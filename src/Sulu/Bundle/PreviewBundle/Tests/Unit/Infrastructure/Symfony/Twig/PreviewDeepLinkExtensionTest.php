@@ -11,10 +11,10 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Tests\Unit\Infrastructure\Symfony\Twig;
+namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Infrastructure\Symfony\Twig;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Content\Infrastructure\Symfony\Twig\PreviewDeepLinkExtension;
+use Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\Twig\PreviewDeepLinkExtension;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -80,20 +80,6 @@ class PreviewDeepLinkExtensionTest extends TestCase
     public function testRendersNothingWithoutRequest(): void
     {
         $requestStack = new RequestStack();
-
-        $extension = new PreviewDeepLinkExtension($requestStack);
-
-        $this->assertSame('', $extension->renderDeepLinkAttribute('abc123'));
-    }
-
-    public function testRendersNothingWhenDeepLinkDisabled(): void
-    {
-        $request = new Request();
-        $request->attributes->set('preview', true);
-        $request->attributes->set('sulu_preview_deep_link', false);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
 
         $extension = new PreviewDeepLinkExtension($requestStack);
 

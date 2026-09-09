@@ -15,6 +15,8 @@ use Sulu\Bundle\PreviewBundle\Admin\PreviewAdmin;
 use Sulu\Bundle\PreviewBundle\Application\Manager\PreviewLinkManager;
 use Sulu\Bundle\PreviewBundle\Infrastructure\Doctrine\Repository\PreviewLinkRepository;
 use Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\EventSubscriber\CacheCommandSubscriber;
+use Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\EventSubscriber\PreviewDeepLinkScriptSubscriber;
+use Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\Twig\PreviewDeepLinkExtension;
 use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
@@ -43,6 +45,17 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_preview.cache_command_subscriber', CacheCommandSubscriber::class)
         ->args([new Reference('sulu_preview.preview.kernel_factory')])
+        ->tag('kernel.event_subscriber')
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    // Renders the deep-link attribute during the preview render; no context tag so it is also
+    // available in the website kernel that produces the preview HTML.
+    $services->set('sulu_preview.preview_deep_link_twig_extension', PreviewDeepLinkExtension::class)
+        ->args([new Reference('request_stack')])
+        ->tag('twig.extension');
+
+    // Injects the deep-link bridge script into the admin preview iframe response.
+    $services->set('sulu_preview.preview_deep_link_script_subscriber', PreviewDeepLinkScriptSubscriber::class)
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);
 
