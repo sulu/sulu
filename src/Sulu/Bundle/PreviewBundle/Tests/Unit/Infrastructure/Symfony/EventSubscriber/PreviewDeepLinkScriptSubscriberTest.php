@@ -58,6 +58,36 @@ class PreviewDeepLinkScriptSubscriberTest extends TestCase
         );
     }
 
+    public function testInjectsScriptIntoJsonContentForUpdateRoute(): void
+    {
+        $json = (string) \json_encode(['content' => '<html><body><h1>Hello</h1></body></html>']);
+        $response = $this->handle('sulu_preview.update', $json);
+
+        $this->assertSame(
+            ['content' => '<html><body><h1>Hello</h1>' . self::SCRIPT . '</body></html>'],
+            \json_decode((string) $response->getContent(), true)
+        );
+    }
+
+    public function testInjectsScriptIntoJsonContentForUpdateContextRoute(): void
+    {
+        $json = (string) \json_encode(['content' => '<html><body>a</body></html>']);
+        $response = $this->handle('sulu_preview.update-context', $json);
+
+        $this->assertSame(
+            ['content' => '<html><body>a' . self::SCRIPT . '</body></html>'],
+            \json_decode((string) $response->getContent(), true)
+        );
+    }
+
+    public function testDoesNotTouchUpdateJsonWithoutContentKey(): void
+    {
+        $json = (string) \json_encode(['other' => 'value']);
+        $response = $this->handle('sulu_preview.update', $json);
+
+        $this->assertSame($json, $response->getContent());
+    }
+
     public function testInjectsBeforeLastBodyTag(): void
     {
         $response = $this->handle('sulu_preview.render', '<body>a</body><body>b</body>');
