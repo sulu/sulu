@@ -323,14 +323,26 @@ class ContentObjectProviderTest extends TestCase
         ]
     ): void {
         $example = new Example();
-        $exampleDimensionContent = new ExampleDimensionContent($example);
+
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $example->addDimensionContent($unlocalizedDimensionContent);
+
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale($locale);
+        $localizedDimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $example->addDimensionContent($localizedDimensionContent);
+
         $mergedDimensionContent = new ExampleDimensionContent($example);
 
         $this->contentDataMapper->map(
             Argument::that(
-                function($dimensionContentCollection) {
+                function($dimensionContentCollection) use ($unlocalizedDimensionContent, $localizedDimensionContent) {
+                    // the localized and unlocalized dimension contents must be mapped as separate instances
                     return $dimensionContentCollection instanceof DimensionContentCollection
-                        && ExampleDimensionContent::class === $dimensionContentCollection->getDimensionContentClass();
+                        && ExampleDimensionContent::class === $dimensionContentCollection->getDimensionContentClass()
+                        && $unlocalizedDimensionContent === $dimensionContentCollection->getDimensionContent(['locale' => null])
+                        && $localizedDimensionContent === $dimensionContentCollection->getDimensionContent(['locale' => 'de']);
                 }
             ),
             Argument::type('array'),
@@ -343,7 +355,7 @@ class ContentObjectProviderTest extends TestCase
 
         $previewContext = new PreviewContext(1, $locale);
         $defaults = [
-            'object' => $exampleDimensionContent,
+            'object' => $localizedDimensionContent,
             '_controller' => ContentController::class . '::indexAction',
             'view' => 'pages/default',
         ];
