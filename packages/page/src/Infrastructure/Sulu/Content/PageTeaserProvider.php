@@ -162,7 +162,8 @@ class PageTeaserProvider implements TeaserProviderInterface
 
     protected function resolveTitle(PageDimensionContentInterface $dimensionContent): ?string
     {
-        $title = $dimensionContent->getExcerptTitle() ?? $dimensionContent->getTitle();
+        $excerptTitle = $dimensionContent->getExcerptTitle();
+        $title = '' !== ($excerptTitle ?? '') ? $excerptTitle : $dimensionContent->getTitle();
 
         return '' !== ($title ?? '') ? $title : null;
     }
