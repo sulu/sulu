@@ -166,4 +166,37 @@ class MetadataResolverTest extends TestCase
         self::assertSame('Excerpt Title', $result['excerpt/title']->getContent());
         self::assertNull($result['excerpt/description']->getContent());
     }
+
+    public function testResolveFlatSlashPathsStayFlatWhenNoDataForRootExists(): void
+    {
+        $propertyResolverProvider = new PropertyResolverProvider(
+            new \ArrayIterator(['default' => new DefaultPropertyResolver()])
+        );
+        $metadataResolver = new MetadataResolver($propertyResolverProvider);
+
+        $fieldMetadata1 = new FieldMetadata('seo/title');
+        $fieldMetadata1->setType('text_line');
+
+        $fieldMetadata2 = new FieldMetadata('seo/description');
+        $fieldMetadata2->setType('text_line');
+
+        // No "seo" data at all (e.g. seo properties before any seo value has been
+        // saved). The properties must stay flat instead of being nested one level
+        // too deep into a "seo" root.
+        $result = $metadataResolver->resolveItems(
+            [
+                'seo/title' => $fieldMetadata1,
+                'seo/description' => $fieldMetadata2,
+            ],
+            ['seoNoIndex' => false],
+            'en',
+        );
+
+        self::assertCount(2, $result);
+        self::assertArrayHasKey('seo/title', $result);
+        self::assertArrayHasKey('seo/description', $result);
+        self::assertArrayNotHasKey('seo', $result);
+        self::assertNull($result['seo/title']->getContent());
+        self::assertNull($result['seo/description']->getContent());
+    }
 }
