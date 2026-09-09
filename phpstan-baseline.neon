@@ -2209,6 +2209,12 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/SingleSelectionPropertyMetadataMapper.php
 
 		-
+			message: '#^Parameter \#1 \$name of class Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\PropertyMetadata constructor expects string, float\|int\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/TextEditorPropertyMetadataMapper.php
+
+		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Metadata\\SchemaMetadata\\StringMetadata\:\:toJsonSchema\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
