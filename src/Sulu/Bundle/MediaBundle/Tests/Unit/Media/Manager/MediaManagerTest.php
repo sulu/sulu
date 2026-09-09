@@ -509,6 +509,35 @@ class MediaManagerTest extends TestCase
         $mediaManager->delete(1, true);
     }
 
+    public function testSaveKeepsAFalsyScalarTitle(): void
+    {
+        /** @var ObjectProphecy<UploadedFile> $uploadedFile */
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . \DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
+        $uploadedFile->getClientOriginalName()->willReturn('test.txt');
+        $uploadedFile->getPathname()->willReturn('');
+        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getMimeType()->willReturn('img');
+
+        $user = $this->prophesize(User::class)->willImplement(UserInterface::class);
+        $this->userRepository->findUserById(1)->willReturn($user);
+
+        $this->mediaRepository->createNew()->willReturn(new Media());
+
+        $this->storage->save('', 'test.txt')->shouldBeCalled();
+        $this->mediaPropertiesProvider
+            ->provide($uploadedFile->reveal())
+            ->willReturn([])
+            ->shouldBeCalled();
+
+        $this->pathCleaner->cleanup(Argument::any())->willReturn('test');
+
+        $this->domainEventCollector->collect(Argument::type(MediaCreatedEvent::class))->shouldBeCalled();
+
+        $media = $this->mediaManager->save($uploadedFile->reveal(), ['locale' => 'en', 'title' => '0'], 1);
+
+        $this->assertSame('0', $media->getTitle());
+    }
+
     #[\PHPUnit\Framework\Attributes\DataProvider('provideSpecialCharacterFileName')]
     public function testSpecialCharacterFileName(string $fileName, string $cleanUpArgument, string $cleanUpResult, string $extension): void
     {
