@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Infrastructure\Symfony\Twig;
+namespace Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\Twig;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
@@ -44,13 +44,6 @@ class PreviewDeepLinkExtension extends AbstractExtension
 
         $request = $this->requestStack->getCurrentRequest();
         if (!$request || true !== $request->attributes->get('preview', false)) {
-            return '';
-        }
-
-        // Public/shareable preview links also render with preview=true but have no admin form on
-        // the other end to navigate to, so they opt out via this separate attribute (see
-        // PreviewRenderer::render()) instead of needlessly exposing block ids.
-        if (false === $request->attributes->get('sulu_preview_deep_link', true)) {
             return '';
         }
 
