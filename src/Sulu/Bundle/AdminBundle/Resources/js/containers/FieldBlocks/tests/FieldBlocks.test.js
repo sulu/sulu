@@ -2147,7 +2147,7 @@ test('Throw error if passed block_id_generator schema option is not a boolean', 
     )).toThrow('The "block" field types only accepts booleans as "block_id_generator" schema option!');
 });
 
-test('Should backfill missing block ids on mount when block_id_generator is enabled', async() => {
+test('Should not backfill block ids on mount even when block_id_generator is enabled', async() => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {
         default: {
@@ -2160,7 +2160,6 @@ test('Should backfill missing block ids on mount when block_id_generator is enab
             },
         },
     };
-    const value = [{type: 'default'}];
     const changeSpy = jest.fn();
 
     const ensureBlockIdsSpy = jest.spyOn(blockIdGenerator, 'ensureBlockIds')
@@ -2174,19 +2173,63 @@ test('Should backfill missing block ids on mount when block_id_generator is enab
             onChange={changeSpy}
             schemaOptions={{block_id_generator: {name: 'block_id_generator', value: true}}}
             types={types}
-            value={value}
+            value={[{type: 'default'}]}
         />
     );
 
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(ensureBlockIdsSpy).toHaveBeenCalledWith(value, types);
+    // Opening a page with id-less blocks must not backfill or dirty the form; missing ids are
+    // accepted silently until the user changes the page.
+    expect(ensureBlockIdsSpy).not.toHaveBeenCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+
+    ensureBlockIdsSpy.mockRestore();
+});
+
+test('Should backfill missing block ids when blocks change and block_id_generator is enabled', async() => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+    const changedValue = [{type: 'default'}];
+    const changeSpy = jest.fn();
+
+    const ensureBlockIdsSpy = jest.spyOn(blockIdGenerator, 'ensureBlockIds')
+        .mockReturnValue(Promise.resolve([{type: 'default', _id: 'generated-id'}]));
+
+    const fieldBlocks = shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={{block_id_generator: {name: 'block_id_generator', value: true}}}
+            types={types}
+            value={[{type: 'default'}]}
+        />
+    );
+
+    fieldBlocks.find('BlockCollection').prop('onChange')(changedValue);
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(ensureBlockIdsSpy).toHaveBeenCalledWith(changedValue, types);
+    expect(changeSpy).toHaveBeenCalledWith(changedValue);
     expect(changeSpy).toHaveBeenCalledWith([{type: 'default', _id: 'generated-id'}]);
 
     ensureBlockIdsSpy.mockRestore();
 });
 
-test('Should not backfill block ids on mount when block_id_generator is disabled', async() => {
+test('Should not backfill block ids when blocks change and block_id_generator is disabled', async() => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {
         default: {
@@ -2203,7 +2246,7 @@ test('Should not backfill block ids on mount when block_id_generator is disabled
 
     const ensureBlockIdsSpy = jest.spyOn(blockIdGenerator, 'ensureBlockIds');
 
-    shallow(
+    const fieldBlocks = shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
             defaultType="editor"
@@ -2215,10 +2258,11 @@ test('Should not backfill block ids on mount when block_id_generator is disabled
         />
     );
 
+    fieldBlocks.find('BlockCollection').prop('onChange')([{type: 'default'}, {type: 'default'}]);
+
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(ensureBlockIdsSpy).not.toHaveBeenCalled();
-    expect(changeSpy).not.toHaveBeenCalled();
 
     ensureBlockIdsSpy.mockRestore();
 });
