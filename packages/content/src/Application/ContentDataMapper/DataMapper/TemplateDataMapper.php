@@ -74,7 +74,15 @@ class TemplateDataMapper implements DataMapperInterface
 
         $unlocalizedDimensionContent->setTemplateData($unlocalizedData);
         $localizedDimensionContent->setTemplateKey($template);
-        $localizedDimensionContent->setTemplateData($localizedData);
+
+        // In the preview both parameters are the same dimension content instance, so a plain
+        // overwrite would drop the unlocalized data set above. Merge when they are identical; the
+        // persisted-save path uses distinct instances and stays unaffected.
+        $localizedDimensionContent->setTemplateData(
+            $unlocalizedDimensionContent === $localizedDimensionContent
+                ? \array_merge($unlocalizedData, $localizedData)
+                : $localizedData
+        );
     }
 
     /**

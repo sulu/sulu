@@ -165,7 +165,12 @@ class TemplateDataMapperTest extends TestCase
         $templateMapper->map($localizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
-        $this->assertSame(['title' => 'Test Localized'], $localizedDimensionContent->getTemplateData());
+        // In the preview the same instance holds both the unlocalized and the localized data, so the
+        // non-multilingual "unlocalizedField" must be kept next to the localized "title" (see #8574).
+        $this->assertSame(
+            ['unlocalizedField' => 'Test Unlocalized', 'title' => 'Test Localized'],
+            $localizedDimensionContent->getTemplateData(),
+        );
     }
 
     public function testMapNestedPropertyData(): void
