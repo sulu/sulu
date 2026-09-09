@@ -51,14 +51,9 @@ class Preview
 
         $previewContext = new PreviewContext($id, $locale);
 
-        /** @var array<string, mixed> $object */
-        $object = $provider->getDefaults($previewContext);
+        $object = $this->buildObject($provider, $previewContext, $data, []);
 
-        if (!empty($data)) {
-            $object = $provider->updateValues($previewContext, $object, $data);
-        }
-
-        $cacheItem = new PreviewCacheItem($id, $locale, $userId, $providerKey, $object);
+        $cacheItem = new PreviewCacheItem($id, $locale, $userId, $providerKey, $object, $data);
         $this->save($cacheItem);
 
         return $cacheItem->getToken();
@@ -104,10 +99,11 @@ class Preview
 
         $provider = $this->getProvider($cacheItem->getProviderKey());
         if (!empty($data)) {
-            $defaults = $cacheItem->getObject();
             $previewContext = new PreviewContext($id, $locale);
-            $object = $provider->updateValues($previewContext, $defaults, $data);
-            $cacheItem->setObject($object);
+            // the form always sends its whole data, so the last payload replaces the previous
+            // one rather than being merged into it
+            $cacheItem->setData($data);
+            $cacheItem->setObject($this->buildObject($provider, $previewContext, $data, $cacheItem->getContext()));
 
             $this->save($cacheItem);
         }
@@ -136,24 +132,24 @@ class Preview
 
         $previewContext = new PreviewContext($cacheItem->getId(), $locale);
         $provider = $this->getProvider($cacheItem->getProviderKey());
-        $object = $cacheItem->getObject();
+
         if (!empty($data)) {
-            /** @var array<string, mixed> $defaults */
-            $defaults = $object;
-            $object = $provider->updateValues($previewContext, $defaults, $data);
+            $cacheItem->setData($data);
         }
 
         if (0 === \count($context)) {
             return $this->renderer->render(
-                $object,
+                $this->buildObject($provider, $previewContext, $cacheItem->getData(), $cacheItem->getContext()),
                 $cacheItem->getId(),
                 false,
                 $options
             );
         }
 
-        $defaults = $cacheItem->getObject();
-        $object = $provider->updateContext($previewContext, $defaults, $context);
+        // the values keep being applied over the new context, so switching template does not
+        // throw away what has been typed since the last save
+        $cacheItem->setContext($context);
+        $object = $this->buildObject($provider, $previewContext, $cacheItem->getData(), $context);
 
         $cacheItem->setObject($object);
 
@@ -229,19 +225,52 @@ class Preview
         return $this->previewObjectProviderRegistry->getPreviewObjectProvider($providerKey);
     }
 
+    /**
+     * Builds the route defaults to render, from the saved state plus everything the form has
+     * sent since. A provider returns an empty array when it has nothing to render, e.g. no
+     * content for the locale, and then has nothing to apply the values to either.
+     *
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $context
+     *
+     * @return array<string, mixed>
+     */
+    private function buildObject(
+        PreviewDefaultsProviderInterface $provider,
+        PreviewContext $previewContext,
+        array $data,
+        array $context
+    ): array {
+        /** @var array<string, mixed> $object */
+        $object = $provider->getDefaults($previewContext);
+
+        if ([] === $object) {
+            return $object;
+        }
+
+        if ([] !== $data) {
+            $object = $provider->updateValues($previewContext, $object, $data);
+        }
+
+        if ([] !== $context) {
+            $object = $provider->updateContext($previewContext, $object, $context);
+        }
+
+        return $object;
+    }
+
     protected function save(PreviewCacheItem $item): void
     {
-        $object = $item->getObject();
-        $objectType = \get_debug_type($object);
-
+        // the route defaults hold the object itself, which does not survive a JSON round trip;
+        // what is stored is the form payload that produced it, so that fetch() can rebuild it
         $data = [
             'id' => $item->getId(),
             'locale' => $item->getLocale(),
             'userId' => $item->getUserId(),
             'providerKey' => $item->getProviderKey(),
             'html' => $item->getHtml(),
-            'object' => $object,
-            'objectClass' => $objectType,
+            'data' => $item->getData(),
+            'context' => $item->getContext(),
         ];
 
         $id = $item->getToken();
@@ -271,14 +300,24 @@ class Preview
          *     userId: int,
          *     providerKey: string,
          *     html: string|null,
-         *     object: mixed,
-         *     objectClass: string,
+         *     data?: array<string, mixed>,
+         *     context?: array<string, mixed>,
          * } $data
          */
         $data = \json_decode($cachedContent, true);
         $provider = $this->getProvider($data['providerKey']);
 
-        $object = $provider->getDefaults(new PreviewContext($data['id'], $data['locale']));
+        $values = $data['data'] ?? [];
+        $context = $data['context'] ?? [];
+
+        // replaying them is what makes a plain render(), the one the reload button triggers,
+        // show the state being edited instead of the last saved version
+        $object = $this->buildObject(
+            $provider,
+            new PreviewContext($data['id'], $data['locale']),
+            $values,
+            $context
+        );
 
         $cacheItem = new PreviewCacheItem(
             $data['id'],
@@ -286,6 +325,8 @@ class Preview
             $data['userId'],
             $data['providerKey'],
             $object,
+            $values,
+            $context,
         );
 
         if ($data['html']) {
