@@ -45,5 +45,19 @@
                 <title lang="en">Animals</title>
             </meta>
         </property>
+
+        <property name="page" type="single_page_selection">
+            <meta>
+                <title lang="de">Seite</title>
+                <title lang="en">Page</title>
+            </meta>
+        </property>
+
+        <property name="teaser" type="teaser_selection">
+            <meta>
+                <title lang="de">Teaser</title>
+                <title lang="en">Teaser</title>
+            </meta>
+        </property>
     </properties>
 </template>
