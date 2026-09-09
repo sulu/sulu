@@ -90,41 +90,29 @@ class Preview
      * @param array<string, mixed> $data
      * @param array<string, mixed> $options
      *
-     * @return array{content: string, data: ?array<string, mixed>} `data` echoes back the data the
-     *                                                             provider mutated while updating
-     *                                                             (e.g. backfilled block ids) so
-     *                                                             the admin form can stay in sync
-     *                                                             with what was actually rendered;
-     *                                                             null if the provider didn't set any.
+     * @return string Complete html response
      */
     public function update(
         string $token,
         array $data,
         array $options = []
-    ): array {
+    ): string {
         /** @var string $locale */
         $locale = $options['locale'] ?? null; // TODO think we should add locale as required parameter not over options array
         $cacheItem = $this->fetch($token);
         $id = $cacheItem->getId();
 
         $provider = $this->getProvider($cacheItem->getProviderKey());
-        $updatedData = null;
         if (!empty($data)) {
             $defaults = $cacheItem->getObject();
             $previewContext = new PreviewContext($id, $locale);
             $object = $provider->updateValues($previewContext, $defaults, $data);
             $cacheItem->setObject($object);
 
-            /** @var array<string, mixed>|null $updatedData */
-            $updatedData = $object['data'] ?? null;
-
             $this->save($cacheItem);
         }
 
-        return [
-            'content' => $this->renderPartial($cacheItem, $options),
-            'data' => $updatedData,
-        ];
+        return $this->renderPartial($cacheItem, $options);
     }
 
     /**

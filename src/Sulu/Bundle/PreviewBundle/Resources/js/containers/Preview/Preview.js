@@ -110,7 +110,6 @@ class Preview extends React.Component<Props> {
     // Bumped on every updatePreview call so an in-flight response can tell it has been superseded
     // by a newer request (e.g. the user reordered/edited blocks again before this one resolved) and
     // must not merge its now-stale backfilled ids into the live form data.
-    updateRequestId: number = 0;
 
     schemaDisposer: () => mixed;
     dataDisposer: () => mixed;
@@ -311,66 +310,11 @@ class Preview extends React.Component<Props> {
     updatePreview = debounce((data: Object) => {
         if (this.shouldUpdateFormStore && !!this.previewStore.token) {
             const {previewStore} = this;
-            const requestId = ++this.updateRequestId;
-            previewStore.update(data).then((result) => {
-                if (!this.unmounted && requestId === this.updateRequestId) {
-                    this.mergeMissingBlockIds(data, result.data, []);
-                }
-
-                this.setContent(result.content, data);
+            previewStore.update(data).then((content) => {
+                this.setContent(content, data);
             });
         }
     }, Preview.debounceDelay);
-
-    // The provider backfills missing block "_id"s server-side while rendering the preview (e.g. for
-    // a block nested inside a collapsed ancestor whose BlockCollection never mounted client-side, so
-    // never generated one) - but only the rendered HTML normally makes it back to the admin, leaving
-    // the form's own copy of that block still without an id. Without this, clicking that block in the
-    // preview has no matching id to navigate to in the admin form. This walks the data that was sent
-    // alongside what the provider echoes back and copies over any id the form is still missing.
-    mergeMissingBlockIds = (sentData: mixed, enrichedData: mixed, path: Array<string>) => {
-        if (!enrichedData || typeof enrichedData !== 'object') {
-            return;
-        }
-
-        if (Array.isArray(sentData) && Array.isArray(enrichedData)) {
-            const length = Math.min(sentData.length, enrichedData.length);
-            for (let i = 0; i < length; i++) {
-                this.mergeMissingBlockIds(sentData[i], enrichedData[i], path.concat(String(i)));
-            }
-
-            return;
-        }
-
-        if (!sentData || typeof sentData !== 'object' || Array.isArray(sentData) || Array.isArray(enrichedData)) {
-            return;
-        }
-
-        const {formStore} = this.props;
-
-        // $FlowFixMe
-        const sentId = sentData._id;
-        // $FlowFixMe
-        const enrichedId = enrichedData._id;
-
-        if (typeof sentId !== 'string' && typeof enrichedId === 'string') {
-            const idPath = path.concat('_id');
-
-            // Only fill the id in if the live form data still lacks one at this exact position -
-            // blindly overwriting could otherwise clobber a newer id. The caller additionally checks
-            // the request hasn't been superseded before calling this at all, so a reorder/edit that
-            // happened after this request was sent causes the whole merge to be skipped rather than
-            // attaching this response's id to a different block that has since taken this position.
-            if (formStore.getValueByPath('/' + idPath.join('/')) === undefined) {
-                formStore.change(idPath.join('/'), enrichedId);
-            }
-        }
-
-        Object.keys(sentData).forEach((key) => {
-            // $FlowFixMe
-            this.mergeMissingBlockIds(sentData[key], enrichedData[key], path.concat(key));
-        });
-    };
 
     setContent = (previewContent: string, data: Object) => {
         const previewDocument = this.getPreviewDocument();
@@ -490,7 +434,7 @@ class Preview extends React.Component<Props> {
         const expectedIds = collectBlockIds(this.renderedData || toJS(formStore.data));
         const missingIds = Array.from(expectedIds).filter((id) => !renderedIds.includes(id));
 
-        if (missingIds.length > 0) {
+        if (renderedIds.length > 0 && missingIds.length > 0) {
             log.warn(
                 '[sulu_preview] The following blocks are missing the "sulu_preview_deep_link()" attribute ' +
                 'on their template root element and cannot be navigated to from the preview: '

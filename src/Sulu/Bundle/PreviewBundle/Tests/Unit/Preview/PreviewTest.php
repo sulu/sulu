@@ -265,10 +265,7 @@ class PreviewTest extends TestCase
         );
 
         $this->assertEquals(
-            [
-                'content' => '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
-                'data' => null,
-            ],
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
             $result
         );
 
@@ -320,10 +317,7 @@ class PreviewTest extends TestCase
         );
 
         $this->assertEquals(
-            [
-                'content' => '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
-                'data' => null,
-            ],
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
             $result
         );
 
@@ -394,10 +388,7 @@ class PreviewTest extends TestCase
         );
 
         $this->assertEquals(
-            [
-                'content' => '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
-                'data' => null,
-            ],
+            '<html><body><div id="content"><h1 property="title">SULU</h1></div></body></html>',
             $result
         );
 

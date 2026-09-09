@@ -32,6 +32,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     @observable value: Object;
     oldIconValue: ?Object;
     computedIcons: Array<Array<string>> = [];
+    generatingBlockIds: boolean = false;
 
     constructor(props: FieldTypeProps<Array<BlockEntry>>) {
         super(props);
@@ -40,6 +41,8 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     }
 
     @action componentDidMount() {
+        this.generateMissingBlockIds();
+
         if (this.settingsFormKey) {
             // initialize empty blockSettingsFormStore because schema of the store is used for determining iconsMapping
             this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
@@ -63,6 +66,8 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             if (!this.value || equals(toJS(this.value), toJS(prevProps.value))) {
                 this.setValue(value);
             }
+
+            this.generateMissingBlockIds();
         }
 
         if (!types || !oldTypes) {
@@ -303,6 +308,31 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.setValue(newValues);
 
         onChange(newValues, context);
+    };
+
+    // Backfills a generated `_id` on every block that lacks one - including blocks nested inside a
+    // collapsed/never-expanded ancestor, which the mounted BlockCollections never reach - so the
+    // preview-to-admin navigation can always resolve a block to its form. BlockCollection keeps
+    // generating ids for interactively added blocks (add/paste/duplicate); this only closes the
+    // gap for blocks that arrive with the loaded data.
+    generateMissingBlockIds = async() => {
+        const {onChange, types, value} = this.props;
+
+        if (this.generatingBlockIds || !this.generateBlockIds || !types || !value) {
+            return;
+        }
+
+        this.generatingBlockIds = true;
+        try {
+            const updatedValue = await blockIdGenerator.ensureBlockIds(toJS(value), types);
+
+            if (updatedValue) {
+                this.setValue(updatedValue);
+                onChange(updatedValue);
+            }
+        } finally {
+            this.generatingBlockIds = false;
+        }
     };
 
     handleBlocksChange = (value: Object) => {
