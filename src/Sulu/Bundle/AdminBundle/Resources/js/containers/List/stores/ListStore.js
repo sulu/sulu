@@ -1,8 +1,9 @@
 // @flow
-import {action, autorun, computed, intercept, observable, untracked} from 'mobx';
+import {action, autorun, computed, intercept, isArrayLike, observable, untracked} from 'mobx';
 import equals from 'fast-deep-equal';
 import log from 'loglevel';
 import ResourceRequester, {RequestPromise} from '../../../services/ResourceRequester';
+import {transformUrlToDate} from '../../../utils/Date';
 import userStore from '../../../stores/userStore';
 import metadataStore from './metadataStore';
 import type {
@@ -22,6 +23,30 @@ const USER_SETTING_SORT_ORDER = 'sort_order';
 const USER_SETTING_FILTER = 'filter';
 const USER_SETTING_LIMIT = 'limit';
 const USER_SETTING_SCHEMA = 'schema';
+
+function transformFilterValue(value) {
+    if (typeof value === 'string') {
+        return transformUrlToDate(value) || value;
+    }
+
+    if (isArrayLike(value)) {
+        return value.map(transformFilterValue);
+    }
+
+    if (value instanceof Object) {
+        return transformFilterObject(value);
+    }
+
+    return value;
+}
+
+function transformFilterObject(value) {
+    return Object.keys(value).reduce((transformedValue, key) => {
+        transformedValue[key] = transformFilterValue(value[key]);
+
+        return transformedValue;
+    }, {});
+}
 
 export default class ListStore {
     @observable pageCount: ?number = 0;
@@ -74,10 +99,10 @@ export default class ListStore {
         userStore.setPersistentSetting(key, value);
     }
 
-    static getFilterSetting(listKey: string, userSettingsKey: string): string {
+    static getFilterSetting(listKey: string, userSettingsKey: string): Object {
         const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_FILTER].join('.');
 
-        return userStore.getPersistentSetting(key);
+        return transformFilterValue(userStore.getPersistentSetting(key));
     }
 
     static setFilterSetting(listKey: string, userSettingsKey: string, value: *) {
