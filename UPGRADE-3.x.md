@@ -1,5 +1,14 @@
 # Upgrade
 
+## 3.1.0
+
+### FormOverlayListViewBuilderInterface gained addOverlayToolbarActions
+
+`Sulu\Bundle\AdminBundle\Admin\View\FormOverlayListViewBuilderInterface` gained the method
+`addOverlayToolbarActions(array $toolbarActions): self`. It configures the toolbar actions rendered inside the overlay
+of a form overlay list, separately from `addToolbarActions()`, which stays bound to the surrounding list. Classes
+extending `FormOverlayListViewBuilder` inherit the method, other implementations of the interface need to add it.
+
 ## 3.0.9
 
 ### Widened webspace, slug and template key column lengths

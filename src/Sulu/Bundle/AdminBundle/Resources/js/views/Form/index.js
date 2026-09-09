@@ -19,6 +19,8 @@ import UpdateFormStoreToolbarAction from './toolbarActions/UpdateFormStoreToolba
 
 export default Form;
 
+export type {ToolbarActionFormInterface} from '../../containers/Toolbar/types';
+
 export {
     formToolbarActionRegistry,
     AbstractFormToolbarAction,

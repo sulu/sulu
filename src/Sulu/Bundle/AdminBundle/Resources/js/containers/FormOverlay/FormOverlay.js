@@ -1,29 +1,37 @@
 // @flow
-import React from 'react';
-import {action, computed, observable} from 'mobx';
+import React, {Fragment} from 'react';
+import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Overlay from '../../components/Overlay';
+import PublishIndicator from '../../components/PublishIndicator';
 import {translate} from '../../utils';
 import Form from '../Form';
 import Router from '../../services/Router';
+import Toolbar from '../Toolbar';
+import toolbarStorePool from '../Toolbar/stores/toolbarStorePool';
+import {SHOW_SUCCESS_DURATION} from '../Toolbar/stores/ToolbarStore';
 import formOverlayStyles from './formOverlay.scss';
+import type {ToolbarActionFormInterface, OverlayToolbarAction, ToolbarErrorType} from '../Toolbar/types';
 import type {FormStoreInterface} from '../Form/types';
 import type {ResourceFormStore} from '../Form';
+import type {SnackbarType} from '../../components/Snackbar';
 import type {Size} from '../../components/Overlay/types';
 import type {ElementRef} from 'react';
 
 type Props = {|
     confirmDisabled: boolean,
     confirmLoading: boolean,
-    confirmText: string,
+    confirmText?: string,
     formStore: FormStoreInterface | ResourceFormStore,
     onClose: () => void,
-    onConfirm: () => void,
+    onConfirm?: () => void,
     onFieldFinish?: (dataPath: string, schemaPath: string) => void,
     open: boolean,
     router?: Router,
     size?: Size,
     title: string,
+    toolbarActionsProvider?: (form: ToolbarActionFormInterface) => Array<OverlayToolbarAction>,
+    toolbarStoreKey: string,
 |};
 
 @observer
@@ -31,11 +39,17 @@ class FormOverlay extends React.Component<Props> {
     static defaultProps = {
         confirmDisabled: false,
         confirmLoading: false,
+        toolbarStoreKey: 'form_overlay',
     };
 
     formRef: ?ElementRef<typeof Form>;
+    successTimeout: ?TimeoutID;
+    toolbarDisposer: ?() => void;
 
-    @observable formErrors: Array<string> = [];
+    @observable errors: Array<ToolbarErrorType> = [];
+    @observable warnings: Array<ToolbarErrorType> = [];
+    @observable successMessage: string | void = undefined;
+    @observable toolbarActions: Array<OverlayToolbarAction> = [];
 
     @computed get confirmLoading() {
         const {confirmLoading, formStore} = this.props;
@@ -46,50 +60,176 @@ class FormOverlay extends React.Component<Props> {
         return confirmLoading || formStoreSaving;
     }
 
+    @action componentDidMount() {
+        const {toolbarActionsProvider, toolbarStoreKey} = this.props;
+
+        if (!toolbarActionsProvider) {
+            return;
+        }
+
+        // The Toolbar creates the store while rendering, but a closed Overlay renders no children.
+        if (!toolbarStorePool.hasStore(toolbarStoreKey)) {
+            toolbarStorePool.createStore(toolbarStoreKey);
+        }
+
+        this.toolbarActions = toolbarActionsProvider(this);
+
+        this.toolbarDisposer = autorun(() => {
+            toolbarStorePool.setToolbarConfig(toolbarStoreKey, this.toolbarConfig);
+        });
+    }
+
     @action componentDidUpdate(prevProps: Props) {
         const {open} = this.props;
 
         if (prevProps.open === false && open === true) {
-            this.formErrors = [];
+            this.errors = [];
+            this.warnings = [];
+            this.successMessage = undefined;
         }
     }
 
-    handleOverlayConfirm = () => {
+    componentWillUnmount() {
+        const {toolbarStoreKey} = this.props;
+
+        if (this.successTimeout) {
+            clearTimeout(this.successTimeout);
+        }
+
+        if (this.toolbarDisposer) {
+            this.toolbarDisposer();
+        }
+
+        this.toolbarActions.forEach((toolbarAction) => toolbarAction.destroy());
+
+        if (toolbarStorePool.hasStore(toolbarStoreKey)) {
+            toolbarStorePool.destroyStore(toolbarStoreKey);
+        }
+    }
+
+    @computed get toolbarConfig() {
+        const {formStore} = this.props;
+
+        const items = [];
+        this.toolbarActions.forEach((toolbarAction) => {
+            const itemConfig = toolbarAction.getToolbarItemConfig();
+
+            if (itemConfig) {
+                items.push(itemConfig);
+            }
+        });
+
+        const icons = [];
+        const data = formStore.data;
+        if (data && (data.hasOwnProperty('publishedState') || data.hasOwnProperty('published'))) {
+            const {published, publishedState} = data;
+            icons.push(
+                <PublishIndicator
+                    draft={publishedState === undefined ? false : !publishedState}
+                    key="publish"
+                    published={published === undefined ? false : !!published}
+                />
+            );
+        }
+
+        return {icons, items};
+    }
+
+    submit = (options: ?Object) => {
         if (!this.formRef) {
             throw new Error('The Form ref has not been set! This should not happen and is likely a bug.');
         }
 
         // calling formRef.submit() will trigger either handleFormSubmit() or handleFormError()
-        this.formRef.submit();
+        this.formRef.submit(options);
     };
 
-    handleFormSubmit = () => {
+    @action showSuccessSnackbar = () => {
+        this.successMessage = translate('sulu_admin.success');
+
+        if (this.successTimeout) {
+            clearTimeout(this.successTimeout);
+        }
+
+        this.successTimeout = setTimeout(action(() => {
+            this.successMessage = undefined;
+        }), SHOW_SUCCESS_DURATION);
+    };
+
+    // The Overlay shows a single snackbar, so the three sources are ranked instead of stacked.
+    @computed get snackbar(): ?{message: string, type: SnackbarType} {
+        const error = this.errors[this.errors.length - 1];
+        if (error !== undefined) {
+            return {message: typeof error === 'object' ? error.message : error, type: 'error'};
+        }
+
+        const warning = this.warnings[this.warnings.length - 1];
+        if (warning !== undefined) {
+            return {message: typeof warning === 'object' ? warning.message : warning, type: 'warning'};
+        }
+
+        if (this.successMessage !== undefined) {
+            return {message: this.successMessage, type: 'success'};
+        }
+
+        return undefined;
+    }
+
+    handleOverlayConfirm = () => {
+        this.submit();
+    };
+
+    handleFormSubmit = (options: ?Object) => {
         const {
             formStore,
             onConfirm,
+            toolbarActionsProvider,
         } = this.props;
 
         // save data before calling onConfirm callback if formstore is instance of ResourceFormStore
         if (typeof formStore.save === 'function') {
             // $FlowFixMe
-            formStore.save()
-                .then(() => {
-                    onConfirm();
-                })
+            formStore.save(options)
+                .then(action(() => {
+                    // The toolbar keeps the overlay open, so success is shown here instead of
+                    // handing over to onConfirm, which the list uses to close the overlay.
+                    if (toolbarActionsProvider) {
+                        this.errors = [];
+                        this.showSuccessSnackbar();
+
+                        return;
+                    }
+
+                    if (onConfirm) {
+                        onConfirm();
+                    }
+                }))
                 .catch(action((error) => {
-                    this.formErrors.push(error.detail || error.title || translate('sulu_admin.form_save_server_error'));
+                    this.errors.push(error.detail || error.title || translate('sulu_admin.form_save_server_error'));
                 }));
-        } else {
+        } else if (onConfirm) {
             onConfirm();
         }
     };
 
     handleFormError = () => {
-        this.formErrors.push(translate('sulu_admin.form_contains_invalid_values'));
+        this.errors.push(translate('sulu_admin.form_contains_invalid_values'));
     };
 
-    @action handleErrorSnackbarClose = () => {
-        this.formErrors.pop();
+    @action handleSnackbarCloseClick = () => {
+        if (this.errors.length > 0) {
+            this.errors.pop();
+
+            return;
+        }
+
+        if (this.warnings.length > 0) {
+            this.warnings.pop();
+
+            return;
+        }
+
+        this.successMessage = undefined;
     };
 
     handleFieldFinish = (dataPath: string, schemaPath: string) => {
@@ -104,6 +244,21 @@ class FormOverlay extends React.Component<Props> {
         this.formRef = formRef;
     };
 
+    renderToolbar() {
+        const {toolbarActionsProvider, toolbarStoreKey} = this.props;
+
+        if (!toolbarActionsProvider) {
+            return undefined;
+        }
+
+        return (
+            <Fragment>
+                <Toolbar showSnackbars={false} storeKey={toolbarStoreKey} />
+                {this.toolbarActions.map((toolbarAction, index) => toolbarAction.getNode(index))}
+            </Fragment>
+        );
+    }
+
     render() {
         const {
             confirmDisabled,
@@ -114,7 +269,10 @@ class FormOverlay extends React.Component<Props> {
             router,
             size,
             title,
+            toolbarActionsProvider,
         } = this.props;
+
+        const snackbar = this.snackbar;
 
         return (
             <Overlay
@@ -122,13 +280,16 @@ class FormOverlay extends React.Component<Props> {
                 confirmLoading={this.confirmLoading}
                 confirmText={confirmText}
                 onClose={onClose}
-                onConfirm={this.handleOverlayConfirm}
-                onSnackbarCloseClick={this.handleErrorSnackbarClose}
+                // The toolbar owns submission when actions are configured, so a footer Save would
+                // be a second button doing the same thing.
+                onConfirm={toolbarActionsProvider ? undefined : this.handleOverlayConfirm}
+                onSnackbarCloseClick={this.handleSnackbarCloseClick}
                 open={open}
                 size={size}
-                snackbarMessage={this.formErrors[this.formErrors.length - 1]}
-                snackbarType="error"
+                snackbarMessage={snackbar ? snackbar.message : undefined}
+                snackbarType={snackbar ? snackbar.type : 'error'}
                 title={title}
+                toolbar={this.renderToolbar()}
             >
                 <div className={formOverlayStyles.form}>
                     <Form

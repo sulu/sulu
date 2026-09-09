@@ -30,6 +30,7 @@ type Props = {
     snackbarMessage?: string,
     snackbarType: SnackbarType,
     title: string,
+    toolbar?: Node,
 };
 
 const CLOSE_ICON = 'su-times';
@@ -115,6 +116,7 @@ class Overlay extends React.Component<Props> {
             snackbarMessage,
             snackbarType,
             title,
+            toolbar,
         } = this.props;
 
         const footerVisible = onConfirm !== undefined || actions.length > 0;
@@ -146,7 +148,12 @@ class Overlay extends React.Component<Props> {
                         >
                             <div className={overlayClass}>
                                 <section className={overlayStyles.content}>
-                                    <header className={overlayStyles.header}>
+                                    <header
+                                        className={classNames(
+                                            overlayStyles.header,
+                                            {[overlayStyles.headerWithToolbar]: toolbar}
+                                        )}
+                                    >
                                         <h2>{title}</h2>
                                         <Icon
                                             className={overlayStyles.icon}
@@ -154,6 +161,9 @@ class Overlay extends React.Component<Props> {
                                             onClick={this.handleIconClick}
                                         />
                                     </header>
+                                    {toolbar &&
+                                        <div className={overlayStyles.toolbar}>{toolbar}</div>
+                                    }
                                     <article className={overlayStyles.article}>{children}</article>
                                     {footerVisible &&
                                         <footer className={overlayStyles.footer}>

@@ -3,6 +3,7 @@
 
 $primaryBackground: $concrete;
 $secondaryBackground: $white;
+$toolbarBackground: $alabaster;
 $borderRadius: 3px;
 $overlayBorderColor: $silver;
 
@@ -65,6 +66,8 @@ $transitionDuration: 300ms;
     border-radius: 0 0 $borderRadius $borderRadius;
     overflow: hidden;
     box-shadow: 0 10px 18px 0 rgba($mineShaft, .5);
+    display: flex;
+    flex-direction: column;
 
     .header {
         background: $primaryBackground;
@@ -79,6 +82,28 @@ $transitionDuration: 300ms;
         }
     }
 
+    /* the toolbar continues the header, so the single separator sits below the actions */
+    .header-with-toolbar {
+        border-bottom: 0;
+    }
+
+    .toolbar {
+        background: $toolbarBackground;
+        border-bottom: 1px solid $overlayBorderColor;
+
+        /* the application toolbar paints its own bar, in here it continues the header */
+        nav {
+            background: transparent;
+            box-shadow: none;
+        }
+
+        /* the item list is the only one in the toolbar, its bar spans the full line instead */
+        ul {
+            background: transparent;
+            border: 0;
+        }
+    }
+
     .article {
         max-height: $overlayContentMaxHeight;
         overflow: auto;
@@ -89,7 +114,7 @@ $transitionDuration: 300ms;
         background: $secondaryBackground;
         border-top: 1px solid $overlayBorderColor;
         height: $overlayFooterHeight;
-        padding: 0 60px;
+        padding: 0 $overlayHorizontalPadding;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -101,7 +126,7 @@ $transitionDuration: 300ms;
 
     .icon {
         position: absolute;
-        right: 60px;
+        right: $overlayHorizontalPadding;
         font-size: $iconFontSize;
         font-weight: bold;
         line-height: $overlayHeaderHeight;
@@ -110,9 +135,10 @@ $transitionDuration: 300ms;
     }
 }
 
+/* the snackbar takes the first row instead of covering the header; it collapses to no height
+   while hidden, so its own margin transition pushes the overlay down as it appears */
 .snackbar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    order: -1;
+    display: flex;
+    flex-direction: column;
 }

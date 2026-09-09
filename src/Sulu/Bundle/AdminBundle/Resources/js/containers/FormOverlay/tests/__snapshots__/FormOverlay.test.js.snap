@@ -1,88 +1,105 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Component should render 1`] = `
-Array [
-  <div
-    class="backdrop visible fixed"
-    data-testid="backdrop"
-    role="button"
-  />,
-  <div
-    class="container isDown"
-  >
+<body>
+  <div />
+  <div>
     <div
-      class="overlay small"
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="container isDown"
     >
-      <section
-        class="content"
+      <div
+        class="overlay small"
       >
-        <header
-          class="header"
+        <section
+          class="content"
         >
-          <h2>
-            overlay-title
-          </h2>
-          <span
-            aria-label="su-times"
-            class="su-times clickable icon"
-            role="button"
-            tabindex="0"
-          />
-        </header>
-        <article
-          class="article"
-        >
-          <div
-            class="form"
+          <header
+            class="header"
           >
-            <div>
-              form container mock
-            </div>
-          </div>
-        </article>
-        <footer
-          class="footer"
-        >
-          <button
-            class="button primary hasText"
-            type="button"
-          >
-            <span
-              class="buttonText"
-            >
-              confirm-text
-            </span>
-          </button>
-        </footer>
-        <div
-          class="snackbar"
-        >
-          <div
-            class="snackbar error"
-            role="button"
-          >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
-            <div
-              class="text"
-            >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
-            </div>
+            <h2>
+              overlay-title
+            </h2>
             <span
               aria-label="su-times"
-              class="su-times clickable closeIcon"
+              class="su-times clickable icon"
               role="button"
               tabindex="0"
             />
+          </header>
+          <article
+            class="article"
+          >
+            <div
+              class="form"
+            >
+              <div
+                data-router="no"
+                data-testid="form-container"
+              >
+                form container mock
+                <button
+                  type="button"
+                >
+                  trigger submit
+                </button>
+                <button
+                  type="button"
+                >
+                  trigger error
+                </button>
+              </div>
+            </div>
+          </article>
+          <footer
+            class="footer"
+          >
+            <button
+              class="button primary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                confirm-text
+              </span>
+            </button>
+          </footer>
+          <div
+            class="snackbar"
+          >
+            <div
+              class="snackbar error"
+              role="button"
+            >
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
+              <span
+                aria-label="su-times"
+                class="su-times clickable closeIcon"
+                role="button"
+                tabindex="0"
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
-  </div>,
-]
+  </div>
+</body>
 `;
