@@ -1,7 +1,6 @@
 // @flow
 import symfonyRouting from 'fos-jsrouting/router';
 import Requester from '../Requester';
-import type {Schema, Types} from '../../containers/Form/types';
 
 function isItemList(value: any): boolean {
     if (!Array.isArray(value) || value.length === 0) {
@@ -11,7 +10,7 @@ function isItemList(value: any): boolean {
     return value.every((item) => !!item && typeof item === 'object' && !Array.isArray(item));
 }
 
-function collectFromItems(items: Array<any>, types: Types, pending: Array<Object>) {
+function collectFromItems(items: Array<any>, types: Object, pending: Array<Object>) {
     items.forEach((item) => {
         if (typeof item._id !== 'string' || item._id === '') {
             pending.push(item);
@@ -26,7 +25,7 @@ function collectFromItems(items: Array<any>, types: Types, pending: Array<Object
     });
 }
 
-function collectFromValue(value: any, types: Types, pending: Array<Object>) {
+function collectFromValue(value: any, types: Object, pending: Array<Object>) {
     if (isItemList(value)) {
         collectFromItems(value, types, pending);
 
@@ -42,7 +41,7 @@ function collectFromValue(value: any, types: Types, pending: Array<Object>) {
     }
 }
 
-function collectFromSchema(schema: Schema, data: any, pending: Array<Object>) {
+function collectFromSchema(schema: Object, data: any, pending: Array<Object>) {
     if (!data || typeof data !== 'object') {
         return;
     }
@@ -104,7 +103,7 @@ const blockIdGenerator = {
 
     // Recursively assigns a generated `_id` to every typed item (block, image_map hotspot and any
     // nested variant) that does not have one yet, descending into each item's sub-form via `types`.
-    async ensureBlockIds(value: any, types: Types): Promise<any> {
+    async ensureBlockIds(value: any, types: Object): Promise<any> {
         if (value === undefined || value === null) {
             return null;
         }
