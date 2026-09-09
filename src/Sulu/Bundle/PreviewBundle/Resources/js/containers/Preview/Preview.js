@@ -283,7 +283,11 @@ class Preview extends React.Component<Props> {
                 }
 
                 this.updatePreview(data);
-            }
+            },
+            // Push the current form data once the preview is ready, so data that field types mutate
+            // during load (e.g. injected block ids) reaches the preview even when that mutation
+            // happened before this reaction was wired.
+            {fireImmediately: true}
         );
 
         this.schemaDisposer = reaction(
