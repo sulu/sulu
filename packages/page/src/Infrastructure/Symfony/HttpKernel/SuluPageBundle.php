@@ -71,6 +71,7 @@ use Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber\PageCacheInvalidatio
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\PageRouteDefaultsProvider;
 use Sulu\Page\Infrastructure\Sulu\Route\PageWebspaceRouteGenerator;
+use Sulu\Page\Infrastructure\Sulu\Route\WebspaceSiteLocaleProvider;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
 use Sulu\Page\Infrastructure\Sulu\Search\Visitor\AdminPageReindexProviderEnhancerInterface;
@@ -368,6 +369,14 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('request_stack'),
             ])
             ->tag('sulu_route.webspace_route_generator', ['webspace' => '.default']);
+
+        $services->set('sulu_page.webspace_site_locale_provider')
+            ->class(WebspaceSiteLocaleProvider::class)
+            ->decorate('sulu_route.site_locale_provider')
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('.inner'),
+            ]);
 
         $services->set('sulu_page.webspace_route_mode_typed_form_metadata_visitor')
             ->class(WebspaceRouteModeTypedFormMetadataVisitor::class)
