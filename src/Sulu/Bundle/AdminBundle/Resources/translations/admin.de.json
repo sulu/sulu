@@ -281,5 +281,16 @@
     "sulu_admin.link_target_blank": "_blank",
     "sulu_admin.link_target_self": "_self",
     "sulu_admin.link_target_parent": "_parent",
-    "sulu_admin.link_target_top": "_top"
+    "sulu_admin.link_target_top": "_top",
+    "sulu_admin.table.format_bold": "Fett",
+    "sulu_admin.table.format_italic": "Kursiv",
+    "sulu_admin.table.format_underline": "Unterstrichen",
+    "sulu_admin.table.insert_column": "Spalte einfügen",
+    "sulu_admin.table.insert_row": "Zeile einfügen",
+    "sulu_admin.table.fullscreen": "Vollbild",
+    "sulu_admin.table.column_title_placeholder": "Spaltentitel",
+    "sulu_admin.table.add_row": "Zeile",
+    "sulu_admin.table.add_column": "Spalte",
+    "sulu_admin.table.close": "Schließen",
+    "sulu_admin.table.edit_overlay_title": "Tabelle bearbeiten"
 }
