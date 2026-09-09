@@ -41,11 +41,6 @@ function collectBlockIds(data: mixed, ids: Set<string> = new Set()): Set<string>
     return ids;
 }
 
-// A collapsed block only renders its lightweight collapsed preview, not its nested fields (see
-// FieldBlocks.js's renderBlockContent), so a block nested inside a collapsed ancestor does not
-// exist in the DOM yet and can't be found by simply querying for it. This walks the raw form data
-// (not the DOM) to find the chain of block ids - from outermost ancestor to the target itself -
-// that needs to be expanded, in order, before the target block will actually be mounted.
 function findBlockIdPath(data: mixed, targetId: string, path: Array<string> = []): ?Array<string> {
     if (Array.isArray(data)) {
         for (const item of data) {
@@ -106,10 +101,6 @@ class Preview extends React.Component<Props> {
     @observable previewStore: PreviewStore;
     @observable previewWindow: any;
     @observable reloadCounter: number = 0;
-
-    // Bumped on every updatePreview call so an in-flight response can tell it has been superseded
-    // by a newer request (e.g. the user reordered/edited blocks again before this one resolved) and
-    // must not merge its now-stale backfilled ids into the live form data.
 
     schemaDisposer: () => mixed;
     dataDisposer: () => mixed;
@@ -322,10 +313,6 @@ class Preview extends React.Component<Props> {
             return;
         }
 
-        // Tracked per-render (not read live from formStore.data) so warnAboutMissingDeepLinkAttributes
-        // compares the "ready" ids against the data that actually produced this content, rather than
-        // whatever the user has already typed since - which could otherwise flag ids that are simply
-        // not rendered yet as "missing" from the template.
         this.renderedData = data;
 
         const preservedScrollPosition = this.getPreviewScrollPosition();

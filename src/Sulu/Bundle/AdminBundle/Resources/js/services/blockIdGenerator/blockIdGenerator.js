@@ -3,8 +3,6 @@ import symfonyRouting from 'fos-jsrouting/router';
 import Requester from '../Requester';
 import type {Schema, Types} from '../../containers/Form/types';
 
-// A "typed item" is an object stored inside a block/image_map list: it carries a `type` selecting
-// its sub-form and should carry a stable `_id`.
 function isItemList(value: any): boolean {
     if (!Array.isArray(value) || value.length === 0) {
         return false;
@@ -35,10 +33,6 @@ function collectFromValue(value: any, types: Types, pending: Array<Object>) {
         return;
     }
 
-    // A typed property does not always store its items directly as the value - image_map for
-    // example wraps them under a "hotspots" key alongside its own "imageId". The wrapping key is
-    // part of each field's storage format, not the schema, so scan the value's own array entries
-    // for the item list instead of hardcoding known keys.
     if (value && typeof value === 'object' && !Array.isArray(value)) {
         Object.keys(value).forEach((key) => {
             if (isItemList(value[key])) {
@@ -110,10 +104,6 @@ const blockIdGenerator = {
 
     // Recursively assigns a generated `_id` to every typed item (block, image_map hotspot and any
     // nested variant) that does not have one yet, descending into each item's sub-form via `types`.
-    // Resolves to a new value with the ids filled in, or null when every item already had one, so
-    // callers can skip a redundant onChange. Works on the raw data instead of the mounted
-    // components, so ids exist for the preview-to-admin navigation even for blocks inside a
-    // collapsed/never-expanded ancestor.
     async ensureBlockIds(value: any, types: Types): Promise<any> {
         if (value === undefined || value === null) {
             return null;

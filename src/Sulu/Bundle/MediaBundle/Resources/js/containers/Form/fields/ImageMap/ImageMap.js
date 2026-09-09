@@ -31,7 +31,7 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
     componentDidUpdate(prevProps: FieldTypeProps<Value>) {
         const {value} = this.props;
 
-        if (!equals(prevProps.value, value)){
+        if (!equals(prevProps.value, value)) {
             this.setValue(value);
 
             this.generateMissingBlockIds();
@@ -56,9 +56,7 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
         return blockIdGeneratorEnabled;
     }
 
-    // Backfills a generated `_id` on every hotspot that lacks one, independently of which hotspot
-    // tab is currently mounted, so the preview-to-admin navigation can resolve a hotspot to its
-    // form even before it has been opened.
+    // Backfills a generated `_id` on every hotspot that lacks one, regardless of mount state.
     generateMissingBlockIds = async() => {
         const {onChange, types, value} = this.props;
 
