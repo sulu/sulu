@@ -1,9 +1,9 @@
 // @flow
 import type {ComponentType} from 'react';
-import type {TextEditorProps} from '../types';
+import type {TextEditorAdapterProps} from '../types';
 
 class TextEditorRegistry {
-    textEditors: {[string]: ComponentType<TextEditorProps>};
+    textEditors: {[string]: ComponentType<TextEditorAdapterProps>};
 
     constructor() {
         this.clear();
@@ -17,7 +17,7 @@ class TextEditorRegistry {
         return name in this.textEditors;
     }
 
-    add(name: string, textEditor: ComponentType<TextEditorProps>) {
+    add(name: string, textEditor: ComponentType<TextEditorAdapterProps>) {
         if (this.has(name)) {
             throw new Error('The key "' + name + '" has already been used for another TextEditor');
         }

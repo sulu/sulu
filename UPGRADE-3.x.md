@@ -38,6 +38,39 @@ keeps it, so on a collision the higher priority resolver wins. The envelope keys
 and `extension` are seeded before any resolver runs, so a `[root]` resolver cannot claim them at
 any priority. Two resolvers returning the same `type` are not rejected; the later one replaces the
 earlier, as before this release.
+### Text editor configs decide which CKEditor plugins are loaded
+
+Which plugins a `text_editor` property loads now follows from the tags and features its text editor config enables,
+configured under `sulu_admin.text_editor.configs`. The `default` config Sulu ships reproduces the previous toolbar, so
+a project that configures nothing keeps the editor it had.
+
+Narrowing a config removes the matching plugin, and CKEditor drops markup no loaded plugin understands. A field whose
+config no longer allows `table` or `h2` therefore loses that markup as soon as the editor is edited and saved. Check
+existing content before narrowing a config for a field that is already in use.
+
+The `formats` and `enter_mode` params of a `text_editor` property are deprecated. They still work and still override
+the config, and will be removed in 4.0. Use the `config` param instead:
+
+```xml
+<property name="teaser" type="text_editor">
+    <params>
+        <param name="config" value="mini"/>
+    </params>
+</property>
+```
+
+### CKEditor plugin and config registries take a tag
+
+`ckeditorPluginRegistry` and `ckeditorConfigRegistry` gained an optional key argument, and the `configRegistry` a
+priority. Registering without a key keeps the previous behaviour of applying to every editor, so existing calls are
+unaffected. Their `plugins` and `configs` properties were replaced by `getPlugins(enabledKeys)` and
+`getConfigs(enabledKeys)`, because the result depends on the config of the edited property.
+
+### The CKEditor5 component takes a config instead of formats
+
+The `CKEditor5` container component replaced its `formats` and `options` props with a single `config` prop holding the
+resolved text editor config. Applications that render the component directly, rather than through the `TextEditor`
+container, have to pass it.
 
 ### Review permission
 

@@ -32,6 +32,10 @@ const LINK_VALIDATION_STATE_ATTRIBUTE = 'validationState';
 const LINK_TAG = 'sulu-link';
 
 export default class InternalLinkPlugin extends Plugin {
+    static get requires() {
+        return [ContextualBalloon];
+    }
+
     @observable openOverlay: ?string = undefined;
     @observable target: ?string = DEFAULT_TARGET;
     @observable id: ?string | number = undefined;

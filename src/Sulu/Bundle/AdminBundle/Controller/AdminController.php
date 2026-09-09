@@ -72,6 +72,7 @@ class AdminController
         private ?string $passwordPattern = null,
         private ?string $passwordInfoTranslationKey = null,
         private bool $hasSingleSignOnProvider = false,
+        private array $textEditorConfigs = [],
     ) {
     }
 
@@ -127,6 +128,7 @@ class AdminController
             'sulu_admin' => [
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
+                'textEditor' => ['configs' => $this->textEditorConfigs],
                 'localizations' => \array_values($this->localizationManager->getLocalizations()),
                 'navigation' => \array_map(function(NavigationItem $navigationItem) {
                     return $navigationItem->toArray();

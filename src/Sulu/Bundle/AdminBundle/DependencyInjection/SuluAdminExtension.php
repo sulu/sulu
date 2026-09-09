@@ -154,6 +154,50 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         );
     }
 
+    /**
+     * The text editor configs Sulu ships. A project config of the same name is merged into these, so a single tag can
+     * be switched off with "false" without restating the whole list.
+     *
+     * @var array<string, array{enter_mode: string, tags: array<string, bool>, features: array<string, bool>}>
+     */
+    private const DEFAULT_TEXT_EDITOR_CONFIGS = [
+        'default' => [
+            'enter_mode' => 'p',
+            'tags' => [
+                'br' => true,
+                'h2' => true,
+                'h3' => true,
+                'h4' => true,
+                'h5' => true,
+                'h6' => true,
+                'strong' => true,
+                'em' => true,
+                'u' => true,
+                's' => true,
+                'sub' => true,
+                'sup' => true,
+                'ul' => true,
+                'ol' => true,
+                'a' => true,
+                'table' => true,
+                'code' => true,
+            ],
+            'features' => [
+                'align' => true,
+            ],
+        ],
+        'mini' => [
+            'enter_mode' => 'br',
+            'tags' => [
+                'br' => true,
+                'a' => true,
+                'strong' => true,
+                'em' => true,
+            ],
+            'features' => [],
+        ],
+    ];
+
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = $this->getConfiguration($configs, $container);
@@ -172,6 +216,11 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_admin.templates.configuration', $config['templates']);
 
         $container->setParameter('sulu_admin.icon_sets', $config['icon_sets'] ?? []);
+
+        $container->setParameter(
+            'sulu_admin.text_editor_configs',
+            $this->buildTextEditorConfigs($config['text_editor']['configs'] ?? [])
+        );
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.php');
@@ -201,6 +250,48 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
             $config['field_type_options'] ?? [],
             $container
         );
+    }
+
+    /**
+     * Merges the project text editor configs into the ones Sulu ships and reduces the boolean maps to the list of
+     * enabled keys the administration interface consumes.
+     *
+     * @param array<string, array{enter_mode?: string, tags?: array<string, bool>, features?: array<string, bool>}> $textEditorConfigs
+     *
+     * @return array<string, array{enterMode: string, tags: string[], features: string[]}>
+     */
+    private function buildTextEditorConfigs(array $textEditorConfigs): array
+    {
+        $names = \array_unique([
+            ...\array_keys(self::DEFAULT_TEXT_EDITOR_CONFIGS),
+            ...\array_keys($textEditorConfigs),
+        ]);
+
+        $configs = [];
+
+        foreach ($names as $name) {
+            $defaults = self::DEFAULT_TEXT_EDITOR_CONFIGS[$name] ?? ['enter_mode' => 'p', 'tags' => [], 'features' => []];
+            $config = $textEditorConfigs[$name] ?? [];
+
+            $configs[$name] = [
+                'enterMode' => $config['enter_mode'] ?? $defaults['enter_mode'],
+                'tags' => $this->filterEnabledKeys($defaults['tags'], $config['tags'] ?? []),
+                'features' => $this->filterEnabledKeys($defaults['features'], $config['features'] ?? []),
+            ];
+        }
+
+        return $configs;
+    }
+
+    /**
+     * @param array<string, bool> $defaults
+     * @param array<string, bool> $config
+     *
+     * @return string[]
+     */
+    private function filterEnabledKeys(array $defaults, array $config): array
+    {
+        return \array_values(\array_keys(\array_filter(\array_merge($defaults, $config))));
     }
 
     public function loadFieldTypeOptions(

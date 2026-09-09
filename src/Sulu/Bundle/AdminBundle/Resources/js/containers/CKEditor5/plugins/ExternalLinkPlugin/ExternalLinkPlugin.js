@@ -30,6 +30,10 @@ const LINK_REL_ATTRIBUTE = 'externalLinkRel';
 const LINK_TAG = 'a';
 
 export default class ExternalLinkPlugin extends Plugin {
+    static get requires() {
+        return [ContextualBalloon];
+    }
+
     @observable open: boolean = false;
     @observable target: ?string = DEFAULT_TARGET;
     @observable title: ?string;

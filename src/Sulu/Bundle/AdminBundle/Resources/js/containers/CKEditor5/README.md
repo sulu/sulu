@@ -1,6 +1,7 @@
 This component uses the [CKEditor 5](https://ckeditor.com/ckeditor-5/) to display a text editor. Our component offers a
 `value` prop to set the value. There is also an `onChange` callback called when a value changes and a `onBlur` callback
-which is called when the editor loses the focus.
+which is called when the editor loses the focus. The `config` prop holds the resolved text editor config, which decides
+which plugins are loaded.
 
 ```javascript
 const [value, setValue] = React.useState('');
@@ -9,7 +10,12 @@ const handleChange = (newValue) => setValue(newValue);
 const handleBlur = () => alert('Text editing finished!');
 
 <div>
-    <CKEditor5 onBlur={this.handleBlur} onChange={handleChange} value={value} />
+    <CKEditor5
+        config={{enterMode: 'p', features: [], tags: ['strong', 'em']}}
+        onBlur={handleBlur}
+        onChange={handleChange}
+        value={value}
+    />
 
     Output: <pre>{value}</pre>
 </div>
@@ -34,3 +40,31 @@ plugin must be compatible with the ckeditor version used in your project (which 
 The `ConfigRegistry` takes a function, which receives the config which is already there. The return value of this 
 function will be shallow merged with the previously existing config. You can reuse the old values from the config, 
 as seen e.g. in the above code snippet.
+
+## Binding a plugin to a tag or feature
+
+Both registries take an optional second argument: the tag or feature the registration belongs to. Sulu then only loads
+that plugin and applies that config if the text editor config of the edited property enables the given key. A single
+registration can be bound to several keys, and is loaded as soon as one of them is enabled. A registration without a
+key is applied to every text editor config, which is why the example above keeps working unchanged.
+
+```javascript static
+import {ckeditorPluginRegistry, ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
+import {Table, TableToolbar} from '@ckeditor/ckeditor5-table';
+
+ckeditorPluginRegistry.add(Table, 'table');
+ckeditorPluginRegistry.add(TableToolbar, 'table');
+ckeditorConfigRegistry.add((config) => ({
+    toolbar: [...config.toolbar, 'insertTable'],
+}), 'table');
+```
+
+The tags and features themselves are configured in the Symfony configuration, see the `TextEditor` container. A key
+that is enabled there but has neither a plugin nor a config registered for it is reported with a warning in the
+browser console.
+
+The `ConfigRegistry` takes a priority as its third argument. Configs with a higher priority are applied first, and
+since a config usually appends to `config.toolbar`, a higher priority places the toolbar item further to the left. The
+default priority is `0`, so anything a project registers ends up behind the items Sulu ships. The config function also
+receives the resolved text editor config as its second argument, which is how the heading options are built from the
+enabled `h*` tags.

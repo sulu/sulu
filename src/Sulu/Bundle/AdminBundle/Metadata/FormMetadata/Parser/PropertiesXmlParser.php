@@ -456,6 +456,31 @@ class PropertiesXmlParser
         return $section;
     }
 
+    /**
+     * @param mixed[] $data
+     */
+    private function triggerDeprecatedTextEditorParams(FieldMetadata $property, array $data): void
+    {
+        if ('text_editor' !== $data['type']) {
+            return;
+        }
+
+        foreach ($data['params'] as $parameter) {
+            if (!\in_array($parameter['name'], ['formats', 'enter_mode'], true)) {
+                continue;
+            }
+
+            @trigger_deprecation(
+                'sulu/sulu',
+                '3.1',
+                'The "%s" param of the "text_editor" property "%s" is deprecated and will be removed in 4.0. ' .
+                'Use the "config" param with a config from "sulu_admin.text_editor.configs" instead.',
+                $parameter['name'],
+                $property->getName()
+            );
+        }
+    }
+
     private function mapProperty(FieldMetadata $property, $data): void
     {
         $data = $this->normalizePropertyData($data);
@@ -480,6 +505,8 @@ class PropertiesXmlParser
         $property->setOnInvalid(\array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
 
         // TODO schema
+
+        $this->triggerDeprecatedTextEditorParams($property, $data);
 
         foreach ($data['params'] as $parameter) {
             $option = new OptionMetadata();
