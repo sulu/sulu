@@ -113,6 +113,10 @@ class SmartContentPropertyResolver implements PropertyResolverInterface
             'maxPerPage' => $parameters['max_per_page'] ?? null,
             'includeSubFolders' => $data['includeSubFolders'] ?? false,
             'excludeDuplicates' => 'true' === $parameters['exclude_duplicates'] || true === $parameters['exclude_duplicates'],
+            // Ids to exclude from the result. Extended in the SmartContentSmartResolver with the currently
+            // rendered resource and, when excludeDuplicates is enabled, the already resolved ids. It can
+            // also be extended by custom smart content filters visitors.
+            'excluded' => [],
         ];
         $sortBy = $data['sortBy'] ?? null;
         $sortBys = null !== $sortBy ? [$sortBy => $data['sortMethod'] ?? 'ASC'] : [];

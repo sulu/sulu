@@ -39,6 +39,7 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Account
  *      offset: int,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
+ *      excluded?: string[],
  *  }
  * @phpstan-type AccountSmartContentCountFilters array{
  *      categories: int[],
@@ -56,6 +57,7 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Account
  *      limit: int|null,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
+ *      excluded?: string[],
  *  }
  */
 readonly class AccountSmartContentProvider implements SmartContentProviderInterface
@@ -129,6 +131,12 @@ readonly class AccountSmartContentProvider implements SmartContentProviderInterf
     ): void {
         foreach ($sortBys as $sortBy => $sortMethod) {
             $queryBuilder->orderBy($sortBy, $sortMethod);
+        }
+
+        $excluded = $filters['excluded'] ?? [];
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
         }
 
         $tagIds = $filters['tags'];
