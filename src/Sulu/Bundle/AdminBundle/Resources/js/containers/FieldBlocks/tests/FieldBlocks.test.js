@@ -3,6 +3,7 @@ import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {observable} from 'mobx';
 import Router from '../../../services/Router';
+import blockIdGenerator from '../../../services/blockIdGenerator';
 import fieldTypeDefaultProps from '../../../utils/TestHelper/fieldTypeDefaultProps';
 import FieldBlocks from '../FieldBlocks';
 import FormInspector from '../../Form/FormInspector';
@@ -2144,4 +2145,80 @@ test('Throw error if passed block_id_generator schema option is not a boolean', 
             value={[]}
         />
     )).toThrow('The "block" field types only accepts booleans as "block_id_generator" schema option!');
+});
+
+test('Should backfill missing block ids on mount when block_id_generator is enabled', async() => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+    const value = [{type: 'default'}];
+    const changeSpy = jest.fn();
+
+    const ensureBlockIdsSpy = jest.spyOn(blockIdGenerator, 'ensureBlockIds')
+        .mockReturnValue(Promise.resolve([{type: 'default', _id: 'generated-id'}]));
+
+    shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={{block_id_generator: {name: 'block_id_generator', value: true}}}
+            types={types}
+            value={value}
+        />
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(ensureBlockIdsSpy).toHaveBeenCalledWith(value, types);
+    expect(changeSpy).toHaveBeenCalledWith([{type: 'default', _id: 'generated-id'}]);
+
+    ensureBlockIdsSpy.mockRestore();
+});
+
+test('Should not backfill block ids on mount when block_id_generator is disabled', async() => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+    const changeSpy = jest.fn();
+
+    const ensureBlockIdsSpy = jest.spyOn(blockIdGenerator, 'ensureBlockIds');
+
+    shallow(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={{block_id_generator: {name: 'block_id_generator', value: false}}}
+            types={types}
+            value={[{type: 'default'}]}
+        />
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(ensureBlockIdsSpy).not.toHaveBeenCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+
+    ensureBlockIdsSpy.mockRestore();
 });
