@@ -22,7 +22,7 @@ class SitemapProviderPool implements SitemapProviderPoolInterface, ResetInterfac
     /**
      * @var SitemapProviderInterface[]
      */
-    private $providers;
+    private $providers = [];
 
     /**
      * @var array<string, Sitemap[]>

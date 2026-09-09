@@ -721,6 +721,82 @@ to better reflect that they come from the page package.
 - `sulu_breadcrumb` → `sulu_page_breadcrumb`
 - `sulu_navigation_is_active` → `sulu_page_navigation_is_active`
 
+### Sitemap Twig functions are based on the sitemap-providers
+
+The `sulu_sitemap` and `sulu_sitemap_url` Twig functions are still available, but `sulu_sitemap` no longer reads
+the pages directly from the removed PHPCR content query. It now returns the urls of every registered sitemap-provider
+(`sulu.sitemap.provider`) instead, which is the same source the XML sitemap (`/sitemap.xml`) is rendered from.
+
+Because of that a human readable sitemap contains pages, articles and every other custom routable entity which
+registers a sitemap-provider, and both sitemaps can not drift apart anymore.
+
+**What changed:**
+
+1. `sulu_sitemap` returns a flat list of `Sulu\Bundle\WebsiteBundle\Sitemap\SitemapUrl` objects instead of a nested
+   array of page structures. There is no `children` key anymore, because the urls of the different providers do not
+   share a common tree. Use the `sulu_page_navigation_tree` function if a nested page tree is required.
+2. The `loc` of a `SitemapUrl` is already an absolute url, so `sulu_sitemap_url` is not needed for the returned entries.
+3. The second argument of `sulu_sitemap` changed from `webspaceKey` to the `alias` of a single sitemap-provider.
+   The webspace is no longer a parameter, because the sitemap-providers resolve the urls by the host of the current
+   request - the same way the XML sitemap does.
+4. `sulu_sitemap_url` is unchanged and still resolves a slug to an absolute url of the given (or current) webspace
+   and locale.
+5. The new `sulu_sitemap_aliases` function returns the aliases of all registered sitemap-providers.
+
+**Old:**
+
+```twig
+{% macro sitemap(items) %}
+    <ul>
+        {% for item in items %}
+            <li>
+                <a href="{{ sulu_sitemap_url(item.url) }}">{{ item.title }}</a>
+                {% if item.children is not empty %}
+                    {{ _self.sitemap(item.children) }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{{ _self.sitemap(sulu_sitemap()) }}
+```
+
+**New:**
+
+```twig
+<ul>
+    {% for entry in sulu_sitemap() %}
+        <li><a href="{{ entry.loc }}">{{ entry.title|default(entry.loc) }}</a></li>
+    {% endfor %}
+</ul>
+```
+
+To group the urls by their content type, render one list per sitemap-provider:
+
+```twig
+{% for alias in sulu_sitemap_aliases() %}
+    <h2>{{ alias }}</h2>
+
+    <ul>
+        {% for entry in sulu_sitemap(alias: alias) %}
+            <li><a href="{{ entry.loc }}">{{ entry.title|default(entry.loc) }}</a></li>
+        {% endfor %}
+    </ul>
+{% endfor %}
+```
+
+The `title` of a `SitemapUrl` is optional and is only set by sitemap-providers which support it - the shipped page
+and article providers do. Custom providers can pass it as `title` argument of the `SitemapUrl` constructor.
+
+Sitemap-providers are paginated with `SitemapProviderInterface::PAGE_SIZE` (50000) urls per page. `sulu_sitemap`
+returns the first page by default, further pages can be requested with the third argument.
+
+**If you bridged the missing functions yourself:** projects which registered their own Twig extension providing a
+`sulu_sitemap` function keep their implementation - Twig resolves a function name to the last registered extension,
+and application extensions are registered after the bundle extensions. Remove your own extension to use the shipped
+one. The same applies to a project service definition which reuses the `sulu_website.twig.sitemap` service id.
+
 ### Navigation Twig Extension property filtering
 
 The navigation Twig functions and repository methods now support custom property filtering, and the default properties
@@ -1656,7 +1732,8 @@ Removed classes / services / interfaces / traits:
 - `Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGenerator`
 - `Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface`
 - `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\MemoizedSitemapTwigExtension`
-- `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtension`
+- `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtensionInterface`
+- `Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtension` (re-added with a new API and internal, see "Sitemap Twig functions are based on the sitemap-providers")
 - `Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface`
 - `Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathTwigExtension` (moved and internal)
 - `Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension`
