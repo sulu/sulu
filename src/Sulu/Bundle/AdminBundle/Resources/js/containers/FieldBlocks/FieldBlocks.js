@@ -33,6 +33,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     oldIconValue: ?Object;
     computedIcons: Array<Array<string>> = [];
     generatingBlockIds: boolean = false;
+    finishFieldDisposer: ?() => void;
 
     constructor(props: FieldTypeProps<Array<BlockEntry>>) {
         super(props);
@@ -41,6 +42,11 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     }
 
     @action componentDidMount() {
+        // Backfill missing block ids on any change to the page (not just this block field): every
+        // field's finish routes through the form inspector, so a title/url/any-field edit heals
+        // id-less blocks too. Never fires on mount, so opening a page stays clean.
+        this.finishFieldDisposer = this.props.formInspector.addFinishFieldHandler(this.handleFinishField);
+
         if (this.settingsFormKey) {
             // initialize empty blockSettingsFormStore because schema of the store is used for determining iconsMapping
             this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
@@ -98,7 +104,12 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
     componentWillUnmount() {
         this.blockSettingsFormStore?.destroy();
+        this.finishFieldDisposer?.();
     }
+
+    handleFinishField = () => {
+        this.generateMissingBlockIds(this.value);
+    };
 
     @computed get settingsFormKey() {
         const {
@@ -304,11 +315,9 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.setValue(newValues);
 
         onChange(newValues, context);
-
-        this.generateMissingBlockIds(newValues);
     };
 
-    // Backfills ids on blocks that have none, but only after a user change to the page (see the user-change handlers)
+    // Backfills ids on blocks that have none, triggered from the finish-field handler on any page change
     generateMissingBlockIds = async(value: Object) => {
         const {onChange, types} = this.props;
 
@@ -334,8 +343,6 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         this.setValue(value);
         onChange(value);
-
-        this.generateMissingBlockIds(value);
     };
 
     handleSortEnd = () => {
@@ -543,8 +550,6 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         this.setValue(newValue);
         onChange(newValue);
-
-        this.generateMissingBlockIds(newValue);
     };
 
     removeSections(blockSchemaTypeForm: Object) {

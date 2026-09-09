@@ -19,6 +19,17 @@ jest.mock('../../../services/Router/Router', () => jest.fn());
 jest.mock('../../Form/FormInspector', () => jest.fn(function() {
     this.isFieldModified = jest.fn();
     this.getSchemaEntryByPath = jest.fn();
+    this.finishFieldHandlers = [];
+    this.addFinishFieldHandler = jest.fn((handler) => {
+        this.finishFieldHandlers.push(handler);
+
+        return () => {
+            this.finishFieldHandlers = this.finishFieldHandlers.filter((existing) => existing !== handler);
+        };
+    });
+    this.finishField = jest.fn((dataPath, schemaPath) => {
+        this.finishFieldHandlers.forEach((handler) => handler(dataPath, schemaPath));
+    });
 }));
 jest.mock('../../Form/stores/metadataStore', () => ({
     getSchema: jest.fn().mockReturnValue(Promise.resolve({})),
@@ -2187,7 +2198,7 @@ test('Should not backfill block ids on mount even when block_id_generator is ena
     ensureBlockIdsSpy.mockRestore();
 });
 
-test('Should backfill missing block ids when blocks change and block_id_generator is enabled', async() => {
+test('Should backfill missing block ids on any page change when block_id_generator is enabled', async() => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {
         default: {
@@ -2200,13 +2211,13 @@ test('Should backfill missing block ids when blocks change and block_id_generato
             },
         },
     };
-    const changedValue = [{type: 'default'}];
+    const value = [{type: 'default'}];
     const changeSpy = jest.fn();
 
     const ensureBlockIdsSpy = jest.spyOn(blockIdGenerator, 'ensureBlockIds')
         .mockReturnValue(Promise.resolve([{type: 'default', _id: 'generated-id'}]));
 
-    const fieldBlocks = shallow(
+    shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
             defaultType="editor"
@@ -2214,22 +2225,23 @@ test('Should backfill missing block ids when blocks change and block_id_generato
             onChange={changeSpy}
             schemaOptions={{block_id_generator: {name: 'block_id_generator', value: true}}}
             types={types}
-            value={[{type: 'default'}]}
+            value={value}
         />
     );
 
-    fieldBlocks.find('BlockCollection').prop('onChange')(changedValue);
+    // A finish on any field of the page (e.g. the title) must heal id-less blocks, not only edits
+    // to this block field.
+    formInspector.finishField('/title', '/title');
 
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(ensureBlockIdsSpy).toHaveBeenCalledWith(changedValue, types);
-    expect(changeSpy).toHaveBeenCalledWith(changedValue);
+    expect(ensureBlockIdsSpy).toHaveBeenCalledWith(value, types);
     expect(changeSpy).toHaveBeenCalledWith([{type: 'default', _id: 'generated-id'}]);
 
     ensureBlockIdsSpy.mockRestore();
 });
 
-test('Should not backfill block ids when blocks change and block_id_generator is disabled', async() => {
+test('Should not backfill block ids on page change when block_id_generator is disabled', async() => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {
         default: {
@@ -2246,7 +2258,7 @@ test('Should not backfill block ids when blocks change and block_id_generator is
 
     const ensureBlockIdsSpy = jest.spyOn(blockIdGenerator, 'ensureBlockIds');
 
-    const fieldBlocks = shallow(
+    shallow(
         <FieldBlocks
             {...fieldTypeDefaultProps}
             defaultType="editor"
@@ -2258,7 +2270,7 @@ test('Should not backfill block ids when blocks change and block_id_generator is
         />
     );
 
-    fieldBlocks.find('BlockCollection').prop('onChange')([{type: 'default'}, {type: 'default'}]);
+    formInspector.finishField('/title', '/title');
 
     await new Promise((resolve) => setTimeout(resolve, 0));
 
