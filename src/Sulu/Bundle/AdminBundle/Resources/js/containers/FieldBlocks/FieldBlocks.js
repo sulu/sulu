@@ -41,8 +41,6 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     }
 
     @action componentDidMount() {
-        this.generateMissingBlockIds();
-
         if (this.settingsFormKey) {
             // initialize empty blockSettingsFormStore because schema of the store is used for determining iconsMapping
             this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
@@ -66,8 +64,6 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             if (!this.value || equals(toJS(this.value), toJS(prevProps.value))) {
                 this.setValue(value);
             }
-
-            this.generateMissingBlockIds();
         }
 
         if (!types || !oldTypes) {
@@ -308,10 +304,13 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.setValue(newValues);
 
         onChange(newValues, context);
+
+        this.generateMissingBlockIds(newValues);
     };
 
-    generateMissingBlockIds = async() => {
-        const {onChange, types, value} = this.props;
+    // Backfills ids on blocks that have none, but only after a user change to the page (see the user-change handlers)
+    generateMissingBlockIds = async(value: Object) => {
+        const {onChange, types} = this.props;
 
         if (this.generatingBlockIds || !this.generateBlockIds || !types || !value) {
             return;
@@ -335,6 +334,8 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         this.setValue(value);
         onChange(value);
+
+        this.generateMissingBlockIds(value);
     };
 
     handleSortEnd = () => {
@@ -542,6 +543,8 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         this.setValue(newValue);
         onChange(newValue);
+
+        this.generateMissingBlockIds(newValue);
     };
 
     removeSections(blockSchemaTypeForm: Object) {
