@@ -32,7 +32,6 @@ use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
-use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
@@ -70,11 +69,6 @@ class ContentObjectProviderTest extends TestCase
     private $contentDataMapper;
 
     /**
-     * @var ObjectProphecy<ContentMergerInterface>
-     */
-    private $contentMerger;
-
-    /**
      * @var ContentObjectProvider<ExampleDimensionContent, Example>
      */
     private $contentObjectProvider;
@@ -89,14 +83,12 @@ class ContentObjectProviderTest extends TestCase
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->contentDataMapper = $this->prophesize(ContentDataMapperInterface::class);
-        $this->contentMerger = $this->prophesize(ContentMergerInterface::class);
 
         $this->contentObjectProvider = new ContentObjectProvider(
             $metadataProviderRegistry,
             $this->entityManager->reveal(),
             $this->contentAggregator->reveal(),
             $this->contentDataMapper->reveal(),
-            $this->contentMerger->reveal(),
             Example::class,
             ExampleAdmin::SECURITY_CONTEXT
         );
@@ -345,7 +337,7 @@ class ContentObjectProviderTest extends TestCase
             $data
         )->shouldBeCalledTimes(1);
 
-        $this->contentMerger->merge(Argument::type(DimensionContentCollection::class))
+        $this->contentAggregator->aggregate($example, Argument::type('array'))
             ->willReturn($mergedDimensionContent)
             ->shouldBeCalledTimes(1);
 
@@ -446,7 +438,6 @@ class ContentObjectProviderTest extends TestCase
             $this->entityManager->reveal(),
             $this->contentAggregator->reveal(),
             $this->contentDataMapper->reveal(),
-            $this->contentMerger->reveal(),
             Example::class,
             null
         );

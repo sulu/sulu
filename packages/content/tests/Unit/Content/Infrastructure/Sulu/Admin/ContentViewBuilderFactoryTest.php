@@ -29,7 +29,6 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
-use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -104,7 +103,6 @@ class ContentViewBuilderFactoryTest extends TestCase
             $entityManager,
             $contentAggregator,
             $contentDataMapper,
-            $this->prophesize(ContentMergerInterface::class)->reveal(),
             $entityClass
         );
     }
