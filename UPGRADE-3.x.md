@@ -1,5 +1,44 @@
 # Upgrade
 
+## 3.1.0
+
+### Content resolvers declare their type and output path on the interface
+
+`ResolverInterface` gained two methods that every implementation must now provide:
+
+```php
+public function getType(): string;
+public function getOutputPath(): ?string;
+```
+
+`getType()` keys the resolver's output and replaces the tag's `type` attribute. `getOutputPath()`
+is a bracket path relative to the root that places the output in the resolved content view data.
+Return `null` to keep the location used before this release, `[extension][<type>]`; the empty
+string merges the output into the root itself. A path ending in `content` also writes the view to
+the sibling `view` key.
+
+Both are instance methods, unlike the static `getType()` on `PropertyResolverInterface` and
+`SmartResolverInterface`. Content resolvers are keyed at runtime rather than by the container, so
+a decorator can delegate to the resolver it decorates instead of repeating its type and path.
+
+Implementations are now tagged by autoconfiguration, so an explicit tag is only needed when
+autoconfiguration is off for the service:
+
+```php
+// nothing to register when the bundle's services are autoconfigured
+$services->set('acme_product.product_resolver', ProductResolver::class)
+    ->tag('sulu_content.content_resolver'); // only when autoconfigure is disabled
+```
+
+The `type` attribute on the `sulu_content.content_resolver` tag is no longer read. Set a
+`priority` with `#[AsTaggedItem(priority: 10)]` or the tag's `priority` attribute.
+
+Two resolvers may share an output path. The `priority` orders them and the first writer of a key
+keeps it, so on a collision the higher priority resolver wins. The envelope keys `content`, `view`
+and `extension` are seeded before any resolver runs, so a `[root]` resolver cannot claim them at
+any priority. Two resolvers returning the same `type` are not rejected; the later one replaces the
+earlier, as before this release.
+
 ## 3.0.9
 
 ### Widened webspace, slug and template key column lengths

@@ -119,12 +119,13 @@ use Webmozart\Assert\Assert;
  *  +---------------------------+
  *           |
  *           | normalize final content + view
+ *           | merge each resolver's output at its configured path
  *           | replace nested ContentView instances in content
  *           | merge field-level item view data into items
  *           | apply optional root property mapping
  *           |
  *           v
- *  array{resource: object, content: array, view: array, extension: array}
+ *  array{resource: object, content: array, view: array, extension: array, ...root-pathed resolver keys}
  *
  * @final
  */
@@ -338,12 +339,9 @@ readonly class ContentResolver implements ContentResolverInterface
             $dimensionContent->getResource(),
         );
 
-        $this->contentViewDataNormalizer->replaceNestedContentViews(
-            $normalizedContentData,
-            ['content']
-        );
+        $this->contentViewDataNormalizer->replaceNestedContentViews($normalizedContentData);
 
-        $normalizedContentData = $this->mergeFieldViewDataIntoItems($normalizedContentData, $viewEnhancements);
+        $normalizedContentData = $this->contentViewDataNormalizer->mergeFieldViewDataIntoItems($normalizedContentData, $viewEnhancements);
 
         if (null !== $properties && [] !== $properties) {
             $this->contentViewDataNormalizer->recursivelyMapProperties(
@@ -410,64 +408,5 @@ readonly class ContentResolver implements ContentResolverInterface
         }
 
         return \array_merge($existingView, [$itemsPropertyName => $items]);
-    }
-
-    /**
-     * Folds per-item field-level view data sitting at numeric indices into the
-     * corresponding `items` entry produced by viewEnhancements.
-     *
-     * @param array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>} $normalizedContentData
-     * @param array<string, array{path: list<int|string>, itemsPropertyName: ?string, items: list<mixed>}> $viewEnhancements
-     *
-     * @return array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>}
-     */
-    private function mergeFieldViewDataIntoItems(array $normalizedContentData, array $viewEnhancements): array
-    {
-        foreach ($viewEnhancements as $enhancement) {
-            $itemsPropertyName = $enhancement['itemsPropertyName'];
-            if (null === $itemsPropertyName) {
-                continue;
-            }
-
-            // strip the resolver-key segment that normalizeContentViewData flattens into [view]
-            $pathSegments = $enhancement['path'];
-            \array_shift($pathSegments);
-            if ([] === $pathSegments) {
-                continue;
-            }
-
-            $viewPath = '[view]' . $this->buildPropertyPath($pathSegments);
-            if (!$this->propertyAccessor->isReadable($normalizedContentData, $viewPath)) {
-                continue;
-            }
-
-            $viewValue = $this->propertyAccessor->getValue($normalizedContentData, $viewPath);
-            if (!\is_array($viewValue) || !isset($viewValue[$itemsPropertyName])) {
-                continue;
-            }
-
-            /** @var list<array<string, mixed>> $items */
-            $items = $viewValue[$itemsPropertyName];
-            foreach ($items as $index => $item) {
-                if (isset($viewValue[$index]) && \is_array($viewValue[$index])) {
-                    $items[$index] = \array_merge($item, $viewValue[$index]);
-                    unset($viewValue[$index]);
-                }
-            }
-
-            $viewValue[$itemsPropertyName] = $items;
-            $this->propertyAccessor->setValue($normalizedContentData, $viewPath, $viewValue);
-        }
-
-        /** @var array{resource: object, content: array<string, mixed>, view: array<string, mixed>, extension: array<string, array<string, mixed>>} $normalizedContentData */
-        return $normalizedContentData;
-    }
-
-    /**
-     * @param list<int|string> $segments
-     */
-    private function buildPropertyPath(array $segments): string
-    {
-        return '[' . \implode('][', $segments) . ']';
     }
 }

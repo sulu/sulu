@@ -76,4 +76,14 @@ readonly class TemplateResolver implements ResolverInterface
             []
         );
     }
+
+    public function getType(): string
+    {
+        return 'template';
+    }
+
+    public function getOutputPath(): ?string
+    {
+        return '[content]';
+    }
 }

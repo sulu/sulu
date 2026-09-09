@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Symfony\HttpKernel;
 
+use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataAwareInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
@@ -137,6 +138,9 @@ final class SuluContentBundle extends AbstractBundle
 
         $container->registerForAutoconfiguration(ResourceLoaderInterface::class)
             ->addTag('sulu_content.resource_loader');
+
+        $container->registerForAutoconfiguration(ResolverInterface::class)
+            ->addTag('sulu_content.content_resolver');
 
         $container->registerForAutoconfiguration(PropertyResolverInterface::class)
             ->addTag('sulu_content.property_resolver');

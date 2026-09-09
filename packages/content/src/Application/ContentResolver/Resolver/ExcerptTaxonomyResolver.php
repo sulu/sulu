@@ -181,4 +181,14 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
     {
         return 'excerpt.';
     }
+
+    public function getType(): string
+    {
+        return 'excerpt';
+    }
+
+    public function getOutputPath(): ?string
+    {
+        return null;
+    }
 }

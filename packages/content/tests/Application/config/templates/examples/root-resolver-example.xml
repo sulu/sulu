@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>root-resolver-example</key>
+
+    <view>@ExampleTest/examples/default</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
+    <cacheLifetime>604800</cacheLifetime>
+
+    <meta>
+        <title lang="en">Root resolver example</title>
+        <title lang="de">Root resolver example</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="de">Titel</title>
+            </meta>
+
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+
+            <tag name="sulu.rlp.part"/>
+            <tag name="sulu.search.field" role="title"/>
+        </property>
+
+        <property name="url" type="route">
+            <meta>
+                <title lang="en">Resourcelocator</title>
+                <title lang="de">Adresse</title>
+            </meta>
+
+            <tag name="sulu.rlp"/>
+            <tag name="sulu.search.field" role="url"/>
+        </property>
+
+        <property name="related" type="example_selection">
+            <meta>
+                <title lang="en">Related</title>
+                <title lang="de">Verwandt</title>
+            </meta>
+        </property>
+    </properties>
+</template>
