@@ -52,7 +52,7 @@ interface ContactRepositoryInterface extends RepositoryInterface
      *
      * @param int|null $limit Page size for Pagination
      * @param int|null $offset Offset for Pagination
-     * @param array|null $sorting Columns to sort
+     * @param array<string, string>|null $sorting Columns to sort, column => direction
      * @param array|null $where Where clauses
      *
      * @return array
