@@ -3,6 +3,7 @@ import {action, autorun, observable, set, toJS, when} from 'mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
 import ResourceRequester from '../../services/ResourceRequester';
+import resourceRouteRegistry from '../../services/ResourceRequester/registries/resourceRouteRegistry';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ObservableOptions} from './types';
 
@@ -60,7 +61,12 @@ export default class ResourceStore {
         }
 
         if (!id) {
-            this.initialized = true;
+            if (resourceRouteRegistry.hasRoute('prefill', this.resourceKey)) {
+                this.prefill();
+            } else {
+                this.initialized = true;
+            }
+
             return;
         }
 
@@ -100,6 +106,39 @@ export default class ResourceStore {
 
                     this.setUnexpectedError(true);
                 }
+            }));
+    };
+
+    prefill = () => {
+        const {
+            observableOptions: {
+                locale,
+            },
+        } = this;
+
+        log.info('ResourceStore prefills "' + this.resourceKey + '" data');
+
+        this.setLoading(true);
+
+        const options = {...this.loadOptions};
+        if (locale) {
+            options.locale = locale.get();
+        }
+
+        ResourceRequester.prefill(this.resourceKey, options)
+            .then(action((response: Object) => {
+                this.setMultiple(response);
+                this.initialized = true;
+                this.setLoading(false);
+                this.dirty = false;
+            }))
+            .catch(action((response: Object) => {
+                this.initialized = true;
+                this.setLoading(false);
+                log.error(
+                    'ResourceStore prefill "' + this.resourceKey
+                    + '" failed with Status code "' + response.status + '"'
+                );
             }));
     };
 
