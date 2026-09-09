@@ -33,6 +33,7 @@ class TeaserSelectionPropertyResolverTest extends TestCase
 
         $this->assertSame([], $contentView->getContent());
         $this->assertSame(['presentAs' => null, 'items' => []], $contentView->getView());
+        $this->assertSame([], $contentView->getReferences());
     }
 
     public function testResolveWrongData(): void
@@ -41,6 +42,7 @@ class TeaserSelectionPropertyResolverTest extends TestCase
 
         $this->assertSame([], $contentView->getContent());
         $this->assertSame(['presentAs' => null, 'items' => []], $contentView->getView());
+        $this->assertSame([], $contentView->getReferences());
     }
 
     public function testResolveParams(): void
@@ -83,6 +85,13 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $this->assertCount(2, $view['items']);
         $this->assertSame(['id' => '123', 'type' => 'article'], $view['items'][0]);
         $this->assertSame(['id' => '456', 'type' => 'page'], $view['items'][1]);
+
+        $references = $contentView->getReferences();
+        $this->assertCount(2, $references);
+        $this->assertSame('123', $references[0]->getResourceId());
+        $this->assertSame('article', $references[0]->getResourceKey());
+        $this->assertSame('456', $references[1]->getResourceId());
+        $this->assertSame('page', $references[1]->getResourceKey());
     }
 
     public function testResolveCustomResourceLoader(): void
@@ -103,6 +112,33 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $resolvable);
         $this->assertSame('article::123', $resolvable->getId());
         $this->assertSame('custom_teaser', $resolvable->getResourceLoaderKey());
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('123', $references[0]->getResourceId());
+        $this->assertSame('article', $references[0]->getResourceKey());
+    }
+
+    public function testResolveDataWithEmptyIdOrType(): void
+    {
+        $data = [
+            'items' => [
+                ['id' => '', 'type' => 'article'],
+                ['id' => '123', 'type' => ''],
+                ['id' => '456', 'type' => 'page'],
+            ],
+        ];
+
+        $contentView = $this->resolver->resolve($data, 'en');
+
+        $content = $contentView->getContent();
+        $this->assertIsArray($content);
+        $this->assertCount(3, $content);
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('456', $references[0]->getResourceId());
+        $this->assertSame('page', $references[0]->getResourceKey());
     }
 
     public function testResolveWithResourceCallback(): void
