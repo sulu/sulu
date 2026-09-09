@@ -11,9 +11,7 @@ jest.mock('../../../../utils/Translator', () => ({
 
 // The inner form inspector of the container: value, errors and modified state live in its store.
 jest.mock('../../../Form/FormInspector', () => jest.fn(function() {
-    this.errors = {};
     this.getValueByPath = jest.fn((dataPath) => this.data[dataPath.substring(1)]);
-    this.isFieldModified = jest.fn(() => false);
 }));
 
 // The container Field is the real form field renderer; stand in with an input that shows what it got.
@@ -61,13 +59,12 @@ const formInspector: FormInspector = new FormInspector();
 function renderComponent(props: Object = {}) {
     // $FlowFixMe
     formInspector.data = props.data || DATA;
-    // $FlowFixMe
-    formInspector.errors = props.errors || {};
 
     return render(
         <ProductAttributesRenderer
             data={DATA}
             disabled={false}
+            errors={{}}
             filter=""
             formInspector={formInspector}
             hideEmpty={false}
@@ -75,7 +72,6 @@ function renderComponent(props: Object = {}) {
             onFinish={jest.fn()}
             router={undefined}
             schema={SCHEMA}
-            showAllErrors={false}
             {...props}
         />
     );
@@ -118,26 +114,15 @@ test('emits the field name and finishes the field with its paths', async() => {
     expect(onFinish).toHaveBeenCalledWith('/attribute_8', '/attribute_group_1/items/attribute_8');
 });
 
-const ERRORS = {
-    attribute_7: {keyword: 'maximum', parameters: {}},
-    attribute_9: {keyword: 'required', parameters: {}},
-};
-
-test('shows the store errors on the rows when all errors are shown', () => {
-    renderComponent({errors: ERRORS, showAllErrors: true});
+test('shows the given errors on their rows', () => {
+    renderComponent({errors: {
+        attribute_7: {keyword: 'maximum', parameters: {}},
+        attribute_9: {keyword: 'required', parameters: {}},
+    }});
 
     expect(screen.getAllByRole('textbox')[0]).toHaveAttribute('data-error', 'maximum');
     expect(screen.getAllByRole('textbox')[1]).not.toHaveAttribute('data-error');
     expect(screen.getAllByRole('textbox')[2]).toHaveAttribute('data-error', 'required');
-});
-
-test('hides the store errors until a row was modified', () => {
-    formInspector.isFieldModified.mockImplementation((dataPath) => dataPath === '/attribute_7');
-    renderComponent({errors: ERRORS, showAllErrors: false});
-
-    expect(screen.getAllByRole('textbox')[0]).toHaveAttribute('data-error', 'maximum');
-    expect(screen.getAllByRole('textbox')[2]).not.toHaveAttribute('data-error');
-    formInspector.isFieldModified.mockImplementation(() => false);
 });
 
 test('hides empty rows and empty groups when hideEmpty is set', () => {

@@ -11,19 +11,21 @@ import FormInspector from '../../Form/FormInspector';
 import memoryFormStoreFactory from '../../Form/stores/memoryFormStoreFactory';
 import ProductAttributesRenderer from './ProductAttributesRenderer';
 import isEmpty from './isEmpty';
-import {NAME_PREFIX} from './namePrefix';
+import {NAME_PREFIX} from './constants';
 import productAttributesRendererStyles from './productAttributesRenderer.scss';
-import type {ErrorCollection, FormStoreInterface} from '../../Form/types';
+import type {Error as FieldError, ErrorCollection, FormStoreInterface} from '../../Form/types';
 
 const FORM_KEY = 'product_attributes';
 
 type Props = {|
     dataPath: string,
     disabled: boolean,
+    error?: ?FieldError | ErrorCollection,
     formInspector: FormInspector,
     onChange: (value: {[string]: mixed}) => void,
-    onFinish: () => void,
+    onFinish: (dataPath: string, schemaPath: string) => void,
     router: ?Router,
+    schemaPath: string,
     showAllErrors: boolean,
     value: ?{[string]: mixed},
     variant: boolean,
@@ -33,8 +35,8 @@ type Selector = {productFamily: string} | {product: string};
 
 /**
  * Edits a product's attribute values in its own form store, built from the product_attributes form
- * of the selected family (or the parent's family for a new variant). Errors in this store block
- * the save of the host form.
+ * of the selected family (or the parent's family for a new variant). The host form validates the
+ * values through its JSON schema, the errors come back through the field's error prop.
  *
  * The store keys its data by field name (attribute_<id>), the host value by attribute id.
  *
@@ -48,13 +50,9 @@ class ProductAttributes extends React.Component<Props> {
     @observable filter: string = '';
 
     selectorDisposer: () => void;
-    removeFieldValidator: () => void;
 
     constructor(props: Props) {
         super(props);
-
-        const {dataPath, formInspector} = props;
-        this.removeFieldValidator = formInspector.addFieldValidator(dataPath, this.validate);
 
         this.selectorDisposer = reaction(
             () => this.selector,
@@ -71,7 +69,6 @@ class ProductAttributes extends React.Component<Props> {
 
     componentWillUnmount() {
         this.selectorDisposer();
-        this.removeFieldValidator();
         this.destroyFormStore();
     }
 
@@ -159,16 +156,29 @@ class ProductAttributes extends React.Component<Props> {
         }
     }
 
-    validate = (): ?ErrorCollection => {
-        const {formStore} = this;
-        if (!formStore || formStore.loading) {
-            return undefined;
+    /*
+     * The host errors sit at /attributes/<id>; a row shows its error once touched or when the form asks for all.
+     * The numeric ids make the host store build an observable array, read as a plain one like FieldBlocks does.
+     */
+    @computed get errors(): {[string]: FieldError} {
+        const {dataPath, error, formInspector, showAllErrors} = this.props;
+        const errors = {};
+
+        if (!error || typeof error !== 'object' || typeof error.keyword === 'string') {
+            return errors;
         }
 
-        formStore.validate();
+        // $FlowFixMe: an object or an array, both read by their set keys
+        const rowErrors: {[string]: ?FieldError} = toJS(error);
+        Object.keys(rowErrors).forEach((id) => {
+            const rowError = rowErrors[id];
+            if (rowError && (showAllErrors || formInspector.isFieldModified(dataPath + '/' + id))) {
+                errors[NAME_PREFIX + id] = rowError;
+            }
+        });
 
-        return formStore.hasErrors ? toJS(formStore.errors) : undefined;
-    };
+        return errors;
+    }
 
     handleChange = (name: string, fieldValue: mixed) => {
         const {formStore} = this;
@@ -180,16 +190,12 @@ class ProductAttributes extends React.Component<Props> {
         this.props.onChange({...this.value, [name.substring(NAME_PREFIX.length)]: fieldValue});
     };
 
-    // Same steps as Form.handleFieldFinish on the inner form, then the host field finishes.
-    handleFinish = (dataPath: string, schemaPath: string) => {
-        const {formInspector, formStore} = this;
-        if (!formStore || !formInspector) {
-            throw new Error('A row finished without a form store. This should not happen and is likely a bug.');
-        }
+    // The row finishes on the host form under its host path, so the host validates and marks it modified.
+    handleFinish = (rowDataPath: string) => {
+        const {dataPath, onFinish, schemaPath} = this.props;
+        const id = rowDataPath.substring(1 + NAME_PREFIX.length);
 
-        formStore.validate();
-        formInspector.finishField(dataPath, schemaPath);
-        this.props.onFinish();
+        onFinish(dataPath + '/' + id, schemaPath);
     };
 
     @action handleHideEmptyChange = (checked: boolean) => {
@@ -226,7 +232,7 @@ class ProductAttributes extends React.Component<Props> {
     }
 
     render() {
-        const {disabled, router, showAllErrors} = this.props;
+        const {disabled, router} = this.props;
         const {formInspector, formStore} = this;
 
         if (!formStore || !formInspector) {
@@ -245,6 +251,7 @@ class ProductAttributes extends React.Component<Props> {
             <ProductAttributesRenderer
                 data={formStore.data}
                 disabled={disabled}
+                errors={this.errors}
                 filter={this.filter}
                 formInspector={formInspector}
                 hideEmpty={this.hideEmpty}
@@ -252,7 +259,6 @@ class ProductAttributes extends React.Component<Props> {
                 onFinish={this.handleFinish}
                 router={router}
                 schema={formStore.schema}
-                showAllErrors={showAllErrors}
                 toolbar={this.renderToolbar()}
             />
         );

@@ -30,7 +30,6 @@ jest.mock('../stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.getSchemaEntryByPath = jest.fn();
     this.finishField = jest.fn();
     this.isFieldModified = jest.fn();
-    this.addFieldValidator = jest.fn();
 }));
 
 test('Should return the resourceKey from the ResourceFormStore', () => {
@@ -109,26 +108,6 @@ test('Should return the values for a given tag by using the ResourceFormStore', 
 
     expect(formInspector.getValuesByTag('/test')).toBe(data);
     expect(formStore.getValuesByTag).toHaveBeenCalledWith('/test');
-});
-
-test('Should register a field validator on the formStore and return its remover', () => {
-    const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
-    const removeValidator = jest.fn();
-    formStore.addFieldValidator.mockReturnValue(removeValidator);
-    const formInspector = new FormInspector(formStore);
-    const validator = jest.fn();
-
-    expect(formInspector.addFieldValidator('/attributes', validator)).toBe(removeValidator);
-    expect(formStore.addFieldValidator).toHaveBeenCalledWith('/attributes', validator);
-});
-
-test('Should ignore a field validator when the formStore does not support them', () => {
-    const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
-    // $FlowFixMe: a store from before field validators existed
-    formStore.addFieldValidator = undefined;
-    const formInspector = new FormInspector(formStore);
-
-    expect(formInspector.addFieldValidator('/attributes', jest.fn())).toEqual(expect.any(Function));
 });
 
 test('Should call finishField method from formStore', () => {

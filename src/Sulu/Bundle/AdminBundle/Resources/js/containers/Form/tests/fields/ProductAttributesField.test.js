@@ -19,7 +19,9 @@ jest.mock('../../../Product/ProductAttributes', () => function ProductAttributes
         JSON.stringify({
             dataPath: props.dataPath,
             disabled: props.disabled,
+            error: props.error,
             hasFormInspector: !!props.formInspector,
+            schemaPath: props.schemaPath,
             showAllErrors: props.showAllErrors,
             value: props.value,
             variant: props.variant,
@@ -31,7 +33,7 @@ jest.mock('../../../Product/ProductAttributes', () => function ProductAttributes
         ),
         React.createElement(
             'button',
-            {onClick: () => props.onFinish(), type: 'button'},
+            {onClick: () => props.onFinish('/attributes/7', '/attributes'), type: 'button'},
             'finish'
         )
     );
@@ -49,20 +51,24 @@ function renderField(props: Object = {}) {
             {...fieldTypeDefaultProps}
             dataPath="/attributes"
             formInspector={formInspector}
+            schemaPath="/attributes"
             value={{'7': null}}
             {...props}
         />
     );
 }
 
-test('passes value, data path, showAllErrors and disabled through to the container', () => {
-    renderField({disabled: true, showAllErrors: true});
+test('passes value, paths, errors and disabled through to the container', () => {
+    const error = {'7': {keyword: 'maximum', parameters: {}}};
+    renderField({disabled: true, error, showAllErrors: true});
 
     const json = screen.getByTestId('container').textContent.replace('change', '').replace('finish', '');
     expect(JSON.parse(json)).toEqual({
         dataPath: '/attributes',
         disabled: true,
+        error,
         hasFormInspector: true,
+        schemaPath: '/attributes',
         showAllErrors: true,
         value: {'7': null},
         variant: false,
@@ -91,5 +97,5 @@ test('calls onChange with the new value and onFinish when a row finishes', async
     expect(onFinish).not.toHaveBeenCalled();
 
     await userEvent.click(screen.getByText('finish'));
-    expect(onFinish).toHaveBeenCalledTimes(1);
+    expect(onFinish).toHaveBeenCalledWith('/attributes/7', '/attributes');
 });

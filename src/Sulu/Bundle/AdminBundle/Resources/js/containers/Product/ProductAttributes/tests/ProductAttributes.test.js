@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {observable} from 'mobx';
 import {act, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import metadataStore from '../../../Form/stores/metadataStore';
@@ -37,8 +38,7 @@ jest.mock('../../../Form/FormInspector', () => {
         this.locale = observable.box('en');
         this.options = {};
         this.getValueByPath = jest.fn((path) => path === '/productFamily' ? this.family.get() : undefined);
-        this.removeFieldValidator = jest.fn();
-        this.addFieldValidator = jest.fn(() => this.removeFieldValidator);
+        this.isFieldModified = jest.fn(() => false);
     });
 });
 
@@ -55,10 +55,10 @@ jest.mock('../ProductAttributesRenderer', () => function ProductAttributesRender
         React.createElement('span', {'data-testid': 'renderer-props'}, JSON.stringify({
             data: props.data,
             disabled: props.disabled,
+            errors: props.errors,
             filter: props.filter,
             hideEmpty: props.hideEmpty,
             schema: props.schema,
-            showAllErrors: props.showAllErrors,
         })),
         props.toolbar,
         React.createElement(
@@ -112,6 +112,7 @@ function renderComponent(props: Object = {}) {
             onChange={jest.fn()}
             onFinish={jest.fn()}
             router={undefined}
+            schemaPath="/attributes"
             showAllErrors={false}
             value={{'7': null}}
             variant={false}
@@ -160,10 +161,10 @@ test('shows a loader until the metadata resolved, then the renderer with the inn
     expect(JSON.parse(screen.getByTestId('renderer-props').textContent)).toEqual({
         data: {attribute_7: 3},
         disabled: false,
+        errors: {},
         filter: '',
         hideEmpty: false,
         schema: SCHEMA,
-        showAllErrors: false,
     });
     expect(rendererProps.formInspector.getValueByPath('/attribute_7')).toEqual(3);
     expect(rendererProps.formInspector.locale.get()).toEqual('en');
@@ -185,7 +186,7 @@ test('falls back to the parent product from the form options', () => {
     FormInspectorMock.mockImplementationOnce(function() {
         this.options = {parentId: 'product-1'};
         this.getValueByPath = jest.fn(() => undefined);
-        this.addFieldValidator = jest.fn(() => jest.fn());
+        this.isFieldModified = jest.fn(() => false);
     });
 
     renderComponent({variant: true});
@@ -200,7 +201,7 @@ test('renders a hint and requests nothing without a family', () => {
     FormInspectorMock.mockImplementationOnce(function() {
         this.options = {};
         this.getValueByPath = jest.fn(() => undefined);
-        this.addFieldValidator = jest.fn(() => jest.fn());
+        this.isFieldModified = jest.fn(() => false);
     });
 
     renderComponent();
@@ -246,6 +247,7 @@ test('follows a value replaced from outside without marking the inner store dirt
             onChange={jest.fn()}
             onFinish={jest.fn()}
             router={undefined}
+            schemaPath="/attributes"
             showAllErrors={false}
             value={{'7': 5}}
             variant={false}
@@ -256,59 +258,53 @@ test('follows a value replaced from outside without marking the inner store dirt
     expect(rendererProps.formInspector.formStore.dirty).toEqual(false);
 });
 
-test('validates the inner store when a row finishes and finishes the host field', async() => {
+test('finishes the row on the host form with its host paths', async() => {
     const onFinish = jest.fn();
-    await renderLoaded({onFinish, value: {'7': 999}});
-    const finishFieldHandler = jest.fn();
-    rendererProps.formInspector.addFinishFieldHandler(finishFieldHandler);
+    await renderLoaded({onFinish});
 
     await userEvent.click(screen.getByText('finish'));
 
-    expect(rendererProps.formInspector.errors).toEqual(
-        {attribute_7: {keyword: 'maximum', parameters: {comparison: '<=', limit: 10}}}
+    expect(onFinish).toHaveBeenCalledWith('/attributes/7', '/attributes');
+});
+
+test('passes the host errors of touched rows to the renderer, keyed by field name', async() => {
+    const error = {'7': {keyword: 'maximum', parameters: {}}, '8': {keyword: 'required', parameters: {}}};
+    const {formInspector} = await renderLoaded({error, value: {'7': 999}});
+
+    expect(JSON.parse(screen.getByTestId('renderer-props').textContent).errors).toEqual({});
+
+    formInspector.isFieldModified.mockImplementation((dataPath) => dataPath === '/attributes/7');
+    act(() => {
+        // $FlowFixMe
+        formInspector.family.set('family-1x');
+    });
+    expect(await screen.findByTestId('renderer')).toBeInTheDocument();
+
+    expect(JSON.parse(screen.getByTestId('renderer-props').textContent).errors).toEqual(
+        {attribute_7: {keyword: 'maximum', parameters: {}}}
     );
-    expect(rendererProps.formInspector.isFieldModified('/attribute_7')).toEqual(true);
-    // the inner inspector's finish-field handlers run, like the host form's do
-    expect(finishFieldHandler).toHaveBeenCalledWith('/attribute_7', '/attribute_group_1/items/attribute_7');
-    expect(onFinish).toHaveBeenCalledTimes(1);
 });
 
-test('registers a validator on the host form that validates the inner store', async() => {
-    const {formInspector} = await renderLoaded({value: {'7': 999}});
+test('passes every host error to the renderer when all errors are shown', async() => {
+    const error = {'7': {keyword: 'maximum', parameters: {}}, '8': {keyword: 'required', parameters: {}}};
+    await renderLoaded({error, showAllErrors: true});
 
-    expect(formInspector.addFieldValidator).toHaveBeenCalledWith('/attributes', expect.any(Function));
-    const validator = formInspector.addFieldValidator.mock.calls[0][1];
-
-    expect(validator()).toEqual({attribute_7: {keyword: 'maximum', parameters: {comparison: '<=', limit: 10}}});
-    expect(rendererProps.formInspector.errors).toEqual(
-        {attribute_7: {keyword: 'maximum', parameters: {comparison: '<=', limit: 10}}}
-    );
-
-    await userEvent.click(screen.getByText('change'));
-    expect(validator()).toEqual(undefined);
+    expect(JSON.parse(screen.getByTestId('renderer-props').textContent).errors).toEqual({
+        attribute_7: {keyword: 'maximum', parameters: {}},
+        attribute_8: {keyword: 'required', parameters: {}},
+    });
 });
 
-test('the host validator reports a missing required value', async() => {
-    const {formInspector} = await renderLoaded({value: {'7': null}});
-    const validator = formInspector.addFieldValidator.mock.calls[0][1];
+test('reads the host errors from the observable array the form store builds for numeric ids', async() => {
+    // jsonpointer.set(errors, '/attributes/7', ...) creates a sparse array, the store's @observable wraps it
+    const hostErrors = [];
+    hostErrors[7] = {keyword: 'maximum', parameters: {}};
+    const {attributes: error} = observable({attributes: hostErrors});
+    await renderLoaded({error, showAllErrors: true});
 
-    expect(validator()).toEqual({attribute_7: {keyword: 'required', parameters: {missingProperty: 'attribute_7'}}});
-});
-
-test('the host validator passes while the metadata is still loading', () => {
-    metadataStore.getSchema.mockReturnValue(deferred().promise);
-    const {formInspector} = renderComponent();
-    const validator = formInspector.addFieldValidator.mock.calls[0][1];
-
-    expect(validator()).toEqual(undefined);
-});
-
-test('removes the host validator on unmount', async() => {
-    const {formInspector, unmount} = await renderLoaded();
-
-    unmount();
-
-    expect(formInspector.removeFieldValidator).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(screen.getByTestId('renderer-props').textContent).errors).toEqual({
+        attribute_7: {keyword: 'maximum', parameters: {}},
+    });
 });
 
 test('toggles hide empty', async() => {
@@ -327,11 +323,4 @@ test('passes the typed filter to the renderer', async() => {
 
     // eslint-disable-next-line jest-dom/prefer-to-have-text-content
     expect(screen.getByTestId('renderer-props').textContent).toContain('"filter":"vol"');
-});
-
-test('passes showAllErrors to the renderer', async() => {
-    await renderLoaded({showAllErrors: true});
-
-    // eslint-disable-next-line jest-dom/prefer-to-have-text-content
-    expect(screen.getByTestId('renderer-props').textContent).toContain('"showAllErrors":true');
 });

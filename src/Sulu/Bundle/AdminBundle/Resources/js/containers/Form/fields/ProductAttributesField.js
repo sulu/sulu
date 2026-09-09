@@ -13,16 +13,18 @@ export default class ProductAttributesField extends React.Component<Props> {
         this.props.onChange(value);
     };
 
-    handleFinish = () => {
-        this.props.onFinish();
+    handleFinish = (rowDataPath: string, rowSchemaPath: string) => {
+        this.props.onFinish(rowDataPath, rowSchemaPath);
     };
 
     render() {
         const {
             dataPath,
             disabled,
+            error,
             formInspector,
             router,
+            schemaPath,
             schemaOptions: {
                 variant: {
                     value: variant,
@@ -40,10 +42,12 @@ export default class ProductAttributesField extends React.Component<Props> {
             <ProductAttributes
                 dataPath={dataPath}
                 disabled={!!disabled}
+                error={error}
                 formInspector={formInspector}
                 onChange={this.handleChange}
                 onFinish={this.handleFinish}
                 router={router}
+                schemaPath={schemaPath}
                 showAllErrors={showAllErrors}
                 value={value}
                 variant={!!variant}

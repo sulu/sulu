@@ -21,6 +21,7 @@ API needs a matching sulu release.
   and renders it through `ProductAttributesRenderer` as one collapsible card per attribute group.
   The container owns a memory form store for that form (`memoryFormStoreFactory.createFromFormKey`,
   data keyed by field name `attribute_<id>`, the host value by `<id>`) and its own `FormInspector`
-  for the rows, validates the store when a row finishes, and registers the store's validation on the
-  host form (`formInspector.addFieldValidator`) so a save is blocked with the usual inline row error.
+  for the rows. Validation is the host form's: its JSON schema carries the family's attribute rules
+  (an `if/then` branch per family, like block types), a row finishes on the host under
+  `/attributes/<id>`, and the errors come back through the field's `error` prop to the rows.
 - `AttributeGroupTable`: the flat table both containers put inside a card.

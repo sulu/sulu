@@ -10,7 +10,7 @@ import FormInspector from '../../Form/FormInspector';
 import AttributeGroupTable from '../AttributeGroupTable';
 import productAttributesRendererStyles from './productAttributesRenderer.scss';
 import isEmpty from './isEmpty';
-import {NAME_PREFIX} from './namePrefix';
+import {NAME_PREFIX} from './constants';
 import type {Node} from 'react';
 import type {Error, Schema, SchemaEntry} from '../../Form/types';
 
@@ -30,6 +30,7 @@ type Group = {
 type Props = {|
     data: Object,
     disabled: boolean,
+    errors: {[string]: Error},
     filter: string,
     formInspector: FormInspector,
     hideEmpty: boolean,
@@ -37,14 +38,13 @@ type Props = {|
     onFinish: (dataPath: string, schemaPath: string) => void,
     router: ?Router,
     schema: Schema,
-    showAllErrors: boolean,
     toolbar?: Node,
 |};
 
 /**
  * Renders a product_attributes form as one collapsible card per attribute group with a label/field
- * row per attribute. Each row uses the form's Field, so any field type works. Values and errors
- * come from the given form inspector, the one of the container's own store.
+ * row per attribute. Each row uses the form's Field, so any field type works. Values come from the
+ * given form inspector, the one of the container's own store, errors from the errors map.
  *
  * @experimental We can not yet give BC Promise for this new container in Sulu 3.1.
  */
@@ -70,18 +70,6 @@ class ProductAttributesRenderer extends React.Component<Props> {
             .filter((group) => group.rows.length > 0);
     }
 
-    // An error shows once the row was edited or the form asks for all errors.
-    rowError(name: string, rowDataPath: string): Error | typeof undefined {
-        const {formInspector, showAllErrors} = this.props;
-        const {errors} = formInspector;
-
-        if (!errors || !(name in errors)) {
-            return undefined;
-        }
-
-        return showAllErrors || formInspector.isFieldModified(rowDataPath) ? errors[name] : undefined;
-    }
-
     // The row draws the label; Form.Field would draw it a second time above the input.
     rowSchema(schema: SchemaEntry): SchemaEntry {
         const {disabled} = this.props;
@@ -95,7 +83,7 @@ class ProductAttributesRenderer extends React.Component<Props> {
     }
 
     renderRow(row: Row, sectionKey: string) {
-        const {data, formInspector, onChange, onFinish, router} = this.props;
+        const {data, errors, formInspector, onChange, onFinish, router} = this.props;
         const {name, schema} = row;
         const rowDataPath = '/' + name;
 
@@ -108,7 +96,7 @@ class ProductAttributesRenderer extends React.Component<Props> {
                     <Field
                         data={data}
                         dataPath={rowDataPath}
-                        error={this.rowError(name, rowDataPath)}
+                        error={errors[name]}
                         formInspector={formInspector}
                         name={name}
                         onChange={onChange}

@@ -2,7 +2,7 @@
 import {action, computed, observable, when} from 'mobx';
 import log from 'loglevel';
 import metadataStore from './metadataStore';
-import type {ChangeContext, FieldValidator, FormStoreInterface, Schema, SchemaEntry} from '../types';
+import type {ChangeContext, FormStoreInterface, Schema, SchemaEntry} from '../types';
 
 export default class SchemaFormStoreDecorator implements FormStoreInterface {
     @observable innerFormStore: ?FormStoreInterface;
@@ -121,26 +121,6 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         }
 
         return false;
-    }
-
-    addFieldValidator(dataPath: string, validator: FieldValidator): () => void {
-        let removeValidator = null;
-        let removed = false;
-
-        const disposer = when(
-            () => !!this.innerFormStore,
-            (): void => {
-                if (!removed && this.innerFormStore?.addFieldValidator) {
-                    removeValidator = this.innerFormStore.addFieldValidator(dataPath, validator);
-                }
-            }
-        );
-
-        return () => {
-            removed = true;
-            disposer();
-            removeValidator?.();
-        };
     }
 
     finishField(dataPath: string) {
