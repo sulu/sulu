@@ -14,10 +14,14 @@ declare(strict_types=1);
 namespace Sulu\Content\Domain\Repository;
 
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestNotFoundException;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestCheck;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestCheckStatusEnum;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecision;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
 
+/**
+ * @internal
+ */
 interface WorkflowTransitionRequestRepositoryInterface
 {
     /**
@@ -56,7 +60,8 @@ interface WorkflowTransitionRequestRepositoryInterface
     public function countBy(array $filters = []): int;
 
     /**
-     * Rows for the admin list, newest request first.
+     * Requests for the admin list, newest first. The list shape is the caller's business: the status
+     * is derived from the workflow config, which a repository has no reason to read.
      *
      * @param array{
      *     id?: string,
@@ -66,18 +71,20 @@ interface WorkflowTransitionRequestRepositoryInterface
      *     active?: bool,
      * } $filters
      *
-     * @return list<array{id: string, requester: string|null, status: string}>
+     * @return list<WorkflowTransitionRequest>
      */
-    public function findFlatBy(array $filters, ?int $limit = null, ?int $offset = null): array;
+    public function findBy(array $filters, ?int $limit = null, ?int $offset = null): array;
 
     public function add(WorkflowTransitionRequest $workflowTransitionRequest): void;
 
     /**
-     * Claims a pending check row and writes its verdict in one statement; the first writer wins.
+     * Claims a pending decision row and writes its verdict in one statement; the first writer wins.
+     *
+     * @param list<DecisionMessage> $messages
      */
-    public function settleCheck(
-        WorkflowTransitionRequestCheck $check,
-        WorkflowTransitionRequestCheckStatusEnum $status,
-        ?string $comment,
+    public function settleDecision(
+        WorkflowTransitionRequestDecision $decision,
+        WorkflowTransitionRequestDecisionStatusEnum $status,
+        array $messages,
     ): void;
 }

@@ -14,10 +14,12 @@ declare(strict_types=1);
 namespace Sulu\Content\Domain\Model\WorkflowTransitionRequest;
 
 /**
- * The persisted part of a request's state. Everything else is derived from the reviewer rows by
+ * The persisted part of a request's state. Everything else is derived from the decision rows by
  * {@see WorkflowTransitionRequest::getStatus()}.
+ *
+ * @internal
  */
-enum WorkflowTransitionRequestLifecycleEnum: string
+enum WorkflowTransitionRequestPlaceEnum: string
 {
     case OPEN = 'open';
     case CANCELLED = 'cancelled';

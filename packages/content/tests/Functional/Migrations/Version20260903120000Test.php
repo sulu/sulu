@@ -23,8 +23,7 @@ class Version20260903120000Test extends SuluTestCase
 {
     private const TABLES = [
         'ct_workflow_transition_requests',
-        'ct_workflow_transition_request_checks',
-        'ct_workflow_transition_request_approvals',
+        'ct_workflow_transition_request_decisions',
     ];
 
     private Connection $connection;
