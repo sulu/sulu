@@ -182,6 +182,14 @@ final class SuluContentBundle extends AbstractBundle
                             \dirname(__DIR__, 4) . '/config/forms',
                         ],
                     ],
+                    'resources' => [
+                        'workflow_transition_requests' => [
+                            'routes' => [
+                                'list' => 'sulu_content.get_workflow_transition_requests',
+                                'detail' => 'sulu_content.get_workflow_transition_request',
+                            ],
+                        ],
+                    ],
                 ]
             );
         }

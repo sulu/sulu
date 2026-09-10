@@ -232,6 +232,14 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
                         \dirname(__DIR__, 5) . '/config/forms',
                     ],
                 ],
+                'resources' => [
+                    'workflow_transition_requests' => [
+                        'routes' => [
+                            'list' => 'sulu_content.get_workflow_transition_requests',
+                            'detail' => 'sulu_content.get_workflow_transition_request',
+                        ],
+                    ],
+                ],
             ],
         ], $containerBuilder->getExtensionConfig('sulu_admin'));
     }

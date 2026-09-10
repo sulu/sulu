@@ -22,6 +22,7 @@ use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionReques
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionRequestTransitionSubscriber;
 use Sulu\Content\Application\MessageHandler\ApproveWorkflowTransitionRequestMessageHandler;
 use Sulu\Content\Application\MessageHandler\RejectWorkflowTransitionRequestMessageHandler;
+use Sulu\Content\Application\MessageHandler\RetryWorkflowTransitionRequestValidationMessageHandler;
 use Sulu\Content\Application\MessageHandler\ValidateWorkflowTransitionRequestFailureListener;
 use Sulu\Content\Application\MessageHandler\ValidateWorkflowTransitionRequestMessageHandler;
 use Sulu\Content\Application\MessageHandler\WorkerState;
@@ -149,6 +150,14 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_content.workflow_transition_request_repository'),
             new Reference('sulu_content.workflow_transition_admin_authorizer'),
             new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+        ])
+        ->tag('messenger.message_handler')
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_content.retry_workflow_transition_request_validation_handler', RetryWorkflowTransitionRequestValidationMessageHandler::class)
+        ->args([
+            new Reference('sulu_content.workflow_transition_request_repository'),
+            new Reference('sulu_message_bus'),
         ])
         ->tag('messenger.message_handler')
         ->tag('sulu.context', ['context' => 'admin']);

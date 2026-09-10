@@ -17,6 +17,8 @@ test('Show only the draft icon', () => {
 
     // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.draft')).toBeInTheDocument();
+    // eslint-disable-next-line testing-library/no-container
+    expect(container.querySelector('.published, .review')).not.toBeInTheDocument();
 });
 
 test('Show the draft and published icon', () => {
@@ -26,4 +28,19 @@ test('Show the draft and published icon', () => {
     expect(container.querySelector('.published')).toBeInTheDocument();
     // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.draft')).toBeInTheDocument();
+});
+
+test('Show only the review icon', () => {
+    const {container} = render(<PublishIndicator review={true} />);
+
+    // eslint-disable-next-line testing-library/no-container
+    expect(container.querySelector('.review')).toBeInTheDocument();
+    // eslint-disable-next-line testing-library/no-container
+    expect(container.querySelector('.published, .draft')).not.toBeInTheDocument();
+});
+
+test('Render nothing without any state', () => {
+    const {container} = render(<PublishIndicator />);
+
+    expect(container).toBeEmptyDOMElement();
 });
