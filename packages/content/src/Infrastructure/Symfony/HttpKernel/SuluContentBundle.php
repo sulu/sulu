@@ -76,14 +76,14 @@ final class SuluContentBundle extends AbstractBundle
                                 ->defaultValue([])
                             ->end()
                             ->arrayNode('validators')
-                                ->info('Automated checks keyed by validator key, run over the message bus once the request exists, so a slow one does not hold it up. They never count towards required_human_approvals. The reserved key "blocking" decides whether a failure holds the request until it passes (default false, informational); everything else is handed to the validator as its own config.')
-                                ->example(['unpublished_references' => ['blocking' => true]])
+                                ->info('Automated checks keyed by validator key, run over the message bus once the request exists, so a slow one does not hold it up. They never count towards required_user_approvals. The reserved key "required" decides whether the request waits for this check to pass (default false, informational); everything else is handed to the validator as its own config.')
+                                ->example(['unpublished_references' => ['required' => true]])
                                 ->normalizeKeys(false)
                                 ->variablePrototype()->end()
                                 ->defaultValue([])
                             ->end()
-                            ->integerNode('required_human_approvals')
-                                ->info('How many people must approve before the request counts as approved. Automated checks never count towards it, and self-review is refused, so these are other users holding the "review" permission. 0 means no human sign-off and is only accepted together with a validator marked "blocking: true", which then becomes the only thing holding the request.')
+                            ->integerNode('required_user_approvals')
+                                ->info('How many people must approve before the request counts as approved. Automated checks never count towards it, and self-review is refused, so these are other users holding the "review" permission. 0 means no user sign-off and is only accepted together with a validator marked "required: true", which then becomes the only thing holding the request.')
                                 ->min(0)
                                 ->defaultValue(1)
                             ->end()
@@ -121,7 +121,7 @@ final class SuluContentBundle extends AbstractBundle
         $builder->getDefinition('sulu_content.content_resolver')
             ->setArgument('$maxDepth', $contentResolverConfig['max_depth']);
 
-        /** @var array<string, array{resources?: list<string>, validators?: array<string, array<string, mixed>>, pre_validators?: array<string, array<string, mixed>>, required_human_approvals?: int}> $requestWorkflowsConfig */
+        /** @var array<string, array{resources?: list<string>, validators?: array<string, array<string, mixed>>, pre_validators?: array<string, array<string, mixed>>, required_user_approvals?: int}> $requestWorkflowsConfig */
         $requestWorkflowsConfig = $config['request_workflows'] ?? [];
         $builder->setParameter('sulu_content.request_workflows', $requestWorkflowsConfig);
 

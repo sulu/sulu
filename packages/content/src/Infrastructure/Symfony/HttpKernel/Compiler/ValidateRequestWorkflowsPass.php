@@ -47,7 +47,7 @@ final class ValidateRequestWorkflowsPass implements CompilerPassInterface
             return;
         }
 
-        /** @var array<string, array{validators?: array<string, mixed>, pre_validators?: array<string, mixed>, required_human_approvals?: int}> $workflows */
+        /** @var array<string, array{validators?: array<string, mixed>, pre_validators?: array<string, mixed>, required_user_approvals?: int}> $workflows */
         $workflows = $container->getParameter(self::WORKFLOWS_PARAMETER);
 
         $errors = [];
@@ -121,26 +121,26 @@ final class ValidateRequestWorkflowsPass implements CompilerPassInterface
     }
 
     /**
-     * Zero approvals only holds a request when a blocking validator does; without one every request
+     * Zero approvals only holds a request when a required validator does; without one every request
      * is approved on arrival and gates nothing.
      *
-     * @param array{validators?: array<string, mixed>, required_human_approvals?: int} $workflowConfig
+     * @param array{validators?: array<string, mixed>, required_user_approvals?: int} $workflowConfig
      * @param list<string> $errors
      */
     private function collectApprovalGateErrors(string $workflowName, array $workflowConfig, array &$errors): void
     {
-        if (0 !== ($workflowConfig['required_human_approvals'] ?? 1)) {
+        if (0 !== ($workflowConfig['required_user_approvals'] ?? 1)) {
             return;
         }
 
         foreach ($workflowConfig['validators'] ?? [] as $validatorConfig) {
-            if (\is_array($validatorConfig) && (bool) ($validatorConfig['blocking'] ?? false)) {
+            if (\is_array($validatorConfig) && (bool) ($validatorConfig['required'] ?? false)) {
                 return;
             }
         }
 
         $errors[] = \sprintf(
-            '- The workflow "%s" sets "required_human_approvals" to 0 without a validator marked "blocking: true", so every request it creates is approved on arrival and holds nothing back. Raise the count or add a blocking validator.',
+            '- The workflow "%s" sets "required_user_approvals" to 0 without a validator marked "required: true", so every request it creates is approved on arrival and holds nothing back. Raise the count or add a required validator.',
             $workflowName,
         );
     }

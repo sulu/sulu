@@ -15,7 +15,7 @@ namespace Sulu\Content\Application\RequestWorkflow\Validator;
 
 /**
  * Checks an existing request, optionally over the message bus. Never counts towards
- * `required_human_approvals`: a check reports on the content, it does not stand in for a reviewer.
+ * `required_user_approvals`: a check reports on the content, it does not stand in for a reviewer.
  */
 interface RequestWorkflowValidatorInterface
 {
@@ -30,5 +30,5 @@ interface RequestWorkflowValidatorInterface
      * Must not mutate the request or write to the database; the caller owns the reviewer row and may
      * retry. Load anything else through own dependencies. Throwing is recorded as a rejection.
      */
-    public function check(ValidationContext $context): ValidationDecision;
+    public function check(ValidationContext $context): ValidationResult;
 }

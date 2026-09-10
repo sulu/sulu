@@ -14,9 +14,11 @@ namespace Sulu\Component\Rest\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Component\Rest\Exception\ExceptionResponseDataInterface;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundException;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
+use Sulu\Component\Rest\Exception\TranslationErrorMessagesExceptionInterface;
 use Sulu\Component\Rest\FlattenExceptionNormalizer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -424,5 +426,91 @@ class FlattenExceptionNormalizerTest extends TestCase
         $this->assertSame('Conflict', $result['message']);
         $this->assertSame('Translated Error Message Example', $result['detail']);
         $this->assertArrayNotHasKey('errors', $result);
+    }
+
+    public function testNormalizeTranslationErrorMessagesExceptionJoinsThemIntoDetail(): void
+    {
+        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $normalizer = new FlattenExceptionNormalizer(
+            $decoratedNormalizer->reveal(),
+            $translator->reveal()
+        );
+
+        $exception = new class('Two rules failed', 1108) extends \Exception implements TranslationErrorMessagesExceptionInterface {
+            public function getMessageTranslations(): array
+            {
+                return [
+                    ['key' => 'sulu_content.workflow_transition_request.seo_required.missing', 'parameters' => ['fields' => 'title']],
+                    ['key' => 'sulu_content.workflow_transition_request.excerpt_required.missing', 'parameters' => []],
+                ];
+            }
+        };
+
+        $flattenException = FlattenException::createFromThrowable($exception);
+
+        $decoratedNormalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        )->willReturn(['code' => 422, 'message' => 'Unprocessable Entity']);
+
+        $translator->trans('sulu_content.workflow_transition_request.seo_required.missing', ['{fields}' => 'title'], 'admin')
+            ->willReturn('SEO fields are still missing: title.');
+        $translator->trans('sulu_content.workflow_transition_request.excerpt_required.missing', [], 'admin')
+            ->willReturn('Excerpt fields are still missing.');
+
+        $result = $normalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        );
+
+        $this->assertSame(1108, $result['code']);
+        $this->assertSame(
+            'SEO fields are still missing: title. Excerpt fields are still missing.',
+            $result['detail'],
+            'Clients that read only `detail` still get every open point in one line.'
+        );
+    }
+
+    public function testNormalizeExceptionResponseDataIsMergedIntoTheBody(): void
+    {
+        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $normalizer = new FlattenExceptionNormalizer(
+            $decoratedNormalizer->reveal(),
+            $translator->reveal()
+        );
+
+        $exception = new class('Rules ran', 1108) extends \Exception implements ExceptionResponseDataInterface {
+            public function getResponseData(): array
+            {
+                return ['preValidationResults' => [['key' => 'seo_required', 'passed' => false]]];
+            }
+        };
+
+        $flattenException = FlattenException::createFromThrowable($exception);
+
+        $decoratedNormalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        )->willReturn(['code' => 422, 'message' => 'Unprocessable Entity']);
+
+        $result = $normalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        );
+
+        $this->assertSame(
+            [['key' => 'seo_required', 'passed' => false]],
+            $result['preValidationResults'],
+            'The keys travel to the frontend as they are.'
+        );
+        $this->assertSame('Unprocessable Entity', $result['message']);
     }
 }

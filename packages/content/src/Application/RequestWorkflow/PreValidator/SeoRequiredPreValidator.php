@@ -11,35 +11,34 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Application\RequestWorkflow\PreValidator\Builtin;
+namespace Sulu\Content\Application\RequestWorkflow\PreValidator;
 
-use Sulu\Content\Application\RequestWorkflow\PreValidator\PreValidationContext;
-use Sulu\Content\Application\RequestWorkflow\PreValidator\PreValidationFailure;
-use Sulu\Content\Application\RequestWorkflow\PreValidator\RequestWorkflowPreValidatorInterface;
-use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
+use Sulu\Content\Domain\Model\SeoInterface;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
 
 /**
- * Requires the configured excerpt fields to be filled; content without an excerpt passes.
+ * Requires the configured SEO fields to be filled; content without SEO data passes.
+ *
+ * @internal
  */
-final class ExcerptRequiredPreValidator implements RequestWorkflowPreValidatorInterface
+class SeoRequiredPreValidator implements RequestWorkflowPreValidatorInterface
 {
-    private const DEFAULT_FIELDS = ['title', 'description'];
-
     public static function getKey(): string
     {
-        return 'excerpt_required';
+        return 'seo_required';
     }
 
-    public function check(PreValidationContext $context): array
+    public function check(PreValidationContext $context): ValidationResult
     {
         $dimensionContent = $context->dimensionContent;
-        if (!$dimensionContent instanceof ExcerptInterface) {
-            return [];
+        if (!$dimensionContent instanceof SeoInterface) {
+            return ValidationResult::approve();
         }
 
         // The config tree passes this through unvalidated, so the shape is genuinely unknown here:
         // a scalar `fields: title` would iterate zero times and silently approve everything.
-        $fields = $context->config['fields'] ?? self::DEFAULT_FIELDS;
+        $fields = $context->config['fields'] ?? null;
         if (!\is_array($fields) || [] === $fields) {
             throw new \LogicException(\sprintf(
                 'The "%s" pre-validator needs a non-empty list of fields, got %s.',
@@ -48,9 +47,9 @@ final class ExcerptRequiredPreValidator implements RequestWorkflowPreValidatorIn
             ));
         }
 
-        // The data bag holds every field of the excerpt form, built-ins and anything a project
+        // The data bag holds every field of the seo form, built-ins and anything a project
         // adds by overriding the template, so a configured field needs no mapping here.
-        $excerptData = $dimensionContent->getExcerptData();
+        $seoData = $dimensionContent->getSeoData();
 
         $missing = [];
         foreach ($fields as $field) {
@@ -62,19 +61,19 @@ final class ExcerptRequiredPreValidator implements RequestWorkflowPreValidatorIn
                 ));
             }
 
-            $value = $excerptData[$field] ?? null;
+            $value = $seoData[$field] ?? null;
             if (!\is_string($value) || '' === \trim($value)) {
                 $missing[] = $field;
             }
         }
 
         if ([] === $missing) {
-            return [];
+            return ValidationResult::approve();
         }
 
-        return [new PreValidationFailure(
-            'sulu_content.workflow_transition_request.excerpt_required.missing',
+        return ValidationResult::reject(DecisionMessage::translated(
+            'sulu_content.workflow_transition_request.seo_required.missing',
             ['fields' => \implode(', ', $missing)],
-        )];
+        ));
     }
 }

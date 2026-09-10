@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\RequestWorkflow\PreValidator;
 
+use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
+
 /**
  * A synchronous rule content must pass before it may go live; a failure aborts the transition.
  */
@@ -27,8 +29,6 @@ interface RequestWorkflowPreValidatorInterface
 
     /**
      * Must not mutate the content or cause side effects.
-     *
-     * @return list<PreValidationFailure> empty when the content may go live
      */
-    public function check(PreValidationContext $context): array;
+    public function check(PreValidationContext $context): ValidationResult;
 }

@@ -15,7 +15,8 @@ namespace Sulu\Content\Tests\Application\ExampleTestBundle\RequestWorkflow;
 
 use Sulu\Content\Application\RequestWorkflow\Validator\RequestWorkflowValidatorInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationContext;
-use Sulu\Content\Application\RequestWorkflow\Validator\ValidationDecision;
+use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
 
 /**
  * Test validator whose verdict comes from its workflow config, so a test can set up an approving, a
@@ -28,19 +29,19 @@ final class ConfiguredResultValidator implements RequestWorkflowValidatorInterfa
         return 'test_configured_result';
     }
 
-    public function check(ValidationContext $context): ValidationDecision
+    public function check(ValidationContext $context): ValidationResult
     {
         /** @var array{result?: string} $config */
         $config = $context->validatorConfig;
 
         return match ($config['result'] ?? 'approve') {
-            'reject' => ValidationDecision::reject(
-                \sprintf('The configured check rejected example %s.', $context->request->getResourceId()),
-            ),
+            'reject' => ValidationResult::reject(DecisionMessage::text(
+                \sprintf('The configured check rejected example %s.', $context->resourceId),
+            )),
             'throw' => throw new \RuntimeException(
-                \sprintf('The configured check crashed on example %s.', $context->request->getResourceId()),
+                \sprintf('The configured check crashed on example %s.', $context->resourceId),
             ),
-            default => ValidationDecision::approve(),
+            default => ValidationResult::approve(),
         };
     }
 }

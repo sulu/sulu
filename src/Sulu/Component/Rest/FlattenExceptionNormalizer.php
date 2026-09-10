@@ -11,10 +11,11 @@
 
 namespace Sulu\Component\Rest;
 
-use Sulu\Component\Rest\Exception\PreValidationFailedExceptionInterface;
+use Sulu\Component\Rest\Exception\ExceptionResponseDataInterface;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
+use Sulu\Component\Rest\Exception\TranslationErrorMessagesExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -87,28 +88,24 @@ class FlattenExceptionNormalizer implements NormalizerInterface
             $data['resource'] = $contextException->getResource();
         }
 
-        if ($contextException instanceof PreValidationFailedExceptionInterface) {
-            $results = [];
+        if ($contextException instanceof TranslationErrorMessagesExceptionInterface) {
             $messages = [];
-            foreach ($contextException->getPreValidationResults() as $result) {
-                $failures = [];
-                foreach ($result['failures'] as $failure) {
-                    $parameters = [];
-                    foreach ($failure['messageParameters'] as $name => $value) {
-                        $parameters['{' . $name . '}'] = $value;
-                    }
-
-                    $message = $this->translator->trans($failure['messageKey'], $parameters, 'admin');
-                    $failures[] = $message;
-                    $messages[] = $message;
+            foreach ($contextException->getMessageTranslations() as $translation) {
+                $parameters = [];
+                foreach ($translation['parameters'] as $name => $value) {
+                    $parameters['{' . $name . '}'] = $value;
                 }
 
-                $results[] = ['key' => $result['key'], 'passed' => $result['passed'], 'messages' => $failures];
+                $messages[] = $this->translator->trans($translation['key'], $parameters, 'admin');
             }
 
-            $data['preValidationResults'] = $results;
-            // Clients that read only `detail` still get every open point in one line.
-            $data['detail'] = \implode(' ', $messages);
+            if ([] !== $messages) {
+                $data['detail'] = \implode(' ', $messages);
+            }
+        }
+
+        if ($contextException instanceof ExceptionResponseDataInterface) {
+            $data = \array_merge($data, $contextException->getResponseData());
         }
 
         if ($contextException instanceof ReferencingResourcesFoundExceptionInterface) {

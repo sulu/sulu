@@ -20,12 +20,13 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\RequestWorkflowPreValidationSubscriber;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\PreValidationContext;
-use Sulu\Content\Application\RequestWorkflow\PreValidator\PreValidationFailure;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\RequestWorkflowPreValidatorInterface;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflow;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
+use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestPreValidationFailedException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -62,11 +63,11 @@ class RequestWorkflowPreValidationSubscriberTest extends TestCase
 
         $subscriber = $this->createSubscriber($dimensionContent, new RequestWorkflow('review', [], 1, [], [
             'seo_required' => [
-                'pre_validator' => $this->createPreValidator([new PreValidationFailure('seo.missing', ['fields' => 'title'])]),
+                'pre_validator' => $this->createPreValidator(ValidationResult::reject(DecisionMessage::translated('seo.missing', ['fields' => 'title']))),
                 'config' => [],
             ],
             'excerpt_required' => [
-                'pre_validator' => $this->createPreValidator([]),
+                'pre_validator' => $this->createPreValidator(ValidationResult::approve()),
                 'config' => [],
             ],
         ]));
@@ -80,11 +81,11 @@ class RequestWorkflowPreValidationSubscriberTest extends TestCase
                     [
                         'key' => 'seo_required',
                         'passed' => false,
-                        'failures' => [['messageKey' => 'seo.missing', 'messageParameters' => ['fields' => 'title']]],
+                        'messages' => [['key' => 'seo.missing', 'parameters' => ['fields' => 'title'], 'text' => null]],
                     ],
-                    ['key' => 'excerpt_required', 'passed' => true, 'failures' => []],
+                    ['key' => 'excerpt_required', 'passed' => true, 'messages' => []],
                 ],
-                $exception->getPreValidationResults(),
+                $exception->getResponseData()['preValidationResults'],
                 'A passing check keeps its row, so the overlay can show what is already done.',
             );
         }
@@ -95,7 +96,7 @@ class RequestWorkflowPreValidationSubscriberTest extends TestCase
         $dimensionContent = $this->createDimensionContent();
 
         $subscriber = $this->createSubscriber($dimensionContent, new RequestWorkflow('review', [], 1, [], [
-            'seo_required' => ['pre_validator' => $this->createPreValidator([]), 'config' => []],
+            'seo_required' => ['pre_validator' => $this->createPreValidator(ValidationResult::approve()), 'config' => []],
         ]));
 
         $subscriber->onTransition(new TransitionEvent($dimensionContent, new Marking()));
@@ -116,13 +117,10 @@ class RequestWorkflowPreValidationSubscriberTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    /**
-     * @param list<PreValidationFailure> $failures
-     */
-    private function createPreValidator(array $failures): RequestWorkflowPreValidatorInterface
+    private function createPreValidator(ValidationResult $result): RequestWorkflowPreValidatorInterface
     {
         $preValidator = $this->prophesize(RequestWorkflowPreValidatorInterface::class);
-        $preValidator->check(Argument::type(PreValidationContext::class))->willReturn($failures);
+        $preValidator->check(Argument::type(PreValidationContext::class))->willReturn($result);
 
         return $preValidator->reveal();
     }

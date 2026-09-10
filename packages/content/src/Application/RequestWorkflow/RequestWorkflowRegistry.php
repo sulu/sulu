@@ -31,7 +31,7 @@ final class RequestWorkflowRegistry implements RequestWorkflowRegistryInterface
     private readonly array $workflows;
 
     /**
-     * @param array<string, array{resources?: list<string>, validators?: array<string, array<string, mixed>|null>, pre_validators?: array<string, array<string, mixed>|null>, required_human_approvals?: int}> $config
+     * @param array<string, array{resources?: list<string>, validators?: array<string, array<string, mixed>|null>, pre_validators?: array<string, array<string, mixed>|null>, required_user_approvals?: int}> $config
      * @param ServiceLocator<RequestWorkflowValidatorInterface> $validators
      * @param ServiceLocator<RequestWorkflowPreValidatorInterface> $preValidators
      */
@@ -78,22 +78,22 @@ final class RequestWorkflowRegistry implements RequestWorkflowRegistryInterface
     }
 
     /**
-     * @param array{resources?: list<string>, validators?: array<string, array<string, mixed>|null>, pre_validators?: array<string, array<string, mixed>|null>, required_human_approvals?: int} $config
+     * @param array{resources?: list<string>, validators?: array<string, array<string, mixed>|null>, pre_validators?: array<string, array<string, mixed>|null>, required_user_approvals?: int} $config
      */
     private function buildWorkflow(string $name, array $config): RequestWorkflow
     {
         $validators = [];
         foreach ($config['validators'] ?? [] as $key => $entryConfig) {
             $entryConfig = \is_array($entryConfig) ? $entryConfig : [];
-            // `blocking` is the workflow's word about the check, not the check's own config, so it
+            // `required` is the workflow's word about the check, not the check's own config, so it
             // is lifted out before the rest is handed over untouched.
-            $blocking = (bool) ($entryConfig['blocking'] ?? false);
-            unset($entryConfig['blocking']);
+            $required = (bool) ($entryConfig['required'] ?? false);
+            unset($entryConfig['required']);
 
             $validators[$key] = [
                 'validator' => $this->resolveService($this->validators, 'validator', $name, $key),
                 'config' => $entryConfig,
-                'blocking' => $blocking,
+                'required' => $required,
             ];
         }
 
@@ -108,7 +108,7 @@ final class RequestWorkflowRegistry implements RequestWorkflowRegistryInterface
         return new RequestWorkflow(
             $name,
             $validators,
-            $config['required_human_approvals'] ?? 1,
+            $config['required_user_approvals'] ?? 1,
             $config['resources'] ?? [],
             $preValidators,
         );

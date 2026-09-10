@@ -15,8 +15,8 @@ namespace Sulu\Content\Tests\Unit\Infrastructure\Symfony\HttpKernel\Compiler;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Sulu\Content\Application\RequestWorkflow\PreValidator\Builtin\ExcerptRequiredPreValidator;
-use Sulu\Content\Application\RequestWorkflow\PreValidator\Builtin\SeoRequiredPreValidator;
+use Sulu\Content\Application\RequestWorkflow\PreValidator\ExcerptRequiredPreValidator;
+use Sulu\Content\Application\RequestWorkflow\PreValidator\SeoRequiredPreValidator;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ValidateRequestWorkflowsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;

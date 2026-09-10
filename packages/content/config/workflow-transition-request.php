@@ -14,12 +14,14 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Sulu\Content\Application\ContentWorkflow\Subscriber\RequestWorkflowPreValidationSubscriber;
-use Sulu\Content\Application\RequestWorkflow\PreValidator\Builtin\ExcerptRequiredPreValidator;
-use Sulu\Content\Application\RequestWorkflow\PreValidator\Builtin\SeoRequiredPreValidator;
+use Sulu\Content\Application\RequestWorkflow\PreValidator\ExcerptRequiredPreValidator;
+use Sulu\Content\Application\RequestWorkflow\PreValidator\SeoRequiredPreValidator;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowRegistry;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowRegistryInterface;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolver;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
+use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolver;
+use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Infrastructure\Doctrine\EventListener\CascadeDeleteWorkflowTransitionRequestListener;
 use Sulu\Content\Infrastructure\Doctrine\Repository\WorkflowTransitionRequestRepository;
@@ -60,6 +62,12 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->alias(RequestWorkflowResolverInterface::class, 'sulu_content.request_workflow_resolver');
+
+    $services->set('sulu_content.workflow_transition_request_status_resolver', WorkflowTransitionRequestStatusResolver::class)
+        ->args([new Reference('sulu_content.request_workflow_registry')])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->alias(WorkflowTransitionRequestStatusResolverInterface::class, 'sulu_content.workflow_transition_request_status_resolver');
 
     $services->set('sulu_content.request_workflow_pre_validation_subscriber', RequestWorkflowPreValidationSubscriber::class)
         ->args([

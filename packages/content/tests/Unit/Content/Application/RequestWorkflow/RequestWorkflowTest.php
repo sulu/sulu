@@ -24,20 +24,20 @@ class RequestWorkflowTest extends TestCase
     {
         $workflow = new RequestWorkflow('default', [], 3);
 
-        $this->assertSame(3, $workflow->getRequiredHumanApprovalCount());
+        $this->assertSame(3, $workflow->getRequiredUserApprovals());
     }
 
     public function testGetRequiredApprovalCountDefaultsToOne(): void
     {
         $workflow = new RequestWorkflow('default', [], 1);
 
-        $this->assertSame(1, $workflow->getRequiredHumanApprovalCount());
+        $this->assertSame(1, $workflow->getRequiredUserApprovals());
     }
 
     public function testGetRequiredApprovalCountCanBeZero(): void
     {
         $workflow = new RequestWorkflow('default', [], 0);
 
-        $this->assertSame(0, $workflow->getRequiredHumanApprovalCount());
+        $this->assertSame(0, $workflow->getRequiredUserApprovals());
     }
 }

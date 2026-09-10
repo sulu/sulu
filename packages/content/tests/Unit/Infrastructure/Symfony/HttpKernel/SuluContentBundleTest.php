@@ -132,7 +132,7 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
                         'resources' => [],
                         'pre_validators' => [],
                         'validators' => [],
-                        'required_human_approvals' => 1,
+                        'required_user_approvals' => 1,
                     ],
                 ],
                 'content_resolver' => [

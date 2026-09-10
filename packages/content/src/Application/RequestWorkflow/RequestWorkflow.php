@@ -20,6 +20,8 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionReques
 /**
  * Resolved configuration for a single named workflow, built by {@see RequestWorkflowRegistry}
  * from the bundle config tree.
+ *
+ * @internal
  */
 final class RequestWorkflow
 {
@@ -31,14 +33,14 @@ final class RequestWorkflow
     public const NONE_NAME = 'none';
 
     /**
-     * @param array<string, array{validator: RequestWorkflowValidatorInterface, config: array<string, mixed>, blocking: bool}> $validators keyed by the validator's tag key, which is also its key on the check rows
+     * @param array<string, array{validator: RequestWorkflowValidatorInterface, config: array<string, mixed>, required: bool}> $validators keyed by the validator's tag key, which is also its key on the check rows
      * @param list<string> $resources resource keys this workflow covers as the implicit default; empty means all, only the `default` workflow reads it
      * @param array<string, array{pre_validator: RequestWorkflowPreValidatorInterface, config: array<string, mixed>}> $preValidators sync rules that must pass before the content goes live, on request and on publish alike, keyed by tag key
      */
     public function __construct(
         public readonly string $name,
         public readonly array $validators,
-        private readonly int $requiredHumanApprovalCount,
+        private readonly int $requiredUserApprovals,
         public readonly array $resources = [],
         public readonly array $preValidators = [],
     ) {
@@ -49,8 +51,23 @@ final class RequestWorkflow
         return [] === $this->resources || \in_array($resourceKey, $this->resources, true);
     }
 
-    public function getRequiredHumanApprovalCount(): int
+    public function getRequiredUserApprovals(): int
     {
-        return $this->requiredHumanApprovalCount;
+        return $this->requiredUserApprovals;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getRequiredValidatorKeys(): array
+    {
+        $keys = [];
+        foreach ($this->validators as $key => $entry) {
+            if ($entry['required']) {
+                $keys[] = $key;
+            }
+        }
+
+        return $keys;
     }
 }

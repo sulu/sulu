@@ -15,7 +15,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\RequestWorkflow;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Sulu\Content\Application\RequestWorkflow\PreValidator\Builtin\SeoRequiredPreValidator;
+use Sulu\Content\Application\RequestWorkflow\PreValidator\SeoRequiredPreValidator;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflow;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowRegistry;
 use Sulu\Content\Domain\Exception\UnknownRequestWorkflowException;
@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 class RequestWorkflowRegistryTest extends TestCase
 {
     /**
-     * @param array<string, array{resources?: list<string>, validators?: array<string, array<string, mixed>|null>, pre_validators?: array<string, array<string, mixed>|null>, required_human_approvals?: int}> $config
+     * @param array<string, array{resources?: list<string>, validators?: array<string, array<string, mixed>|null>, pre_validators?: array<string, array<string, mixed>|null>, required_user_approvals?: int}> $config
      */
     private function createRegistry(array $config): RequestWorkflowRegistry
     {
@@ -45,7 +45,7 @@ class RequestWorkflowRegistryTest extends TestCase
                 'resources' => ['articles'],
                 'validators' => ['test_configured_result' => ['result' => 'reject']],
                 'pre_validators' => ['seo_required' => ['fields' => ['title']]],
-                'required_human_approvals' => 2,
+                'required_user_approvals' => 2,
             ],
         ]);
 
@@ -53,7 +53,7 @@ class RequestWorkflowRegistryTest extends TestCase
 
         $this->assertSame(RequestWorkflow::DEFAULT_NAME, $workflow->name);
         $this->assertSame(['articles'], $workflow->resources);
-        $this->assertSame(2, $workflow->getRequiredHumanApprovalCount());
+        $this->assertSame(2, $workflow->getRequiredUserApprovals());
         $this->assertInstanceOf(ConfiguredResultValidator::class, $workflow->validators['test_configured_result']['validator']);
         $this->assertSame(['result' => 'reject'], $workflow->validators['test_configured_result']['config']);
         $this->assertInstanceOf(SeoRequiredPreValidator::class, $workflow->preValidators['seo_required']['pre_validator']);
@@ -65,14 +65,14 @@ class RequestWorkflowRegistryTest extends TestCase
         $registry = $this->createRegistry([
             'blog' => [
                 'validators' => [
-                    'test_configured_result' => ['blocking' => true, 'result' => 'approve'],
+                    'test_configured_result' => ['required' => true, 'result' => 'approve'],
                 ],
             ],
         ]);
 
         $entry = $registry->get('blog')->validators['test_configured_result'];
 
-        $this->assertTrue($entry['blocking']);
+        $this->assertTrue($entry['required']);
         $this->assertSame(
             ['result' => 'approve'],
             $entry['config'],
@@ -86,7 +86,7 @@ class RequestWorkflowRegistryTest extends TestCase
             'blog' => ['validators' => ['test_configured_result' => null]],
         ]);
 
-        $this->assertFalse($registry->get('blog')->validators['test_configured_result']['blocking']);
+        $this->assertFalse($registry->get('blog')->validators['test_configured_result']['required']);
     }
 
     public function testResourcesOnANamedWorkflowThrows(): void
@@ -107,7 +107,7 @@ class RequestWorkflowRegistryTest extends TestCase
         $this->assertSame([], $workflow->validators);
         $this->assertSame([], $workflow->preValidators);
         $this->assertSame([], $workflow->resources);
-        $this->assertSame(1, $workflow->getRequiredHumanApprovalCount());
+        $this->assertSame(1, $workflow->getRequiredUserApprovals());
     }
 
     public function testUnknownValidatorKeyThrows(): void

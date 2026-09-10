@@ -13,14 +13,15 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Domain\Exception;
 
-use Sulu\Component\Rest\Exception\PreValidationFailedExceptionInterface;
+use Sulu\Component\Rest\Exception\ExceptionResponseDataInterface;
+use Sulu\Component\Rest\Exception\TranslationErrorMessagesExceptionInterface;
 
-class WorkflowTransitionRequestPreValidationFailedException extends \RuntimeException implements PreValidationFailedExceptionInterface
+class WorkflowTransitionRequestPreValidationFailedException extends \RuntimeException implements TranslationErrorMessagesExceptionInterface, ExceptionResponseDataInterface
 {
-    public const ERROR_CODE = 1107;
+    public const EXCEPTION_CODE_PRE_VALIDATION_FAILED = 1108;
 
     /**
-     * @param list<array{key: string, passed: bool, failures: list<array{messageKey: string, messageParameters: array<string, float|int|string>}>}> $results in configuration order
+     * @param list<array{key: string, passed: bool, messages: list<array{key: string|null, parameters: array<string, float|int|string>, text: string|null}>}> $results in configuration order
      */
     public function __construct(
         private readonly array $results,
@@ -34,12 +35,29 @@ class WorkflowTransitionRequestPreValidationFailedException extends \RuntimeExce
 
         parent::__construct(
             'Content did not pass its pre-validators: ' . \implode(', ', $failedKeys),
-            self::ERROR_CODE,
+            self::EXCEPTION_CODE_PRE_VALIDATION_FAILED,
         );
     }
 
-    public function getPreValidationResults(): array
+    public function getMessageTranslations(): array
     {
-        return $this->results;
+        $translations = [];
+        foreach ($this->results as $result) {
+            foreach ($result['messages'] as $message) {
+                if (null === $message['key']) {
+                    continue;
+                }
+
+                $translations[] = ['key' => $message['key'], 'parameters' => $message['parameters']];
+            }
+        }
+
+        return $translations;
+    }
+
+    public function getResponseData(): array
+    {
+        // Passed checks travel too, so the admin can list what is done beside what is left.
+        return ['preValidationResults' => $this->results];
     }
 }

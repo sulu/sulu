@@ -16,8 +16,9 @@ namespace Sulu\Content\Tests\Application\ExampleTestBundle\RequestWorkflow;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\RequestWorkflowValidatorInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationContext;
-use Sulu\Content\Application\RequestWorkflow\Validator\ValidationDecision;
+use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepository;
 
@@ -39,14 +40,13 @@ final class UnpublishedExampleReferencesValidator implements RequestWorkflowVali
         return 'unpublished_example_references';
     }
 
-    public function check(ValidationContext $context): ValidationDecision
+    public function check(ValidationContext $context): ValidationResult
     {
-        $request = $context->request;
-        $locale = $request->getLocale();
+        $locale = $context->locale;
 
         $unpublished = [];
         $missing = [];
-        foreach ($this->findReferencedExampleIds($request->getResourceKey(), $request->getResourceId(), $locale) as $resourceId) {
+        foreach ($this->findReferencedExampleIds($context->resourceKey, $context->resourceId, $locale) as $resourceId) {
             if (null === $this->exampleRepository->findOneBy(['id' => $resourceId])) {
                 $missing[] = $resourceId;
 
@@ -76,8 +76,8 @@ final class UnpublishedExampleReferencesValidator implements RequestWorkflowVali
         }
 
         return [] === $findings
-            ? ValidationDecision::approve()
-            : ValidationDecision::reject(\implode(' ', $findings));
+            ? ValidationResult::approve()
+            : ValidationResult::reject(DecisionMessage::text(\implode(' ', $findings)));
     }
 
     /**

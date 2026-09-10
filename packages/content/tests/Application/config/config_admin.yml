@@ -19,9 +19,9 @@ sulu_admin:
 sulu_content:
     request_workflows:
         review:
-            required_human_approvals: 1
+            required_user_approvals: 1
         strict:
-            required_human_approvals: 2
+            required_user_approvals: 2
         seo:
             pre_validators:
                 seo_required:
@@ -32,7 +32,7 @@ sulu_content:
             validators:
                 unpublished_example_references: ~
         configured:
-            required_human_approvals: 2
+            required_user_approvals: 2
             validators:
                 test_configured_result:
                     result: 'reject'

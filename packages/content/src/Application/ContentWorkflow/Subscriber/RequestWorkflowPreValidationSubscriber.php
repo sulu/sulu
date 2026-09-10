@@ -70,17 +70,14 @@ class RequestWorkflowPreValidationSubscriber implements EventSubscriberInterface
         $passed = true;
         foreach ($workflow->preValidators as $key => $entry) {
             $context = new PreValidationContext($dimensionContent, $entry['config'], $workflow->name);
+            $result = $entry['pre_validator']->check($context);
 
-            $failures = [];
-            foreach ($entry['pre_validator']->check($context) as $failure) {
-                $failures[] = [
-                    'messageKey' => $failure->messageKey,
-                    'messageParameters' => $failure->messageParameters,
-                ];
-            }
-
-            $results[] = ['key' => $key, 'passed' => [] === $failures, 'failures' => $failures];
-            $passed = $passed && [] === $failures;
+            $results[] = [
+                'key' => $key,
+                'passed' => $result->approved,
+                'messages' => $result->messagesToArray(),
+            ];
+            $passed = $passed && $result->approved;
         }
 
         if ($passed) {

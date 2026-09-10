@@ -13,15 +13,20 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\RequestWorkflow\Validator;
 
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
-
+/**
+ * What a validator is told about the content it checks. It names the content rather than handing over
+ * the request, so a validator can be tested without building one.
+ */
 final class ValidationContext
 {
     /**
      * @param array<string, mixed> $validatorConfig
      */
     public function __construct(
-        public readonly WorkflowTransitionRequest $request,
+        public readonly string $resourceKey,
+        public readonly string $resourceId,
+        public readonly string $locale,
+        public readonly string $workflowName,
         public readonly array $validatorConfig,
     ) {
     }
