@@ -58,8 +58,69 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         private SecurityCheckerInterface $securityChecker,
         private array $settingsForms,
         private array $excerptForms = [],
-        private array $seoForms = []
+        private array $seoForms = [],
     ) {
+    }
+
+    /**
+     * The `save` dropdown is shown while no request is active; once one is open it gives way to the single
+     * `approval` button, which opens the overlay where the request is acted on.
+     *
+     * @return array{save: DropdownToolbarAction, approval: ToolbarAction}
+     */
+    public function getWorkflowTransitionRequestToolbarActions(
+        string $resourceKey,
+        string $saveVisibleCondition = '(!_permissions || _permissions.edit)',
+        string $publishVisibleCondition = '(!_permissions || _permissions.live)',
+        // Opening the overlay takes `edit` or `live` too: retrying a failed check and publishing
+        // without review both live in it. The decision buttons inside are still gated on `review`.
+        string $reviewVisibleCondition = '(!_permissions || _permissions.review || _permissions.edit || _permissions.live)',
+    ): array {
+        $noActiveRequest = '!activeWorkflowTransitionRequest';
+        $hasActiveRequest = '!!activeWorkflowTransitionRequest';
+
+        return [
+            'save' => new DropdownToolbarAction(
+                'sulu_admin.save',
+                'su-save',
+                [
+                    new ToolbarAction(
+                        'sulu_admin.save',
+                        [
+                            'label' => 'sulu_admin.save_draft',
+                            'options' => ['action' => 'draft'],
+                            'visible_condition' => '(' . $saveVisibleCondition . ') && ' . $noActiveRequest,
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_content.request_for_publish',
+                        [
+                            'visible_condition' => '(' . $saveVisibleCondition . ') && ' . $noActiveRequest,
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_admin.save',
+                        [
+                            'label' => 'sulu_admin.save_publish',
+                            'options' => ['action' => 'publish'],
+                            'visible_condition' => '(' . $saveVisibleCondition . ') && (' . $publishVisibleCondition . ') && ' . $noActiveRequest,
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_admin.publish',
+                        [
+                            'visible_condition' => '(' . $publishVisibleCondition . ') && ' . $noActiveRequest,
+                        ]
+                    ),
+                ]
+            ),
+            'approval' => new ToolbarAction(
+                'sulu_content.review_workflow_transition_request',
+                [
+                    'visible_condition' => '(' . $reviewVisibleCondition . ') && ' . $hasActiveRequest,
+                ]
+            ),
+        ];
     }
 
     public function getDefaultToolbarActions(

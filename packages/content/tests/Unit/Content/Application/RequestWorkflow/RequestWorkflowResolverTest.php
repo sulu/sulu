@@ -66,24 +66,64 @@ class RequestWorkflowResolverTest extends TestCase
 
     private function makeMetadataProviderWithTypedForm(string $templateType, string $templateKey, ?string $workflowName): MetadataProviderInterface
     {
+        return $this->makeMetadataProviderWithTypedForms($templateType, [$templateKey => $workflowName]);
+    }
+
+    /**
+     * @param array<string, string|null> $workflowNamesByTemplateKey a `null` name leaves the template untagged
+     */
+    private function makeMetadataProviderWithTypedForms(string $templateType, array $workflowNamesByTemplateKey): MetadataProviderInterface
+    {
         $provider = $this->prophesize(MetadataProviderInterface::class);
         $typed = new TypedFormMetadata();
 
-        $form = new FormMetadata();
-        $form->setKey($templateKey);
+        foreach ($workflowNamesByTemplateKey as $templateKey => $workflowName) {
+            $form = new FormMetadata();
+            $form->setKey($templateKey);
 
-        if (null !== $workflowName) {
-            $tag = new TagMetadata();
-            $tag->setName(RequestWorkflowResolver::TEMPLATE_TAG);
-            $tag->setAttributes([RequestWorkflowResolver::TEMPLATE_TAG_ATTRIBUTE => $workflowName]);
-            $form->addTag($tag);
+            if (null !== $workflowName) {
+                $tag = new TagMetadata();
+                $tag->setName(RequestWorkflowResolver::TEMPLATE_TAG);
+                $tag->setAttributes([RequestWorkflowResolver::TEMPLATE_TAG_ATTRIBUTE => $workflowName]);
+                $form->addTag($tag);
+            }
+
+            $typed->addForm($templateKey, $form);
         }
-
-        $typed->addForm($templateKey, $form);
 
         $provider->getMetadata($templateType, 'en', [])->willReturn($typed);
 
         return $provider->reveal();
+    }
+
+    public function testResolveTemplateKeysWithWorkflowSkipsOnlyTheOptedOutTemplate(): void
+    {
+        $resolver = $this->makeResolver(
+            ['blog' => [], RequestWorkflow::DEFAULT_NAME => []],
+            $this->makeMetadataProviderWithTypedForms(Example::TEMPLATE_TYPE, [
+                'tagged' => 'blog',
+                'untagged' => null,
+                'opted_out' => RequestWorkflow::NONE_NAME,
+            ]),
+        );
+
+        $this->assertSame(
+            ['tagged', 'untagged'],
+            $resolver->resolveTemplateKeysWithWorkflow(Example::RESOURCE_KEY, Example::TEMPLATE_TYPE),
+        );
+    }
+
+    public function testResolveTemplateKeysWithWorkflowIsEmptyWhenNoDefaultCoversTheResource(): void
+    {
+        $resolver = $this->makeResolver(
+            [],
+            $this->makeMetadataProviderWithTypedForms(Example::TEMPLATE_TYPE, ['untagged' => null]),
+        );
+
+        $this->assertSame(
+            [],
+            $resolver->resolveTemplateKeysWithWorkflow(Example::RESOURCE_KEY, Example::TEMPLATE_TYPE),
+        );
     }
 
     public function testResolveForContentWithNonTemplateInterfaceReturnsDefaultWorkflow(): void

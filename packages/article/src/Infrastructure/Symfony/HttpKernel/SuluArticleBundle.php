@@ -72,6 +72,7 @@ use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
 use Sulu\Content\Infrastructure\Sulu\Security\ResourceSecurityContextProvider;
+use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ContentTemplateTypePass;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -253,6 +254,10 @@ final class SuluArticleBundle extends AbstractBundle
                 ArticleAdmin::SECURITY_CONTEXT,
             ])
             ->tag('sulu_content.workflow_transition_request_security_context_provider', ['resource-key' => ArticleInterface::RESOURCE_KEY])
+            ->tag(ContentTemplateTypePass::TAG, [
+                'resource-key' => ArticleInterface::RESOURCE_KEY,
+                'template-type' => ArticleInterface::TEMPLATE_TYPE,
+            ])
             ->tag('sulu.context', ['context' => 'admin']);
 
         $services->set('sulu_article.article_content_mapper')

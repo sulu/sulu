@@ -149,6 +149,17 @@ test('Set dirty flag from ResourceStore', () => {
     expect(resourceFormStore.dirty).toEqual(true);
 });
 
+test('Read locked flag from the _locked field of the ResourceStore data', () => {
+    const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box('en')});
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    expect(resourceFormStore.locked).toEqual(false);
+
+    resourceStore.data._locked = true;
+
+    expect(resourceFormStore.locked).toEqual(true);
+});
+
 test('Create data object for schema with sections', () => {
     const metadata = {
         section1: {

@@ -6,7 +6,7 @@ import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
 import formToolbarActionRegistry from '../registries/formToolbarActionRegistry';
 import Form from '../Form';
-import AbstractFormToolbarAction from './AbstractFormToolbarAction';
+import AbstractFormToolbarAction, {applyToolbarItemLock} from './AbstractFormToolbarAction';
 import type {DropdownOption} from '../../../components/Toolbar/types';
 import type {ToolbarItemConfig, DropdownItemConfig} from '../../../containers/Toolbar/types';
 
@@ -72,6 +72,11 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
         );
     }
 
+    /** Each child carries the lock itself, so a locked form can still expose the review actions here. */
+    get enabledWhileLocked(): boolean {
+        return true;
+    }
+
     getToolbarItemConfig(): ?DropdownItemConfig {
         const {icon, label} = this.options;
 
@@ -83,9 +88,14 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
             throw new Error('The "icon" option must be a string!');
         }
 
+        const locked = !!this.resourceFormStore.locked;
+
         // use "Boolean" to filter undefined: https://github.com/facebook/flow/issues/1414#issuecomment-251422935
         const childToolbarItemConfigs: Array<ToolbarItemConfig<*>> = this.toolbarActions
-            .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
+            .map((toolbarAction) => applyToolbarItemLock(
+                toolbarAction.getToolbarItemConfig(),
+                locked && !toolbarAction.enabledWhileLocked
+            ))
             .filter(Boolean);
 
         if (childToolbarItemConfigs.length === 0) {

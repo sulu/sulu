@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Infrastructure\Sulu\Admin;
 
+use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -29,6 +30,19 @@ interface ContentViewBuilderFactoryInterface
      */
     public function getDefaultToolbarActions(
         string $contentRichEntityClass
+    ): array;
+
+    /**
+     * The `save` and `approval` dropdowns, merged over the default toolbar actions. Pass permission
+     * conditions when plain `_permissions` does not apply, as for webspace-scoped pages.
+     *
+     * @return array{save: DropdownToolbarAction, approval: ToolbarAction}
+     */
+    public function getWorkflowTransitionRequestToolbarActions(
+        string $resourceKey,
+        string $saveVisibleCondition = '(!_permissions || _permissions.edit)',
+        string $publishVisibleCondition = '(!_permissions || _permissions.live)',
+        string $reviewVisibleCondition = '(!_permissions || _permissions.review || _permissions.edit || _permissions.live)',
     ): array;
 
     /**

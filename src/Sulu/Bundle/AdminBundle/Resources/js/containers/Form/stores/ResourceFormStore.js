@@ -329,6 +329,11 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         this.resourceStore.dirty = dirty;
     }
 
+    /** True when the backend marked this resource read-only, e.g. by an active transition request. */
+    @computed get locked(): boolean {
+        return !!this.data._locked;
+    }
+
     @action setSchemaLoading(schemaLoading: boolean) {
         this.schemaLoading = schemaLoading;
     }

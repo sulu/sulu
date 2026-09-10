@@ -1,0 +1,49 @@
+@import '../../../containers/Application/colors.scss';
+
+$overlayWidth: 660px;
+$overlayContentHeight: 436px;
+
+.comment-body {
+    box-sizing: border-box;
+    max-height: $overlayContentHeight;
+    padding: 24px 40px;
+    width: $overlayWidth;
+}
+
+.comment-label {
+    color: $scorpion;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.comment-field {
+    margin-top: 8px;
+
+    textarea {
+        font-size: 14px;
+        height: 140px;
+        padding: 12px;
+        resize: none;
+    }
+}
+
+.notice {
+    color: $doveGray;
+    font-size: 13px;
+    margin: 0;
+    padding: 12px 20px;
+}
+
+.reject-button {
+    background: $white;
+    border-color: $silver;
+    color: $blueZodiac;
+    font-size: 14px;
+    line-height: 34px;
+    min-width: 112px;
+    padding: 0 16px;
+
+    &:disabled {
+        color: $silverChalice;
+    }
+}

@@ -40,6 +40,7 @@ use Sulu\Content\Infrastructure\Doctrine\ContactFactory;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Content\Infrastructure\Doctrine\MetadataLoader;
 use Sulu\Content\Infrastructure\Doctrine\TagFactory;
+use Sulu\Content\Infrastructure\Sulu\Admin\ContentAdmin;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactory;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Content\Infrastructure\Sulu\HttpCache\EventSubscriber\DimensionContentTagSubscriber;
@@ -53,6 +54,14 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_content.metadata_loader', MetadataLoader::class)
         ->args(['%kernel.bundles%'])
         ->tag('doctrine.event_listener', ['event' => 'loadClassMetadata', 'priority' => 100]);
+
+    $services->set('sulu_content.admin', ContentAdmin::class)
+        ->args([
+            new Reference('sulu_content.request_workflow_resolver'),
+            '%sulu_content.content_template_types%',
+        ])
+        ->tag('sulu.admin')
+        ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_content.content_view_builder_factory', ContentViewBuilderFactory::class)
         ->args([

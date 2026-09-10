@@ -9,14 +9,18 @@ import Section from './Section';
 import Item from './Item';
 import Action from './Action';
 import arrowMenuStyles from './arrowMenu.scss';
+import type {HorizontalAnchorMode} from '../Popover/types';
 import type {ChildrenArray, Element, ElementRef} from 'react';
 
 type Props = {
     anchorElement: Element<*>,
+    backdrop: boolean,
     children: ChildrenArray<Element<*> | false>,
+    horizontalAnchorMode: HorizontalAnchorMode,
     onClose?: () => void,
     open: boolean,
     refProp: string,
+    skin: 'light' | 'dark',
 };
 
 const VERTICAL_OFFSET = 20;
@@ -24,7 +28,10 @@ const VERTICAL_OFFSET = 20;
 @observer
 class ArrowMenu extends React.Component<Props> {
     static defaultProps = {
+        backdrop: true,
+        horizontalAnchorMode: 'left',
         refProp: 'ref',
+        skin: 'light',
     };
 
     static Section = Section;
@@ -93,6 +100,8 @@ class ArrowMenu extends React.Component<Props> {
     render() {
         const {
             anchorElement,
+            backdrop,
+            horizontalAnchorMode,
             open,
             onClose,
         } = this.props;
@@ -104,6 +113,8 @@ class ArrowMenu extends React.Component<Props> {
                 {clonedAnchorElement}
                 <Popover
                     anchorElement={this.displayValueRef}
+                    backdrop={backdrop}
+                    horizontalAnchorMode={horizontalAnchorMode}
                     onClose={onClose}
                     open={open}
                     verticalOffset={VERTICAL_OFFSET}
@@ -133,24 +144,37 @@ class ArrowMenu extends React.Component<Props> {
     ) {
         const {
             children,
+            horizontalAnchorMode,
+            skin,
         } = this.props;
 
         const clonedChildren = this.cloneChildren(children);
+
+        const centered = horizontalAnchorMode === 'center';
 
         const arrowClass = classNames(
             arrowMenuStyles.arrow,
             {
                 [arrowMenuStyles.top]: arrowVerticalPosition === 'top',
                 [arrowMenuStyles.bottom]: arrowVerticalPosition === 'bottom',
-                [arrowMenuStyles.left]: arrowHorizontalPosition === 'left',
-                [arrowMenuStyles.right]: arrowHorizontalPosition === 'right',
+                [arrowMenuStyles.center]: centered,
+                [arrowMenuStyles.left]: !centered && arrowHorizontalPosition === 'left',
+                [arrowMenuStyles.right]: !centered && arrowHorizontalPosition === 'right',
+                [arrowMenuStyles.dark]: skin === 'dark',
+            }
+        );
+
+        const menuClass = classNames(
+            arrowMenuStyles.arrowMenu,
+            {
+                [arrowMenuStyles.dark]: skin === 'dark',
             }
         );
 
         return (
             <div className={arrowMenuStyles.arrowMenuContainer} ref={setPopoverElementRef} style={popoverStyle}>
                 <div className={arrowClass} />
-                <div className={arrowMenuStyles.arrowMenu}>
+                <div className={menuClass}>
                     {clonedChildren}
                 </div>
             </div>

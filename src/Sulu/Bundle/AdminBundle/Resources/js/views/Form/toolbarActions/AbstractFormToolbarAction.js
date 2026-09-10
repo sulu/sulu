@@ -7,6 +7,18 @@ import Form from '../Form';
 import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 import type {Node} from 'react';
 
+/**
+ * Split out of the class so DropdownToolbarAction can apply the same rule to its children. The cast
+ * is needed because ToolbarItemConfig is a union of exact object types, which a spread cannot match.
+ */
+export function applyToolbarItemLock(config: ?ToolbarItemConfig<*>, locked: boolean): ?ToolbarItemConfig<*> {
+    if (!config || !locked) {
+        return config;
+    }
+
+    return (({...config, disabled: true}: any): ToolbarItemConfig<*>);
+}
+
 export default class AbstractFormToolbarAction {
     resourceFormStore: ResourceFormStore;
     formInspector: FormInspector;
@@ -56,6 +68,19 @@ export default class AbstractFormToolbarAction {
 
     getToolbarItemConfig(): ?ToolbarItemConfig<*> {
         throw new Error('The getToolbarItemConfig method must be implemented by the sub class!');
+    }
+
+    /** A locked form disables every action by default, so only actions resolving the lock opt back in. */
+    get enabledWhileLocked(): boolean {
+        return false;
+    }
+
+    /** Everything rendering toolbar items must use this instead of getToolbarItemConfig(). */
+    getLockAwareToolbarItemConfig(): ?ToolbarItemConfig<*> {
+        return applyToolbarItemLock(
+            this.getToolbarItemConfig(),
+            !!this.resourceFormStore.locked && !this.enabledWhileLocked
+        );
     }
 
     destroy() {

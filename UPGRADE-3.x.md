@@ -69,8 +69,15 @@ alone: `live` does not imply it.
   with that `resource-key` once a request workflow covers its content; without one, publishing that
   content answers 500. Pages, articles and snippets ship one. A resource key without one whose content
   no request workflow covers publishes as before.
+- `Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface` gained
+  `getWorkflowTransitionRequestToolbarActions()`.
+- Admin JS form toolbar actions must extend `AbstractFormToolbarAction`: the form now calls
+  `getLockAwareToolbarItemConfig()` on each.
 - The `draft` dot of the `PublishIndicator` is grey instead of yellow, yellow now means "in review".
   This changes the list and form indicators of every project.
+- `ContentViewBuilderFactoryInterface::getWorkflowTransitionRequestToolbarActions()` returns a plain
+  `ToolbarAction` for `approval` instead of a `DropdownToolbarAction`.
+- The `sulu_content.bypass_review_and_publish` form toolbar action was removed.
 
 ## 3.0.10
 

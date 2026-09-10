@@ -58,7 +58,29 @@ final class RequestWorkflowResolver implements RequestWorkflowResolverInterface
             return $this->fallback($resourceKey);
         }
 
-        $name = $this->readWorkflowNameFromTemplate($dimensionContent::getTemplateType(), $templateKey);
+        return $this->resolveForTemplate($resourceKey, $dimensionContent::getTemplateType(), $templateKey);
+    }
+
+    public function resolveTemplateKeysWithWorkflow(string $resourceKey, string $templateType): array
+    {
+        $typed = $this->getTypedFormMetadata($templateType);
+        if (null === $typed) {
+            return [];
+        }
+
+        $templateKeys = [];
+        foreach (\array_keys($typed->getForms()) as $templateKey) {
+            if (null !== $this->resolveForTemplate($resourceKey, $templateType, $templateKey)) {
+                $templateKeys[] = $templateKey;
+            }
+        }
+
+        return $templateKeys;
+    }
+
+    private function resolveForTemplate(string $resourceKey, string $templateType, string $templateKey): ?RequestWorkflow
+    {
+        $name = $this->readWorkflowNameFromTemplate($templateType, $templateKey);
         if (null === $name) {
             return $this->fallback($resourceKey);
         }
@@ -83,7 +105,7 @@ final class RequestWorkflowResolver implements RequestWorkflowResolverInterface
         return $workflow->appliesToResource($resourceKey) ? $workflow : null;
     }
 
-    private function readWorkflowNameFromTemplate(string $templateType, string $templateKey): ?string
+    private function getTypedFormMetadata(string $templateType): ?TypedFormMetadata
     {
         try {
             $typed = $this->metadataProviderRegistry
@@ -95,7 +117,13 @@ final class RequestWorkflowResolver implements RequestWorkflowResolverInterface
             return null;
         }
 
-        if (!$typed instanceof TypedFormMetadata) {
+        return $typed instanceof TypedFormMetadata ? $typed : null;
+    }
+
+    private function readWorkflowNameFromTemplate(string $templateType, string $templateKey): ?string
+    {
+        $typed = $this->getTypedFormMetadata($templateType);
+        if (null === $typed) {
             return null;
         }
 
