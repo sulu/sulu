@@ -51,6 +51,23 @@ class Navigation extends React.Component<Props> {
         this.props.onNavigate(view);
     };
 
+    handleNavigationItemLinkClick = (event: SyntheticMouseEvent<HTMLAnchorElement>, value: string) => {
+        // Keep href for accessibility / open-in-new-tab, but use SPA navigation for normal clicks.
+        if (
+            event.button !== 0
+            || event.metaKey
+            || event.altKey
+            || event.ctrlKey
+            || event.shiftKey
+            || event.defaultPrevented
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+        this.handleNavigationItemClick(value);
+    };
+
     handleProfileEditClick = () => {
         this.props.onProfileClick();
     };
@@ -91,8 +108,10 @@ class Navigation extends React.Component<Props> {
                 {navigationItems.filter((item: NavigationItem) => item.visible).map((item: NavigationItem) => (
                     <NavigationComponent.Item
                         active={this.isItemActive(item)}
+                        href={item.view ? this.props.router.getHref(item.view) : undefined}
                         icon={item.icon}
                         key={item.id}
+                        onLinkClick={this.handleNavigationItemLinkClick}
                         title={item.label}
                         value={item.id}
                     >
@@ -101,7 +120,9 @@ class Navigation extends React.Component<Props> {
                             item.items.filter((subItem: NavigationItem) => subItem.visible).map((subItem) => (
                                 <NavigationComponent.Item
                                     active={this.isItemActive(subItem)}
+                                    href={subItem.view ? this.props.router.getHref(subItem.view) : undefined}
                                     key={subItem.id}
+                                    onLinkClick={this.handleNavigationItemLinkClick}
                                     title={subItem.label}
                                     value={subItem.id}
                                 />
