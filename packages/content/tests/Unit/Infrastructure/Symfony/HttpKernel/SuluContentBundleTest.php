@@ -66,7 +66,7 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
         $passConfig = $containerBuilder->getCompiler()->getPassConfig();
 
         $this->assertSame(
-            4,
+            5,
             \count($passConfig->getPasses()) - $beforeCount
         );
     }
@@ -97,9 +97,50 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
                 'content_resolver' => [
                     'max_depth' => 5,
                 ],
+                'request_workflows' => [],
             ],
         ], [
             $tree->getName() => $tree->finalize([]),
+        ]);
+    }
+
+    public function testRequestWorkflowPrototypeDefaults(): void
+    {
+        $contentBundle = $this->getContentBundle();
+        $treeBuilder = new TreeBuilder('sulu_content');
+        $fileLocator = new FileLocator(__DIR__ . '/config');
+        $definitionLoader = new DefinitionFileLoader(
+            $treeBuilder,
+            $fileLocator,
+        );
+
+        $definitionConfigurator = new DefinitionConfigurator(
+            $treeBuilder,
+            $definitionLoader,
+            __DIR__ . '/config',
+            '',
+        );
+
+        $contentBundle->configure($definitionConfigurator);
+
+        $tree = $treeBuilder->buildTree();
+
+        $this->assertSame([
+            'sulu_content' => [
+                'request_workflows' => [
+                    'default' => [
+                        'resources' => [],
+                        'pre_validators' => [],
+                        'validators' => [],
+                        'required_human_approvals' => 1,
+                    ],
+                ],
+                'content_resolver' => [
+                    'max_depth' => 5,
+                ],
+            ],
+        ], [
+            $tree->getName() => $tree->finalize(['request_workflows' => ['default' => []]]),
         ]);
     }
 

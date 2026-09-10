@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Rest;
 
+use Sulu\Component\Rest\Exception\PreValidationFailedExceptionInterface;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
@@ -84,6 +85,30 @@ class FlattenExceptionNormalizer implements NormalizerInterface
             $data['dependantResourcesCount'] = $contextException->getDependantResourcesCount();
             $data['dependantResourceBatches'] = $contextException->getDependantResourceBatches();
             $data['resource'] = $contextException->getResource();
+        }
+
+        if ($contextException instanceof PreValidationFailedExceptionInterface) {
+            $results = [];
+            $messages = [];
+            foreach ($contextException->getPreValidationResults() as $result) {
+                $failures = [];
+                foreach ($result['failures'] as $failure) {
+                    $parameters = [];
+                    foreach ($failure['messageParameters'] as $name => $value) {
+                        $parameters['{' . $name . '}'] = $value;
+                    }
+
+                    $message = $this->translator->trans($failure['messageKey'], $parameters, 'admin');
+                    $failures[] = $message;
+                    $messages[] = $message;
+                }
+
+                $results[] = ['key' => $result['key'], 'passed' => $result['passed'], 'messages' => $failures];
+            }
+
+            $data['preValidationResults'] = $results;
+            // Clients that read only `detail` still get every open point in one line.
+            $data['detail'] = \implode(' ', $messages);
         }
 
         if ($contextException instanceof ReferencingResourcesFoundExceptionInterface) {
