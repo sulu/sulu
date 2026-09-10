@@ -2,6 +2,7 @@
 import {Alignment} from '@ckeditor/ckeditor5-alignment';
 import {Bold, Code, Italic, Strikethrough, Subscript, Superscript, Underline} from '@ckeditor/ckeditor5-basic-styles';
 import {Heading} from '@ckeditor/ckeditor5-heading';
+import {TextPartLanguage} from '@ckeditor/ckeditor5-language';
 import {List} from '@ckeditor/ckeditor5-list';
 import {Table, TableToolbar} from '@ckeditor/ckeditor5-table';
 import {ContextualBalloon} from '@ckeditor/ckeditor5-ui';
@@ -174,4 +175,19 @@ test('Every tag and feature the shipped configs enable is claimed by a plugin or
     for (const {features, tags} of [DEFAULT_CONFIG, MINI_CONFIG]) {
         expect([...tags, ...features].filter((key) => !claimedKeys.includes(key))).toEqual([]);
     }
+});
+
+test('Load the text part language plugin only for the lang feature', () => {
+    expect(pluginRegistry.getPlugins(['lang'])).toEqual([TextPartLanguage]);
+    expect(buildConfig({enterMode: 'p', features: ['lang'], tags: []}).toolbar).toEqual(['textPartLanguage']);
+});
+
+test('Do not enable the lang feature in any shipped config', () => {
+    // It writes a lang attribute the previous editor could not produce, so enabling it by default would change
+    // the markup of every existing field.
+    for (const {features} of [DEFAULT_CONFIG, MINI_CONFIG]) {
+        expect(features).not.toContain('lang');
+    }
+
+    expect(pluginRegistry.getPlugins(DEFAULT_CONFIG.tags)).not.toContain(TextPartLanguage);
 });

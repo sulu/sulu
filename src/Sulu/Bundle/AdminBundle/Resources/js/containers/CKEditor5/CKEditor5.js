@@ -15,6 +15,7 @@ import '@ckeditor/ckeditor5-alignment/dist/index.css';
 import '@ckeditor/ckeditor5-basic-styles/dist/index.css';
 import '@ckeditor/ckeditor5-essentials/dist/index.css';
 import '@ckeditor/ckeditor5-heading/dist/index.css';
+import '@ckeditor/ckeditor5-language/dist/index.css';
 import '@ckeditor/ckeditor5-list/dist/index.css';
 import '@ckeditor/ckeditor5-paragraph/dist/index.css';
 import '@ckeditor/ckeditor5-table/dist/index.css';

@@ -31,8 +31,9 @@ concrete editor implementation, so that the same config can drive a different ed
 
 * `tags`: the HTML tags the editor may produce, e.g. `a`, `strong`, `h2`, `table`. Only tags a plugin can switch
   off appear here; `p` and `br` are always available and are controlled by `enterMode`, not by `tags`.
-* `features`: capabilities that are not an HTML tag, e.g. `align`, which writes a `text-align` style on an existing
-  element.
+* `features`: capabilities that are not an HTML tag, which is where attributes and inline styles are configured, e.g.
+  `align`, which writes a `text-align` style on an existing element, or `lang`, which marks the language of a text
+  part with a `lang` attribute.
 * `enterMode`: whether the editor produces paragraphs (`p`) or line breaks (`br`).
 
 The configs are defined in the Symfony configuration and delivered to the administration interface with the rest of the

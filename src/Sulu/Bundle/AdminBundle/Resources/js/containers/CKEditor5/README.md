@@ -59,6 +59,23 @@ ckeditorConfigRegistry.add((config) => ({
 }), 'table');
 ```
 
+A key does not have to be a tag. Anything a plugin adds that is not an element of its own is a feature, which is how
+attributes and inline styles are configured. `align` writes a `text-align` style on an existing element, and `lang`
+writes a `lang` attribute on a `span`:
+
+```javascript static
+import {ckeditorPluginRegistry, ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
+import {TextPartLanguage} from '@ckeditor/ckeditor5-language';
+
+ckeditorPluginRegistry.add(TextPartLanguage, 'lang');
+ckeditorConfigRegistry.add((config) => ({
+    toolbar: [...config.toolbar, 'textPartLanguage'],
+}), 'lang');
+```
+
+A project enables it with `features: {lang: true}`. Sulu registers this plugin but enables it in no shipped config,
+because marking the language of a text part produces markup the editor could not produce before.
+
 The tags and features themselves are configured in the Symfony configuration, see the `TextEditor` container. A key
 that is enabled there but has neither a plugin nor a config registered for it is reported with a warning in the
 browser console.

@@ -2,6 +2,7 @@
 import {Alignment} from '@ckeditor/ckeditor5-alignment';
 import {Bold, Code, Italic, Strikethrough, Subscript, Superscript, Underline} from '@ckeditor/ckeditor5-basic-styles';
 import {Heading} from '@ckeditor/ckeditor5-heading';
+import {TextPartLanguage} from '@ckeditor/ckeditor5-language';
 import {List} from '@ckeditor/ckeditor5-list';
 import {Table, TableToolbar} from '@ckeditor/ckeditor5-table';
 import {translate} from '../../utils/Translator';
@@ -91,6 +92,15 @@ export function registerCKEditor5Plugins() {
 
     pluginRegistry.add(Alignment, 'align');
     configRegistry.add((config) => ({toolbar: [...config.toolbar, 'alignment']}), 'align', PRIORITY_CORE);
+
+    // "lang" writes a lang attribute rather than a tag, which is why it is a feature and not a tag. It is not part of
+    // any shipped config, so a project opts in with "features: {lang: true}".
+    pluginRegistry.add(TextPartLanguage, 'lang');
+    configRegistry.add(
+        (config) => ({toolbar: [...config.toolbar, 'textPartLanguage']}),
+        'lang',
+        PRIORITY_CORE
+    );
 
     pluginRegistry.add(Table, 'table');
     pluginRegistry.add(TableToolbar, 'table');
