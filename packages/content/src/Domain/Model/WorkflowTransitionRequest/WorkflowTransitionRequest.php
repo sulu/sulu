@@ -172,8 +172,6 @@ class WorkflowTransitionRequest implements AuditableInterface
     {
         $decisions = \array_values($this->decisions->toArray());
 
-        // Ordered here rather than in the mapping: an ORDER BY there is applied to every load of the
-        // collection, including ones that do not care.
         \usort(
             $decisions,
             static fn (WorkflowTransitionRequestDecision $a, WorkflowTransitionRequestDecision $b) => $a->getId() <=> $b->getId(),
