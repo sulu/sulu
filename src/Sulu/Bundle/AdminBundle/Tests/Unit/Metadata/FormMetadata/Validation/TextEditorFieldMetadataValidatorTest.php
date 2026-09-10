@@ -98,9 +98,7 @@ class TextEditorFieldMetadataValidatorTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    /**
-     * @group legacy
-     */
+    #[\PHPUnit\Framework\Attributes\Group('legacy')]
     public function testDeprecatedFormatsParamTriggersDeprecation(): void
     {
         $this->expectUserDeprecationMessageMatches('/"formats" param of the "text_editor" property "teaser"/');
@@ -108,9 +106,7 @@ class TextEditorFieldMetadataValidatorTest extends TestCase
         $this->validator->validate($this->createField('text_editor', [], 'formats'), 'page_default');
     }
 
-    /**
-     * @group legacy
-     */
+    #[\PHPUnit\Framework\Attributes\Group('legacy')]
     public function testDeprecatedEnterModeParamTriggersDeprecation(): void
     {
         $this->expectUserDeprecationMessageMatches('/"enter_mode" param of the "text_editor" property "teaser"/');
