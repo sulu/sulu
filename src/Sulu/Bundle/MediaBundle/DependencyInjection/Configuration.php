@@ -81,6 +81,16 @@ final class Configuration implements ConfigurationInterface
             ->arrayNode('format_manager')
                 ->addDefaultsIfNotSet()
                 ->children()
+                    ->arrayNode('parallel_image_generation')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->integerNode('limit')
+                                ->info('Maximum number of images generated at the same time by HTTP requests, null means no limit. Requires symfony/semaphore and the framework "semaphore" configuration.')
+                                ->min(1)
+                                ->defaultNull()
+                            ->end()
+                        ->end()
+                    ->end()
                     ->arrayNode('response_headers')
                         ->prototype('scalar')->end()->defaultValue([
                             'Cache-Control' => 'public, immutable, max-age=31536000',

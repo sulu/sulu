@@ -37,6 +37,7 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Process\ExecutableFinder;
+use Symfony\Component\Semaphore\SemaphoreFactory;
 
 class SuluMediaExtension extends Extension implements PrependExtensionInterface
 {
@@ -348,6 +349,24 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.php');
         $loader->load('command.php');
+
+        $formatManagerConfig = $config['format_manager'];
+        \assert(\is_array($formatManagerConfig));
+        $parallelImageGenerationConfig = $formatManagerConfig['parallel_image_generation'];
+        \assert(\is_array($parallelImageGenerationConfig));
+        $parallelImageGenerationLimit = $parallelImageGenerationConfig['limit'];
+        if (null !== $parallelImageGenerationLimit) {
+            \assert(\is_int($parallelImageGenerationLimit));
+
+            if (!\class_exists(SemaphoreFactory::class)) {
+                throw new InvalidConfigurationException(
+                    'The "sulu_media.format_manager.parallel_image_generation.limit" option requires the Semaphore component. Try running "composer require symfony/semaphore" and configure "framework.semaphore".'
+                );
+            }
+
+            $container->setParameter('sulu_media.parallel_image_generation.limit', $parallelImageGenerationLimit);
+            $loader->load('parallel_image_generation.php');
+        }
 
         if (\class_exists(SvgImagine::class)) {
             $loader->load('services_imagine_svg.php');
