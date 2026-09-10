@@ -2,6 +2,7 @@
 import React from 'react';
 import {action, computed, observable, reaction, toJS} from 'mobx';
 import {observer} from 'mobx-react';
+import equals from 'fast-deep-equal';
 import {translate} from '../../../utils/Translator';
 import Input from '../../../components/Input';
 import Loader from '../../../components/Loader';
@@ -10,12 +11,30 @@ import Router from '../../../services/Router';
 import FormInspector from '../../Form/FormInspector';
 import memoryFormStoreFactory from '../../Form/stores/memoryFormStoreFactory';
 import ProductAttributesRenderer from './ProductAttributesRenderer';
-import isEmpty from './isEmpty';
-import {NAME_PREFIX} from './constants';
 import productAttributesRendererStyles from './productAttributesRenderer.scss';
+import type {Row} from './ProductAttributesRenderer';
 import type {Error as FieldError, ErrorCollection, FormStoreInterface} from '../../Form/types';
 
 const FORM_KEY = 'product_attributes';
+
+// Field names in the product_attributes form are "attribute_<id>", mirrored by the bundle's AttributeFieldFactory.
+const NAME_PREFIX = 'attribute_';
+
+function isEmpty(value: mixed): boolean {
+    if (value === undefined || value === null || value === '') {
+        return true;
+    }
+
+    if (Array.isArray(value)) {
+        return value.length === 0;
+    }
+
+    if (typeof value === 'object') {
+        return Object.keys(value).length === 0;
+    }
+
+    return false;
+}
 
 type Props = {|
     dataPath: string,
@@ -45,34 +64,37 @@ type Selector = {productFamily: string} | {product: string};
 @observer
 class ProductAttributes extends React.Component<Props> {
     @observable formStore: ?FormStoreInterface = undefined;
-    @observable formInspector: ?FormInspector = undefined;
     @observable hideEmpty: boolean = false;
     @observable filter: string = '';
 
     selectorDisposer: () => void;
 
-    constructor(props: Props) {
-        super(props);
-
-        this.selectorDisposer = reaction(
-            () => this.selector,
-            this.createFormStore,
-            {equals: (a, b) => JSON.stringify(a) === JSON.stringify(b), fireImmediately: true}
-        );
+    componentDidMount() {
+        // The family is read from the host store, not from a prop, so only a reaction sees it change.
+        this.selectorDisposer = reaction(() => this.selector, this.createFormStore, {fireImmediately: true});
     }
 
     componentDidUpdate(prevProps: Props) {
-        if (prevProps.value !== this.props.value) {
+        if (!equals(toJS(prevProps.value), toJS(this.props.value))) {
             this.syncValue();
         }
     }
 
     componentWillUnmount() {
         this.selectorDisposer();
-        this.destroyFormStore();
+
+        if (this.formStore) {
+            this.formStore.destroy();
+        }
     }
 
-    @computed get selector(): ?Selector {
+    @computed get formInspector(): ?FormInspector {
+        const {formStore} = this;
+
+        return formStore ? new FormInspector(formStore) : undefined;
+    }
+
+    @computed.struct get selector(): ?Selector {
         const {formInspector} = this.props;
 
         const productFamily = formInspector.getValueByPath('/productFamily');
@@ -88,55 +110,36 @@ class ProductAttributes extends React.Component<Props> {
         return undefined;
     }
 
-    @computed get value(): {[string]: mixed} {
-        return this.props.value || {};
-    }
-
-    // Empty values stay out of the data, so the JSON schema's required check catches them.
     get data(): {[string]: mixed} {
-        const {value} = this;
+        const value = this.props.value || {};
         const data = {};
 
         Object.keys(value).forEach((id) => {
-            if (!isEmpty(value[id])) {
-                data[NAME_PREFIX + id] = value[id];
-            }
+            data[NAME_PREFIX + id] = value[id];
         });
 
         return data;
     }
 
-    @action createFormStore = (selector: ?Selector) => {
-        this.destroyFormStore();
-
-        if (!selector) {
-            return;
+    @action createFormStore = (selector: Selector) => {
+        if (this.formStore) {
+            this.formStore.destroy();
         }
 
         const {formInspector, variant} = this.props;
         const metadataOptions = variant ? {...selector, variant: true} : {...selector};
 
-        const formStore = memoryFormStoreFactory.createFromFormKey(
+        this.formStore = memoryFormStoreFactory.createFromFormKey(
             FORM_KEY,
             this.data,
             formInspector.locale,
             undefined,
             metadataOptions
         );
-        this.formStore = formStore;
-        this.formInspector = new FormInspector(formStore);
     };
 
-    @action destroyFormStore() {
-        if (this.formStore) {
-            this.formStore.destroy();
-        }
-
-        this.formStore = undefined;
-        this.formInspector = undefined;
-    }
-
-    // A reload of the host form replaces the value; the store follows without becoming dirty.
+    // Mirrors a host value replaced from outside, e.g. a save response or "delete draft".
+    // Written as a server value so the inner store does not go dirty from a change the user did not make.
     syncValue() {
         const {formStore} = this;
         if (!formStore) {
@@ -187,7 +190,7 @@ class ProductAttributes extends React.Component<Props> {
         }
 
         formStore.change('/' + name, fieldValue);
-        this.props.onChange({...this.value, [name.substring(NAME_PREFIX.length)]: fieldValue});
+        this.props.onChange({...this.props.value, [name.substring(NAME_PREFIX.length)]: fieldValue});
     };
 
     // The row finishes on the host form under its host path, so the host validates and marks it modified.
@@ -196,6 +199,22 @@ class ProductAttributes extends React.Component<Props> {
         const id = rowDataPath.substring(1 + NAME_PREFIX.length);
 
         onFinish(dataPath + '/' + id, schemaPath);
+    };
+
+    // The renderer asks per row, so the toolbar's filter and its hide-empty toggle are answered in one place.
+    filterItem = (row: Row): boolean => {
+        const {formStore} = this;
+        const needle = this.filter.trim().toLowerCase();
+
+        if (needle && !(row.schema.label || '').toLowerCase().includes(needle)) {
+            return false;
+        }
+
+        if (this.hideEmpty && (!formStore || isEmpty(toJS(formStore.data[row.name])))) {
+            return false;
+        }
+
+        return true;
     };
 
     @action handleHideEmptyChange = (checked: boolean) => {
@@ -235,15 +254,8 @@ class ProductAttributes extends React.Component<Props> {
         const {disabled, router} = this.props;
         const {formInspector, formStore} = this;
 
-        if (!formStore || !formInspector) {
-            return (
-                <p className={productAttributesRendererStyles.hint}>
-                    {translate('sulu_product.select_product_family_for_attributes')}
-                </p>
-            );
-        }
-
-        if (formStore.loading) {
+        // The store is built in componentDidMount, so the first render has none yet.
+        if (!formStore || !formInspector || formStore.loading) {
             return <Loader />;
         }
 
@@ -252,9 +264,8 @@ class ProductAttributes extends React.Component<Props> {
                 data={formStore.data}
                 disabled={disabled}
                 errors={this.errors}
-                filter={this.filter}
+                filterItem={this.filterItem}
                 formInspector={formInspector}
-                hideEmpty={this.hideEmpty}
                 onChange={this.handleChange}
                 onFinish={this.handleFinish}
                 router={router}

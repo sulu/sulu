@@ -9,12 +9,10 @@ import Field from '../../Form/Field';
 import FormInspector from '../../Form/FormInspector';
 import AttributeGroupTable from '../AttributeGroupTable';
 import productAttributesRendererStyles from './productAttributesRenderer.scss';
-import isEmpty from './isEmpty';
-import {NAME_PREFIX} from './constants';
 import type {Node} from 'react';
 import type {Error, Schema, SchemaEntry} from '../../Form/types';
 
-type Row = {
+export type Row = {
     name: string,
     schema: SchemaEntry,
 };
@@ -31,9 +29,8 @@ type Props = {|
     data: Object,
     disabled: boolean,
     errors: {[string]: Error},
-    filter: string,
+    filterItem: (row: Row) => boolean,
     formInspector: FormInspector,
-    hideEmpty: boolean,
     onChange: (name: string, value: mixed) => void,
     onFinish: (dataPath: string, schemaPath: string) => void,
     router: ?Router,
@@ -44,15 +41,15 @@ type Props = {|
 /**
  * Renders a product_attributes form as one collapsible card per attribute group with a label/field
  * row per attribute. Each row uses the form's Field, so any field type works. Values come from the
- * given form inspector, the one of the container's own store, errors from the errors map.
+ * given form inspector, the one of the container's own store, errors from the errors map. Which rows
+ * are shown is decided by the given filterItem callback.
  *
  * @experimental We can not yet give BC Promise for this new container in Sulu 3.1.
  */
 @observer
 class ProductAttributesRenderer extends React.Component<Props> {
     @computed get groups(): Array<Group> {
-        const {filter, formInspector, hideEmpty, schema} = this.props;
-        const needle = filter.trim().toLowerCase();
+        const {filterItem, schema} = this.props;
 
         return Object.keys(schema)
             .map((sectionKey) => {
@@ -60,10 +57,8 @@ class ProductAttributesRenderer extends React.Component<Props> {
                 const items = section.items || {};
 
                 const rows = Object.keys(items)
-                    .filter((name) => name.startsWith(NAME_PREFIX))
                     .map((name) => ({name, schema: items[name]}))
-                    .filter((row) => !hideEmpty || !isEmpty(formInspector.getValueByPath('/' + row.name)))
-                    .filter((row) => !needle || (row.schema.label || '').toLowerCase().includes(needle));
+                    .filter((row) => filterItem(row));
 
                 return {rows, sectionKey, title: section.label || ''};
             })

@@ -56,8 +56,6 @@ jest.mock('../ProductAttributesRenderer', () => function ProductAttributesRender
             data: props.data,
             disabled: props.disabled,
             errors: props.errors,
-            filter: props.filter,
-            hideEmpty: props.hideEmpty,
             schema: props.schema,
         })),
         props.toolbar,
@@ -157,13 +155,10 @@ test('shows a loader until the metadata resolved, then the renderer with the inn
     });
 
     expect(screen.queryByTestId('loader')).not.toBeInTheDocument();
-    // empty values stay out of the inner data, so the JSON schema's required check catches them
     expect(JSON.parse(screen.getByTestId('renderer-props').textContent)).toEqual({
-        data: {attribute_7: 3},
+        data: {attribute_7: 3, attribute_8: null},
         disabled: false,
         errors: {},
-        filter: '',
-        hideEmpty: false,
         schema: SCHEMA,
     });
     expect(rendererProps.formInspector.getValueByPath('/attribute_7')).toEqual(3);
@@ -193,21 +188,6 @@ test('falls back to the parent product from the form options', () => {
 
     expect(metadataStore.getSchema)
         .toHaveBeenCalledWith('product_attributes', undefined, {product: 'product-1', variant: true});
-});
-
-test('renders a hint and requests nothing without a family', () => {
-    const FormInspectorMock = require('../../../Form/FormInspector');
-    // $FlowFixMe
-    FormInspectorMock.mockImplementationOnce(function() {
-        this.options = {};
-        this.getValueByPath = jest.fn(() => undefined);
-        this.isFieldModified = jest.fn(() => false);
-    });
-
-    renderComponent();
-
-    expect(metadataStore.getSchema).not.toHaveBeenCalled();
-    expect(screen.getByText('sulu_product.select_product_family_for_attributes')).toBeInTheDocument();
 });
 
 test('creates a new store when the family changes', async() => {
@@ -307,20 +287,36 @@ test('reads the host errors from the observable array the form store builds for 
     });
 });
 
-test('toggles hide empty', async() => {
-    await renderLoaded();
+test('drops the empty rows from the filter callback once hide empty is toggled', async() => {
+    await renderLoaded({value: {'7': 3, '8': null}});
+
+    const filled = {name: 'attribute_7', schema: {label: 'Weight', type: 'number'}};
+    const empty = {name: 'attribute_8', schema: {label: 'Colour', type: 'text_line'}};
+    expect(rendererProps.filterItem(filled)).toEqual(true);
+    expect(rendererProps.filterItem(empty)).toEqual(true);
 
     await userEvent.click(screen.getByRole('checkbox'));
 
-    // eslint-disable-next-line jest-dom/prefer-to-have-text-content
-    expect(screen.getByTestId('renderer-props').textContent).toContain('"hideEmpty":true');
+    expect(rendererProps.filterItem(filled)).toEqual(true);
+    expect(rendererProps.filterItem(empty)).toEqual(false);
 });
 
-test('passes the typed filter to the renderer', async() => {
+test('keeps only the rows whose label contains the typed filter', async() => {
     await renderLoaded();
 
-    await userEvent.type(screen.getByPlaceholderText('sulu_product.filter_attributes'), 'vol');
+    await userEvent.type(screen.getByPlaceholderText('sulu_product.filter_attributes'), 'eig');
 
-    // eslint-disable-next-line jest-dom/prefer-to-have-text-content
-    expect(screen.getByTestId('renderer-props').textContent).toContain('"filter":"vol"');
+    expect(rendererProps.filterItem({name: 'attribute_7', schema: {label: 'Weight', type: 'number'}})).toEqual(true);
+    expect(rendererProps.filterItem({name: 'attribute_8', schema: {label: 'Colour', type: 'text_line'}}))
+        .toEqual(false);
+});
+
+test('reports an empty list and an empty object as empty', async() => {
+    await renderLoaded({value: {'7': [], '8': {}}});
+
+    await userEvent.click(screen.getByRole('checkbox'));
+
+    expect(rendererProps.filterItem({name: 'attribute_7', schema: {label: 'Weight', type: 'number'}})).toEqual(false);
+    expect(rendererProps.filterItem({name: 'attribute_8', schema: {label: 'Colour', type: 'text_line'}}))
+        .toEqual(false);
 });

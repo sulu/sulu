@@ -51,7 +51,10 @@ const SCHEMA = {
     },
 };
 
-const DATA = {attribute_7: 12, attribute_9: '', attribute_42: 'stale'};
+const DATA = {attribute_7: 12, attribute_9: ''};
+
+// The container decides which rows are shown; the default keeps them all.
+const filterItem = () => true;
 
 // $FlowFixMe
 const formInspector: FormInspector = new FormInspector();
@@ -65,9 +68,8 @@ function renderComponent(props: Object = {}) {
             data={DATA}
             disabled={false}
             errors={{}}
-            filter=""
+            filterItem={filterItem}
             formInspector={formInspector}
-            hideEmpty={false}
             onChange={jest.fn()}
             onFinish={jest.fn()}
             router={undefined}
@@ -125,21 +127,23 @@ test('shows the given errors on their rows', () => {
     expect(screen.getAllByRole('textbox')[2]).toHaveAttribute('data-error', 'required');
 });
 
-test('hides empty rows and empty groups when hideEmpty is set', () => {
-    renderComponent({hideEmpty: true});
-
-    expect(screen.getByText('Dimensions')).toBeInTheDocument();
-    expect(screen.getByText('Weight (kg) *')).toBeInTheDocument();
-    expect(screen.queryByText('Colour')).not.toBeInTheDocument();
-    expect(screen.queryByText('Electrical')).not.toBeInTheDocument();
-});
-
-test('keeps only rows whose label contains the filter and drops empty groups', () => {
-    renderComponent({filter: 'volt'});
+test('keeps only the rows the filterItem callback accepts and drops the groups left empty', () => {
+    renderComponent({filterItem: (row) => row.schema.label === 'Voltage (V)'});
 
     expect(screen.getByText('Voltage (V)')).toBeInTheDocument();
     expect(screen.queryByText('Weight (kg) *')).not.toBeInTheDocument();
     expect(screen.queryByText('Dimensions')).not.toBeInTheDocument();
+});
+
+test('asks the filterItem callback for every field of every group', () => {
+    const filterItemMock = jest.fn(() => true);
+    renderComponent({filterItem: filterItemMock});
+
+    expect(filterItemMock.mock.calls.map(([row]) => row.name))
+        .toEqual(['attribute_7', 'attribute_8', 'attribute_9']);
+    expect(filterItemMock).toHaveBeenCalledWith(
+        {name: 'attribute_7', schema: SCHEMA.attribute_group_1.items.attribute_7}
+    );
 });
 
 test('disables every field when disabled', () => {
