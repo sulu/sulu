@@ -76,6 +76,7 @@ jackrabbit/*
 /.php-version
 
 /config/reference.php
+/packages/*/tests/Application/config/reference.php
 
 ###> symfony/framework-bundle ###
 /.env.local
