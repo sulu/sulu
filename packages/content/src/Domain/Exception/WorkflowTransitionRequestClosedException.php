@@ -20,17 +20,17 @@ class WorkflowTransitionRequestClosedException extends \RuntimeException impleme
 {
     private readonly string $workflowTransitionRequestId;
 
-    private readonly string $status;
+    private readonly string $place;
 
     public function __construct(WorkflowTransitionRequest $workflowTransitionRequest)
     {
         $this->workflowTransitionRequestId = $workflowTransitionRequest->getId();
-        $this->status = $workflowTransitionRequest->getStatus()->value;
+        $this->place = $workflowTransitionRequest->getPlace()->value;
 
         parent::__construct(\sprintf(
-            'Workflow transition request "%s" cannot accept decisions in status "%s".',
+            'Workflow transition request "%s" cannot accept decisions, it is "%s".',
             $this->workflowTransitionRequestId,
-            $this->status,
+            $this->place,
         ));
     }
 
@@ -43,7 +43,7 @@ class WorkflowTransitionRequestClosedException extends \RuntimeException impleme
     {
         return [
             '{workflowTransitionRequestId}' => $this->workflowTransitionRequestId,
-            '{status}' => $this->status,
+            '{place}' => $this->place,
         ];
     }
 }

@@ -41,9 +41,9 @@ earlier, as before this release.
 
 ### New workflow transition request tables
 
-The review flow stores its requests in `ct_workflow_transition_requests`, the people's verdicts in
-`ct_workflow_transition_request_approvals` and the automated checks in
-`ct_workflow_transition_request_checks`. Run the new migration to apply the schema change:
+The review flow stores its requests in `ct_workflow_transition_requests` and every verdict on them,
+by a reviewer or by an automated validator, in `ct_workflow_transition_request_decisions`. Run the new
+migration to apply the schema change:
 
 ```bash
 bin/console doctrine:migrations:migrate

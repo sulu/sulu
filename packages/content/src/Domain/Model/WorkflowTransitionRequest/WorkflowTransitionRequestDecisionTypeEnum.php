@@ -13,9 +13,13 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Domain\Model\WorkflowTransitionRequest;
 
-enum WorkflowTransitionRequestCheckStatusEnum: string
+/**
+ * Names which subject decided, and therefore which column of the row is filled.
+ *
+ * @internal
+ */
+enum WorkflowTransitionRequestDecisionTypeEnum: string
 {
-    case PENDING = 'pending';
-    case PASSED = 'passed';
-    case FAILED = 'failed';
+    case USER = 'user';
+    case VALIDATOR = 'validator';
 }

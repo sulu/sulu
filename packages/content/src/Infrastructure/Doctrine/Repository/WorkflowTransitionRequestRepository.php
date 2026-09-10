@@ -19,9 +19,10 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestNotFoundException;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestCheck;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestCheckStatusEnum;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecision;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 
 /**
@@ -32,6 +33,8 @@ use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
  *     locale?: string,
  *     active?: bool,
  * }
+ *
+ * @internal
  */
 final class WorkflowTransitionRequestRepository implements WorkflowTransitionRequestRepositoryInterface
 {
@@ -79,7 +82,7 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
         return (int) $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
-    public function findFlatBy(array $filters, ?int $limit = null, ?int $offset = null): array
+    public function findBy(array $filters, ?int $limit = null, ?int $offset = null): array
     {
         $queryBuilder = $this->joinCreator($this->createQueryBuilder($filters))
             ->orderBy('workflowTransitionRequest.created', 'DESC')
@@ -93,16 +96,9 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
         /** @var list<WorkflowTransitionRequest> $workflowTransitionRequests */
         $workflowTransitionRequests = $queryBuilder->getQuery()->getResult();
 
-        $this->preloadChecksAndApprovals($workflowTransitionRequests);
+        $this->preloadDecisions($workflowTransitionRequests);
 
-        return \array_map(
-            static fn (WorkflowTransitionRequest $workflowTransitionRequest) => [
-                'id' => $workflowTransitionRequest->getId(),
-                'requester' => $workflowTransitionRequest->getCreator()?->getFullName(),
-                'status' => $workflowTransitionRequest->getStatus()->value,
-            ],
-            $workflowTransitionRequests,
-        );
+        return $workflowTransitionRequests;
     }
 
     /**
@@ -110,16 +106,15 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
      *
      * @param list<WorkflowTransitionRequest> $workflowTransitionRequests
      */
-    private function preloadChecksAndApprovals(array $workflowTransitionRequests): void
+    private function preloadDecisions(array $workflowTransitionRequests): void
     {
         if ([] === $workflowTransitionRequests) {
             return;
         }
 
         $this->entityRepository->createQueryBuilder('workflowTransitionRequest')
-            ->addSelect('checks', 'approvals')
-            ->leftJoin('workflowTransitionRequest.checks', 'checks')
-            ->leftJoin('workflowTransitionRequest.approvals', 'approvals')
+            ->addSelect('decisions')
+            ->leftJoin('workflowTransitionRequest.decisions', 'decisions')
             ->where('workflowTransitionRequest.id IN (:ids)')
             ->setParameter('ids', \array_map(
                 static fn (WorkflowTransitionRequest $workflowTransitionRequest) => $workflowTransitionRequest->getId(),
@@ -134,28 +129,31 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
         $this->entityManager->persist($workflowTransitionRequest);
     }
 
-    public function settleCheck(
-        WorkflowTransitionRequestCheck $check,
-        WorkflowTransitionRequestCheckStatusEnum $status,
-        ?string $comment,
+    public function settleDecision(
+        WorkflowTransitionRequestDecision $decision,
+        WorkflowTransitionRequestDecisionStatusEnum $status,
+        array $messages,
     ): void {
         $decidedAt = new \DateTimeImmutable();
-        $tableName = $this->entityManager->getClassMetadata(WorkflowTransitionRequestCheck::class)->getTableName();
+        $tableName = $this->entityManager->getClassMetadata(WorkflowTransitionRequestDecision::class)->getTableName();
 
         $claimed = (int) $this->entityManager->getConnection()->executeStatement(
             \sprintf(
-                'UPDATE %s SET status = :status, comment = :comment, decided_at = :decidedAt
+                'UPDATE %s SET status = :status, messages = :messages, decided_at = :decidedAt
                     WHERE id = :id AND status = :pending',
                 $tableName,
             ),
             [
                 'status' => $status->value,
-                'comment' => $comment,
+                'messages' => \array_map(static fn (DecisionMessage $message) => $message->toArray(), $messages),
                 'decidedAt' => $decidedAt,
-                'id' => $check->getId(),
-                'pending' => WorkflowTransitionRequestCheckStatusEnum::PENDING->value,
+                'id' => $decision->getId(),
+                'pending' => WorkflowTransitionRequestDecisionStatusEnum::PENDING->value,
             ],
-            ['decidedAt' => Types::DATETIME_IMMUTABLE],
+            [
+                'messages' => Types::JSON,
+                'decidedAt' => Types::DATETIME_IMMUTABLE,
+            ],
         );
 
         if (1 !== $claimed) {
@@ -164,7 +162,7 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
 
         // The statement bypasses the unit of work, so the hydrated row would otherwise stay `pending`
         // for the rest of an inline run and the response would contradict the database.
-        $check->settle($status, $comment, $decidedAt);
+        $decision->settle($status, $messages, $decidedAt);
     }
 
     /**

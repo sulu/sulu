@@ -10,10 +10,9 @@
         <field name="resourceKey" column="resource_key" type="string" length="191"/>
         <field name="resourceId" column="resource_id" type="string" length="191"/>
         <field name="locale" column="locale" type="string" length="15"/>
-        <field name="lifecycle" column="lifecycle" type="string" length="16" enum-type="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestLifecycleEnum"/>
+        <field name="place" column="place" type="string" length="16" enum-type="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum"/>
         <field name="activeKey" column="active_key" type="string" length="191" nullable="true" unique="true"/>
         <field name="workflowName" column="workflow_name" type="string" length="64"/>
-        <field name="requiredHumanApprovalCount" column="required_human_approval_count" type="integer"/>
         <field name="created" column="created_at" type="datetime_immutable"/>
         <field name="changed" column="changed_at" type="datetime_immutable"/>
 
@@ -29,22 +28,10 @@
             <index name="ct_workflow_transition_requests_scope_idx" columns="resource_key,resource_id,locale"/>
         </indexes>
 
-        <one-to-many field="checks" target-entity="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestCheck" mapped-by="workflowTransitionRequest" orphan-removal="true">
+        <one-to-many field="decisions" target-entity="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecision" mapped-by="workflowTransitionRequest" orphan-removal="true">
             <cascade>
                 <cascade-persist/>
             </cascade>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
-        </one-to-many>
-
-        <one-to-many field="approvals" target-entity="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestApproval" mapped-by="workflowTransitionRequest" orphan-removal="true">
-            <cascade>
-                <cascade-persist/>
-            </cascade>
-            <order-by>
-                <order-by-field name="decidedAt" direction="ASC"/>
-            </order-by>
         </one-to-many>
     </entity>
 </doctrine-mapping>

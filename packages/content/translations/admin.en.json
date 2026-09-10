@@ -50,7 +50,7 @@
     "sulu_content.workflow_transition_request.automated_checks": "Automated checks",
     "sulu_content.workflow_transition_request.check_caption_waiting": "Has not answered yet",
     "sulu_content.workflow_transition_request.check_caption_failed": "Reported a problem",
-    "sulu_content.workflow_transition_request.check_caption_blocking": "Must pass before publishing",
+    "sulu_content.workflow_transition_request.check_caption_required": "Must pass before publishing",
     "sulu_content.workflow_transition_request.approve_comment_label": "Do you want to add a comment?",
     "sulu_content.workflow_transition_request.banner_approved": "Ready to Publish",
     "sulu_content.workflow_transition_request.banner_pending": "This site was requested for publish. If you want to continue editing, cancel the request.",

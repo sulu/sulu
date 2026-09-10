@@ -22,6 +22,9 @@ use Sulu\Content\Domain\Exception\SelfReviewNotAllowedException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * @internal
+ */
 class WorkflowTransitionRequest implements AuditableInterface
 {
     use AuditableTrait;
@@ -30,32 +33,25 @@ class WorkflowTransitionRequest implements AuditableInterface
 
     private string $id;
 
-    private WorkflowTransitionRequestLifecycleEnum $lifecycle = WorkflowTransitionRequestLifecycleEnum::OPEN;
+    private WorkflowTransitionRequestPlaceEnum $place = WorkflowTransitionRequestPlaceEnum::OPEN;
 
     private ?string $activeKey = null;
 
     private string $workflowName;
 
     /**
-     * @var Collection<int, WorkflowTransitionRequestApproval>
+     * @var Collection<int, WorkflowTransitionRequestDecision>
      */
-    private Collection $approvals;
-
-    /**
-     * @var Collection<int, WorkflowTransitionRequestCheck>
-     */
-    private Collection $checks;
+    private Collection $decisions;
 
     public function __construct(
         private readonly string $resourceKey,
         private readonly string $resourceId,
         private readonly string $locale,
         string $workflowName,
-        private readonly int $requiredHumanApprovalCount,
     ) {
         $this->id = Uuid::v7()->toRfc4122();
-        $this->approvals = new ArrayCollection();
-        $this->checks = new ArrayCollection();
+        $this->decisions = new ArrayCollection();
         $this->workflowName = $workflowName;
         $this->created = new \DateTimeImmutable();
         $this->syncActiveKey();
@@ -83,31 +79,46 @@ class WorkflowTransitionRequest implements AuditableInterface
 
     public function isOpen(): bool
     {
-        return $this->lifecycle->isOpen();
+        return $this->place->isOpen();
+    }
+
+    public function getPlace(): WorkflowTransitionRequestPlaceEnum
+    {
+        return $this->place;
     }
 
     /**
      * Derived on read and never stored, so two handlers settling concurrently cannot overwrite
-     * each other's verdict.
+     * each other's verdict. The two numbers come from the workflow config, not from the row, so a
+     * config change applies to open requests as well.
+     *
+     * @param list<string> $requiredValidatorKeys
      */
-    public function getStatus(): WorkflowTransitionRequestStatusEnum
+    public function getStatus(int $requiredUserApprovals, array $requiredValidatorKeys = []): WorkflowTransitionRequestStatusEnum
     {
-        if (WorkflowTransitionRequestLifecycleEnum::CANCELLED === $this->lifecycle) {
+        if (WorkflowTransitionRequestPlaceEnum::CANCELLED === $this->place) {
             return WorkflowTransitionRequestStatusEnum::CANCELLED;
         }
 
-        if (WorkflowTransitionRequestLifecycleEnum::PUBLISHED === $this->lifecycle) {
+        if (WorkflowTransitionRequestPlaceEnum::PUBLISHED === $this->place) {
             return WorkflowTransitionRequestStatusEnum::PUBLISHED;
         }
 
-        if ($this->countHumanApprovals() < $this->requiredHumanApprovalCount) {
+        if ($this->countUserApprovals() < $requiredUserApprovals) {
             return WorkflowTransitionRequestStatusEnum::PENDING;
         }
 
-        // People carry the request, checks can hold it back: a check configured to block keeps the
-        // request pending until it passed, however many approvals it collected.
-        foreach ($this->checks as $check) {
-            if ($check->blocksApproval()) {
+        // People carry the request, validators can hold it back: one marked required keeps the
+        // request pending until it approved, however many approvals it collected.
+        foreach ($this->decisions as $decision) {
+            $validatorKey = $decision->getValidatorKey();
+            if (null === $validatorKey) {
+                continue;
+            }
+
+            // Pending is not a rejection, but it is not an approval either, so a required
+            // validator that has not answered yet still holds the request.
+            if (!$decision->isApproved() && \in_array($validatorKey, $requiredValidatorKeys, true)) {
                 return WorkflowTransitionRequestStatusEnum::PENDING;
             }
         }
@@ -115,13 +126,13 @@ class WorkflowTransitionRequest implements AuditableInterface
         return WorkflowTransitionRequestStatusEnum::APPROVED;
     }
 
-    public function countHumanApprovals(): int
+    public function countUserApprovals(): int
     {
         $approvals = 0;
-        foreach ($this->approvals as $approval) {
+        foreach ($this->decisions as $decision) {
             // Deleting a user nulls the row's user, leaving it owned by nobody. It stays as history
             // but must not keep voting.
-            if ($approval->isApproved() && null !== $approval->getUser()) {
+            if ($decision->isUserDecision() && $decision->isApproved() && null !== $decision->getUser()) {
                 ++$approvals;
             }
         }
@@ -129,11 +140,14 @@ class WorkflowTransitionRequest implements AuditableInterface
         return $approvals;
     }
 
-    public function countHumanRejections(): int
+    /**
+     * A deleted user's decision stays as history but stops counting, on both sides.
+     */
+    public function countUserRejections(): int
     {
         $rejections = 0;
-        foreach ($this->approvals as $approval) {
-            if (!$approval->isApproved()) {
+        foreach ($this->decisions as $decision) {
+            if ($decision->isUserDecision() && $decision->isRejected() && null !== $decision->getUser()) {
                 ++$rejections;
             }
         }
@@ -151,62 +165,62 @@ class WorkflowTransitionRequest implements AuditableInterface
         return $this->workflowName;
     }
 
-    public function getRequiredHumanApprovalCount(): int
-    {
-        return $this->requiredHumanApprovalCount;
-    }
-
     /**
-     * @return list<WorkflowTransitionRequestApproval>
+     * @return list<WorkflowTransitionRequestDecision>
      */
-    public function getApprovals(): array
+    public function getDecisions(): array
     {
-        return \array_values($this->approvals->toArray());
+        $decisions = \array_values($this->decisions->toArray());
+
+        // Ordered here rather than in the mapping: an ORDER BY there is applied to every load of the
+        // collection, including ones that do not care.
+        \usort(
+            $decisions,
+            static fn (WorkflowTransitionRequestDecision $a, WorkflowTransitionRequestDecision $b) => $a->getId() <=> $b->getId(),
+        );
+
+        return $decisions;
     }
 
-    /**
-     * @return list<WorkflowTransitionRequestCheck>
-     */
-    public function getChecks(): array
+    public function addValidatorDecision(string $validatorKey): void
     {
-        return \array_values($this->checks->toArray());
-    }
-
-    public function addCheck(string $validatorKey, bool $blocking = false): void
-    {
-        if (null !== $this->getCheck($validatorKey)) {
+        if (null !== $this->getValidatorDecision($validatorKey)) {
             return;
         }
 
-        $this->checks->add(new WorkflowTransitionRequestCheck($this, $validatorKey, $blocking));
+        $this->decisions->add(WorkflowTransitionRequestDecision::forValidator($this, $validatorKey));
     }
 
-    public function getCheck(string $validatorKey): ?WorkflowTransitionRequestCheck
+    public function getValidatorDecision(string $validatorKey): ?WorkflowTransitionRequestDecision
     {
-        foreach ($this->checks as $check) {
-            if ($validatorKey === $check->getValidatorKey()) {
-                return $check;
+        foreach ($this->decisions as $decision) {
+            if ($validatorKey === $decision->getValidatorKey()) {
+                return $decision;
             }
         }
 
         return null;
     }
 
-    public function addApproval(UserInterface $user, ?string $comment = null): void
+    public function addApproval(UserInterface $user, DecisionMessage ...$messages): void
     {
-        $this->decide($user, WorkflowTransitionRequestApprovalStatusEnum::APPROVED, $comment);
+        $this->decide($user, WorkflowTransitionRequestDecisionStatusEnum::APPROVED, \array_values($messages));
     }
 
-    public function addRejection(UserInterface $user, string $comment): void
+    public function addRejection(UserInterface $user, DecisionMessage ...$messages): void
     {
-        $this->decide($user, WorkflowTransitionRequestApprovalStatusEnum::REJECTED, $comment);
+        if ([] === $messages) {
+            throw new \InvalidArgumentException('A rejecting reviewer must say what is wrong.');
+        }
+
+        $this->decide($user, WorkflowTransitionRequestDecisionStatusEnum::REJECTED, \array_values($messages));
     }
 
-    public function getApprovalOf(UserInterface $user): ?WorkflowTransitionRequestApproval
+    public function getUserDecision(UserInterface $user): ?WorkflowTransitionRequestDecision
     {
-        foreach ($this->approvals as $approval) {
-            if ($approval->getUser() === $user) {
-                return $approval;
+        foreach ($this->decisions as $decision) {
+            if ($decision->getUser() === $user) {
+                return $decision;
             }
         }
 
@@ -215,20 +229,23 @@ class WorkflowTransitionRequest implements AuditableInterface
 
     public function cancel(): void
     {
-        $this->transitionTo(WorkflowTransitionRequestLifecycleEnum::CANCELLED);
+        $this->transitionTo(WorkflowTransitionRequestPlaceEnum::CANCELLED);
     }
 
     public function publish(): void
     {
-        $this->transitionTo(WorkflowTransitionRequestLifecycleEnum::PUBLISHED);
+        $this->transitionTo(WorkflowTransitionRequestPlaceEnum::PUBLISHED);
     }
 
+    /**
+     * @param list<DecisionMessage> $messages
+     */
     private function decide(
         UserInterface $user,
-        WorkflowTransitionRequestApprovalStatusEnum $status,
-        ?string $comment,
+        WorkflowTransitionRequestDecisionStatusEnum $status,
+        array $messages,
     ): void {
-        if (!$this->lifecycle->isOpen()) {
+        if (!$this->place->isOpen()) {
             throw new WorkflowTransitionRequestClosedException($this);
         }
 
@@ -236,29 +253,29 @@ class WorkflowTransitionRequest implements AuditableInterface
             throw new SelfReviewNotAllowedException($this);
         }
 
-        $approval = $this->getApprovalOf($user);
-        if (null !== $approval) {
-            $approval->decide($status, $comment);
+        $decision = $this->getUserDecision($user);
+        if (null !== $decision) {
+            $decision->settle($status, $messages, new \DateTimeImmutable());
 
             return;
         }
 
-        $this->approvals->add(new WorkflowTransitionRequestApproval($this, $user, $status, $comment));
+        $this->decisions->add(WorkflowTransitionRequestDecision::forUser($this, $user, $status, $messages));
     }
 
-    private function transitionTo(WorkflowTransitionRequestLifecycleEnum $toLifecycle): void
+    private function transitionTo(WorkflowTransitionRequestPlaceEnum $toPlace): void
     {
-        if (!$this->lifecycle->isOpen()) {
+        if (!$this->place->isOpen()) {
             return;
         }
 
-        $this->lifecycle = $toLifecycle;
+        $this->place = $toPlace;
         $this->syncActiveKey();
     }
 
     private function syncActiveKey(): void
     {
-        $this->activeKey = $this->lifecycle->isOpen()
+        $this->activeKey = $this->place->isOpen()
             ? \sprintf('%s:%s:%s', $this->resourceKey, $this->resourceId, $this->locale)
             : null;
     }

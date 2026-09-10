@@ -50,7 +50,7 @@
     "sulu_content.workflow_transition_request.automated_checks": "Automatische Prüfungen",
     "sulu_content.workflow_transition_request.check_caption_waiting": "Noch keine Antwort",
     "sulu_content.workflow_transition_request.check_caption_failed": "Hat ein Problem gemeldet",
-    "sulu_content.workflow_transition_request.check_caption_blocking": "Muss vor dem Veröffentlichen bestanden sein",
+    "sulu_content.workflow_transition_request.check_caption_required": "Muss vor dem Veröffentlichen bestanden sein",
     "sulu_content.workflow_transition_request.approve_comment_label": "Möchten Sie einen Kommentar hinzufügen?",
     "sulu_content.workflow_transition_request.banner_approved": "Bereit zur Veröffentlichung",
     "sulu_content.workflow_transition_request.banner_pending": "Diese Seite wurde zur Veröffentlichung angefragt. Wenn Sie weiter bearbeiten möchten, brechen Sie die Anfrage ab.",
