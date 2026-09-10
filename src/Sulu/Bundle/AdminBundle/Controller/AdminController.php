@@ -151,16 +151,8 @@ class AdminController
                 'collaborationEnabled' => $this->collaborationEnabled,
                 'collaborationInterval' => $this->collaborationInterval * 1000,
             ],
+            ...$this->adminPool->getAdminConfigs(),
         ];
-
-        foreach ($this->adminPool->getAdmins() as $admin) {
-            $adminConfigKey = $admin->getConfigKey();
-            $adminConfig = $admin->getConfig();
-
-            if ($adminConfigKey && $adminConfig) {
-                $config[$adminConfigKey] = $adminConfig;
-            }
-        }
 
         $view = View::create($config);
 

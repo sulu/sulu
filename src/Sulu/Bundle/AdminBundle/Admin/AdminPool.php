@@ -82,12 +82,28 @@ class AdminPool
     }
 
     /**
+     * @return array<string, array<mixed>>
+     */
+    public function getAdminConfigs(): array
+    {
+        $configs = [];
+        foreach ($this->pool as $admin) {
+            $adminConfigKey = $admin->getConfigKey();
+            $adminConfig = $admin->getConfig();
+
+            if (null !== $adminConfigKey && null !== $adminConfig) {
+                $configs[$adminConfigKey] = $adminConfig;
+            }
+        }
+
+        return $configs;
+    }
+
+    /**
      * Helper function to iterate over all available Admin objects.
      */
     private function iterateAdmins(callable $callback): void
     {
-        foreach ($this->pool as $admin) {
-            $callback($admin);
-        }
+        \array_walk($this->pool, $callback);
     }
 }
