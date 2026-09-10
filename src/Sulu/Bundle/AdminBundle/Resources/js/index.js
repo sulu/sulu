@@ -117,6 +117,8 @@ import Form, {
     DropdownToolbarAction as FormDropdownToolbarAction,
     SaveToolbarAction as FormSaveToolbarAction,
     PublishToolbarAction as FormPublishToolbarAction,
+    RequestForPublishToolbarAction as FormRequestForPublishToolbarAction,
+    ReviewWorkflowTransitionRequestToolbarAction as FormReviewWorkflowTransitionRequestToolbarAction,
     SaveWithFormDialogToolbarAction as FormSaveWithFormDialogToolbarAction,
     SaveWithPublishingToolbarAction as FormSaveWithPublishingToolbarAction,
     SetUnpublishedToolbarAction as FormSetUnpublishedToolbarAction,
@@ -131,6 +133,7 @@ import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 import Subscription from './views/Subscription';
+import {setRequestWorkflowTemplates} from './views/Form/requestWorkflowConfig';
 import {setSubscriptionConfig} from './views/Subscription/subscriptionConfig';
 import RequestLog from './views/RequestLog';
 import {initializeJexl} from './utils/jexl';
@@ -373,6 +376,14 @@ function registerFormToolbarActions() {
     formToolbarActionRegistry.add('sulu_admin.update_form_store', FormUpdateFormStoreToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.suggest_form_store', FormSuggestFormStoreToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.reload_form_store', FormReloadFormStoreToolbarAction);
+    formToolbarActionRegistry.add(
+        'sulu_content.request_for_publish',
+        FormRequestForPublishToolbarAction
+    );
+    formToolbarActionRegistry.add(
+        'sulu_content.review_workflow_transition_request',
+        FormReviewWorkflowTransitionRequestToolbarAction
+    );
 }
 
 function registerListToolbarActions() {
@@ -478,6 +489,10 @@ function startAdmin() {
 
 initializer.addUpdateConfigHook('sulu_ai_platform', (config: Object) => {
     setSubscriptionConfig(config?.['subscription']);
+});
+
+initializer.addUpdateConfigHook('sulu_content', (config: Object) => {
+    setRequestWorkflowTemplates(config?.['requestWorkflowTemplates']);
 });
 
 initializer.addUpdateConfigHook('sulu_ai', (config: Object, initialized: boolean) => {

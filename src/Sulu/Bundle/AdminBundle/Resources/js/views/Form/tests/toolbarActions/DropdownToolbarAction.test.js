@@ -26,6 +26,10 @@ jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
         get data() {
             return this.resourceStore.data;
         }
+
+        get locked() {
+            return !!this.resourceStore.data._locked;
+        }
     }
 ));
 
@@ -172,6 +176,56 @@ test('Return item config with options passed to child ToolbarActions', () => {
             expect.objectContaining({
                 label: 'Copy',
             }),
+        ],
+        type: 'dropdown',
+    });
+});
+
+test('Disable the child options of a locked form, but not the dropdown itself', () => {
+    formToolbarActionRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'sulu_admin.delete':
+                return class {
+                    getToolbarItemConfig() {
+                        return {
+                            label: 'Delete',
+                            onClick: jest.fn(),
+                        };
+                    }
+                };
+            case 'sulu_admin.publish':
+                return class {
+                    get enabledWhileLocked() {
+                        return true;
+                    }
+
+                    getToolbarItemConfig() {
+                        return {
+                            label: 'Publish',
+                            onClick: jest.fn(),
+                        };
+                    }
+                };
+        }
+    });
+
+    const dropdownToolbarAction = createDropdownToolbarAction({
+        icon: 'su-save',
+        label: 'save',
+        toolbarActions: [
+            {type: 'sulu_admin.delete', options: {}},
+            {type: 'sulu_admin.publish', options: {}},
+        ],
+    });
+    dropdownToolbarAction.resourceFormStore.resourceStore.data = {_locked: true};
+
+    expect(dropdownToolbarAction.getLockAwareToolbarItemConfig()).toEqual({
+        icon: 'su-save',
+        label: 'save',
+        loading: false,
+        options: [
+            {disabled: true, label: 'Delete', onClick: expect.any(Function)},
+            {disabled: undefined, label: 'Publish', onClick: expect.any(Function)},
         ],
         type: 'dropdown',
     });

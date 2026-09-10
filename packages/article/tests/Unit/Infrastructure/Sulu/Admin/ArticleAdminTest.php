@@ -75,6 +75,10 @@ class ArticleAdminTest extends TestCase
         $this->groupProvider = $this->prophesize(GroupProviderInterface::class);
 
         $this->contentViewBuilderFactory->getDefaultToolbarActions(Argument::cetera())->willReturn([]);
+        $this->contentViewBuilderFactory->getWorkflowTransitionRequestToolbarActions(Argument::cetera())->willReturn([
+            'save' => new DropdownToolbarAction('sulu_admin.save', 'su-save', []),
+            'approval' => new DropdownToolbarAction('sulu_content.approval', 'su-save', []),
+        ]);
         $this->contentViewBuilderFactory->createViews(Argument::cetera())->willReturn([]);
         $this->activityViewBuilderFactory->hasActivityListPermission()->willReturn(false);
 

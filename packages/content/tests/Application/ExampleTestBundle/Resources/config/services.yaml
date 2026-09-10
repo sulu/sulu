@@ -134,6 +134,7 @@ services:
             - 'sulu.example.examples'
         tags:
             - { name: 'sulu_content.workflow_transition_request_security_context_provider', resource-key: 'examples' }
+            - { name: 'sulu_content.content_template_type', resource-key: 'examples', template-type: 'example' }
             - { name: 'sulu.context', context: 'admin' }
 
     # No tag on purpose: implementing the interface is what registers a validator, and its key comes
