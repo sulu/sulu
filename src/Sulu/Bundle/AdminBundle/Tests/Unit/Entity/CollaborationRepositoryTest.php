@@ -31,7 +31,13 @@ class CollaborationRepositoryTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        ClockMock::withClockMock(true);
+        ClockMock::register(Collaboration::class);
+        ClockMock::register(CollaborationRepository::class);
+        ClockMock::withClockMock(\strtotime('2018-11-05 01:00:00'));
+
+        // Checking that the mock is working
+        self::assertTrue(ClockMock::withClockMock());
+        self::assertEquals('2018', \Sulu\Bundle\AdminBundle\Entity\date('Y'));
     }
 
     public function setUp(): void
@@ -177,7 +183,7 @@ class CollaborationRepositoryTest extends TestCase
 
         $this->assertEquals([$collaboration1, $collaboration2], $result);
 
-        \sleep($threshold + 1);
+        ClockMock::sleep($threshold + 1);
 
         $collaboration2 = new Collaboration(
             $collaborationId2,
@@ -237,7 +243,7 @@ class CollaborationRepositoryTest extends TestCase
         $started = $collaboration1->getStarted();
         $this->assertEquals($started, $collaboration1->getChanged());
 
-        \sleep(10);
+        ClockMock::sleep(10);
 
         $this->cache->save($cacheItem)->shouldBeCalled();
         $result = $collaborationRepository->update($collaboration1);
