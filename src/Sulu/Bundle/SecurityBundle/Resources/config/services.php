@@ -58,7 +58,7 @@ use Symfony\Component\DependencyInjection\Reference;
 return static function(ContainerConfigurator $container) {
     $services = $container->services();
     $parameters = $container->parameters();
-    $parameters->set('sulu_security.permissions', ['view' => 64, 'add' => 32, 'edit' => 16, 'delete' => 8, 'archive' => 4, 'live' => 2, 'security' => 1]);
+    $parameters->set('sulu_security.permissions', ['review' => 128, 'view' => 64, 'add' => 32, 'edit' => 16, 'delete' => 8, 'archive' => 4, 'live' => 2, 'security' => 1]);
     $parameters->set('sulu_security.entity.user_setting', UserSetting::class);
 
     $services->set('sulu_security.resetting_controller', ResettingController::class)

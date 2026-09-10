@@ -80,7 +80,12 @@ class WorkflowDataMapper implements DataMapperInterface
         // therefore we only want to copy the published property from the draft to the live dimension
 
         if (DimensionContentInterface::STAGE_LIVE !== $object->getStage()) {
-            if (WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED !== $object->getWorkflowPlace()) {
+            // Only the places `edit` can leave: the review places have no such transition, and
+            // applying one that is not enabled throws.
+            if (\in_array($object->getWorkflowPlace(), [
+                WorkflowInterface::WORKFLOW_PLACE_PUBLISHED,
+                WorkflowInterface::WORKFLOW_PLACE_DRAFT,
+            ], true)) {
                 $this->contentWorkflow->apply(
                     $object->getResource(),
                     $object::getEffectiveDimensionAttributes(['locale' => $object->getLocale()]),

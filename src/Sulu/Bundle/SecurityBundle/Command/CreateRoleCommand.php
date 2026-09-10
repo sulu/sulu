@@ -87,7 +87,7 @@ class CreateRoleCommand extends Command
             $permission = new Permission();
             $permission->setRole($role);
             $permission->setContext($securityContext);
-            $permission->setPermissions(127);
+            $permission->setPermissions(255);
             $role->addPermission($permission);
         }
 

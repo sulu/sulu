@@ -92,6 +92,7 @@
                 "delete": false,
                 "archive": false,
                 "live": false,
+                "review": false,
                 "security": false
             },
             "allLocalizations": [
@@ -172,6 +173,7 @@
                 "delete": false,
                 "archive": false,
                 "live": false,
+                "review": false,
                 "security": false
             },
             "allLocalizations": [
@@ -250,6 +252,7 @@
                 "delete": false,
                 "archive": false,
                 "live": false,
+                "review": false,
                 "security": false
             },
             "allLocalizations": [
@@ -326,6 +329,7 @@
                 "delete": false,
                 "archive": false,
                 "live": false,
+                "review": false,
                 "security": false
             },
             "allLocalizations": [
@@ -396,6 +400,7 @@
                 "delete": false,
                 "archive": false,
                 "live": false,
+                "review": false,
                 "security": false
             },
             "allLocalizations": [

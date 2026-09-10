@@ -14,11 +14,13 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapper;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\WorkflowDataMapper;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 
@@ -152,7 +154,7 @@ class WorkflowDataMapperTest extends TestCase
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setLocale('en');
 
-        $localizedDimensionContent->setWorkflowPlace('something-else');
+        $localizedDimensionContent->setWorkflowPlace(WorkflowInterface::WORKFLOW_PLACE_PUBLISHED);
         $localizedDimensionContent->setWorkflowPublished(new \DateTimeImmutable('2021-01-01 00:00:00'));
 
         $this->contentWorkflow->apply(
@@ -168,10 +170,27 @@ class WorkflowDataMapperTest extends TestCase
         $workflowMapper = $this->createWorkflowDataMapperInstance();
         $workflowMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
-        $this->assertSame('something-else', $localizedDimensionContent->getWorkflowPlace());
+        $this->assertSame(WorkflowInterface::WORKFLOW_PLACE_PUBLISHED, $localizedDimensionContent->getWorkflowPlace());
         $workflowPublished = $localizedDimensionContent->getWorkflowPublished();
         $this->assertNotNull($workflowPublished);
         $this->assertSame('2021-01-01 00:00:00', $workflowPublished->format('Y-m-d H:i:s'));
+    }
+
+    /**
+     * The review places have no `edit` transition, so the mapper must not try to apply one.
+     */
+    public function testMapSkipsTheEditTransitionForContentInReview(): void
+    {
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+        $localizedDimensionContent->setWorkflowPlace(WorkflowInterface::WORKFLOW_PLACE_REVIEW);
+
+        $this->contentWorkflow->apply(Argument::cetera())->shouldNotBeCalled();
+
+        $this->createWorkflowDataMapperInstance()
+            ->map($unlocalizedDimensionContent, $localizedDimensionContent, []);
     }
 
     public function testMapLocalizedLivePublishedNotSet(): void

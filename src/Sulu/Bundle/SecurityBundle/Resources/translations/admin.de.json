@@ -21,6 +21,7 @@
     "sulu_security.edit": "Bearbeiten",
     "sulu_security.delete": "Löschen",
     "sulu_security.live": "Live",
+    "sulu_security.review": "Prüfen",
     "sulu_security.security": "Sicherheit",
     "sulu_security.system_permission_heading": "Berechtigung für {system} aktivieren",
     "sulu_security.inherit_permissions_title": "Berechtigung vererben?",

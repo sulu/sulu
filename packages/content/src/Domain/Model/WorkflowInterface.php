@@ -45,6 +45,10 @@ interface WorkflowInterface
 
     public const WORKFLOW_TRANSITION_REJECT_DRAFT = 'reject_draft';
 
+    public const WORKFLOW_TRANSITION_CANCEL_REVIEW = 'cancel_review';
+
+    public const WORKFLOW_TRANSITION_CANCEL_REVIEW_DRAFT = 'cancel_review_draft';
+
     public const WORKFLOW_DEFAULT_NAME = 'content_workflow';
 
     public static function getWorkflowName(): string;

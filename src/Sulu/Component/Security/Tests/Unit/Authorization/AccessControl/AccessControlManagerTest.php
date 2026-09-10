@@ -123,7 +123,7 @@ class AccessControlManagerTest extends TestCase
         $this->maskConverter->convertPermissionsToArray(0)->willReturn(['view' => false, 'edit' => false]);
         $this->maskConverter->convertPermissionsToArray(32)->willReturn(['view' => false, 'edit' => true]);
         $this->maskConverter->convertPermissionsToArray(64)->willReturn(['view' => true, 'edit' => false]);
-        $this->maskConverter->convertPermissionsToArray(127)->willReturn([
+        $this->maskConverter->convertPermissionsToArray(255)->willReturn([
             'view' => true,
             'edit' => true,
             'add' => true,

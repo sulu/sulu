@@ -33,7 +33,7 @@ trait CreatePageWithPermissionsTrait
 
         $permission = new Permission();
         $permission->setRole($role);
-        $permission->setPermissions(127); // All permissions at webspace level
+        $permission->setPermissions(255); // All permissions at webspace level
         $permission->setContext(\sprintf('sulu.webspaces.%s', $webspaceKey));
         $role->addPermission($permission);
 
@@ -68,6 +68,6 @@ trait CreatePageWithPermissionsTrait
 
     protected function grantAllAccessToPage(PageInterface $page, Role $role): void
     {
-        $this->setPagePermissions($page, $role, 127); // All permissions
+        $this->setPagePermissions($page, $role, 255); // All permissions
     }
 }

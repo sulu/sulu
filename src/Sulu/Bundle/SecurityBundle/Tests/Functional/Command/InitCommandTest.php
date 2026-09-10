@@ -102,13 +102,13 @@ class InitCommandTest extends SuluTestCase
             return 'sulu.webspaces.sulu_io' === $permission->getContext();
         })->first();
         $this->assertNotNull($webspacePermission);
-        $this->assertSame(127, $webspacePermission->getPermissions());
+        $this->assertSame(255, $webspacePermission->getPermissions());
 
         $collectionPermissions = $permissions->filter(function(Permission $permission) {
             return 'sulu.media.collections' === $permission->getContext();
         })->first() ?: null;
         $this->assertNotNull($collectionPermissions);
-        $this->assertSame(127, $collectionPermissions->getPermissions());
+        $this->assertSame(255, $collectionPermissions->getPermissions());
     }
 
     private function createAnonymousRole(string $system): RoleInterface

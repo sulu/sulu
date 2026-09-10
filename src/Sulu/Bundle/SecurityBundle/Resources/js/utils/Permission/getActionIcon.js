@@ -16,6 +16,8 @@ export default function getActionIcon(action: string) {
             return 'su-publish';
         case 'archive':
             return 'su-archive';
+        case 'review':
+            return 'su-check-circle';
         default:
             throw new Error('No icon defined for "' + action + '"');
     }
