@@ -103,6 +103,17 @@ class ContentWorkflow implements ContentWorkflowInterface
         } catch (UndefinedTransitionException $e) {
             throw new UnknownContentTransitionException($e->getMessage(), $e->getCode(), $e);
         } catch (NotEnabledTransitionException $e) {
+            foreach ($e->getTransitionBlockerList() as $transitionBlocker) {
+                if (ContentWorkflowInterface::BLOCKER_CODE_EXCEPTION !== $transitionBlocker->getCode()) {
+                    continue;
+                }
+
+                $reported = $transitionBlocker->getParameters()[ContentWorkflowInterface::BLOCKER_EXCEPTION_PARAMETER] ?? null;
+                if ($reported instanceof \Throwable) {
+                    throw $reported;
+                }
+            }
+
             throw new UnavailableContentTransitionException($e->getMessage(), $e->getCode(), $e);
         }
 
@@ -200,6 +211,17 @@ class ContentWorkflow implements ContentWorkflowInterface
                 WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH,
                 WorkflowInterface::WORKFLOW_PLACE_DRAFT,
                 WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED
+            ))
+            // Editing content that is in review, so a guard can hold it there
+            ->addTransition(new Transition(
+                WorkflowInterface::WORKFLOW_TRANSITION_EDIT,
+                WorkflowInterface::WORKFLOW_PLACE_REVIEW,
+                WorkflowInterface::WORKFLOW_PLACE_REVIEW
+            ))
+            ->addTransition(new Transition(
+                WorkflowInterface::WORKFLOW_TRANSITION_EDIT,
+                WorkflowInterface::WORKFLOW_PLACE_REVIEW_DRAFT,
+                WorkflowInterface::WORKFLOW_PLACE_REVIEW_DRAFT
             ))
             // Create a draft out of a published
             ->addTransition(new Transition(

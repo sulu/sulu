@@ -172,6 +172,19 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
         $this->assertEquals(new Reference('doctrine.orm.entity_manager'), $repositoryDefinition->getArgument(0));
     }
 
+    public function testLoadRegistersWorkflowTransitionRequestSubscribers(): void
+    {
+        $this->container->setParameter('kernel.environment', 'test');
+        $this->container->setParameter('kernel.build_dir', \dirname(__DIR__, 4) . '/Application/var/cache/builddir');
+
+        $this->load();
+
+        // The subscribers are always registered; with no `request_workflows` configured the resolver
+        // returns null for every content, so they never create or enforce a request.
+        $this->assertContainerBuilderHasService('sulu_content.workflow_transition_request_publish_transition_subscriber');
+        $this->assertContainerBuilderHasService('sulu_content.workflow_transition_request_transition_subscriber');
+    }
+
     public function testPrepend(): void
     {
         $extension = $this->getContentBundle();

@@ -119,6 +119,16 @@ services:
         alias: sulu_reference.refresh_reference_message_handler
         public: true
 
+    example_test.example_security_context_provider:
+        class: Sulu\Content\Infrastructure\Sulu\Security\ResourceSecurityContextProvider
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example
+            - 'sulu.example.examples'
+        tags:
+            - { name: 'sulu_content.workflow_transition_request_security_context_provider', resource-key: 'examples' }
+            - { name: 'sulu.context', context: 'admin' }
+
     # No tag on purpose: implementing the interface is what registers a validator, and its key comes
     # from the class' static getKey().
     example_test.request_workflow_validator.unpublished_example_references:
