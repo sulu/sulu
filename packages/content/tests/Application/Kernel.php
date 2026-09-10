@@ -21,6 +21,12 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class Kernel extends SuluTestKernel
 {
+    /**
+     * The validate message is routed to this transport in config_admin.yml, so every workflow test
+     * sees the ordering a worker sees: the validator answers only once the message is consumed.
+     */
+    public const VALIDATION_TRANSPORT = 'async_validation';
+
     public function registerBundles(): iterable
     {
         $bundles = [...parent::registerBundles()];

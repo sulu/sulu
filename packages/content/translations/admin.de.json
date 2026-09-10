@@ -50,6 +50,7 @@
     "sulu_content.workflow_transition_request.action_failed": "Die Veröffentlichungsanfrage konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
     "sulu_content.workflow_transition_request.automated_checks": "Automatische Prüfungen",
     "sulu_content.workflow_transition_request.check_caption_waiting": "Noch keine Antwort",
+    "sulu_content.workflow_transition_request.check_errored": "Die Prüfung konnte nicht ausgeführt werden. Wiederholen Sie sie oder bitten Sie einen Administrator, die Logs zu prüfen.",
     "sulu_content.workflow_transition_request.check_caption_failed": "Hat ein Problem gemeldet",
     "sulu_content.workflow_transition_request.check_caption_required": "Muss vor dem Veröffentlichen bestanden sein",
     "sulu_content.workflow_transition_request.approve_comment_label": "Möchten Sie einen Kommentar hinzufügen?",

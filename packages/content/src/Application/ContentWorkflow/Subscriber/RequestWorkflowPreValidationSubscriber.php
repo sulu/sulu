@@ -84,7 +84,10 @@ class RequestWorkflowPreValidationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        throw new WorkflowTransitionRequestPreValidationFailedException($results);
+        throw new WorkflowTransitionRequestPreValidationFailedException(
+            $results,
+            (string) $dimensionContent->getResource()->getId(),
+        );
     }
 
     public static function getSubscribedEvents(): array

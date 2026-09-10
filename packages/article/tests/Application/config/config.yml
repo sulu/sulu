@@ -12,3 +12,9 @@ twig:
 
 sulu_article:
     default_main_webspace: 'sulu-io'
+
+# One named workflow, opted into by the `review` template only: every other template publishes directly.
+sulu_content:
+    request_workflows:
+        review:
+            required_user_approvals: 1

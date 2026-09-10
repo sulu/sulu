@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapper;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\WorkflowDataMapper;
@@ -177,9 +176,10 @@ class WorkflowDataMapperTest extends TestCase
     }
 
     /**
-     * The review places have no `edit` transition, so the mapper must not try to apply one.
+     * The review places can leave through `edit` as well, so the guard that holds content in review
+     * sees the write and is the one to refuse it.
      */
-    public function testMapSkipsTheEditTransitionForContentInReview(): void
+    public function testMapAppliesTheEditTransitionForContentInReview(): void
     {
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
@@ -187,7 +187,15 @@ class WorkflowDataMapperTest extends TestCase
         $localizedDimensionContent->setLocale('en');
         $localizedDimensionContent->setWorkflowPlace(WorkflowInterface::WORKFLOW_PLACE_REVIEW);
 
-        $this->contentWorkflow->apply(Argument::cetera())->shouldNotBeCalled();
+        $this->contentWorkflow->apply(
+            $example,
+            [
+                'stage' => 'draft',
+                'locale' => 'en',
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            $localizedDimensionContent::getWorkflowTransitionEdit()
+        )->shouldBeCalled()->willReturn($localizedDimensionContent);
 
         $this->createWorkflowDataMapperInstance()
             ->map($unlocalizedDimensionContent, $localizedDimensionContent, []);
