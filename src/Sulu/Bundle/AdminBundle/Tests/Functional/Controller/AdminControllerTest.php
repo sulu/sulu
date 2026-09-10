@@ -56,14 +56,28 @@ class AdminControllerTest extends SuluTestCase
         $this->assertIsObject($response->sulu_admin->resources);
         $this->assertTrue(\property_exists($response, 'sulu_preview'));
 
-        $this->assertTrue(\property_exists($response->sulu_admin, 'textEditor'));
-        $textEditorConfigs = $response->sulu_admin->textEditor->configs;
-        $this->assertTrue(\property_exists($textEditorConfigs, 'default'));
-        $this->assertTrue(\property_exists($textEditorConfigs, 'mini'));
-        $this->assertSame('p', $textEditorConfigs->default->enterMode);
-        $this->assertSame('br', $textEditorConfigs->mini->enterMode);
-        $this->assertContains('table', $textEditorConfigs->default->tags);
-        $this->assertNotContains('table', $textEditorConfigs->mini->tags);
+        $decoded = \json_decode($this->client->getResponse()->getContent() ?: '', true);
+        $this->assertIsArray($decoded);
+        $suluAdmin = $decoded['sulu_admin'];
+        $this->assertIsArray($suluAdmin);
+        $this->assertArrayHasKey('textEditor', $suluAdmin);
+        $textEditor = $suluAdmin['textEditor'];
+        $this->assertIsArray($textEditor);
+        $textEditorConfigs = $textEditor['configs'];
+        $this->assertIsArray($textEditorConfigs);
+        $this->assertArrayHasKey('default', $textEditorConfigs);
+        $this->assertArrayHasKey('mini', $textEditorConfigs);
+
+        $defaultConfig = $textEditorConfigs['default'];
+        $miniConfig = $textEditorConfigs['mini'];
+        $this->assertIsArray($defaultConfig);
+        $this->assertIsArray($miniConfig);
+        $this->assertSame('p', $defaultConfig['enterMode']);
+        $this->assertSame('br', $miniConfig['enterMode']);
+        $this->assertIsArray($defaultConfig['tags']);
+        $this->assertIsArray($miniConfig['tags']);
+        $this->assertContains('table', $defaultConfig['tags']);
+        $this->assertNotContains('table', $miniConfig['tags']);
 
         /** @var array<object{locale: string}> $localizations */
         $localizations = $response->sulu_admin->localizations;

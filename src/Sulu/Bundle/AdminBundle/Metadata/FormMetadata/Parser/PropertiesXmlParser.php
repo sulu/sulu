@@ -28,7 +28,7 @@ class PropertiesXmlParser
     use XmlParserTrait;
 
     /**
-     * @param array<string, array{enterMode: string, tags: string[], features: string[]}> $textEditorConfigs
+     * @param array<string, mixed> $textEditorConfigs config names to their resolved config; only the names are read
      */
     public function __construct(
         private TagXmlParser $tagXmlParser,
@@ -473,22 +473,30 @@ class PropertiesXmlParser
             return;
         }
 
-        foreach ($data['params'] as $parameter) {
-            if (\in_array($parameter['name'], ['formats', 'enter_mode'], true)) {
+        $params = $data['params'] ?? [];
+
+        if (!\is_array($params)) {
+            return;
+        }
+
+        foreach ($params as $parameter) {
+            $name = \is_array($parameter) ? ($parameter['name'] ?? null) : null;
+
+            if (\in_array($name, ['formats', 'enter_mode'], true)) {
                 @trigger_deprecation(
                     'sulu/sulu',
                     '3.1',
                     'The "%s" param of the "text_editor" property "%s" is deprecated and will be removed in 4.0. ' .
                     'Use the "config" param with a config from "sulu_admin.text_editor.configs" instead.',
-                    $parameter['name'],
+                    $name,
                     $property->getName()
                 );
 
                 continue;
             }
 
-            if ('config' === $parameter['name']) {
-                $this->assertTextEditorConfigExists($parameter['value'], $property);
+            if ('config' === $name) {
+                $this->assertTextEditorConfigExists($parameter['value'] ?? null, $property);
             }
         }
     }

@@ -43,6 +43,7 @@ class AdminController
      * @param array<string> $locales
      * @param array<string> $translations
      * @param iterable<SmartContentProviderInterface> $smartContentProviders
+     * @param array<string, array{enterMode: string, tags: string[], features: string[]}> $textEditorConfigs
      */
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,

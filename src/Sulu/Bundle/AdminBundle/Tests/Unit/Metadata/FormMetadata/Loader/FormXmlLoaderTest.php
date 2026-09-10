@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\MetaXmlParser;
@@ -548,7 +549,9 @@ class FormXmlLoaderTest extends TestCase
             \dirname(__DIR__) . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'form_text_editor_configs.xml'
         );
 
-        $this->assertSame('mini', $formMetadata->getItems()['teaser']->getOptions()['config']->getValue());
+        $teaser = $formMetadata->getItems()['teaser'];
+        $this->assertInstanceOf(FieldMetadata::class, $teaser);
+        $this->assertSame('mini', $teaser->getOptions()['config']->getValue());
     }
 
     public function testLoadFormWithUnknownTextEditorConfigThrows(): void
