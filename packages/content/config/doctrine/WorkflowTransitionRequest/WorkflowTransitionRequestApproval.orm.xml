@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestApproval" table="ct_workflow_transition_request_approvals">
+        <id name="id" type="string" column="id" length="36">
+            <generator strategy="NONE"/>
+        </id>
+
+        <many-to-one field="workflowTransitionRequest" target-entity="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest" inversed-by="approvals">
+            <join-column name="workflow_transition_request_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+
+        <many-to-one field="user" target-entity="Sulu\Component\Security\Authentication\UserInterface">
+            <join-column name="user_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
+        </many-to-one>
+
+        <field name="status" column="status" type="string" length="16" enum-type="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestApprovalStatusEnum"/>
+        <field name="comment" column="comment" type="text" nullable="true"/>
+        <field name="decidedAt" column="decided_at" type="datetime_immutable"/>
+
+        <unique-constraints>
+            <unique-constraint name="ct_wtr_approvals_user_uq" columns="workflow_transition_request_id,user_id"/>
+        </unique-constraints>
+    </entity>
+</doctrine-mapping>

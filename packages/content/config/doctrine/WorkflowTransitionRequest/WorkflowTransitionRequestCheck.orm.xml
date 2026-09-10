@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestCheck" table="ct_workflow_transition_request_checks">
+        <id name="id" type="string" column="id" length="36">
+            <generator strategy="NONE"/>
+        </id>
+
+        <many-to-one field="workflowTransitionRequest" target-entity="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest" inversed-by="checks">
+            <join-column name="workflow_transition_request_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+
+        <field name="validatorKey" column="validator_key" type="string" length="64"/>
+        <field name="blocking" column="blocking" type="boolean"/>
+        <field name="status" column="status" type="string" length="16" enum-type="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestCheckStatusEnum"/>
+        <field name="comment" column="comment" type="text" nullable="true"/>
+        <field name="decidedAt" column="decided_at" type="datetime_immutable" nullable="true"/>
+
+        <unique-constraints>
+            <unique-constraint name="ct_wtr_checks_validator_uq" columns="workflow_transition_request_id,validator_key"/>
+        </unique-constraints>
+    </entity>
+</doctrine-mapping>

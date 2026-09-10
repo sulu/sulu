@@ -39,6 +39,16 @@ and `extension` are seeded before any resolver runs, so a `[root]` resolver cann
 any priority. Two resolvers returning the same `type` are not rejected; the later one replaces the
 earlier, as before this release.
 
+### New workflow transition request tables
+
+The review flow stores its requests in `ct_workflow_transition_requests`, the people's verdicts in
+`ct_workflow_transition_request_approvals` and the automated checks in
+`ct_workflow_transition_request_checks`. Run the new migration to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
 ### Review permission
 
 `PermissionTypes::REVIEW` is new and no existing role carries its bit, so approving and rejecting is

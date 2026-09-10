@@ -17,7 +17,10 @@ use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataAwareInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
+use Sulu\Content\Domain\Exception\SelfReviewNotAllowedException;
 use Sulu\Content\Domain\Exception\ShadowSourceNotPublishedException;
+use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
+use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Sulu\Content\Infrastructure\Doctrine\EventListener\RouteCleanupListener;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ExcerptFormPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ResourceLoaderCacheCompilerPass;
@@ -60,6 +63,7 @@ final class SuluContentBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $loader = new PhpFileLoader($builder, new FileLocator(\dirname(__DIR__, 4) . '/config'));
+        $loader->load('workflow-transition-request.php');
         $loader->load('data-mapper.php');
         $loader->load('merger.php');
         $loader->load('normalizer.php');
@@ -91,6 +95,37 @@ final class SuluContentBundle extends AbstractBundle
      */
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+        if ($builder->hasExtension('doctrine')) {
+            $builder->prependExtensionConfig(
+                'doctrine',
+                [
+                    'orm' => [
+                        'mappings' => [
+                            'SuluContentWorkflowTransitionRequest' => [
+                                'type' => 'xml',
+                                'prefix' => 'Sulu\Content\Domain\Model\WorkflowTransitionRequest',
+                                'dir' => \dirname(__DIR__, 4) . '/config/doctrine/WorkflowTransitionRequest',
+                                'alias' => 'SuluContentWorkflowTransitionRequest',
+                                'is_bundle' => false,
+                                'mapping' => true,
+                            ],
+                        ],
+                    ],
+                ],
+            );
+        }
+
+        if ($builder->hasExtension('doctrine_migrations')) {
+            $builder->prependExtensionConfig(
+                'doctrine_migrations',
+                [
+                    'migrations_paths' => [
+                        'Sulu\\Content\\Migrations' => \dirname(__DIR__, 4) . '/migrations',
+                    ],
+                ],
+            );
+        }
+
         if ($builder->hasExtension('sulu_admin')) {
             $builder->prependExtensionConfig(
                 'sulu_admin',
@@ -111,6 +146,9 @@ final class SuluContentBundle extends AbstractBundle
                     'exception' => [
                         'codes' => [
                             ShadowSourceNotPublishedException::class => 400,
+                            SelfReviewNotAllowedException::class => 403,
+                            WorkflowTransitionRequestCancelNotAllowedException::class => 403,
+                            WorkflowTransitionRequestClosedException::class => 409,
                         ],
                     ],
                 ]
