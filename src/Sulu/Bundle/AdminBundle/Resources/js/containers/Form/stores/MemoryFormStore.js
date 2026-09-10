@@ -2,12 +2,12 @@
 import {action, observable, set} from 'mobx';
 import log from 'loglevel';
 import jsonpointer from 'json-pointer';
-import {createAjv} from '../../../utils/Ajv';
+import {createValidator} from '../../../utils/JsonSchema';
 import AbstractFormStore from './AbstractFormStore';
 import type {ChangeContext, FormStoreInterface, Schema, SchemaType} from '../types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
-const ajv = createAjv();
+const jsonSchemaValidator = createValidator();
 
 export default class MemoryFormStore extends AbstractFormStore implements FormStoreInterface {
     id = undefined;
@@ -31,7 +31,7 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         this.schema = schema;
         this.locale = locale;
         this.addMissingSchemaProperties();
-        this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
+        this.validator = jsonSchema ? jsonSchemaValidator.compile(jsonSchema) : undefined;
         this.metadataOptions = metadataOptions;
     }
 
