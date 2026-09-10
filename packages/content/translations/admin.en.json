@@ -99,6 +99,7 @@
     "sulu_content.workflow_transition_request.status.approved": "Approved",
     "sulu_content.workflow_transition_request.status.cancelled": "Cancelled",
     "sulu_content.workflow_transition_request.status.published": "Published",
+    "sulu_content.workflow_transition_request.status.unknown": "Unknown",
     "sulu_content.approval": "Approval",
     "sulu_content.approve": "Approve",
     "sulu_content.reject": "Reject"

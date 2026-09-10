@@ -486,6 +486,34 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                     new ListItemAction('restore_version', ['success_view' => $parentView]),
                 ])
                 ->setParent($insightsResourceTabViewName),
+
+            $this->viewBuilderFactory
+                ->createListViewBuilder(
+                    $insightsResourceTabViewName . '.workflow_transition_requests',
+                    '/workflow-transition-requests'
+                )
+                ->setTabTitle('sulu_content.workflow_transition_request.requests_for_publishing')
+                // The sibling tabs inherit the insights tab order, so a higher value sorts this one last.
+                ->setTabOrder(6145)
+                ->setResourceKey('workflow_transition_requests')
+                ->setListKey('workflow_transition_requests')
+                ->addListAdapters(['table'])
+                ->addAdapterOptions([
+                    'table' => [
+                        'skin' => 'flat',
+                    ],
+                ])
+                ->disableTabGap()
+                ->disableSearching()
+                ->disableSelection()
+                ->disableColumnOptions()
+                ->disableFiltering()
+                ->addRequestParameters(['resourceKey' => $resourceKey])
+                ->addRouterAttributesToListRequest(['id' => 'resourceId', 'locale'])
+                ->addItemActions([
+                    new ListItemAction('review_workflow_transition_request'),
+                ])
+                ->setParent($insightsResourceTabViewName),
         ];
     }
 
