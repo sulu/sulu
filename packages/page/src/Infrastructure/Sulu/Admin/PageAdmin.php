@@ -200,6 +200,9 @@ class PageAdmin extends Admin
                     ->setOption('tabTitle', 'sulu_page.pages')
                     ->setOption('tabOrder', 0)
                     ->setOption('tabPriority', 1024)
+                    ->setOption('toolbarActions', [
+                        new ToolbarAction('sulu_website.cache_clear'),
+                    ])
                     ->addRerenderAttribute('webspace')
                     ->setParent(static::WEBSPACE_TABS_VIEW)
             );

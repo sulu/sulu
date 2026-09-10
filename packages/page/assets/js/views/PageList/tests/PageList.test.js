@@ -2,7 +2,7 @@
 import React from 'react';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {mount} from 'enzyme';
-import {Router} from 'sulu-admin-bundle/services';
+import {Route, Router} from 'sulu-admin-bundle/services';
 import {findWithHighOrderFunction, defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
 
 jest.mock('sulu-admin-bundle/containers', () => ({
@@ -60,6 +60,12 @@ jest.mock('sulu-admin-bundle/containers', () => ({
     withToolbar: jest.fn((Component) => Component),
 }));
 
+jest.mock('sulu-admin-bundle/views', () => ({
+    viewToolbarActionRegistry: {
+        get: jest.fn(),
+    },
+}));
+
 jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', () => ({
     get: jest.fn().mockReturnValue(require('sulu-admin-bundle/containers/List/adapters/ColumnListAdapter').default),
     has: jest.fn().mockReturnValue(true),
@@ -89,7 +95,7 @@ jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(fu
 }));
 jest.mock('sulu-admin-bundle/containers/ListOverlay', () => jest.fn().mockReturnValue(null));
 
-jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.fn(function() {
+jest.mock('sulu-website-bundle/views/toolbarActions/CacheClearToolbarAction', () => jest.fn(function() {
     this.getNode = jest.fn();
     this.getToolbarItemConfig = jest.fn();
 }));
@@ -114,6 +120,12 @@ test('Render PageList', () => {
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {},
+    });
 
     const webspaceOverview = mount(
         <PageList
@@ -159,6 +171,12 @@ test('Should show loader if available page types have not been loaded yet', () =
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {},
+    });
 
     const webspaceOverview = mount(
         <PageList
@@ -196,6 +214,12 @@ test('Should show the locales from the webspace configuration for the toolbar', 
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {},
+    });
 
     const webspaceOverview = mount(
         <PageList
@@ -240,6 +264,12 @@ test('Should change excludeGhostsAndShadows when value of toggler is changed', (
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {},
+    });
 
     const webspaceOverview = mount(
         <PageList
@@ -295,6 +325,12 @@ test('Should set webspace if copied page is in different webspace than the sourc
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {},
+    });
 
     const webspaceOverview = mount(
         <PageList
@@ -315,9 +351,11 @@ test('Should set webspace if copied page is in different webspace than the sourc
 
 test('Should use CacheClearToolbarAction for cache clearing', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const viewToolbarActionRegistry = require('sulu-admin-bundle/views').viewToolbarActionRegistry;
     const PageList = require('../PageList').default;
     const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
-    const CacheClearToolbarAction = require('sulu-website-bundle/containers').CacheClearToolbarAction;
+    const CacheClearToolbarAction = require('sulu-website-bundle/views').CacheClearToolbarAction;
+    viewToolbarActionRegistry.get.mockReturnValue(CacheClearToolbarAction);
 
     const webspaceKey = observable.box('sulu');
 
@@ -332,6 +370,19 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {
+            toolbarActions: [
+                {
+                    type: 'sulu_website.cache_clear',
+                    options: {},
+                },
+            ],
+        },
+    });
 
     const pageList = mount(
         <PageList
@@ -345,7 +396,8 @@ test('Should use CacheClearToolbarAction for cache clearing', () => {
 
     const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
 
-    expect(CacheClearToolbarAction).toHaveBeenCalledWith('sulu');
+    expect(viewToolbarActionRegistry.get).toHaveBeenCalledWith('sulu_website.cache_clear');
+    expect(CacheClearToolbarAction).toHaveBeenCalledWith(router, {});
     expect(cacheClearToolbarAction.getNode).toHaveBeenCalledWith();
 
     expect(cacheClearToolbarAction.getToolbarItemConfig).not.toHaveBeenCalled();
@@ -389,6 +441,12 @@ test('Destroy ListStore to avoid many requests and reset active to be set on web
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {},
+    });
 
     const webspaceOverview = mount(
         <PageList
@@ -419,6 +477,12 @@ test('Should bind router', () => {
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {},
+    });
 
     const webspaceOverview = mount(
         <PageList
@@ -452,6 +516,12 @@ test('Should call disposers on unmount', () => {
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {},
+    });
 
     const webspaceOverview = mount(
         <PageList
