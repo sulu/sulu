@@ -958,6 +958,7 @@ class CollectionControllerTest extends SuluTestCase
                 'archive' => false,
                 'live' => false,
                 'security' => false,
+                'review' => false,
             ],
         ];
 

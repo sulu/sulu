@@ -180,6 +180,7 @@ class PagePermissionInheritanceTest extends SuluTestCase
                 'delete' => true,
                 'archive' => false,
                 'live' => true,
+                'review' => false,
                 'security' => true,
             ],
         ];

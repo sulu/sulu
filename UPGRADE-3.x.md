@@ -39,6 +39,16 @@ and `extension` are seeded before any resolver runs, so a `[root]` resolver cann
 any priority. Two resolvers returning the same `type` are not rejected; the later one replaces the
 earlier, as before this release.
 
+### Review permission
+
+`PermissionTypes::REVIEW` is new and no existing role carries its bit, so approving and rejecting is
+refused everywhere until roles are granted it in **Settings** -> **User Roles**. Approving is `review`
+alone: `live` does not imply it.
+
+### BC breaks
+
+- The permission mask meaning "everything" is 255, not 127: `PermissionTypes::REVIEW` occupies bit
+  128. Code comparing a mask against 127 to mean full access has to be updated.
 ## 3.0.9
 
 ### Widened webspace, slug and template key column lengths

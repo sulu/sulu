@@ -123,7 +123,7 @@ class AccessControlManager implements AccessControlManagerInterface
     {
         $system = $securityCondition->getSystem() ?? $this->systemStore->getSystem();
         if (!$system) {
-            return $this->maskConverter->convertPermissionsToArray(127);
+            return $this->maskConverter->convertPermissionsToArray(255);
         }
 
         if (!$user instanceof UserInterface) {
@@ -165,7 +165,7 @@ class AccessControlManager implements AccessControlManagerInterface
         }
 
         if (!$system) {
-            return $this->maskConverter->convertPermissionsToArray(127);
+            return $this->maskConverter->convertPermissionsToArray(255);
         }
 
         $objectPermissions = $this->getRolesObjectPermissionsByArray(

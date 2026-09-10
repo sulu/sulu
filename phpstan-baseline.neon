@@ -35781,7 +35781,7 @@ parameters:
 		-
 			message: '#^Binary operation "&" between int and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 7
+			count: 8
 			path: src/Sulu/Component/Security/Authorization/MaskConverter.php
 
 		-

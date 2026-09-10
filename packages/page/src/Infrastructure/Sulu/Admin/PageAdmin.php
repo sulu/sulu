@@ -363,6 +363,7 @@ class PageAdmin extends Admin
                 PermissionTypes::EDIT,
                 PermissionTypes::DELETE,
                 PermissionTypes::LIVE,
+                PermissionTypes::REVIEW,
                 PermissionTypes::SECURITY,
             ];
         }
@@ -412,6 +413,7 @@ class PageAdmin extends Admin
                             PermissionTypes::EDIT,
                             PermissionTypes::DELETE,
                             PermissionTypes::LIVE,
+                            PermissionTypes::REVIEW,
                             PermissionTypes::SECURITY,
                         ],
                     ],

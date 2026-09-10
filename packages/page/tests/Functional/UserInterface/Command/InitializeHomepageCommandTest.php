@@ -46,9 +46,12 @@ class InitializeHomepageCommandTest extends SuluTestCase
 
         $commandTester->assertCommandIsSuccessful();
 
+        // Same filter as the pre-assertion, so this can see whether the homepage was published.
         self::assertSame(1, $this->pageRepository->countBy([
             'parentId' => null,
             'webspaceKey' => 'sulu-io',
+            'locale' => 'en',
+            'stage' => DimensionContentInterface::STAGE_LIVE,
         ]));
     }
 

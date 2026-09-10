@@ -78,6 +78,7 @@ class PermissionControllerTest extends SuluTestCase
                 'archive' => false,
                 'security' => false,
                 'live' => false,
+                'review' => false,
             ],
             $permissions[$role1Id]
         );
@@ -90,6 +91,7 @@ class PermissionControllerTest extends SuluTestCase
                 'archive' => false,
                 'security' => false,
                 'live' => false,
+                'review' => false,
             ],
             $permissions[$role2Id]
         );
@@ -124,6 +126,7 @@ class PermissionControllerTest extends SuluTestCase
                 'archive' => false,
                 'security' => false,
                 'live' => false,
+                'review' => false,
             ],
             $permissions2[$role1Id]
         );

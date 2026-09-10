@@ -292,6 +292,7 @@ class ArticleAdmin extends Admin
                     PermissionTypes::EDIT,
                     PermissionTypes::DELETE,
                     PermissionTypes::LIVE,
+                    PermissionTypes::REVIEW,
                 ];
             }
         }
@@ -306,6 +307,7 @@ class ArticleAdmin extends Admin
                             PermissionTypes::EDIT,
                             PermissionTypes::DELETE,
                             PermissionTypes::LIVE,
+                            PermissionTypes::REVIEW,
                         ],
                     ],
                     $securityContext,

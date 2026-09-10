@@ -50,6 +50,7 @@ class MaskConverter implements MaskConverterInterface
             PermissionTypes::DELETE => (bool) ($permissions & $this->permissions[PermissionTypes::DELETE]),
             PermissionTypes::ARCHIVE => (bool) ($permissions & $this->permissions[PermissionTypes::ARCHIVE]),
             PermissionTypes::LIVE => (bool) ($permissions & $this->permissions[PermissionTypes::LIVE]),
+            PermissionTypes::REVIEW => (bool) ($permissions & $this->permissions[PermissionTypes::REVIEW]),
             PermissionTypes::SECURITY => (bool) ($permissions & $this->permissions[PermissionTypes::SECURITY]),
         ];
 

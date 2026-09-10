@@ -28,5 +28,7 @@ final class PermissionTypes
 
     public const LIVE = 'live';
 
+    public const REVIEW = 'review';
+
     public const SECURITY = 'security';
 }
