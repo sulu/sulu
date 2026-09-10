@@ -19,8 +19,7 @@ class PluginRegistry {
     }
 
     /**
-     * Registers a plugin for the given tags or features. A plugin registered without any key is added to every
-     * text editor config, a plugin registered with keys is only added if at least one of them is enabled.
+     * A plugin registered without a key is added to every text editor config.
      */
     add(plugin: Class<typeof Plugin>, keys: ?string | Array<string> = undefined) {
         this.registeredPlugins.push({keys: normalizeKeys(keys), plugin});

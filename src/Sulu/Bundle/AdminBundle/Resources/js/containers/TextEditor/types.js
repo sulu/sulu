@@ -5,8 +5,8 @@ import type {SchemaOptions} from '../Form/types';
 export type EnterMode = 'p' | 'br';
 
 /**
- * The resolved configuration of a text editor. It describes which HTML the editor may produce and must not contain
- * anything specific to a concrete text editor implementation.
+ * Must not contain anything specific to a concrete text editor implementation, so that the same config can drive a
+ * different editor later.
  */
 export type TextEditorConfig = {|
     enterMode: EnterMode,

@@ -20,9 +20,7 @@ class ConfigRegistry {
     }
 
     /**
-     * Registers a config for the given tags or features. A config registered without any key is applied to every
-     * text editor config, a config registered with keys is only applied if at least one of them is enabled.
-     * Configs with a higher priority are applied first.
+     * A config registered without a key applies to every text editor config. Higher priority is applied first.
      */
     add(config: Config, keys: ?string | Array<string> = undefined, priority: number = 0) {
         this.registeredConfigs.push({config, keys: normalizeKeys(keys), priority});

@@ -19,6 +19,14 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 final class Configuration implements ConfigurationInterface
 {
+    /**
+     * Keys whose plugin needs a block element to carry it, which "enter_mode: br" strips from the stored
+     * value. See Resources/js/containers/CKEditor5/utils.js removePTags().
+     */
+    private const BLOCK_TEXT_EDITOR_KEYS = [
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'table', 'code', 'align',
+    ];
+
     public function __construct(private bool $debug)
     {
     }
@@ -106,10 +114,15 @@ final class Configuration implements ConfigurationInterface
                         ->arrayNode('configs')
                             ->useAttributeAsKey('name')
                             ->normalizeKeys(false)
+                            ->validate()
+                                ->ifTrue(fn ($configs) => [] !== self::invalidKeys($configs))
+                                ->thenInvalid('A text editor config name must be a non-empty string, got %s')
+                            ->end()
                             ->prototype('array')
                                 ->children()
                                     ->enumNode('enter_mode')
                                         ->values(['p', 'br'])
+                                        ->defaultValue('p')
                                         ->info('Whether the editor produces paragraphs or line breaks')
                                     ->end()
                                     ->arrayNode('tags')
@@ -124,6 +137,19 @@ final class Configuration implements ConfigurationInterface
                                         ->prototype('boolean')->end()
                                         ->info('Editor capabilities that are not an HTML tag, e.g. "align"')
                                     ->end()
+                                ->end()
+                                ->validate()
+                                    ->ifTrue(fn ($config) => [] !== self::invalidKeys(self::keyMap($config)))
+                                    ->thenInvalid('A text editor tag or feature must be a non-empty string, got %s')
+                                ->end()
+                                ->validate()
+                                    ->ifTrue(fn ($config) => 'br' === self::enterMode($config)
+                                        && [] !== \array_intersect(self::BLOCK_TEXT_EDITOR_KEYS, self::enabledKeys($config)))
+                                    ->thenInvalid(
+                                        'A text editor config with "enter_mode: br" cannot enable a key that needs a '
+                                        . 'block element, because the paragraphs carrying it are stripped from the '
+                                        . 'stored value. Remove the block key or use "enter_mode: p". Got %s'
+                                    )
                                 ->end()
                             ->end()
                         ->end()
@@ -286,5 +312,47 @@ final class Configuration implements ConfigurationInterface
         ->end();
 
         return $treeBuilder;
+    }
+
+    /**
+     * @return array<array-key, mixed>
+     */
+    private static function keyMap(mixed $config): array
+    {
+        if (!\is_array($config)) {
+            return [];
+        }
+
+        $tags = \is_array($config['tags'] ?? null) ? $config['tags'] : [];
+        $features = \is_array($config['features'] ?? null) ? $config['features'] : [];
+
+        return [...$tags, ...$features];
+    }
+
+    /**
+     * @return array<array-key, mixed>
+     */
+    private static function invalidKeys(mixed $map): array
+    {
+        if (!\is_array($map)) {
+            return [];
+        }
+
+        return \array_filter(\array_keys($map), fn ($key) => !\is_string($key) || '' === $key);
+    }
+
+    private static function enterMode(mixed $config): string
+    {
+        $enterMode = \is_array($config) ? ($config['enter_mode'] ?? 'p') : 'p';
+
+        return \is_string($enterMode) ? $enterMode : 'p';
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function enabledKeys(mixed $config): array
+    {
+        return \array_map(\strval(...), \array_keys(\array_filter(self::keyMap($config))));
     }
 }

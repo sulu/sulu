@@ -27,11 +27,16 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\Yaml\Yaml;
 
 class SuluAdminExtension extends Extension implements PrependExtensionInterface
 {
     public function prepend(ContainerBuilder $container): void
     {
+        /** @var array<string, mixed> $textEditorConfig */
+        $textEditorConfig = Yaml::parseFile(__DIR__ . '/../Resources/config/text_editor.yaml');
+        $container->prependExtensionConfig('sulu_admin', $textEditorConfig);
+
         if ($container->hasExtension('framework')) {
             $publicDir = 'public';
 
@@ -154,51 +159,6 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         );
     }
 
-    /**
-     * The text editor configs Sulu ships. A project config of the same name is merged into these, so a single tag can
-     * be switched off with "false" without restating the whole list.
-     *
-     * "br" and "p" are deliberately absent: the editor always produces them and no plugin gates them, so offering
-     * them as switches would promise a restriction that cannot be applied.
-     *
-     * @var array<string, array{enter_mode: string, tags: array<string, bool>, features: array<string, bool>}>
-     */
-    private const DEFAULT_TEXT_EDITOR_CONFIGS = [
-        'default' => [
-            'enter_mode' => 'p',
-            'tags' => [
-                'h2' => true,
-                'h3' => true,
-                'h4' => true,
-                'h5' => true,
-                'h6' => true,
-                'strong' => true,
-                'em' => true,
-                'u' => true,
-                's' => true,
-                'sub' => true,
-                'sup' => true,
-                'ul' => true,
-                'ol' => true,
-                'a' => true,
-                'table' => true,
-                'code' => true,
-            ],
-            'features' => [
-                'align' => true,
-            ],
-        ],
-        'mini' => [
-            'enter_mode' => 'br',
-            'tags' => [
-                'a' => true,
-                'strong' => true,
-                'em' => true,
-            ],
-            'features' => [],
-        ],
-    ];
-
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = $this->getConfiguration($configs, $container);
@@ -218,15 +178,12 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('sulu_admin.icon_sets', $config['icon_sets'] ?? []);
 
-        $textEditorConfig = $config['text_editor'] ?? [];
-        \assert(\is_array($textEditorConfig));
-        $textEditorConfigs = $textEditorConfig['configs'] ?? [];
-        \assert(\is_array($textEditorConfigs));
-
-        $container->setParameter(
-            'sulu_admin.text_editor_configs',
-            $this->buildTextEditorConfigs($textEditorConfigs)
-        );
+        /** @var array{configs: array<string, array{enter_mode: string, tags: array<string, bool>, features: array<string, bool>}>} $textEditor */
+        $textEditor = $config['text_editor'];
+        $configuredTextEditors = $textEditor['configs'];
+        $textEditorConfigs = $this->buildTextEditorConfigs($configuredTextEditors);
+        $container->setParameter('sulu_admin.text_editor_configs', $textEditorConfigs);
+        $container->setParameter('sulu_admin.text_editor_config_names', \array_keys($textEditorConfigs));
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.php');
@@ -259,39 +216,22 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * Merges the project text editor configs into the ones Sulu ships and reduces the boolean maps to the list of
-     * enabled keys the administration interface consumes.
+     * Reduces the boolean maps of every text editor config to the list of enabled keys the administration interface
+     * consumes. The configs Sulu ships are prepended in prepend(), so the project block is already merged in here.
      *
-     * @param array<array-key, mixed> $textEditorConfigs
+     * @param array<string, array{enter_mode: string, tags: array<string, bool>, features: array<string, bool>}> $textEditorConfigs
      *
      * @return array<string, array{enterMode: string, tags: string[], features: string[]}>
      */
     private function buildTextEditorConfigs(array $textEditorConfigs): array
     {
-        $names = \array_unique([
-            ...\array_keys(self::DEFAULT_TEXT_EDITOR_CONFIGS),
-            ...\array_map(\strval(...), \array_keys($textEditorConfigs)),
-        ]);
-
         $configs = [];
 
-        foreach ($names as $name) {
-            $defaults = self::DEFAULT_TEXT_EDITOR_CONFIGS[$name] ?? ['enter_mode' => 'p', 'tags' => [], 'features' => []];
-
-            // The semantic contract is enforced by the Configuration tree; here it is only re-stated for the analyser.
-            $config = $textEditorConfigs[$name] ?? [];
-            \assert(\is_array($config));
-            $enterMode = $config['enter_mode'] ?? $defaults['enter_mode'];
-            \assert(\is_string($enterMode));
-            $tags = $config['tags'] ?? [];
-            \assert(\is_array($tags));
-            $features = $config['features'] ?? [];
-            \assert(\is_array($features));
-
+        foreach ($textEditorConfigs as $name => $config) {
             $configs[$name] = [
-                'enterMode' => $enterMode,
-                'tags' => $this->filterEnabledKeys($defaults['tags'], $tags),
-                'features' => $this->filterEnabledKeys($defaults['features'], $features),
+                'enterMode' => $config['enter_mode'],
+                'tags' => $this->filterEnabledKeys($config['tags']),
+                'features' => $this->filterEnabledKeys($config['features']),
             ];
         }
 
@@ -299,14 +239,13 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * @param array<string, bool> $defaults
-     * @param array<array-key, mixed> $config
+     * @param array<string, bool> $keys
      *
      * @return string[]
      */
-    private function filterEnabledKeys(array $defaults, array $config): array
+    private function filterEnabledKeys(array $keys): array
     {
-        return \array_keys(\array_filter(\array_merge($defaults, $config)));
+        return \array_keys(\array_filter($keys));
     }
 
     public function loadFieldTypeOptions(

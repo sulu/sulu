@@ -54,6 +54,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagFilterTypedFormMetadataVisi
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateFilterTypedFormMetadataVisitor;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\BlockFieldMetadataValidator;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\ChainFieldMetadataValidator;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\TextEditorFieldMetadataValidator;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\TypesPropertyFieldMetadataValidator;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Visitor\BlockIdGeneratorFormMetadataVisitor;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Visitor\BlockSettingsFormMetadataVisitor;
@@ -166,7 +167,6 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_admin.tag_xml_parser'),
             new Reference('sulu_admin.meta_xml_parser'),
-            '%sulu_admin.text_editor_configs%',
         ]);
 
     $services->set('sulu_admin.meta_xml_parser', MetaXmlParser::class)
@@ -414,6 +414,10 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu_admin.field_metadata_validator');
 
     $services->set('sulu_admin.field_metadata_validator.block', BlockFieldMetadataValidator::class)
+        ->tag('sulu_admin.field_metadata_validator');
+
+    $services->set('sulu_admin.field_metadata_validator.text_editor', TextEditorFieldMetadataValidator::class)
+        ->args(['%sulu_admin.text_editor_config_names%'])
         ->tag('sulu_admin.field_metadata_validator');
 
     $services->set('sulu_admin.form_metadata_validator.locale_options', LocalesOptionFormMetadataVisitor::class)

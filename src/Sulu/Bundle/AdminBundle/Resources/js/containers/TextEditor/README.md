@@ -4,6 +4,7 @@ decides which `TextEditor` should be used.
 
 ```javascript
 const CKEditor5 = require('../CKEditor5').default;
+require('../CKEditor5').registerCKEditor5Plugins();
 
 const [value, setValue] = React.useState('');
 
@@ -13,7 +14,7 @@ textEditorRegistry.add('ckeditor5', CKEditor5);
 
 const textEditorConfigRegistry = require('./registries/textEditorConfigRegistry').default;
 textEditorConfigRegistry.clear();
-textEditorConfigRegistry.add('default', {enterMode: 'p', features: ['align'], tags: ['strong', 'em', 'a']});
+textEditorConfigRegistry.add('default', {enterMode: 'p', features: ['align'], tags: ['strong', 'i', 'a']});
 
 const handleBlur = () => alert('Text editing finished!');
 
@@ -51,7 +52,7 @@ sulu_admin:
                 tags:
                     a: true
                     strong: true
-                    em: true
+                    i: true
 ```
 
 A project block for a config Sulu ships (`default`, `mini`) is merged into it, so a single tag can be switched off

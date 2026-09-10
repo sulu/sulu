@@ -1,0 +1,36 @@
+# The text editor configs Sulu ships. A project block of the same name is merged into these, so a single tag can be
+# switched off with "false" without restating the whole list.
+#
+# "p" and "br" are deliberately absent: the editor always produces them and no plugin gates them, so offering them as
+# switches would promise a restriction that cannot be applied. Which HTML a tag produces is decided by the plugin bound
+# to it in the administration interface, see Resources/js/containers/CKEditor5/index.js.
+text_editor:
+    configs:
+        default:
+            enter_mode: p
+            tags:
+                h2: true
+                h3: true
+                h4: true
+                h5: true
+                h6: true
+                strong: true
+                i: true
+                u: true
+                s: true
+                sub: true
+                sup: true
+                ul: true
+                ol: true
+                a: true
+                table: true
+                code: true
+            features:
+                align: true
+        mini:
+            enter_mode: br
+            tags:
+                a: true
+                strong: true
+                i: true
+            features: []

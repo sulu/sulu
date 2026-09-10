@@ -27,13 +27,9 @@ class PropertiesXmlParser
 {
     use XmlParserTrait;
 
-    /**
-     * @param array<string, mixed> $textEditorConfigs config names to their resolved config; only the names are read
-     */
     public function __construct(
         private TagXmlParser $tagXmlParser,
         private MetaXmlParser $metaXmlParser,
-        private array $textEditorConfigs = [],
     ) {
     }
 
@@ -460,70 +456,6 @@ class PropertiesXmlParser
         return $section;
     }
 
-    /**
-     * Validates the "config" param against the configured text editor configs and deprecates the params it replaces.
-     * An unknown config name is caught here rather than in the administration interface, where the registry throws
-     * during render and React unmounts the whole form.
-     *
-     * @param mixed[] $data
-     */
-    private function processTextEditorParams(FieldMetadata $property, array $data): void
-    {
-        if ('text_editor' !== $data['type']) {
-            return;
-        }
-
-        $params = $data['params'] ?? [];
-
-        if (!\is_array($params)) {
-            return;
-        }
-
-        foreach ($params as $parameter) {
-            $name = \is_array($parameter) ? ($parameter['name'] ?? null) : null;
-
-            if (\in_array($name, ['formats', 'enter_mode'], true)) {
-                @trigger_deprecation(
-                    'sulu/sulu',
-                    '3.1',
-                    'The "%s" param of the "text_editor" property "%s" is deprecated and will be removed in 4.0. ' .
-                    'Use the "config" param with a config from "sulu_admin.text_editor.configs" instead.',
-                    $name,
-                    $property->getName()
-                );
-
-                continue;
-            }
-
-            if ('config' === $name) {
-                $this->assertTextEditorConfigExists($parameter['value'] ?? null, $property);
-            }
-        }
-    }
-
-    private function assertTextEditorConfigExists(mixed $configName, FieldMetadata $property): void
-    {
-        // An empty list means the configs were not injected, which is the case in unit tests of this parser.
-        if ([] === $this->textEditorConfigs || !\is_string($configName)) {
-            return;
-        }
-
-        if (\array_key_exists($configName, $this->textEditorConfigs)) {
-            return;
-        }
-
-        $availableConfigs = \array_keys($this->textEditorConfigs);
-        \sort($availableConfigs);
-
-        throw new \InvalidArgumentException(\sprintf(
-            'The "text_editor" property "%s" uses the config "%s", which is not configured. ' .
-            'Configure it under "sulu_admin.text_editor.configs" or use one of: %s',
-            $property->getName(),
-            $configName,
-            \implode(', ', $availableConfigs)
-        ));
-    }
-
     private function mapProperty(FieldMetadata $property, $data): void
     {
         $data = $this->normalizePropertyData($data);
@@ -548,8 +480,6 @@ class PropertiesXmlParser
         $property->setOnInvalid(\array_key_exists('onInvalid', $data) ? $data['onInvalid'] : null);
 
         // TODO schema
-
-        $this->processTextEditorParams($property, $data);
 
         foreach ($data['params'] as $parameter) {
             $option = new OptionMetadata();

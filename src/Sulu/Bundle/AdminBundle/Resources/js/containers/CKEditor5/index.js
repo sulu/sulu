@@ -50,8 +50,8 @@ export function registerCKEditor5Plugins() {
     pluginRegistry.add(Bold, 'strong');
     configRegistry.add((config) => ({toolbar: [...config.toolbar, 'bold']}), 'strong', PRIORITY_CORE);
 
-    pluginRegistry.add(Italic, 'em');
-    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'italic']}), 'em', PRIORITY_CORE);
+    pluginRegistry.add(Italic, 'i');
+    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'italic']}), 'i', PRIORITY_CORE);
 
     pluginRegistry.add(Underline, 'u');
     configRegistry.add((config) => ({toolbar: [...config.toolbar, 'underline']}), 'u', PRIORITY_CORE);

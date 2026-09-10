@@ -4,6 +4,9 @@ which is called when the editor loses the focus. The `config` prop holds the res
 which plugins are loaded.
 
 ```javascript
+const {registerCKEditor5Plugins} = require('./index');
+registerCKEditor5Plugins();
+
 const [value, setValue] = React.useState('');
 
 const handleChange = (newValue) => setValue(newValue);
@@ -11,7 +14,7 @@ const handleBlur = () => alert('Text editing finished!');
 
 <div>
     <CKEditor5
-        config={{enterMode: 'p', features: [], tags: ['strong', 'em']}}
+        config={{enterMode: 'p', features: [], tags: ['strong', 'i']}}
         onBlur={handleBlur}
         onChange={handleChange}
         value={value}
@@ -58,6 +61,9 @@ ckeditorConfigRegistry.add((config) => ({
     toolbar: [...config.toolbar, 'insertTable'],
 }), 'table');
 ```
+
+A key names the plugin, not always the element it produces: `i` is CKEditor's Italic, which also reads `<em>`, and
+`table` renders a `<figure class="table">` around the table.
 
 A key does not have to be a tag. Anything a plugin adds that is not an element of its own is a feature, which is how
 attributes and inline styles are configured. `align` writes a `text-align` style on an existing element, and `lang`

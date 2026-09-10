@@ -21,7 +21,7 @@ const DEFAULT_CONFIG = {
     enterMode: 'p',
     features: ['align'],
     tags: [
-        'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'u', 's',
+        'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'i', 'u', 's',
         'sub', 'sup', 'ul', 'ol', 'a', 'table', 'code',
     ],
 };
@@ -30,7 +30,7 @@ const DEFAULT_CONFIG = {
 const MINI_CONFIG = {
     enterMode: 'br',
     features: [],
-    tags: ['a', 'strong', 'em'],
+    tags: ['a', 'strong', 'i'],
 };
 
 function buildConfig(textEditorConfig): Object {
@@ -148,7 +148,7 @@ test('Build the heading options from the enabled heading tags only', () => {
 test('Append toolbar items of a config registered without a key after the core ones', () => {
     configRegistry.add((config) => ({toolbar: [...config.toolbar, 'fontSize']}));
 
-    expect(buildConfig({enterMode: 'p', features: [], tags: ['strong', 'em']}).toolbar)
+    expect(buildConfig({enterMode: 'p', features: [], tags: ['strong', 'i']}).toolbar)
         .toEqual(['bold', 'italic', 'fontSize']);
 });
 
@@ -167,9 +167,8 @@ test('Both link plugins require the contextual balloon they use', () => {
 });
 
 test('Every tag and feature the shipped configs enable is claimed by a plugin or config', () => {
-    // Guards the three hand-maintained copies of this list against drifting apart: the PHP defaults in
-    // SuluAdminExtension::DEFAULT_TEXT_EDITOR_CONFIGS, the registrations in index.js, and MINI_CONFIG/DEFAULT_CONFIG
-    // here. A key added on one side without the other makes every editor mount warn, which this test turns red first.
+    // Checks the JS half of the invariant: every key the fixtures above name is claimed by a registration. The
+    // fixtures mirror Resources/config/text_editor.yaml by hand, so a key added there still has to be added here.
     const claimedKeys = [...pluginRegistry.keys, ...configRegistry.keys];
 
     for (const {features, tags} of [DEFAULT_CONFIG, MINI_CONFIG]) {
@@ -190,4 +189,12 @@ test('Do not enable the lang feature in any shipped config', () => {
     }
 
     expect(pluginRegistry.getPlugins(DEFAULT_CONFIG.tags)).not.toContain(TextPartLanguage);
+});
+
+test('Load a plugin registered under two enabled keys only once', () => {
+    class SharedPlugin {}
+    pluginRegistry.add(SharedPlugin, 'strong');
+    pluginRegistry.add(SharedPlugin, 'a');
+
+    expect(pluginRegistry.getPlugins(['strong', 'a']).filter((p) => p === SharedPlugin)).toHaveLength(1);
 });

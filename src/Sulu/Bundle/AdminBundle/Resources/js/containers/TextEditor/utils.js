@@ -25,9 +25,10 @@ export function resolveTextEditorConfig(options: ?SchemaOptions): TextEditorConf
     return {
         enterMode: deprecatedEnterMode || enterMode,
         features,
-        tags: deprecatedFormats
-            ? [...tags.filter((tag) => !HEADING_TAGS.includes(tag)), ...deprecatedFormats]
-            : tags,
+        // A "formats" param replaces the heading tags of the config, even when it names none of them.
+        tags: deprecatedFormats === undefined
+            ? tags
+            : [...tags.filter((tag) => !HEADING_TAGS.includes(tag)), ...deprecatedFormats],
     };
 }
 
@@ -64,5 +65,6 @@ function readDeprecatedFormats(options: ?SchemaOptions) {
 
     // The param only ever selected among the heading tags, anything else in it was ignored. Keeping that scope
     // stops a legacy value that happens to name a tag from enabling its plugin on upgrade.
+    // An empty result is returned as an empty list, not undefined, because "formats" was set and still applies.
     return formats.filter((format) => HEADING_TAGS.includes(format));
 }

@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\MetaXmlParser;
@@ -66,30 +65,6 @@ class FormXmlLoaderTest extends TestCase
         $container->set('block', $blockMetadataProvider);
 
         $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser, $tagXmlParser, $schemaMetadataProvider);
-    }
-
-    /**
-     * @param array<string, mixed> $textEditorConfigs
-     */
-    private function createLoader(array $textEditorConfigs): FormXmlLoader
-    {
-        $tagXmlParser = new TagXmlParser();
-        $propertiesXmlParser = new PropertiesXmlParser(
-            $tagXmlParser,
-            new MetaXmlParser($this->translator->reveal(), ['en' => 'en', 'de' => 'de']),
-            $textEditorConfigs,
-        );
-
-        $container = new Container();
-        $schemaMetadataProvider = new SchemaMetadataProvider(new PropertyMetadataMapperRegistry($container));
-        $container->set('block', new BlockPropertyMetadataMapper($schemaMetadataProvider));
-
-        return new FormXmlLoader(
-            $propertiesXmlParser,
-            new SchemaXmlParser(),
-            $tagXmlParser,
-            $schemaMetadataProvider
-        );
     }
 
     public function testLoadForm(): void
@@ -539,35 +514,6 @@ class FormXmlLoaderTest extends TestCase
         $this->assertEquals('name', $formMetadata->getItems()['name']->getName());
         $this->assertEquals(8, $formMetadata->getItems()['name']->getColSpan());
         $this->assertCount(1, $formMetadata->getItems()['name']->getItems());
-    }
-
-    public function testLoadFormWithKnownTextEditorConfig(): void
-    {
-        $loader = $this->createLoader(['default' => [], 'mini' => []]);
-
-        $formMetadata = $loader->load(
-            \dirname(__DIR__) . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'form_text_editor_configs.xml'
-        );
-
-        $teaser = $formMetadata->getItems()['teaser'];
-        $this->assertInstanceOf(FieldMetadata::class, $teaser);
-        $this->assertSame('mini', $teaser->getOptions()['config']->getValue());
-    }
-
-    public function testLoadFormWithUnknownTextEditorConfigThrows(): void
-    {
-        $loader = $this->createLoader(['default' => [], 'mini' => []]);
-
-        // Without this the name only fails in the administration interface, where the registry throws during render
-        // and React unmounts the whole form.
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/does_not_exist/');
-        $this->expectExceptionMessageMatches('/default, mini/');
-
-        $loader->load(
-            \dirname(__DIR__) . \DIRECTORY_SEPARATOR . 'data'
-            . \DIRECTORY_SEPARATOR . 'form_text_editor_unknown_config.xml'
-        );
     }
 
     public function testLoadFormInvalidRootTag(): void
