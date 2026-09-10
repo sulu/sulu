@@ -12127,12 +12127,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Variable \$entities in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountFactory\:\:createEntity\(\) should return Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface but returns object\.$#'
 			identifier: return.type
 			count: 1
@@ -24843,7 +24837,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''created'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
@@ -25039,19 +25033,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
-			message: '#^Parameter \#1 \$created of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersion\:\:setCreated\(\) expects DateTimeImmutable, DateTime given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
-
-		-
 			message: '#^Parameter \#1 \$credits of method Sulu\\Bundle\\MediaBundle\\Entity\\FileVersionMeta\:\:setCredits\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
-
-		-
-			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
@@ -28555,12 +28537,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Variable \$entities in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Util\\TokenGenerator\:\:getRandomNumber\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -29837,6 +29813,12 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/SitemapController.php
+
+		-
+			message: '#^Cannot access offset ''cache'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
 
 		-
 			message: '#^Cannot access offset ''cache_lifetime'' on mixed\.$#'
@@ -32389,6 +32371,24 @@ parameters:
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
 
 		-
+			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
+			identifier: equal.alwaysTrue
+			count: 1
+			path: src/Sulu/Component/Persistence/RelationTrait.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: src/Sulu/Component/Persistence/RelationTrait.php
+
+		-
+			message: '#^Variable \$entities in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Sulu/Component/Persistence/RelationTrait.php
+
+		-
 			message: '#^Parameter \#1 \$objects of class Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber constructor expects array\<string, array\<string, array\{model\?\: class\-string\<object\>, repository\?\: class\-string\<Doctrine\\ORM\\EntityRepository\<object\>\>\}\>\>, array\{sulu\: array\{contact\: array\{model\: ''stdClass'', repository\: ''Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository''\}, member\: array\{model\: ''Closure''\}, user\: array\{model\: class\-string\<stdClass\>\}\}\} given\.$#'
 			identifier: argument.type
 			count: 1
@@ -32533,32 +32533,8 @@ parameters:
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/UserBlameSubscriberTest.php
 
 		-
-			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
-			identifier: equal.alwaysTrue
-			count: 2
-			path: src/Sulu/Component/Persistence/RelationTrait.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 2
-			path: src/Sulu/Component/Persistence/RelationTrait.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 1
-			path: src/Sulu/Component/Rest/AbstractRestController.php
-
-		-
-			message: '#^Call to function is_object\(\) with non\-empty\-array\<Sulu\\Bundle\\CoreBundle\\Entity\\ApiEntity\> will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: src/Sulu/Component/Rest/AbstractRestController.php
-
-		-
-			message: '#^Call to function method_exists\(\) with \*NEVER\* and ''getValues'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Sulu/Component/Rest/AbstractRestController.php
 
@@ -32649,18 +32625,6 @@ parameters:
 		-
 			message: '#^Property Sulu\\Component\\Rest\\AbstractRestController\:\:\$unsortable type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/AbstractRestController.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 1
-			path: src/Sulu/Component/Rest/AbstractRestController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Component/Rest/AbstractRestController.php
 
@@ -34357,14 +34321,32 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/PaginatedRepresentation.php
 
 		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
+			message: '#^Call to function is_object\(\) with non\-empty\-array\<Sulu\\Bundle\\CoreBundle\\Entity\\ApiEntity\> will always evaluate to false\.$#'
+			identifier: function.impossibleType
 			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
+			path: src/Sulu/Component/Rest/RestControllerTrait.php
 
 		-
-			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
-			identifier: equal.alwaysTrue
+			message: '#^Call to function method_exists\(\) with \*NEVER\* and ''getValues'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Sulu/Component/Rest/RestControllerTrait.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: src/Sulu/Component/Rest/RestControllerTrait.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and string will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Sulu/Component/Rest/RestControllerTrait.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
 
@@ -34495,20 +34477,8 @@ parameters:
 			path: src/Sulu/Component/Rest/RestHelper.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
 			message: '#^Trying to invoke \(callable\(\)\: mixed\)\|null but it might not be a callable\.$#'
 			identifier: callable.nonCallable
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
-			message: '#^Variable \$entities in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
 
