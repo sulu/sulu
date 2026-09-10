@@ -32,7 +32,6 @@
     "sulu_activity.description.snippets.workflow_transition.publish": "{userFullName} has published the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.workflow_transition.unpublish": "{userFullName} has unpublished the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.workflow_transition.remove_draft": "{userFullName} has discarded the draft of the snippet \"{resourceTitle}\"",
-    "sulu_activity.description.snippets.workflow_transition.bypass_publish": "{userFullName} has published the snippet \"{resourceTitle}\" without a review",
     "sulu_activity.description.snippets.workflow_transition.request_for_review": "{userFullName} has requested a review for the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.workflow_transition.request_for_review_draft": "{userFullName} has requested a review for the draft of the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.workflow_transition.cancel_review": "{userFullName} has cancelled the review of the snippet \"{resourceTitle}\"",

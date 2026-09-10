@@ -27,7 +27,6 @@
     "sulu_activity.description.articles.workflow_transition.publish": "{userFullName} hat den Artikel \"{resourceTitle}\" veröffentlicht",
     "sulu_activity.description.articles.workflow_transition.unpublish": "{userFullName} hat den Artikel \"{resourceTitle}\" nicht mehr veröffentlicht",
     "sulu_activity.description.articles.workflow_transition.remove_draft": "{userFullName} hat den Entwurf des Artikels \"{resourceTitle}\" verworfen",
-    "sulu_activity.description.articles.workflow_transition.bypass_publish": "{userFullName} hat den Artikel \"{resourceTitle}\" ohne Review veröffentlicht",
     "sulu_activity.description.articles.workflow_transition.request_for_review": "{userFullName} hat ein Review für den Artikel \"{resourceTitle}\" angefragt",
     "sulu_activity.description.articles.workflow_transition.request_for_review_draft": "{userFullName} hat ein Review für den Entwurf des Artikels \"{resourceTitle}\" angefragt",
     "sulu_activity.description.articles.workflow_transition.cancel_review": "{userFullName} hat das Review des Artikels \"{resourceTitle}\" abgebrochen",

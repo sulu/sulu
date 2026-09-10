@@ -33,7 +33,6 @@
     "sulu_activity.description.snippets.workflow_transition.publish": "{userFullName} hat den Schnipsel \"{resourceTitle}\" veröffentlicht",
     "sulu_activity.description.snippets.workflow_transition.unpublish": "{userFullName} hat den Schnipsel \"{resourceTitle}\" nicht mehr veröffentlicht",
     "sulu_activity.description.snippets.workflow_transition.remove_draft": "{userFullName} hat den Entwurf des Schnipsels \"{resourceTitle}\" verworfen",
-    "sulu_activity.description.snippets.workflow_transition.bypass_publish": "{userFullName} hat das Snippet \"{resourceTitle}\" ohne Review veröffentlicht",
     "sulu_activity.description.snippets.workflow_transition.request_for_review": "{userFullName} hat ein Review für das Snippet \"{resourceTitle}\" angefragt",
     "sulu_activity.description.snippets.workflow_transition.request_for_review_draft": "{userFullName} hat ein Review für den Entwurf des Snippets \"{resourceTitle}\" angefragt",
     "sulu_activity.description.snippets.workflow_transition.cancel_review": "{userFullName} hat das Review des Snippets \"{resourceTitle}\" abgebrochen",

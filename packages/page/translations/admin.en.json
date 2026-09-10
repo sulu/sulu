@@ -48,7 +48,6 @@
     "sulu_activity.description.pages.workflow_transition.publish": "{userFullName} has published the page \"{resourceTitle}\"",
     "sulu_activity.description.pages.workflow_transition.unpublish": "{userFullName} has unpublished the page \"{resourceTitle}\"",
     "sulu_activity.description.pages.workflow_transition.remove_draft": "{userFullName} has discarded the draft of the page \"{resourceTitle}\"",
-    "sulu_activity.description.pages.workflow_transition.bypass_publish": "{userFullName} has published the page \"{resourceTitle}\" without a review",
     "sulu_activity.description.pages.workflow_transition.request_for_review": "{userFullName} has requested a review for the page \"{resourceTitle}\"",
     "sulu_activity.description.pages.workflow_transition.request_for_review_draft": "{userFullName} has requested a review for the draft of the page \"{resourceTitle}\"",
     "sulu_activity.description.pages.workflow_transition.cancel_review": "{userFullName} has cancelled the review of the page \"{resourceTitle}\"",
