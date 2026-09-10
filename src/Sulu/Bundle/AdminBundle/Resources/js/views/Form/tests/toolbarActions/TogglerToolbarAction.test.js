@@ -71,7 +71,7 @@ function createTogglerToolbarAction(resourceKey, options: {[key: string]: mixed}
     return new TogglerToolbarAction(resourceFormStore, form, router, [], options, resourceStore);
 }
 
-test('Return item config with correct type, label, loading and value', () => {
+test('Return item config with correct type, label, loading, disabled and value', () => {
     const toolbarAction = createTogglerToolbarAction('test', {label: 'sulu_admin.publish', property: 'published'});
     toolbarAction.resourceFormStore.resourceStore.loading = false;
     toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
@@ -79,6 +79,26 @@ test('Return item config with correct type, label, loading and value', () => {
 
     expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         type: 'toggler',
+        disabled: false,
+        label: 'sulu_admin.publish',
+        loading: false,
+        value: false,
+    }));
+});
+
+test('Return item config with correct type, label, loading, disabled and value but with disabled_condtion met', () => {
+    const toolbarAction = createTogglerToolbarAction('test', {
+        label: 'sulu_admin.publish',
+        property: 'published',
+        disabled_condition: 'true == true',
+    });
+    toolbarAction.resourceFormStore.resourceStore.loading = false;
+    toolbarAction.resourceFormStore.resourceStore.data.id = 1234;
+    toolbarAction.resourceFormStore.resourceStore.data.published = false;
+
+    expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        type: 'toggler',
+        disabled: true,
         label: 'sulu_admin.publish',
         loading: false,
         value: false,

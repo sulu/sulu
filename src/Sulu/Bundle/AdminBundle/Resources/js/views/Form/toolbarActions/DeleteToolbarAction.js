@@ -182,23 +182,16 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
             visible_condition: visibleCondition,
         } = this.options;
 
-        const {id} = this.resourceFormStore;
-
         const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
         if (!visibleConditionFulfilled) {
             return;
         }
 
-        const isOnlyOneContentLocale = jexl.evalSync(
-            'contentLocales && contentLocales|length == 1',
-            this.conditionData
-        );
-
         if (deleteLocaleOption) {
             // Delete locale mode
             return {
-                disabled: !id || !!isOnlyOneContentLocale,
+                disabled: this.isDisabled(),
                 icon: 'su-trash-alt',
                 label: translate('sulu_admin.delete_locale'),
                 onClick: action(() => {
@@ -208,22 +201,8 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                 type: 'button',
             };
         } else {
-            // Regular delete mode
-            if (!id) {
-                return {
-                    disabled: true,
-                    icon: 'su-trash-alt',
-                    label: translate('sulu_admin.delete'),
-                    onClick: action(() => {
-                        this.deleteLocale = false;
-                        this.showDialog = true;
-                    }),
-                    type: 'button',
-                };
-            }
-
             return {
-                disabled: false,
+                disabled: this.isDisabled(),
                 icon: 'su-trash-alt',
                 label: translate('sulu_admin.delete'),
                 onClick: action(() => {
@@ -319,4 +298,23 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                 })
             );
     };
+
+    isDisabled(): boolean {
+        const disabled = super.isDisabled();
+
+        const {id} = this.resourceFormStore;
+
+        const deleteLocaleOption = this.options.delete_locale ?? false;
+
+        const isOnlyOneContentLocale = jexl.evalSync(
+            'contentLocales && contentLocales|length == 1',
+            this.conditionData
+        );
+
+        if (deleteLocaleOption) {
+            return disabled || !id || !!isOnlyOneContentLocale;
+        }
+
+        return id ? disabled : true;
+    }
 }

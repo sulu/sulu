@@ -1,5 +1,6 @@
 // @flow
 import {computed, toJS} from 'mobx';
+import jexl from 'jexl';
 import ResourceStore from '../../../stores/ResourceStore';
 import {ResourceFormStore, FormInspector, conditionDataProviderRegistry} from '../../../containers/Form';
 import Router from '../../../services/Router';
@@ -60,5 +61,17 @@ export default class AbstractFormToolbarAction {
 
     destroy() {
 
+    }
+
+    isDisabled(): boolean {
+        const {
+            disabled_condition: disabledCondition,
+        } = this.options;
+
+        try {
+            return disabledCondition ? jexl.evalSync(disabledCondition, this.conditionData) : false;
+        } catch (e) {
+            return false;
+        }
     }
 }

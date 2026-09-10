@@ -76,6 +76,16 @@ test('Return item config with enabled button when resource is not published and 
     }));
 });
 
+test('Return item config with disabled button when has disabled_condition met', () => {
+    const publishToolbarAction = createPublishToolbarAction({disabled_condition: 'true == true'});
+    publishToolbarAction.resourceFormStore.resourceStore.dirty = false;
+    publishToolbarAction.resourceFormStore.resourceStore.data.publishedState = false;
+
+    expect(publishToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: true,
+    }));
+});
+
 test('Return item config with disabled button when resource is not published but form is not dirty', () => {
     const publishToolbarAction = createPublishToolbarAction();
     publishToolbarAction.resourceFormStore.resourceStore.dirty = true;

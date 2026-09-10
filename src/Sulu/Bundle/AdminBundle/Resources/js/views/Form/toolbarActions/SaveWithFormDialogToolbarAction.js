@@ -85,7 +85,7 @@ export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbar
 
     getToolbarItemConfig() {
         return {
-            disabled: !this.resourceFormStore.dirty,
+            disabled: this.isDisabled(),
             icon: 'su-save',
             label: translate('sulu_admin.save'),
             loading: this.resourceFormStore.saving,
@@ -107,5 +107,11 @@ export default class SaveWithFormDialogToolbarAction extends AbstractFormToolbar
 
     destroy() {
         this.dialogFormStore.destroy();
+    }
+
+    isDisabled(): boolean {
+        const disabled = super.isDisabled();
+
+        return disabled || !this.resourceFormStore.dirty;
     }
 }

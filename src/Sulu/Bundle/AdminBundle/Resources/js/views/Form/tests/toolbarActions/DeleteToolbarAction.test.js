@@ -136,6 +136,16 @@ test('Return item config with enabled button if more than one contentLocale and 
     }));
 });
 
+test('Return item config with enabled button if has disabled_condition met', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({delete_locale: true, disabled_condition: 'true == true'});
+    deleteToolbarAction.resourceFormStore.resourceStore.id = '123-123-123';
+    deleteToolbarAction.resourceFormStore.resourceStore.data = {contentLocales: ['de', 'en']};
+
+    expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: true,
+    }));
+});
+
 test('Return item config with disabled button if only one contentLocale is available', () => {
     const deleteToolbarAction = createDeleteToolbarAction({delete_locale: true});
     deleteToolbarAction.resourceFormStore.resourceStore.id = '123-123-123';

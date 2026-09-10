@@ -112,6 +112,23 @@ test('Return correct toolbar item config', () => {
 
     expect(config).toEqual({
         type: 'button',
+        disabled: false,
+        label: 'Reload',
+        icon: 'su-sync',
+        onClick: expect.any(Function),
+    });
+});
+
+test('Return correct toolbar item config but with disabled_condition met', () => {
+    const action = createReloadFormStoreToolbarAction({
+        label: 'Reload',
+        disabled_condition: 'true == true',
+    });
+    const config = action.getToolbarItemConfig();
+
+    expect(config).toEqual({
+        type: 'button',
+        disabled: true,
         label: 'Reload',
         icon: 'su-sync',
         onClick: expect.any(Function),

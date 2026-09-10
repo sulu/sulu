@@ -76,14 +76,11 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
             visible_condition: visibleCondition,
         } = this.options;
 
-        const {id, data} = this.resourceFormStore;
-        const {published} = data;
-
         const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
         if (visibleConditionFulfilled) {
             return {
-                disabled: !id || !published,
+                disabled: this.isDisabled(),
                 label: translate('sulu_page.unpublish'),
                 onClick: action(() => {
                     this.showUnpublishDialog = true;
@@ -132,4 +129,13 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
     @action handleUnpublishDialogClose = () => {
         this.showUnpublishDialog = false;
     };
+
+    isDisabled(): boolean {
+        const disabled = super.isDisabled();
+
+        const {id, data} = this.resourceFormStore;
+        const {published} = data;
+
+        return disabled || !id || !published;
+    }
 }

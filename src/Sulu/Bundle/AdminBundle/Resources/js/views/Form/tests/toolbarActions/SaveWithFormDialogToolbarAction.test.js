@@ -81,6 +81,21 @@ test('Return item config with enabled button when dirty flag is set', () => {
     }));
 });
 
+test('Return item config with disabled button when dirty flag is set but disabled_condition is met', () => {
+    const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction(
+        {
+            condition: 'true',
+            formKey: 'test',
+            disabled_condition: 'true == true',
+        }
+    );
+    saveWithFormDialogToolbarAction.resourceFormStore.resourceStore.dirty = true;
+
+    expect(saveWithFormDialogToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: true,
+    }));
+});
+
 test('Return item config with loading button when saving flag is set', () => {
     const saveWithFormDialogToolbarAction = createSaveWithFormDialogToolbarAction({condition: 'true', formKey: 'test'});
     saveWithFormDialogToolbarAction.resourceFormStore.resourceStore.saving = true;

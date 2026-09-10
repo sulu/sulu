@@ -186,6 +186,7 @@ export default class UpdateFormStoreToolbarAction extends AbstractFormToolbarAct
             icon: this.icon,
             onClick: this.handleClick,
             loading: this.loading,
+            disabled: this.isDisabled(),
         };
     }
 
