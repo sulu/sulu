@@ -301,3 +301,52 @@ test('Return disabled true when passed disabled condition is met', () => {
 
     expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({disabled: true}));
 });
+
+test('Return item config with options sorted by priority first, then by title', () => {
+    const typeToolbarAction = createTypeToolbarAction({sort_by: 'title'});
+    typeToolbarAction.resourceFormStore.typesLoading = false;
+    typeToolbarAction.resourceFormStore.data.template = 'default';
+    typeToolbarAction.resourceFormStore.types = {
+        article: {
+            key: 'article',
+            title: 'Article',
+            priority: 50,
+        },
+        homepage: {
+            key: 'homepage',
+            title: 'Homepage',
+            priority: 100,
+        },
+        default: {
+            key: 'default',
+            title: 'Default',
+            priority: 0,
+        },
+        contact: {
+            key: 'contact',
+            title: 'Contact',
+            priority: 0,
+        },
+    };
+
+    expect(typeToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        options: [
+            {
+                label: 'Homepage',
+                value: 'homepage',
+            },
+            {
+                label: 'Article',
+                value: 'article',
+            },
+            {
+                label: 'Contact',
+                value: 'contact',
+            },
+            {
+                label: 'Default',
+                value: 'default',
+            },
+        ],
+    }));
+});

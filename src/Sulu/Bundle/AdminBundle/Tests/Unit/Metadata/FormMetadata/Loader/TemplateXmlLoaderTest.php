@@ -455,6 +455,20 @@ class TemplateXmlLoaderTest extends TestCase
         $this->assertSame('content', $formMetadata->getGroup());
     }
 
+    public function testLoadTemplateWithPriority(): void
+    {
+        $formMetadata = $this->loader->load($this->getTemplatesDirectory() . 'default.xml');
+
+        $this->assertSame(10, $formMetadata->getPriority());
+    }
+
+    public function testLoadTemplateWithoutPriority(): void
+    {
+        $formMetadata = $this->loader->load($this->getTemplatesDirectory() . 'grouped.xml');
+
+        $this->assertSame(0, $formMetadata->getPriority());
+    }
+
     public function testLoadTemplateWithoutGroup(): void
     {
         // Test that templates without a group element return null for the group
