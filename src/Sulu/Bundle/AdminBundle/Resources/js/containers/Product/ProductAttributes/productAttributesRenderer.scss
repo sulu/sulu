@@ -1,0 +1,87 @@
+@import '../../../containers/Application/colors.scss';
+
+/* narrower than AttributeGroupTable's label column: the value input needs the room */
+$valueTableLabelWidth: 30%;
+
+/*
+ * Both cells hang from the top: the label's first line sits on the input's text line, a long label or a
+ * description grows the row downwards.
+ */
+$rowHeight: 44px;
+$inputHeight: 30px;
+$labelLineHeight: 18px;
+$cellBorderWidth: 1px;
+$cellPaddingVertical: calc(($rowHeight - $inputHeight - 2 * $cellBorderWidth) / 2);
+
+/* doubled to outrank the Table cell rules (250px cap, nowrap); long attribute names wrap instead of clipping */
+.labelCell.labelCell {
+    width: $valueTableLabelWidth;
+    max-width: none;
+    overflow: visible;
+    white-space: normal;
+    color: $mineShaft;
+}
+
+.fieldCell.fieldCell {
+    max-width: none;
+    overflow: visible;
+    white-space: normal;
+}
+
+/* tripled to outrank AttributeGroupTable's cell padding */
+.labelCell.labelCell.labelCell,
+.fieldCell.fieldCell.fieldCell {
+    vertical-align: top;
+    padding-top: $cellPaddingVertical;
+    padding-bottom: $cellPaddingVertical;
+}
+
+/* the cell content is a vertically centred flex box in core; here the content decides its height, not the row */
+.labelCell > div,
+.fieldCell > div {
+    height: auto;
+    min-height: $inputHeight;
+    align-items: flex-start;
+}
+
+.labelCell > div {
+    padding-top: calc(($inputHeight - $labelLineHeight) / 2);
+}
+
+/*
+ * Grid.Item, two levels below the cell, floats and reserves a 20px gutter for a multi-column
+ * grid; the cell is the row's only column, so the two child combinators outrank it.
+ */
+.fieldCell > div > div {
+    float: none;
+    margin: 0;
+    padding-right: 0;
+    width: 100%;
+}
+
+/* Form.Field keeps a bottom margin and an empty error row meant for a stacked form; the table row is the spacing */
+.fieldCell > div > div > div {
+    margin-bottom: 0;
+}
+
+.fieldCell > div > div > div > div:empty {
+    display: none;
+}
+
+/* one line at every width: the search gives way, the toggler keeps its size and its single line */
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+}
+
+.search {
+    flex: 0 1 260px;
+    min-width: 0;
+}
+
+.hideEmpty {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}

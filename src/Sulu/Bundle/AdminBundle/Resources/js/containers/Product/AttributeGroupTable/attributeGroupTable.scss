@@ -4,6 +4,9 @@ $rowHeight: 44px;
 $labelColumnWidth: 50%;
 $removeColumnWidth: 56px;
 
+/* the card has no padding, the outer cells carry its inset */
+$cardInset: 20px;
+
 .table {
     overflow-x: auto;
 
@@ -31,6 +34,16 @@ $removeColumnWidth: 56px;
     th,
     td {
         padding: 4px 8px;
+    }
+
+    th:first-child,
+    td:first-child {
+        padding-left: $cardInset;
+    }
+
+    th:last-child,
+    td:last-child {
+        padding-right: $cardInset;
     }
 
     table {
@@ -65,8 +78,8 @@ $removeColumnWidth: 56px;
 
     th.removeCell,
     td.removeCell {
-        width: $removeColumnWidth;
-        padding: 0;
+        width: calc($removeColumnWidth + $cardInset);
+        padding: 0 $cardInset 0 0;
     }
 }
 

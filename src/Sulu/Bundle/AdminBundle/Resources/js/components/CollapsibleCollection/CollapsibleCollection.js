@@ -7,6 +7,7 @@ import Button from '../Button';
 import Icon from '../Icon';
 import SortableCollapsibleList from './SortableCollapsibleList';
 import collapsibleCollectionStyles from './collapsibleCollection.scss';
+import type {Node} from 'react';
 import type {
     CollapsibleActionConfig,
     CollapsibleConfig,
@@ -24,6 +25,7 @@ type Props<T: CollapsibleConfig> = {|
     onChange: (value: Array<T>) => void,
     onSortEnd?: (oldIndex: number, newIndex: number) => void,
     renderCollapsibleContent: RenderCollapsibleContentCallback<T>,
+    toolbar?: Node,
     value: Array<T>,
 |};
 
@@ -102,34 +104,38 @@ class CollapsibleCollection<T: CollapsibleConfig> extends React.Component<Props<
         const allCollapsed = this.expandedCollapsibles.every((expanded) => !expanded);
 
         return (
-            <div className={collapsibleCollectionStyles.collapsibleCollectionActionButtonContainer}>
-                <button
-                    className={collapsibleCollectionStyles.collapsibleCollectionActionButton}
-                    onClick={allCollapsed ? this.handleClickExpandAll : this.handleClickCollapseAll}
-                    type="button"
-                >
-                    <Icon
-                        aria-hidden={true}
-                        className={collapsibleCollectionStyles.collapsibleCollectionActionButtonIcon}
-                        name={allCollapsed ? 'su-expand-vertical' : 'su-collapse-vertical'}
-                    />
-                    <span className={collapsibleCollectionStyles.collapsibleCollectionActionButtonText}>
-                        {allCollapsed
-                            ? (expandAllText ? expandAllText : translate('sulu_admin.expand_all'))
-                            : (collapseAllText ? collapseAllText : translate('sulu_admin.collapse_all'))
-                        }
-                    </span>
-                </button>
-            </div>
+            <button
+                className={collapsibleCollectionStyles.collapsibleCollectionActionButton}
+                onClick={allCollapsed ? this.handleClickExpandAll : this.handleClickCollapseAll}
+                type="button"
+            >
+                <Icon
+                    aria-hidden={true}
+                    className={collapsibleCollectionStyles.collapsibleCollectionActionButtonIcon}
+                    name={allCollapsed ? 'su-expand-vertical' : 'su-collapse-vertical'}
+                />
+                <span className={collapsibleCollectionStyles.collapsibleCollectionActionButtonText}>
+                    {allCollapsed
+                        ? (expandAllText ? expandAllText : translate('sulu_admin.expand_all'))
+                        : (collapseAllText ? collapseAllText : translate('sulu_admin.collapse_all'))
+                    }
+                </span>
+            </button>
         );
     };
 
     render() {
-        const {actions, addButtonText, onAddClick, renderCollapsibleContent, value} = this.props;
+        const {actions, addButtonText, onAddClick, renderCollapsibleContent, toolbar, value} = this.props;
+        const showToggleButton = value.length > 1;
 
         return (
             <section className={collapsibleCollectionStyles.collapsibleCollection}>
-                {value.length > 1 && this.renderToggleButton()}
+                {(toolbar || showToggleButton) &&
+                    <div className={collapsibleCollectionStyles.collapsibleCollectionActionButtonContainer}>
+                        {toolbar && <div className={collapsibleCollectionStyles.toolbar}>{toolbar}</div>}
+                        {showToggleButton && this.renderToggleButton()}
+                    </div>
+                }
 
                 <div className={collapsibleCollectionStyles.spacer} />
 

@@ -24,6 +24,7 @@ const renderCollapsibleContent = (collapsible) => (
 />
 ```
 
+A `toolbar` node renders left of the collapse-all button, above the collapsibles.
 Set `movable` to `false` to render the collapsibles without a drag handle. The `actions` are shown
 as icon buttons in the header of every collapsible, and their `onClick` is called with the index of
 the collapsible it was invoked on.

@@ -24,3 +24,17 @@ test('renders the header cells and the rows', () => {
     expect(screen.getByText('Size')).toBeInTheDocument();
     expect(screen.getByText('yes')).toBeInTheDocument();
 });
+
+test('renders no header row without header cells', () => {
+    const {container} = render(
+        <AttributeGroupTable>
+            <Table.Row id="a1" key="a1">
+                <Table.Cell key="label">Size</Table.Cell>
+            </Table.Row>
+        </AttributeGroupTable>
+    );
+
+    // eslint-disable-next-line testing-library/no-container
+    expect(container.querySelector('thead')).toBeNull();
+    expect(screen.getByText('Size')).toBeInTheDocument();
+});
