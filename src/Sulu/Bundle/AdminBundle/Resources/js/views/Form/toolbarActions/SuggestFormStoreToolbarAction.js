@@ -168,7 +168,9 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
             this.loading = false;
 
             const data = await this.getErrorData(error);
-            this.setError(data.messageKey, () => this.generateAndApply());
+            this.setError(data.messageKey, () => {
+                this.generateAndApply();
+            });
         }));
     };
 
@@ -206,7 +208,9 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
             }
 
             this.closeDialog();
-            this.setError(data.messageKey, () => this.generate());
+            this.setError(data.messageKey, () => {
+                this.generate();
+            });
         }));
     };
 
@@ -263,7 +267,7 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
                 snackbarType={this.dialogSnackbarType}
                 title={this.dialogTitle}
             >
-                {this.originalFormStore && (
+                {Boolean(this.originalFormStore) && (
                     <Grid>
                         <Grid.Item colSpan={6}>
                             <SuggestionColumn heading={this.originalColumnLabel} store={this.originalFormStore} />
