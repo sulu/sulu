@@ -220,9 +220,6 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * Reduces the boolean maps of every text editor config to the list of enabled keys the administration interface
-     * consumes. The configs Sulu ships are prepended in prepend(), so the project block is already merged in here.
-     *
      * @param array<array-key, array{enter_mode: string, tags: array<array-key, bool>, features: array<array-key, bool>}> $textEditorConfigs
      *
      * @return array<array-key, array{enterMode: string, tags: string[], features: string[]}>
@@ -234,23 +231,13 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         foreach ($textEditorConfigs as $name => $config) {
             $configs[$name] = [
                 'enterMode' => $config['enter_mode'],
-                'tags' => $this->filterEnabledKeys($config['tags']),
-                'features' => $this->filterEnabledKeys($config['features']),
+                // Cast, because a YAML key that looks like a number arrives as an int.
+                'tags' => \array_map(\strval(...), \array_keys(\array_filter($config['tags']))),
+                'features' => \array_map(\strval(...), \array_keys(\array_filter($config['features']))),
             ];
         }
 
         return $configs;
-    }
-
-    /**
-     * @param array<array-key, bool> $keys
-     *
-     * @return string[]
-     */
-    private function filterEnabledKeys(array $keys): array
-    {
-        // Cast, because a YAML key that looks like a number arrives as an int and the interface expects strings.
-        return \array_map(\strval(...), \array_keys(\array_filter($keys)));
     }
 
     public function loadFieldTypeOptions(

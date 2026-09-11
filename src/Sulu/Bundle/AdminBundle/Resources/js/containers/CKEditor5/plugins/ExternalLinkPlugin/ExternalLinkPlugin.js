@@ -30,6 +30,7 @@ const LINK_REL_ATTRIBUTE = 'externalLinkRel';
 const LINK_TAG = 'a';
 
 export default class ExternalLinkPlugin extends Plugin {
+    // The balloon used to arrive with the table plugin, which is no longer loaded for every config.
     static get requires() {
         return [ContextualBalloon];
     }

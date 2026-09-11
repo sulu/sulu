@@ -1,9 +1,3 @@
-# The text editor configs Sulu ships. A project block of the same name is merged into these, so a single tag can be
-# switched off with "false" without restating the whole list.
-#
-# "p" and "br" are deliberately absent: the editor always produces them and no plugin gates them, so offering them as
-# switches would promise a restriction that cannot be applied. Which HTML a tag produces is decided by the plugin bound
-# to it in the administration interface, see Resources/js/containers/CKEditor5/index.js.
 text_editor:
     configs:
         default:

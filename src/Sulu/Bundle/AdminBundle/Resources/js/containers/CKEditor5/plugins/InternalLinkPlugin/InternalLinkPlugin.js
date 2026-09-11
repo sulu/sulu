@@ -32,6 +32,7 @@ const LINK_VALIDATION_STATE_ATTRIBUTE = 'validationState';
 const LINK_TAG = 'sulu-link';
 
 export default class InternalLinkPlugin extends Plugin {
+    // The balloon used to arrive with the table plugin, which is no longer loaded for every config.
     static get requires() {
         return [ContextualBalloon];
     }
