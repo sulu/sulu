@@ -26,7 +26,7 @@ use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestPreValidationFailedException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -63,7 +63,7 @@ class RequestWorkflowPreValidationSubscriberTest extends TestCase
 
         $subscriber = $this->createSubscriber($dimensionContent, new RequestWorkflow('review', [], 1, [], [
             'seo_required' => [
-                'pre_validator' => $this->createPreValidator(ValidationResult::reject(DecisionMessage::translated('seo.missing', ['fields' => 'title']))),
+                'pre_validator' => $this->createPreValidator(ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::translated('seo.missing', ['fields' => 'title']))),
                 'config' => [],
             ],
             'excerpt_required' => [

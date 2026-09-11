@@ -20,12 +20,12 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflow;
 use Sulu\Content\Domain\Exception\SelfReviewNotAllowedException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecision;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
 
 #[CoversClass(WorkflowTransitionRequest::class)]
 #[CoversClass(WorkflowTransitionRequestDecision::class)]
@@ -52,7 +52,7 @@ class WorkflowTransitionRequestTest extends TestCase
     {
         $request = $this->createRequest();
 
-        $request->addApproval($this->createUser(), DecisionMessage::text('Looks good'));
+        $request->addApproval($this->createUser(), WorkflowTransitionRequestDecisionMessage::text('Looks good'));
 
         $this->assertSame(WorkflowTransitionRequestStatusEnum::PENDING, $request->getStatus(2));
         $this->assertCount(1, $request->getDecisions());
@@ -66,8 +66,8 @@ class WorkflowTransitionRequestTest extends TestCase
         $request->addApproval($this->createUser());
         $request->addApproval($this->createUser());
         $request->addApproval($this->createUser());
-        $request->addRejection($this->createUser(), DecisionMessage::text('Typo in the headline'));
-        $request->addRejection($this->createUser(), DecisionMessage::text('Wrong image'));
+        $request->addRejection($this->createUser(), WorkflowTransitionRequestDecisionMessage::text('Typo in the headline'));
+        $request->addRejection($this->createUser(), WorkflowTransitionRequestDecisionMessage::text('Wrong image'));
 
         $this->assertSame(
             WorkflowTransitionRequestStatusEnum::APPROVED,
@@ -114,10 +114,10 @@ class WorkflowTransitionRequestTest extends TestCase
         $user = $this->createUser();
         $request = $this->createRequest();
 
-        $request->addApproval($user, DecisionMessage::text('Fine by me'));
+        $request->addApproval($user, WorkflowTransitionRequestDecisionMessage::text('Fine by me'));
         $this->assertSame(WorkflowTransitionRequestStatusEnum::APPROVED, $request->getStatus(1));
 
-        $request->addRejection($user, DecisionMessage::text('Changed my mind'));
+        $request->addRejection($user, WorkflowTransitionRequestDecisionMessage::text('Changed my mind'));
 
         $this->assertCount(1, $request->getDecisions());
         $this->assertSame(WorkflowTransitionRequestDecisionStatusEnum::REJECTED, $request->getDecisions()[0]->getStatus());
@@ -276,7 +276,7 @@ class WorkflowTransitionRequestTest extends TestCase
     ): void {
         $request->getValidatorDecision($validatorKey)?->settle(
             $status,
-            null === $text ? [] : [DecisionMessage::text($text)],
+            null === $text ? [] : [WorkflowTransitionRequestDecisionMessage::text($text)],
             new \DateTimeImmutable(),
         );
     }

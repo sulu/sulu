@@ -18,7 +18,7 @@ use Sulu\Content\Application\RequestWorkflow\Validator\RequestWorkflowValidatorI
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationContext;
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepository;
 
@@ -77,7 +77,7 @@ final class UnpublishedExampleReferencesValidator implements RequestWorkflowVali
 
         return [] === $findings
             ? ValidationResult::approve()
-            : ValidationResult::reject(DecisionMessage::text(\implode(' ', $findings)));
+            : ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::text(\implode(' ', $findings)));
     }
 
     /**

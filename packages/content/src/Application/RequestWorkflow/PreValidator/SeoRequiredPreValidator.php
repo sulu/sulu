@@ -15,7 +15,7 @@ namespace Sulu\Content\Application\RequestWorkflow\PreValidator;
 
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
 use Sulu\Content\Domain\Model\SeoInterface;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 
 /**
  * Requires the configured SEO fields to be filled; content without SEO data passes.
@@ -71,7 +71,7 @@ class SeoRequiredPreValidator implements RequestWorkflowPreValidatorInterface
             return ValidationResult::approve();
         }
 
-        return ValidationResult::reject(DecisionMessage::translated(
+        return ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::translated(
             'sulu_content.workflow_transition_request.seo_required.missing',
             ['fields' => \implode(', ', $missing)],
         ));

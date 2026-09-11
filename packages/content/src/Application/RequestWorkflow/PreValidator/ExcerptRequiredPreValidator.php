@@ -15,7 +15,7 @@ namespace Sulu\Content\Application\RequestWorkflow\PreValidator;
 
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
 use Sulu\Content\Domain\Model\ExcerptInterface;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 
 /**
  * Requires the configured excerpt fields to be filled; content without an excerpt passes.
@@ -71,7 +71,7 @@ class ExcerptRequiredPreValidator implements RequestWorkflowPreValidatorInterfac
             return ValidationResult::approve();
         }
 
-        return ValidationResult::reject(DecisionMessage::translated(
+        return ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::translated(
             'sulu_content.workflow_transition_request.excerpt_required.missing',
             ['fields' => \implode(', ', $missing)],
         ));

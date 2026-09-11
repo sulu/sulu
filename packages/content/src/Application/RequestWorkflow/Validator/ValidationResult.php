@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\RequestWorkflow\Validator;
 
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 
 /**
  * What a validator or pre-validator answers. Messages travel on a pass too, so the admin can list what
@@ -22,7 +22,7 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
 final class ValidationResult
 {
     /**
-     * @param list<DecisionMessage> $messages
+     * @param list<WorkflowTransitionRequestDecisionMessage> $messages
      */
     private function __construct(
         public readonly bool $approved,
@@ -30,12 +30,12 @@ final class ValidationResult
     ) {
     }
 
-    public static function approve(DecisionMessage ...$messages): self
+    public static function approve(WorkflowTransitionRequestDecisionMessage ...$messages): self
     {
         return new self(true, \array_values($messages));
     }
 
-    public static function reject(DecisionMessage ...$messages): self
+    public static function reject(WorkflowTransitionRequestDecisionMessage ...$messages): self
     {
         if ([] === $messages) {
             throw new \InvalidArgumentException('A rejecting validator must say what is wrong.');
@@ -49,6 +49,6 @@ final class ValidationResult
      */
     public function messagesToArray(): array
     {
-        return \array_map(static fn (DecisionMessage $message) => $message->toArray(), $this->messages);
+        return \array_map(static fn (WorkflowTransitionRequestDecisionMessage $message) => $message->toArray(), $this->messages);
     }
 }

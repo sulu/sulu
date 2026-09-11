@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\RequestWorkflow;
 
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
 
 /**
  * Derives a request's status from the workflow config it names. Nothing is stored on the row, so a

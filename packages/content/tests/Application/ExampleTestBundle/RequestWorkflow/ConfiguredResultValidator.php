@@ -16,7 +16,7 @@ namespace Sulu\Content\Tests\Application\ExampleTestBundle\RequestWorkflow;
 use Sulu\Content\Application\RequestWorkflow\Validator\RequestWorkflowValidatorInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationContext;
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 
 /**
  * Test validator whose verdict comes from its workflow config, so a test can set up an approving, a
@@ -35,7 +35,7 @@ final class ConfiguredResultValidator implements RequestWorkflowValidatorInterfa
         $config = $context->validatorConfig;
 
         return match ($config['result'] ?? 'approve') {
-            'reject' => ValidationResult::reject(DecisionMessage::text(
+            'reject' => ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::text(
                 \sprintf('The configured check rejected example %s.', $context->resourceId),
             )),
             'throw' => throw new \RuntimeException(

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\RequestWorkflow;
 
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
 
 /**
  * @internal
