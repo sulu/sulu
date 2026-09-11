@@ -1,18 +1,10 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {Alignment} from '@ckeditor/ckeditor5-alignment';
-import {Bold, Code, Italic, Strikethrough, Subscript, Superscript, Underline} from '@ckeditor/ckeditor5-basic-styles';
 import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
 import {Essentials} from '@ckeditor/ckeditor5-essentials';
-import {Heading} from '@ckeditor/ckeditor5-heading';
-import {List} from '@ckeditor/ckeditor5-list';
 import {Paragraph} from '@ckeditor/ckeditor5-paragraph';
-import {Table, TableToolbar} from '@ckeditor/ckeditor5-table';
-import {translate} from '../../utils/Translator';
 import {addPTags, removePTags} from './utils';
-import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
-import InternalLinkPlugin from './plugins/InternalLinkPlugin';
 import configRegistry from './registries/configRegistry';
 import pluginRegistry from './registries/pluginRegistry';
 import type {IObservableValue} from 'mobx/lib/mobx';
@@ -23,21 +15,21 @@ import '@ckeditor/ckeditor5-alignment/dist/index.css';
 import '@ckeditor/ckeditor5-basic-styles/dist/index.css';
 import '@ckeditor/ckeditor5-essentials/dist/index.css';
 import '@ckeditor/ckeditor5-heading/dist/index.css';
+import '@ckeditor/ckeditor5-language/dist/index.css';
 import '@ckeditor/ckeditor5-list/dist/index.css';
 import '@ckeditor/ckeditor5-paragraph/dist/index.css';
 import '@ckeditor/ckeditor5-table/dist/index.css';
 import '@ckeditor/ckeditor5-widget/dist/index.css';
 import './ckeditor5.scss';
-import type {SchemaOptions} from '../Form/types';
+import type {TextEditorConfig} from '../TextEditor/types';
 
 type Props = {|
+    config: TextEditorConfig,
     disabled: boolean,
-    formats: Array<string>,
     locale?: ?IObservableValue<string>,
     onBlur?: () => void,
     onChange: (value: ?string) => void,
     onFocus?: (event: { target: EventTarget }) => void,
-    options?: SchemaOptions,
     value: ?string,
 |};
 
@@ -53,8 +45,6 @@ export default class CKEditor5 extends React.Component<Props> {
 
     static defaultProps = {
         disabled: false,
-        formats: ['h2', 'h3', 'h4', 'h5', 'h6'],
-        options: {},
         value: '',
     };
 
@@ -68,17 +58,15 @@ export default class CKEditor5 extends React.Component<Props> {
         this.containerRef = containerRef;
     };
 
+    get enabledKeys(): Array<string> {
+        const {config: {features, tags}} = this.props;
+
+        return [...tags, ...features];
+    }
+
     componentDidUpdate() {
         if (this.editorInstance) {
-            const {
-                value,
-                disabled,
-                options: {
-                    enter_mode: {
-                        value: enterModeValue = 'p',
-                    } = {},
-                } = {},
-            } = this.props;
+            const {config: {enterMode}, value, disabled} = this.props;
 
             if (disabled) {
                 this.editorInstance.ui.element.classList.add('disabled');
@@ -91,7 +79,7 @@ export default class CKEditor5 extends React.Component<Props> {
             const editorData = this.getEditorData();
             if (editorData !== value && !(value === '' && editorData === undefined)) {
                 let finalValue = value;
-                if (finalValue && enterModeValue === 'br') {
+                if (finalValue && enterMode === 'br') {
                     finalValue = addPTags(finalValue);
                 }
                 this.editorInstance.setData(finalValue);
@@ -100,88 +88,16 @@ export default class CKEditor5 extends React.Component<Props> {
     }
 
     componentDidMount() {
-        const {
-            formats,
-            locale,
-            options: {
-                enter_mode: {
-                    value: enterModeValue = 'p',
-                } = {},
-            } = {},
-        } = this.props;
+        const {config, locale} = this.props;
+        const enabledKeys = this.enabledKeys;
+
+        this.warnAboutUnclaimedKeys(enabledKeys);
 
         const defaultConfig = {
             licenseKey: 'GPL',
-            toolbar: [
-                'heading',
-                'bold',
-                'italic',
-                'underline',
-                'strikethrough',
-                'subscript',
-                'superscript',
-                'bulletedlist',
-                'numberedlist',
-                'externalLink',
-                'internalLink',
-                'alignment',
-                'insertTable',
-                'code',
-            ],
-            heading: {
-                options: [
-                    {
-                        model: 'paragraph',
-                        title: translate('sulu_admin.paragraph'),
-                        class: 'ck-heading_paragraph',
-                    },
-                    formats.includes('h1') ? {
-                        model: 'heading1',
-                        view: 'h1',
-                        title: translate('sulu_admin.heading1'),
-                        class: 'ck-heading_heading1',
-                    } : undefined,
-                    formats.includes('h2') ? {
-                        model: 'heading2',
-                        view: 'h2',
-                        title: translate('sulu_admin.heading2'),
-                        class: 'ck-heading_heading2',
-                    } : undefined,
-                    formats.includes('h3') ? {
-                        model: 'heading3',
-                        view: 'h3',
-                        title: translate('sulu_admin.heading3'),
-                        class: 'ck-heading_heading3',
-                    } : undefined,
-                    formats.includes('h4') ? {
-                        model: 'heading4',
-                        view: 'h4',
-                        title: translate('sulu_admin.heading4'),
-                        class: 'ck-heading_heading4',
-                    } : undefined,
-                    formats.includes('h5') ? {
-                        model: 'heading5',
-                        view: 'h5',
-                        title: translate('sulu_admin.heading5'),
-                        class: 'ck-heading_heading5',
-                    } : undefined,
-                    formats.includes('h6') ? {
-                        model: 'heading6',
-                        view: 'h6',
-                        title: translate('sulu_admin.heading6'),
-                        class: 'ck-heading_heading6',
-                    } : undefined,
-                ].filter((entry) => entry !== undefined),
-            },
+            toolbar: [],
             sulu: {
                 locale: locale && locale.get(),
-            },
-            table: {
-                contentToolbar: [
-                    'tableColumn',
-                    'tableRow',
-                    'mergeTableCells',
-                ],
             },
             ui: {
                 poweredBy: {
@@ -198,32 +114,18 @@ export default class CKEditor5 extends React.Component<Props> {
             .create({
                 attachTo: this.containerRef,
                 plugins: [
-                    Alignment,
-                    Bold,
                     Essentials,
-                    ExternalLinkPlugin,
-                    Heading,
-                    InternalLinkPlugin,
-                    Italic,
-                    List,
                     Paragraph,
-                    Strikethrough,
-                    Underline,
-                    Subscript,
-                    Superscript,
-                    Code,
-                    Table,
-                    TableToolbar,
-                    ...pluginRegistry.plugins,
+                    ...pluginRegistry.getPlugins(enabledKeys),
                 ],
-                ...configRegistry.configs.reduce((previousConfig, config) => {
-                    return {...previousConfig, ...config(previousConfig)};
+                ...configRegistry.getConfigs(enabledKeys).reduce((previousConfig, editorConfig) => {
+                    return {...previousConfig, ...editorConfig(previousConfig, config)};
                 }, defaultConfig),
             })
             .then((editor) => {
                 this.editorInstance = editor;
                 let value = this.props.value;
-                if (value && enterModeValue === 'br') {
+                if (value && config.enterMode === 'br') {
                     value = addPTags(value);
                 }
                 this.editorInstance.setData(value);
@@ -278,17 +180,23 @@ export default class CKEditor5 extends React.Component<Props> {
         }
     }
 
+    warnAboutUnclaimedKeys(enabledKeys: Array<string>) {
+        const claimedKeys = [...pluginRegistry.keys, ...configRegistry.keys];
+        const unclaimedKeys = enabledKeys.filter((key) => !claimedKeys.includes(key));
+
+        if (unclaimedKeys.length > 0) {
+            log.warn(
+                'The text editor config enables the following tags or features, but no plugin or config is ' +
+                'registered for them: ' + unclaimedKeys.sort().join(', ')
+            );
+        }
+    }
+
     getEditorData() {
-        const {
-            options: {
-                enter_mode: {
-                    value: enterModeValue = 'p',
-                } = {},
-            } = {},
-        } = this.props;
+        const {config: {enterMode}} = this.props;
 
         const editorData = this.editorInstance.getData();
-        return editorData === '' ? undefined : (enterModeValue === 'br' ? removePTags(editorData) : editorData);
+        return editorData === '' ? undefined : (enterMode === 'br' ? removePTags(editorData) : editorData);
     }
 
     render() {

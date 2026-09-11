@@ -1,0 +1,30 @@
+text_editor:
+    configs:
+        default:
+            enter_mode: p
+            tags:
+                h2: true
+                h3: true
+                h4: true
+                h5: true
+                h6: true
+                strong: true
+                i: true
+                u: true
+                s: true
+                sub: true
+                sup: true
+                ul: true
+                ol: true
+                a: true
+                table: true
+                code: true
+            features:
+                align: true
+        mini:
+            enter_mode: br
+            tags:
+                a: true
+                strong: true
+                i: true
+            features: []

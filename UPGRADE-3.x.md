@@ -39,6 +39,71 @@ and `extension` are seeded before any resolver runs, so a `[root]` resolver cann
 any priority. Two resolvers returning the same `type` are not rejected; the later one replaces the
 earlier, as before this release.
 
+### Text editor configs decide which CKEditor plugins are loaded
+
+Which plugins a `text_editor` property loads now follows from the tags and features its text editor config enables,
+configured under `sulu_admin.text_editor.configs`. The `default` config Sulu ships reproduces the previous toolbar, so
+a project that configures nothing keeps the editor it had.
+
+Narrowing a config removes the matching plugin, and CKEditor drops markup no loaded plugin understands. A field whose
+config no longer allows `table` or `h2` therefore loses that markup as soon as the editor is edited and saved. Check
+existing content before narrowing a config for a field that is already in use.
+
+A tag key names the element the plugin produces, so italic is `i` and not `em`; the editor still reads existing
+`<em>` markup. A config with `enter_mode: br` cannot enable a key that needs a block element to carry it (`h2` to `h6`,
+`ul`, `ol`, `table`, `align`), because the paragraphs are stripped from the stored value.
+
+The `formats` and `enter_mode` params of a `text_editor` property are deprecated. They still work and still override
+the config, and will be removed in 4.0. Use the `config` param instead:
+
+```xml
+<property name="teaser" type="text_editor">
+    <params>
+        <param name="config" value="mini"/>
+    </params>
+</property>
+```
+
+### CKEditor plugin and config registries take a tag
+
+`ckeditorPluginRegistry` and `ckeditorConfigRegistry` gained an optional key argument, and the `configRegistry` a
+priority. Registering without a key keeps the previous behaviour of applying to every editor, so existing calls are
+unaffected. Their `plugins` and `configs` properties were replaced by `getPlugins(enabledKeys)` and
+`getConfigs(enabledKeys)`, because the result depends on the config of the edited property.
+
+### A text editor field needs a registered text editor config
+
+`TextEditor` resolves its config through `textEditorConfigRegistry`, which throws when the requested config is not
+registered. The administration interface fills the registry from `sulu_admin.text_editor.configs` on startup, but a
+test or a story that renders `TextEditor`, or a field of type `text_editor`, without going through the initializer now
+has to seed it:
+
+```javascript
+import {textEditorConfigRegistry} from 'sulu-admin-bundle/containers';
+
+textEditorConfigRegistry.add('default', {enterMode: 'p', features: [], tags: ['strong', 'i', 'a']});
+```
+
+### The text editor registry is typed against the adapter props
+
+`textEditorRegistry.add()` now expects a `ComponentType<TextEditorAdapterProps>` instead of a
+`ComponentType<TextEditorProps>`, because every adapter receives the resolved `config` prop. A custom text editor
+adapter has to widen its own props type accordingly; there is no runtime change, `TextEditor` still passes every
+prop it passed before.
+
+### Heading and table config moved out of the CKEditor5 defaults
+
+The `heading` and `table` keys are no longer part of the default config the `CKEditor5` component builds; they are
+contributed by the registrations keyed on the respective tags. A config function that read `config.heading.options`
+or `config.table.contentToolbar` to extend them now has to guard against them being undefined, and should register
+itself under the same tag so it only runs when that tag is enabled.
+
+### The CKEditor5 component takes a config instead of formats
+
+The `CKEditor5` container component replaced its `formats` and `options` props with a single `config` prop holding the
+resolved text editor config. Applications that render the component directly, rather than through the `TextEditor`
+container, have to pass it.
+
 ### Review permission
 
 `PermissionTypes::REVIEW` is new and no existing role carries its bit, so approving and rejecting is

@@ -283,6 +283,9 @@ class AdminControllerTest extends TestCase
             Argument::that(
                 function(View $view) use ($smartContentProviders, $fieldTypeOptions, $views, $admin1Config, $admin2Config) {
                     $data = $view->getData();
+                    \assert(\is_array($data));
+                    $suluAdmin = $data['sulu_admin'];
+                    \assert(\is_array($suluAdmin));
 
                     return 'json' === $view->getFormat()
                         && $data['sulu_admin']['fieldTypeOptions'] === $fieldTypeOptions
@@ -291,6 +294,7 @@ class AdminControllerTest extends TestCase
                         && 'navigation_item1' === $data['sulu_admin']['navigation'][0]['title']
                         && 'navigation_item2' === $data['sulu_admin']['navigation'][1]['title']
                         && $data['sulu_admin']['resources'] === $this->resources
+                        && ['configs' => []] === $suluAdmin['textEditor']
                         && true === $data['sulu_admin']['collaborationEnabled']
                         && 10000 === $data['sulu_admin']['collaborationInterval']
                         && $data['admin1'] === $admin1Config

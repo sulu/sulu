@@ -33,6 +33,7 @@ import List, {
 } from './views/List';
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
+import {registerCKEditor5Plugins} from './containers/CKEditor5';
 import {
     ArrayFieldTransformer,
     BooleanFieldFilterType,
@@ -102,7 +103,7 @@ import {
     Link,
     SingleIconSelection,
 } from './containers/Form';
-import {textEditorRegistry} from './containers/TextEditor';
+import {textEditorConfigRegistry, textEditorRegistry} from './containers/TextEditor';
 import Form, {
     formToolbarActionRegistry,
     CopyToolbarAction as FormCopyToolbarAction,
@@ -179,6 +180,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerListItemActions();
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
+        registerTextEditorConfigs(config.textEditor);
         registerLinkOverlays();
         registerInternalLinkTypes(config.internalLinkTypes);
         registerFormToolbarActions();
@@ -316,6 +318,15 @@ function registerBlockPreviewTransformers() {
 
 function registerTextEditors() {
     textEditorRegistry.add('ckeditor5', CKEditor5);
+    registerCKEditor5Plugins();
+}
+
+function registerTextEditorConfigs(textEditor) {
+    const configs = textEditor ? textEditor.configs : {};
+
+    for (const configKey in configs) {
+        textEditorConfigRegistry.add(configKey, configs[configKey]);
+    }
 }
 
 function registerLinkOverlays() {
