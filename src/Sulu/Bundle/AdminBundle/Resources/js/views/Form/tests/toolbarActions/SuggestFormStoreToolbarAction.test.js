@@ -195,8 +195,14 @@ test('Insert writes the suggestion into the resource form store, closes, and kee
     // $FlowFixMe
     action.resourceFormStore.change = jest.fn();
     action.showDialog = true;
-    action.originalFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'Existing title'});
-    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'Suggested title'});
+    action.originalFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Existing title'}
+    );
+    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Suggested title'}
+    );
 
     const element = mount(action.getNode());
     element.find('Button[skin="primary"]').simulate('click');
@@ -219,8 +225,14 @@ test('Regenerate re-fetches without closing the dialog', async() => {
     // $FlowFixMe
     action.resourceFormStore.locale.get = jest.fn().mockReturnValue('en');
     action.showDialog = true;
-    action.originalFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'Existing title'});
-    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'First suggestion'});
+    action.originalFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Existing title'}
+    );
+    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'First suggestion'}
+    );
 
     symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
     Requester.post.mockResolvedValue({title: 'Second suggestion'});
@@ -242,12 +254,20 @@ test('Regenerate blanks the suggestion fields while the new response is in fligh
     // $FlowFixMe
     action.resourceFormStore.locale.get = jest.fn().mockReturnValue('en');
     action.showDialog = true;
-    action.originalFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'Existing title'});
-    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'First suggestion'});
+    action.originalFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Existing title'}
+    );
+    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'First suggestion'}
+    );
 
     symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
     let resolveRequest;
-    Requester.post.mockReturnValue(new Promise((resolve) => { resolveRequest = resolve; }));
+    Requester.post.mockReturnValue(new Promise((resolve) => {
+        resolveRequest = resolve;
+    }));
 
     const element = mount(action.getNode());
     element.find('Button[icon="su-magic"]').simulate('click');
@@ -265,8 +285,14 @@ test('Regenerate blanks the suggestion fields while the new response is in fligh
 test('Temporary error while generating keeps the dialog open with a snackbar', async() => {
     const action = createSuggestFormStoreToolbarAction();
     action.showDialog = true;
-    action.originalFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'Existing title'});
-    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'First suggestion'});
+    action.originalFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Existing title'}
+    );
+    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'First suggestion'}
+    );
 
     const error = new Error('Test Error');
     // $FlowFixMe
@@ -289,8 +315,14 @@ test('Account limit error while generating closes the dialog with a terminal err
 
     const action = createSuggestFormStoreToolbarAction();
     action.showDialog = true;
-    action.originalFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'Existing title'});
-    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'First suggestion'});
+    action.originalFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Existing title'}
+    );
+    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'First suggestion'}
+    );
 
     const error = new Error('Test Error');
     // $FlowFixMe
@@ -315,12 +347,18 @@ test('Account limit error while generating closes the dialog with a terminal err
 test('Cancel closes the dialog without clearing its content mid-transition', () => {
     const action = createSuggestFormStoreToolbarAction();
     action.showDialog = true;
-    const originalFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'Existing title'});
+    const originalFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Existing title'}
+    );
     action.originalFormStore = originalFormStore;
-    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'Suggestion'});
+    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Suggestion'}
+    );
 
     const element = mount(action.getNode());
-    element.find('Button[skin="secondary"]').filterWhere((button) => 'Cancel' === button.text()).simulate('click');
+    element.find('Button[skin="secondary"]').filterWhere((button) => button.text() === 'Cancel').simulate('click');
 
     expect(action.showDialog).toBe(false);
     // the stores are left alone here on purpose: the Dialog component keeps rendering its
@@ -338,8 +376,14 @@ test('Opening the dialog again destroys stores left over from the previous sessi
     // $FlowFixMe
     action.resourceFormStore.locale.get = jest.fn().mockReturnValue('en');
 
-    const staleOriginalFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'Stale'});
-    const staleSuggestionFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {title: 'Stale suggestion'});
+    const staleOriginalFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Stale'}
+    );
+    const staleSuggestionFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Stale suggestion'}
+    );
     action.originalFormStore = staleOriginalFormStore;
     action.suggestionFormStore = staleSuggestionFormStore;
 

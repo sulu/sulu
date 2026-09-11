@@ -168,7 +168,7 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
             this.loading = false;
 
             const data = await this.getErrorData(error);
-            this.setError(data.messageKey, () => { this.generateAndApply(); });
+            this.setError(data.messageKey, () => this.generateAndApply());
         }));
     };
 
@@ -206,11 +206,15 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
             }
 
             this.closeDialog();
-            this.setError(data.messageKey, () => { this.generate(); });
+            this.setError(data.messageKey, () => this.generate());
         }));
     };
 
-    @action applySuggestion = () => {
+    @action handleRegenerateClick = () => {
+        this.generate();
+    };
+
+    @action handleConfirm = () => {
         const suggestionFormStore = this.suggestionFormStore;
 
         if (!suggestionFormStore) {
@@ -252,7 +256,7 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
                 confirmText={this.insertText}
                 key={this.dialogKey}
                 onCancel={this.handleDialogClose}
-                onConfirm={this.applySuggestion}
+                onConfirm={this.handleConfirm}
                 open={this.showDialog}
                 size={this.originalFormStore ? 'large' : undefined}
                 snackbarMessage={this.dialogSnackbarMessage}
@@ -270,7 +274,7 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
                                     <Button
                                         icon={this.loading ? undefined : 'su-magic'}
                                         loading={this.loading}
-                                        onClick={() => { this.generate(); }}
+                                        onClick={this.handleRegenerateClick}
                                         skin="secondary"
                                     >
                                         {this.regenerateText}
