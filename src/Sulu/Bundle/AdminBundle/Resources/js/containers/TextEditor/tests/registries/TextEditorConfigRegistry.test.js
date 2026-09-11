@@ -34,3 +34,16 @@ test('Throw with the registered keys if a config does not exist', () => {
 
     expect(() => textEditorConfigRegistry.get('teaser')).toThrow(/Registered keys: default, mini/);
 });
+
+test('Treat a config named like an Object member as any other key', () => {
+    const config = {enterMode: 'p', features: [], tags: ['a']};
+
+    expect(textEditorConfigRegistry.has('constructor')).toEqual(false);
+    expect(textEditorConfigRegistry.has('toString')).toEqual(false);
+
+    textEditorConfigRegistry.add('constructor', config);
+    textEditorConfigRegistry.add('__proto__', config);
+
+    expect(textEditorConfigRegistry.get('constructor')).toBe(config);
+    expect(textEditorConfigRegistry.get('__proto__')).toBe(config);
+});

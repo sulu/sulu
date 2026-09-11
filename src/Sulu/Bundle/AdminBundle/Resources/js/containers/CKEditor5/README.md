@@ -62,8 +62,9 @@ ckeditorConfigRegistry.add((config) => ({
 }), 'table');
 ```
 
-A key names the plugin, not always the element it produces: `i` is CKEditor's Italic, which also reads `<em>`, and
-`table` renders a `<figure class="table">` around the table.
+A tag key names the element the editor produces, so register Italic under `i` and not under `italic` or `em`. A plugin
+may read more than it writes, Italic also upcasts an existing `<em>`, and it may add markup around the element, `table`
+renders a `<figure class="table">` around the table.
 
 A key does not have to be a tag. Anything a plugin adds that is not an element of its own is a feature, which is how
 attributes and inline styles are configured. `align` writes a `text-align` style on an existing element, and `lang`

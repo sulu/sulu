@@ -123,6 +123,23 @@ class SuluAdminExtensionTest extends TestCase
         $this->assertSame(['a'], $configs['teaser']['tags']);
     }
 
+    public function testInlineKeyWithLineBreakEnterModeIsAllowed(): void
+    {
+        // "code" is the inline basic style producing <code>, not a block, so removePTags() keeps it intact.
+        $configs = $this->loadTextEditorConfigs([
+            'teaser' => ['enter_mode' => 'br', 'tags' => ['a' => true, 'code' => true]],
+        ]);
+
+        $this->assertSame(['a', 'code'], $configs['teaser']['tags']);
+    }
+
+    public function testReservedObjectNameIsAValidConfigName(): void
+    {
+        $configs = $this->loadTextEditorConfigs(['constructor' => ['tags' => ['a' => true]]]);
+
+        $this->assertSame(['a'], $configs['constructor']['tags']);
+    }
+
     public function testNonStringConfigNameIsRejected(): void
     {
         $this->expectException(InvalidConfigurationException::class);

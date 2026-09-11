@@ -24,7 +24,7 @@ final class Configuration implements ConfigurationInterface
      * value. See Resources/js/containers/CKEditor5/utils.js removePTags().
      */
     private const BLOCK_TEXT_EDITOR_KEYS = [
-        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'table', 'code', 'align',
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'table', 'align',
     ];
 
     public function __construct(private bool $debug)

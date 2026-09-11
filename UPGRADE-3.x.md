@@ -51,7 +51,7 @@ existing content before narrowing a config for a field that is already in use.
 
 A tag key names the element the plugin produces, so italic is `i` and not `em`; the editor still reads existing
 `<em>` markup. A config with `enter_mode: br` cannot enable a key that needs a block element to carry it (`h2` to `h6`,
-`ul`, `ol`, `table`, `code`, `align`), because the paragraphs are stripped from the stored value.
+`ul`, `ol`, `table`, `align`), because the paragraphs are stripped from the stored value.
 
 The `formats` and `enter_mode` params of a `text_editor` property are deprecated. They still work and still override
 the config, and will be removed in 4.0. Use the `config` param instead:

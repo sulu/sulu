@@ -9,7 +9,9 @@ class TextEditorConfigRegistry {
     }
 
     clear() {
-        this.configs = {};
+        // A null prototype, so that a config named "constructor" or "__proto__" behaves like any other key.
+        // $FlowFixMe: flow describes a null prototype as incompatible with an object type
+        this.configs = Object.create(null);
     }
 
     has(name: string) {
