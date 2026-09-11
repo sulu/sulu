@@ -32,8 +32,8 @@ type Props = {|
 |};
 
 const COLUMNS: Array<FieldColumn> = [
-    {name: 'required', title: 'sulu_product.attribute_required', type: 'checkbox'},
-    {name: 'variantSpecific', title: 'sulu_product.attribute_variant', type: 'checkbox'},
+    {name: 'required', title: 'sulu_admin.attribute_required', type: 'checkbox'},
+    {name: 'variantSpecific', title: 'sulu_admin.attribute_variant', type: 'checkbox'},
 ];
 
 /**
@@ -104,7 +104,7 @@ class ProductFamilyAttributes extends React.Component<Props> {
 
                 return {
                     ...group,
-                    subtitle: translate('sulu_product.attribute_count', {count: group.entries.length}),
+                    subtitle: translate('sulu_admin.attribute_count', {count: group.entries.length}),
                 };
             })
             .sort((a, b) => a.title.localeCompare(b.title));
@@ -125,7 +125,7 @@ class ProductFamilyAttributes extends React.Component<Props> {
     renderHeaderCells(): Array<Object> {
         const cells = [
             <Table.HeaderCell className={attributeGroupTableStyles.labelCell} key="label">
-                {translate('sulu_product.attribute')}
+                {translate('sulu_admin.attribute')}
             </Table.HeaderCell>,
             ...COLUMNS.map((column) => (
                 <Table.HeaderCell className={attributeGroupTableStyles.fieldCell} key={column.name}>
@@ -240,7 +240,7 @@ class ProductFamilyAttributes extends React.Component<Props> {
             <Fragment>
                 <CollapsibleCollection
                     actions={this.collapsibleActions}
-                    addButtonText={translate('sulu_product.add_attributes_overlay_title')}
+                    addButtonText={translate('sulu_admin.choose_attributes')}
                     movable={false}
                     onAddClick={this.props.disabled ? undefined : this.handleAddClick}
                     onChange={this.handleCollectionChange}
@@ -256,7 +256,7 @@ class ProductFamilyAttributes extends React.Component<Props> {
                     open={this.overlayOpen}
                     preSelectedItems={this.selectedItems}
                     resourceKey={this.props.resourceKey}
-                    title={translate('sulu_product.add_attributes_overlay_title')}
+                    title={translate('sulu_admin.choose_attributes')}
                 />
             </Fragment>
         );

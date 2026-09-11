@@ -131,6 +131,13 @@ function renderControlled(value = VALUE, onChange = jest.fn()) {
     return {...view, store};
 }
 
+// Every card starts collapsed, so a test that reads the rows opens the cards first.
+async function expandAllCards() {
+    for (const toggle of screen.getAllByLabelText('su-expand-vertical')) {
+        await userEvent.click(toggle);
+    }
+}
+
 function getRow(name: string) {
     // $FlowFixMe
     return screen.getByText(name).closest('tr');
@@ -154,8 +161,9 @@ test('loads the selected attributes from the resource', () => {
     expect(MultiSelectionStore).toHaveBeenCalledWith('attributes', ['a3', 'a1', 'a2'], expect.anything(), 'ids');
 });
 
-test('renders the flag columns through the registered checkbox field type', () => {
+test('renders the flag columns through the registered checkbox field type', async() => {
     renderComponent();
+    await expandAllCards();
 
     expect(fieldRegistry.get).toHaveBeenCalledWith('checkbox');
     expect(within(getRow('Size')).getAllByRole('checkbox')).toHaveLength(2);
@@ -169,8 +177,9 @@ test('orders group cards alphabetically by group name', () => {
     expect(headings).toEqual(['General', 'Marketing']);
 });
 
-test('orders attributes inside a group by position', () => {
+test('orders attributes inside a group by position', async() => {
     renderComponent();
+    await expandAllCards();
 
     // Collapsible's root is <section role="switch">, so this scopes the query to one card.
     const general = screen.getByText('General').closest('[role="switch"]');
@@ -189,20 +198,21 @@ test('renders no cards and no collapse toggle when the value is empty', () => {
 test('shows the attribute count per group', () => {
     renderComponent();
 
-    expect(screen.getByText('sulu_product.attribute_count:{"count":2}')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.attribute_count:{"count":2}')).toBeInTheDocument();
 });
 
 test('skips an id whose attribute no longer resolves', () => {
     renderComponent([...VALUE, {id: 'gone', required: false, variantSpecific: false}]);
 
     expect(screen.queryByText('gone')).not.toBeInTheDocument();
-    expect(screen.getByText('sulu_product.attribute_count:{"count":2}')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.attribute_count:{"count":2}')).toBeInTheDocument();
 });
 
 test('toggling required emits the updated value', async() => {
     const handleChange = jest.fn();
 
     renderComponent(VALUE, handleChange);
+    await expandAllCards();
 
     await userEvent.click(within(getRow('Size')).getAllByRole('checkbox')[0]);
 
@@ -217,6 +227,7 @@ test('toggling variant emits the updated value', async() => {
     const handleChange = jest.fn();
 
     renderComponent(VALUE, handleChange);
+    await expandAllCards();
 
     await userEvent.click(within(getRow('Size')).getAllByRole('checkbox')[1]);
 
@@ -231,6 +242,7 @@ test('removing a row emits the value without it', async() => {
     const handleChange = jest.fn();
 
     renderComponent(VALUE, handleChange);
+    await expandAllCards();
 
     await userEvent.click(within(getRow('Size')).getByRole('button', {name: 'sulu_admin.delete'}));
 
@@ -258,7 +270,7 @@ test('confirming the overlay replaces the selection, keeping flags of entries al
 
     const {store} = renderControlled(VALUE, handleChange);
 
-    await userEvent.click(screen.getByText('sulu_product.add_attributes_overlay_title'));
+    await userEvent.click(screen.getByText('sulu_admin.choose_attributes'));
     await userEvent.click(screen.getByText('confirm-overlay'));
 
     expect(store.set).toHaveBeenCalledWith(mockOverlayItems);
@@ -272,8 +284,9 @@ test('confirming the overlay replaces the selection, keeping flags of entries al
 test('renders the overlay rows without a reload', async() => {
     const {store} = renderControlled();
 
-    await userEvent.click(screen.getByText('sulu_product.add_attributes_overlay_title'));
+    await userEvent.click(screen.getByText('sulu_admin.choose_attributes'));
     await userEvent.click(screen.getByText('confirm-overlay'));
+    await expandAllCards();
 
     expect(screen.queryByText('Marketing')).not.toBeInTheDocument();
     expect(within(getCard('General')).getByText('Colour')).toBeInTheDocument();

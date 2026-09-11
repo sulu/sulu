@@ -62,8 +62,8 @@ class CollapsibleCollection<T: CollapsibleConfig> extends React.Component<Props<
             expandedCollapsibles.splice(value.length);
         }
 
-        // A collapsible is expanded when it enters the collection.
-        expandedCollapsibles.push(...new Array(value.length - expandedCollapsibles.length).fill(true));
+        // A collapsible is collapsed when it enters the collection.
+        expandedCollapsibles.push(...new Array(value.length - expandedCollapsibles.length).fill(false));
     };
 
     @action handleCollapse = (index: number) => {
