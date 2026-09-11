@@ -69,10 +69,10 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
         return suggestionFormKey;
     }
 
-    @computed get replaceText() {
-        const {dialogReplaceText} = this.options;
+    @computed get insertText() {
+        const {dialogInsertText} = this.options;
 
-        return typeof dialogReplaceText === 'string' ? dialogReplaceText : this.dialogOkText;
+        return typeof dialogInsertText === 'string' ? dialogInsertText : this.dialogOkText;
     }
 
     @computed get originalColumnLabel() {
@@ -249,7 +249,7 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
                 cancelText={this.dialogCancelText || translate('sulu_admin.cancel')}
                 confirmDisabled={this.loading || !this.suggestionFormStore}
                 confirmLoading={false}
-                confirmText={this.replaceText}
+                confirmText={this.insertText}
                 key={this.dialogKey}
                 onCancel={this.handleDialogClose}
                 onConfirm={this.applySuggestion}

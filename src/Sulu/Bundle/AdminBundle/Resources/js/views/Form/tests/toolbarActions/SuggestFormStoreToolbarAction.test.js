@@ -116,7 +116,7 @@ function createSuggestFormStoreToolbarAction(options = {}) {
             dialogDescription: 'Test Description',
             dialogCancelText: 'Cancel',
             dialogOkText: 'Generate',
-            dialogReplaceText: 'Replace Original',
+            dialogInsertText: 'Insert',
             regenerateText: 'Regenerate',
             label: 'Test Dialog',
             suggestionFormKey: 'test_suggestion_form',
