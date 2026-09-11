@@ -98,19 +98,65 @@ class TextEditorFieldMetadataValidatorTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    #[\PHPUnit\Framework\Attributes\Group('legacy')]
     public function testDeprecatedFormatsParamTriggersDeprecation(): void
     {
-        $this->expectUserDeprecationMessageMatches('/"formats" param of the "text_editor" property "teaser"/');
+        $deprecations = $this->collectDeprecations(
+            fn () => $this->validator->validate($this->createField('text_editor', [], 'formats'), 'page_default')
+        );
 
-        $this->validator->validate($this->createField('text_editor', [], 'formats'), 'page_default');
+        $this->assertCount(1, $deprecations);
+        $this->assertStringContainsString(
+            'The "formats" param of the "text_editor" property "teaser" is deprecated',
+            $deprecations[0]
+        );
     }
 
-    #[\PHPUnit\Framework\Attributes\Group('legacy')]
     public function testDeprecatedEnterModeParamTriggersDeprecation(): void
     {
-        $this->expectUserDeprecationMessageMatches('/"enter_mode" param of the "text_editor" property "teaser"/');
+        $deprecations = $this->collectDeprecations(
+            fn () => $this->validator->validate($this->createField('text_editor', 'br', 'enter_mode'), 'page_default')
+        );
 
-        $this->validator->validate($this->createField('text_editor', 'br', 'enter_mode'), 'page_default');
+        $this->assertCount(1, $deprecations);
+        $this->assertStringContainsString(
+            'The "enter_mode" param of the "text_editor" property "teaser" is deprecated',
+            $deprecations[0]
+        );
+    }
+
+    public function testConfigParamTriggersNoDeprecation(): void
+    {
+        $deprecations = $this->collectDeprecations(
+            fn () => $this->validator->validate($this->createField('text_editor', 'mini'), 'page_default')
+        );
+
+        $this->assertSame([], $deprecations);
+    }
+
+    /**
+     * Collected by hand rather than with expectUserDeprecationMessageMatches(), which only exists from PHPUnit 11.2.
+     *
+     * @return string[]
+     */
+    private function collectDeprecations(callable $callback): array
+    {
+        $deprecations = [];
+
+        \set_error_handler(
+            static function(int $level, string $message) use (&$deprecations): bool {
+                $deprecations[] = $message;
+
+                return true;
+            },
+            \E_USER_DEPRECATED
+        );
+
+        try {
+            $callback();
+        } finally {
+            \restore_error_handler();
+        }
+
+        return $deprecations;
     }
 }
