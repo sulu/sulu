@@ -11,13 +11,13 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Domain\Model\WorkflowTransitionRequest;
+namespace Sulu\Content\Domain\Value\WorkflowTransitionRequest;
+
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 
 /**
  * The persisted part of a request's state. Everything else is derived from the decision rows by
  * {@see WorkflowTransitionRequest::getStatus()}.
- *
- * @internal
  */
 enum WorkflowTransitionRequestPlaceEnum: string
 {

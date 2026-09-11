@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Sulu\Content\Domain\Repository;
 
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestNotFoundException;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecision;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
 
 /**
  * @internal
@@ -80,7 +80,7 @@ interface WorkflowTransitionRequestRepositoryInterface
     /**
      * Claims a pending decision row and writes its verdict in one statement; the first writer wins.
      *
-     * @param list<DecisionMessage> $messages
+     * @param list<WorkflowTransitionRequestDecisionMessage> $messages
      */
     public function settleDecision(
         WorkflowTransitionRequestDecision $decision,

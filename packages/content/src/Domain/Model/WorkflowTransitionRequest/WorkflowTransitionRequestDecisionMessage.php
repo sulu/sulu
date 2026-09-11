@@ -17,7 +17,7 @@ namespace Sulu\Content\Domain\Model\WorkflowTransitionRequest;
  * One thing said about a request. A translated message carries a key the admin resolves, raw text is
  * for what no fixed key can express, like the list of ids a check found.
  */
-final class DecisionMessage
+final class WorkflowTransitionRequestDecisionMessage
 {
     /**
      * @param array<string, float|int|string> $parameters

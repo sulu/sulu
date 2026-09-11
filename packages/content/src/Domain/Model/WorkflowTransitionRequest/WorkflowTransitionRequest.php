@@ -20,6 +20,9 @@ use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Domain\Exception\SelfReviewNotAllowedException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -200,12 +203,12 @@ class WorkflowTransitionRequest implements AuditableInterface
         return null;
     }
 
-    public function addApproval(UserInterface $user, DecisionMessage ...$messages): void
+    public function addApproval(UserInterface $user, WorkflowTransitionRequestDecisionMessage ...$messages): void
     {
         $this->decide($user, WorkflowTransitionRequestDecisionStatusEnum::APPROVED, \array_values($messages));
     }
 
-    public function addRejection(UserInterface $user, DecisionMessage ...$messages): void
+    public function addRejection(UserInterface $user, WorkflowTransitionRequestDecisionMessage ...$messages): void
     {
         if ([] === $messages) {
             throw new \InvalidArgumentException('A rejecting reviewer must say what is wrong.');
@@ -236,7 +239,7 @@ class WorkflowTransitionRequest implements AuditableInterface
     }
 
     /**
-     * @param list<DecisionMessage> $messages
+     * @param list<WorkflowTransitionRequestDecisionMessage> $messages
      */
     private function decide(
         UserInterface $user,

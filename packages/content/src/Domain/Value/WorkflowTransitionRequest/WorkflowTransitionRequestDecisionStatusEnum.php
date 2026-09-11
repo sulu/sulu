@@ -11,13 +11,11 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Domain\Model\WorkflowTransitionRequest;
+namespace Sulu\Content\Domain\Value\WorkflowTransitionRequest;
 
 /**
  * A user row is never pending: it exists once someone decided. A validator row starts pending and is
  * settled when its check answers.
- *
- * @internal
  */
 enum WorkflowTransitionRequestDecisionStatusEnum: string
 {

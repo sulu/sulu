@@ -11,10 +11,10 @@
             <join-column name="workflow_transition_request_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
         </many-to-one>
 
-        <field name="type" column="type" type="string" length="16" enum-type="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionTypeEnum"/>
+        <field name="type" column="type" type="string" length="16" enum-type="Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionTypeEnum"/>
         <field name="subjectKey" column="subject_key" type="string" length="191"/>
         <field name="validatorKey" column="validator_key" type="string" length="64" nullable="true"/>
-        <field name="status" column="status" type="string" length="16" enum-type="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum"/>
+        <field name="status" column="status" type="string" length="16" enum-type="Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum"/>
         <field name="messages" column="messages" type="json"/>
         <field name="decidedAt" column="decided_at" type="datetime_immutable" nullable="true"/>
 

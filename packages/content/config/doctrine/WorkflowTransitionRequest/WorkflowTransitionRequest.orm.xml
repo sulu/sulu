@@ -10,7 +10,7 @@
         <field name="resourceKey" column="resource_key" type="string" length="191"/>
         <field name="resourceId" column="resource_id" type="string" length="191"/>
         <field name="locale" column="locale" type="string" length="15"/>
-        <field name="place" column="place" type="string" length="16" enum-type="Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum"/>
+        <field name="place" column="place" type="string" length="16" enum-type="Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum"/>
         <field name="activeKey" column="active_key" type="string" length="191" nullable="true" unique="true"/>
         <field name="workflowName" column="workflow_name" type="string" length="64"/>
         <field name="created" column="created_at" type="datetime_immutable"/>

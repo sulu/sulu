@@ -19,11 +19,11 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestNotFoundException;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\DecisionMessage;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecision;
-use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
 
 /**
  * @phpstan-type WorkflowTransitionRequestFilters array{
@@ -145,7 +145,7 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
             ),
             [
                 'status' => $status->value,
-                'messages' => \array_map(static fn (DecisionMessage $message) => $message->toArray(), $messages),
+                'messages' => \array_map(static fn (WorkflowTransitionRequestDecisionMessage $message) => $message->toArray(), $messages),
                 'decidedAt' => $decidedAt,
                 'id' => $decision->getId(),
                 'pending' => WorkflowTransitionRequestDecisionStatusEnum::PENDING->value,

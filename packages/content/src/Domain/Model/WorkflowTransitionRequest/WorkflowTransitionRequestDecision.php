@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Sulu\Content\Domain\Model\WorkflowTransitionRequest;
 
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionTypeEnum;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -64,7 +66,7 @@ class WorkflowTransitionRequestDecision
     }
 
     /**
-     * @param list<DecisionMessage> $messages
+     * @param list<WorkflowTransitionRequestDecisionMessage> $messages
      */
     public static function forUser(
         WorkflowTransitionRequest $workflowTransitionRequest,
@@ -162,22 +164,22 @@ class WorkflowTransitionRequestDecision
     }
 
     /**
-     * @return list<DecisionMessage>
+     * @return list<WorkflowTransitionRequestDecisionMessage>
      */
     public function getMessages(): array
     {
         return \array_map(
-            static fn (array $message) => DecisionMessage::fromArray($message),
+            static fn (array $message) => WorkflowTransitionRequestDecisionMessage::fromArray($message),
             $this->messages,
         );
     }
 
     /**
-     * @param list<DecisionMessage> $messages
+     * @param list<WorkflowTransitionRequestDecisionMessage> $messages
      */
     private function setMessages(array $messages): void
     {
-        $this->messages = \array_map(static fn (DecisionMessage $message) => $message->toArray(), $messages);
+        $this->messages = \array_map(static fn (WorkflowTransitionRequestDecisionMessage $message) => $message->toArray(), $messages);
     }
 
     public function getDecidedAt(): ?\DateTimeImmutable
@@ -196,7 +198,7 @@ class WorkflowTransitionRequestDecision
      * Also mirrors a settlement that already happened in the database onto the hydrated row, so an
      * inline run answers the same as a worker run.
      *
-     * @param list<DecisionMessage> $messages
+     * @param list<WorkflowTransitionRequestDecisionMessage> $messages
      */
     public function settle(
         WorkflowTransitionRequestDecisionStatusEnum $status,
