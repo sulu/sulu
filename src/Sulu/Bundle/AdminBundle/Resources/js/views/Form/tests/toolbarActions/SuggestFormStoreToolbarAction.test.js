@@ -265,7 +265,7 @@ test('Regenerate blanks the suggestion fields while the new response is in fligh
     );
 
     symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
-    let resolveRequest;
+    let resolveRequest: (response: {title: string}) => void = () => {};
     Requester.post.mockReturnValue(new Promise((resolve) => {
         resolveRequest = resolve;
     }));
