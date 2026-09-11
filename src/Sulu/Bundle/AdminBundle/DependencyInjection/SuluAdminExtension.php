@@ -178,12 +178,16 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('sulu_admin.icon_sets', $config['icon_sets'] ?? []);
 
-        /** @var array{configs: array<string, array{enter_mode: string, tags: array<string, bool>, features: array<string, bool>}>} $textEditor */
+        /** @var array{configs: array<array-key, array{enter_mode: string, tags: array<array-key, bool>, features: array<array-key, bool>}>} $textEditor */
         $textEditor = $config['text_editor'];
         $configuredTextEditors = $textEditor['configs'];
         $textEditorConfigs = $this->buildTextEditorConfigs($configuredTextEditors);
         $container->setParameter('sulu_admin.text_editor_configs', $textEditorConfigs);
-        $container->setParameter('sulu_admin.text_editor_config_names', \array_keys($textEditorConfigs));
+        // Cast, because a numeric config name is an int array key and the validator compares names strictly.
+        $container->setParameter(
+            'sulu_admin.text_editor_config_names',
+            \array_map(\strval(...), \array_keys($textEditorConfigs))
+        );
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.php');
@@ -219,9 +223,9 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
      * Reduces the boolean maps of every text editor config to the list of enabled keys the administration interface
      * consumes. The configs Sulu ships are prepended in prepend(), so the project block is already merged in here.
      *
-     * @param array<string, array{enter_mode: string, tags: array<string, bool>, features: array<string, bool>}> $textEditorConfigs
+     * @param array<array-key, array{enter_mode: string, tags: array<array-key, bool>, features: array<array-key, bool>}> $textEditorConfigs
      *
-     * @return array<string, array{enterMode: string, tags: string[], features: string[]}>
+     * @return array<array-key, array{enterMode: string, tags: string[], features: string[]}>
      */
     private function buildTextEditorConfigs(array $textEditorConfigs): array
     {
@@ -239,13 +243,14 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * @param array<string, bool> $keys
+     * @param array<array-key, bool> $keys
      *
      * @return string[]
      */
     private function filterEnabledKeys(array $keys): array
     {
-        return \array_keys(\array_filter($keys));
+        // Cast, because a YAML key that looks like a number arrives as an int and the interface expects strings.
+        return \array_map(\strval(...), \array_keys(\array_filter($keys)));
     }
 
     public function loadFieldTypeOptions(

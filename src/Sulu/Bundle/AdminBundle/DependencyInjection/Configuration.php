@@ -114,10 +114,6 @@ final class Configuration implements ConfigurationInterface
                         ->arrayNode('configs')
                             ->useAttributeAsKey('name')
                             ->normalizeKeys(false)
-                            ->validate()
-                                ->ifTrue(fn ($configs) => [] !== self::invalidKeys($configs))
-                                ->thenInvalid('A text editor config name must be a non-empty string, got %s')
-                            ->end()
                             ->prototype('array')
                                 ->children()
                                     ->enumNode('enter_mode')
@@ -139,12 +135,7 @@ final class Configuration implements ConfigurationInterface
                                     ->end()
                                 ->end()
                                 ->validate()
-                                    ->ifTrue(fn ($config) => [] !== self::invalidKeys(self::keyMap($config)))
-                                    ->thenInvalid('A text editor tag or feature must be a non-empty string, got %s')
-                                ->end()
-                                ->validate()
-                                    ->ifTrue(fn ($config) => 'br' === self::enterMode($config)
-                                        && [] !== \array_intersect(self::BLOCK_TEXT_EDITOR_KEYS, self::enabledKeys($config)))
+                                    ->ifTrue(fn ($config) => [] !== self::enabledBlockKeys($config))
                                     ->thenInvalid(
                                         'A text editor config with "enter_mode: br" cannot enable a key that needs a '
                                         . 'block element, because the paragraphs carrying it are stripped from the '
@@ -315,44 +306,21 @@ final class Configuration implements ConfigurationInterface
     }
 
     /**
-     * @return array<array-key, mixed>
+     * The keys a config enables that need a block element to carry them, which "enter_mode: br" strips from the
+     * stored value. The node is still mixed here, so every level is narrowed before it is read.
+     *
+     * @return string[]
      */
-    private static function keyMap(mixed $config): array
+    private static function enabledBlockKeys(mixed $config): array
     {
-        if (!\is_array($config)) {
+        if (!\is_array($config) || 'br' !== ($config['enter_mode'] ?? null)) {
             return [];
         }
 
         $tags = \is_array($config['tags'] ?? null) ? $config['tags'] : [];
         $features = \is_array($config['features'] ?? null) ? $config['features'] : [];
+        $enabled = \array_map(\strval(...), \array_keys(\array_filter([...$tags, ...$features])));
 
-        return [...$tags, ...$features];
-    }
-
-    /**
-     * @return array<array-key, mixed>
-     */
-    private static function invalidKeys(mixed $map): array
-    {
-        if (!\is_array($map)) {
-            return [];
-        }
-
-        return \array_filter(\array_keys($map), fn ($key) => !\is_string($key) || '' === $key);
-    }
-
-    private static function enterMode(mixed $config): string
-    {
-        $enterMode = \is_array($config) ? ($config['enter_mode'] ?? 'p') : 'p';
-
-        return \is_string($enterMode) ? $enterMode : 'p';
-    }
-
-    /**
-     * @return string[]
-     */
-    private static function enabledKeys(mixed $config): array
-    {
-        return \array_map(\strval(...), \array_keys(\array_filter(self::keyMap($config))));
+        return \array_intersect(self::BLOCK_TEXT_EDITOR_KEYS, $enabled);
     }
 }

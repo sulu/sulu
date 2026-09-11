@@ -21,7 +21,7 @@ class SuluAdminExtensionTest extends TestCase
     /**
      * @param mixed[] $config
      *
-     * @return array<string, array{enterMode: string, tags: string[], features: string[]}>
+     * @return array<array-key, array{enterMode: string, tags: string[], features: string[]}>
      */
     private function loadTextEditorConfigs(array $config): array
     {
@@ -38,7 +38,7 @@ class SuluAdminExtensionTest extends TestCase
             $container
         );
 
-        /** @var array<string, array{enterMode: string, tags: string[], features: string[]}> $configs */
+        /** @var array<array-key, array{enterMode: string, tags: string[], features: string[]}> $configs */
         $configs = $container->getParameter('sulu_admin.text_editor_configs');
 
         return $configs;
@@ -140,18 +140,14 @@ class SuluAdminExtensionTest extends TestCase
         $this->assertSame(['a'], $configs['constructor']['tags']);
     }
 
-    public function testNonStringConfigNameIsRejected(): void
+    /**
+     * A YAML key that looks like a number arrives as an int, which the administration interface expects as a string.
+     */
+    public function testNumericTagsAreDeliveredAsStrings(): void
     {
-        $this->expectException(InvalidConfigurationException::class);
+        $configs = $this->loadTextEditorConfigs([2024 => ['tags' => [0 => true, 'a' => true]]]);
 
-        $this->loadTextEditorConfigs([2024 => ['tags' => ['a' => true]]]);
-    }
-
-    public function testNonStringTagIsRejected(): void
-    {
-        $this->expectException(InvalidConfigurationException::class);
-
-        $this->loadTextEditorConfigs(['teaser' => ['tags' => [0 => true]]]);
+        $this->assertSame(['0', 'a'], $configs[2024]['tags']);
     }
 
     public function testOwnConfigDefaultsToParagraphEnterMode(): void
