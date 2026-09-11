@@ -1,5 +1,6 @@
 // @flow
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import symfonyRouting from 'fos-jsrouting/router';
 import SuggestFormStoreToolbarAction from '../../toolbarActions/SuggestFormStoreToolbarAction';
 import {setAccountLimitContactEmail} from '../../../../containers/AiApplication/accountLimits';
@@ -204,8 +205,8 @@ test('Insert writes the suggestion into the resource form store, closes, and kee
         {title: 'Suggested title'}
     );
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="primary"]').simulate('click');
+    render(action.getNode());
+    await userEvent.click(screen.getByText('Insert'));
 
     expect(action.resourceFormStore.change).toHaveBeenCalledWith('/title', 'Suggested title');
     expect(action.form.showSuccessSnackbar).toHaveBeenCalled();
@@ -237,8 +238,8 @@ test('Regenerate re-fetches without closing the dialog', async() => {
     symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
     Requester.post.mockResolvedValue({title: 'Second suggestion'});
 
-    const element = mount(action.getNode());
-    element.find('Button[icon="su-magic"]').simulate('click');
+    render(action.getNode());
+    await userEvent.click(screen.getByText('Regenerate'));
 
     await new Promise((resolve) => setTimeout(resolve));
 
@@ -269,8 +270,8 @@ test('Regenerate blanks the suggestion fields while the new response is in fligh
         resolveRequest = resolve;
     }));
 
-    const element = mount(action.getNode());
-    element.find('Button[icon="su-magic"]').simulate('click');
+    render(action.getNode());
+    await userEvent.click(screen.getByText('Regenerate'));
 
     // $FlowFixMe
     expect(action.suggestionFormStore.data).toEqual({title: undefined});
@@ -299,8 +300,8 @@ test('Temporary error while generating keeps the dialog open with a snackbar', a
     error.json = jest.fn().mockResolvedValue({messageKey: 'sulu_ai.ai_request_failed'});
     Requester.post.mockRejectedValue(error);
 
-    const element = mount(action.getNode());
-    element.find('Button[icon="su-magic"]').simulate('click');
+    render(action.getNode());
+    await userEvent.click(screen.getByText('Regenerate'));
 
     await new Promise((resolve) => setTimeout(resolve));
 
@@ -329,8 +330,8 @@ test('Account limit error while generating closes the dialog with a terminal err
     error.json = jest.fn().mockResolvedValue({messageKey: 'sulu_ai.out_of_credits'});
     Requester.post.mockRejectedValue(error);
 
-    const element = mount(action.getNode());
-    element.find('Button[icon="su-magic"]').simulate('click');
+    render(action.getNode());
+    await userEvent.click(screen.getByText('Regenerate'));
 
     await new Promise((resolve) => setTimeout(resolve));
 
@@ -344,7 +345,7 @@ test('Account limit error while generating closes the dialog with a terminal err
     setAccountLimitContactEmail(undefined);
 });
 
-test('Cancel closes the dialog without clearing its content mid-transition', () => {
+test('Cancel closes the dialog without clearing its content mid-transition', async() => {
     const action = createSuggestFormStoreToolbarAction();
     action.showDialog = true;
     const originalFormStore = memoryFormStoreFactory.createFromFormKey(
@@ -357,8 +358,8 @@ test('Cancel closes the dialog without clearing its content mid-transition', () 
         {title: 'Suggestion'}
     );
 
-    const element = mount(action.getNode());
-    element.find('Button[skin="secondary"]').filterWhere((button) => button.text() === 'Cancel').simulate('click');
+    render(action.getNode());
+    await userEvent.click(screen.getByText('Cancel'));
 
     expect(action.showDialog).toBe(false);
     // the stores are left alone here on purpose: the Dialog component keeps rendering its
