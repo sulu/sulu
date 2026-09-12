@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
@@ -478,6 +479,34 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->setParameter('collectionId', $collectionId)
             ->getQuery()
             ->getArrayResult();
+    }
+
+    public function findMediaWithCurrentFileVersion(array $ids): array
+    {
+        if (0 === \count($ids)) {
+            return [];
+        }
+
+        // callers pass whatever the request carried, so the keys are dropped to keep a list
+        $ids = \array_values($ids);
+
+        // the file versions are joined on the version the file points at, so the collection
+        // is hydrated with the single version the callers read, instead of being loaded
+        // lazily once per media
+        /** @var MediaInterface[] */
+        return $this->createQueryBuilder('media')
+            ->leftJoin('media.files', 'file')
+            ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, 'fileVersion.version = file.version')
+            ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
+            ->addSelect('file')
+            ->addSelect('fileVersion')
+            ->addSelect('fileVersionDefaultMeta')
+            ->where('media.id IN (:mediaIds)')
+            // the type is passed explicitly so the list is expanded into one placeholder
+            // per id, without relying on what the DBAL version in use infers from the value
+            ->setParameter('mediaIds', $ids, Connection::PARAM_INT_ARRAY)
+            ->getQuery()
+            ->getResult();
     }
 
     public function setAccessControlQueryEnhancer(AccessControlQueryEnhancerInterface $accessControlQueryEnhancer)
