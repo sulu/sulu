@@ -581,8 +581,12 @@ class MediaRepositoryTest extends SuluTestCase
         $media1 = $this->createMedia('test-1', 'test-1', $collection);
         $media2 = $this->createMedia('test-2', 'test-2', $collection);
 
+        $this->assertInstanceOf(Media::class, $media1);
+        $this->assertInstanceOf(Media::class, $media2);
+
         // the second version is the one the file points at, the first one must not be loaded
         $file = $media1->getFiles()[0];
+        $this->assertInstanceOf(File::class, $file);
         $file->setVersion(2);
         $file->addFileVersion($this->createFileVersion($file, 2, 'test-1-version-2'));
 
@@ -602,15 +606,21 @@ class MediaRepositoryTest extends SuluTestCase
         $this->assertArrayHasKey($mediaId1, $result);
         $this->assertArrayHasKey($mediaId2, $result);
 
-        $fileVersions = $result[$mediaId1]->getFiles()[0]->getFileVersions();
+        $loadedFile = $result[$mediaId1]->getFiles()[0];
+        $this->assertInstanceOf(File::class, $loadedFile);
+
+        $fileVersions = $loadedFile->getFileVersions();
         $this->assertInstanceOf(PersistentCollection::class, $fileVersions);
         $this->assertTrue($fileVersions->isInitialized());
         $this->assertCount(1, $fileVersions);
 
-        $latestFileVersion = $result[$mediaId1]->getFiles()[0]->getLatestFileVersion();
+        $latestFileVersion = $loadedFile->getLatestFileVersion();
         $this->assertNotNull($latestFileVersion);
         $this->assertSame(2, $latestFileVersion->getVersion());
-        $this->assertSame('test-1-version-2', $latestFileVersion->getDefaultMeta()->getTitle());
+
+        $defaultMeta = $latestFileVersion->getDefaultMeta();
+        $this->assertNotNull($defaultMeta);
+        $this->assertSame('test-1-version-2', $defaultMeta->getTitle());
     }
 
     public function testFindMediaWithCurrentFileVersionWithoutIds(): void
