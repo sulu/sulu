@@ -249,7 +249,7 @@ test('A removed collapsible should not leave its expanded state behind', async()
     expect(screen.queryByText('Shipping content')).not.toBeInTheDocument();
 });
 
-test('Render the toolbar next to the collapse all toggle', () => {
+test('Render the toolbar next to the expand all toggle', () => {
     render(
         <CollapsibleCollection
             onChange={jest.fn()}
@@ -260,7 +260,7 @@ test('Render the toolbar next to the collapse all toggle', () => {
     );
 
     expect(screen.getByText('toolbar-content')).toBeInTheDocument();
-    expect(screen.getByText('sulu_admin.collapse_all')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.expand_all')).toBeInTheDocument();
 });
 
 test('Render the toolbar even for a single collapsible', () => {

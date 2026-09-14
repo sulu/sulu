@@ -79,6 +79,13 @@ function renderComponent(props: Object = {}) {
     );
 }
 
+// Groups start collapsed, so their rows only render once expanded.
+async function expandAllGroups() {
+    for (const card of screen.getAllByRole('switch')) {
+        await userEvent.click(within(card).getByLabelText('su-expand-vertical'));
+    }
+}
+
 test('renders one card per section with the section label', () => {
     renderComponent();
 
@@ -86,8 +93,9 @@ test('renders one card per section with the section label', () => {
     expect(screen.getByText('Electrical')).toBeInTheDocument();
 });
 
-test('renders one row per field with the label, the required marker and the field type', () => {
+test('renders one row per field with the label, the required marker and the field type', async() => {
     renderComponent();
+    await expandAllGroups();
 
     expect(screen.getByText('Weight (kg) *')).toBeInTheDocument();
     expect(screen.getByText('Colour')).toBeInTheDocument();
@@ -107,6 +115,7 @@ test('emits the field name and finishes the field with its paths', async() => {
     const onChange = jest.fn();
     const onFinish = jest.fn();
     renderComponent({onChange, onFinish});
+    await expandAllGroups();
 
     const input = screen.getAllByRole('textbox')[1];
     await userEvent.type(input, 'r');
@@ -116,19 +125,21 @@ test('emits the field name and finishes the field with its paths', async() => {
     expect(onFinish).toHaveBeenCalledWith('/attribute_8', '/attribute_group_1/items/attribute_8');
 });
 
-test('shows the given errors on their rows', () => {
+test('shows the given errors on their rows', async() => {
     renderComponent({errors: {
         attribute_7: {keyword: 'maximum', parameters: {}},
         attribute_9: {keyword: 'required', parameters: {}},
     }});
+    await expandAllGroups();
 
     expect(screen.getAllByRole('textbox')[0]).toHaveAttribute('data-error', 'maximum');
     expect(screen.getAllByRole('textbox')[1]).not.toHaveAttribute('data-error');
     expect(screen.getAllByRole('textbox')[2]).toHaveAttribute('data-error', 'required');
 });
 
-test('keeps only the rows the filterItem callback accepts and drops the groups left empty', () => {
+test('keeps only the rows the filterItem callback accepts and drops the groups left empty', async() => {
     renderComponent({filterItem: (row) => row.schema.label === 'Voltage (V)'});
+    await expandAllGroups();
 
     expect(screen.getByText('Voltage (V)')).toBeInTheDocument();
     expect(screen.queryByText('Weight (kg) *')).not.toBeInTheDocument();
@@ -146,22 +157,23 @@ test('asks the filterItem callback for every field of every group', () => {
     );
 });
 
-test('disables every field when disabled', () => {
+test('disables every field when disabled', async() => {
     renderComponent({disabled: true});
+    await expandAllGroups();
 
     screen.getAllByRole('textbox').forEach((input) => {
         expect(input).toBeDisabled();
     });
 });
 
-test('renders the toolbar and the collapse all toggle', () => {
+test('renders the toolbar and the expand all toggle', () => {
     renderComponent({toolbar: <span>toolbar-content</span>});
 
     expect(screen.getByText('toolbar-content')).toBeInTheDocument();
-    expect(screen.getByText('sulu_admin.collapse_all')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.expand_all')).toBeInTheDocument();
 });
 
-test('passes the schema disabledCondition through unchanged when not disabled', () => {
+test('passes the schema disabledCondition through unchanged when not disabled', async() => {
     const schema = {
         attribute_group_1: {
             items: {
@@ -179,11 +191,12 @@ test('passes the schema disabledCondition through unchanged when not disabled', 
     };
 
     renderComponent({disabled: false, schema});
+    await expandAllGroups();
 
     expect(screen.getByRole('textbox')).toHaveAttribute('data-disabled-condition', 'type == \'x\'');
 });
 
-test('forces the disabledCondition to "true" when disabled, overriding the schema value', () => {
+test('forces the disabledCondition to "true" when disabled, overriding the schema value', async() => {
     const schema = {
         attribute_group_1: {
             items: {
@@ -201,12 +214,14 @@ test('forces the disabledCondition to "true" when disabled, overriding the schem
     };
 
     renderComponent({disabled: true, schema});
+    await expandAllGroups();
 
     expect(screen.getByRole('textbox')).toHaveAttribute('data-disabled-condition', 'true');
 });
 
 test('collapsing a card hides its rows', async() => {
     renderComponent();
+    await expandAllGroups();
 
     // $FlowFixMe
     const card = screen.getByText('Dimensions').closest('section');
