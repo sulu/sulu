@@ -288,5 +288,7 @@
     "sulu_admin.attribute_required": "Erforderlich",
     "sulu_admin.attribute_variant": "Variante",
     "sulu_admin.choose_attributes": "Attribute auswählen",
-    "sulu_admin.attribute_count": "{count} {count, plural, =1 {Attribut} other {Attribute}}"
+    "sulu_admin.attribute_count": "{count} {count, plural, =1 {Attribut} other {Attribute}}",
+    "sulu_admin.filter_attributes": "Attribute filtern...",
+    "sulu_admin.hide_empty_attributes": "Leere Attribute ausblenden"
 }

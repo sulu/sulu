@@ -237,13 +237,13 @@ class ProductAttributes extends React.Component<Props> {
                         icon="su-search"
                         onChange={this.handleFilterChange}
                         onClearClick={this.handleFilterClear}
-                        placeholder={translate('sulu_product.filter_attributes')}
+                        placeholder={translate('sulu_admin.filter_attributes')}
                         value={this.filter}
                     />
                 </div>
                 <div className={productAttributesRendererStyles.hideEmpty}>
                     <Toggler checked={this.hideEmpty} onChange={this.handleHideEmptyChange}>
-                        {translate('sulu_product.hide_empty_attributes')}
+                        {translate('sulu_admin.hide_empty_attributes')}
                     </Toggler>
                 </div>
             </div>
