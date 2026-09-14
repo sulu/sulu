@@ -137,6 +137,7 @@ export default class ReloadFormStoreToolbarAction extends AbstractFormToolbarAct
     getToolbarItemConfig() {
         return {
             type: 'button',
+            disabled: this.isDisabled(),
             label: this.label,
             icon: this.icon,
             onClick: this.handleClick,

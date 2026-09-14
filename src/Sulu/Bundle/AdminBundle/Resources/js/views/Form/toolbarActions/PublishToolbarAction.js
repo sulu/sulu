@@ -9,19 +9,25 @@ export default class PublishToolbarAction extends AbstractFormToolbarAction {
             visible_condition: visibleCondition,
         } = this.options;
 
-        const {dirty, data} = this.resourceFormStore;
-
         const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
         if (visibleConditionFulfilled) {
             return {
                 label: translate('sulu_admin.publish'),
-                disabled: dirty || data.publishedState === undefined || !!data.publishedState,
+                disabled: this.isDisabled(),
                 onClick: () => {
                     this.form.submit({action: 'publish'});
                 },
                 type: 'button',
             };
         }
+    }
+
+    isDisabled(): boolean {
+        const disabled = super.isDisabled();
+
+        const {dirty, data} = this.resourceFormStore;
+
+        return disabled || dirty || data.publishedState === undefined || !!data.publishedState;
     }
 }

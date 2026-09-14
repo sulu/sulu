@@ -156,6 +156,19 @@ test('Return enabled item config', () => {
     }));
 });
 
+test('Return item config is disabled with disabled_condition', () => {
+    const copyLocaleToolbarAction = createCopyLocaleToolbarAction(
+        ['en', 'de'],
+        {disabled_condition: 'true == true'}
+    );
+    copyLocaleToolbarAction.resourceFormStore.resourceStore.id = 5;
+
+    expect(copyLocaleToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: true,
+        label: 'sulu_admin.copy_locale',
+    }));
+});
+
 test('Return no item config if deprecated display_condition is not met', () => {
     const copyLocaleToolbarAction = createCopyLocaleToolbarAction(
         ['en', 'de'],
