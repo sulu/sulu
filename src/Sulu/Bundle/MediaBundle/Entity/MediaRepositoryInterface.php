@@ -107,4 +107,15 @@ interface MediaRepositoryInterface extends RepositoryInterface
      * @return array<array{id: int, resourceKey: string, depth: int}>
      */
     public function findMediaResourcesByCollection(int $collectionId, bool $includeDescendantCollections = true): array;
+
+    /**
+     * Finds the medias with the given ids, with the file version they currently point at
+     * already loaded. Use it when the medias are only needed to read that file version,
+     * to avoid loading the versions of each media separately.
+     *
+     * @param array<int> $ids
+     *
+     * @return MediaInterface[]
+     */
+    public function findMediaWithCurrentFileVersion(array $ids): array;
 }

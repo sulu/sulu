@@ -2,6 +2,17 @@
 
 For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upgrades/upgrade-2.x.html) steps.
 
+## 2.6.27
+
+### MediaRepositoryInterface has changed
+
+A new method has been added to the `MediaRepositoryInterface`:
+
+- `findMediaWithCurrentFileVersion`
+
+It returns the medias together with the file version they currently point at, so that reading
+that version does not cost one query per media.
+
 ## 2.6.26
 
 ### Improved reference tracking performance
