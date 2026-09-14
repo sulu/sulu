@@ -2,17 +2,20 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
+import log from 'loglevel';
 import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
 import CKEditor5 from '../CKEditor5';
 import configRegistry from '../registries/configRegistry';
 import pluginRegistry from '../registries/pluginRegistry';
 
 jest.mock('../registries/pluginRegistry', () => ({
-    plugins: [],
+    getPlugins: jest.fn(),
+    keys: [],
 }));
 
 jest.mock('../registries/configRegistry', () => ({
-    configs: [],
+    getConfigs: jest.fn(),
+    keys: [],
 }));
 
 jest.mock('@ckeditor/ckeditor5-editor-classic', () => ({
@@ -21,9 +24,21 @@ jest.mock('@ckeditor/ckeditor5-editor-classic', () => ({
     },
 }));
 
+jest.mock('loglevel', () => ({
+    error: jest.fn(),
+    warn: jest.fn(),
+}));
+
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
+
+const textEditorConfig = {enterMode: 'p', features: [], tags: ['strong']};
+
+beforeEach(() => {
+    pluginRegistry.getPlugins.mockReturnValue([]);
+    configRegistry.getConfigs.mockReturnValue([]);
+});
 
 const defaultEditor = {
     editing: {
@@ -63,118 +78,93 @@ test('Create a CKEditor5 instance', () => {
 
     const locale = observable.box('en');
 
-    mount(<CKEditor5 locale={locale} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+    mount(
+        <CKEditor5
+            config={textEditorConfig}
+            locale={locale}
+            onBlur={jest.fn()}
+            onChange={jest.fn()}
+            value={undefined}
+        />
+    );
 
     expect(ClassicEditor.create).toHaveBeenCalledWith(expect.objectContaining({
         attachTo: expect.anything(),
-        heading: {
-            options: [
-                {
-                    class: 'ck-heading_paragraph',
-                    model: 'paragraph',
-                    title: 'sulu_admin.paragraph',
-                },
-                {
-                    class: 'ck-heading_heading2',
-                    model: 'heading2',
-                    title: 'sulu_admin.heading2',
-                    view: 'h2',
-                },
-                {
-                    class: 'ck-heading_heading3',
-                    model: 'heading3',
-                    title: 'sulu_admin.heading3',
-                    view: 'h3',
-                },
-                {
-                    class: 'ck-heading_heading4',
-                    model: 'heading4',
-                    title: 'sulu_admin.heading4',
-                    view: 'h4',
-                },
-                {
-                    class: 'ck-heading_heading5',
-                    model: 'heading5',
-                    title: 'sulu_admin.heading5',
-                    view: 'h5',
-                },
-                {
-                    class: 'ck-heading_heading6',
-                    model: 'heading6',
-                    title: 'sulu_admin.heading6',
-                    view: 'h6',
-                },
-            ],
-        },
+        licenseKey: 'GPL',
         sulu: {
             locale: 'en',
         },
+        toolbar: [],
     }));
+});
+
+test('Ask the registries for the tags and features enabled by the config', () => {
+    ClassicEditor.create.mockReturnValue(Promise.resolve({...defaultEditor}));
+
+    mount(
+        <CKEditor5
+            config={{enterMode: 'p', features: ['align'], tags: ['strong', 'table']}}
+            onBlur={jest.fn()}
+            onChange={jest.fn()}
+            value={undefined}
+        />
+    );
+
+    expect(pluginRegistry.getPlugins).toHaveBeenCalledWith(['strong', 'table', 'align']);
+    expect(configRegistry.getConfigs).toHaveBeenCalledWith(['strong', 'table', 'align']);
+});
+
+test('Pass the text editor config to every registered config', () => {
+    const config = jest.fn(() => ({}));
+    configRegistry.getConfigs.mockReturnValue([config]);
+    ClassicEditor.create.mockReturnValue(Promise.resolve({...defaultEditor}));
+
+    mount(
+        <CKEditor5 config={textEditorConfig} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />
+    );
+
+    expect(config).toHaveBeenCalledWith(expect.objectContaining({toolbar: []}), textEditorConfig);
+});
+
+test('Warn about a tag or feature no plugin or config is registered for', () => {
+    ClassicEditor.create.mockReturnValue(Promise.resolve({...defaultEditor}));
+    // $FlowFixMe: the registries are mocked with a plain object in this test file
+    pluginRegistry.keys = ['strong'];
+    // $FlowFixMe: the registries are mocked with a plain object in this test file
+    configRegistry.keys = ['strong'];
+
+    mount(
+        <CKEditor5
+            config={{enterMode: 'p', features: ['align'], tags: ['strong', 'marquee']}}
+            onBlur={jest.fn()}
+            onChange={jest.fn()}
+            value={undefined}
+        />
+    );
+
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('align, marquee'));
 });
 
 test('Create a CKEditor5 instance with an additional plugin', () => {
     const Plugin = class {};
-    pluginRegistry.plugins = [Plugin];
+    pluginRegistry.getPlugins.mockReturnValue([Plugin]);
 
     const config = jest.fn((config) => ({
         toolbar: [...config.toolbar, 'plugin1', 'plugin2'],
     }));
-    configRegistry.configs = [config];
+    configRegistry.getConfigs.mockReturnValue([config]);
 
     const editor = {
         ...defaultEditor,
     };
     ClassicEditor.create.mockReturnValue(Promise.resolve(editor));
 
-    mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+    mount(<CKEditor5 config={textEditorConfig} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
     expect(ClassicEditor.create).toHaveBeenCalledWith(expect.objectContaining({
         attachTo: expect.anything(),
         plugins: expect.arrayContaining([Plugin]),
-        toolbar: expect.arrayContaining(['bold', 'italic', 'underline', 'plugin1', 'plugin2']),
-    }));
-});
-
-test('Create a CKEditor5 instance with given formats', () => {
-    const editor = {
-        ...defaultEditor,
-    };
-    ClassicEditor.create.mockReturnValue(Promise.resolve(editor));
-
-    mount(<CKEditor5 formats={['h1', 'h2', 'h3']} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
-
-    expect(ClassicEditor.create).toHaveBeenCalledWith(expect.objectContaining({
-        attachTo: expect.anything(),
-        heading: {
-            options: [
-                {
-                    class: 'ck-heading_paragraph',
-                    model: 'paragraph',
-                    title: 'sulu_admin.paragraph',
-                },
-                {
-                    class: 'ck-heading_heading1',
-                    model: 'heading1',
-                    title: 'sulu_admin.heading1',
-                    view: 'h1',
-                },
-                {
-                    class: 'ck-heading_heading2',
-                    model: 'heading2',
-                    title: 'sulu_admin.heading2',
-                    view: 'h2',
-                },
-                {
-                    class: 'ck-heading_heading3',
-                    model: 'heading3',
-                    title: 'sulu_admin.heading3',
-                    view: 'h3',
-                },
-            ],
-        },
-        sulu: {
-            locale: undefined,
-        },
+        toolbar: ['plugin1', 'plugin2'],
     }));
 });
 
@@ -186,7 +176,9 @@ test('Set data on editor when value is updated', () => {
     const editorPromise = Promise.resolve(editor);
     ClassicEditor.create.mockReturnValue(editorPromise);
 
-    const ckeditor = mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+    const ckeditor = mount(
+        <CKEditor5 config={textEditorConfig} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />
+    );
 
     return editorPromise.then(() => {
         ckeditor.setProps({value: '<p>Test</p>'});
@@ -204,7 +196,9 @@ test('Do not set data on editor when value is not changed when props change', ()
     const editorPromise = Promise.resolve(editor);
     ClassicEditor.create.mockReturnValue(editorPromise);
 
-    const ckeditor = mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value="<p>Test</p>" />);
+    const ckeditor = mount(
+        <CKEditor5 config={textEditorConfig} onBlur={jest.fn()} onChange={jest.fn()} value="<p>Test</p>" />
+    );
 
     return editorPromise.then(() => {
         editor.setData.mockClear();
@@ -223,7 +217,9 @@ test('Do not set data on editor when value and editorData is undefined', () => {
     const editorPromise = Promise.resolve(editor);
     ClassicEditor.create.mockReturnValue(editorPromise);
 
-    const ckeditor = mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+    const ckeditor = mount(
+        <CKEditor5 config={textEditorConfig} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />
+    );
 
     return editorPromise.then(() => {
         editor.setData.mockClear();
@@ -248,7 +244,15 @@ test('Set disabled class and isReadOnly property to CKEditor5', () => {
     const editorPromise = Promise.resolve(editor);
     ClassicEditor.create.mockReturnValue(editorPromise);
 
-    mount(<CKEditor5 disabled={true} onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+    mount(
+        <CKEditor5
+            config={textEditorConfig}
+            disabled={true}
+            onBlur={jest.fn()}
+            onChange={jest.fn()}
+            value={undefined}
+        />
+    );
 
     return editorPromise.then(() => {
         expect(ClassicEditor.create).toHaveBeenCalled();
@@ -275,7 +279,7 @@ test('Call onChange prop when something changed', () => {
     const editorPromise = Promise.resolve(editor);
     ClassicEditor.create.mockReturnValue(editorPromise);
 
-    mount(<CKEditor5 onBlur={jest.fn()} onChange={changeSpy} value={undefined} />);
+    mount(<CKEditor5 config={textEditorConfig} onBlur={jest.fn()} onChange={changeSpy} value={undefined} />);
 
     return editorPromise.then(() => {
         editor.model.document.on.mock.calls[0][1]();
@@ -301,7 +305,7 @@ test('Call onChange prop with undefined if editor is empty', () => {
     const editorPromise = Promise.resolve(editor);
     ClassicEditor.create.mockReturnValue(editorPromise);
 
-    mount(<CKEditor5 onBlur={jest.fn()} onChange={changeSpy} value={undefined} />);
+    mount(<CKEditor5 config={textEditorConfig} onBlur={jest.fn()} onChange={changeSpy} value={undefined} />);
 
     return editorPromise.then(() => {
         editor.model.document.on.mock.calls[0][1]();
@@ -327,7 +331,7 @@ test('Do not call onChange prop when nothing changed', () => {
     const editorPromise = Promise.resolve(editor);
     ClassicEditor.create.mockReturnValue(editorPromise);
 
-    mount(<CKEditor5 onBlur={jest.fn()} onChange={changeSpy} value={undefined} />);
+    mount(<CKEditor5 config={textEditorConfig} onBlur={jest.fn()} onChange={changeSpy} value={undefined} />);
 
     return editorPromise.then(() => {
         editor.model.document.on.mock.calls[0][1]();
@@ -353,7 +357,7 @@ test('Call onBlur prop when CKEditor5 fires its blur event', () => {
     const editorPromise = Promise.resolve(editor);
     ClassicEditor.create.mockReturnValue(editorPromise);
 
-    mount(<CKEditor5 onBlur={blurSpy} onChange={jest.fn()} value={undefined} />);
+    mount(<CKEditor5 config={textEditorConfig} onBlur={blurSpy} onChange={jest.fn()} value={undefined} />);
 
     return editorPromise.then(() => {
         editor.editing.view.document.on.mock.calls[0][1]();
@@ -386,7 +390,7 @@ test('Call onFocus prop when CKEditor5 fires its focus event', () => {
     const editorPromise = Promise.resolve(editor);
     ClassicEditor.create.mockReturnValue(editorPromise);
 
-    mount(<CKEditor5 onChange={jest.fn()} onFocus={focusSpy} value={undefined} />);
+    mount(<CKEditor5 config={textEditorConfig} onChange={jest.fn()} onFocus={focusSpy} value={undefined} />);
 
     return editorPromise.then(() => {
         editor.editing.view.document.on.mock.calls[0][1]();

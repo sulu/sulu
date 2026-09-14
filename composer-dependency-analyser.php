@@ -73,13 +73,6 @@ return $config
         ],
         [ErrorType::DEV_DEPENDENCY_IN_PROD],
     )
-    // PROD_DEPENDENCY_ONLY_IN_DEV:
-    ->ignoreErrorsOnPackages(
-        [
-            'symfony/yaml', // we use yaml configurations
-        ],
-        [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV],
-    )
     // UNUSED_DEPENDENCY
     ->ignoreErrorsOnPackages(
         [

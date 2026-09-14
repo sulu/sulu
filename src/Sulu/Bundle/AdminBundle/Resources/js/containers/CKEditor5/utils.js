@@ -62,6 +62,14 @@ function addPTags(htmlString: string): string {
         .replace(/<!--\/p-->/g, '</p>');
 }
 
+function normalizeKeys(keys: ?string | Array<string>): ?Array<string> {
+    if (keys === undefined || keys === null) {
+        return undefined;
+    }
+
+    return Array.isArray(keys) ? keys : [keys];
+}
+
 function replaceLast(str, search, replace) {
     const lastIndex = str.lastIndexOf(search);
 
@@ -72,4 +80,11 @@ function replaceLast(str, search, replace) {
     return str.slice(0, lastIndex) + replace + str.slice(lastIndex + search.length);
 }
 
-export {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection, removePTags, addPTags};
+export {
+    addLinkConversion,
+    findModelItemInSelection,
+    findViewLinkItemInSelection,
+    normalizeKeys,
+    removePTags,
+    addPTags,
+};

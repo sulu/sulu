@@ -27,11 +27,16 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\Yaml\Yaml;
 
 class SuluAdminExtension extends Extension implements PrependExtensionInterface
 {
     public function prepend(ContainerBuilder $container): void
     {
+        /** @var array<string, mixed> $textEditorConfig */
+        $textEditorConfig = Yaml::parseFile(__DIR__ . '/../Resources/config/text_editor.yaml');
+        $container->prependExtensionConfig('sulu_admin', $textEditorConfig);
+
         if ($container->hasExtension('framework')) {
             $publicDir = 'public';
 
@@ -173,6 +178,17 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('sulu_admin.icon_sets', $config['icon_sets'] ?? []);
 
+        /** @var array{configs: array<array-key, array{enter_mode: string, tags: array<array-key, bool>, features: array<array-key, bool>}>} $textEditor */
+        $textEditor = $config['text_editor'];
+        $configuredTextEditors = $textEditor['configs'];
+        $textEditorConfigs = $this->buildTextEditorConfigs($configuredTextEditors);
+        $container->setParameter('sulu_admin.text_editor_configs', $textEditorConfigs);
+        // Cast, because a numeric config name is an int array key and the validator compares names strictly.
+        $container->setParameter(
+            'sulu_admin.text_editor_config_names',
+            \array_map(\strval(...), \array_keys($textEditorConfigs))
+        );
+
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.php');
 
@@ -201,6 +217,27 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
             $config['field_type_options'] ?? [],
             $container
         );
+    }
+
+    /**
+     * @param array<array-key, array{enter_mode: string, tags: array<array-key, bool>, features: array<array-key, bool>}> $textEditorConfigs
+     *
+     * @return array<array-key, array{enterMode: string, tags: string[], features: string[]}>
+     */
+    private function buildTextEditorConfigs(array $textEditorConfigs): array
+    {
+        $configs = [];
+
+        foreach ($textEditorConfigs as $name => $config) {
+            $configs[$name] = [
+                'enterMode' => $config['enter_mode'],
+                // Cast, because a YAML key that looks like a number arrives as an int.
+                'tags' => \array_map(\strval(...), \array_keys(\array_filter($config['tags']))),
+                'features' => \array_map(\strval(...), \array_keys(\array_filter($config['features']))),
+            ];
+        }
+
+        return $configs;
     }
 
     public function loadFieldTypeOptions(

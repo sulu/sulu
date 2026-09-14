@@ -38,7 +38,7 @@ import MultiSelection from './MultiSelection';
 import SingleAutoComplete from './SingleAutoComplete';
 import SingleListOverlay from './SingleListOverlay';
 import SingleSelection from './SingleSelection';
-import TextEditor, {textEditorRegistry} from './TextEditor';
+import TextEditor, {textEditorConfigRegistry, textEditorRegistry} from './TextEditor';
 import {linkTypeRegistry} from './Link';
 import type {FormStoreInterface, Schema, SchemaOption} from './Form/types';
 import type {ViewProps} from './ViewRenderer';
@@ -93,6 +93,7 @@ export {
     sidebarStore,
     sidebarRegistry,
     TextEditor,
+    textEditorConfigRegistry,
     textEditorRegistry,
     viewRegistry,
     withToolbar,
