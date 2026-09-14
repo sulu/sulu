@@ -116,6 +116,7 @@ import Form, {
     TypeToolbarAction as FormTypeToolbarAction,
     TogglerToolbarAction as FormTogglerToolbarAction,
     UpdateFormStoreToolbarAction as FormUpdateFormStoreToolbarAction,
+    SuggestFormStoreToolbarAction as FormSuggestFormStoreToolbarAction,
     ReloadFormStoreToolbarAction as FormReloadFormStoreToolbarAction,
 } from './views/Form';
 import {navigationRegistry} from './containers/Navigation';
@@ -348,6 +349,7 @@ function registerFormToolbarActions() {
     formToolbarActionRegistry.add('sulu_admin.type', FormTypeToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.toggler', FormTogglerToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.update_form_store', FormUpdateFormStoreToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.suggest_form_store', FormSuggestFormStoreToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.reload_form_store', FormReloadFormStoreToolbarAction);
 }
 
