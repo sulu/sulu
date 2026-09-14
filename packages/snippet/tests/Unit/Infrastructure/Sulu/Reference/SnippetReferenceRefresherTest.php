@@ -16,6 +16,7 @@ namespace Sulu\Snippet\Tests\Unit\Infrastructure\Sulu\Reference;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
@@ -24,6 +25,7 @@ use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Model\Snippet;
+use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
 
@@ -126,5 +128,42 @@ class SnippetReferenceRefresherTest extends TestCase
         $results = \iterator_to_array($generator);
 
         $this->assertEmpty($results);
+    }
+
+    public function testRefreshClearsReferencesForShadowContent(): void
+    {
+        $snippet = new Snippet('snippet-uuid');
+        $shadowDimensionContent = new SnippetDimensionContent($snippet);
+        $shadowDimensionContent->setLocale('de');
+        $shadowDimensionContent->setStage(DimensionContentInterface::STAGE_LIVE);
+        $shadowDimensionContent->setShadowLocale('en');
+
+        $queryBuilder = $this->prophesize(\Doctrine\ORM\QueryBuilder::class);
+        $query = $this->prophesize(\Doctrine\ORM\Query::class);
+
+        $queryBuilder->where('dimensionContent.version = :version')->willReturn($queryBuilder);
+        $queryBuilder->setParameter('version', DimensionContentInterface::CURRENT_VERSION)->willReturn($queryBuilder);
+        $queryBuilder->orderBy('dimensionContent.snippet', 'ASC')->willReturn($queryBuilder);
+        $queryBuilder->getQuery()->willReturn($query->reveal());
+        $query->toIterable()->willReturn(new \ArrayIterator([$shadowDimensionContent]));
+
+        $this->snippetDimensionContentRepository->createQueryBuilder('dimensionContent')
+            ->willReturn($queryBuilder->reveal());
+
+        $this->contentMerger->merge(Argument::type(\Sulu\Content\Domain\Model\DimensionContentCollection::class))
+            ->willReturn($shadowDimensionContent);
+
+        $this->referenceRepository->removeBy([
+            'referenceResourceKey' => Snippet::RESOURCE_KEY,
+            'referenceResourceId' => 'snippet-uuid',
+            'referenceLocale' => 'de',
+            'referenceContext' => DimensionContentInterface::STAGE_LIVE,
+        ])->shouldBeCalledOnce();
+        $this->contentViewResolver->getContentViews(Argument::any())->shouldNotBeCalled();
+
+        $results = \iterator_to_array($this->refresher->refresh());
+
+        $this->assertCount(1, $results);
+        $this->assertSame($shadowDimensionContent, $results[0]);
     }
 }
