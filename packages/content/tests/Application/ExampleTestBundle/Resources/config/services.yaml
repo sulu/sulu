@@ -116,3 +116,16 @@ services:
     Sulu\Bundle\ReferenceBundle\Application\MessageHandler\RefreshReferenceMessageHandler:
         alias: sulu_reference.refresh_reference_message_handler
         public: true
+
+    # No tag on purpose: implementing the interface is what registers a validator, and its key comes
+    # from the class' static getKey().
+    example_test.request_workflow_validator.unpublished_example_references:
+        class: Sulu\Content\Tests\Application\ExampleTestBundle\RequestWorkflow\UnpublishedExampleReferencesValidator
+        autoconfigure: true
+        arguments:
+            - '@sulu_reference.reference_repository'
+            - '@example_test.example_repository'
+
+    example_test.request_workflow_validator.configured_result:
+        class: Sulu\Content\Tests\Application\ExampleTestBundle\RequestWorkflow\ConfiguredResultValidator
+        autoconfigure: true

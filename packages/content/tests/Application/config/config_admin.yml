@@ -3,7 +3,6 @@ imports:
 
 framework:
     router: { resource: "%kernel.project_dir%/config/routing_admin.yml" }
-
 services:
     sulu_preview.preview.kernel_factory:
         class: Sulu\Content\Tests\Application\PreviewKernelFactory
@@ -14,3 +13,30 @@ sulu_admin:
     forms:
         directories:
             - '%kernel.project_dir%/config/forms'
+
+# Named workflows only, no `default`: a test picks its scenario with the template tag
+# `sulu_content.request_workflow`, an untagged template stays outside the review flow.
+sulu_content:
+    request_workflows:
+        review:
+            required_user_approvals: 1
+        strict:
+            required_user_approvals: 2
+        seo:
+            pre_validators:
+                seo_required:
+                    fields: ['title', 'description']
+                excerpt_required:
+                    fields: ['title']
+        references:
+            validators:
+                unpublished_example_references: ~
+        configured:
+            required_user_approvals: 2
+            validators:
+                test_configured_result:
+                    result: 'reject'
+        throwing:
+            validators:
+                test_configured_result:
+                    result: 'throw'

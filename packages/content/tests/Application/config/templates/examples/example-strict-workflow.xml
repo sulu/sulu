@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>example-strict-workflow</key>
+
+    <view>@ExampleTest/examples/default</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
+    <cacheLifetime>604800</cacheLifetime>
+
+    <tag name="sulu_content.request_workflow" workflow="strict"/>
+
+    <meta>
+        <title lang="en">Example Strict Workflow</title>
+        <title lang="de">Example Strict Workflow</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+            </meta>
+            <tag name="sulu.rlp.part"/>
+            <tag name="sulu.search.field" role="title"/>
+        </property>
+
+        <property name="url" type="route">
+            <meta>
+                <title lang="en">URL</title>
+            </meta>
+            <tag name="sulu.rlp"/>
+        </property>
+    </properties>
+</template>

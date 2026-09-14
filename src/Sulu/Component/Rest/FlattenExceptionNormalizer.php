@@ -11,9 +11,11 @@
 
 namespace Sulu\Component\Rest;
 
+use Sulu\Component\Rest\Exception\ExceptionResponseDataInterface;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
+use Sulu\Component\Rest\Exception\TranslationErrorMessagesExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -84,6 +86,26 @@ class FlattenExceptionNormalizer implements NormalizerInterface
             $data['dependantResourcesCount'] = $contextException->getDependantResourcesCount();
             $data['dependantResourceBatches'] = $contextException->getDependantResourceBatches();
             $data['resource'] = $contextException->getResource();
+        }
+
+        if ($contextException instanceof TranslationErrorMessagesExceptionInterface) {
+            $messages = [];
+            foreach ($contextException->getMessageTranslations() as $translation) {
+                $parameters = [];
+                foreach ($translation['parameters'] as $name => $value) {
+                    $parameters['{' . $name . '}'] = $value;
+                }
+
+                $messages[] = $this->translator->trans($translation['key'], $parameters, 'admin');
+            }
+
+            if ([] !== $messages) {
+                $data['detail'] = \implode(' ', $messages);
+            }
+        }
+
+        if ($contextException instanceof ExceptionResponseDataInterface) {
+            $data = \array_merge($data, $contextException->getResponseData());
         }
 
         if ($contextException instanceof ReferencingResourcesFoundExceptionInterface) {
