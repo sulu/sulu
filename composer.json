@@ -240,6 +240,7 @@
             "Sulu\\Route\\Migrations\\": "packages/route/migrations",
             "Sulu\\Search\\Tests\\": "packages/search/tests",
             "Sulu\\Content\\Tests\\": "packages/content/tests",
+            "Sulu\\Content\\Migrations\\": "packages/content/migrations",
             "Sulu\\CustomUrl\\Tests\\": "packages/custom-url/tests",
             "Sulu\\Notifier\\Tests\\": "packages/notifier/tests"
         }
