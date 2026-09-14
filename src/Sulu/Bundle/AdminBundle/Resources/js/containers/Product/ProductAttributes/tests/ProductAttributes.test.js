@@ -304,7 +304,7 @@ test('drops the empty rows from the filter callback once hide empty is toggled',
 test('keeps only the rows whose label contains the typed filter', async() => {
     await renderLoaded();
 
-    await userEvent.type(screen.getByPlaceholderText('sulu_product.filter_attributes'), 'eig');
+    await userEvent.type(screen.getByPlaceholderText('sulu_admin.filter_attributes'), 'eig');
 
     expect(rendererProps.filterItem({name: 'attribute_7', schema: {label: 'Weight', type: 'number'}})).toEqual(true);
     expect(rendererProps.filterItem({name: 'attribute_8', schema: {label: 'Colour', type: 'text_line'}}))
