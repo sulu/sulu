@@ -50,7 +50,7 @@ type Props = {|
     variant: boolean,
 |};
 
-type Selector = {productFamily: string} | {product: string};
+type Selector = {productFamily: string, productType?: string} | {product: string};
 
 /**
  * Edits a product's attribute values in its own form store, built from the product_attributes form
@@ -95,11 +95,15 @@ class ProductAttributes extends React.Component<Props> {
     }
 
     @computed.struct get selector(): ?Selector {
-        const {formInspector} = this.props;
+        const {formInspector, variant} = this.props;
 
         const productFamily = formInspector.getValueByPath('/productFamily');
         if (typeof productFamily === 'string' && productFamily) {
-            return {productFamily};
+            const productType = formInspector.getValueByPath('/type');
+
+            return !variant && typeof productType === 'string' && productType
+                ? {productFamily, productType}
+                : {productFamily};
         }
 
         const product = formInspector.options ? formInspector.options.parentId : undefined;

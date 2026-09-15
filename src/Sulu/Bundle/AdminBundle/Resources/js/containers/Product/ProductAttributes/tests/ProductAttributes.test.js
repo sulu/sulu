@@ -35,9 +35,16 @@ jest.mock('../../../Form/FormInspector', () => {
         }
 
         this.family = observable.box('family-1');
+        this.type = observable.box(undefined);
         this.locale = observable.box('en');
         this.options = {};
-        this.getValueByPath = jest.fn((path) => path === '/productFamily' ? this.family.get() : undefined);
+        this.getValueByPath = jest.fn((path) => {
+            if (path === '/productFamily') {
+                return this.family.get();
+            }
+
+            return path === '/type' ? this.type.get() : undefined;
+        });
         this.isFieldModified = jest.fn(() => false);
     });
 });
@@ -170,6 +177,49 @@ test('sends the variant flag', () => {
 
     renderComponent({variant: true});
 
+    expect(metadataStore.getSchema)
+        .toHaveBeenCalledWith('product_attributes', undefined, {productFamily: 'family-1', variant: true});
+});
+
+test('sends the product type', () => {
+    metadataStore.getSchema.mockReturnValue(deferred().promise);
+    const {formInspector} = renderComponent();
+
+    act(() => {
+        // $FlowFixMe
+        formInspector.type.set('product');
+    });
+
+    expect(metadataStore.getSchema)
+        .toHaveBeenLastCalledWith('product_attributes', undefined, {productFamily: 'family-1', productType: 'product'});
+});
+
+test('creates a new store when the product type changes', async() => {
+    const {formInspector} = await renderLoaded();
+
+    act(() => {
+        // $FlowFixMe
+        formInspector.type.set('product_with_variants');
+    });
+
+    expect(metadataStore.getSchema).toHaveBeenCalledTimes(2);
+    expect(metadataStore.getSchema).toHaveBeenLastCalledWith(
+        'product_attributes',
+        undefined,
+        {productFamily: 'family-1', productType: 'product_with_variants'}
+    );
+});
+
+test('sends no product type for a variant', () => {
+    metadataStore.getSchema.mockReturnValue(deferred().promise);
+    const {formInspector} = renderComponent({variant: true});
+
+    act(() => {
+        // $FlowFixMe
+        formInspector.type.set('variant');
+    });
+
+    expect(metadataStore.getSchema).toHaveBeenCalledTimes(1);
     expect(metadataStore.getSchema)
         .toHaveBeenCalledWith('product_attributes', undefined, {productFamily: 'family-1', variant: true});
 });
