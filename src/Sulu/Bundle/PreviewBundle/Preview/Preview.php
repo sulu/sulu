@@ -15,6 +15,7 @@ use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Provider\CachablePreviewDefaultsProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 
@@ -234,6 +235,11 @@ class Preview
         $object = $item->getObject();
         $objectType = \get_debug_type($object);
 
+        $provider = $this->getProvider($item->getProviderKey());
+        if ($provider instanceof CachablePreviewDefaultsProviderInterface) {
+            $object = $provider->serialize(new PreviewContext($item->getId(), $item->getLocale()), $object);
+        }
+
         $data = [
             'id' => $item->getId(),
             'locale' => $item->getLocale(),
@@ -278,7 +284,13 @@ class Preview
         $data = \json_decode($cachedContent, true);
         $provider = $this->getProvider($data['providerKey']);
 
-        $object = $provider->getDefaults(new PreviewContext($data['id'], $data['locale']));
+        $previewContext = new PreviewContext($data['id'], $data['locale']);
+
+        if ($provider instanceof CachablePreviewDefaultsProviderInterface && \is_string($data['object'])) {
+            $object = $provider->deserialize($previewContext, $data['object']);
+        } else {
+            $object = $provider->getDefaults($previewContext);
+        }
 
         $cacheItem = new PreviewCacheItem(
             $data['id'],
