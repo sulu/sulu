@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
@@ -331,6 +332,71 @@ class ImageMapPropertyResolverTest extends TestCase
         yield 'hotspot_with_not_exist_type' => [['imageId' => 1, 'hotspots' => [['type' => 'not_exist', 'hotspot' => ['type' => 'circle'], 'title' => 'Title']]]];
         yield 'hotspot_with_no_type' => [['imageId' => 1, 'hotspots' => [['hotspot' => ['type' => 'circle'], 'title' => 'Title']]]];
         yield 'hotspot_with_no_hotspot' => [['imageId' => 1, 'hotspots' => [['type' => 'not_exist', 'title' => 'Title']]]];
+    }
+
+    public function testResolveForwardsHotspotId(): void
+    {
+        $metadata = $this->createMetadata();
+        $blockIdGeneratorOption = new OptionMetadata();
+        $blockIdGeneratorOption->setName('block_id_generator');
+        $blockIdGeneratorOption->setValue(true);
+        $metadata->addOption($blockIdGeneratorOption);
+
+        $contentView = $this->resolver->resolve(
+            ['imageId' => 1, 'hotspots' => [
+                ['_id' => 'hotspot-id-1', 'type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title'],
+                // a hotspot without an id (e.g. content saved before ids existed) must not gain one here -
+                // the resolver only forwards what's already there, TemplateDataMapper is what backfills it
+                ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title'],
+            ]],
+            'en',
+            [],
+            $metadata,
+        );
+
+        $imageMapContent = $contentView->getContent();
+        $this->assertIsArray($imageMapContent);
+        $hotspotsView = $imageMapContent['hotspots'];
+        $this->assertInstanceOf(ContentView::class, $hotspotsView);
+        $hotspots = $hotspotsView->getContent();
+        $this->assertIsArray($hotspots);
+
+        $firstHotspotView = $hotspots[0];
+        $this->assertInstanceOf(ContentView::class, $firstHotspotView);
+        $firstHotspot = $firstHotspotView->getContent();
+        $this->assertIsArray($firstHotspot);
+        $this->assertSame('hotspot-id-1', $firstHotspot['_id'] ?? null);
+
+        $secondHotspotView = $hotspots[1];
+        $this->assertInstanceOf(ContentView::class, $secondHotspotView);
+        $secondHotspot = $secondHotspotView->getContent();
+        $this->assertIsArray($secondHotspot);
+        $this->assertArrayNotHasKey('_id', $secondHotspot);
+    }
+
+    public function testResolveDoesNotForwardHotspotIdWithoutBlockIdGeneratorOption(): void
+    {
+        $contentView = $this->resolver->resolve(
+            ['imageId' => 1, 'hotspots' => [
+                ['_id' => 'hotspot-id-1', 'type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title'],
+            ]],
+            'en',
+            [],
+            $this->createMetadata(),
+        );
+
+        $imageMapContent = $contentView->getContent();
+        $this->assertIsArray($imageMapContent);
+        $hotspotsView = $imageMapContent['hotspots'];
+        $this->assertInstanceOf(ContentView::class, $hotspotsView);
+        $hotspots = $hotspotsView->getContent();
+        $this->assertIsArray($hotspots);
+
+        $firstHotspotView = $hotspots[0];
+        $this->assertInstanceOf(ContentView::class, $firstHotspotView);
+        $firstHotspot = $firstHotspotView->getContent();
+        $this->assertIsArray($firstHotspot);
+        $this->assertArrayNotHasKey('_id', $firstHotspot);
     }
 
     public function testResolveGlobalBlockHotspot(): void

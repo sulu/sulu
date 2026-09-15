@@ -32,6 +32,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     @observable value: Object;
     oldIconValue: ?Object;
     computedIcons: Array<Array<string>> = [];
+    generatingBlockIds: boolean = false;
 
     constructor(props: FieldTypeProps<Array<BlockEntry>>) {
         super(props);
@@ -40,6 +41,11 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     }
 
     @action componentDidMount() {
+        // Inject missing block ids when the form opens, the same way field types apply their
+        // defaults: written with the isDefaultValue context so the form does not become dirty. This
+        // fills ids regardless of how the stored data was created (fixtures, imports, legacy data).
+        this.generateMissingBlockIds(this.value);
+
         if (this.settingsFormKey) {
             // initialize empty blockSettingsFormStore because schema of the store is used for determining iconsMapping
             this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
@@ -56,13 +62,17 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         const {defaultType, onChange, types, value} = this.props;
         const {types: oldTypes} = prevProps;
 
-        if (!equals(toJS(prevProps.value), toJS(value))){
+        if (!equals(toJS(prevProps.value), toJS(value))) {
             // Only sync from props if no local changes were made since the last render.
             // This prevents stale echoed values from overwriting local changes
             // (e.g., default values applied by field components during mount).
             if (!this.value || equals(toJS(this.value), toJS(prevProps.value))) {
                 this.setValue(value);
             }
+
+            // Retry the injection when the value (re)loaded still has blocks without an id. Since
+            // ensureBlockIds is a no-op when nothing is missing, this cannot loop on injected values.
+            this.generateMissingBlockIds(value);
         }
 
         if (!types || !oldTypes) {
@@ -274,7 +284,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         return this.computedIcons;
     }
 
-    getConditionData(data: {[string]: any}, dataPath: ?string) {
+    getConditionData(data: { [string]: any }, dataPath: ?string) {
         const {formInspector} = this.props;
 
         return conditionDataProviderRegistry.getAll().reduce(
@@ -303,6 +313,29 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.setValue(newValues);
 
         onChange(newValues, context);
+    };
+
+    // Injects ids into blocks that have none. Written with the isDefaultValue context (like a field
+    // type applying its default) so it never marks the form dirty; on the happy path every block
+    // already carries an id and this stays silent.
+    generateMissingBlockIds = async(value: Object) => {
+        const {onChange, types} = this.props;
+
+        if (this.generatingBlockIds || !this.generateBlockIds || !types || !value) {
+            return;
+        }
+
+        this.generatingBlockIds = true;
+        try {
+            const updatedValue = await blockIdGenerator.ensureBlockIds(toJS(value), types);
+
+            if (updatedValue) {
+                this.setValue(updatedValue);
+                onChange(updatedValue, {isDefaultValue: true});
+            }
+        } finally {
+            this.generatingBlockIds = false;
+        }
     };
 
     handleBlocksChange = (value: Object) => {
@@ -505,8 +538,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         if (!blockSettingsFormStore
             || openedBlockSettingsIndex === undefined
             || openedBlockSettingsIndex === null
-            || !oldValues)
-        {
+            || !oldValues) {
             return;
         }
 
