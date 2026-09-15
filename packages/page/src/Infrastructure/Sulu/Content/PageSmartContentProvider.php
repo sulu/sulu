@@ -57,6 +57,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: string[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -79,6 +80,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: string[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -266,6 +268,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      *        offset?: int,
      *        includeSubFolders: bool,
      *        excludeDuplicates: bool,
+     *        excluded?: string[],
      *        audienceTargeting?: bool,
      *        targetGroupId?: int,
      *        segmentKey?: string,
@@ -392,10 +395,17 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      *     websiteCategoryOperator: 'AND'|'OR',
      *     websiteTags: string[],
      *     websiteTagOperator: 'AND'|'OR',
+     *     excluded?: string[],
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
+        $excluded = $filters['excluded'] ?? [];
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
+        }
+
         $datasource = $filters['dataSource'] ?? null;
         if ($filters['includeSubFolders']) {
             // Join with the dataSource page to get its lft and rgt values

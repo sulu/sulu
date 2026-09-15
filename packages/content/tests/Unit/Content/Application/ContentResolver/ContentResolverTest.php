@@ -21,6 +21,7 @@ use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolver;
+use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolver;
 use Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer;
 use Sulu\Content\Application\ContentResolver\ResolvableResourceLoader\ResolvableResourceLoaderInterface;
@@ -102,7 +103,8 @@ class ContentResolverTest extends TestCase
             $this->contentAggregator->reveal(),
             $maxDepth,
             $this->contentEnhancer->reveal(),
-            $resourceLoaderProvider
+            $resourceLoaderProvider,
+            new ContentDeduplicationTracker()
         );
     }
 

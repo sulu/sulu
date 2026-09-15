@@ -18,6 +18,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\ResourceLoader\Loader\RawResourceLoader;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -42,6 +43,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  *       maxPerPage: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: string[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: string,
  *       offset?: int,
@@ -54,10 +56,14 @@ class SmartContentSmartResolver implements SmartResolverInterface
      */
     public function __construct(
         private ServiceLocator $smartContentProviders,
+        private ContentDeduplicationTracker $deduplicationTracker,
     ) {
     }
 
-    public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
+    /**
+     * @param array<string, mixed> $context
+     */
+    public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
     {
         /** @var array{
          *     value: array<string, mixed>,
@@ -109,11 +115,40 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
         $filters['limit'] = $maxPerPage ?? $limit;
 
+        // Smart content deduplication is keyed by the provider's resource key, which is shared with the
+        // regular selections and with the currently rendered resource.
+        $resourceKey = $smartContentProvider->getType();
+
+        // Preserve any explicit exclusions already present in the filters.
+        /** @var string[] $excluded */
+        $excluded = $filters['excluded'] ?? [];
+
+        // Exclude the currently rendered resource (the "own" page) from its own results.
+        $selfReference = $context['selfReference'] ?? null;
+        if (\is_array($selfReference) && ($selfReference['resourceKey'] ?? null) === $resourceKey) {
+            $excluded[] = (string) $selfReference['id'];
+        }
+
+        // When "exclude_duplicates" is enabled, also exclude the resources already referenced by earlier
+        // selections or smart content blocks of the same resource key.
+        if ($filters['excludeDuplicates']) {
+            $excluded = [...$excluded, ...$this->deduplicationTracker->getAll($resourceKey)];
+        }
+
+        $excluded = \array_values(\array_unique($excluded));
+        $filters['excluded'] = $excluded;
+
         $countByFilters = $filters;
         unset($countByFilters['offset']);
 
         $params = ['value' => $value, ...$parameters];
         $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
+
+        // Always register the resolved ids so that following blocks can deduplicate against them, even
+        // when this block has "exclude_duplicates" disabled.
+        foreach ($result as $item) {
+            $this->deduplicationTracker->add($resourceKey, $item['id']);
+        }
 
         $fullTotal = $smartContentProvider->countBy($countByFilters, $params);
         $total = $limit ? \min($limit, $fullTotal) : $fullTotal;
@@ -148,8 +183,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
             'limit' => $limit,
             'maxPerPage' => $maxPerPage,
 
-            // TODO duplicates
-            'excluded' => [],
+            'excluded' => $excluded,
         ];
 
         $configuration = $smartContentProvider->getConfiguration();

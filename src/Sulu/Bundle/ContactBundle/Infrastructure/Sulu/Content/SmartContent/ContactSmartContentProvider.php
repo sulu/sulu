@@ -39,6 +39,7 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Contact
  *      offset: int,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
+ *      excluded?: string[],
  *  }
  * @phpstan-type ContactSmartContentCountFilters array{
  *      categories: int[],
@@ -56,6 +57,7 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Contact
  *      limit: int|null,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
+ *      excluded?: string[],
  *  }
  */
 readonly class ContactSmartContentProvider implements SmartContentProviderInterface
@@ -142,6 +144,12 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
     ): void {
         foreach ($sortBys as $sortBy => $sortMethod) {
             $queryBuilder->orderBy($sortBy, $sortMethod);
+        }
+
+        $excluded = $filters['excluded'] ?? [];
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
         }
 
         $tagIds = $filters['tags'];
