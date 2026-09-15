@@ -16,7 +16,10 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\DependencyInjection\SuluMediaExtension;
+use Sulu\Bundle\MediaBundle\EventListener\ParallelImageGenerationLimiter;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Process\ExecutableFinder;
+use Symfony\Component\Semaphore\SemaphoreFactory;
 
 class SuluMediaExtensionTest extends AbstractExtensionTestCase
 {
@@ -87,6 +90,39 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
                 'mimeTypes' => ['audio/*'],
             ],
         ]);
+    }
+
+    public function testLoadWithParallelImageGenerationLimit(): void
+    {
+        if (!\class_exists(SemaphoreFactory::class)) {
+            $this->markTestSkipped('Requires symfony/semaphore.');
+        }
+
+        $this->executableFinder->find(Argument::any())->willReturn(true);
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->load([
+            'format_manager' => [
+                'parallel_image_generation' => [
+                    'limit' => 4,
+                ],
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasParameter('sulu_media.parallel_image_generation.limit', 4);
+        $this->assertContainerBuilderHasService('sulu_media.parallel_image_generation.limiter', ParallelImageGenerationLimiter::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument('sulu_media.parallel_image_generation.limiter', 0, new Reference('semaphore.factory'));
+        $this->assertContainerBuilderHasServiceDefinitionWithTag('sulu_media.parallel_image_generation.limiter', 'kernel.event_subscriber');
+    }
+
+    public function testLoadWithoutParallelImageGenerationLimit(): void
+    {
+        $this->executableFinder->find(Argument::any())->willReturn(true);
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->load([]);
+
+        $this->assertContainerBuilderNotHasService('sulu_media.parallel_image_generation.limiter');
     }
 
     public function testConfigureFileValidator(): void
