@@ -6,9 +6,9 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ### Reference tracking for page and teaser selections
 
-The `single_page_selection` and `teaser_selection` content types now register their targets in the
+The `single_page_selection`, `page_selection` and `teaser_selection` content types now register their targets in the
 reference table, like the snippet and media selections already do. Content that uses these types only
-gets reference rows on its next publish, so refresh existing content once after upgrading:
+gets reference rows when it is saved or published again, so refresh existing content once after upgrading:
 
 ```bash
 bin/adminconsole sulu:reference:refresh

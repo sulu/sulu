@@ -112,6 +112,7 @@ class PageReferenceProviderTest extends SuluTestCase
             'template' => 'test_page',
             'url' => '/test',
             'page' => $targetPage->getUuid(),
+            'pages' => [$targetPage->getUuid()],
             'teaser' => ['items' => [['type' => 'pages', 'id' => $targetPage->getUuid()]]],
         ]);
 
@@ -125,8 +126,8 @@ class PageReferenceProviderTest extends SuluTestCase
         /** @var Reference[] $references */
         $references = $this->referenceRepository->findBy(['referenceContext' => 'test'], ['referenceProperty' => 'ASC']);
 
-        // one reference from the single_page_selection, one from the teaser_selection, both pointing at the target page
-        $this->assertCount(2, $references);
+        // one reference each from the single_page_selection, page_selection and teaser_selection, all pointing at the target page
+        $this->assertCount(3, $references);
         foreach ($references as $reference) {
             self::assertSame(PageDocument::RESOURCE_KEY, $reference->getResourceKey());
             self::assertSame($targetPage->getUuid(), $reference->getResourceId());

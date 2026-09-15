@@ -53,6 +53,13 @@
             </meta>
         </property>
 
+        <property name="pages" type="page_selection">
+            <meta>
+                <title lang="de">Seiten</title>
+                <title lang="en">Pages</title>
+            </meta>
+        </property>
+
         <property name="teaser" type="teaser_selection">
             <meta>
                 <title lang="de">Teaser</title>
