@@ -62,6 +62,8 @@ services:
             - '@sulu_content.content_aggregator'
             - '@sulu_content.content_data_mapper'
             - Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example
+            - null
+            - '@sulu_content.content_normalizer'
         tags:
             - { name: 'sulu.context', context: 'admin' }
             - { name: 'sulu_preview.object_provider', provider-key: 'examples' }
