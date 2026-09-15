@@ -8,6 +8,10 @@ export default class ResourceRequester {
         return Requester.get(resourceRouteRegistry.getUrl('detail', resourceKey, {...parameters}));
     }
 
+    static prefill(resourceKey: string, parameters: ?Object) {
+        return Requester.get(resourceRouteRegistry.getUrl('prefill', resourceKey, {...parameters}));
+    }
+
     static post(resourceKey: string, data: ?Object, parameters: ?Object) {
         return Requester.post(resourceRouteRegistry.getUrl('detail', resourceKey, {...parameters}), data);
     }
