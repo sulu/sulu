@@ -6,7 +6,7 @@
 
 The `teaser_selection` content type now registers its items in the reference table, like the
 `single_page_selection` content type already does. Content using teaser selections only gets reference
-rows on its next publish, so refresh existing content once after upgrading:
+rows on its next save, so refresh existing content once after upgrading:
 
 ```bash
 bin/console sulu:reference:refresh

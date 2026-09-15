@@ -58,8 +58,8 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $data = [
             'presentAs' => 'two-columns',
             'items' => [
-                ['id' => '123', 'type' => 'article'],
-                ['id' => '456', 'type' => 'page'],
+                ['id' => '123', 'type' => 'articles'],
+                ['id' => '456', 'type' => 'pages'],
             ],
         ];
 
@@ -71,34 +71,34 @@ class TeaserSelectionPropertyResolverTest extends TestCase
 
         $resolvable1 = $content[0];
         $this->assertInstanceOf(ResolvableResource::class, $resolvable1);
-        $this->assertSame('article::123', $resolvable1->getId());
+        $this->assertSame('articles::123', $resolvable1->getId());
         $this->assertSame('teaser', $resolvable1->getResourceLoaderKey());
 
         $resolvable2 = $content[1];
         $this->assertInstanceOf(ResolvableResource::class, $resolvable2);
-        $this->assertSame('page::456', $resolvable2->getId());
+        $this->assertSame('pages::456', $resolvable2->getId());
         $this->assertSame('teaser', $resolvable2->getResourceLoaderKey());
 
         $view = $contentView->getView();
         $this->assertSame('two-columns', $view['presentAs']);
         $this->assertIsArray($view['items']);
         $this->assertCount(2, $view['items']);
-        $this->assertSame(['id' => '123', 'type' => 'article'], $view['items'][0]);
-        $this->assertSame(['id' => '456', 'type' => 'page'], $view['items'][1]);
+        $this->assertSame(['id' => '123', 'type' => 'articles'], $view['items'][0]);
+        $this->assertSame(['id' => '456', 'type' => 'pages'], $view['items'][1]);
 
         $references = $contentView->getReferences();
         $this->assertCount(2, $references);
         $this->assertSame('123', $references[0]->getResourceId());
-        $this->assertSame('article', $references[0]->getResourceKey());
+        $this->assertSame('articles', $references[0]->getResourceKey());
         $this->assertSame('456', $references[1]->getResourceId());
-        $this->assertSame('page', $references[1]->getResourceKey());
+        $this->assertSame('pages', $references[1]->getResourceKey());
     }
 
     public function testResolveCustomResourceLoader(): void
     {
         $data = [
             'items' => [
-                ['id' => '123', 'type' => 'article'],
+                ['id' => '123', 'type' => 'articles'],
             ],
         ];
 
@@ -110,22 +110,22 @@ class TeaserSelectionPropertyResolverTest extends TestCase
 
         $resolvable = $content[0];
         $this->assertInstanceOf(ResolvableResource::class, $resolvable);
-        $this->assertSame('article::123', $resolvable->getId());
+        $this->assertSame('articles::123', $resolvable->getId());
         $this->assertSame('custom_teaser', $resolvable->getResourceLoaderKey());
 
         $references = $contentView->getReferences();
         $this->assertCount(1, $references);
         $this->assertSame('123', $references[0]->getResourceId());
-        $this->assertSame('article', $references[0]->getResourceKey());
+        $this->assertSame('articles', $references[0]->getResourceKey());
     }
 
     public function testResolveDataWithEmptyIdOrType(): void
     {
         $data = [
             'items' => [
-                ['id' => '', 'type' => 'article'],
+                ['id' => '', 'type' => 'articles'],
                 ['id' => '123', 'type' => ''],
-                ['id' => '456', 'type' => 'page'],
+                ['id' => '456', 'type' => 'pages'],
             ],
         ];
 
@@ -138,7 +138,7 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $references = $contentView->getReferences();
         $this->assertCount(1, $references);
         $this->assertSame('456', $references[0]->getResourceId());
-        $this->assertSame('page', $references[0]->getResourceKey());
+        $this->assertSame('pages', $references[0]->getResourceKey());
     }
 
     public function testResolveWithResourceCallback(): void
@@ -147,7 +147,7 @@ class TeaserSelectionPropertyResolverTest extends TestCase
             'items' => [
                 [
                     'id' => '123',
-                    'type' => 'article',
+                    'type' => 'articles',
                     'title' => 'Article Title',
                     'description' => 'Article Description',
                     'mediaId' => 11,
@@ -163,10 +163,10 @@ class TeaserSelectionPropertyResolverTest extends TestCase
 
         $resolvable = $content[0];
         $this->assertInstanceOf(ResolvableResource::class, $resolvable);
-        $this->assertSame('article::123', $resolvable->getId());
+        $this->assertSame('articles::123', $resolvable->getId());
         $this->assertSame('teaser', $resolvable->getResourceLoaderKey());
 
-        $teaser = new Teaser('123', 'article', 'en', '', '', '', 'http://example.com', 1);
+        $teaser = new Teaser('123', 'articles', 'en', '', '', '', 'http://example.com', 1);
         $mergedTeaser = $resolvable->executeResourceCallback($teaser);
         $this->assertInstanceOf(Teaser::class, $mergedTeaser);
         $this->assertSame('Article Title', $mergedTeaser->getTitle());
