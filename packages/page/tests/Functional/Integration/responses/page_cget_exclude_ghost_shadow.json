@@ -18,6 +18,7 @@
                 "webspaceKey": "sulu-io",
                 "template": null,
                 "publishedState": false,
+                "workflowPlace": null,
                 "linkProvider": null,
                 "hasChildren": true,
                 "_embedded": {
@@ -37,6 +38,7 @@
                             "version" : 0,
                             "locale": "de",
                             "publishedState": false,
+                            "workflowPlace": "unpublished",
                             "shadowLocale": null,
                             "template": "default",
                             "title": "Test Page",

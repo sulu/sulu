@@ -12,7 +12,8 @@
                 "published": null,
                 "publishedState": false,
                 "templateKey": "snippet",
-                "title": "Test Snippet 2"
+                "title": "Test Snippet 2",
+                "workflowPlace": "unpublished"
             }
         ]
     },

@@ -17,6 +17,7 @@
                 "template": null,
                 "version": null,
                 "publishedState": false,
+                "workflowPlace": null,
                 "linkProvider": null,
                 "hasChildren": true,
                 "_hasPermissions": false,
@@ -38,6 +39,7 @@
                             "template": "default",
                             "version" : 0,
                             "publishedState": false,
+                            "workflowPlace": "unpublished",
                             "linkProvider": null,
                             "hasChildren": true,
                             "_hasPermissions": false
@@ -58,6 +60,7 @@
                             "template": "default",
                             "version" : 0,
                             "publishedState": true,
+                            "workflowPlace": "published",
                             "linkProvider": null,
                             "hasChildren": false,
                             "_hasPermissions": false
@@ -78,6 +81,7 @@
                             "template": "default",
                             "version" : 0,
                             "publishedState": false,
+                            "workflowPlace": "unpublished",
                             "linkProvider": null,
                             "hasChildren": false,
                             "_hasPermissions": false

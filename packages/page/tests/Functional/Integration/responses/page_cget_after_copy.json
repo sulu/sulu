@@ -17,6 +17,7 @@
                 "webspaceKey": "sulu-io",
                 "template": null,
                 "publishedState": false,
+                "workflowPlace": null,
                 "linkProvider": null,
                 "hasChildren": true,
                 "_hasPermissions": false,
@@ -38,6 +39,7 @@
                             "webspaceKey": "sulu-io",
                             "template": "default",
                             "publishedState": false,
+                            "workflowPlace": "unpublished",
                             "linkProvider": null,
                             "hasChildren": true,
                             "_hasPermissions": false
@@ -58,6 +60,7 @@
                             "webspaceKey": "sulu-io",
                             "template": "default",
                             "publishedState": true,
+                            "workflowPlace": "published",
                             "linkProvider": null,
                             "hasChildren": true,
                             "_hasPermissions": false,
@@ -79,6 +82,7 @@
                                         "webspaceKey": "sulu-io",
                                         "template": "default",
                                         "publishedState": false,
+                                        "workflowPlace": "unpublished",
                                         "linkProvider": null,
                                         "hasChildren": false,
                                         "_hasPermissions": false
