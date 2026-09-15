@@ -261,5 +261,12 @@
                 </params>
             </filter>
         </property>
+
+        <property name="workflowPlace" translation="sulu_content.workflow_place" visibility="never">
+            <field-name>workflowPlace</field-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+        </property>
     </properties>
 </list>
