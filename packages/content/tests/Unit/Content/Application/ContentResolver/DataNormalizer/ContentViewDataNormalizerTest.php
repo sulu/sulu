@@ -406,6 +406,30 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame([], $result['view']);
     }
 
+    public function testFlatPathFlattensNestedEntitiesAndDropsTheirView(): void
+    {
+        $normalizer = $this->createNormalizer(self::CORE_PATHS + ['product' => ['product']]);
+
+        $variant = [
+            'resource' => new Example(),
+            'content' => ['title' => 'X-1'],
+            'view' => ['title' => ['type' => 'text_line']],
+            'extension' => [],
+        ];
+
+        $result = $normalizer->normalizeContentViewData(
+            ['template' => [], 'product' => ['code' => 'X', 'variants' => [$variant]]],
+            [],
+            new Example(),
+        );
+
+        $normalizer->replaceNestedContentViews($result);
+
+        // @phpstan-ignore-next-line offsetAccess.notFound
+        self::assertSame(['code' => 'X', 'variants' => [['title' => 'X-1']]], $result['product']);
+        self::assertSame([], $result['view']);
+    }
+
     public function testContentPathViewTwinKeepsHigherPriorityKeys(): void
     {
         // "a" has higher priority and runs first.
