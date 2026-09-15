@@ -41,6 +41,12 @@ final class ParallelImageGenerationLimiter implements EventSubscriberInterface
     private const REQUEST_ATTRIBUTE = '_sulu_media_parallel_image_generation_semaphore';
 
     /**
+     * Seconds after which a slot is freed even if it was not released, e.g. when the
+     * worker holding it was killed while generating the image.
+     */
+    private const SEMAPHORE_TTL = 60.0;
+
+    /**
      * Microseconds between two attempts to take a free slot.
      */
     private const WAIT_INTERVAL = 50000;
@@ -51,7 +57,7 @@ final class ParallelImageGenerationLimiter implements EventSubscriberInterface
         /**
          * Seconds after which a request waiting for a free slot gives up.
          */
-        private int $maxWaitTime = 60,
+        private int $maxWaitTime = 20,
     ) {
     }
 
@@ -74,7 +80,7 @@ final class ParallelImageGenerationLimiter implements EventSubscriberInterface
             return;
         }
 
-        $semaphore = $this->semaphoreFactory->createSemaphore(self::SEMAPHORE_RESOURCE, $this->limit);
+        $semaphore = $this->semaphoreFactory->createSemaphore(self::SEMAPHORE_RESOURCE, $this->limit, 1, self::SEMAPHORE_TTL);
 
         $deadline = \microtime(true) + $this->maxWaitTime;
         while (!$semaphore->acquire()) {

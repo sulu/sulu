@@ -35,7 +35,7 @@ class ParallelImageGenerationLimiterTest extends TestCase
         $semaphore->release()->shouldBeCalledOnce();
 
         $semaphoreFactory = $this->prophesize(SemaphoreFactory::class);
-        $semaphoreFactory->createSemaphore(ParallelImageGenerationLimiter::SEMAPHORE_RESOURCE, 3)
+        $semaphoreFactory->createSemaphore(ParallelImageGenerationLimiter::SEMAPHORE_RESOURCE, 3, 1, 60.0)
             ->willReturn($semaphore->reveal())
             ->shouldBeCalledOnce();
 
@@ -84,7 +84,7 @@ class ParallelImageGenerationLimiterTest extends TestCase
         $semaphore->release()->shouldNotBeCalled();
 
         $semaphoreFactory = $this->prophesize(SemaphoreFactory::class);
-        $semaphoreFactory->createSemaphore(ParallelImageGenerationLimiter::SEMAPHORE_RESOURCE, 3)
+        $semaphoreFactory->createSemaphore(ParallelImageGenerationLimiter::SEMAPHORE_RESOURCE, 3, 1, 60.0)
             ->willReturn($semaphore->reveal());
 
         $limiter = new ParallelImageGenerationLimiter($semaphoreFactory->reveal(), 3, 0);
