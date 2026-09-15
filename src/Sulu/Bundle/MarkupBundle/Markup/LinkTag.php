@@ -212,7 +212,11 @@ class LinkTag implements TagInterface
      */
     private function getPartsFromHref($href): array
     {
-        $href = (string) $href ?: null;
+        // The href comes from an html attribute, so "#", "?" and "&" may be escaped as entities
+        // and have to be decoded before they can be used as separators. Quotes are deliberately
+        // left encoded: the parts are re-appended to the href that parseAll() prints without
+        // escaping, so decoding a quote here would let it break out of the attribute.
+        $href = $href ? \html_entity_decode((string) $href, \ENT_NOQUOTES | \ENT_HTML5, 'UTF-8') : null;
 
         /** @var string[] $hrefParts */
         $hrefParts = $href ? \explode('#', $href, 2) : [];
