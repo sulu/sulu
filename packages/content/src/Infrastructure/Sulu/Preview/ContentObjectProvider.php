@@ -21,10 +21,11 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
-use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Provider\CachablePreviewDefaultsProviderInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
+use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
@@ -36,7 +37,7 @@ use Sulu\Content\Domain\Model\TemplateInterface;
  * @template B of DimensionContentInterface
  * @template T of ContentRichEntityInterface<B>
  */
-class ContentObjectProvider implements PreviewDefaultsProviderInterface
+class ContentObjectProvider implements CachablePreviewDefaultsProviderInterface
 {
     /**
      * @param class-string<T> $contentRichEntityClass
@@ -47,7 +48,8 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
         private ContentAggregatorInterface $contentAggregator,
         private ContentDataMapperInterface $contentDataMapper,
         private string $contentRichEntityClass,
-        private ?string $securityContext = null
+        private ?string $securityContext = null,
+        private ?ContentNormalizerInterface $contentNormalizer = null,
     ) {
     }
 
@@ -159,6 +161,29 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
         }
 
         return $defaults;
+    }
+
+    public function serialize(PreviewContext $previewContext, array $defaults): string
+    {
+        $object = $defaults['object'] ?? null;
+        if (null === $this->contentNormalizer || !$object instanceof DimensionContentInterface) {
+            return '';
+        }
+
+        return \json_encode($this->contentNormalizer->normalize($object), \JSON_THROW_ON_ERROR);
+    }
+
+    public function deserialize(PreviewContext $previewContext, string $serializedDefaults): array
+    {
+        $defaults = $this->getDefaults($previewContext);
+        if ([] === $defaults || '' === $serializedDefaults) {
+            return $defaults;
+        }
+
+        /** @var array<string, mixed> $data */
+        $data = \json_decode($serializedDefaults, true, 512, \JSON_THROW_ON_ERROR);
+
+        return $this->updateValues($previewContext, $defaults, $data);
     }
 
     public function getSecurityContext(PreviewContext $previewContext): ?string

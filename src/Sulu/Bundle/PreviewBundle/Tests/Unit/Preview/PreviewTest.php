@@ -22,6 +22,7 @@ use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
+use Sulu\Bundle\PreviewBundle\Preview\Provider\CachablePreviewDefaultsProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Provider\PreviewDefaultsProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -804,6 +805,96 @@ class PreviewTest extends TestCase
         $this->assertEquals(
             $expectedData,
             \json_decode($cacheItemResult, true)
+        );
+    }
+
+    public function testRenderAfterUpdateKeepsTheEditedStateOfACachableProvider(): void
+    {
+        $preview = $this->createPreviewWithCachableProvider();
+        $options = ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale];
+
+        $token = $preview->start('cachable-provider', '1', 1, [], $options);
+
+        $this->assertSame('<html><body><h1>Saved</h1></body></html>', $preview->render($token, $options));
+        $this->assertSame('<html><body><h1>Edited</h1></body></html>', $preview->update($token, ['title' => 'Edited'], $options));
+
+        // the reload button of the preview renders again without sending the form data
+        $this->assertSame('<html><body><h1>Edited</h1></body></html>', $preview->render($token, $options));
+
+        /** @var string $cachedContent */
+        $cachedContent = $this->cache->getItem($token)->get();
+        $this->assertStringContainsString('"object":"{\\"title\\":\\"Edited\\"}"', $cachedContent);
+    }
+
+    public function testRenderFallsBackToTheDefaultsForAnEntryNotSerializedByTheCachableProvider(): void
+    {
+        $preview = $this->createPreviewWithCachableProvider();
+        $options = ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale];
+
+        $token = \md5('cachable-provider.1.1');
+        $cacheItem = $this->cache->getItem($token);
+        $cacheItem->set(\json_encode([
+            'id' => '1',
+            'providerKey' => 'cachable-provider',
+            'object' => ['object' => ['title' => 'Edited'], '_controller' => 'SuluTestBundle:Test:render'],
+            'objectClass' => 'array',
+            'userId' => 1,
+            'html' => null,
+            'locale' => $this->locale,
+        ]));
+        $this->cache->save($cacheItem);
+
+        $this->assertSame('<html><body><h1>Saved</h1></body></html>', $preview->render($token, $options));
+    }
+
+    private function createPreviewWithCachableProvider(): Preview
+    {
+        $provider = new class() implements CachablePreviewDefaultsProviderInterface {
+            public function getDefaults(PreviewContext $previewContext): array
+            {
+                return ['object' => ['title' => 'Saved'], '_controller' => 'SuluTestBundle:Test:render'];
+            }
+
+            public function updateValues(PreviewContext $previewContext, array $defaults, array $data): array
+            {
+                return [...$defaults, 'object' => $data];
+            }
+
+            public function updateContext(PreviewContext $previewContext, array $defaults, array $context): array
+            {
+                return $defaults;
+            }
+
+            public function getSecurityContext(PreviewContext $previewContext): ?string
+            {
+                return null;
+            }
+
+            public function serialize(PreviewContext $previewContext, array $defaults): string
+            {
+                return (string) \json_encode($defaults['object']);
+            }
+
+            public function deserialize(PreviewContext $previewContext, string $serializedDefaults): array
+            {
+                return [...$this->getDefaults($previewContext), 'object' => \json_decode($serializedDefaults, true)];
+            }
+        };
+
+        $options = ['webspaceKey' => $this->webspaceKey, 'locale' => $this->locale];
+        foreach (['Saved', 'Edited'] as $title) {
+            $defaults = ['object' => ['title' => $title], '_controller' => 'SuluTestBundle:Test:render'];
+
+            $this->renderer->render($defaults, '1', false, $options)
+                ->willReturn('<html><body><!-- CONTENT-REPLACER --><h1>' . $title . '</h1><!-- CONTENT-REPLACER --></body></html>');
+            $this->renderer->render($defaults, '1', true, $options)
+                ->willReturn('<h1>' . $title . '</h1>');
+        }
+
+        return new Preview(
+            new PreviewObjectProviderRegistry(['cachable-provider' => $provider]),
+            $this->cache,
+            $this->renderer->reveal()
         );
     }
 }
