@@ -34,9 +34,9 @@ use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
-use Sulu\Content\Infrastructure\Sulu\Preview\PreviewDimensionContentCollection;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Admin\ExampleAdmin;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
@@ -323,25 +323,46 @@ class ContentObjectProviderTest extends TestCase
         ]
     ): void {
         $example = new Example();
-        $exampleDimensionContent = new ExampleDimensionContent($example);
 
-        $previewContext = new PreviewContext(1, $locale);
-        $defaults = [
-            'object' => $exampleDimensionContent,
-            '_controller' => ContentController::class . '::indexAction',
-            'view' => 'pages/default',
-        ];
-        $this->contentObjectProvider->updateValues($previewContext, $defaults, $data);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $example->addDimensionContent($unlocalizedDimensionContent);
+
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale($locale);
+        $localizedDimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $example->addDimensionContent($localizedDimensionContent);
+
+        $mergedDimensionContent = new ExampleDimensionContent($example);
 
         $this->contentDataMapper->map(
             Argument::that(
-                function(PreviewDimensionContentCollection $dimensionContentCollection) use ($exampleDimensionContent) {
-                    return $exampleDimensionContent === $dimensionContentCollection->getDimensionContent([]);
+                function($dimensionContentCollection) use ($unlocalizedDimensionContent, $localizedDimensionContent) {
+                    // the localized and unlocalized dimension contents must be mapped as separate instances
+                    return $dimensionContentCollection instanceof DimensionContentCollection
+                        && ExampleDimensionContent::class === $dimensionContentCollection->getDimensionContentClass()
+                        && $unlocalizedDimensionContent === $dimensionContentCollection->getDimensionContent(['locale' => null])
+                        && $localizedDimensionContent === $dimensionContentCollection->getDimensionContent(['locale' => 'de']);
                 }
             ),
-            ['locale' => 'de', 'stage' => 'draft', 'version' => 0],
+            Argument::type('array'),
             $data
         )->shouldBeCalledTimes(1);
+
+        $this->contentAggregator->aggregate($example, Argument::type('array'))
+            ->willReturn($mergedDimensionContent)
+            ->shouldBeCalledTimes(1);
+
+        $previewContext = new PreviewContext(1, $locale);
+        $defaults = [
+            'object' => $localizedDimensionContent,
+            '_controller' => ContentController::class . '::indexAction',
+            'view' => 'pages/default',
+        ];
+
+        $result = $this->contentObjectProvider->updateValues($previewContext, $defaults, $data);
+
+        $this->assertSame($mergedDimensionContent, $result['object']);
     }
 
     /**

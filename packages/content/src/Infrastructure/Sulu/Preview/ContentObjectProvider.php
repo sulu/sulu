@@ -27,6 +27,7 @@ use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
@@ -123,12 +124,22 @@ class ContentObjectProvider implements PreviewDefaultsProviderInterface
             throw new \RuntimeException('The ContentObjectProvider requires a locale to be set in the PreviewContext.');
         }
 
-        $previewDimensionContentCollection = new PreviewDimensionContentCollection($object, $locale);
+        $dimensionContents = $object->getResource()->getDimensionContents();
+        $dimensionContentCollection = new DimensionContentCollection(
+            $dimensionContents,
+            [
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_DRAFT,
+            ],
+            \get_class($object)
+        );
         $this->contentDataMapper->map(
-            $previewDimensionContentCollection,
-            $previewDimensionContentCollection->getDimensionAttributes(),
+            $dimensionContentCollection,
+            $dimensionContentCollection->getDimensionAttributes(),
             $data
         );
+
+        $defaults['object'] = $this->contentAggregator->aggregate($object->getResource(), $dimensionContentCollection->getDimensionAttributes());
 
         return $defaults;
     }
