@@ -3,6 +3,16 @@ imports:
 
 framework:
     router: { resource: "%kernel.project_dir%/config/routing_admin.yml" }
+    messenger:
+        transports:
+            async_validation:
+                dsn: 'in-memory://'
+                # no retries, so a worker run reaches the final failure in one go
+                retry_strategy:
+                    max_retries: 0
+        routing:
+            'Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage': async_validation
+
 services:
     sulu_preview.preview.kernel_factory:
         class: Sulu\Content\Tests\Application\PreviewKernelFactory

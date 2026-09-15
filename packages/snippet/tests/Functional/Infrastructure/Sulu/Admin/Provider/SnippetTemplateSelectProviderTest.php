@@ -39,7 +39,12 @@ class SnippetTemplateSelectProviderTest extends SuluTestCase
         // (the XML expression used to read "templates ?? null").
         $options = $this->getTemplateKeyFilterOptions(new Request());
 
-        $this->assertSame(['snippet-alternate', 'snippet'], \array_keys($options));
+        // Sorted here, not asserted in registration order: that order comes from reading the template
+        // directory, which differs between filesystems.
+        $keys = \array_keys($options);
+        \sort($keys);
+
+        $this->assertSame(['review', 'snippet', 'snippet-alternate'], $keys);
     }
 
     public function testGetFilterValuesWithTemplatesParamNarrowsOptions(): void

@@ -13,3 +13,9 @@ framework:
 twig:
     paths:
         - '%kernel.project_dir%/templates'
+
+# One named workflow, opted into by the `review` template only: every other template publishes directly.
+sulu_content:
+    request_workflows:
+        review:
+            required_user_approvals: 1

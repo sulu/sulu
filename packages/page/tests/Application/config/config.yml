@@ -10,3 +10,15 @@ framework:
 twig:
     paths:
         - '%kernel.project_dir%/templates'
+
+# Two named workflows, opted into by the `review` and `review-seo` templates: every other template
+# publishes directly.
+sulu_content:
+    request_workflows:
+        review:
+            required_user_approvals: 1
+        review_seo:
+            required_user_approvals: 1
+            pre_validators:
+                seo_required:
+                    fields: ['title', 'description']

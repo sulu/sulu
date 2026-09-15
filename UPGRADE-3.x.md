@@ -59,6 +59,11 @@ alone: `live` does not imply it.
 
 - The permission mask meaning "everything" is 255, not 127: `PermissionTypes::REVIEW` occupies bit
   128. Code comparing a mask against 127 to mean full access has to be updated.
+- Publishing through the API takes `live`, or `edit` together with an approved active request: a role
+  with `edit` alone now gets a 403 where it previously published. `reject` and `reject_draft` take
+  `review`. A call with no authenticated user publishes on the system's behalf and passes through.
+- A write to content covered by an open request answers 409. Publishing, rejecting and cancelling must
+  be sent as a payload-less `POST ?action=...`; a `PUT` carrying the form is a write and is refused.
 ## 3.0.9
 
 ### Widened webspace, slug and template key column lengths
