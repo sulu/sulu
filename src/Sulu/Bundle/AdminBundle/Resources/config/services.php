@@ -67,6 +67,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\Numbe
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\SelectionPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\SelectPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\SingleSelectionPropertyMetadataMapper;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\TablePropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\TeaserSelectionPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\TextPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
@@ -292,6 +293,9 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_admin.property_metadata_mapper.teaser_selection', TeaserSelectionPropertyMetadataMapper::class)
         ->args([new Reference('sulu_admin.property_metadata_min_max_value_resolver')])
         ->tag('sulu_admin.property_metadata_mapper', ['type' => 'teaser_selection']);
+
+    $services->set('sulu_admin.property_metadata_mapper.table', TablePropertyMetadataMapper::class)
+        ->tag('sulu_admin.property_metadata_mapper', ['type' => 'table']);
 
     $services->set('sulu_admin.schema_metadata_provider', SchemaMetadataProvider::class)
         ->args([new Reference('sulu_admin.property_metadata_mapper_registry')]);
