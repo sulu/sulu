@@ -34,12 +34,6 @@ class ContentObjectProviderTest extends SuluTestCase
         $this->contentObjectProvider = $contentObjectProvider;
     }
 
-    /**
-     * Regression test for #8574: the preview must map the localized and unlocalized dimension
-     * contents as separate instances and merge them back together, so that unlocalized values
-     * (here the "unlocalizedValue" property of the "preview-unlocalized" template) survive
-     * alongside the localized ones instead of being overwritten.
-     */
     public function testUpdateValuesMergesUnlocalizedAndLocalizedValues(): void
     {
         $example = new Example();
