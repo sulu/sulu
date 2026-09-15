@@ -23,6 +23,8 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterf
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreNotExistsException;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
@@ -35,7 +37,7 @@ use Sulu\Component\Content\SimpleContentType;
 /**
  * Provides content-type for selecting teasers.
  */
-class TeaserContentType extends SimpleContentType implements PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
+class TeaserContentType extends SimpleContentType implements PreResolvableContentTypeInterface, PropertyMetadataMapperInterface, ReferenceContentTypeInterface
 {
     public function __construct(
         private TeaserProviderPoolInterface $teaserProviderPool,
@@ -128,6 +130,29 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
             } catch (ReferenceStoreNotExistsException $exception) {
                 // ignore not existing stores
             }
+        }
+    }
+
+    public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
+    {
+        foreach ($this->getItems($property) as $item) {
+            if (!\is_array($item)) {
+                continue;
+            }
+
+            $type = $item['type'] ?? null;
+            $id = $item['id'] ?? null;
+
+            // the teaser "type" is the provider alias, which matches the resource key of the referenced resource
+            if (!\is_string($type) || '' === $type || (!\is_string($id) && !\is_int($id)) || '' === (string) $id) {
+                continue;
+            }
+
+            $referenceCollector->addReference(
+                $type,
+                (string) $id,
+                $propertyPrefix . $property->getName()
+            );
         }
     }
 

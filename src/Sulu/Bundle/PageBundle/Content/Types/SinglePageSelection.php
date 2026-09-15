@@ -12,6 +12,9 @@
 namespace Sulu\Bundle\PageBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
@@ -20,7 +23,7 @@ use Sulu\Component\Content\SimpleContentType;
 /**
  * ContentType for SinglePageSelection.
  */
-class SinglePageSelection extends SimpleContentType implements PreResolvableContentTypeInterface
+class SinglePageSelection extends SimpleContentType implements PreResolvableContentTypeInterface, ReferenceContentTypeInterface
 {
     public function __construct(
         private ReferenceStoreInterface $referenceStore
@@ -70,5 +73,19 @@ class SinglePageSelection extends SimpleContentType implements PreResolvableCont
         }
 
         $this->referenceStore->add($uuid);
+    }
+
+    public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
+    {
+        $uuid = $property->getValue();
+        if (!\is_string($uuid) || '' === $uuid) {
+            return;
+        }
+
+        $referenceCollector->addReference(
+            BasePageDocument::RESOURCE_KEY,
+            $uuid,
+            $propertyPrefix . $property->getName()
+        );
     }
 }
