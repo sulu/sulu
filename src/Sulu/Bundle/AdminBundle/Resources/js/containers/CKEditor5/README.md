@@ -14,7 +14,7 @@ const handleBlur = () => alert('Text editing finished!');
 
 <div>
     <CKEditor5
-        config={{enterMode: 'p', features: [], tags: ['strong', 'i']}}
+        config={{enterMode: 'p', attributes: [], tags: ['strong', 'i']}}
         onBlur={handleBlur}
         onChange={handleChange}
         value={value}
@@ -66,7 +66,7 @@ A tag key names the element the editor produces, so register Italic under `i` an
 may read more than it writes, Italic also upcasts an existing `<em>`, and it may add markup around the element, `table`
 renders a `<figure class="table">` around the table.
 
-A key does not have to be a tag. Anything a plugin adds that is not an element of its own is a feature, which is how
+A key does not have to be a tag: an attribute the editor writes on an existing element is configured under `attributes` and registered the same way. Anything a plugin adds that is not an element of its own is a feature, which is how
 attributes and inline styles are configured. `align` writes a `text-align` style on an existing element, and `lang`
 writes a `lang` attribute on a `span`:
 
@@ -80,10 +80,10 @@ ckeditorConfigRegistry.add((config) => ({
 }), 'lang');
 ```
 
-A project enables it with `features: {lang: true}`. Sulu registers this plugin but enables it in no shipped config,
+A project enables it with `attributes: {lang: true}`. Sulu registers this plugin but enables it in no shipped config,
 because marking the language of a text part produces markup the editor could not produce before.
 
-The tags and features themselves are configured in the Symfony configuration, see the `TextEditor` container. A key
+The tags and attributes themselves are configured in the Symfony configuration, see the `TextEditor` container. A key
 that is enabled there but has neither a plugin nor a config registered for it is reported with a warning in the
 browser console.
 

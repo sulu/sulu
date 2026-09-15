@@ -18,13 +18,13 @@ export function resolveTextEditorConfig(options: ?SchemaOptions): TextEditorConf
         throw new Error('The passed "config" must be a string');
     }
 
-    const {enterMode, features, tags} = textEditorConfigRegistry.get(configNameValue);
+    const {enterMode, attributes, tags} = textEditorConfigRegistry.get(configNameValue);
     const deprecatedEnterMode = readDeprecatedEnterMode(options);
     const deprecatedFormats = readDeprecatedFormats(options);
 
     return {
         enterMode: deprecatedEnterMode || enterMode,
-        features,
+        attributes,
         // A "formats" param replaces the heading tags of the config, even when it names none of them.
         tags: deprecatedFormats === undefined
             ? tags

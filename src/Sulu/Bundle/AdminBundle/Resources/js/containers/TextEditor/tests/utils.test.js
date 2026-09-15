@@ -6,12 +6,12 @@ beforeEach(() => {
     textEditorConfigRegistry.clear();
     textEditorConfigRegistry.add('default', {
         enterMode: 'p',
-        features: ['align'],
+        attributes: ['align'],
         tags: ['strong', 'em', 'h2', 'h3'],
     });
     textEditorConfigRegistry.add('mini', {
         enterMode: 'br',
-        features: [],
+        attributes: [],
         tags: ['a', 'strong'],
     });
 });
@@ -19,7 +19,7 @@ beforeEach(() => {
 test('Resolve to the default config if no config param is given', () => {
     expect(resolveTextEditorConfig({})).toEqual({
         enterMode: 'p',
-        features: ['align'],
+        attributes: ['align'],
         tags: ['strong', 'em', 'h2', 'h3'],
     });
 });
@@ -29,7 +29,7 @@ test('Resolve to the config named by the config param', () => {
 
     expect(resolveTextEditorConfig(options)).toEqual({
         enterMode: 'br',
-        features: [],
+        attributes: [],
         tags: ['a', 'strong'],
     });
 });

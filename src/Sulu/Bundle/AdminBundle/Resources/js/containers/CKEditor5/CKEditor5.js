@@ -59,9 +59,9 @@ export default class CKEditor5 extends React.Component<Props> {
     };
 
     get enabledKeys(): Array<string> {
-        const {config: {features, tags}} = this.props;
+        const {config: {attributes, tags}} = this.props;
 
-        return [...tags, ...features];
+        return [...tags, ...attributes];
     }
 
     componentDidUpdate() {
@@ -186,7 +186,7 @@ export default class CKEditor5 extends React.Component<Props> {
 
         if (unclaimedKeys.length > 0) {
             log.warn(
-                'The text editor config enables the following tags or features, but no plugin or config is ' +
+                'The text editor config enables the following tags or attributes, but no plugin or config is ' +
                 'registered for them: ' + unclaimedKeys.sort().join(', ')
             );
         }

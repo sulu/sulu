@@ -10,12 +10,12 @@ jest.mock('../registries/textEditorRegistry', () => ({
     get: jest.fn(),
 }));
 
-const defaultConfig = {enterMode: 'p', features: ['align'], tags: ['strong', 'em']};
+const defaultConfig = {enterMode: 'p', attributes: ['align'], tags: ['strong', 'em']};
 
 beforeEach(() => {
     textEditorConfigRegistry.clear();
     textEditorConfigRegistry.add('default', defaultConfig);
-    textEditorConfigRegistry.add('mini', {enterMode: 'br', features: [], tags: ['a']});
+    textEditorConfigRegistry.add('mini', {enterMode: 'br', attributes: [], tags: ['a']});
 });
 
 test('Render the TextEditor', () => {
@@ -82,7 +82,7 @@ test('Pass the config named by the config option to the given adapter', () => {
     );
 
     expect(textEditor.find('TestAdapter').prop('config'))
-        .toEqual({enterMode: 'br', features: [], tags: ['a']});
+        .toEqual({enterMode: 'br', attributes: [], tags: ['a']});
 });
 
 test('Throw an exception if a not existing adapter is used', () => {

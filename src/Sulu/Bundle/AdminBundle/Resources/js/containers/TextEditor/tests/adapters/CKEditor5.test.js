@@ -8,7 +8,7 @@ test('Pass correct props to CKEditor5 component', () => {
     const blurSpy = jest.fn();
     const changeSpy = jest.fn();
 
-    const config = {enterMode: 'p', features: ['align'], tags: ['strong']};
+    const config = {enterMode: 'p', attributes: ['align'], tags: ['strong']};
     const locale = observable.box('en');
 
     const ckeditor5 = shallow(

@@ -41,7 +41,7 @@ earlier, as before this release.
 
 ### Text editor configs decide which CKEditor plugins are loaded
 
-Which plugins a `text_editor` property loads now follows from the tags and features its text editor config enables,
+Which plugins a `text_editor` property loads now follows from the tags and attributes its text editor config enables,
 configured under `sulu_admin.text_editor.configs`. The `default` config Sulu ships reproduces the previous toolbar, so
 a project that configures nothing keeps the editor it had.
 
@@ -81,7 +81,7 @@ has to seed it:
 ```javascript
 import {textEditorConfigRegistry} from 'sulu-admin-bundle/containers';
 
-textEditorConfigRegistry.add('default', {enterMode: 'p', features: [], tags: ['strong', 'i', 'a']});
+textEditorConfigRegistry.add('default', {enterMode: 'p', attributes: [], tags: ['strong', 'i', 'a']});
 ```
 
 ### The text editor registry is typed against the adapter props
@@ -993,7 +993,7 @@ ALTER TABLE cu_custom_url_route ADD CONSTRAINT FK_D2349CF4CB30A644 FOREIGN KEY (
 ALTER TABLE cu_custom_url_route ADD CONSTRAINT FK_D2349CF44ED689B2 FOREIGN KEY (target_route_uuid) REFERENCES cu_custom_url_route (uuid) ON DELETE CASCADE;
 ```
 
-**Custom URL Routing Features:**
+**Custom URL Routing Attributes:**
 - **History Routes**: When a custom URL path changes (baseDomain or domainParts), the old route is automatically marked as history and redirects to the new URL with a 301 redirect
 - **Redirect Support**: Custom URLs with `redirect=true` will redirect to their target page URL
 - **SEO Properties**: `canonical`, `noFollow`, and `noIndex` properties are available and applied to route defaults

@@ -178,7 +178,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
 
         $container->setParameter('sulu_admin.icon_sets', $config['icon_sets'] ?? []);
 
-        /** @var array{configs: array<array-key, array{enter_mode: string, tags: array<array-key, bool>, features: array<array-key, bool>}>} $textEditor */
+        /** @var array{configs: array<array-key, array{enter_mode: string, tags: array<array-key, bool>, attributes: array<array-key, bool>}>} $textEditor */
         $textEditor = $config['text_editor'];
         $configuredTextEditors = $textEditor['configs'];
         $textEditorConfigs = $this->buildTextEditorConfigs($configuredTextEditors);
@@ -220,9 +220,9 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
     }
 
     /**
-     * @param array<array-key, array{enter_mode: string, tags: array<array-key, bool>, features: array<array-key, bool>}> $textEditorConfigs
+     * @param array<array-key, array{enter_mode: string, tags: array<array-key, bool>, attributes: array<array-key, bool>}> $textEditorConfigs
      *
-     * @return array<array-key, array{enterMode: string, tags: string[], features: string[]}>
+     * @return array<array-key, array{enterMode: string, tags: string[], attributes: string[]}>
      */
     private function buildTextEditorConfigs(array $textEditorConfigs): array
     {
@@ -233,7 +233,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
                 'enterMode' => $config['enter_mode'],
                 // Cast, because a YAML key that looks like a number arrives as an int.
                 'tags' => \array_map(\strval(...), \array_keys(\array_filter($config['tags']))),
-                'features' => \array_map(\strval(...), \array_keys(\array_filter($config['features']))),
+                'attributes' => \array_map(\strval(...), \array_keys(\array_filter($config['attributes']))),
             ];
         }
 

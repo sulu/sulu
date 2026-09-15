@@ -19,7 +19,7 @@ const HEADING_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 const PRIORITY_CORE = 10;
 
 /**
- * Maps the tags and features of a text editor config to the CKEditor 5 plugins and config implementing them. Anything
+ * Maps the tags and attributes of a text editor config to the CKEditor 5 plugins and config implementing them. Anything
  * registered here is only loaded if the config of the edited property enables the given key.
  */
 export function registerCKEditor5Plugins() {
@@ -94,7 +94,7 @@ export function registerCKEditor5Plugins() {
     configRegistry.add((config) => ({toolbar: [...config.toolbar, 'alignment']}), 'align', PRIORITY_CORE);
 
     // "lang" writes a lang attribute rather than a tag, which is why it is a feature and not a tag. It is not part of
-    // any shipped config, so a project opts in with "features: {lang: true}".
+    // any shipped config, so a project opts in with "attributes: {lang: true}".
     pluginRegistry.add(TextPartLanguage, 'lang');
     configRegistry.add(
         (config) => ({toolbar: [...config.toolbar, 'textPartLanguage']}),

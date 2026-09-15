@@ -21,7 +21,7 @@ class SuluAdminExtensionTest extends TestCase
     /**
      * @param mixed[] $config
      *
-     * @return array<array-key, array{enterMode: string, tags: string[], features: string[]}>
+     * @return array<array-key, array{enterMode: string, tags: string[], attributes: string[]}>
      */
     private function loadTextEditorConfigs(array $config): array
     {
@@ -38,7 +38,7 @@ class SuluAdminExtensionTest extends TestCase
             $container
         );
 
-        /** @var array<array-key, array{enterMode: string, tags: string[], features: string[]}> $configs */
+        /** @var array<array-key, array{enterMode: string, tags: string[], attributes: string[]}> $configs */
         $configs = $container->getParameter('sulu_admin.text_editor_configs');
 
         return $configs;
@@ -62,11 +62,11 @@ class SuluAdminExtensionTest extends TestCase
             $configs['default']['tags'],
             'the default config reproduces the toolbar Sulu shipped before the text editor configs'
         );
-        $this->assertSame(['align'], $configs['default']['features']);
+        $this->assertSame(['align'], $configs['default']['attributes']);
 
         $this->assertSame('br', $configs['mini']['enterMode']);
         $this->assertSame(['a', 'strong', 'i'], $configs['mini']['tags']);
-        $this->assertSame([], $configs['mini']['features']);
+        $this->assertSame([], $configs['mini']['attributes']);
     }
 
     public function testProjectConfigOverridesTheEnterModeOfAShippedConfig(): void
@@ -81,11 +81,11 @@ class SuluAdminExtensionTest extends TestCase
     public function testOwnConfigStartsEmpty(): void
     {
         $configs = $this->loadTextEditorConfigs([
-            'teaser' => ['tags' => ['a' => true, 'strong' => true], 'features' => ['align' => true]],
+            'teaser' => ['tags' => ['a' => true, 'strong' => true], 'attributes' => ['align' => true]],
         ]);
 
         $this->assertSame(['a', 'strong'], $configs['teaser']['tags']);
-        $this->assertSame(['align'], $configs['teaser']['features']);
+        $this->assertSame(['align'], $configs['teaser']['attributes']);
         $this->assertSame('p', $configs['teaser']['enterMode']);
     }
 
@@ -111,7 +111,7 @@ class SuluAdminExtensionTest extends TestCase
     {
         $this->expectException(InvalidConfigurationException::class);
 
-        $this->loadTextEditorConfigs(['teaser' => ['enter_mode' => 'br', 'features' => ['align' => true]]]);
+        $this->loadTextEditorConfigs(['teaser' => ['enter_mode' => 'br', 'attributes' => ['align' => true]]]);
     }
 
     public function testDisabledBlockKeyWithLineBreakEnterModeIsAllowed(): void

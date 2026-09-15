@@ -6,7 +6,7 @@ beforeEach(() => {
 });
 
 test('Add and get a config', () => {
-    const config = {enterMode: 'p', features: ['align'], tags: ['strong']};
+    const config = {enterMode: 'p', attributes: ['align'], tags: ['strong']};
 
     textEditorConfigRegistry.add('default', config);
 
@@ -15,28 +15,28 @@ test('Add and get a config', () => {
 });
 
 test('Clear all configs', () => {
-    textEditorConfigRegistry.add('default', {enterMode: 'p', features: [], tags: []});
+    textEditorConfigRegistry.add('default', {enterMode: 'p', attributes: [], tags: []});
     textEditorConfigRegistry.clear();
 
     expect(textEditorConfigRegistry.has('default')).toEqual(false);
 });
 
 test('Throw if a key is used twice', () => {
-    textEditorConfigRegistry.add('default', {enterMode: 'p', features: [], tags: []});
+    textEditorConfigRegistry.add('default', {enterMode: 'p', attributes: [], tags: []});
 
-    expect(() => textEditorConfigRegistry.add('default', {enterMode: 'br', features: [], tags: []}))
+    expect(() => textEditorConfigRegistry.add('default', {enterMode: 'br', attributes: [], tags: []}))
         .toThrow(/"default" has already been used/);
 });
 
 test('Throw with the registered keys if a config does not exist', () => {
-    textEditorConfigRegistry.add('default', {enterMode: 'p', features: [], tags: []});
-    textEditorConfigRegistry.add('mini', {enterMode: 'br', features: [], tags: []});
+    textEditorConfigRegistry.add('default', {enterMode: 'p', attributes: [], tags: []});
+    textEditorConfigRegistry.add('mini', {enterMode: 'br', attributes: [], tags: []});
 
     expect(() => textEditorConfigRegistry.get('teaser')).toThrow(/Registered keys: default, mini/);
 });
 
 test('Treat a config named like an Object member as any other key', () => {
-    const config = {enterMode: 'p', features: [], tags: ['a']};
+    const config = {enterMode: 'p', attributes: [], tags: ['a']};
 
     expect(textEditorConfigRegistry.has('constructor')).toEqual(false);
     expect(textEditorConfigRegistry.has('toString')).toEqual(false);

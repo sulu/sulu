@@ -19,7 +19,7 @@ text_editor:
                 a: true
                 table: true
                 code: true
-            features:
+            attributes:
                 align: true
         mini:
             enter_mode: br
@@ -27,4 +27,4 @@ text_editor:
                 a: true
                 strong: true
                 i: true
-            features: []
+            attributes: []

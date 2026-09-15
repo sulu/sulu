@@ -9,8 +9,8 @@ export type EnterMode = 'p' | 'br';
  * different editor later.
  */
 export type TextEditorConfig = {|
+    attributes: Array<string>,
     enterMode: EnterMode,
-    features: Array<string>,
     tags: Array<string>,
 |};
 

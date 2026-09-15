@@ -127,11 +127,11 @@ final class Configuration implements ConfigurationInterface
                                         ->prototype('boolean')->end()
                                         ->info('The HTML tags the editor is allowed to produce')
                                     ->end()
-                                    ->arrayNode('features')
+                                    ->arrayNode('attributes')
                                         ->useAttributeAsKey('name')
                                         ->normalizeKeys(false)
                                         ->prototype('boolean')->end()
-                                        ->info('Editor capabilities that are not an HTML tag, e.g. "align"')
+                                        ->info('The HTML attributes the editor is allowed to write, e.g. "lang", or "align" for a text-align style')
                                     ->end()
                                 ->end()
                                 ->validate()
@@ -318,8 +318,8 @@ final class Configuration implements ConfigurationInterface
         }
 
         $tags = \is_array($config['tags'] ?? null) ? $config['tags'] : [];
-        $features = \is_array($config['features'] ?? null) ? $config['features'] : [];
-        $enabled = \array_map(\strval(...), \array_keys(\array_filter([...$tags, ...$features])));
+        $attributes = \is_array($config['attributes'] ?? null) ? $config['attributes'] : [];
+        $enabled = \array_map(\strval(...), \array_keys(\array_filter([...$tags, ...$attributes])));
 
         return \array_intersect(self::BLOCK_TEXT_EDITOR_KEYS, $enabled);
     }

@@ -33,7 +33,7 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-const textEditorConfig = {enterMode: 'p', features: [], tags: ['strong']};
+const textEditorConfig = {enterMode: 'p', attributes: [], tags: ['strong']};
 
 beforeEach(() => {
     pluginRegistry.getPlugins.mockReturnValue([]);
@@ -98,12 +98,12 @@ test('Create a CKEditor5 instance', () => {
     }));
 });
 
-test('Ask the registries for the tags and features enabled by the config', () => {
+test('Ask the registries for the tags and attributes enabled by the config', () => {
     ClassicEditor.create.mockReturnValue(Promise.resolve({...defaultEditor}));
 
     mount(
         <CKEditor5
-            config={{enterMode: 'p', features: ['align'], tags: ['strong', 'table']}}
+            config={{enterMode: 'p', attributes: ['align'], tags: ['strong', 'table']}}
             onBlur={jest.fn()}
             onChange={jest.fn()}
             value={undefined}
@@ -135,7 +135,7 @@ test('Warn about a tag or feature no plugin or config is registered for', () => 
 
     mount(
         <CKEditor5
-            config={{enterMode: 'p', features: ['align'], tags: ['strong', 'marquee']}}
+            config={{enterMode: 'p', attributes: ['align'], tags: ['strong', 'marquee']}}
             onBlur={jest.fn()}
             onChange={jest.fn()}
             value={undefined}
