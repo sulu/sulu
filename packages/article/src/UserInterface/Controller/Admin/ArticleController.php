@@ -111,6 +111,7 @@ final class ArticleController implements SecuredControllerInterface
         $listBuilder->addSelectField($fieldDescriptors['published']);
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
         $listBuilder->addSelectField($fieldDescriptors['templateKey']);
+        $listBuilder->addSelectField($fieldDescriptors['workflowPlace']);
 
         if (isset($fieldDescriptors['ghostLocale'])) {
             $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);

@@ -20,6 +20,7 @@
     "sulu_content.hide_in_sitemap": "Hide in sitemap",
     "sulu_content.published": "Published on",
     "sulu_content.published_state": "Published State",
+    "sulu_content.workflow_place": "Workflow Place",
     "sulu_content.state_published": "Published",
     "sulu_content.state_not_published": "Not Published",
     "sulu_content.last_modified_enabled": "Enable last modified date",

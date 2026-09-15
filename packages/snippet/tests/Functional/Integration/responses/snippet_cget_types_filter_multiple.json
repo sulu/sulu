@@ -13,7 +13,8 @@
                 "publishedState": false,
                 "title": "Test Snippet 2",
                 "templateKey": "snippet",
-                "_group": "default"
+                "_group": "default",
+                "workflowPlace": "unpublished"
             }
         ]
     },

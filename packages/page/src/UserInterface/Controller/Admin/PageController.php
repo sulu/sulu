@@ -115,7 +115,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             $filters['templateKeys'] = $templateKeys;
         }
 
-        $includedFields = ['locale', 'ghostLocale', 'shadowLocale', 'webspaceKey', 'template', 'publishedState', 'linkProvider'];
+        $includedFields = ['locale', 'ghostLocale', 'shadowLocale', 'webspaceKey', 'template', 'publishedState', 'workflowPlace', 'linkProvider'];
 
         // TODO this should be handled by PageRepository, currently copied from
         //      https://github.com/handcraftedinthealps/SuluResourceBundle
