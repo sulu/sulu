@@ -11,6 +11,7 @@
                 "changer": null,
                 "locale": null,
                 "publishedState": false,
+                "workflowPlace": null,
                 "shadowLocale": null,
                 "ghostLocale": null,
                 "webspaceKey": "sulu-io",
