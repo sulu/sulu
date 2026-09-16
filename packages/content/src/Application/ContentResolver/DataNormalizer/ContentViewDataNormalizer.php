@@ -194,8 +194,12 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      * } $contentData
      * @param list<int|string> $path
      */
-    private function replaceNestedContentViewsAtPath(array &$contentData, array $path = ['content'], int $contentDepth = 0): void
-    {
+    private function replaceNestedContentViewsAtPath(
+        array &$contentData,
+        array $path = ['content'],
+        int $contentDepth = 0,
+        bool $hasViewTwin = true,
+    ): void {
         $pathValues = [];
         $iterable = $this->propertyAccessor->getValue($contentData, $this->buildPropertyPath($path)) ?? [];
         if (!\is_array($iterable)) {
@@ -206,14 +210,14 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         foreach ($iterable as $key => $entry) {
             if (\is_array($entry)) {
                 if ([] !== $entry) {
-                    $this->replaceNestedContentViewsAtPath($contentData, [...$path, $key], $contentDepth);
+                    $this->replaceNestedContentViewsAtPath($contentData, [...$path, $key], $contentDepth, $hasViewTwin);
                 }
 
                 if (!$this->isExtractableIterable($iterable)) {
                     continue;
                 }
 
-                if ('view' === $key) {
+                if ('view' === $key && $hasViewTwin) {
                     // truncate at the next nested 'content' segment so we keep only the outermost resolver wrapper
                     $nextContentIdx = $this->findSegmentAfter($path, 'content', $contentDepth + 1);
                     $viewPath = null === $nextContentIdx ? $path : \array_slice($path, 0, $nextContentIdx);
@@ -255,8 +259,9 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     }
 
     /**
-     * Runs the replacement for the root `content` and every configured `[x][content]` path,
-     * so those paths flatten nested content the same way the root does.
+     * Runs the replacement for the root `content` and every configured output path, so nested
+     * content flattens the same way everywhere. A path not ending in `content` has no view twin,
+     * so the views of its nested content are dropped.
      *
      * @param array{
      *     resource: object,
@@ -270,19 +275,30 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
     {
         /** @var array<string, list<string>> $contentPaths */
         $contentPaths = ['content' => ['content']];
+        /** @var array<string, list<string>> $flatPaths */
+        $flatPaths = [];
 
         foreach ($this->getPaths() as $segments) {
-            if ([] !== $segments && 'content' === $segments[\count($segments) - 1]) {
+            if ([] === $segments) {
+                continue;
+            }
+
+            if ('content' === $segments[\count($segments) - 1]) {
                 $contentPaths[\implode('/', $segments)] = $segments;
+            } else {
+                $flatPaths[\implode('/', $segments)] = $segments;
             }
         }
 
-        foreach ($contentPaths as $segments) {
+        // content paths run first: a flat ancestor such as `[shop]` flattens what sits below
+        // `[shop][content]` and drops the views its own path has no twin for
+        foreach ([...$contentPaths, ...$flatPaths] as $segments) {
             if (!$this->propertyAccessor->isReadable($contentData, $this->buildPropertyPath($segments))) {
                 continue;
             }
 
-            $this->replaceNestedContentViewsAtPath($contentData, $segments, \count($segments) - 1);
+            $hasViewTwin = 'content' === $segments[\count($segments) - 1];
+            $this->replaceNestedContentViewsAtPath($contentData, $segments, \count($segments) - 1, $hasViewTwin);
         }
     }
 
