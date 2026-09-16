@@ -93,6 +93,24 @@ class ResolvableResourceReplacerTest extends TestCase
         self::assertCount(1, $tags);
     }
 
+    public function testReplaceRemovesResourcesWhenNothingWasResolved(): void
+    {
+        $resolvableResource = new ResolvableResource('123', 'page', 0, null, null, 'pages');
+
+        $content = [
+            'title' => 'Test',
+            'pages' => [$resolvableResource],
+            'page' => $resolvableResource,
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues($content, [], 0, 5);
+
+        self::assertSame('Test', $result['content']['title']);
+        self::assertSame([], $result['content']['pages']);
+        self::assertNull($result['content']['page']);
+        self::assertSame([], $this->referenceStore->getAll());
+    }
+
     public function testReplaceWithNestedResolvableResources(): void
     {
         $firstResource = new ResolvableResource(
@@ -174,7 +192,7 @@ class ResolvableResourceReplacerTest extends TestCase
             2
         );
 
-        self::assertNull($result['content']['page']);
+        self::assertSame(['page' => null], $result['content']);
 
         $tags = $this->referenceStore->getAll();
         self::assertEmpty($tags);
@@ -203,7 +221,8 @@ class ResolvableResourceReplacerTest extends TestCase
             5
         );
 
-        self::assertSame($resolvableResource, $result['content']['page']);
+        // every value was a resolvable, so the unresolved ones are dropped
+        self::assertSame([], $result['content']);
 
         $tags = $this->referenceStore->getAll();
         self::assertEmpty($tags);
@@ -541,7 +560,7 @@ class ResolvableResourceReplacerTest extends TestCase
 
         $mySnippets = $result['content']['mySnippets'];
         self::assertIsArray($mySnippets);
-        self::assertSame($resolvableResource, $mySnippets[0]);
+        self::assertSame([], $mySnippets);
         self::assertEmpty($result['viewEnhancements']);
     }
 
@@ -958,14 +977,14 @@ class ResolvableResourceReplacerTest extends TestCase
         self::assertContains('tags-4', $refs);
     }
 
-    public function testReplaceResolvableResourcesInViewReturnsEarlyWithNoResolvedResources(): void
+    public function testReplaceResolvableResourcesInViewRemovesResourcesWhenNothingWasResolved(): void
     {
         $tag = new ResolvableResource(3, 'tag', 0);
         $view = ['tags' => [$tag]];
 
         $result = $this->replacer->replaceResolvableResourcesInView($view, [], 1, 10);
 
-        self::assertSame($view, $result);
+        self::assertSame(['tags' => []], $result);
     }
 
     public function testReplaceResolvableResourcesInViewFiltersUnresolvedListEntries(): void
