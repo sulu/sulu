@@ -198,7 +198,7 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         array &$contentData,
         array $path = ['content'],
         int $contentDepth = 0,
-        bool $hoistViews = true,
+        bool $hasViewTwin = true,
     ): void {
         $pathValues = [];
         $iterable = $this->propertyAccessor->getValue($contentData, $this->buildPropertyPath($path)) ?? [];
@@ -210,14 +210,14 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
         foreach ($iterable as $key => $entry) {
             if (\is_array($entry)) {
                 if ([] !== $entry) {
-                    $this->replaceNestedContentViewsAtPath($contentData, [...$path, $key], $contentDepth, $hoistViews);
+                    $this->replaceNestedContentViewsAtPath($contentData, [...$path, $key], $contentDepth, $hasViewTwin);
                 }
 
                 if (!$this->isExtractableIterable($iterable)) {
                     continue;
                 }
 
-                if ('view' === $key && $hoistViews) {
+                if ('view' === $key && $hasViewTwin) {
                     // truncate at the next nested 'content' segment so we keep only the outermost resolver wrapper
                     $nextContentIdx = $this->findSegmentAfter($path, 'content', $contentDepth + 1);
                     $viewPath = null === $nextContentIdx ? $path : \array_slice($path, 0, $nextContentIdx);
@@ -273,22 +273,32 @@ class ContentViewDataNormalizer implements ContentViewDataNormalizerInterface
      */
     public function replaceNestedContentViews(array &$contentData): void
     {
-        /** @var array<string, list<string>> $paths */
-        $paths = ['content' => ['content']];
+        /** @var array<string, list<string>> $contentPaths */
+        $contentPaths = ['content' => ['content']];
+        /** @var array<string, list<string>> $flatPaths */
+        $flatPaths = [];
 
         foreach ($this->getPaths() as $segments) {
-            if ([] !== $segments) {
-                $paths[\implode('/', $segments)] = $segments;
+            if ([] === $segments) {
+                continue;
+            }
+
+            if ('content' === $segments[\count($segments) - 1]) {
+                $contentPaths[\implode('/', $segments)] = $segments;
+            } else {
+                $flatPaths[\implode('/', $segments)] = $segments;
             }
         }
 
-        foreach ($paths as $segments) {
+        // content paths run first: a flat ancestor such as `[shop]` flattens what sits below
+        // `[shop][content]` and drops the views its own path has no twin for
+        foreach ([...$contentPaths, ...$flatPaths] as $segments) {
             if (!$this->propertyAccessor->isReadable($contentData, $this->buildPropertyPath($segments))) {
                 continue;
             }
 
-            $hoistViews = 'content' === $segments[\count($segments) - 1];
-            $this->replaceNestedContentViewsAtPath($contentData, $segments, \count($segments) - 1, $hoistViews);
+            $hasViewTwin = 'content' === $segments[\count($segments) - 1];
+            $this->replaceNestedContentViewsAtPath($contentData, $segments, \count($segments) - 1, $hasViewTwin);
         }
     }
 

@@ -406,6 +406,38 @@ class ContentViewDataNormalizerTest extends TestCase
         self::assertSame([], $result['view']);
     }
 
+    public function testAContentPathKeepsItsViewTwinWhateverTheResolverOrder(): void
+    {
+        $orders = [
+            'flat path first' => ['shop' => ['shop'], 'shopContent' => ['shop', 'content']],
+            'content path first' => ['shopContent' => ['shop', 'content'], 'shop' => ['shop']],
+        ];
+
+        foreach ($orders as $order => $paths) {
+            $normalizer = $this->createNormalizer(self::CORE_PATHS + $paths);
+
+            $related = [
+                'resource' => new Example(),
+                'content' => ['title' => 'Nested'],
+                'view' => ['title' => ['type' => 'text_line']],
+                'extension' => [],
+            ];
+
+            $result = $normalizer->normalizeContentViewData(
+                ['template' => [], 'shop' => ['currency' => 'EUR'], 'shopContent' => ['related' => [$related]]],
+                [],
+                new Example(),
+            );
+
+            $normalizer->replaceNestedContentViews($result);
+
+            // @phpstan-ignore-next-line offsetAccess.notFound
+            self::assertSame(['related' => [['title' => 'Nested']]], $result['shop']['content'], $order);
+            // @phpstan-ignore-next-line offsetAccess.notFound
+            self::assertSame(['related' => [['title' => ['type' => 'text_line']]]], $result['shop']['view'], $order);
+        }
+    }
+
     public function testFlatPathFlattensNestedEntitiesAndDropsTheirView(): void
     {
         $normalizer = $this->createNormalizer(self::CORE_PATHS + ['product' => ['product']]);
