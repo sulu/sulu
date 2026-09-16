@@ -149,7 +149,12 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         }
 
         if (!$this->hasPermission($securityContext, PermissionTypes::LIVE)) {
-            unset($toolbarActions['edit'], $addToolbarActions['edit']);
+            unset(
+                $toolbarActions['edit'],
+                $addToolbarActions['edit'],
+                $seoAndExcerptToolbarActions['edit'],
+                $settingsToolbarActions['edit']
+            );
         }
 
         if (!$this->hasPermission($securityContext, PermissionTypes::DELETE)) {

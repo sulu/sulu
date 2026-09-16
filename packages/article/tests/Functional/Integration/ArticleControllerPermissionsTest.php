@@ -173,6 +173,64 @@ class ArticleControllerPermissionsTest extends SuluTestCase
         $this->assertHttpStatusCode(201, $limitedClient->getResponse());
     }
 
+    public function testPostTriggerActionCopyWithoutAddPermissionIsForbidden(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithPermissions('viewedituser', 80); // VIEW and EDIT
+
+        self::ensureKernelShutdown();
+
+        $article = $this->createArticle([
+            'en' => [
+                'draft' => [
+                    'template' => 'article',
+                    'title' => 'Copied Article',
+                    'url' => '/copied-article',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('viewedituser');
+        $limitedClient->request(
+            'POST',
+            \sprintf('/admin/api/articles/%s?locale=en&action=copy', $article->getUuid()),
+        );
+
+        $this->assertHttpStatusCode(403, $limitedClient->getResponse());
+    }
+
+    public function testPostTriggerActionCopyWithAddPermissionIsAllowed(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithPermissions('addedituser', 112); // VIEW, ADD and EDIT
+
+        self::ensureKernelShutdown();
+
+        $article = $this->createArticle([
+            'en' => [
+                'draft' => [
+                    'template' => 'article',
+                    'title' => 'Copied Article',
+                    'url' => '/copied-article',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('addedituser');
+        $limitedClient->request(
+            'POST',
+            \sprintf('/admin/api/articles/%s?locale=en&action=copy', $article->getUuid()),
+        );
+
+        $this->assertHttpStatusCode(200, $limitedClient->getResponse());
+    }
+
     private function createUserWithPermissions(string $username, int $permissions): void
     {
         $entityManager = self::getEntityManager();

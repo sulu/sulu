@@ -59,13 +59,14 @@ final class SnippetController implements SecuredControllerInterface
     use HandleTrait;
 
     /**
-     * Actions which change the live content of a snippet and therefore need the live permission,
-     * which the request method based check of the SuluSecurityListener does not cover.
+     * Permissions the request method based check of the SuluSecurityListener does not cover:
+     * the live actions change the live content, copying creates a snippet.
      */
-    private const LIVE_ACTIONS = [
-        WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH,
-        WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH,
-        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT,
+    private const ACTION_PERMISSIONS = [
+        WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH => PermissionTypes::LIVE,
+        WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH => PermissionTypes::LIVE,
+        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT => PermissionTypes::LIVE,
+        'copy' => PermissionTypes::ADD,
     ];
 
     /**
@@ -242,7 +243,7 @@ final class SnippetController implements SecuredControllerInterface
 
     public function postAction(Request $request): Response
     {
-        $this->checkLiveActionPermission($request);
+        $this->checkActionPermission($request);
 
         $message = new CreateSnippetMessage($this->getData($request));
 
@@ -260,7 +261,7 @@ final class SnippetController implements SecuredControllerInterface
 
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
-        $this->checkLiveActionPermission($request);
+        $this->checkActionPermission($request);
 
         $message = new ModifySnippetMessage(['uuid' => $id], $this->getData($request));
         /** @see \Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler */
@@ -273,7 +274,7 @@ final class SnippetController implements SecuredControllerInterface
 
     public function postTriggerAction(Request $request, string $id): Response
     {
-        $this->checkLiveActionPermission($request);
+        $this->checkActionPermission($request);
 
         $result = $this->handleAction($request, $id);
 
@@ -381,15 +382,17 @@ final class SnippetController implements SecuredControllerInterface
         return SnippetAdmin::SECURITY_CONTEXT;
     }
 
-    private function checkLiveActionPermission(Request $request): void
+    private function checkActionPermission(Request $request): void
     {
-        if (!\in_array($request->query->get('action'), self::LIVE_ACTIONS, true)) {
+        $permission = self::ACTION_PERMISSIONS[$request->query->getString('action')] ?? null;
+
+        if (null === $permission) {
             return;
         }
 
         $this->securityChecker->checkPermission(
             new SecurityCondition($this->getSecurityContext(), $this->getLocale($request)),
-            PermissionTypes::LIVE,
+            $permission,
         );
     }
 }

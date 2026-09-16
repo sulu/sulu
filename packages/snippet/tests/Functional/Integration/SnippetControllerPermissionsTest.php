@@ -167,6 +167,62 @@ class SnippetControllerPermissionsTest extends SuluTestCase
         $this->assertHttpStatusCode(201, $limitedClient->getResponse());
     }
 
+    public function testPostTriggerActionCopyWithoutAddPermissionIsForbidden(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithPermissions('viewedituser', 80); // VIEW and EDIT
+
+        self::ensureKernelShutdown();
+
+        $snippet = $this->createSnippet([
+            'en' => [
+                'draft' => [
+                    'template' => 'snippet',
+                    'title' => 'Copied Snippet',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('viewedituser');
+        $limitedClient->request(
+            'POST',
+            \sprintf('/admin/api/snippets/%s?locale=en&action=copy', $snippet->getUuid()),
+        );
+
+        $this->assertHttpStatusCode(403, $limitedClient->getResponse());
+    }
+
+    public function testPostTriggerActionCopyWithAddPermissionIsAllowed(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithPermissions('addedituser', 112); // VIEW, ADD and EDIT
+
+        self::ensureKernelShutdown();
+
+        $snippet = $this->createSnippet([
+            'en' => [
+                'draft' => [
+                    'template' => 'snippet',
+                    'title' => 'Copied Snippet',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('addedituser');
+        $limitedClient->request(
+            'POST',
+            \sprintf('/admin/api/snippets/%s?locale=en&action=copy', $snippet->getUuid()),
+        );
+
+        $this->assertHttpStatusCode(200, $limitedClient->getResponse());
+    }
+
     private function createUserWithPermissions(string $username, int $permissions): void
     {
         $entityManager = self::getEntityManager();

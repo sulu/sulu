@@ -77,6 +77,12 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT,
     ];
 
+    /**
+     * Copying creates a page below the destination, which the request method based check of the
+     * SuluSecurityListener grants with the edit permission of the copied page.
+     */
+    private const ACTION_COPY = 'copy';
+
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private MessageBusInterface $messageBus, // @phpstan-ignore property.onlyWritten
@@ -229,12 +235,8 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         $parentId = $request->query->getString('parentId');
 
         // the page does not exist yet, so the listener cannot resolve a security context for it
-        $securityContext = PageAdmin::getPageSecurityContext($webspaceKey);
-        $this->checkPermission($request, $securityContext, null, PermissionTypes::ADD);
-
-        if ($this->isLiveAction($request)) {
-            $this->checkPermission($request, $securityContext, null, PermissionTypes::LIVE);
-        }
+        $this->checkPermission($request, PageAdmin::getPageSecurityContext($webspaceKey), null, PermissionTypes::ADD);
+        $this->checkActionPermission($request, null);
 
         $message = new CreatePageMessage($webspaceKey, $parentId, $this->getData($request));
 
@@ -252,7 +254,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
-        $this->checkLiveActionPermission($request, $id);
+        $this->checkActionPermission($request, $id);
 
         $message = new ModifyPageMessage(['uuid' => $id], $this->getData($request));
         /** @see \Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler */
@@ -265,7 +267,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
     public function postTriggerAction(Request $request, string $id): Response
     {
-        $this->checkLiveActionPermission($request, $id);
+        $this->checkActionPermission($request, $id);
 
         $result = $this->handleAction($request, $id);
 
@@ -654,21 +656,34 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         return Page::class;
     }
 
-    private function isLiveAction(Request $request): bool
+    private function checkActionPermission(Request $request, ?string $id): void
     {
-        return \in_array($request->query->get('action'), self::LIVE_ACTIONS, true);
-    }
+        $action = $request->query->getString('action');
 
-    private function checkLiveActionPermission(Request $request, string $id): void
-    {
-        if (!$this->isLiveAction($request)) {
+        if (self::ACTION_COPY === $action) {
+            // the copy is created below the destination, so the destination decides where it lands
+            $destination = $this->pageRepository->getOneBy(['uuid' => $request->query->getString('destination')]);
+
+            $this->checkPermission(
+                $request,
+                $destination->getSecurityContext(),
+                $destination->getUuid(),
+                PermissionTypes::ADD,
+            );
+
+            return;
+        }
+
+        if (!\in_array($action, self::LIVE_ACTIONS, true)) {
             return;
         }
 
         // the webspace of an existing page comes from the page itself, not from the request
-        $page = $this->pageRepository->getOneBy(['uuid' => $id]);
+        $securityContext = null !== $id
+            ? $this->pageRepository->getOneBy(['uuid' => $id])->getSecurityContext()
+            : PageAdmin::getPageSecurityContext($request->query->getString('webspace'));
 
-        $this->checkPermission($request, $page->getSecurityContext(), $id, PermissionTypes::LIVE);
+        $this->checkPermission($request, $securityContext, $id, PermissionTypes::LIVE);
     }
 
     private function checkPermission(Request $request, string $securityContext, ?string $id, string $permission): void

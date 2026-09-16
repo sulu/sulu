@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
@@ -254,9 +255,9 @@ class ContentViewBuilderFactoryTest extends TestCase
                 ],
                 [
                     ['sulu_admin.save_with_publishing', 'sulu_admin.type'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    ['sulu_admin.save_with_publishing'],
+                    ['sulu_admin.save_with_publishing'],
+                    ['sulu_admin.save_with_publishing'],
                     [],
                     [],
                 ],
@@ -282,9 +283,9 @@ class ContentViewBuilderFactoryTest extends TestCase
                 [
                     ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete'],
                     ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    ['sulu_admin.save_with_publishing'],
+                    ['sulu_admin.save_with_publishing'],
+                    ['sulu_admin.save_with_publishing'],
                     [],
                     [],
                 ],
@@ -370,7 +371,50 @@ class ContentViewBuilderFactoryTest extends TestCase
             'test_context'
         );
 
-        $this->assertNotEmpty($views);
+        $this->assertSame(
+            ['false', 'false', 'false', 'false', 'false'],
+            $this->getPublishVisibleConditions($views),
+        );
+    }
+
+    public function testCreateViewsWithLivePermissionKeepsPublishing(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $contentViewBuilder = $this->createContentViewBuilder($contentMetadataInspector->reveal(), $securityChecker->reveal());
+
+        $securityChecker->hasPermission('test_context', PermissionTypes::ADD)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::EDIT)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::DELETE)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::LIVE)->willReturn(true);
+
+        $views = $contentViewBuilder->createViews(
+            Example::class,
+            'edit_parent_key',
+            'add_parent_key',
+            'test_context'
+        );
+
+        $condition = '(!_permissions || _permissions.live)';
+
+        $this->assertSame(
+            [$condition, $condition, $condition, $condition, $condition],
+            $this->getPublishVisibleConditions($views),
+        );
+    }
+
+    /**
+     * @param ViewBuilderInterface[] $views
+     *
+     * @return array<int, mixed>
+     */
+    private function getPublishVisibleConditions(array $views): array
+    {
+        $conditions = [];
 
         foreach ($views as $viewBuilder) {
             /** @var ToolbarAction[] $toolbarActions */
@@ -381,9 +425,11 @@ class ContentViewBuilderFactoryTest extends TestCase
                     continue;
                 }
 
-                $this->assertSame('false', $toolbarAction->getOptions()['publish_visible_condition'] ?? null);
+                $conditions[] = $toolbarAction->getOptions()['publish_visible_condition'] ?? null;
             }
         }
+
+        return $conditions;
     }
 
     /**
