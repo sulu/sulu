@@ -131,7 +131,8 @@ class ProductAttributes extends React.Component<Props> {
         }
 
         const {formInspector, variant} = this.props;
-        const metadataOptions = variant ? {...selector, variant: true} : {...selector};
+        // The variant form has no type field, so it names the type itself.
+        const metadataOptions = variant ? {...selector, productType: 'variant'} : {...selector};
 
         this.formStore = memoryFormStoreFactory.createFromFormKey(
             FORM_KEY,
