@@ -852,17 +852,23 @@ test('Ignores messages whose source matches but whose origin does not (source su
     expect(instance.navigateToBlock).not.toHaveBeenCalled();
 });
 
+function appendNavigableBlocks(...ids) {
+    const container = document.createElement('div');
+    ids.forEach((id) => {
+        const element = document.createElement('div');
+        element.setAttribute('data-sulu-block-id', id);
+        container.appendChild(element);
+    });
+    document.body.appendChild(container);
+
+    return container;
+}
+
 test('Warns about blocks missing the preview deep-link attribute', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    // $FlowFixMe
-    formStore.data = {
-        blocks: [
-            {_id: 'block-1', type: 'text'},
-            {_id: 'block-2', type: 'text'},
-        ],
-    };
     const router = new Router({});
+    const container = appendNavigableBlocks('block-1', 'block-2');
 
     const preview = shallow(<Preview formStore={formStore} router={router} />);
     const warnSpy = jest.spyOn(log, 'warn').mockImplementation(() => {});
@@ -872,19 +878,14 @@ test('Warns about blocks missing the preview deep-link attribute', () => {
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('block-2'));
 
     warnSpy.mockRestore();
+    document.body.removeChild(container);
 });
 
 test('Does not warn when no block renders the preview deep-link attribute at all', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    // $FlowFixMe
-    formStore.data = {
-        blocks: [
-            {_id: 'block-1', type: 'text'},
-            {_id: 'block-2', type: 'text'},
-        ],
-    };
     const router = new Router({});
+    const container = appendNavigableBlocks('block-1', 'block-2');
 
     const preview = shallow(<Preview formStore={formStore} router={router} />);
     const warnSpy = jest.spyOn(log, 'warn').mockImplementation(() => {});
@@ -894,16 +895,14 @@ test('Does not warn when no block renders the preview deep-link attribute at all
     expect(warnSpy).not.toHaveBeenCalled();
 
     warnSpy.mockRestore();
+    document.body.removeChild(container);
 });
 
 test('Does not warn when every block carries the preview deep-link attribute', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    // $FlowFixMe
-    formStore.data = {
-        blocks: [{_id: 'block-1', type: 'text'}],
-    };
     const router = new Router({});
+    const container = appendNavigableBlocks('block-1');
 
     const preview = shallow(<Preview formStore={formStore} router={router} />);
     const warnSpy = jest.spyOn(log, 'warn').mockImplementation(() => {});
@@ -913,4 +912,5 @@ test('Does not warn when every block carries the preview deep-link attribute', (
     expect(warnSpy).not.toHaveBeenCalled();
 
     warnSpy.mockRestore();
+    document.body.removeChild(container);
 });

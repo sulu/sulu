@@ -17,6 +17,7 @@ const MISSING_TYPE_ERROR_MESSAGE = 'The "image_map" field type needs at least on
 class ImageMap extends React.Component<FieldTypeProps<Value>> {
     @observable value: Value;
     generatingBlockIds: boolean = false;
+    blockIdsChangedWhileGenerating: boolean = false;
 
     constructor(props: FieldTypeProps<Value>) {
         super(props);
@@ -56,11 +57,18 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
         return blockIdGeneratorEnabled;
     }
 
-    // Backfills a generated `_id` on every hotspot that lacks one, regardless of mount state.
+    // Backfills a generated `_id` on every hotspot that lacks one, written with the isDefaultValue
+    // context so it never marks the form dirty, matching the block path in FieldBlocks.
     generateMissingBlockIds = async() => {
         const {onChange, types, value} = this.props;
 
-        if (this.generatingBlockIds || !this.generateBlockIds || !types || !value) {
+        if (!this.generateBlockIds || !types || !value) {
+            return;
+        }
+
+        if (this.generatingBlockIds) {
+            this.blockIdsChangedWhileGenerating = true;
+
             return;
         }
 
@@ -70,10 +78,16 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
 
             if (updatedValue) {
                 this.setValue(updatedValue);
-                onChange(updatedValue);
+                onChange(updatedValue, {isDefaultValue: true});
             }
         } finally {
             this.generatingBlockIds = false;
+        }
+
+        // Re-check the value that arrived while a run was in flight; a no-op once nothing is missing.
+        if (this.blockIdsChangedWhileGenerating) {
+            this.blockIdsChangedWhileGenerating = false;
+            this.generateMissingBlockIds();
         }
     };
 

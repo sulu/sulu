@@ -74,7 +74,7 @@ final class PreviewDeepLinkScriptSubscriber implements EventSubscriberInterface
             }
 
             $decoded['content'] = $injected;
-            $encoded = \json_encode($decoded);
+            $encoded = \json_encode($decoded, \JSON_UNESCAPED_UNICODE | \JSON_UNESCAPED_SLASHES);
             if (false !== $encoded) {
                 $response->setContent($encoded);
             }
