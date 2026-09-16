@@ -26,6 +26,7 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -65,6 +66,16 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 final class PageController implements SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use HandleTrait;
+
+    /**
+     * Actions which change the live content of a page and therefore need the live permission,
+     * which the request method based check of the SuluSecurityListener does not cover.
+     */
+    private const LIVE_ACTIONS = [
+        WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH,
+        WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH,
+        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT,
+    ];
 
     public function __construct(
         private PageRepositoryInterface $pageRepository,
@@ -216,6 +227,15 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     {
         $webspaceKey = $request->query->getString('webspace');
         $parentId = $request->query->getString('parentId');
+
+        // the page does not exist yet, so the listener cannot resolve a security context for it
+        $securityContext = PageAdmin::getPageSecurityContext($webspaceKey);
+        $this->checkPermission($request, $securityContext, null, PermissionTypes::ADD);
+
+        if ($this->isLiveAction($request)) {
+            $this->checkPermission($request, $securityContext, null, PermissionTypes::LIVE);
+        }
+
         $message = new CreatePageMessage($webspaceKey, $parentId, $this->getData($request));
 
         /** @see \Sulu\Page\Application\MessageHandler\CreatePageMessageHandler */
@@ -232,6 +252,8 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
+        $this->checkLiveActionPermission($request, $id);
+
         $message = new ModifyPageMessage(['uuid' => $id], $this->getData($request));
         /** @see \Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
@@ -243,6 +265,8 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
 
     public function postTriggerAction(Request $request, string $id): Response
     {
+        $this->checkLiveActionPermission($request, $id);
+
         $result = $this->handleAction($request, $id);
 
         return $this->getAction($request, $result?->getUuid() ?? $id);
@@ -628,6 +652,31 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     public function getSecuredClass()
     {
         return Page::class;
+    }
+
+    private function isLiveAction(Request $request): bool
+    {
+        return \in_array($request->query->get('action'), self::LIVE_ACTIONS, true);
+    }
+
+    private function checkLiveActionPermission(Request $request, string $id): void
+    {
+        if (!$this->isLiveAction($request)) {
+            return;
+        }
+
+        // the webspace of an existing page comes from the page itself, not from the request
+        $page = $this->pageRepository->getOneBy(['uuid' => $id]);
+
+        $this->checkPermission($request, $page->getSecurityContext(), $id, PermissionTypes::LIVE);
+    }
+
+    private function checkPermission(Request $request, string $securityContext, ?string $id, string $permission): void
+    {
+        $this->securityChecker->checkPermission(
+            new SecurityCondition($securityContext, $this->getLocale($request), Page::class, $id),
+            $permission,
+        );
     }
 
     public function getSecuredObjectId(Request $request): string

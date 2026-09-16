@@ -126,6 +126,11 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         $previewEnabled = $this->objectProviderRegistry->hasPreviewObjectProvider($resourceKey);
 
         $toolbarActions = $toolbarActions ?: $this->getDefaultToolbarActions($contentRichEntityClass);
+
+        if (!$this->hasPermission($securityContext, PermissionTypes::LIVE)) {
+            $toolbarActions = $this->removePublishingFromSaveAction($toolbarActions);
+        }
+
         $addToolbarActions = $toolbarActions;
 
         $settingsToolbarActions = [];
@@ -411,5 +416,29 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         }
 
         return $this->securityChecker->hasPermission($securityContext, $permissionType);
+    }
+
+    /**
+     * The publishing options of the save action are only guarded by the permissions of the entity,
+     * which entities without object security do not deliver, so they are removed here.
+     *
+     * @param array<string, ToolbarAction> $toolbarActions
+     *
+     * @return array<string, ToolbarAction>
+     */
+    private function removePublishingFromSaveAction(array $toolbarActions): array
+    {
+        $saveAction = $toolbarActions['save'] ?? null;
+
+        if (!$saveAction instanceof ToolbarAction || 'sulu_admin.save_with_publishing' !== $saveAction->getType()) {
+            return $toolbarActions;
+        }
+
+        $toolbarActions['save'] = new ToolbarAction(
+            $saveAction->getType(),
+            \array_merge($saveAction->getOptions(), ['publish_visible_condition' => 'false']),
+        );
+
+        return $toolbarActions;
     }
 }

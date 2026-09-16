@@ -348,6 +348,44 @@ class ContentViewBuilderFactoryTest extends TestCase
         }
     }
 
+    public function testCreateViewsWithoutLivePermissionHidesPublishing(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $contentViewBuilder = $this->createContentViewBuilder($contentMetadataInspector->reveal(), $securityChecker->reveal());
+
+        $securityChecker->hasPermission('test_context', PermissionTypes::ADD)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::EDIT)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::DELETE)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::LIVE)->willReturn(false);
+
+        $views = $contentViewBuilder->createViews(
+            Example::class,
+            'edit_parent_key',
+            'add_parent_key',
+            'test_context'
+        );
+
+        $this->assertNotEmpty($views);
+
+        foreach ($views as $viewBuilder) {
+            /** @var ToolbarAction[] $toolbarActions */
+            $toolbarActions = $viewBuilder->getView()->getOption('toolbarActions') ?? [];
+
+            foreach ($toolbarActions as $toolbarAction) {
+                if ('sulu_admin.save_with_publishing' !== $toolbarAction->getType()) {
+                    continue;
+                }
+
+                $this->assertSame('false', $toolbarAction->getOptions()['publish_visible_condition'] ?? null);
+            }
+        }
+    }
+
     /**
      * @return mixed[]
      */

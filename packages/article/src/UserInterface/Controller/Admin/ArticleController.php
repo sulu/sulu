@@ -31,6 +31,9 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -53,6 +56,16 @@ final class ArticleController implements SecuredControllerInterface
 {
     use HandleTrait;
 
+    /**
+     * Actions which change the live content of an article and therefore need the live permission,
+     * which the request method based check of the SuluSecurityListener does not cover.
+     */
+    private const LIVE_ACTIONS = [
+        WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH,
+        WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH,
+        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT,
+    ];
+
     public function __construct(
         private ArticleRepositoryInterface $articleRepository,
         MessageBusInterface $messageBus,
@@ -63,6 +76,7 @@ final class ArticleController implements SecuredControllerInterface
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
+        private SecurityCheckerInterface $securityChecker,
         private bool $isSingleLocale = false,
     ) {
         $this->messageBus = $messageBus;
@@ -214,6 +228,8 @@ final class ArticleController implements SecuredControllerInterface
 
     public function postAction(Request $request): Response
     {
+        $this->checkLiveActionPermission($request);
+
         $message = new CreateArticleMessage($this->getData($request));
 
         /** @see \Sulu\Article\Application\MessageHandler\CreateArticleMessageHandler */
@@ -230,6 +246,8 @@ final class ArticleController implements SecuredControllerInterface
 
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
+        $this->checkLiveActionPermission($request);
+
         $message = new ModifyArticleMessage(['uuid' => $id], $this->getData($request));
         /** @see \Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
@@ -241,6 +259,8 @@ final class ArticleController implements SecuredControllerInterface
 
     public function postTriggerAction(Request $request, string $id): Response
     {
+        $this->checkLiveActionPermission($request);
+
         $result = $this->handleAction($request, $id);
 
         return $this->getAction($request, $result?->getUuid() ?? $id);
@@ -344,5 +364,17 @@ final class ArticleController implements SecuredControllerInterface
     public function getSecurityContext()
     {
         return ArticleAdmin::SECURITY_CONTEXT;
+    }
+
+    private function checkLiveActionPermission(Request $request): void
+    {
+        if (!\in_array($request->query->get('action'), self::LIVE_ACTIONS, true)) {
+            return;
+        }
+
+        $this->securityChecker->checkPermission(
+            new SecurityCondition($this->getSecurityContext(), $this->getLocale($request)),
+            PermissionTypes::LIVE,
+        );
     }
 }

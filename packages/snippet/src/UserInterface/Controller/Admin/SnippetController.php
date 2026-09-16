@@ -18,6 +18,9 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -56,6 +59,16 @@ final class SnippetController implements SecuredControllerInterface
     use HandleTrait;
 
     /**
+     * Actions which change the live content of a snippet and therefore need the live permission,
+     * which the request method based check of the SuluSecurityListener does not cover.
+     */
+    private const LIVE_ACTIONS = [
+        WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH,
+        WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH,
+        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT,
+    ];
+
+    /**
      * @param SnippetAreaConfig $snippetAreas
      */
     public function __construct(
@@ -66,6 +79,7 @@ final class SnippetController implements SecuredControllerInterface
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
+        private SecurityCheckerInterface $securityChecker,
         private array $snippetAreas = [],
         private bool $isSingleLocale = false,
     ) {
@@ -228,6 +242,8 @@ final class SnippetController implements SecuredControllerInterface
 
     public function postAction(Request $request): Response
     {
+        $this->checkLiveActionPermission($request);
+
         $message = new CreateSnippetMessage($this->getData($request));
 
         /** @see \Sulu\Snippet\Application\MessageHandler\CreateSnippetMessageHandler */
@@ -244,6 +260,8 @@ final class SnippetController implements SecuredControllerInterface
 
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
+        $this->checkLiveActionPermission($request);
+
         $message = new ModifySnippetMessage(['uuid' => $id], $this->getData($request));
         /** @see \Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
@@ -255,6 +273,8 @@ final class SnippetController implements SecuredControllerInterface
 
     public function postTriggerAction(Request $request, string $id): Response
     {
+        $this->checkLiveActionPermission($request);
+
         $result = $this->handleAction($request, $id);
 
         return $this->getAction($request, $result?->getUuid() ?? $id);
@@ -359,5 +379,17 @@ final class SnippetController implements SecuredControllerInterface
     public function getSecurityContext()
     {
         return SnippetAdmin::SECURITY_CONTEXT;
+    }
+
+    private function checkLiveActionPermission(Request $request): void
+    {
+        if (!\in_array($request->query->get('action'), self::LIVE_ACTIONS, true)) {
+            return;
+        }
+
+        $this->securityChecker->checkPermission(
+            new SecurityCondition($this->getSecurityContext(), $this->getLocale($request)),
+            PermissionTypes::LIVE,
+        );
     }
 }
