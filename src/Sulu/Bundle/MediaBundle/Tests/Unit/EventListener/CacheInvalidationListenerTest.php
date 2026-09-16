@@ -19,6 +19,8 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
@@ -68,7 +70,37 @@ class CacheInvalidationListenerTest extends TestCase
         $eventArgs->getObject()->willReturn($entity->reveal());
 
         $entity->getId()->willReturn(1);
-        $this->cacheManager->invalidateReference('media', 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(MediaInterface::RESOURCE_KEY, 1)->shouldBeCalled();
+
+        $this->listener->{$functionName}($eventArgs->reveal());
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideFunctionName')]
+    public function testPostUpdateCollection(string $functionName): void
+    {
+        $entity = $this->prophesize(CollectionInterface::class);
+
+        $eventArgs = $this->prophesize(LifecycleEventArgs::class);
+        $eventArgs->getObject()->willReturn($entity->reveal());
+
+        $entity->getId()->willReturn(2);
+        $this->cacheManager->invalidateReference(CollectionInterface::RESOURCE_KEY, 2)->shouldBeCalled();
+
+        $this->listener->{$functionName}($eventArgs->reveal());
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideFunctionName')]
+    public function testPostUpdateCollectionMeta(string $functionName): void
+    {
+        $collection = $this->prophesize(CollectionInterface::class);
+        $entity = $this->prophesize(CollectionMeta::class);
+        $entity->getCollection()->willReturn($collection->reveal());
+
+        $eventArgs = $this->prophesize(LifecycleEventArgs::class);
+        $eventArgs->getObject()->willReturn($entity->reveal());
+
+        $collection->getId()->willReturn(2);
+        $this->cacheManager->invalidateReference(CollectionInterface::RESOURCE_KEY, 2)->shouldBeCalled();
 
         $this->listener->{$functionName}($eventArgs->reveal());
     }
@@ -84,7 +116,7 @@ class CacheInvalidationListenerTest extends TestCase
         $eventArgs->getObject()->willReturn($entity->reveal());
 
         $media->getId()->willReturn(1);
-        $this->cacheManager->invalidateReference('media', 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(MediaInterface::RESOURCE_KEY, 1)->shouldBeCalled();
 
         $this->listener->{$functionName}($eventArgs->reveal());
     }
@@ -102,21 +134,21 @@ class CacheInvalidationListenerTest extends TestCase
         $tags[0]->getId()->willReturn(1);
         $tags[1]->getId()->willReturn(2);
         $entity->getTags()->willReturn(new ArrayCollection([$tags[0]->reveal(), $tags[1]->reveal()]));
-        $this->cacheManager->invalidateReference('tag', 1)->shouldBeCalled();
-        $this->cacheManager->invalidateReference('tag', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, 2)->shouldBeCalled();
 
         $categories = [$this->prophesize(CategoryInterface::class), $this->prophesize(CategoryInterface::class)];
         $categories[0]->getId()->willReturn(1);
         $categories[1]->getId()->willReturn(2);
         $entity->getCategories()->willReturn(new ArrayCollection([$categories[0]->reveal(), $categories[1]->reveal()]));
-        $this->cacheManager->invalidateReference('category', 1)->shouldBeCalled();
-        $this->cacheManager->invalidateReference('category', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, 2)->shouldBeCalled();
 
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventArgs->getObject()->willReturn($entity->reveal());
 
         $media->getId()->willReturn(1);
-        $this->cacheManager->invalidateReference('media', 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(MediaInterface::RESOURCE_KEY, 1)->shouldBeCalled();
 
         $this->listener->{$functionName}($eventArgs->reveal());
     }
@@ -138,7 +170,7 @@ class CacheInvalidationListenerTest extends TestCase
         $eventArgs->getObject()->willReturn($entity->reveal());
 
         $media->getId()->willReturn(1);
-        $this->cacheManager->invalidateReference('media', 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(MediaInterface::RESOURCE_KEY, 1)->shouldBeCalled();
 
         $this->listener->{$functionName}($eventArgs->reveal());
     }

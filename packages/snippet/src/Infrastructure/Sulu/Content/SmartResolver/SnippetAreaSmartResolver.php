@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Infrastructure\Sulu\Content\SmartResolver;
 
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartResolverInterface;
+use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
@@ -34,6 +36,7 @@ class SnippetAreaSmartResolver implements SmartResolverInterface
     public function __construct(
         private SnippetAreaRepositoryInterface $snippetAreaRepository,
         private RequestAnalyzerInterface $requestAnalyzer,
+        private ReferenceStoreInterface $referenceStore,
     ) {
     }
 
@@ -61,6 +64,8 @@ class SnippetAreaSmartResolver implements SmartResolverInterface
 
     private function resolveSingleArea(string $areaKey, string $webspaceKey): ContentView
     {
+        $this->referenceStore->add($areaKey, SnippetAreaInterface::RESOURCE_KEY);
+
         $snippetId = $this->fetchSnippetId($areaKey, $webspaceKey);
 
         if (null === $snippetId) {
@@ -81,6 +86,10 @@ class SnippetAreaSmartResolver implements SmartResolverInterface
      */
     private function resolveMultipleAreas(array $areaKeys, string $webspaceKey): ContentView
     {
+        foreach ($areaKeys as $areaKey) {
+            $this->referenceStore->add($areaKey, SnippetAreaInterface::RESOURCE_KEY);
+        }
+
         $snippetIds = $this->fetchSnippetIds($areaKeys, $webspaceKey);
 
         if ([] === $snippetIds) {

@@ -90,4 +90,9 @@ class LinkConfiguration
         $this->icon = $icon;
         $this->targets = $targets ?? $this->targets;
     }
+
+    public function getResourceKey(): string
+    {
+        return $this->resourceKey;
+    }
 }

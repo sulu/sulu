@@ -1,5 +1,18 @@
 # Upgrade
 
+## 3.0.11
+
+### Cache tags now match the invalidation
+
+Pages are tagged with the resource key of a resource (`tags-5`, `contacts-3`), while the invalidation used
+the aliases of 2.x (`tag-news`, `contact-3`), so tags, categories, contacts and accounts were never
+invalidated. Both sides use the resource key and the id of the resource now. Projects that add cache tags
+with the old aliases need to switch to the resource key:
+
+```php
+$cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->getId());
+```
+
 ## 3.0.10
 
 ### Reference tracking for teaser selections

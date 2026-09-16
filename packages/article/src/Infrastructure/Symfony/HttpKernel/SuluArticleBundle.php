@@ -346,6 +346,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_enhancer'),
                 new Reference('translator'),
                 new Reference('sulu_admin.teaser_tag_property_extractor'),
+                new Reference('sulu_http_cache.reference_store'),
             ])
             ->tag('sulu.teaser.provider', ['alias' => ArticleInterface::RESOURCE_KEY]);
 

@@ -23,8 +23,10 @@ use Sulu\Article\Domain\Model\ArticleDimensionContent;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\HttpCache\EventSubscriber\ArticleCacheInvalidationSubscriber;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -245,8 +247,8 @@ class ArticleCacheInvalidationSubscriberTest extends TestCase
     {
         $article = new Article('article-uuid-with-tags');
 
-        $tag1 = (new Tag())->setName('Technology');
-        $tag2 = (new Tag())->setName('CMS');
+        $tag1 = (new Tag())->setId(10)->setName('Technology');
+        $tag2 = (new Tag())->setId(20)->setName('CMS');
 
         $dimensionContent = new ArticleDimensionContent($article);
         $dimensionContent->setExcerptTags([$tag1, $tag2]);
@@ -270,9 +272,9 @@ class ArticleCacheInvalidationSubscriberTest extends TestCase
 
         $this->cacheManager->invalidateTag('article-uuid-with-tags')
             ->shouldBeCalled();
-        $this->cacheManager->invalidateReference('tag', 'Technology')
+        $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, '10')
             ->shouldBeCalled();
-        $this->cacheManager->invalidateReference('tag', 'CMS')
+        $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, '20')
             ->shouldBeCalled();
 
         $this->subscriber->onWorkflowTransition($event);
@@ -307,9 +309,9 @@ class ArticleCacheInvalidationSubscriberTest extends TestCase
 
         $this->cacheManager->invalidateTag('article-uuid-with-categories')
             ->shouldBeCalled();
-        $this->cacheManager->invalidateReference('category', '10')
+        $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, '10')
             ->shouldBeCalled();
-        $this->cacheManager->invalidateReference('category', '20')
+        $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, '20')
             ->shouldBeCalled();
 
         $this->subscriber->onWorkflowTransition($event);

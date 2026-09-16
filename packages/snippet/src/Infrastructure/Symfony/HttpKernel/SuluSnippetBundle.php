@@ -354,6 +354,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_snippet.snippet_area_repository'),
                 new Reference('sulu_core.webspace.request_analyzer'),
+                new Reference('sulu_http_cache.reference_store'),
             ])
             ->tag('sulu_content.smart_resolver', ['type' => 'snippet_area_default']);
 
