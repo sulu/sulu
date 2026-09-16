@@ -377,7 +377,7 @@ readonly class ContentResolver implements ContentResolverInterface
      */
     private function registerReferences(array $priorityQueue): void
     {
-        \array_walk_recursive($priorityQueue, function (mixed $resource): void {
+        \array_walk_recursive($priorityQueue, function(mixed $resource): void {
             if ($resource instanceof ResolvableResource && null !== $resourceKey = $resource->getResourceKey()) {
                 $this->deduplicationTracker->add($resourceKey, $resource->getId());
             }

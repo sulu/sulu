@@ -13,6 +13,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancer;
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
+use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\ContentResolver;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolver;
@@ -38,7 +39,6 @@ use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\LinkPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\SmartContentPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\TeaserSelectionPropertyResolver;
-use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver;
 use Sulu\Content\Application\SmartResolver\SmartResolverProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
