@@ -16,9 +16,9 @@ namespace Sulu\Content\Application\SmartResolver\Resolver;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
+use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
-use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\ResourceLoader\Loader\RawResourceLoader;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -125,8 +125,11 @@ class SmartContentSmartResolver implements SmartResolverInterface
 
         // Exclude the currently rendered resource (the "own" page) from its own results.
         $selfReference = $context['selfReference'] ?? null;
-        if (\is_array($selfReference) && ($selfReference['resourceKey'] ?? null) === $resourceKey) {
-            $excluded[] = (string) $selfReference['id'];
+        if (\is_array($selfReference)
+            && ($selfReference['resourceKey'] ?? null) === $resourceKey
+            && \is_string($selfReferenceId = $selfReference['id'] ?? null)
+        ) {
+            $excluded[] = $selfReferenceId;
         }
 
         // When "exclude_duplicates" is enabled, also exclude the resources already referenced by earlier
