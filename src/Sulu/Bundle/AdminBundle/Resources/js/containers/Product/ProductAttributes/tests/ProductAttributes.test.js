@@ -172,13 +172,13 @@ test('shows a loader until the metadata resolved, then the renderer with the inn
     expect(rendererProps.formInspector.locale.get()).toEqual('en');
 });
 
-test('sends the variant flag', () => {
+test('sends the variant product type', () => {
     metadataStore.getSchema.mockReturnValue(deferred().promise);
 
     renderComponent({variant: true});
 
     expect(metadataStore.getSchema)
-        .toHaveBeenCalledWith('product_attributes', undefined, {productFamily: 'family-1', variant: true});
+        .toHaveBeenCalledWith('product_attributes', undefined, {productFamily: 'family-1', productType: 'variant'});
 });
 
 test('sends the product type', () => {
@@ -210,7 +210,7 @@ test('creates a new store when the product type changes', async() => {
     );
 });
 
-test('sends no product type for a variant', () => {
+test('ignores the host form type for a variant', () => {
     metadataStore.getSchema.mockReturnValue(deferred().promise);
     const {formInspector} = renderComponent({variant: true});
 
@@ -221,7 +221,7 @@ test('sends no product type for a variant', () => {
 
     expect(metadataStore.getSchema).toHaveBeenCalledTimes(1);
     expect(metadataStore.getSchema)
-        .toHaveBeenCalledWith('product_attributes', undefined, {productFamily: 'family-1', variant: true});
+        .toHaveBeenCalledWith('product_attributes', undefined, {productFamily: 'family-1', productType: 'variant'});
 });
 
 test('falls back to the parent product from the form options', () => {
@@ -237,7 +237,7 @@ test('falls back to the parent product from the form options', () => {
     renderComponent({variant: true});
 
     expect(metadataStore.getSchema)
-        .toHaveBeenCalledWith('product_attributes', undefined, {product: 'product-1', variant: true});
+        .toHaveBeenCalledWith('product_attributes', undefined, {product: 'product-1', productType: 'variant'});
 });
 
 test('creates a new store when the family changes', async() => {
