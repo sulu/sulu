@@ -20,6 +20,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
+use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\ContentResolver;
 use Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolver;
 use Sulu\Content\Application\ContentResolver\DataNormalizer\ContentViewDataNormalizer;
@@ -102,7 +103,8 @@ class ContentResolverTest extends TestCase
             $this->contentAggregator->reveal(),
             $maxDepth,
             $this->contentEnhancer->reveal(),
-            $resourceLoaderProvider
+            $resourceLoaderProvider,
+            new ContentDeduplicationTracker()
         );
     }
 
@@ -181,13 +183,13 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => $highPriorityResource]]],
             'en',
-            []
+            $this->selfReferenceContext($example)
         )->willReturn(['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => 'High Priority Result']]]);
 
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => $lowPriorityResource]]],
             'en',
-            []
+            $this->selfReferenceContext($example)
         )->willReturn(['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => 'Low Priority Result']]]);
 
         $result = $this->contentResolver->resolve($dimensionContent);
@@ -252,7 +254,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => $singleResource]]],
             'en',
-            []
+            $this->selfReferenceContext($example)
         )->willReturn(
             ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => ['id' => 'single-1', 'title' => 'Single Title']]]]
         );
@@ -296,7 +298,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            []
+            $this->selfReferenceContext($example)
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );
@@ -340,7 +342,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            []
+            $this->selfReferenceContext($example)
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );
@@ -387,7 +389,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            []
+            $this->selfReferenceContext($example)
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );
@@ -403,6 +405,22 @@ class ContentResolverTest extends TestCase
             ],
             $result['view']['multi_selection']
         );
+    }
+
+    /**
+     * The content resolver passes the currently resolved resource to the resource loaders, so smart
+     * content blocks can exclude the own page from their results.
+     *
+     * @return array<string, mixed>
+     */
+    private function selfReferenceContext(TestExample $example): array
+    {
+        return [
+            'selfReference' => [
+                'resourceKey' => TestExample::RESOURCE_KEY,
+                'id' => (string) $example->getId(),
+            ],
+        ];
     }
 }
 
