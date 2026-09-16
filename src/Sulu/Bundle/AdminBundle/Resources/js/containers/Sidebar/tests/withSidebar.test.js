@@ -137,7 +137,7 @@ test('Dispose toolbar when a new view is rendered', () => {
 });
 
 test('Recall sidebar-function when changing observable', () => {
-    const ref = React.createRef();
+    const ref: any = React.createRef();
 
     const Component = class Component extends React.Component<*> {
         @observable sidebarView = 'preview';

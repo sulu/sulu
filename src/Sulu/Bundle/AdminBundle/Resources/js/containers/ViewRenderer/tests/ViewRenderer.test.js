@@ -181,7 +181,9 @@ test('Render view with route that has no rerenderAttributes', () => {
 
     viewRegistry.get.mockImplementation(() => {
         return function WebspaceOverview() {
-            React.useEffect(() => { mountSpy(); }, []);
+            React.useEffect(() => {
+                mountSpy();
+            }, []);
 
             return (
                 <div>
@@ -216,7 +218,9 @@ test('Render view with route that has rerenderAttributes', () => {
 
     viewRegistry.get.mockImplementation(() => {
         return function WebspaceOverview() {
-            React.useEffect(() => { mountSpy(); }, []);
+            React.useEffect(() => {
+                mountSpy();
+            }, []);
 
             return (
                 <div>
@@ -253,7 +257,9 @@ test('Render view with route that has more than one rerenderAttributes', () => {
 
     viewRegistry.get.mockImplementation(() => {
         return function WebspaceOverview() {
-            React.useEffect(() => { mountSpy(); }, []);
+            React.useEffect(() => {
+                mountSpy();
+            }, []);
 
             return (
                 <div>
