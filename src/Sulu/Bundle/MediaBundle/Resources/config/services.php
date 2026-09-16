@@ -161,6 +161,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_media.system_collections.manager'),
             new Reference('doctrine.orm.entity_manager'),
             new Reference('sulu_activity.domain_event_collector'),
+            new Reference('sulu_security.security_checker'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
@@ -170,6 +171,8 @@ return static function(ContainerConfigurator $container) {
             new Reference('fos_rest.view_handler'),
             new Reference('sulu_media.format_options_manager'),
             new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu_media.media_manager'),
+            new Reference('sulu_security.security_checker'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 

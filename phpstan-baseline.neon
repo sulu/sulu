@@ -30523,6 +30523,18 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewControllerTest.php
 
 		-
+			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewFormatPermissionTest.php
+
+		-
+			message: '#^Instanceof between Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactory and Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaPreviewFormatPermissionTest.php
+
+		-
 			message: '#^Argument of an invalid type list\<string\>\|false supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 1

@@ -16,13 +16,18 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaPreviewImageModifiedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaPreviewImageRemovedEvent;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -40,9 +45,14 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
         private MediaManagerInterface $mediaManager,
         private SystemCollectionManagerInterface $systemCollectionManager,
         private EntityManagerInterface $entityManager,
-        private DomainEventCollectorInterface $domainEventCollector
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ?SecurityCheckerInterface $securityChecker = null,
     ) {
         parent::__construct($viewHandler, $tokenStorage);
+
+        if (null === $this->securityChecker) {
+            @trigger_deprecation('sulu/sulu', '2.6', 'Instantiating MediaPreviewController without the $securityChecker argument is deprecated.');
+        }
     }
 
     /**
@@ -62,6 +72,7 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $media = $this->mediaManager->getById($id, $locale);
             /** @var MediaInterface $mediaEntity */
             $mediaEntity = $media->getEntity();
+            $this->checkEditPermission($mediaEntity);
 
             $data = $this->getData($request, false);
 
@@ -117,6 +128,7 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
             $media = $this->mediaManager->getById($id, $locale);
             /** @var MediaInterface $mediaEntity */
             $mediaEntity = $media->getEntity();
+            $this->checkEditPermission($mediaEntity);
 
             if (null !== $mediaEntity->getPreviewImage()) {
                 $previousPreviewImageId = $mediaEntity->getPreviewImage()->getId();
@@ -137,5 +149,17 @@ class MediaPreviewController extends AbstractMediaController implements ClassRes
         }
 
         return $this->handleView($view);
+    }
+
+    private function checkEditPermission(MediaInterface $media): void
+    {
+        if (null === $this->securityChecker) {
+            return;
+        }
+
+        $this->securityChecker->checkPermission(
+            new SecurityCondition(MediaAdmin::SECURITY_CONTEXT, null, Collection::class, $media->getCollection()->getId()),
+            PermissionTypes::EDIT
+        );
     }
 }
