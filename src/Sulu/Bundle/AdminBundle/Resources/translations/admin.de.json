@@ -287,6 +287,7 @@
     "sulu_admin.attribute": "Attribut",
     "sulu_admin.attribute_required": "Erforderlich",
     "sulu_admin.attribute_variant": "Variante",
+    "sulu_admin.attribute_filterable": "Filterbar",
     "sulu_admin.choose_attributes": "Attribute auswählen",
     "sulu_admin.attribute_count": "{count} {count, plural, =1 {Attribut} other {Attribute}}",
     "sulu_admin.filter_attributes": "Attribute filtern...",

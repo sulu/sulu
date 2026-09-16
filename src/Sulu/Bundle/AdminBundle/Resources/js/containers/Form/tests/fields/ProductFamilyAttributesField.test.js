@@ -9,7 +9,7 @@ import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import ProductFamilyAttributesField from '../../fields/ProductFamilyAttributesField';
 
-const NEXT_VALUE = [{id: 'a1', required: true, variantSpecific: true}];
+const NEXT_VALUE = [{id: 'a1', required: true, variantSpecific: true, filterable: false}];
 
 const SCHEMA_OPTIONS = {
     list_key: {name: 'list_key', value: 'attributes'},
@@ -50,7 +50,7 @@ test('passes value, disabled and locale through to the container', () => {
     // $FlowFixMe
     formInspector.locale = observable.box('en');
 
-    const value = [{id: 'a1', required: true, variantSpecific: false}];
+    const value = [{id: 'a1', required: true, variantSpecific: false, filterable: false}];
 
     render(
         <ProductFamilyAttributesField
@@ -126,6 +126,6 @@ test('calls onChange and onFinish when the container changes the value', async()
 
     await userEvent.click(screen.getByText('change'));
 
-    expect(handleChange).toHaveBeenCalledWith([{id: 'a1', required: true, variantSpecific: true}]);
+    expect(handleChange).toHaveBeenCalledWith([{id: 'a1', required: true, variantSpecific: true, filterable: false}]);
     expect(handleFinish).toHaveBeenCalled();
 });

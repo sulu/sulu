@@ -1,6 +1,7 @@
 // @flow
 
 export type Entry = {
+    filterable: boolean,
     id: string,
     required: boolean,
     variantSpecific: boolean,

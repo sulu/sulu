@@ -34,6 +34,7 @@ type Props = {|
 const COLUMNS: Array<FieldColumn> = [
     {name: 'required', title: 'sulu_admin.attribute_required', type: 'checkbox'},
     {name: 'variantSpecific', title: 'sulu_admin.attribute_variant', type: 'checkbox'},
+    {name: 'filterable', title: 'sulu_admin.attribute_filterable', type: 'checkbox'},
 ];
 
 /**
@@ -195,6 +196,7 @@ class ProductFamilyAttributes extends React.Component<Props> {
             id: item.id,
             required: false,
             variantSpecific: false,
+            filterable: false,
         }));
     };
 

@@ -64,9 +64,9 @@ const ITEMS = [
 ];
 
 const VALUE = [
-    {id: 'a3', required: false, variantSpecific: false},
-    {id: 'a1', required: false, variantSpecific: true},
-    {id: 'a2', required: true, variantSpecific: false},
+    {id: 'a3', required: false, variantSpecific: false, filterable: false},
+    {id: 'a1', required: false, variantSpecific: true, filterable: false},
+    {id: 'a2', required: true, variantSpecific: false, filterable: false},
 ];
 
 // $FlowFixMe
@@ -166,7 +166,7 @@ test('renders the flag columns through the registered checkbox field type', asyn
     await expandAllCards();
 
     expect(fieldRegistry.get).toHaveBeenCalledWith('checkbox');
-    expect(within(getRow('Size')).getAllByRole('checkbox')).toHaveLength(2);
+    expect(within(getRow('Size')).getAllByRole('checkbox')).toHaveLength(3);
 });
 
 test('orders group cards alphabetically by group name', () => {
@@ -202,7 +202,7 @@ test('shows the attribute count per group', () => {
 });
 
 test('skips an id whose attribute no longer resolves', () => {
-    renderComponent([...VALUE, {id: 'gone', required: false, variantSpecific: false}]);
+    renderComponent([...VALUE, {id: 'gone', required: false, variantSpecific: false, filterable: false}]);
 
     expect(screen.queryByText('gone')).not.toBeInTheDocument();
     expect(screen.getByText('sulu_admin.attribute_count:{"count":2}')).toBeInTheDocument();
@@ -217,9 +217,9 @@ test('toggling required emits the updated value', async() => {
     await userEvent.click(within(getRow('Size')).getAllByRole('checkbox')[0]);
 
     expect(handleChange).toHaveBeenCalledWith([
-        {id: 'a3', required: false, variantSpecific: false},
-        {id: 'a1', required: true, variantSpecific: true},
-        {id: 'a2', required: true, variantSpecific: false},
+        {id: 'a3', required: false, variantSpecific: false, filterable: false},
+        {id: 'a1', required: true, variantSpecific: true, filterable: false},
+        {id: 'a2', required: true, variantSpecific: false, filterable: false},
     ]);
 });
 
@@ -232,9 +232,24 @@ test('toggling variant emits the updated value', async() => {
     await userEvent.click(within(getRow('Size')).getAllByRole('checkbox')[1]);
 
     expect(handleChange).toHaveBeenCalledWith([
-        {id: 'a3', required: false, variantSpecific: false},
-        {id: 'a1', required: false, variantSpecific: false},
-        {id: 'a2', required: true, variantSpecific: false},
+        {id: 'a3', required: false, variantSpecific: false, filterable: false},
+        {id: 'a1', required: false, variantSpecific: false, filterable: false},
+        {id: 'a2', required: true, variantSpecific: false, filterable: false},
+    ]);
+});
+
+test('toggling filterable emits the updated value', async() => {
+    const handleChange = jest.fn();
+
+    renderComponent(VALUE, handleChange);
+    await expandAllCards();
+
+    await userEvent.click(within(getRow('Size')).getAllByRole('checkbox')[2]);
+
+    expect(handleChange).toHaveBeenCalledWith([
+        {id: 'a3', required: false, variantSpecific: false, filterable: false},
+        {id: 'a1', required: false, variantSpecific: true, filterable: true},
+        {id: 'a2', required: true, variantSpecific: false, filterable: false},
     ]);
 });
 
@@ -247,21 +262,21 @@ test('removing a row emits the value without it', async() => {
     await userEvent.click(within(getRow('Size')).getByRole('button', {name: 'sulu_admin.delete'}));
 
     expect(handleChange).toHaveBeenCalledWith([
-        {id: 'a3', required: false, variantSpecific: false},
-        {id: 'a2', required: true, variantSpecific: false},
+        {id: 'a3', required: false, variantSpecific: false, filterable: false},
+        {id: 'a2', required: true, variantSpecific: false, filterable: false},
     ]);
 });
 
 test('removing a group removes every resolved entry in it and keeps unresolved ids', async() => {
     const handleChange = jest.fn();
 
-    renderComponent([...VALUE, {id: 'gone', required: false, variantSpecific: false}], handleChange);
+    renderComponent([...VALUE, {id: 'gone', required: false, variantSpecific: false, filterable: false}], handleChange);
 
     await userEvent.click(within(getCardHeader('General')).getByRole('button', {name: 'sulu_admin.delete'}));
 
     expect(handleChange).toHaveBeenCalledWith([
-        {id: 'a3', required: false, variantSpecific: false},
-        {id: 'gone', required: false, variantSpecific: false},
+        {id: 'a3', required: false, variantSpecific: false, filterable: false},
+        {id: 'gone', required: false, variantSpecific: false, filterable: false},
     ]);
 });
 
@@ -276,8 +291,8 @@ test('confirming the overlay replaces the selection, keeping flags of entries al
     expect(store.set).toHaveBeenCalledWith(mockOverlayItems);
     expect(store.loadItems).toHaveBeenCalledTimes(0);
     expect(handleChange).toHaveBeenCalledWith([
-        {id: 'a1', required: false, variantSpecific: true},
-        {id: 'a4', required: false, variantSpecific: false},
+        {id: 'a1', required: false, variantSpecific: true, filterable: false},
+        {id: 'a4', required: false, variantSpecific: false, filterable: false},
     ]);
 });
 
@@ -307,7 +322,7 @@ function rerenderWithValue(rerender, value) {
 test('loads the attributes when the value receives an id the store has not been asked for', () => {
     const {rerender, store} = renderComponent();
 
-    rerenderWithValue(rerender, [...VALUE, {id: 'a9', required: false, variantSpecific: false}]);
+    rerenderWithValue(rerender, [...VALUE, {id: 'a9', required: false, variantSpecific: false, filterable: false}]);
 
     expect(store.loadItems).toHaveBeenCalledWith(['a3', 'a1', 'a2', 'a9']);
 });
@@ -316,8 +331,8 @@ test('does not reload when the value only loses entries or changes flags', () =>
     const {rerender, store} = renderComponent();
 
     rerenderWithValue(rerender, [
-        {id: 'a3', required: true, variantSpecific: false},
-        {id: 'a1', required: false, variantSpecific: true},
+        {id: 'a3', required: true, variantSpecific: false, filterable: false},
+        {id: 'a1', required: false, variantSpecific: true, filterable: false},
     ]);
 
     expect(store.loadItems).not.toHaveBeenCalled();
@@ -325,7 +340,7 @@ test('does not reload when the value only loses entries or changes flags', () =>
 
 test('does not reload again for an id the resource did not return', () => {
     const {rerender, store} = renderComponent();
-    const value = [...VALUE, {id: 'gone', required: false, variantSpecific: false}];
+    const value = [...VALUE, {id: 'gone', required: false, variantSpecific: false, filterable: false}];
 
     rerenderWithValue(rerender, value);
     rerenderWithValue(rerender, value.map((entry) => ({...entry, required: true})));
