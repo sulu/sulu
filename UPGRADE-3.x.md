@@ -64,6 +64,9 @@ alone: `live` does not imply it.
   `review`. A call with no authenticated user publishes on the system's behalf and passes through.
 - A write to content covered by an open request answers 409. Publishing, rejecting and cancelling must
   be sent as a payload-less `POST ?action=...`; a `PUT` carrying the form is a write and is refused.
+- Every resource key whose content can be published needs a service tagged
+  `sulu_content.workflow_transition_request_security_context_provider` with that `resource-key`.
+  Pages, articles and snippets ship one; a custom content type without one answers 500 on publish.
 
 ## 3.0.10
 

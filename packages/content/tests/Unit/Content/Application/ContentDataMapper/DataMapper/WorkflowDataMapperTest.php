@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapper;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\WorkflowDataMapper;
@@ -199,6 +200,27 @@ class WorkflowDataMapperTest extends TestCase
 
         $this->createWorkflowDataMapperInstance()
             ->map($unlocalizedDimensionContent, $localizedDimensionContent, []);
+    }
+
+    /**
+     * `unpublished` is the one place `edit` can leave that is deliberately left out: content there
+     * has never been submitted, so no request can cover it. Pinned so a state machine change that
+     * lets a request reach `unpublished` fails here instead of quietly opening the write lock.
+     */
+    public function testMapSkipsTheEditTransitionForUnpublishedContent(): void
+    {
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+        $localizedDimensionContent->setWorkflowPlace(WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED);
+
+        $this->contentWorkflow->apply(Argument::cetera())->shouldNotBeCalled();
+
+        $this->createWorkflowDataMapperInstance()
+            ->map($unlocalizedDimensionContent, $localizedDimensionContent, []);
+
+        $this->assertSame(WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED, $localizedDimensionContent->getWorkflowPlace());
     }
 
     public function testMapLocalizedLivePublishedNotSet(): void

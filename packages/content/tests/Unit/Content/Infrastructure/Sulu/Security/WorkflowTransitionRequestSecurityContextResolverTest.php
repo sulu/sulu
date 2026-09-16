@@ -43,7 +43,7 @@ class WorkflowTransitionRequestSecurityContextResolverTest extends TestCase
         $resolver = new WorkflowTransitionRequestSecurityContextResolver([]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('No security context provider registered for resource key "unknown"');
+        $this->expectExceptionMessage('No security context provider is registered for resource key "unknown"');
 
         $resolver->resolve('unknown', 'anything', 'en');
     }

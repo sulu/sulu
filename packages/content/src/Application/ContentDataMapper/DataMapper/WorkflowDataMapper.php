@@ -80,8 +80,9 @@ class WorkflowDataMapper implements DataMapperInterface
         // therefore we only want to copy the published property from the draft to the live dimension
 
         if (DimensionContentInterface::STAGE_LIVE !== $object->getStage()) {
-            // Only the places `edit` can leave. The review places are among them so the guard that
-            // holds content in review sees the write.
+            // Only the places `edit` can leave, minus `unpublished`: content there has never been
+            // submitted, so no request can cover it and there is nothing for the review lock to see.
+            // A state machine change that lets a request reach `unpublished` has to add it here.
             if (\in_array($object->getWorkflowPlace(), [
                 WorkflowInterface::WORKFLOW_PLACE_PUBLISHED,
                 WorkflowInterface::WORKFLOW_PLACE_DRAFT,

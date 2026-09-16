@@ -50,7 +50,7 @@ class WorkflowTransitionRequestNormalizerTest extends TestCase
     public function testEnhanceSkipsNonDimensionContentObject(): void
     {
         $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
-        $provider->findForContent(Argument::any())->shouldNotBeCalled();
+        $provider->find(Argument::cetera())->shouldNotBeCalled();
 
         $normalizer = new WorkflowTransitionRequestNormalizer(
             $provider->reveal(),
@@ -65,7 +65,7 @@ class WorkflowTransitionRequestNormalizerTest extends TestCase
     public function testEnhanceSkipsLiveStage(): void
     {
         $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
-        $provider->findForContent(Argument::any())->shouldNotBeCalled();
+        $provider->find(Argument::cetera())->shouldNotBeCalled();
 
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent->getStage()->willReturn(DimensionContentInterface::STAGE_LIVE);
@@ -81,7 +81,7 @@ class WorkflowTransitionRequestNormalizerTest extends TestCase
     public function testEnhanceSkipsWhenLocaleIsNull(): void
     {
         $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
-        $provider->findForContent(Argument::any())->shouldNotBeCalled();
+        $provider->find(Argument::cetera())->shouldNotBeCalled();
 
         $dimensionContent = $this->prophesize(DimensionContentInterface::class);
         $dimensionContent->getStage()->willReturn(DimensionContentInterface::STAGE_DRAFT);

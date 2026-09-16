@@ -15,8 +15,13 @@ namespace Sulu\Content\Domain\Exception;
 
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-final class WorkflowTransitionRequestCancelNotAllowedException extends \RuntimeException implements TranslationErrorMessageExceptionInterface
+/**
+ * An `AccessDeniedException` so the guard on `cancel_review` reports it the same way as every other
+ * refused permission, while keeping its own translated message.
+ */
+final class WorkflowTransitionRequestCancelNotAllowedException extends AccessDeniedException implements TranslationErrorMessageExceptionInterface
 {
     private readonly string $workflowTransitionRequestId;
 

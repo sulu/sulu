@@ -18,6 +18,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
+use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -64,7 +65,7 @@ final class WorkflowTransitionAuthorizer implements WorkflowTransitionAuthorizer
         ));
     }
 
-    public function assertCanReject(string $resourceKey, string $resourceId, string $locale): void
+    public function assertCanReview(string $resourceKey, string $resourceId, string $locale): void
     {
         if ($this->isSystemCall()) {
             return;
@@ -76,10 +77,31 @@ final class WorkflowTransitionAuthorizer implements WorkflowTransitionAuthorizer
         // listener maps to EDIT; without this an editor could reject a request they may not review.
         if (!$this->securityChecker->hasPermission($condition, PermissionTypes::REVIEW)) {
             throw new AccessDeniedException(\sprintf(
-                'Rejecting a workflow transition request requires the "%s" permission on "%s".',
+                'Deciding on a workflow transition request requires the "%s" permission on "%s".',
                 PermissionTypes::REVIEW,
                 $condition->getSecurityContext(),
             ));
+        }
+    }
+
+    public function assertCanCancelReview(string $resourceKey, string $resourceId, string $locale): void
+    {
+        if ($this->isSystemCall()) {
+            return;
+        }
+
+        $request = $this->activeWorkflowTransitionRequestProvider->find($resourceKey, $resourceId, $locale);
+        if (null === $request) {
+            return;
+        }
+
+        // Withdrawing a request frees the content for editing again, so it takes the same permission
+        // as editing it: the author withdraws their own, a colleague unblocks content left behind.
+        if (!$this->securityChecker->hasPermission(
+            $this->securityContextResolver->resolve($resourceKey, $resourceId, $locale),
+            PermissionTypes::EDIT,
+        )) {
+            throw new WorkflowTransitionRequestCancelNotAllowedException($request);
         }
     }
 

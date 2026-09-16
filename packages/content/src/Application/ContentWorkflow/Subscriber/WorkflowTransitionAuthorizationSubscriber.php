@@ -60,7 +60,19 @@ class WorkflowTransitionAuthorizationSubscriber implements EventSubscriberInterf
     public function onReject(GuardEvent $guardEvent): void
     {
         $this->guard($guardEvent, function(string $resourceKey, string $resourceId, string $locale): void {
-            $this->workflowTransitionAuthorizer->assertCanReject($resourceKey, $resourceId, $locale);
+            $this->workflowTransitionAuthorizer->assertCanReview($resourceKey, $resourceId, $locale);
+        });
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param GuardEvent<T> $guardEvent
+     */
+    public function onCancelReview(GuardEvent $guardEvent): void
+    {
+        $this->guard($guardEvent, function(string $resourceKey, string $resourceId, string $locale): void {
+            $this->workflowTransitionAuthorizer->assertCanCancelReview($resourceKey, $resourceId, $locale);
         });
     }
 
@@ -104,6 +116,8 @@ class WorkflowTransitionAuthorizationSubscriber implements EventSubscriberInterf
             $prefix . WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH => 'onPublish',
             $prefix . WorkflowInterface::WORKFLOW_TRANSITION_REJECT => 'onReject',
             $prefix . WorkflowInterface::WORKFLOW_TRANSITION_REJECT_DRAFT => 'onReject',
+            $prefix . WorkflowInterface::WORKFLOW_TRANSITION_CANCEL_REVIEW => 'onCancelReview',
+            $prefix . WorkflowInterface::WORKFLOW_TRANSITION_CANCEL_REVIEW_DRAFT => 'onCancelReview',
         ];
     }
 }

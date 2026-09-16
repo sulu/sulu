@@ -25,6 +25,7 @@ use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusReso
 use Sulu\Content\Application\Security\WorkflowTransitionAuthorizer;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
+use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
@@ -107,7 +108,7 @@ class WorkflowTransitionAuthorizerTest extends TestCase
         $securityChecker->hasPermission(Argument::any(), PermissionTypes::REVIEW)->willReturn(true);
 
         $this->createAuthorizer($securityChecker, $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class))
-            ->assertCanReject(Example::RESOURCE_KEY, '1', 'en');
+            ->assertCanReview(Example::RESOURCE_KEY, '1', 'en');
 
         $this->expectNotToPerformAssertions();
     }
@@ -129,7 +130,43 @@ class WorkflowTransitionAuthorizerTest extends TestCase
 
         $this->expectException(AccessDeniedException::class);
 
-        $authorizer->assertCanReject(Example::RESOURCE_KEY, '1', 'en');
+        $authorizer->assertCanReview(Example::RESOURCE_KEY, '1', 'en');
+    }
+
+    public function testCanCancelReviewWithTheEditPermission(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(Argument::any(), PermissionTypes::EDIT)->willReturn(true);
+
+        $this->createAuthorizer($securityChecker, $this->activeRequest($this->openRequest()))
+            ->assertCanCancelReview(Example::RESOURCE_KEY, '1', 'en');
+
+        $this->expectNotToPerformAssertions();
+    }
+
+    public function testCannotCancelReviewWithoutTheEditPermission(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(Argument::any(), PermissionTypes::EDIT)->willReturn(false);
+
+        $authorizer = $this->createAuthorizer($securityChecker, $this->activeRequest($this->openRequest()));
+
+        $this->expectException(WorkflowTransitionRequestCancelNotAllowedException::class);
+
+        $authorizer->assertCanCancelReview(Example::RESOURCE_KEY, '1', 'en');
+    }
+
+    /**
+     * Without a request there is nothing to withdraw, so `cancel_review` is an ordinary workflow
+     * move and asks for no permission of its own.
+     */
+    public function testCancelReviewWithoutAnActiveRequestAsksForNothing(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(Argument::cetera())->shouldNotBeCalled();
+
+        $this->createAuthorizer($securityChecker, $this->activeRequest(null))
+            ->assertCanCancelReview(Example::RESOURCE_KEY, '1', 'en');
     }
 
     /**
@@ -198,6 +235,14 @@ class WorkflowTransitionAuthorizerTest extends TestCase
         $securityChecker->hasPermission(Argument::any(), PermissionTypes::EDIT)->willReturn($edit);
 
         return $securityChecker;
+    }
+
+    private function openRequest(): WorkflowTransitionRequest
+    {
+        $request = new WorkflowTransitionRequest(Example::RESOURCE_KEY, '1', 'en', 'default');
+        $request->setCreator($this->prophesize(UserInterface::class)->reveal());
+
+        return $request;
     }
 
     /**

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\Security;
 
+use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -27,7 +28,16 @@ interface WorkflowTransitionAuthorizerInterface
     public function assertCanPublish(string $resourceKey, string $resourceId, string $locale): void;
 
     /**
+     * Covers every reviewer verdict: the content-level `reject` transition as well as approving or
+     * rejecting a request on the message bus.
+     *
      * @throws AccessDeniedException when the user lacks the REVIEW permission for the resolved context
      */
-    public function assertCanReject(string $resourceKey, string $resourceId, string $locale): void;
+    public function assertCanReview(string $resourceKey, string $resourceId, string $locale): void;
+
+    /**
+     * @throws WorkflowTransitionRequestCancelNotAllowedException when an active request covers the
+     *                                                            content and the user lacks EDIT
+     */
+    public function assertCanCancelReview(string $resourceKey, string $resourceId, string $locale): void;
 }

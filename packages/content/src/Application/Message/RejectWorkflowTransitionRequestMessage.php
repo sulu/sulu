@@ -13,6 +13,10 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\Message;
 
+/**
+ * The comment is required, unlike on `ApproveWorkflowTransitionRequestMessage`: a rejection sends the
+ * author back to the content, so it has to say what is wrong.
+ */
 final class RejectWorkflowTransitionRequestMessage
 {
     public function __construct(

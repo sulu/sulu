@@ -25,6 +25,7 @@ use Sulu\Content\Domain\Exception\MissingAuthenticatedUserException;
 use Sulu\Content\Domain\Exception\NoRequestWorkflowException;
 use Sulu\Content\Domain\Exception\SelfReviewNotAllowedException;
 use Sulu\Content\Domain\Exception\ShadowSourceNotPublishedException;
+use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestPreValidationFailedException;
@@ -200,6 +201,9 @@ final class SuluContentBundle extends AbstractBundle
                             DuplicateActiveWorkflowTransitionRequestException::class => 409,
                             WorkflowTransitionRequestPreValidationFailedException::class => 422,
                             NoRequestWorkflowException::class => 422,
+                            // A misconfiguration, not a verdict on the caller: reported with the
+                            // message naming what to register instead of a bare 500.
+                            UnresolvableSecurityContextException::class => 500,
                         ],
                     ],
                 ]

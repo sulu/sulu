@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextProviderInterface;
+use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 
 /**
  * Ready-made provider for resources whose context is fixed or carried by the entity. Register one
@@ -44,10 +45,11 @@ final class ResourceSecurityContextProvider implements WorkflowTransitionRequest
         $entity = $this->entityManager->find($this->entityClass, $resourceId);
 
         if (!$entity instanceof SecuredEntityInterface) {
-            throw new \RuntimeException(\sprintf(
-                'Cannot resolve a security context from "%s" with id "%s".',
+            throw new UnresolvableSecurityContextException(\sprintf(
+                'Cannot resolve a security context from "%s" with id "%s": it does not exist or does not implement "%s".',
                 $this->entityClass,
                 $resourceId,
+                SecuredEntityInterface::class,
             ));
         }
 

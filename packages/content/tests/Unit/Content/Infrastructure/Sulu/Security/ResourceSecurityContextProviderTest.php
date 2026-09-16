@@ -72,7 +72,7 @@ class ResourceSecurityContextProviderTest extends TestCase
         $provider = new ResourceSecurityContextProvider($entityManager->reveal(), \stdClass::class);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Cannot resolve a security context from "stdClass" with id "missing".');
+        $this->expectExceptionMessage('Cannot resolve a security context from "stdClass" with id "missing":');
 
         $provider->resolve('missing', 'en');
     }

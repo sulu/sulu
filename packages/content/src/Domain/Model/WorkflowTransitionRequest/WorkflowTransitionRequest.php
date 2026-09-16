@@ -92,8 +92,12 @@ class WorkflowTransitionRequest implements AuditableInterface
 
     /**
      * Derived on read and never stored, so two handlers settling concurrently cannot overwrite
-     * each other's verdict. The two numbers come from the workflow config, not from the row, so a
-     * config change applies to open requests as well.
+     * each other's verdict. Both thresholds come from the workflow config rather than from the row,
+     * so raising or lowering them applies to open requests as well.
+     *
+     * The set of validators does not: the rows are written when the request is created, so a
+     * validator added to the config afterwards is not checked for requests that are already open.
+     * Reading it live instead would leave them waiting on a row nothing can ever settle.
      *
      * @param list<string> $requiredValidatorKeys
      */

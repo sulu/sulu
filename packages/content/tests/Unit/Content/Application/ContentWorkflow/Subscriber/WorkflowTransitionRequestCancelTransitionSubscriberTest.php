@@ -18,13 +18,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Component\Security\Authorization\PermissionTypes;
-use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
-use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionRequestCancelTransitionSubscriber;
-use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
-use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
@@ -43,128 +38,49 @@ class WorkflowTransitionRequestCancelTransitionSubscriberTest extends TestCase
 
         $this->assertSame(
             [
-                $prefix . WorkflowInterface::WORKFLOW_TRANSITION_CANCEL_REVIEW => 'onCancelReview',
-                $prefix . WorkflowInterface::WORKFLOW_TRANSITION_CANCEL_REVIEW_DRAFT => 'onCancelReview',
-                $prefix . WorkflowInterface::WORKFLOW_TRANSITION_REJECT => 'onReject',
-                $prefix . WorkflowInterface::WORKFLOW_TRANSITION_REJECT_DRAFT => 'onReject',
+                $prefix . WorkflowInterface::WORKFLOW_TRANSITION_CANCEL_REVIEW => 'onLeaveReview',
+                $prefix . WorkflowInterface::WORKFLOW_TRANSITION_CANCEL_REVIEW_DRAFT => 'onLeaveReview',
+                $prefix . WorkflowInterface::WORKFLOW_TRANSITION_REJECT => 'onLeaveReview',
+                $prefix . WorkflowInterface::WORKFLOW_TRANSITION_REJECT_DRAFT => 'onLeaveReview',
             ],
             WorkflowTransitionRequestCancelTransitionSubscriber::getSubscribedEvents(),
         );
     }
 
     /**
-     * The content-level reject takes the content out of review, so the request cannot stay open
-     * behind it: that would leave the content locked with no transition left to free it.
+     * Every transition out of a review place closes the request: leaving it open would lock the
+     * content with no transition left to free it.
      */
-    public function testOnRejectClosesTheRequest(): void
+    public function testOnLeaveReviewClosesTheRequest(): void
     {
         $request = new WorkflowTransitionRequest(Example::RESOURCE_KEY, '1', 'en', 'default');
         $request->setCreator($this->prophesize(UserInterface::class)->reveal());
 
-        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $securityChecker->hasPermission(Argument::cetera())->shouldNotBeCalled();
+        $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
+        $provider->findForContent(Argument::any())->willReturn($request);
 
-        $this->createSubscriber($request, $securityChecker)
-            ->onReject(new TransitionEvent($this->createDimensionContent(), new Marking()));
+        $subscriber = new WorkflowTransitionRequestCancelTransitionSubscriber($provider->reveal());
+        $subscriber->onLeaveReview(new TransitionEvent($this->createDimensionContent(), new Marking()));
 
         $this->assertFalse($request->isOpen());
     }
 
-    public function testOnRejectDoesNothingWithoutAnActiveRequest(): void
+    public function testOnLeaveReviewDoesNothingWithoutAnActiveRequest(): void
     {
         $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
         $provider->findForContent(Argument::any())->willReturn(null)->shouldBeCalledOnce();
 
-        $subscriber = new WorkflowTransitionRequestCancelTransitionSubscriber(
-            $provider->reveal(),
-            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
-            $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class)->reveal(),
-        );
-
-        $subscriber->onReject(new TransitionEvent($this->createDimensionContent(), new Marking()));
+        $subscriber = new WorkflowTransitionRequestCancelTransitionSubscriber($provider->reveal());
+        $subscriber->onLeaveReview(new TransitionEvent($this->createDimensionContent(), new Marking()));
     }
 
-    public function testOnCancelReviewClosesTheRequestWithTheEditPermission(): void
-    {
-        $request = new WorkflowTransitionRequest(Example::RESOURCE_KEY, '1', 'en', 'default');
-        $request->setCreator($this->prophesize(UserInterface::class)->reveal());
-
-        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $securityChecker->hasPermission($this->conditionOn('sulu.example'), PermissionTypes::EDIT)->willReturn(true);
-
-        $this->createSubscriber($request, $securityChecker)
-            ->onCancelReview(new TransitionEvent($this->createDimensionContent(), new Marking()));
-
-        $this->assertFalse($request->isOpen());
-    }
-
-    public function testOnCancelReviewIsRefusedWithoutTheEditPermission(): void
-    {
-        $request = new WorkflowTransitionRequest(Example::RESOURCE_KEY, '1', 'en', 'default');
-        $request->setCreator($this->prophesize(UserInterface::class)->reveal());
-
-        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $securityChecker->hasPermission($this->conditionOn('sulu.example'), PermissionTypes::EDIT)->willReturn(false);
-
-        $subscriber = $this->createSubscriber($request, $securityChecker);
-
-        $this->expectException(WorkflowTransitionRequestCancelNotAllowedException::class);
-
-        try {
-            $subscriber->onCancelReview(new TransitionEvent($this->createDimensionContent(), new Marking()));
-        } finally {
-            $this->assertTrue($request->isOpen(), 'A refused cancel must leave the request untouched.');
-        }
-    }
-
-    public function testOnCancelReviewDoesNothingWithoutAnActiveRequest(): void
+    public function testOnLeaveReviewIgnoresForeignSubjects(): void
     {
         $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
-        $provider->findForContent(Argument::any())->willReturn(null);
+        $provider->findForContent(Argument::cetera())->shouldNotBeCalled();
 
-        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-        $securityChecker->hasPermission(Argument::cetera())->shouldNotBeCalled();
-
-        $subscriber = new WorkflowTransitionRequestCancelTransitionSubscriber(
-            $provider->reveal(),
-            $securityChecker->reveal(),
-            $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class)->reveal(),
-        );
-
-        $subscriber->onCancelReview(new TransitionEvent($this->createDimensionContent(), new Marking()));
-    }
-
-    /**
-     * @return \Prophecy\Argument\Token\CallbackToken
-     */
-    private function conditionOn(string $context)
-    {
-        return Argument::that(
-            static fn ($condition) => $condition instanceof SecurityCondition
-                && $context === $condition->getSecurityContext()
-                && 'en' === $condition->getLocale()
-        );
-    }
-
-    /**
-     * @param \Prophecy\Prophecy\ObjectProphecy<SecurityCheckerInterface> $securityChecker
-     */
-    private function createSubscriber(
-        WorkflowTransitionRequest $request,
-        $securityChecker,
-    ): WorkflowTransitionRequestCancelTransitionSubscriber {
-        $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
-        $provider->findForContent(Argument::any())->willReturn($request);
-
-        $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
-        $securityContextResolver->resolve(Example::RESOURCE_KEY, '1', 'en')
-            ->willReturn(new SecurityCondition('sulu.example', 'en'));
-
-        return new WorkflowTransitionRequestCancelTransitionSubscriber(
-            $provider->reveal(),
-            $securityChecker->reveal(),
-            $securityContextResolver->reveal(),
-        );
+        $subscriber = new WorkflowTransitionRequestCancelTransitionSubscriber($provider->reveal());
+        $subscriber->onLeaveReview(new TransitionEvent(new \stdClass(), new Marking()));
     }
 
     private function createDimensionContent(): ExampleDimensionContent

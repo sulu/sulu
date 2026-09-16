@@ -58,12 +58,7 @@ class WorkflowTransitionRequestNormalizer implements NormalizerInterface
             return $normalizedData;
         }
 
-        try {
-            $resourceId = (string) $object->getResource()->getId();
-        } catch (\TypeError) {
-            return $normalizedData;
-        }
-
+        $resourceId = (string) $object->getResource()->getId();
         $request = $this->activeWorkflowTransitionRequestProvider->find($object::getResourceKey(), $resourceId, $locale);
 
         $normalizedData['activeWorkflowTransitionRequest'] = null === $request

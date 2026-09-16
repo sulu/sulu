@@ -44,7 +44,17 @@ final class ValidateWorkflowTransitionRequestMessageHandler
             'id' => $message->getWorkflowTransitionRequestId(),
         ]);
 
-        if (null === $request || !$request->isOpen()) {
+        if (null === $request) {
+            return;
+        }
+
+        // Settled before this pass ran, by a cancel or a publish. Logged because under async
+        // processing it is otherwise indistinguishable from a request that is simply gone.
+        if (!$request->isOpen()) {
+            $this->logger->info('Request "{request}" is no longer open, its pending validators are skipped.', [
+                'request' => $request->getId(),
+            ]);
+
             return;
         }
 

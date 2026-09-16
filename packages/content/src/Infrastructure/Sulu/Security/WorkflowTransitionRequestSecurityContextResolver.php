@@ -16,6 +16,7 @@ namespace Sulu\Content\Infrastructure\Sulu\Security;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextProviderInterface;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
+use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 
 /**
  * @internal
@@ -38,10 +39,13 @@ final class WorkflowTransitionRequestSecurityContextResolver implements Workflow
     public function resolve(string $resourceKey, string $resourceId, string $locale): SecurityCondition
     {
         if (!isset($this->providers[$resourceKey])) {
-            throw new \RuntimeException(\sprintf(
-                'No security context provider registered for resource key "%s", known keys: %s.',
+            throw new UnresolvableSecurityContextException(\sprintf(
+                'No security context provider is registered for resource key "%s", so a workflow transition on it'
+                . ' cannot be authorized. Tag a service with "%s" and resource-key "%s". Known keys: %s.',
                 $resourceKey,
-                \implode(', ', \array_keys($this->providers)),
+                'sulu_content.workflow_transition_request_security_context_provider',
+                $resourceKey,
+                [] === $this->providers ? 'none' : \implode(', ', \array_keys($this->providers)),
             ));
         }
 
