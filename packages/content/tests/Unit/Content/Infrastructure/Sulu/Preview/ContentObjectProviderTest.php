@@ -410,7 +410,23 @@ class ContentObjectProviderTest extends TestCase
 
     public function testSerializeWithoutContentNormalizer(): void
     {
-        $contentObjectProvider = $this->createContentObjectProviderWithoutSecurityContext();
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            $contentObjectProvider = $this->createContentObjectProviderWithoutSecurityContext();
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(
+            ['Since sulu/sulu 3.0: Instantiating ContentObjectProvider without the $contentNormalizer argument is deprecated.'],
+            $deprecations
+        );
 
         $result = $contentObjectProvider->serialize(new PreviewContext(1, 'de'), [
             'object' => new ExampleDimensionContent(new Example()),

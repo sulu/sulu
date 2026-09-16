@@ -51,6 +51,9 @@ class ContentObjectProvider implements CachablePreviewDefaultsProviderInterface
         private ?string $securityContext = null,
         private ?ContentNormalizerInterface $contentNormalizer = null,
     ) {
+        if (null === $this->contentNormalizer) {
+            @trigger_deprecation('sulu/sulu', '3.0', 'Instantiating ContentObjectProvider without the $contentNormalizer argument is deprecated.');
+        }
     }
 
     public function getDefaults(PreviewContext $previewContext): array

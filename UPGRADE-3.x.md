@@ -2,6 +2,29 @@
 
 ## 3.0.10
 
+### Additional Optional Parameter contentNormalizer for ContentObjectProvider
+
+The `ContentObjectProvider` gained an optional `$contentNormalizer` argument, which it uses to keep the
+edited state of a preview between two requests. Omitting it is deprecated, so integrators registering
+their own provider service should start passing the `sulu_content.content_normalizer` service now to
+remain compatible with a future version where it is required:
+
+```yaml
+services:
+    app.example_preview_provider:
+        class: Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider
+        arguments:
+            - '@sulu_admin.metadata_provider_registry'
+            - '@doctrine.orm.entity_manager'
+            - '@sulu_content.content_aggregator'
+            - '@sulu_content.content_data_mapper'
+            - App\Entity\Example
+            - null
+            - '@sulu_content.content_normalizer'
+```
+
+Without it, the preview keeps rendering the last saved version when it is reloaded without form data.
+
 ### Reference tracking for teaser selections
 
 The `teaser_selection` content type now registers its items in the reference table, like the
