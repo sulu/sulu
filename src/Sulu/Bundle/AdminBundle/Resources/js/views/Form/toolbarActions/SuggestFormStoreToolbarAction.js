@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, when} from 'mobx';
 import React from 'react';
 import Dialog from '../../../components/Dialog';
 import Grid from '../../../components/Grid';
@@ -24,12 +24,17 @@ const noop = () => undefined;
  * consumers of that action (category and media metadata translation) already misuse its
  * "content exists" dialog as a plain input form.
  *
+ * Both comparison columns render through the same "suggestionFormKey" schema. This component
+ * does not force them read-only itself - mark every property "disabledCondition=true" in that
+ * schema, or the columns stay editable and Insert writes whatever was typed into them.
+ *
  * @experimental We can not yet give BC Promise for this new component in Sulu 2.6.
  */
 export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormStoreToolbarAction {
     formStore: ?FormStoreInterface;
     @observable originalFormStore: ?FormStoreInterface;
     @observable suggestionFormStore: ?FormStoreInterface;
+    @observable hasSuggestion: boolean = false;
     @observable dialogSnackbarMessage: string | void;
     @observable dialogSnackbarType: 'error' | 'warning' = 'error';
 
@@ -68,25 +73,25 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
     @computed get insertText() {
         const {dialogInsertText} = this.options;
 
-        return typeof dialogInsertText === 'string' ? dialogInsertText : this.dialogOkText;
+        return typeof dialogInsertText === 'string' ? dialogInsertText : translate('sulu_admin.insert');
     }
 
     @computed get originalColumnLabel() {
         const {originalColumnLabel} = this.options;
 
-        return typeof originalColumnLabel === 'string' ? originalColumnLabel : undefined;
+        return typeof originalColumnLabel === 'string' ? originalColumnLabel : translate('sulu_admin.current_content');
     }
 
     @computed get suggestionColumnLabel() {
         const {suggestionColumnLabel} = this.options;
 
-        return typeof suggestionColumnLabel === 'string' ? suggestionColumnLabel : undefined;
+        return typeof suggestionColumnLabel === 'string' ? suggestionColumnLabel : translate('sulu_admin.suggestion');
     }
 
     @computed get regenerateText() {
         const {regenerateText} = this.options;
 
-        return typeof regenerateText === 'string' ? regenerateText : this.dialogOkText;
+        return typeof regenerateText === 'string' ? regenerateText : translate('sulu_admin.regenerate');
     }
 
     @action handleClick = async() => {
@@ -171,16 +176,25 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
         this.clearRetryWarning();
         this.dialogSnackbarMessage = undefined;
         this.loading = true;
+        this.hasSuggestion = false;
         this.blankSuggestionFields();
 
         const url = this.buildRequestUrl();
         const content = await this.getCurrentContent();
+        const formStore = this.formStore;
+
+        // the optimize checkbox's schema loads asynchronously too - without this, a request
+        // fired before it resolves goes out with formStore.data still at its pre-load default
+        if (formStore) {
+            await when(() => !formStore.loading);
+        }
 
         Requester.post(url, {
             content,
-            data: this.formStore?.data || {},
+            data: formStore?.data || {},
         }).then(action((response: Object) => {
             this.suggestionFormStore?.changeMultiple(response, {isServerValue: true});
+            this.hasSuggestion = true;
             this.loading = false;
         })).catch(action(async(error) => {
             this.loading = false;
@@ -233,6 +247,7 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
         this.suggestionFormStore?.destroy();
         this.originalFormStore = undefined;
         this.suggestionFormStore = undefined;
+        this.hasSuggestion = false;
     };
 
     destroy() {
@@ -243,7 +258,7 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
         return (
             <Dialog
                 cancelText={this.dialogCancelText || translate('sulu_admin.cancel')}
-                confirmDisabled={this.loading || !this.suggestionFormStore}
+                confirmDisabled={this.loading || !this.hasSuggestion || !!this.suggestionFormStore?.loading}
                 confirmLoading={false}
                 confirmText={this.insertText}
                 key={this.dialogKey}
@@ -255,6 +270,8 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
                 snackbarType={this.dialogSnackbarType}
                 title={this.dialogTitle}
             >
+                {this.dialogDescription}
+
                 {Boolean(this.originalFormStore) && (
                     <Grid>
                         <Grid.Item colSpan={6}>
