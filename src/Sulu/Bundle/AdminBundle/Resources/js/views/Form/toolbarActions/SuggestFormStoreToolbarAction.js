@@ -20,13 +20,9 @@ const noop = () => undefined;
 /**
  * Like UpdateFormStoreToolbarAction, but when the target fields already hold content it shows
  * the generated result next to the original before applying it, instead of overwriting blind.
- * Generation starts as soon as the dialog opens (using the "optimize" checkbox's default), and
- * the checkbox stays editable next to a regenerate button so the user can run it again with a
- * different setting. Kept as a sibling action rather than a mode on UpdateFormStoreToolbarAction
- * because two other consumers of that action (category and media metadata translation) already
- * misuse its "content exists" dialog as a plain input form with a no-op contentExpressions entry
- * - folding the comparison flow into the same class would mix two incompatible meanings of that
- * dialog.
+ * Kept as a sibling action rather than a mode on UpdateFormStoreToolbarAction because two other
+ * consumers of that action (category and media metadata translation) already misuse its
+ * "content exists" dialog as a plain input form.
  *
  * @experimental We can not yet give BC Promise for this new component in Sulu 2.6.
  */
@@ -101,10 +97,6 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
             const formMetadataOptions = formKey ? await this.getFormMetadataOptions() : undefined;
 
             action(() => {
-                // clean up a previous session's stores now, before the dialog re-opens - not at
-                // close time, otherwise the dialog's own closing transition (Dialog.js keeps
-                // rendering "children" until its CSS transition ends) would repaint with these
-                // props already cleared and visibly collapse to an empty, disabled state mid-fade
                 this.destroySuggestionStores();
 
                 if (formKey) {
@@ -149,7 +141,6 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
         }
     }
 
-    // no existing content: same behaviour as UpdateFormStoreToolbarAction without a dialog
     @action generateAndApply = async() => {
         this.clearRetryWarning();
         this.loading = true;
@@ -174,10 +165,8 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
         }));
     };
 
-    // existing content: (re-)generate a suggestion and show it next to the original, don't apply yet.
-    // the suggestion store is created once (in handleClick) and updated in place on every call, rather
-    // than destroyed and recreated, so the form keeps rendering its (now blank) fields instead of
-    // disappearing while the request is in flight - that would otherwise shift the dialog's layout
+    // updates suggestionFormStore in place rather than replacing it, so the form keeps rendering
+    // its (now blank) fields instead of disappearing while the request is in flight
     @action generate = async() => {
         this.clearRetryWarning();
         this.dialogSnackbarMessage = undefined;
@@ -230,15 +219,14 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
         this.handleDialogClose();
     };
 
-    // overrides the base class's plain (non-@action) handleDialogClose: that one only ever
-    // delegates to closeDialog(), itself an action, but this one writes dialogSnackbarMessage
-    // directly and is invoked as a raw onCancel handler, outside any action scope.
-    // deliberately does NOT destroy the suggestion stores here - see the comment in handleClick
     @action handleDialogClose = () => {
         this.dialogSnackbarMessage = undefined;
         this.closeDialog();
     };
 
+    // called from the next handleClick, not from handleDialogClose: Dialog.js keeps rendering
+    // children until its closing transition ends, so clearing these stores immediately on close
+    // would collapse the still-visible dialog to an empty state mid-fade
     @action destroySuggestionStores = () => {
         this.formStore = undefined;
         this.originalFormStore?.destroy();
