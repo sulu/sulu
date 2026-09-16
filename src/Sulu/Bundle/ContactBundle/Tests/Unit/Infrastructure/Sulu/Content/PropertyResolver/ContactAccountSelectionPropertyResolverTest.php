@@ -14,6 +14,8 @@ namespace Sulu\Bundle\ContactBundle\Tests\Unit\Infrastructure\Sulu\Content\Prope
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\PropertyResolver\ContactAccountSelectionPropertyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 
@@ -86,6 +88,11 @@ class ContactAccountSelectionPropertyResolverTest extends TestCase
             $this->assertSame((int) \substr($value, 1), $resolvable->getId());
             $expectedResourceLoaderKey = $expectedResourceLoaderKeys[$key] ?? null;
             $this->assertSame($expectedResourceLoaderKey, $resolvable->getResourceLoaderKey());
+
+            $this->assertSame(
+                'c' === $value[0] ? ContactInterface::RESOURCE_KEY : AccountInterface::RESOURCE_KEY,
+                $resolvable->getResourceKey()
+            );
         }
 
         $this->assertSame(['ids' => $data], $contentView->getView());

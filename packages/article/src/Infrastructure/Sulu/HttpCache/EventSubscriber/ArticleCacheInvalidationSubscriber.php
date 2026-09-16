@@ -17,7 +17,9 @@ use Sulu\Article\Domain\Event\ArticleRemovedEvent;
 use Sulu\Article\Domain\Event\ArticleWorkflowTransitionAppliedEvent;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
@@ -135,11 +137,11 @@ class ArticleCacheInvalidationSubscriber implements EventSubscriberInterface
         }
 
         foreach ($dimensionContent->getExcerptTags() as $tag) {
-            $this->cacheManager->invalidateReference('tag', $tag->getName());
+            $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->getId());
         }
 
         foreach ($dimensionContent->getExcerptCategoryIds() as $categoryId) {
-            $this->cacheManager->invalidateReference('category', (string) $categoryId);
+            $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, (string) $categoryId);
         }
     }
 }

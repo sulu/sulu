@@ -16,6 +16,7 @@ namespace Sulu\Snippet\Infrastructure\Sulu\HttpCache\EventSubscriber;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Snippet\Domain\Event\SnippetAreaModifiedEvent;
 use Sulu\Snippet\Domain\Event\SnippetAreaRemovedEvent;
+use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -67,6 +68,6 @@ class SnippetAreaCacheInvalidationSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->cacheManager->invalidateReference('snippet_area', $areaKey);
+        $this->cacheManager->invalidateReference(SnippetAreaInterface::RESOURCE_KEY, $areaKey);
     }
 }

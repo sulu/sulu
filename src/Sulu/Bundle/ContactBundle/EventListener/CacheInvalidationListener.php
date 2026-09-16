@@ -72,11 +72,11 @@ class CacheInvalidationListener
         }
 
         if ($object instanceof ContactInterface) {
-            $cacheManager->invalidateReference('contact', (string) $object->getId());
+            $cacheManager->invalidateReference(ContactInterface::RESOURCE_KEY, (string) $object->getId());
             $this->invalidateTags($cacheManager, $object->getTags());
             $this->invalidateCategories($cacheManager, $object->getCategories());
         } elseif ($object instanceof AccountInterface) {
-            $cacheManager->invalidateReference('account', (string) $object->getId());
+            $cacheManager->invalidateReference(AccountInterface::RESOURCE_KEY, (string) $object->getId());
             $this->invalidateTags($cacheManager, $object->getTags());
             $this->invalidateCategories($cacheManager, $object->getCategories());
         }
@@ -90,7 +90,7 @@ class CacheInvalidationListener
     private function invalidateTags(CacheManagerInterface $cacheManager, $tags)
     {
         foreach ($tags as $tag) {
-            $cacheManager->invalidateReference('tag', (string) $tag->getId());
+            $cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->getId());
         }
     }
 
@@ -102,7 +102,7 @@ class CacheInvalidationListener
     private function invalidateCategories(CacheManagerInterface $cacheManager, $categories)
     {
         foreach ($categories as $category) {
-            $cacheManager->invalidateReference('category', (string) $category->getId());
+            $cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, (string) $category->getId());
         }
     }
 }

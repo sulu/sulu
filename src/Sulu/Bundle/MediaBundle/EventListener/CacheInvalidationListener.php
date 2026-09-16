@@ -15,6 +15,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
@@ -74,7 +76,12 @@ class CacheInvalidationListener
         }
 
         if ($object instanceof MediaInterface) {
-            $cacheManager->invalidateReference('media', (string) $object->getId());
+            $cacheManager->invalidateReference(MediaInterface::RESOURCE_KEY, (string) $object->getId());
+        } elseif ($object instanceof CollectionInterface) {
+            $cacheManager->invalidateReference(CollectionInterface::RESOURCE_KEY, (string) $object->getId());
+        } elseif ($object instanceof CollectionMeta) {
+            $collection = $object->getCollection();
+            $this->invalidateEntity($collection);
         } elseif ($object instanceof File) {
             $this->invalidateEntity($object->getMedia());
         } elseif ($object instanceof FileVersion) {
@@ -97,7 +104,7 @@ class CacheInvalidationListener
     private function invalidateTags(CacheManagerInterface $cacheManager, $tags)
     {
         foreach ($tags as $tag) {
-            $cacheManager->invalidateReference('tag', (string) $tag->getId());
+            $cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->getId());
         }
     }
 
@@ -109,7 +116,7 @@ class CacheInvalidationListener
     private function invalidateCategories(CacheManagerInterface $cacheManager, $categories)
     {
         foreach ($categories as $category) {
-            $cacheManager->invalidateReference('category', (string) $category->getId());
+            $cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, (string) $category->getId());
         }
     }
 }

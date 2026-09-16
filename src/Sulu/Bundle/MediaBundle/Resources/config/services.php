@@ -455,6 +455,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu.repository.media'),
             new Reference('sulu_media.media_manager'),
             new Reference('translator'),
+            new Reference('sulu_http_cache.reference_store'),
         ])
         ->tag('sulu.link.provider', ['alias' => 'media']);
 

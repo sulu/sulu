@@ -62,20 +62,26 @@ class ContactAccountSelectionPropertyResolver implements PropertyResolverInterfa
                 continue;
             }
 
+            $reference = match ($key) {
+                self::PREFIX_CONTACT => new Reference($id, ContactInterface::RESOURCE_KEY),
+                self::PREFIX_ACCOUNT => new Reference($id, AccountInterface::RESOURCE_KEY),
+                default => null,
+            };
+
+            if (null === $reference) {
+                continue;
+            }
+
             // this is a very edge case normally the `ResolvableResource` class should not be used by property resolvers
             // but in this case we need to use it to load resources depending on the key correctly
             // the ResolvableResource is kept internal to the content bundle and should not be used by other bundles
-            match ($key) {
-                self::PREFIX_CONTACT => [
-                    $resolvableResources[] = new ResolvableResource($id, $contactResourceLoaderKey, 0),
-                    $references[] = new Reference($id, ContactInterface::RESOURCE_KEY),
-                ],
-                self::PREFIX_ACCOUNT => [
-                    $resolvableResources[] = new ResolvableResource($id, $accountResourceLoaderKey, 0),
-                    $references[] = new Reference($id, AccountInterface::RESOURCE_KEY),
-                ],
-                default => null,
-            };
+            $resolvableResources[] = new ResolvableResource(
+                $id,
+                self::PREFIX_CONTACT === $key ? $contactResourceLoaderKey : $accountResourceLoaderKey,
+                0,
+                resourceKey: $reference->getResourceKey(),
+            );
+            $references[] = $reference;
         }
 
         return ContentView::createWithReferences(
