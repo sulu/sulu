@@ -49,7 +49,7 @@ class ResolvableResourceLoaderTest extends TestCase
         };
 
         $smartExampleResolver = new class() implements SmartResolverInterface {
-            public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
+            public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
             {
                 return ContentView::create([
                     'title' => 'Smart Example Resource',
