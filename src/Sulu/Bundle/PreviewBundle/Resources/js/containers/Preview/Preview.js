@@ -25,22 +25,6 @@ type Props = {|
 const NAVIGATE_MESSAGE_TYPE = 'sulu.preview.navigate';
 const READY_MESSAGE_TYPE = 'sulu.preview.ready';
 
-function collectBlockIds(data: mixed, ids: Set<string> = new Set()): Set<string> {
-    if (Array.isArray(data)) {
-        data.forEach((item) => collectBlockIds(item, ids));
-    } else if (data && typeof data === 'object') {
-        // $FlowFixMe
-        const {_id} = data;
-        if (typeof _id === 'string') {
-            ids.add(_id);
-        }
-
-        Object.keys(data).forEach((key) => collectBlockIds(data[key], ids));
-    }
-
-    return ids;
-}
-
 function findBlockIdPath(data: mixed, targetId: string, path: Array<string> = []): ?Array<string> {
     if (Array.isArray(data)) {
         for (const item of data) {
@@ -107,7 +91,6 @@ class Preview extends React.Component<Props> {
     localeDisposer: () => mixed;
 
     unmounted: boolean = false;
-    renderedData: ?Object;
 
     @computed get webspaceKey() {
         const {
@@ -296,7 +279,7 @@ class Preview extends React.Component<Props> {
                 if (formStore.type) {
                     const data = toJS(formStore.data);
                     previewStore.updateContext(toJS(formStore.type), data)
-                        .then((previewContent) => this.setContent(previewContent, data));
+                        .then((previewContent) => this.setContent(previewContent));
                 }
             }
         );
@@ -306,18 +289,16 @@ class Preview extends React.Component<Props> {
         if (this.shouldUpdateFormStore && !!this.previewStore.token) {
             const {previewStore} = this;
             previewStore.update(data).then((content) => {
-                this.setContent(content, data);
+                this.setContent(content);
             });
         }
     }, Preview.debounceDelay);
 
-    setContent = (previewContent: string, data: Object) => {
+    setContent = (previewContent: string) => {
         const previewDocument = this.getPreviewDocument();
         if (!previewDocument) {
             return;
         }
-
-        this.renderedData = data;
 
         const preservedScrollPosition = this.getPreviewScrollPosition();
         previewDocument.open(); // This will lose in Firefox the and safari previewDocument.location
@@ -421,9 +402,12 @@ class Preview extends React.Component<Props> {
     };
 
     warnAboutMissingDeepLinkAttributes = (renderedIds: $ReadOnlyArray<mixed>) => {
-        const {formStore} = this.props;
-        const expectedIds = collectBlockIds(this.renderedData || toJS(formStore.data));
-        const missingIds = Array.from(expectedIds).filter((id) => !renderedIds.includes(id));
+        // Expect the preview attribute only for blocks the admin renders as navigable targets
+        // (carrying "data-sulu-block-id"), not for every "_id" found anywhere in the form data.
+        const expectedIds = Array.from(document.querySelectorAll('[data-sulu-block-id]'))
+            .map((element) => element.getAttribute('data-sulu-block-id'))
+            .filter((id) => typeof id === 'string' && id !== '');
+        const missingIds = expectedIds.filter((id) => !renderedIds.includes(id));
 
         if (renderedIds.length > 0 && missingIds.length > 0) {
             log.warn(

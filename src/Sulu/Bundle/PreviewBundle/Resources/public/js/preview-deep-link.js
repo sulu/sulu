@@ -8,6 +8,13 @@
  *
  * Vanilla JS, no dependencies. UI lives in a closed Shadow DOM so host page
  * styles (box-sizing, resets, cascades) can never leak in or out.
+ *
+ * The admin rewrites the same iframe document on every preview update via
+ * document.open()/write()/close(), which re-executes this script while the
+ * window object (and its listeners) survives. To avoid stacking a fresh set of
+ * listeners on every keystroke, the global mouse/scroll listeners are bound once
+ * per window and read the current overlay from shared state; only the overlay -
+ * wiped together with the old document body - is rebuilt on each run.
  */
 (function () {
     'use strict';
@@ -23,6 +30,7 @@
     var ATTRIBUTE = 'data-sulu-preview-id';
     var MESSAGE_NAVIGATE = 'sulu.preview.navigate';
     var MESSAGE_READY = 'sulu.preview.ready';
+    var STATE_KEY = '__suluPreviewDeepLink';
 
     // The preview iframe/window is always same-origin with the admin, so target it explicitly
     // instead of falling back to a wildcard origin when document.referrer is unavailable
@@ -104,31 +112,60 @@
         overlay.button.style.display = 'none';
     }
 
-    function init() {
+    function rebuildOverlay(state) {
         var overlay = createOverlay();
-        var activeAnchor = null;
+        state.overlay = overlay;
+        state.activeAnchor = null;
 
-        document.addEventListener('mouseover', function (event) {
+        // Events targeting shadow-tree content never reach the window-level listeners as anything
+        // but the retargeted host, so leaving the button/outline is detected here, directly on the
+        // host, where mouseleave isn't subject to that retargeting.
+        overlay.host.addEventListener('mouseleave', function () {
+            state.activeAnchor = null;
+            hide(overlay);
+        });
+
+        overlay.button.addEventListener('click', function () {
+            if (!state.activeAnchor) {
+                return;
+            }
+
+            postToAdmin({type: MESSAGE_NAVIGATE, id: state.activeAnchor.getAttribute(ATTRIBUTE)});
+        });
+    }
+
+    // Bound once per window: window listeners survive document.open(), so they are not re-added on
+    // each preview update. They read the current overlay from shared state.
+    function bindGlobalListeners(state) {
+        window.addEventListener('mouseover', function (event) {
+            if (!state.overlay) {
+                return;
+            }
+
             var anchor = findAnchor(event.target);
             if (!anchor) {
                 return;
             }
 
-            activeAnchor = anchor;
-            positionAt(overlay, anchor);
+            state.activeAnchor = anchor;
+            positionAt(state.overlay, anchor);
         }, true);
 
-        document.addEventListener('mouseout', function (event) {
-            var anchor = findAnchor(event.target);
-            if (!anchor || anchor !== activeAnchor) {
+        window.addEventListener('mouseout', function (event) {
+            if (!state.overlay) {
                 return;
             }
 
-            // The overlay itself lives in a closed shadow tree appended to <body>, so once the
-            // pointer reaches the button/outline, the browser retargets relatedTarget to the
-            // shadow host here (it has no data-sulu-preview-id ancestor). Without this check the
-            // overlay would hide itself the instant the pointer arrives at the button.
-            if (event.relatedTarget === overlay.host) {
+            var anchor = findAnchor(event.target);
+            if (!anchor || anchor !== state.activeAnchor) {
+                return;
+            }
+
+            // The overlay lives in a closed shadow tree appended to <body>, so once the pointer
+            // reaches the button/outline the browser retargets relatedTarget to the shadow host
+            // (it has no data-sulu-preview-id ancestor). Without this check the overlay would hide
+            // itself the instant the pointer arrives at the button.
+            if (event.relatedTarget === state.overlay.host) {
                 return;
             }
 
@@ -137,38 +174,33 @@
                 return;
             }
 
-            activeAnchor = null;
-            hide(overlay);
+            state.activeAnchor = null;
+            hide(state.overlay);
         }, true);
-
-        // Events targeting shadow-tree content never reach document-level listeners as anything
-        // but the retargeted host, so leaving the button/outline is instead detected here, directly
-        // on the host, where mouseleave isn't subject to that retargeting.
-        overlay.host.addEventListener('mouseleave', function () {
-            activeAnchor = null;
-            hide(overlay);
-        });
-
-        overlay.button.addEventListener('click', function () {
-            if (!activeAnchor) {
-                return;
-            }
-
-            postToAdmin({type: MESSAGE_NAVIGATE, id: activeAnchor.getAttribute(ATTRIBUTE)});
-        });
 
         window.addEventListener('scroll', function () {
-            if (activeAnchor) {
-                positionAt(overlay, activeAnchor);
+            if (state.activeAnchor && state.overlay) {
+                positionAt(state.overlay, state.activeAnchor);
             }
         }, true);
+    }
+
+    function run() {
+        var state = window[STATE_KEY];
+        if (!state) {
+            state = {overlay: null, activeAnchor: null};
+            window[STATE_KEY] = state;
+            bindGlobalListeners(state);
+        }
+
+        rebuildOverlay(state);
 
         postToAdmin({type: MESSAGE_READY, ids: collectKnownIds()});
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', run);
     } else {
-        init();
+        run();
     }
 })();

@@ -33,6 +33,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     oldIconValue: ?Object;
     computedIcons: Array<Array<string>> = [];
     generatingBlockIds: boolean = false;
+    pendingBlockIdValue: ?Object;
 
     constructor(props: FieldTypeProps<Array<BlockEntry>>) {
         super(props);
@@ -321,7 +322,13 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     generateMissingBlockIds = async(value: Object) => {
         const {onChange, types} = this.props;
 
-        if (this.generatingBlockIds || !this.generateBlockIds || !types || !value) {
+        if (!this.generateBlockIds || !types || !value) {
+            return;
+        }
+
+        if (this.generatingBlockIds) {
+            this.pendingBlockIdValue = value;
+
             return;
         }
 
@@ -335,6 +342,13 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             }
         } finally {
             this.generatingBlockIds = false;
+        }
+
+        // Re-check the value that arrived while a run was in flight; a no-op once nothing is missing.
+        if (this.pendingBlockIdValue) {
+            const pendingValue = this.pendingBlockIdValue;
+            this.pendingBlockIdValue = undefined;
+            this.generateMissingBlockIds(pendingValue);
         }
     };
 
