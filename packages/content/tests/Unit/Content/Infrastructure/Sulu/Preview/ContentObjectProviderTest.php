@@ -32,6 +32,7 @@ use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
+use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
@@ -69,6 +70,11 @@ class ContentObjectProviderTest extends TestCase
     private $contentDataMapper;
 
     /**
+     * @var ObjectProphecy<ContentNormalizerInterface>
+     */
+    private $contentNormalizer;
+
+    /**
      * @var ContentObjectProvider<ExampleDimensionContent, Example>
      */
     private $contentObjectProvider;
@@ -83,6 +89,7 @@ class ContentObjectProviderTest extends TestCase
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->contentDataMapper = $this->prophesize(ContentDataMapperInterface::class);
+        $this->contentNormalizer = $this->prophesize(ContentNormalizerInterface::class);
 
         $this->contentObjectProvider = new ContentObjectProvider(
             $metadataProviderRegistry,
@@ -90,7 +97,8 @@ class ContentObjectProviderTest extends TestCase
             $this->contentAggregator->reveal(),
             $this->contentDataMapper->reveal(),
             Example::class,
-            ExampleAdmin::SECURITY_CONTEXT
+            ExampleAdmin::SECURITY_CONTEXT,
+            $this->contentNormalizer->reveal()
         );
     }
 
@@ -381,6 +389,60 @@ class ContentObjectProviderTest extends TestCase
         $this->contentObjectProvider->updateContext($previewContext, $defaults, $context);
 
         $this->assertSame($context['template'], $dimensionContent->getTemplateKey());
+    }
+
+    public function testSerialize(): void
+    {
+        $dimensionContent = new ExampleDimensionContent(new Example());
+
+        $this->contentNormalizer->normalize($dimensionContent)
+            ->willReturn(['template' => 'default', 'title' => 'Edited'])
+            ->shouldBeCalledTimes(1);
+
+        $result = $this->contentObjectProvider->serialize(new PreviewContext(1, 'de'), [
+            'object' => $dimensionContent,
+            '_controller' => ContentController::class . '::indexAction',
+            'view' => 'pages/default',
+        ]);
+
+        $this->assertSame('{"template":"default","title":"Edited"}', $result);
+    }
+
+    public function testSerializeWithoutContentNormalizer(): void
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            $contentObjectProvider = $this->createContentObjectProviderWithoutSecurityContext();
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(
+            ['Since sulu/sulu 3.0: Instantiating ContentObjectProvider without the $contentNormalizer argument is deprecated.'],
+            $deprecations
+        );
+
+        $result = $contentObjectProvider->serialize(new PreviewContext(1, 'de'), [
+            'object' => new ExampleDimensionContent(new Example()),
+        ]);
+
+        $this->assertSame('', $result);
+    }
+
+    public function testDeserializeNonExisting(): void
+    {
+        $this->entityManager->createQueryBuilder()->willThrow(NoResultException::class)->shouldBeCalledTimes(1);
+        $this->contentDataMapper->map(Argument::cetera())->shouldNotBeCalled();
+
+        $result = $this->contentObjectProvider->deserialize(new PreviewContext(1, 'de'), '{"title":"Edited"}');
+
+        $this->assertSame([], $result);
     }
 
     public function testGetSecurityContext(): void

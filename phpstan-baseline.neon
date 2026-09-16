@@ -25477,7 +25477,7 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Infrastructure/Symfony/DependencyInjection/Compiler/RegisterPreviewWebspaceClassPassTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Provider\\PreviewDefaultsProviderInterface@anonymous/src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest\.php\:78\:\:getSecurityContext\(\) never returns null so it can be removed from the return type\.$#'
+			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Provider\\PreviewDefaultsProviderInterface@anonymous/src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest\.php\:79\:\:getSecurityContext\(\) never returns null so it can be removed from the return type\.$#'
 			identifier: return.unusedType
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest.php

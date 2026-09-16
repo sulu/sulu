@@ -334,6 +334,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_data_mapper'),
                 '%sulu.model.article.class%',
                 ArticleAdmin::SECURITY_CONTEXT,
+                new Reference('sulu_content.content_normalizer'),
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu_preview.object_provider', ['provider-key' => 'articles']);
