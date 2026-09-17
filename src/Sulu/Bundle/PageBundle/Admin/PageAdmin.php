@@ -73,12 +73,12 @@ class PageAdmin extends Admin
     {
         $firstWebspace = $this->getFirstWebspaceWithPermissions();
 
-        $createPageSaveVisibleCondition = '!_permissions && (!__webspace || __webspace._permissions.edit)';
+        $createPageSaveVisibleCondition = '!_permissions && (!__webspace || __webspace._permissions.add)';
         $editPageSaveVisibleCondition = '_permissions && _permissions.edit';
         $saveVisibleCondition = '(' . $createPageSaveVisibleCondition . ') || (' . $editPageSaveVisibleCondition . ')';
 
         $createPagePublishVisibleCondition = '!_permissions  && (!__webspace || __webspace._permissions.live)';
-        $editPagePublishVisibleCondition = '(!_permissions || _permissions.live)';
+        $editPagePublishVisibleCondition = '_permissions && _permissions.live';
         $publishVisibleCondition = '(' . $createPagePublishVisibleCondition . ') || (' . $editPagePublishVisibleCondition . ')';
 
         $saveWithPublishingDropdown = new DropdownToolbarAction(
