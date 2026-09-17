@@ -178,7 +178,7 @@ test('Should show loader if available page types have not been loaded yet', () =
     });
 });
 
-test('Should pass onItemAdd to the List when the webspace grants the add permission', () => {
+test('Should allow adding and copying pages when the webspace grants the add permission', () => {
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
     formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
@@ -210,10 +210,11 @@ test('Should pass onItemAdd to the List when the webspace grants the add permiss
     return metadataPromise.then(() => {
         webspaceOverview.update();
         expect(webspaceOverview.find('List').prop('onItemAdd')).toBeInstanceOf(Function);
+        expect(webspaceOverview.find('List').prop('copyable')).toEqual(true);
     });
 });
 
-test('Should not pass onItemAdd to the List without the add permission on the webspace', () => {
+test('Should not allow adding and copying pages without the add permission on the webspace', () => {
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
     formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
@@ -245,6 +246,48 @@ test('Should not pass onItemAdd to the List without the add permission on the we
     return metadataPromise.then(() => {
         webspaceOverview.update();
         expect(webspaceOverview.find('List').prop('onItemAdd')).toBeUndefined();
+        expect(webspaceOverview.find('List').prop('copyable')).toEqual(false);
+    });
+});
+
+test('Should show the error of a failed copy in the toolbar', () => {
+    const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
+    const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
+    formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
+
+    const PageList = require('../PageList').default;
+
+    const webspaceKey = observable.box('sulu');
+    const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
+        _permissions: {add: true},
+    };
+
+    const router = new Router({});
+    router.attributes = {
+        webspace: 'sulu',
+    };
+
+    const webspaceOverview = mount(
+        <PageList
+            route={router.route}
+            router={router}
+            // $FlowFixMe
+            webspace={webspace}
+            webspaceKey={webspaceKey}
+        />
+    );
+
+    return metadataPromise.then(() => {
+        webspaceOverview.update();
+        webspaceOverview.find('List').prop('onCopyError')({detail: 'Copying is not allowed'});
+        webspaceOverview.find('List').prop('onCopyError')({});
+
+        expect(webspaceOverview.instance().errors).toEqual([
+            'Copying is not allowed',
+            'sulu_admin.unexpected_copy_server_error',
+        ]);
     });
 });
 
