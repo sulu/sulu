@@ -1,6 +1,6 @@
 # Upgrade
 
-## 3.0.11
+## 3.0.10
 
 ### Cache tags now match the invalidation
 
@@ -12,8 +12,6 @@ with the old aliases need to switch to the resource key:
 ```php
 $cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->getId());
 ```
-
-## 3.0.10
 
 ### Add and live permissions are enforced for pages, snippets and articles
 
