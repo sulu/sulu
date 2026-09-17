@@ -34,6 +34,9 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Sulu\Component\Rest\RequestParametersTrait;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormTypeInterface;
@@ -65,6 +68,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         private ListRestHelper $listRestHelper,
         private MetadataFactoryInterface $metadataFactory,
         private TranslatorInterface $translator,
+        private ?SecurityCheckerInterface $securityChecker = null,
     ) {
     }
 
@@ -268,6 +272,12 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 
                     break;
                 case 'copy':
+                    // copying creates a new snippet, which the request method based security check grants with edit
+                    $this->securityChecker?->checkPermission(
+                        new SecurityCondition($this->getSecurityContext(), $locale),
+                        PermissionTypes::ADD
+                    );
+
                     /** @var SnippetDocument $document */
                     $document = $this->documentManager->find($id, $locale);
                     $copiedPath = $this->documentManager->copy($document, \dirname($document->getPath()));

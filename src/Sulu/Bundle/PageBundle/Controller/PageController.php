@@ -165,6 +165,22 @@ class PageController extends AbstractRestController implements ClassResourceInte
                         'edit'
                     );
 
+                    // the copy is created below the destination, which can be in another webspace
+                    $destination = $this->documentManager->find(
+                        $this->getRequestParameter($request, 'destination', true),
+                        $locale
+                    );
+
+                    $this->securityChecker->checkPermission(
+                        new SecurityCondition(
+                            PageAdmin::getPageSecurityContext($destination->getWebspaceName()),
+                            $locale,
+                            SecurityBehavior::class,
+                            $destination->getUuid()
+                        ),
+                        'add'
+                    );
+
                     $copiedPath = $this->documentManager->copy(
                         $document,
                         $this->getRequestParameter($request, 'destination', true)
