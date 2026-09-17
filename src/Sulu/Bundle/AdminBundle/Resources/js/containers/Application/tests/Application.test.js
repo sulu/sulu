@@ -3,6 +3,7 @@ import React from 'react';
 import {render, mount} from 'enzyme';
 import Router, {Route} from '../../../services/Router';
 import Application from '../Application';
+import blockingOverlayRegistry from '../registries/blockingOverlayRegistry';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
@@ -40,6 +41,7 @@ const mockUserStoreUser = jest.fn();
 const mockUserStoreGetPersistentSetting = jest.fn().mockReturnValue(0);
 const mockUserStoreSetPersistentSetting = jest.fn();
 const mockUserStoreHasSingleSignOn = jest.fn().mockReturnValue(false);
+const mockUserStoreTwoFactorSetupRequired = jest.fn().mockReturnValue(false);
 
 jest.mock('../../../stores/userStore', () => {
     return new class {
@@ -53,6 +55,10 @@ jest.mock('../../../stores/userStore', () => {
 
         get contact() {
             return mockUserStoreContact();
+        }
+
+        get twoFactorSetupRequired() {
+            return mockUserStoreTwoFactorSetupRequired();
         }
 
         hasSingleSignOn() {
@@ -69,7 +75,7 @@ jest.mock('../../../stores/userStore', () => {
     };
 });
 
-jest.mock('../../ViewRenderer', () => function Test(props) {
+jest.mock('../../ViewRenderer', () => function ViewRenderer(props) {
     return (
         <div>
             <h1>Test</h1>
@@ -78,7 +84,7 @@ jest.mock('../../ViewRenderer', () => function Test(props) {
     );
 });
 
-jest.mock('../../ProfileFormOverlay', () => function Test() {
+jest.mock('../../ProfileFormOverlay', () => function ProfileFormOverlay() {
     return (
         <div>ProfileFormOverlay Mock</div>
     );
@@ -94,6 +100,7 @@ beforeEach(() => {
     mockInitializedTranslationsLocale.mockReturnValue('en');
 
     mockUserStoreLoggedIn.mockReturnValue(true);
+    mockUserStoreTwoFactorSetupRequired.mockReturnValue(false);
     mockUserStoreContact.mockReturnValue({
         fullName: 'Hikaru Sulu',
     });
@@ -156,6 +163,41 @@ test('Render based on current route', () => {
     const view = render(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
 
     expect(view).toMatchSnapshot();
+});
+
+test('Do not render the view while a forced two factor setup is pending', () => {
+    mockUserStoreTwoFactorSetupRequired.mockReturnValue(true);
+
+    const router = new Router({});
+    router.route = new Route({
+        name: 'test',
+        path: '/webspaces',
+        type: 'test',
+    });
+
+    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+
+    expect(view.find('ViewRenderer')).toHaveLength(0);
+});
+
+test('Render the registered blocking overlays', () => {
+    blockingOverlayRegistry.clear();
+    blockingOverlayRegistry.add('test_overlay', function TestBlockingOverlay() {
+        return <div>blocking overlay mock</div>;
+    });
+
+    const router = new Router({});
+    router.route = new Route({
+        name: 'test',
+        path: '/webspaces',
+        type: 'test',
+    });
+
+    const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
+
+    expect(view.find('TestBlockingOverlay')).toHaveLength(1);
+
+    blockingOverlayRegistry.clear();
 });
 
 test('Render based on current route with app version', () => {
