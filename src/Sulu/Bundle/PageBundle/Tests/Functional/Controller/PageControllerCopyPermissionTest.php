@@ -20,7 +20,6 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 /**
  * Copying creates a page below the destination, so it needs the add permission on the webspace of the destination.
@@ -145,12 +144,7 @@ class PageControllerCopyPermissionTest extends SuluTestCase
         $user->setLocale('en');
 
         $passwordHasherFactory = self::getContainer()->get('sulu_security.encoder_factory');
-        if ($passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
-            $password = $passwordHasherFactory->getPasswordHasher($user)->hash($username);
-        } else {
-            $password = $passwordHasherFactory->getEncoder($user)->encodePassword($username, $user->getSalt());
-        }
-        $user->setPassword($password);
+        $user->setPassword($passwordHasherFactory->getPasswordHasher($user)->hash($username));
 
         $userRole = new UserRole();
         $userRole->setUser($user);

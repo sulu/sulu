@@ -171,6 +171,10 @@ class PageController extends AbstractRestController implements ClassResourceInte
                         $locale
                     );
 
+                    if (!$destination instanceof BasePageDocument) {
+                        throw new RestException('Unrecognized destination for copy');
+                    }
+
                     $this->securityChecker->checkPermission(
                         new SecurityCondition(
                             PageAdmin::getPageSecurityContext($destination->getWebspaceName()),
