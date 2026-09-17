@@ -316,6 +316,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_core.list_builder.field_descriptor_factory'),
                 new Reference('sulu_core.doctrine_list_builder_factory'),
                 new Reference('sulu_core.doctrine_rest_helper'),
+                new Reference('sulu_security.security_checker'),
                 param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
                 param('sulu_core.is_single_locale'),
             ])

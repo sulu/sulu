@@ -208,6 +208,7 @@ class PageList extends React.Component<Props> {
 
     render() {
         const {getIndicators} = this;
+        const {webspace} = this.props;
 
         return (
             <div className={pageListStyles.pageList}>
@@ -223,7 +224,7 @@ class PageList extends React.Component<Props> {
                         adapters={['column_list', 'tree_table']}
                         onCopyFinished={this.handleCopyFinished}
                         onDeleteError={this.handleDeleteError}
-                        onItemAdd={this.handleItemAdd}
+                        onItemAdd={webspace && webspace._permissions.add ? this.handleItemAdd : undefined}
                         onItemClick={this.handleEditClick}
                         searchable={false}
                         selectable={false}

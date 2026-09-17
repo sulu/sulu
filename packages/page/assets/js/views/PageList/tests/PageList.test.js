@@ -178,6 +178,76 @@ test('Should show loader if available page types have not been loaded yet', () =
     });
 });
 
+test('Should pass onItemAdd to the List when the webspace grants the add permission', () => {
+    const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
+    const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
+    formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
+
+    const PageList = require('../PageList').default;
+
+    const webspaceKey = observable.box('sulu');
+    const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
+        _permissions: {add: true},
+    };
+
+    const router = new Router({});
+    router.attributes = {
+        webspace: 'sulu',
+    };
+
+    const webspaceOverview = mount(
+        <PageList
+            route={router.route}
+            router={router}
+            // $FlowFixMe
+            webspace={webspace}
+            webspaceKey={webspaceKey}
+        />
+    );
+
+    return metadataPromise.then(() => {
+        webspaceOverview.update();
+        expect(webspaceOverview.find('List').prop('onItemAdd')).toBeInstanceOf(Function);
+    });
+});
+
+test('Should not pass onItemAdd to the List without the add permission on the webspace', () => {
+    const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
+    const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
+    formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
+
+    const PageList = require('../PageList').default;
+
+    const webspaceKey = observable.box('sulu');
+    const webspace = {
+        ...defaultWebspace,
+        localizations: undefined,
+        _permissions: {add: false},
+    };
+
+    const router = new Router({});
+    router.attributes = {
+        webspace: 'sulu',
+    };
+
+    const webspaceOverview = mount(
+        <PageList
+            route={router.route}
+            router={router}
+            // $FlowFixMe
+            webspace={webspace}
+            webspaceKey={webspaceKey}
+        />
+    );
+
+    return metadataPromise.then(() => {
+        webspaceOverview.update();
+        expect(webspaceOverview.find('List').prop('onItemAdd')).toBeUndefined();
+    });
+});
+
 test('Should show the locales from the webspace configuration for the toolbar', () => {
     const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
     const PageList = require('../PageList').default;
