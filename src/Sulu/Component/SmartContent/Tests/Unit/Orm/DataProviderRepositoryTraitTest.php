@@ -195,6 +195,38 @@ class DataProviderRepositoryTraitTest extends TestCase
         $this->queryBuilder->distinct()->shouldBeCalled();
     }
 
+    public function testFindByFiltersIdsWithoutOperators(): void
+    {
+        $query = $this->prophesize(Query::class);
+        $query->setParameter(Argument::cetera())->willReturn($query);
+        $query->setFirstResult(0)->willReturn($query);
+        $query->setMaxResults(Argument::any())->willReturn($query);
+        $query->getScalarResult()->willReturn([]);
+
+        $this->queryBuilder->select(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->distinct(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->orderBy(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->leftJoin(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->andWhere(Argument::cetera())->willReturn($this->queryBuilder);
+        $this->queryBuilder->getQuery()->willReturn($query);
+
+        // no *Operator keys set -> must default to "or" instead of raising a warning
+        $this->findByFiltersIds(
+            filters: [
+                'tags' => [1],
+                'categories' => [2],
+                'websiteTags' => [3],
+                'websiteCategories' => [4],
+            ],
+            page: 1,
+            pageSize: 5,
+            limit: null,
+            locale: 'de',
+        );
+
+        $this->queryBuilder->getQuery()->shouldBeCalled();
+    }
+
     public function testFindByFiltersWithSorting(): void
     {
         $query = $this->prophesize(Query::class);
