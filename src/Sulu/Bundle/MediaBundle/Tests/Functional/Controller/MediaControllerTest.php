@@ -24,7 +24,9 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -1444,6 +1446,72 @@ class MediaControllerTest extends SuluTestCase
         $this->assertObjectHasProperty('message', $response);
 
         $this->assertFalse(\file_exists($this->getStoragePath() . '/1/photo.jpeg'));
+    }
+
+    public function testDeleteByIdWithReferences(): void
+    {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $mediaId = (int) $media->getId();
+        $this->createMediaReference($mediaId, 'Referencing page');
+
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId);
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        /** @var array{code: int, resource: array{id: string, resourceKey: string}, referencingResources: array<int, array{resourceKey: string, title: string}>, referencingResourcesCount: int} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame(1106, $response['code']);
+        $this->assertSame(1, $response['referencingResourcesCount']);
+        $this->assertSame((string) $mediaId, $response['resource']['id']);
+        $this->assertSame(MediaInterface::RESOURCE_KEY, $response['resource']['resourceKey']);
+        $this->assertSame('pages', $response['referencingResources'][0]['resourceKey']);
+        $this->assertSame('Referencing page', $response['referencingResources'][0]['title']);
+
+        // the media must still exist because the delete was refused
+        $this->client->jsonRequest('GET', '/api/media/' . $mediaId . '?locale=en-gb');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var string $storagePath */
+        $storagePath = $this->getStoragePath();
+        $this->assertFileExists($storagePath . '/1/photo.jpeg');
+    }
+
+    public function testDeleteByIdWithReferencesForced(): void
+    {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $mediaId = (int) $media->getId();
+        $this->createMediaReference($mediaId, 'Referencing page');
+
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId . '?force=true');
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $this->client->jsonRequest('GET', '/api/media/' . $mediaId . '?locale=en-gb');
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+
+        /** @var string $storagePath */
+        $storagePath = $this->getStoragePath();
+        $this->assertFalse(\file_exists($storagePath . '/1/photo.jpeg'));
+    }
+
+    private function createMediaReference(int $mediaId, string $title): void
+    {
+        /** @var ReferenceRepositoryInterface $referenceRepository */
+        $referenceRepository = $this->getContainer()->get('sulu_reference.reference_repository');
+
+        $reference = $referenceRepository->create(
+            MediaInterface::RESOURCE_KEY,
+            (string) $mediaId,
+            'pages',
+            'page-uuid-1',
+            'en',
+            $title,
+            'default',
+            'image'
+        );
+        $referenceRepository->add($reference);
+        $referenceRepository->flush();
     }
 
     public function testDeleteByIdNotExisting(): void
