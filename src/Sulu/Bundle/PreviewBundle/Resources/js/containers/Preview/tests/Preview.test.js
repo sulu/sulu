@@ -859,7 +859,7 @@ function appendNavigableBlocks(...ids) {
         element.setAttribute('data-sulu-block-id', id);
         container.appendChild(element);
     });
-    document.body.appendChild(container);
+    document.body?.appendChild(container);
 
     return container;
 }
@@ -878,7 +878,7 @@ test('Warns about blocks missing the preview deep-link attribute', () => {
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('block-2'));
 
     warnSpy.mockRestore();
-    document.body.removeChild(container);
+    document.body?.removeChild(container);
 });
 
 test('Does not warn when no block renders the preview deep-link attribute at all', () => {
@@ -895,7 +895,7 @@ test('Does not warn when no block renders the preview deep-link attribute at all
     expect(warnSpy).not.toHaveBeenCalled();
 
     warnSpy.mockRestore();
-    document.body.removeChild(container);
+    document.body?.removeChild(container);
 });
 
 test('Does not warn when every block carries the preview deep-link attribute', () => {
@@ -912,5 +912,5 @@ test('Does not warn when every block carries the preview deep-link attribute', (
     expect(warnSpy).not.toHaveBeenCalled();
 
     warnSpy.mockRestore();
-    document.body.removeChild(container);
+    document.body?.removeChild(container);
 });
