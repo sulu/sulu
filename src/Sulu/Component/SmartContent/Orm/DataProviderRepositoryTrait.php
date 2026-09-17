@@ -145,7 +145,7 @@ trait DataProviderRepositoryTrait
                     $queryBuilder,
                     $tagRelation,
                     $filters['tags'],
-                    \strtolower($filters['tagOperator']),
+                    \strtolower($filters['tagOperator'] ?? 'or'),
                     'adminTags'
                 )
             );
@@ -172,7 +172,7 @@ trait DataProviderRepositoryTrait
                     $queryBuilder,
                     $categoryRelation,
                     $filters['categories'],
-                    \strtolower($filters['categoryOperator']),
+                    \strtolower($filters['categoryOperator'] ?? 'or'),
                     'adminCategories'
                 )
             );
@@ -199,7 +199,7 @@ trait DataProviderRepositoryTrait
                     $queryBuilder,
                     $tagRelation,
                     $filters['websiteTags'],
-                    \strtolower($filters['websiteTagsOperator']),
+                    \strtolower($filters['websiteTagsOperator'] ?? 'or'),
                     'websiteTags'
                 )
             );
@@ -212,7 +212,7 @@ trait DataProviderRepositoryTrait
                     $queryBuilder,
                     $categoryRelation,
                     $filters['websiteCategories'],
-                    \strtolower($filters['websiteCategoriesOperator']),
+                    \strtolower($filters['websiteCategoriesOperator'] ?? 'or'),
                     'websiteCategories'
                 )
             );

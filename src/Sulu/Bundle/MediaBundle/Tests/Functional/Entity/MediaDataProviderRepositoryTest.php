@@ -302,6 +302,15 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
                 \array_slice(self::$mediaData, 0, 7),
                 [0],
             ],
+            // no pagination, tag 0 without explicit operator
+            [
+                ['dataSource' => 'root', 'tags' => [0]],
+                null,
+                0,
+                null,
+                \array_slice(self::$mediaData, 0, 7),
+                [0],
+            ],
             // no pagination, tag 0 or 1
             [
                 ['dataSource' => 'root', 'tags' => [0, 1], 'tagOperator' => 'or'],
