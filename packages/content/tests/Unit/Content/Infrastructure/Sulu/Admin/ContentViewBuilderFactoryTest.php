@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
@@ -405,6 +406,107 @@ class ContentViewBuilderFactoryTest extends TestCase
             [$condition, $condition, $condition, $condition, $condition],
             $this->getPublishVisibleConditions($views),
         );
+    }
+
+    /**
+     * @return iterable<string, array{array<string, bool>, string[], int}>
+     */
+    public static function getEditDropdownPermissionData(): iterable
+    {
+        yield 'all permissions' => [
+            [PermissionTypes::ADD => true, PermissionTypes::EDIT => true, PermissionTypes::LIVE => true, PermissionTypes::DELETE => true],
+            ['sulu_admin.copy', 'sulu_admin.copy_locale', 'sulu_admin.delete_draft', 'sulu_admin.set_unpublished'],
+            5,
+        ];
+
+        yield 'without live' => [
+            [PermissionTypes::ADD => true, PermissionTypes::EDIT => true, PermissionTypes::LIVE => false, PermissionTypes::DELETE => true],
+            ['sulu_admin.copy', 'sulu_admin.copy_locale'],
+            5,
+        ];
+
+        yield 'without add' => [
+            [PermissionTypes::ADD => false, PermissionTypes::EDIT => true, PermissionTypes::LIVE => true, PermissionTypes::DELETE => true],
+            ['sulu_admin.copy_locale', 'sulu_admin.delete_draft', 'sulu_admin.set_unpublished'],
+            4,
+        ];
+
+        yield 'without add and live' => [
+            [PermissionTypes::ADD => false, PermissionTypes::EDIT => true, PermissionTypes::LIVE => false, PermissionTypes::DELETE => true],
+            ['sulu_admin.copy_locale'],
+            4,
+        ];
+    }
+
+    /**
+     * @param array<string, bool> $permissions
+     * @param string[] $expectedEditActions
+     */
+    #[DataProvider('getEditDropdownPermissionData')]
+    public function testCreateViewsKeepsOnlyEditActionsTheUserMayUse(
+        array $permissions,
+        array $expectedEditActions,
+        int $expectedViewsWithEditDropdown,
+    ): void {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $contentViewBuilder = $this->createContentViewBuilder($contentMetadataInspector->reveal(), $securityChecker->reveal());
+
+        foreach ($permissions as $permissionType => $permission) {
+            $securityChecker->hasPermission('test_context', $permissionType)->willReturn($permission);
+        }
+
+        $toolbarActions = $contentViewBuilder->getDefaultToolbarActions(Example::class);
+        $toolbarActions['edit'] = new DropdownToolbarAction('sulu_admin.edit', 'su-pen', [
+            new ToolbarAction('sulu_admin.copy'),
+            new ToolbarAction('sulu_admin.copy_locale'),
+            new ToolbarAction('sulu_admin.delete_draft'),
+            new ToolbarAction('sulu_admin.set_unpublished'),
+        ]);
+
+        $views = $contentViewBuilder->createViews(
+            Example::class,
+            'edit_parent_key',
+            'add_parent_key',
+            'test_context',
+            $toolbarActions,
+        );
+
+        $this->assertSame(
+            \array_fill(0, $expectedViewsWithEditDropdown, $expectedEditActions),
+            $this->getDropdownActionTypes($views),
+        );
+    }
+
+    /**
+     * @param ViewBuilderInterface[] $views
+     *
+     * @return string[][]
+     */
+    private function getDropdownActionTypes(array $views): array
+    {
+        $dropdowns = [];
+
+        foreach ($views as $viewBuilder) {
+            /** @var ToolbarAction[] $toolbarActions */
+            $toolbarActions = $viewBuilder->getView()->getOption('toolbarActions') ?? [];
+
+            foreach ($toolbarActions as $toolbarAction) {
+                if (!$toolbarAction instanceof DropdownToolbarAction) {
+                    continue;
+                }
+
+                /** @var ToolbarAction[] $children */
+                $children = $toolbarAction->getOptions()['toolbarActions'];
+                $dropdowns[] = \array_map(fn (ToolbarAction $child) => $child->getType(), $children);
+            }
+        }
+
+        return $dropdowns;
     }
 
     /**
