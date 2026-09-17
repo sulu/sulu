@@ -23,8 +23,8 @@ use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
 
 /**
- * Runs every validator with a pending row and records its verdict. On a worker a crash escapes so
- * the retry strategy applies.
+ * Runs every validator with a pending row and records its verdict. On a worker a crash escapes once
+ * the remaining validators have run, so the retry strategy applies to the one that failed.
  *
  * @internal
  */
@@ -69,6 +69,7 @@ final class ValidateWorkflowTransitionRequestMessageHandler
         }
 
         $entriesByKey = $this->requestWorkflowRegistry->get($workflowName)->validators;
+        $firstThrowable = null;
 
         foreach ($request->getDecisions() as $decision) {
             $validatorKey = $decision->getValidatorKey();
@@ -91,7 +92,12 @@ final class ValidateWorkflowTransitionRequestMessageHandler
                     ));
                 } catch (\Throwable $throwable) {
                     if ($this->workerState->isRunning()) {
-                        throw $throwable;
+                        // Kept and rethrown after the loop rather than here, so the validators
+                        // behind this one still get a real verdict. Its own row stays pending, so
+                        // the retry only has this one left to run.
+                        $firstThrowable ??= $throwable;
+
+                        continue;
                     }
 
                     $this->logger->error('Request workflow validator "{validator}" failed on request "{request}".', [
@@ -111,6 +117,13 @@ final class ValidateWorkflowTransitionRequestMessageHandler
                     : WorkflowTransitionRequestDecisionStatusEnum::REJECTED,
                 $result->messages,
             );
+        }
+
+        // Hands the message back to the retry strategy. A bus running this handler inside
+        // `doctrine_transaction` rolls the verdicts above back with it, so on such a bus the
+        // decisions settled in this pass are lost and every validator runs again on the retry.
+        if (null !== $firstThrowable) {
+            throw $firstThrowable;
         }
     }
 }
