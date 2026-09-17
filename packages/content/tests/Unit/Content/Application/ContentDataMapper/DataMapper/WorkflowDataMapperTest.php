@@ -177,9 +177,10 @@ class WorkflowDataMapperTest extends TestCase
     }
 
     /**
-     * The review places have no `edit` transition, so the mapper must not try to apply one.
+     * The review places can leave through `edit` as well, so the guard that holds content in review
+     * sees the write and is the one to refuse it.
      */
-    public function testMapSkipsTheEditTransitionForContentInReview(): void
+    public function testMapAppliesTheEditTransitionForContentInReview(): void
     {
         $example = new Example();
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
@@ -187,10 +188,39 @@ class WorkflowDataMapperTest extends TestCase
         $localizedDimensionContent->setLocale('en');
         $localizedDimensionContent->setWorkflowPlace(WorkflowInterface::WORKFLOW_PLACE_REVIEW);
 
+        $this->contentWorkflow->apply(
+            $example,
+            [
+                'stage' => 'draft',
+                'locale' => 'en',
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            $localizedDimensionContent::getWorkflowTransitionEdit()
+        )->shouldBeCalled()->willReturn($localizedDimensionContent);
+
+        $this->createWorkflowDataMapperInstance()
+            ->map($unlocalizedDimensionContent, $localizedDimensionContent, []);
+    }
+
+    /**
+     * `unpublished` is the one place `edit` can leave that is deliberately left out: content there
+     * has never been submitted, so no request can cover it. Pinned so a state machine change that
+     * lets a request reach `unpublished` fails here instead of quietly opening the write lock.
+     */
+    public function testMapSkipsTheEditTransitionForUnpublishedContent(): void
+    {
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+        $localizedDimensionContent->setWorkflowPlace(WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED);
+
         $this->contentWorkflow->apply(Argument::cetera())->shouldNotBeCalled();
 
         $this->createWorkflowDataMapperInstance()
             ->map($unlocalizedDimensionContent, $localizedDimensionContent, []);
+
+        $this->assertSame(WorkflowInterface::WORKFLOW_PLACE_UNPUBLISHED, $localizedDimensionContent->getWorkflowPlace());
     }
 
     public function testMapLocalizedLivePublishedNotSet(): void

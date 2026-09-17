@@ -25,6 +25,7 @@ class WorkflowTransitionRequestPreValidationFailedException extends \RuntimeExce
      */
     public function __construct(
         private readonly array $results,
+        private readonly ?string $resourceId = null,
     ) {
         $failedKeys = [];
         foreach ($results as $result) {
@@ -58,6 +59,12 @@ class WorkflowTransitionRequestPreValidationFailedException extends \RuntimeExce
     public function getResponseData(): array
     {
         // Passed checks travel too, so the admin can list what is done beside what is left.
-        return ['preValidationResults' => $this->results];
+        $data = ['preValidationResults' => $this->results];
+
+        if (null !== $this->resourceId) {
+            $data['id'] = $this->resourceId;
+        }
+
+        return $data;
     }
 }

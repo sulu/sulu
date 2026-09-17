@@ -71,6 +71,7 @@ use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
+use Sulu\Content\Infrastructure\Sulu\Security\ResourceSecurityContextProvider;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -243,6 +244,16 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
+
+        $services->set('sulu_article.workflow_transition_request_security_context_provider')
+            ->class(ResourceSecurityContextProvider::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                '%sulu.model.article.class%',
+                ArticleAdmin::SECURITY_CONTEXT,
+            ])
+            ->tag('sulu_content.workflow_transition_request_security_context_provider', ['resource-key' => ArticleInterface::RESOURCE_KEY])
+            ->tag('sulu.context', ['context' => 'admin']);
 
         $services->set('sulu_article.article_content_mapper')
             ->class(ArticleContentMapper::class)

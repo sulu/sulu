@@ -23,6 +23,15 @@ interface ContentWorkflowInterface
     public const DIMENSION_ATTRIBUTES_CONTEXT_KEY = 'dimensionAttributes';
 
     /**
+     * A guard listener that refuses a transition for its own reason blocks it with this code and
+     * puts the exception to report under {@see BLOCKER_EXCEPTION_PARAMETER}, so the caller sees that
+     * reason instead of a generic "transition not enabled".
+     */
+    public const BLOCKER_CODE_EXCEPTION = 'sulu_content.blocked_by_exception';
+
+    public const BLOCKER_EXCEPTION_PARAMETER = 'exception';
+
+    /**
      * @template T of DimensionContentInterface
      *
      * @param ContentRichEntityInterface<T> $contentRichEntity

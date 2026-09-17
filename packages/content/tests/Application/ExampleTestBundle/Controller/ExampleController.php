@@ -140,11 +140,12 @@ class ExampleController extends AbstractRestController
         $this->entityManager->persist($example);
         $this->entityManager->flush();
 
-        if ('publish' === $request->query->get('action')) {
+        $publishTransition = $this->resolvePublishTransition($request);
+        if (null !== $publishTransition) {
             $dimensionContent = $this->contentManager->applyTransition(
                 $example,
                 $dimensionAttributes,
-                WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
+                $publishTransition,
             );
 
             $this->entityManager->flush();
@@ -159,7 +160,7 @@ class ExampleController extends AbstractRestController
     public function postTriggerAction(string $id, Request $request): Response
     {
         $dimensionAttributes = $this->getDimensionAttributes($request);
-        $action = $request->query->get('action');
+        $action = $request->query->getString('action');
 
         // For workflow operations that copy/modify across locales or versions, load ALL dimension contents
         if (\in_array($action, ['copy_locale', 'restore', 'unpublish', 'remove_draft'], true)) {
@@ -239,6 +240,29 @@ class ExampleController extends AbstractRestController
                 $this->entityManager->flush();
 
                 return $this->handleView($this->view($this->normalize($example, $dimensionContent)));
+            case 'publish':
+                $dimensionContent = $this->contentManager->applyTransition(
+                    $example,
+                    $dimensionAttributes,
+                    $action,
+                );
+
+                $this->entityManager->flush();
+
+                return $this->handleView($this->view($this->normalize($example, $dimensionContent)));
+            case WorkflowInterface::WORKFLOW_TRANSITION_REQUEST_FOR_REVIEW:
+            case WorkflowInterface::WORKFLOW_TRANSITION_REQUEST_FOR_REVIEW_DRAFT:
+            case WorkflowInterface::WORKFLOW_TRANSITION_CANCEL_REVIEW:
+            case WorkflowInterface::WORKFLOW_TRANSITION_CANCEL_REVIEW_DRAFT:
+                $dimensionContent = $this->contentManager->applyTransition(
+                    $example,
+                    $dimensionAttributes,
+                    $action,
+                );
+
+                $this->entityManager->flush();
+
+                return $this->handleView($this->view($this->normalize($example, $dimensionContent)));
             default:
                 throw new RestException('Unrecognized action: ' . $action);
         }
@@ -281,17 +305,33 @@ class ExampleController extends AbstractRestController
 
         $this->entityManager->flush();
 
-        if ('publish' === $request->query->get('action')) {
+        $publishTransition = $this->resolvePublishTransition($request);
+        if (null !== $publishTransition) {
             $dimensionContent = $this->contentManager->applyTransition(
                 $example,
                 $dimensionAttributes,
-                WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH
+                $publishTransition,
             );
 
             $this->entityManager->flush();
         }
 
         return $this->handleView($this->view($this->normalize($example, $dimensionContent)));
+    }
+
+    /**
+     * Resolves the publish transition from the `action` query parameter, or null when the action is
+     * not a publish.
+     */
+    private function resolvePublishTransition(Request $request): ?string
+    {
+        $action = $request->query->get('action');
+
+        if (WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH !== $action) {
+            return null;
+        }
+
+        return $action;
     }
 
     /**
