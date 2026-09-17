@@ -17,12 +17,13 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
-use Sulu\Content\Application\Security\WorkflowTransitionAuthorizer;
+use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizer;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
@@ -34,8 +35,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-#[CoversClass(WorkflowTransitionAuthorizer::class)]
-class WorkflowTransitionAuthorizerTest extends TestCase
+#[CoversClass(WorkflowTransitionAdminAuthorizer::class)]
+class WorkflowTransitionAdminAuthorizerTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -184,12 +185,38 @@ class WorkflowTransitionAuthorizerTest extends TestCase
         $tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $tokenStorage->getToken()->willReturn(null);
 
-        $authorizer = new WorkflowTransitionAuthorizer(
+        $authorizer = new WorkflowTransitionAdminAuthorizer(
             $securityContextResolver->reveal(),
             $securityChecker->reveal(),
             $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class)->reveal(),
             $tokenStorage->reveal(),
             $this->statusResolver(),
+            SuluKernel::CONTEXT_ADMIN,
+        );
+
+        $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en');
+    }
+
+    /**
+     * The security contexts this resolves against are registered in the admin context only, so
+     * outside it there is nothing to authorize against and it steps aside rather than answering
+     * from half a container. Code running there brings its own check.
+     */
+    public function testOutsideTheAdminContextNothingIsAuthorized(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(Argument::cetera())->shouldNotBeCalled();
+
+        $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
+        $securityContextResolver->resolve(Argument::cetera())->shouldNotBeCalled();
+
+        $authorizer = new WorkflowTransitionAdminAuthorizer(
+            $securityContextResolver->reveal(),
+            $securityChecker->reveal(),
+            $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class)->reveal(),
+            $this->authenticatedTokenStorage(),
+            $this->statusResolver(),
+            SuluKernel::CONTEXT_WEBSITE,
         );
 
         $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en');
@@ -260,18 +287,19 @@ class WorkflowTransitionAuthorizerTest extends TestCase
      * @param \Prophecy\Prophecy\ObjectProphecy<SecurityCheckerInterface> $securityChecker
      * @param \Prophecy\Prophecy\ObjectProphecy<ActiveWorkflowTransitionRequestProviderInterface> $provider
      */
-    private function createAuthorizer($securityChecker, $provider): WorkflowTransitionAuthorizer
+    private function createAuthorizer($securityChecker, $provider): WorkflowTransitionAdminAuthorizer
     {
         $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
         $securityContextResolver->resolve(Example::RESOURCE_KEY, '1', 'en')
             ->willReturn(new SecurityCondition('sulu.example', 'en'));
 
-        return new WorkflowTransitionAuthorizer(
+        return new WorkflowTransitionAdminAuthorizer(
             $securityContextResolver->reveal(),
             $securityChecker->reveal(),
             $provider->reveal(),
             $this->authenticatedTokenStorage(),
             $this->statusResolver(),
+            SuluKernel::CONTEXT_ADMIN,
         );
     }
 

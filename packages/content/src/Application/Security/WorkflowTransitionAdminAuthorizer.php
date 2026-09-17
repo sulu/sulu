@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\Security;
 
+use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -24,9 +25,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
+ * Answers the workflow guards for a person working in the admin. The security contexts it resolves
+ * against are registered in the admin context only, so it authorizes nothing outside it.
+ *
  * @internal
  */
-final class WorkflowTransitionAuthorizer implements WorkflowTransitionAuthorizerInterface
+final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdminAuthorizerInterface
 {
     public function __construct(
         private readonly WorkflowTransitionRequestSecurityContextResolverInterface $securityContextResolver,
@@ -34,12 +38,13 @@ final class WorkflowTransitionAuthorizer implements WorkflowTransitionAuthorizer
         private readonly ActiveWorkflowTransitionRequestProviderInterface $activeWorkflowTransitionRequestProvider,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly WorkflowTransitionRequestStatusResolverInterface $statusResolver,
+        private readonly string $suluContext,
     ) {
     }
 
     public function assertCanPublish(string $resourceKey, string $resourceId, string $locale): void
     {
-        if ($this->isSystemCall()) {
+        if (!$this->isAuthorizedAdminCall()) {
             return;
         }
 
@@ -67,7 +72,7 @@ final class WorkflowTransitionAuthorizer implements WorkflowTransitionAuthorizer
 
     public function assertCanReview(string $resourceKey, string $resourceId, string $locale): void
     {
-        if ($this->isSystemCall()) {
+        if (!$this->isAuthorizedAdminCall()) {
             return;
         }
 
@@ -86,7 +91,7 @@ final class WorkflowTransitionAuthorizer implements WorkflowTransitionAuthorizer
 
     public function assertCanCancelReview(string $resourceKey, string $resourceId, string $locale): void
     {
-        if ($this->isSystemCall()) {
+        if (!$this->isAuthorizedAdminCall()) {
             return;
         }
 
@@ -106,11 +111,16 @@ final class WorkflowTransitionAuthorizer implements WorkflowTransitionAuthorizer
     }
 
     /**
-     * A command, fixture or consumer publishes on the system's behalf, with no user to check.
+     * Permissions belong to a person working in the admin. Anything else, a command, a fixture, a
+     * consumer, carries no user to check and is let through instead.
+     *
+     * The context is asked as well as the user, so the class refuses to authorize anywhere its
+     * security contexts are not registered rather than answering from half a container.
      */
-    private function isSystemCall(): bool
+    private function isAuthorizedAdminCall(): bool
     {
-        return !$this->tokenStorage->getToken()?->getUser() instanceof UserInterface;
+        return SuluKernel::CONTEXT_ADMIN === $this->suluContext
+            && $this->tokenStorage->getToken()?->getUser() instanceof UserInterface;
     }
 
     private function hasApprovedRequest(string $resourceKey, string $resourceId, string $locale): bool

@@ -20,7 +20,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\Message\ApproveWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\MessageHandler\ApproveWorkflowTransitionRequestMessageHandler;
-use Sulu\Content\Application\Security\WorkflowTransitionAuthorizerInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Domain\Exception\MissingAuthenticatedUserException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
@@ -44,7 +44,7 @@ class ApproveWorkflowTransitionRequestMessageHandlerTest extends TestCase
         $tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $tokenStorage->getToken()->willReturn(null);
 
-        $authorizer = $this->prophesize(WorkflowTransitionAuthorizerInterface::class);
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanReview(Argument::cetera())->shouldNotBeCalled();
 
         $handler = new ApproveWorkflowTransitionRequestMessageHandler(
@@ -65,7 +65,7 @@ class ApproveWorkflowTransitionRequestMessageHandlerTest extends TestCase
         $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
         $repository->getOneBy(['id' => $requestId])->willReturn($request);
 
-        $authorizer = $this->prophesize(WorkflowTransitionAuthorizerInterface::class);
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanReview('pages', 'res-1', 'en')->willThrow(new AccessDeniedException());
 
         $handler = new ApproveWorkflowTransitionRequestMessageHandler(
@@ -91,7 +91,7 @@ class ApproveWorkflowTransitionRequestMessageHandlerTest extends TestCase
         $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
         $repository->getOneBy(['id' => $requestId])->willReturn($request);
 
-        $authorizer = $this->prophesize(WorkflowTransitionAuthorizerInterface::class);
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanReview('pages', 'res-1', 'en')->shouldBeCalled();
 
         $handler = new ApproveWorkflowTransitionRequestMessageHandler(
@@ -121,7 +121,7 @@ class ApproveWorkflowTransitionRequestMessageHandlerTest extends TestCase
         $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
         $repository->getOneBy(['id' => $requestId])->willReturn($request);
 
-        $authorizer = $this->prophesize(WorkflowTransitionAuthorizerInterface::class);
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanReview(Argument::cetera())->shouldBeCalled();
 
         $handler = new ApproveWorkflowTransitionRequestMessageHandler(

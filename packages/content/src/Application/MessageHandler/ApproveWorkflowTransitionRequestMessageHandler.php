@@ -15,7 +15,7 @@ namespace Sulu\Content\Application\MessageHandler;
 
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\Message\ApproveWorkflowTransitionRequestMessage;
-use Sulu\Content\Application\Security\WorkflowTransitionAuthorizerInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Domain\Exception\MissingAuthenticatedUserException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
@@ -29,7 +29,7 @@ final class ApproveWorkflowTransitionRequestMessageHandler
 {
     public function __construct(
         private readonly WorkflowTransitionRequestRepositoryInterface $workflowTransitionRequestRepository,
-        private readonly WorkflowTransitionAuthorizerInterface $workflowTransitionAuthorizer,
+        private readonly WorkflowTransitionAdminAuthorizerInterface $workflowTransitionAdminAuthorizer,
         private readonly ?TokenStorageInterface $tokenStorage = null,
     ) {
     }
@@ -48,7 +48,7 @@ final class ApproveWorkflowTransitionRequestMessageHandler
         // Asked here and not only where a controller dispatches this: the message is on the public
         // bus. The user check above runs first, which keeps the authorizer's system-call bypass out
         // of a verdict that has to be attributable to a person.
-        $this->workflowTransitionAuthorizer->assertCanReview(
+        $this->workflowTransitionAdminAuthorizer->assertCanReview(
             $workflowTransitionRequest->getResourceKey(),
             $workflowTransitionRequest->getResourceId(),
             $workflowTransitionRequest->getLocale(),

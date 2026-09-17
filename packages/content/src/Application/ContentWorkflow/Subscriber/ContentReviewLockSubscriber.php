@@ -24,7 +24,10 @@ use Symfony\Component\Workflow\TransitionBlocker;
 
 /**
  * Holds content that an open request covers: every write goes through the `edit` transition, so this
- * is the one place that decides it, whatever content type or controller asked.
+ * is the one place that decides it, whatever content type or admin controller asked.
+ *
+ * Registered in the admin context only, like the rest of the review, so a write from the website
+ * kernel is not held here.
  *
  * Publishing, rejecting and cancelling leave the review and write only the live stage, so they never
  * reach this guard.

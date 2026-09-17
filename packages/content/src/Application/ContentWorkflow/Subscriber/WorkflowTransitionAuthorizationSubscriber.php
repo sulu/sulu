@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentWorkflow\Subscriber;
 
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
-use Sulu\Content\Application\Security\WorkflowTransitionAuthorizerInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -23,8 +23,12 @@ use Symfony\Component\Workflow\Event\GuardEvent;
 use Symfony\Component\Workflow\TransitionBlocker;
 
 /**
- * Guards the transitions that take a permission of their own, so every caller of the workflow is
- * covered and no controller or message handler has to ask.
+ * Guards the transitions that take a permission of their own, so every admin caller of the workflow
+ * is covered and no controller or message handler there has to ask.
+ *
+ * Registered in the admin context only, because that is where Sulu's permissions live. Code running
+ * in the website kernel reaches the workflow with no guard in front of it and has to bring its own
+ * check.
  *
  * It blocks rather than throws: the workflow also asks its guards to list the transitions a subject
  * could take, and a throw there would escape a question nobody asked.
@@ -36,7 +40,7 @@ use Symfony\Component\Workflow\TransitionBlocker;
 class WorkflowTransitionAuthorizationSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly WorkflowTransitionAuthorizerInterface $workflowTransitionAuthorizer,
+        private readonly WorkflowTransitionAdminAuthorizerInterface $workflowTransitionAdminAuthorizer,
     ) {
     }
 
@@ -48,7 +52,7 @@ class WorkflowTransitionAuthorizationSubscriber implements EventSubscriberInterf
     public function onPublish(GuardEvent $guardEvent): void
     {
         $this->guard($guardEvent, function(string $resourceKey, string $resourceId, string $locale): void {
-            $this->workflowTransitionAuthorizer->assertCanPublish($resourceKey, $resourceId, $locale);
+            $this->workflowTransitionAdminAuthorizer->assertCanPublish($resourceKey, $resourceId, $locale);
         });
     }
 
@@ -60,7 +64,7 @@ class WorkflowTransitionAuthorizationSubscriber implements EventSubscriberInterf
     public function onReject(GuardEvent $guardEvent): void
     {
         $this->guard($guardEvent, function(string $resourceKey, string $resourceId, string $locale): void {
-            $this->workflowTransitionAuthorizer->assertCanReview($resourceKey, $resourceId, $locale);
+            $this->workflowTransitionAdminAuthorizer->assertCanReview($resourceKey, $resourceId, $locale);
         });
     }
 
@@ -72,7 +76,7 @@ class WorkflowTransitionAuthorizationSubscriber implements EventSubscriberInterf
     public function onCancelReview(GuardEvent $guardEvent): void
     {
         $this->guard($guardEvent, function(string $resourceKey, string $resourceId, string $locale): void {
-            $this->workflowTransitionAuthorizer->assertCanCancelReview($resourceKey, $resourceId, $locale);
+            $this->workflowTransitionAdminAuthorizer->assertCanCancelReview($resourceKey, $resourceId, $locale);
         });
     }
 

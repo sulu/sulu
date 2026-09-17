@@ -19,7 +19,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionAuthorizationSubscriber;
-use Sulu\Content\Application\Security\WorkflowTransitionAuthorizerInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
@@ -57,7 +57,7 @@ class WorkflowTransitionAuthorizationSubscriberTest extends TestCase
     {
         $exception = new AccessDeniedException('nope');
 
-        $authorizer = $this->prophesize(WorkflowTransitionAuthorizerInterface::class);
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en')->willThrow($exception);
 
         $guardEvent = $this->createGuardEvent();
@@ -76,7 +76,7 @@ class WorkflowTransitionAuthorizationSubscriberTest extends TestCase
 
     public function testOnPublishLetsAnAllowedTransitionThrough(): void
     {
-        $authorizer = $this->prophesize(WorkflowTransitionAuthorizerInterface::class);
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en')->shouldBeCalled();
 
         $guardEvent = $this->createGuardEvent();
@@ -87,7 +87,7 @@ class WorkflowTransitionAuthorizationSubscriberTest extends TestCase
 
     public function testOnRejectAsksForTheReviewPermission(): void
     {
-        $authorizer = $this->prophesize(WorkflowTransitionAuthorizerInterface::class);
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanReview(Example::RESOURCE_KEY, '1', 'en')->willThrow(new AccessDeniedException());
 
         $guardEvent = $this->createGuardEvent();
@@ -102,7 +102,7 @@ class WorkflowTransitionAuthorizationSubscriberTest extends TestCase
      */
     public function testOnCancelReviewBlocksWhenTheRequestMayNotBeWithdrawn(): void
     {
-        $authorizer = $this->prophesize(WorkflowTransitionAuthorizerInterface::class);
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanCancelReview(Example::RESOURCE_KEY, '1', 'en')->willThrow(new AccessDeniedException());
 
         $guardEvent = $this->createGuardEvent();
@@ -113,7 +113,7 @@ class WorkflowTransitionAuthorizationSubscriberTest extends TestCase
 
     public function testForeignSubjectsAreIgnored(): void
     {
-        $authorizer = $this->prophesize(WorkflowTransitionAuthorizerInterface::class);
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanPublish(Argument::cetera())->shouldNotBeCalled();
 
         $guardEvent = new GuardEvent(new \stdClass(), new Marking(), new Transition('publish', 'a', 'b'));

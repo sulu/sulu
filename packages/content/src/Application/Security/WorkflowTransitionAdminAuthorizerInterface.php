@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @internal this interface is internal and should not be implemented or used in another context
  */
-interface WorkflowTransitionAuthorizerInterface
+interface WorkflowTransitionAdminAuthorizerInterface
 {
     /**
      * @throws AccessDeniedException when the user holds neither the LIVE permission nor the EDIT
