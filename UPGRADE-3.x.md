@@ -15,6 +15,17 @@ $cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->ge
 
 ## 3.0.10
 
+### Add and live permissions are enforced for pages, snippets and articles
+
+The admin API now checks these permissions:
+
+- Creating a page requires `add` on its webspace.
+- Publishing, unpublishing and removing a draft require `live`.
+- Copying requires `add`. For pages it is checked on the page the copy is created under.
+
+Before, users without these permissions could still create, publish and copy through the API and parts of
+the admin. Check your roles and grant `add` and `live` where users need them, otherwise they get a `403`.
+
 ### Additional Optional Parameter contentNormalizer for ContentObjectProvider
 
 The `ContentObjectProvider` gained an optional `$contentNormalizer` argument, which it uses to keep the
