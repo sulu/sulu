@@ -2051,6 +2051,22 @@ test('Should move all selected items to the new given parent and reload the list
     });
 });
 
+test('Should reset copying and pass the error on when copying fails', () => {
+    expect.assertions(3);
+
+    const listStore = new ListStore('snippets', 'snippets', 'list_test', {page: observable.box()});
+    const error = {status: 403};
+    ResourceRequester.post.mockImplementation(() => Promise.reject(error));
+
+    const copyPromise = listStore.copy(5, 8);
+    expect(listStore.copying).toEqual(true);
+
+    return copyPromise.catch((copyError) => {
+        expect(copyError).toBe(error);
+        expect(listStore.copying).toEqual(false);
+    });
+});
+
 test('Should copy the item with the given ID to the new given parent and reload the list', () => {
     const locale = observable.box('de');
     const schema = {

@@ -356,6 +356,12 @@ class List extends React.Component<Props> {
         this.list = list;
     };
 
+    @action handleCopyError = (error?: Object): void => {
+        const message = error?.detail || error?.title || translate('sulu_admin.unexpected_copy_server_error');
+
+        this.errors.push(message);
+    };
+
     @action handleDeleteError = (error?: Object): void => {
         const message = error?.detail || error?.title || translate('sulu_admin.unexpected_delete_server_error');
 
@@ -398,6 +404,7 @@ class List extends React.Component<Props> {
                         header={title && <h1>{title}</h1>}
                         itemActionsProvider={this.getItemActionConfigs}
                         itemDisabledCondition={itemDisabledCondition}
+                        onCopyError={this.handleCopyError}
                         onDeleteError={this.handleDeleteError}
                         onItemAdd={onItemAdd || addView ? this.addItem : undefined}
                         onItemClick={onItemClick || editView ? this.handleItemClick : undefined}
