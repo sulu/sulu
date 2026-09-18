@@ -521,6 +521,10 @@ export default class ListStore {
                 // TODO do not hardcode "id", but use some metadata instead
                 this.activate(response.id);
                 this.clear();
+            }))
+            .catch(action((error) => {
+                this.copying = false;
+                throw error;
             }));
     };
 

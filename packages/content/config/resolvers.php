@@ -157,6 +157,9 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_content.link_property_resolver', LinkPropertyResolver::class)
+        ->args([
+            new Reference('sulu_markup.link_tag.provider_pool'),
+        ])
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_content.teaser_selection_property_resolver', TeaserSelectionPropertyResolver::class)

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Markup\Link;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
@@ -45,8 +46,11 @@ class MediaLinkProviderTest extends TestCase
      */
     private $translator;
 
+    private ReferenceStore $referenceStore;
+
     public function setUp(): void
     {
+        $this->referenceStore = new ReferenceStore();
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
         $this->translator = $this->prophesize(TranslatorInterface::class);
@@ -56,7 +60,8 @@ class MediaLinkProviderTest extends TestCase
         $this->mediaLinkProvider = new MediaLinkProvider(
             $this->mediaRepository->reveal(),
             $this->mediaManager->reveal(),
-            $this->translator->reveal()
+            $this->translator->reveal(),
+            $this->referenceStore
         );
     }
 
@@ -101,5 +106,7 @@ class MediaLinkProviderTest extends TestCase
         $this->assertEquals('defaultTitle2', $mediaLinks[1]->getTitle());
         $this->assertEquals('/test2.jpg?version=1', $mediaLinks[1]->getUrl());
         $this->assertTrue($mediaLinks[1]->isPublished());
+
+        $this->assertSame(['media-3' => 'media-3', 'media-6' => 'media-6'], $this->referenceStore->getAll());
     }
 }

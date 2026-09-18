@@ -28,6 +28,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Snippet\Domain\Exception\SnippetAreaNotFoundException;
 use Sulu\Snippet\Domain\Model\Snippet;
 use Sulu\Snippet\Domain\Model\SnippetArea;
+use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
@@ -135,7 +136,10 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $this->assertSame($resolvedContent, $result);
 
         $this->assertSame(
-            [SnippetInterface::RESOURCE_KEY . '-test-snippet-uuid' => SnippetInterface::RESOURCE_KEY . '-test-snippet-uuid'],
+            [
+                SnippetInterface::RESOURCE_KEY . '-test-snippet-uuid' => SnippetInterface::RESOURCE_KEY . '-test-snippet-uuid',
+                SnippetAreaInterface::RESOURCE_KEY . '-header' => SnippetAreaInterface::RESOURCE_KEY . '-header',
+            ],
             $this->referenceStore->getAll()
         );
     }
@@ -199,7 +203,10 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $this->assertSame($resolvedContent, $result);
 
         $this->assertSame(
-            [SnippetInterface::RESOURCE_KEY . '-footer-snippet-uuid' => SnippetInterface::RESOURCE_KEY . '-footer-snippet-uuid'],
+            [
+                SnippetInterface::RESOURCE_KEY . '-footer-snippet-uuid' => SnippetInterface::RESOURCE_KEY . '-footer-snippet-uuid',
+                SnippetAreaInterface::RESOURCE_KEY . '-footer' => SnippetAreaInterface::RESOURCE_KEY . '-footer',
+            ],
             $this->referenceStore->getAll()
         );
     }

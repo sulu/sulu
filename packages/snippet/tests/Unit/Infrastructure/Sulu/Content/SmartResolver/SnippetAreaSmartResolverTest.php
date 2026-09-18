@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
@@ -37,14 +38,19 @@ class SnippetAreaSmartResolverTest extends TestCase
     /** @var ObjectProphecy<RequestAnalyzerInterface> */
     private ObjectProphecy $requestAnalyzer;
 
+    private ReferenceStore $referenceStore;
+
     protected function setUp(): void
     {
         $this->snippetAreaRepository = $this->prophesize(SnippetAreaRepositoryInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
 
+        $this->referenceStore = new ReferenceStore();
+
         $this->resolver = new SnippetAreaSmartResolver(
             $this->snippetAreaRepository->reveal(),
-            $this->requestAnalyzer->reveal()
+            $this->requestAnalyzer->reveal(),
+            $this->referenceStore
         );
     }
 

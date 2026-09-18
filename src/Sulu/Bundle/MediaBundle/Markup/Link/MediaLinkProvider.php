@@ -11,9 +11,11 @@
 
 namespace Sulu\Bundle\MediaBundle\Markup\Link;
 
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -28,6 +30,7 @@ final class MediaLinkProvider implements LinkProviderInterface
         private MediaRepositoryInterface $mediaRepository,
         private MediaManagerInterface $mediaManager,
         private TranslatorInterface $translator,
+        private ReferenceStoreInterface $referenceStore,
     ) {
     }
 
@@ -45,11 +48,14 @@ final class MediaLinkProvider implements LinkProviderInterface
 
     public function preload(array $hrefs, string $locale, bool $published = true): iterable
     {
+        /** @var list<array{id: int, title: string|null, defaultTitle: string, name: string, version: int}> $medias */
         $medias = $this->mediaRepository->findMediaDisplayInfo($hrefs, $locale);
 
-        return \array_map(function($media) {
+        return \array_map(function(array $media) {
+            $this->referenceStore->add((string) $media['id'], MediaInterface::RESOURCE_KEY);
+
             return new LinkItem(
-                $media['id'],
+                (string) $media['id'],
                 $media['title'] ?? $media['defaultTitle'],
                 $this->mediaManager->getUrl($media['id'], $media['name'], $media['version']),
                 true

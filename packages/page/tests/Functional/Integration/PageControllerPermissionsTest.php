@@ -21,6 +21,9 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\AssertSnapshotTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
+use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
 use Sulu\Page\Tests\Traits\CreatePageWithPermissionsTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -177,5 +180,516 @@ class PageControllerPermissionsTest extends SuluTestCase
         $pagesBlog = $content['_embedded']['pages'] ?? [];
 
         $this->assertEmpty($pagesBlog, 'User without blog permission should not see blog pages');
+    }
+
+    public function testPostActionWithoutAddPermissionIsForbidden(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithWebspacePermissions('viewedituser', 80); // VIEW and EDIT
+
+        self::ensureKernelShutdown();
+
+        $homepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage',
+                    'url' => '/',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('viewedituser');
+        $limitedClient->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&parentId=%s&webspace=sulu-io', $homepage->getUuid()),
+            [],
+            [],
+            [],
+            (string) \json_encode([
+                'template' => 'default',
+                'title' => 'Page Without Add Permission',
+                'url' => '/page-without-add-permission',
+            ]),
+        );
+
+        $this->assertHttpStatusCode(403, $limitedClient->getResponse());
+    }
+
+    public function testPostActionWithPublishWithoutLivePermissionIsForbidden(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithWebspacePermissions('addedituser', 112); // VIEW, ADD and EDIT
+
+        self::ensureKernelShutdown();
+
+        $homepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage',
+                    'url' => '/',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('addedituser');
+        $limitedClient->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', $homepage->getUuid()),
+            [],
+            [],
+            [],
+            (string) \json_encode([
+                'template' => 'default',
+                'title' => 'Page Without Live Permission',
+                'url' => '/page-without-live-permission',
+            ]),
+        );
+
+        $this->assertHttpStatusCode(403, $limitedClient->getResponse());
+    }
+
+    public function testPostActionWithAddPermissionCreatesDraft(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithWebspacePermissions('addedituser', 112); // VIEW, ADD and EDIT
+
+        self::ensureKernelShutdown();
+
+        $homepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage',
+                    'url' => '/',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('addedituser');
+        $limitedClient->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&parentId=%s&webspace=sulu-io', $homepage->getUuid()),
+            [],
+            [],
+            [],
+            (string) \json_encode([
+                'template' => 'default',
+                'title' => 'Page With Add Permission',
+                'url' => '/page-with-add-permission',
+            ]),
+        );
+
+        $this->assertHttpStatusCode(201, $limitedClient->getResponse());
+    }
+
+    public function testPutActionWithPublishWithoutLivePermissionIsForbidden(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithWebspacePermissions('viewedituser', 80); // VIEW and EDIT
+
+        self::ensureKernelShutdown();
+
+        $homepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage',
+                    'url' => '/',
+                ],
+            ],
+        ]);
+        $page = $this->createPage([
+            'en' => [
+                'draft' => [
+                    'parentId' => $homepage->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Page',
+                    'url' => '/page',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('viewedituser');
+        $limitedClient->request(
+            'PUT',
+            \sprintf('/admin/api/pages/%s?locale=en&action=publish&webspace=sulu-io', $page->getUuid()),
+            [],
+            [],
+            [],
+            (string) \json_encode([
+                'template' => 'default',
+                'title' => 'Page',
+                'url' => '/page',
+            ]),
+        );
+
+        $this->assertHttpStatusCode(403, $limitedClient->getResponse());
+    }
+
+    /**
+     * An approval delegates the publish right of that request, so the edit permission is enough.
+     */
+    public function testPostTriggerActionPublishWithoutLivePermissionIsAllowedOnceApproved(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithWebspacePermissions('viewedituser', 80); // VIEW and EDIT
+
+        self::ensureKernelShutdown();
+
+        $homepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage',
+                    'url' => '/',
+                ],
+            ],
+        ]);
+        $page = $this->createPage([
+            'en' => [
+                'draft' => [
+                    'parentId' => $homepage->getUuid(),
+                    'template' => 'review-seo',
+                    'title' => 'Page',
+                    'url' => '/page',
+                    'seo' => ['title' => 'Page', 'description' => 'Page description'],
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('viewedituser');
+        $limitedClient->request(
+            'POST',
+            \sprintf('/admin/api/pages/%s?locale=en&action=request_for_review&webspace=sulu-io', $page->getUuid()),
+        );
+        $this->assertHttpStatusCode(200, $limitedClient->getResponse());
+
+        $request = self::getContainer()->get(WorkflowTransitionRequestRepositoryInterface::class)->getOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $page->getUuid(),
+            'locale' => 'en',
+            'active' => true,
+        ]);
+        $request->addApproval($this->createReviewer(), WorkflowTransitionRequestDecisionMessage::text('looks good'));
+        self::getEntityManager()->flush();
+
+        $limitedClient->request(
+            'POST',
+            \sprintf('/admin/api/pages/%s?locale=en&action=publish&webspace=sulu-io', $page->getUuid()),
+        );
+
+        $this->assertHttpStatusCode(200, $limitedClient->getResponse());
+        /** @var array{workflowPlace: string} $content */
+        $content = \json_decode((string) $limitedClient->getResponse()->getContent(), true);
+        $this->assertSame('published', $content['workflowPlace']);
+    }
+
+    public function testPostTriggerActionUnpublishWithoutLivePermissionIsForbidden(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithWebspacePermissions('viewedituser', 80); // VIEW and EDIT
+
+        self::ensureKernelShutdown();
+
+        $homepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage',
+                    'url' => '/',
+                ],
+            ],
+        ]);
+        $page = $this->createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $homepage->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Published Page',
+                    'url' => '/published-page',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('viewedituser');
+        $limitedClient->request(
+            'POST',
+            \sprintf('/admin/api/pages/%s?locale=en&action=unpublish', $page->getUuid()),
+        );
+
+        $this->assertHttpStatusCode(403, $limitedClient->getResponse());
+    }
+
+    public function testPostActionWithPublishWithLivePermissionIsAllowed(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithWebspacePermissions('liveuser', 114); // VIEW, ADD, EDIT and LIVE
+
+        self::ensureKernelShutdown();
+
+        $homepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage',
+                    'url' => '/',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('liveuser');
+        $limitedClient->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&action=publish&parentId=%s&webspace=sulu-io', $homepage->getUuid()),
+            [],
+            [],
+            [],
+            (string) \json_encode([
+                'template' => 'default',
+                'title' => 'Page With Live Permission',
+                'url' => '/page-with-live-permission',
+            ]),
+        );
+
+        $this->assertHttpStatusCode(201, $limitedClient->getResponse());
+    }
+
+    public function testPostTriggerActionCopyWithoutAddPermissionIsForbidden(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithWebspacePermissions('viewedituser', 80); // VIEW and EDIT
+
+        self::ensureKernelShutdown();
+
+        $homepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage',
+                    'url' => '/',
+                ],
+            ],
+        ]);
+        $page = $this->createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $homepage->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Page',
+                    'url' => '/page',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('viewedituser');
+        $limitedClient->request(
+            'POST',
+            \sprintf(
+                '/admin/api/pages/%s?locale=en&action=copy&destination=%s',
+                $page->getUuid(),
+                $homepage->getUuid(),
+            ),
+        );
+
+        $this->assertHttpStatusCode(403, $limitedClient->getResponse());
+    }
+
+    public function testPostTriggerActionCopyIntoWebspaceWithoutPermissionIsForbidden(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithWebspacePermissions('suluiouser', 127); // all permissions on sulu-io
+
+        self::ensureKernelShutdown();
+
+        $homepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage',
+                    'url' => '/',
+                ],
+            ],
+        ]);
+        $page = $this->createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $homepage->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Page',
+                    'url' => '/page',
+                ],
+            ],
+        ]);
+        $blogHomepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Blog Homepage',
+                    'url' => '/',
+                ],
+            ],
+        ], 'blog');
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('suluiouser');
+        $limitedClient->request(
+            'POST',
+            \sprintf(
+                '/admin/api/pages/%s?locale=en&action=copy&destination=%s',
+                $page->getUuid(),
+                $blogHomepage->getUuid(),
+            ),
+        );
+
+        $this->assertHttpStatusCode(403, $limitedClient->getResponse());
+    }
+
+    public function testPostTriggerActionCopyWithAddPermissionIsAllowed(): void
+    {
+        self::purgeDatabase();
+
+        $this->createUserWithWebspacePermissions('addedituser', 112); // VIEW, ADD and EDIT
+
+        self::ensureKernelShutdown();
+
+        $homepage = $this->createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Homepage',
+                    'url' => '/',
+                ],
+            ],
+        ]);
+        $page = $this->createPage([
+            'en' => [
+                'live' => [
+                    'parentId' => $homepage->getUuid(),
+                    'template' => 'default',
+                    'title' => 'Page',
+                    'url' => '/page',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $limitedClient = $this->createClientForUser('addedituser');
+        $limitedClient->request(
+            'POST',
+            \sprintf(
+                '/admin/api/pages/%s?locale=en&action=copy&destination=%s',
+                $page->getUuid(),
+                $homepage->getUuid(),
+            ),
+        );
+
+        $this->assertHttpStatusCode(200, $limitedClient->getResponse());
+    }
+
+    private function createUserWithWebspacePermissions(string $username, int $permissions): void
+    {
+        $entityManager = self::getEntityManager();
+
+        $role = new Role();
+        $role->setName('Limited Role');
+        $role->setSystem('Sulu');
+        $entityManager->persist($role);
+
+        $permission = new Permission();
+        $permission->setRole($role);
+        $permission->setPermissions($permissions);
+        $permission->setContext('sulu.webspaces.sulu-io');
+        $entityManager->persist($permission);
+
+        $contact = new Contact();
+        $contact->setFirstName('Limited');
+        $contact->setLastName('User');
+        $entityManager->persist($contact);
+
+        $user = new User();
+        $user->setUsername($username);
+        $user->setSalt('');
+        $user->setLocale('en');
+        $user->setEmail($username . '@test.com');
+        $user->setContact($contact);
+
+        $passwordHasherFactory = self::getContainer()->get('security.password_hasher_factory');
+        $hasher = $passwordHasherFactory->getPasswordHasher($user);
+        $user->setPassword($hasher->hash('test'));
+
+        $entityManager->persist($user);
+
+        $userRole = new UserRole();
+        $userRole->setRole($role);
+        $userRole->setUser($user);
+        $userRole->setLocale((string) \json_encode(['en']));
+        $user->addUserRole($userRole);
+        $entityManager->persist($userRole);
+
+        $entityManager->flush();
+        $entityManager->clear();
+    }
+
+    private function createReviewer(): User
+    {
+        $entityManager = self::getEntityManager();
+
+        $contact = new Contact();
+        $contact->setFirstName('Reviewer');
+        $contact->setLastName('User');
+        $entityManager->persist($contact);
+
+        $user = new User();
+        $user->setUsername('reviewer');
+        $user->setPassword('test');
+        $user->setSalt('');
+        $user->setLocale('en');
+        $user->setContact($contact);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $user;
+    }
+
+    private function createClientForUser(string $username): KernelBrowser
+    {
+        return $this->createAuthenticatedClient(
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_ACCEPT' => 'application/json',
+                'PHP_AUTH_USER' => $username,
+                'PHP_AUTH_PW' => 'test',
+            ],
+        );
     }
 }

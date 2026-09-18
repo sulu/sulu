@@ -4,6 +4,16 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.27
 
+### Copying a page or snippet requires the add permission
+
+Copying creates a new page or snippet, but only `edit` was checked so far. For pages the permission is checked
+on the webspace of the destination, so copying into another webspace needs the permission there. Check your
+roles and grant `add` where users copy content, otherwise they get a `403`.
+
+If you replaced the snippet controller through `sulu_snippet.controller.snippet.class`, pass the
+`sulu_security.security_checker` as the last constructor argument. Without it the new check does nothing
+and copying stays open to everyone with `edit`. Leaving it out triggers a deprecation.
+
 ### Reference tracking for page and teaser selections
 
 The `single_page_selection`, `page_selection` and `teaser_selection` content types now register their targets in the

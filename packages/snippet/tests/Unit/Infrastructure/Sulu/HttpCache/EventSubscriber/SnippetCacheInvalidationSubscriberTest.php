@@ -23,6 +23,7 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Snippet\Domain\Event\SnippetRemovedEvent;
 use Sulu\Snippet\Domain\Event\SnippetWorkflowTransitionAppliedEvent;
 use Sulu\Snippet\Domain\Model\Snippet;
+use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Infrastructure\Sulu\HttpCache\EventSubscriber\SnippetCacheInvalidationSubscriber;
 
 class SnippetCacheInvalidationSubscriberTest extends TestCase
@@ -158,7 +159,7 @@ class SnippetCacheInvalidationSubscriberTest extends TestCase
 
         $this->cacheManager->invalidateTag('snippet-uuid-with-area')
             ->shouldBeCalled();
-        $this->cacheManager->invalidateReference('snippet_area', 'footer')
+        $this->cacheManager->invalidateReference(SnippetAreaInterface::RESOURCE_KEY, 'footer')
             ->shouldBeCalled();
 
         $subscriber->onWorkflowTransition($event);
@@ -197,7 +198,7 @@ class SnippetCacheInvalidationSubscriberTest extends TestCase
 
         $this->cacheManager->invalidateTag('snippet-uuid-no-cache')
             ->shouldBeCalled();
-        $this->cacheManager->invalidateReference('snippet_area', 'header')
+        $this->cacheManager->invalidateReference(SnippetAreaInterface::RESOURCE_KEY, 'header')
             ->shouldNotBeCalled();
 
         $subscriber->onWorkflowTransition($event);

@@ -95,6 +95,7 @@ class SmartContentSmartResolverTest extends TestCase
         $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
             ->willReturn(10);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
+        $smartContentProvider->getType()->willReturn('pages');
         $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
 
         $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
@@ -105,6 +106,8 @@ class SmartContentSmartResolverTest extends TestCase
         $this->assertSame(1, $content[0]->getId());
         $this->assertSame(2, $content[1]->getId());
         $this->assertSame('pages', $content[0]->getResourceLoaderKey());
+
+        $this->assertSame('pages', $content[0]->getResourceKey());
 
         $view = $result->getView();
         $this->assertArrayHasKey('total', $view);
@@ -201,6 +204,7 @@ class SmartContentSmartResolverTest extends TestCase
         $smartContentProvider->countBy($countByFilters, ['value' => $data['value'], ...$data['parameters']])
             ->willReturn(3);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
+        $smartContentProvider->getType()->willReturn('pages');
         $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
 
         $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
@@ -251,6 +255,7 @@ class SmartContentSmartResolverTest extends TestCase
         $smartContentProvider->findFlatBy(Argument::cetera())->willReturn([]);
         $smartContentProvider->countBy(Argument::cetera())->willReturn(0);
         $smartContentProvider->getResourceLoaderKey()->willReturn('articles');
+        $smartContentProvider->getType()->willReturn('articles');
         $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
 
         $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');
@@ -310,6 +315,7 @@ class SmartContentSmartResolverTest extends TestCase
         $smartContentProvider->findFlatBy(Argument::cetera())->willReturn([]);
         $smartContentProvider->countBy(Argument::cetera())->willReturn(0);
         $smartContentProvider->getResourceLoaderKey()->willReturn('articles');
+        $smartContentProvider->getType()->willReturn('articles');
         $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
 
         $result = $this->smartResolver->resolve($smartResolvable->reveal(), 'en');

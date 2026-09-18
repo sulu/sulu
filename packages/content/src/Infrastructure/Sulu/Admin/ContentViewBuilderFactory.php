@@ -37,6 +37,16 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
 class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
 {
     /**
+     * Toolbar actions which need a permission of their own, removed one by one for users lacking it,
+     * because entities without object security deliver no permissions their visibility conditions could use.
+     */
+    private const TOOLBAR_ACTION_PERMISSIONS = [
+        'sulu_admin.copy' => PermissionTypes::ADD,
+        'sulu_admin.delete_draft' => PermissionTypes::LIVE,
+        'sulu_admin.set_unpublished' => PermissionTypes::LIVE,
+    ];
+
+    /**
      * @param array<string, array{instanceOf: class-string}> $settingsForms
      * @param array<string, array{instanceOf: class-string}> $excerptForms
      * @param array<string, array{instanceOf: class-string}> $seoForms
@@ -126,6 +136,13 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         $previewEnabled = $this->objectProviderRegistry->hasPreviewObjectProvider($resourceKey);
 
         $toolbarActions = $toolbarActions ?: $this->getDefaultToolbarActions($contentRichEntityClass);
+
+        if (!$this->hasPermission($securityContext, PermissionTypes::LIVE)) {
+            $toolbarActions = $this->removePublishingFromSaveAction($toolbarActions);
+        }
+
+        $toolbarActions = $this->removeToolbarActionsWithoutPermission($toolbarActions, $securityContext);
+
         $addToolbarActions = $toolbarActions;
 
         $settingsToolbarActions = [];
@@ -141,10 +158,6 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
 
         if (!$this->hasPermission($securityContext, PermissionTypes::EDIT)) {
             unset($toolbarActions['save'], $seoAndExcerptToolbarActions['save'], $settingsToolbarActions['save']);
-        }
-
-        if (!$this->hasPermission($securityContext, PermissionTypes::LIVE)) {
-            unset($toolbarActions['edit'], $addToolbarActions['edit']);
         }
 
         if (!$this->hasPermission($securityContext, PermissionTypes::DELETE)) {
@@ -411,5 +424,75 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         }
 
         return $this->securityChecker->hasPermission($securityContext, $permissionType);
+    }
+
+    /**
+     * @param array<string, ToolbarAction> $toolbarActions
+     *
+     * @return array<string, ToolbarAction>
+     */
+    private function removeToolbarActionsWithoutPermission(array $toolbarActions, ?string $securityContext): array
+    {
+        foreach ($toolbarActions as $key => $toolbarAction) {
+            if (!$toolbarAction instanceof DropdownToolbarAction) {
+                if (!$this->isToolbarActionPermitted($toolbarAction, $securityContext)) {
+                    unset($toolbarActions[$key]);
+                }
+
+                continue;
+            }
+
+            /** @var array{label: string, icon: string, toolbarActions: ToolbarAction[]} $options */
+            $options = $toolbarAction->getOptions();
+            $permittedToolbarActions = \array_values(\array_filter(
+                $options['toolbarActions'],
+                fn (ToolbarAction $childToolbarAction): bool => $this->isToolbarActionPermitted($childToolbarAction, $securityContext),
+            ));
+
+            if (\count($permittedToolbarActions) === \count($options['toolbarActions'])) {
+                continue;
+            }
+
+            if ([] === $permittedToolbarActions) {
+                unset($toolbarActions[$key]);
+
+                continue;
+            }
+
+            $toolbarActions[$key] = new DropdownToolbarAction($options['label'], $options['icon'], $permittedToolbarActions);
+        }
+
+        return $toolbarActions;
+    }
+
+    private function isToolbarActionPermitted(ToolbarAction $toolbarAction, ?string $securityContext): bool
+    {
+        $permission = self::TOOLBAR_ACTION_PERMISSIONS[$toolbarAction->getType()] ?? null;
+
+        return null === $permission || $this->hasPermission($securityContext, $permission);
+    }
+
+    /**
+     * The publishing options of the save action are only guarded by the permissions of the entity,
+     * which entities without object security do not deliver, so they are removed here.
+     *
+     * @param array<string, ToolbarAction> $toolbarActions
+     *
+     * @return array<string, ToolbarAction>
+     */
+    private function removePublishingFromSaveAction(array $toolbarActions): array
+    {
+        $saveAction = $toolbarActions['save'] ?? null;
+
+        if (!$saveAction instanceof ToolbarAction || 'sulu_admin.save_with_publishing' !== $saveAction->getType()) {
+            return $toolbarActions;
+        }
+
+        $toolbarActions['save'] = new ToolbarAction(
+            $saveAction->getType(),
+            \array_merge($saveAction->getOptions(), ['publish_visible_condition' => 'false']),
+        );
+
+        return $toolbarActions;
     }
 }

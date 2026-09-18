@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\PropertyResolver\ImageMapPropertyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
@@ -159,6 +160,12 @@ class ImageMapPropertyResolverTest extends TestCase
             $this->assertSame($imageId, $resolvable->getId());
             $this->assertSame('media', $resolvable->getResourceLoaderKey());
             $this->assertSame(['id' => $imageId, 'displayOption' => null], $image->getView());
+
+            $this->assertSame(MediaInterface::RESOURCE_KEY, $resolvable->getResourceKey());
+            $references = $image->getReferences();
+            $this->assertCount(1, $references);
+            $this->assertSame($imageId, $references[0]->getResourceId());
+            $this->assertSame(MediaInterface::RESOURCE_KEY, $references[0]->getResourceKey());
         }
 
         $hotspotsContentView = $content['hotspots'] ?? null;

@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber;
 
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -124,11 +126,11 @@ class PageCacheInvalidationSubscriber implements EventSubscriberInterface
         }
 
         foreach ($dimensionContent->getExcerptTags() as $tag) {
-            $this->cacheManager->invalidateReference('tag', $tag->getName());
+            $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->getId());
         }
 
         foreach ($dimensionContent->getExcerptCategoryIds() as $categoryId) {
-            $this->cacheManager->invalidateReference('category', (string) $categoryId);
+            $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, (string) $categoryId);
         }
     }
 }
