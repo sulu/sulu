@@ -10,10 +10,11 @@ class MemoryFormStoreFactory {
         data: Object = {},
         locale: ?IObservableValue<string>,
         type: ?string,
-        metadataOptions: ?Object
+        metadataOptions: ?Object,
+        options: ?Object
     ) {
         return new SchemaFormStoreDecorator(
-            (schema, jsonSchema) => new MemoryFormStore(data, schema, jsonSchema, locale, metadataOptions),
+            (schema, jsonSchema) => new MemoryFormStore(data, schema, jsonSchema, locale, metadataOptions, options),
             formKey,
             type,
             metadataOptions
