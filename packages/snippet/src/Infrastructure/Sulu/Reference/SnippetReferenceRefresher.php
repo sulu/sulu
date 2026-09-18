@@ -111,6 +111,14 @@ class SnippetReferenceRefresher implements ReferenceRefresherInterface
             ]
         );
 
+        if (null !== $snippetDimensionContent->getShadowLocale()) {
+            // Shadow contents do not own references. Persist the empty collection so
+            // references from a former independent translation are removed.
+            $referenceCollector->persistReferences();
+
+            return;
+        }
+
         $contentViews = $this->contentViewResolver->getContentViews(dimensionContent: $snippetDimensionContent);
 
         foreach ($contentViews as $key => $contentView) {
