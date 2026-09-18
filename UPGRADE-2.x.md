@@ -10,6 +10,10 @@ Copying creates a new page or snippet, but only `edit` was checked so far. For p
 on the webspace of the destination, so copying into another webspace needs the permission there. Check your
 roles and grant `add` where users copy content, otherwise they get a `403`.
 
+If you replaced the snippet controller through `sulu_snippet.controller.snippet.class`, pass the
+`sulu_security.security_checker` as the last constructor argument. Without it the new check does nothing
+and copying stays open to everyone with `edit`.
+
 ### Reference tracking for page and teaser selections
 
 The `single_page_selection`, `page_selection` and `teaser_selection` content types now register their targets in the
