@@ -17,6 +17,10 @@ import type {ResourceFormStore, FormStoreInterface} from '../../../containers';
 
 const noop = () => undefined;
 
+// SchemaFormStoreDecorator has no error state, so its "loading" stays true forever if the
+// options form's own metadata request fails - bound the wait instead of hanging indefinitely
+const FORM_STORE_LOAD_TIMEOUT = 10000;
+
 /**
  * Like UpdateFormStoreToolbarAction, but when the target fields already hold content it shows
  * the generated result next to the original before applying it, instead of overwriting blind.
@@ -138,12 +142,32 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
         );
     }
 
+    // skips properties the response/suggestion did not carry, so an incomplete answer can only
+    // add content, never delete a field that was already there
     writeContentExpressions(getValue: (property: string) => mixed) {
         for (const expr of this.contentExpressions) {
             if (expr.path) {
-                this.resourceFormStore.change(expr.path, getValue(expr.property));
+                const value = getValue(expr.property);
+
+                if (undefined === value) {
+                    continue;
+                }
+
+                this.resourceFormStore.change(expr.path, value);
             }
         }
+    }
+
+    waitForFormStoreToLoad(formStore: FormStoreInterface): Promise<void> {
+        return Promise.race([
+            when(() => !formStore.loading),
+            new Promise((resolve, reject) => {
+                setTimeout(
+                    () => reject(new Error('Timed out waiting for the options form to load')),
+                    FORM_STORE_LOAD_TIMEOUT
+                );
+            }),
+        ]);
     }
 
     @action generateAndApply = async() => {
@@ -186,7 +210,17 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
         // the optimize checkbox's schema loads asynchronously too - without this, a request
         // fired before it resolves goes out with formStore.data still at its pre-load default
         if (formStore) {
-            await when(() => !formStore.loading);
+            try {
+                await this.waitForFormStoreToLoad(formStore);
+            } catch (error) {
+                action(() => {
+                    this.loading = false;
+                    this.dialogSnackbarType = 'warning';
+                    this.dialogSnackbarMessage = translate('sulu_admin.request_failed');
+                })();
+
+                return;
+            }
         }
 
         Requester.post(url, {
