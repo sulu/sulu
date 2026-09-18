@@ -48,13 +48,11 @@ return static function(ContainerConfigurator $container) {
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);
 
-    // Renders the deep-link attribute during the preview render; no context tag so it is also
-    // available in the website kernel that produces the preview HTML.
+    // No context tag: the extension must also load in the website kernel that renders the preview.
     $services->set('sulu_preview.preview_deep_link_twig_extension', PreviewDeepLinkExtension::class)
         ->args([new Reference('request_stack')])
         ->tag('twig.extension');
 
-    // Injects the deep-link bridge script into the admin preview iframe response.
     $services->set('sulu_preview.preview_deep_link_script_subscriber', PreviewDeepLinkScriptSubscriber::class)
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);

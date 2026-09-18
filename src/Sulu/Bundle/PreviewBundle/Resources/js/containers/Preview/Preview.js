@@ -4,7 +4,7 @@ import {action, computed, observable, reaction, toJS, when} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import classNames from 'classnames';
-import log from 'loglevel';
+import equals from 'fast-deep-equal';
 import {DatePicker, Form, Loader, Toolbar} from 'sulu-admin-bundle/components';
 import {ResourceFormStore, sidebarStore} from 'sulu-admin-bundle/containers';
 import {Router} from 'sulu-admin-bundle/services';
@@ -23,7 +23,6 @@ type Props = {|
 |};
 
 const NAVIGATE_MESSAGE_TYPE = 'sulu.preview.navigate';
-const READY_MESSAGE_TYPE = 'sulu.preview.ready';
 
 function findBlockIdPath(data: mixed, targetId: string, path: Array<string> = []): ?Array<string> {
     if (Array.isArray(data)) {
@@ -90,6 +89,7 @@ class Preview extends React.Component<Props> {
     dataDisposer: () => mixed;
     localeDisposer: () => mixed;
 
+    initialData: ?Object;
     unmounted: boolean = false;
 
     @computed get webspaceKey() {
@@ -227,6 +227,14 @@ class Preview extends React.Component<Props> {
 
         previewStore.start();
 
+        // Snapshot the loaded server data (what the iframe renders) to detect a real change below.
+        when(
+            () => !formStore.loading,
+            () => {
+                this.initialData = toJS(formStore.data);
+            }
+        );
+
         when(
             () => !formStore.loading
                 && !previewStore.starting
@@ -258,18 +266,25 @@ class Preview extends React.Component<Props> {
             return;
         }
 
+        let firstRun = true;
+
         this.dataDisposer = reaction(
             () => toJS(formStore.data),
             (data) => {
+                const wasFirstRun = firstRun;
+                firstRun = false;
+
                 if (this.iframeRef === null && !this.previewWindow) {
+                    return;
+                }
+
+                // Skip the first push when unchanged; the iframe already renders this server data.
+                if (wasFirstRun && this.initialData && equals(data, this.initialData)) {
                     return;
                 }
 
                 this.updatePreview(data);
             },
-            // Push the current form data once the preview is ready, so data that field types mutate
-            // during load (e.g. injected block ids) reaches the preview even when that mutation
-            // happened before this reaction was wired.
             {fireImmediately: true}
         );
 
@@ -277,9 +292,7 @@ class Preview extends React.Component<Props> {
             () => toJS(formStore.schema),
             () => {
                 if (formStore.type) {
-                    const data = toJS(formStore.data);
-                    previewStore.updateContext(toJS(formStore.type), data)
-                        .then((previewContent) => this.setContent(previewContent));
+                    previewStore.updateContext(toJS(formStore.type), toJS(formStore.data)).then(this.setContent);
                 }
             }
         );
@@ -288,9 +301,7 @@ class Preview extends React.Component<Props> {
     updatePreview = debounce((data: Object) => {
         if (this.shouldUpdateFormStore && !!this.previewStore.token) {
             const {previewStore} = this;
-            previewStore.update(data).then((content) => {
-                this.setContent(content);
-            });
+            previewStore.update(data).then(this.setContent);
         }
     }, Preview.debounceDelay);
 
@@ -329,11 +340,7 @@ class Preview extends React.Component<Props> {
             return;
         }
 
-        // event.source is the preview window's WindowProxy, which stays valid even if that
-        // window navigates to a different origin (e.g. via a link inside the previewed page) -
-        // checking it alone would keep trusting messages from whatever page ends up loaded
-        // there. The preview iframe/window is always same-origin with the admin today, so also
-        // require that.
+        // event.source survives cross-origin navigation of the preview window, so also check origin.
         if (event.origin !== window.location.origin) {
             return;
         }
@@ -346,10 +353,6 @@ class Preview extends React.Component<Props> {
         if (data.type === NAVIGATE_MESSAGE_TYPE && typeof data.id === 'string') {
             this.navigateToBlock(data.id);
         }
-
-        if (data.type === READY_MESSAGE_TYPE && Array.isArray(data.ids)) {
-            this.warnAboutMissingDeepLinkAttributes(data.ids);
-        }
     };
 
     navigateToBlock = (id: string) => {
@@ -361,14 +364,9 @@ class Preview extends React.Component<Props> {
 
         const maxMountAttempts = 30; // ~0.5s at 60fps, generous for a React re-render to commit
 
-        // idPath includes the target block itself as its last entry (not just its ancestors), so
-        // every entry needs to be expanded via a real click - including the target, since it may
-        // itself be collapsed - before it can be scrolled into view.
+        // idPath ends with the target block itself, so each entry (incl. the target) is clicked open.
         const expandNext = (index: number, mountAttempt: number = 0) => {
-            // The component may have unmounted (e.g. the sidebar was switched away from Preview)
-            // while a requestAnimationFrame callback below was still pending - rAF callbacks are
-            // not tied to React's lifecycle and would otherwise keep clicking/scrolling the still-
-            // mounted admin form after the user already left Preview.
+            // Stop if unmounted: a pending rAF callback must not keep clicking the left-behind form.
             if (this.unmounted) {
                 return;
             }
@@ -385,8 +383,7 @@ class Preview extends React.Component<Props> {
             const element = findBlockElement(idPath[index]);
             if (!element) {
                 if (mountAttempt >= maxMountAttempts) {
-                    // A parent's nested content never mounted (stale/removed block) - give up
-                    // instead of polling forever.
+                    // A parent's nested content never mounted (stale/removed block) - give up.
                     return;
                 }
 
@@ -399,23 +396,6 @@ class Preview extends React.Component<Props> {
         };
 
         expandNext(0);
-    };
-
-    warnAboutMissingDeepLinkAttributes = (renderedIds: $ReadOnlyArray<mixed>) => {
-        // Expect the preview attribute only for blocks the admin renders as navigable targets
-        // (carrying "data-sulu-block-id"), not for every "_id" found anywhere in the form data.
-        const expectedIds = Array.from(document.querySelectorAll('[data-sulu-block-id]'))
-            .map((element) => element.getAttribute('data-sulu-block-id'))
-            .filter((id) => typeof id === 'string' && id !== '');
-        const missingIds = expectedIds.filter((id) => !renderedIds.includes(id));
-
-        if (renderedIds.length > 0 && missingIds.length > 0) {
-            log.warn(
-                '[sulu_preview] The following blocks are missing the "sulu_preview_deep_link()" attribute ' +
-                'on their template root element and cannot be navigated to from the preview: '
-                + missingIds.join(', ')
-            );
-        }
     };
 
     disposeFormStoreReactions() {

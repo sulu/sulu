@@ -50,32 +50,35 @@ class PreviewDeepLinkScriptSubscriberTest extends TestCase
 
     public function testInjectsScriptForAdminRenderRoute(): void
     {
-        $response = $this->handle('sulu_preview.render', '<html><body><h1>Hello</h1></body></html>');
+        $response = $this->handle(
+            'sulu_preview.render',
+            '<html><body><h1 data-sulu-preview-id="block-1">Hello</h1></body></html>'
+        );
 
         $this->assertSame(
-            '<html><body><h1>Hello</h1>' . self::SCRIPT . '</body></html>',
+            '<html><body><h1 data-sulu-preview-id="block-1">Hello</h1>' . self::SCRIPT . '</body></html>',
             $response->getContent()
         );
     }
 
     public function testInjectsScriptIntoJsonContentForUpdateRoute(): void
     {
-        $json = (string) \json_encode(['content' => '<html><body><h1>Hello</h1></body></html>']);
+        $json = (string) \json_encode(['content' => '<html><body><h1 data-sulu-preview-id="block-1">Hello</h1></body></html>']);
         $response = $this->handle('sulu_preview.update', $json);
 
         $this->assertSame(
-            ['content' => '<html><body><h1>Hello</h1>' . self::SCRIPT . '</body></html>'],
+            ['content' => '<html><body><h1 data-sulu-preview-id="block-1">Hello</h1>' . self::SCRIPT . '</body></html>'],
             \json_decode((string) $response->getContent(), true)
         );
     }
 
     public function testInjectsScriptIntoJsonContentForUpdateContextRoute(): void
     {
-        $json = (string) \json_encode(['content' => '<html><body>a</body></html>']);
+        $json = (string) \json_encode(['content' => '<html><body><span data-sulu-preview-id="a">a</span></body></html>']);
         $response = $this->handle('sulu_preview.update-context', $json);
 
         $this->assertSame(
-            ['content' => '<html><body>a' . self::SCRIPT . '</body></html>'],
+            ['content' => '<html><body><span data-sulu-preview-id="a">a</span>' . self::SCRIPT . '</body></html>'],
             \json_decode((string) $response->getContent(), true)
         );
     }
@@ -90,9 +93,23 @@ class PreviewDeepLinkScriptSubscriberTest extends TestCase
 
     public function testInjectsBeforeLastBodyTag(): void
     {
-        $response = $this->handle('sulu_preview.render', '<body>a</body><body>b</body>');
+        $response = $this->handle(
+            'sulu_preview.render',
+            '<body data-sulu-preview-id="x">a</body><body>b</body>'
+        );
 
-        $this->assertSame('<body>a</body><body>b' . self::SCRIPT . '</body>', $response->getContent());
+        $this->assertSame(
+            '<body data-sulu-preview-id="x">a</body><body>b' . self::SCRIPT . '</body>',
+            $response->getContent()
+        );
+    }
+
+    public function testDoesNotInjectWhenContentHasNoDeepLinkAttribute(): void
+    {
+        $content = '<html><body><h1>Hello</h1></body></html>';
+        $response = $this->handle('sulu_preview.render', $content);
+
+        $this->assertSame($content, $response->getContent());
     }
 
     public function testDoesNotInjectForPublicRenderRoute(): void
@@ -113,7 +130,7 @@ class PreviewDeepLinkScriptSubscriberTest extends TestCase
 
     public function testDoesNotInjectWhenNoBodyTag(): void
     {
-        $content = '{"content": "partial update"}';
+        $content = '<div data-sulu-preview-id="x">partial update</div>';
         $response = $this->handle('sulu_preview.render', $content);
 
         $this->assertSame($content, $response->getContent());

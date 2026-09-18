@@ -78,12 +78,7 @@ function deepClone(value: any): any {
 }
 
 const blockIdGenerator = {
-    /**
-     * Generate unique block IDs from the backend API.
-     *
-     * @param {number} count - The number of IDs to generate (default: 1)
-     * @returns {Promise<Array<string>>} Array of generated block IDs
-     */
+    // Fetches `count` freshly generated block ids from the backend.
     generateBlockIds(count: number = 1): Promise<Array<string>> {
         if (count <= 0) {
             return Promise.resolve([]);
@@ -101,8 +96,7 @@ const blockIdGenerator = {
             });
     },
 
-    // Recursively assigns a generated `_id` to every typed item (block, image_map hotspot and any
-    // nested variant) that does not have one yet, descending into each item's sub-form via `types`.
+    // Assigns a generated `_id` to every typed item (block, hotspot, nested variant) that lacks one.
     async ensureBlockIds(value: any, types: Object): Promise<any> {
         if (value === undefined || value === null) {
             return null;

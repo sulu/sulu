@@ -1,27 +1,13 @@
 /**
- * Preview deep-link bridge.
- *
- * Runs inside the Sulu preview iframe. Hovering an element carrying a
- * `data-sulu-preview-id` attribute (rendered via the `sulu_preview_deep_link()`
- * Twig function) shows a focus button; clicking it posts a message to the
- * parent admin window so it can scroll to and expand the matching block.
- *
- * Vanilla JS, no dependencies. UI lives in a closed Shadow DOM so host page
- * styles (box-sizing, resets, cascades) can never leak in or out.
- *
- * The admin rewrites the same iframe document on every preview update via
- * document.open()/write()/close(), which re-executes this script while the
- * window object (and its listeners) survives. To avoid stacking a fresh set of
- * listeners on every keystroke, the global mouse/scroll listeners are bound once
- * per window and read the current overlay from shared state; only the overlay -
- * wiped together with the old document body - is rebuilt on each run.
+ * Preview deep-link bridge, running inside the Sulu preview iframe. Hovering an element with a
+ * `data-sulu-preview-id` attribute shows a focus button that posts a message to the admin window,
+ * which then scrolls to and expands the matching block. The UI lives in a closed Shadow DOM. The
+ * admin rewrites the iframe via document.open() on every update, so everything is rebuilt each run.
  */
 (function () {
     'use strict';
 
-    // Either embedded in the admin's preview iframe (window.parent) or opened via the preview's
-    // "open in window" button, which admin opens with window.open() (window.opener). Neither
-    // means this is a standalone visit with no admin to bridge to.
+    // The admin is window.parent (iframe) or window.opener ("open in window"); absent means standalone.
     var adminWindow = window.opener || (window.parent !== window ? window.parent : null);
     if (!adminWindow) {
         return;
@@ -29,27 +15,14 @@
 
     var ATTRIBUTE = 'data-sulu-preview-id';
     var MESSAGE_NAVIGATE = 'sulu.preview.navigate';
-    var MESSAGE_READY = 'sulu.preview.ready';
-    var STATE_KEY = '__suluPreviewDeepLink';
 
-    // The preview iframe/window is always same-origin with the admin, so target it explicitly
-    // instead of falling back to a wildcard origin when document.referrer is unavailable
-    // (e.g. under a strict Referrer-Policy).
+    // Target the admin explicitly (always same-origin) instead of a wildcard origin.
     function postToAdmin(message) {
         adminWindow.postMessage(message, window.location.origin);
     }
 
     function findAnchor(element) {
         return element instanceof Element ? element.closest('[' + ATTRIBUTE + ']') : null;
-    }
-
-    function collectKnownIds() {
-        var ids = [];
-        document.querySelectorAll('[' + ATTRIBUTE + ']').forEach(function (element) {
-            ids.push(element.getAttribute(ATTRIBUTE));
-        });
-
-        return ids;
     }
 
     function createOverlay() {
@@ -117,9 +90,7 @@
         state.overlay = overlay;
         state.activeAnchor = null;
 
-        // Events targeting shadow-tree content never reach the window-level listeners as anything
-        // but the retargeted host, so leaving the button/outline is detected here, directly on the
-        // host, where mouseleave isn't subject to that retargeting.
+        // mouseleave on the host is not subject to the shadow-tree retargeting the window listeners see.
         overlay.host.addEventListener('mouseleave', function () {
             state.activeAnchor = null;
             hide(overlay);
@@ -134,8 +105,7 @@
         });
     }
 
-    // Bound once per window: window listeners survive document.open(), so they are not re-added on
-    // each preview update. They read the current overlay from shared state.
+    // Rebound each run: document.open() dropped the previous window listeners, so nothing stacks.
     function bindGlobalListeners(state) {
         window.addEventListener('mouseover', function (event) {
             if (!state.overlay) {
@@ -161,10 +131,8 @@
                 return;
             }
 
-            // The overlay lives in a closed shadow tree appended to <body>, so once the pointer
-            // reaches the button/outline the browser retargets relatedTarget to the shadow host
-            // (it has no data-sulu-preview-id ancestor). Without this check the overlay would hide
-            // itself the instant the pointer arrives at the button.
+            // Pointer entering the button/outline retargets relatedTarget to the shadow host; without
+            // this the overlay would hide the instant the pointer reaches the button.
             if (event.relatedTarget === state.overlay.host) {
                 return;
             }
@@ -186,16 +154,10 @@
     }
 
     function run() {
-        var state = window[STATE_KEY];
-        if (!state) {
-            state = {overlay: null, activeAnchor: null};
-            window[STATE_KEY] = state;
-            bindGlobalListeners(state);
-        }
+        var state = {overlay: null, activeAnchor: null};
 
+        bindGlobalListeners(state);
         rebuildOverlay(state);
-
-        postToAdmin({type: MESSAGE_READY, ids: collectKnownIds()});
     }
 
     if (document.readyState === 'loading') {

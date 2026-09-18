@@ -2144,7 +2144,7 @@ test('Throw error if passed block_id_generator schema option is not a boolean', 
             types={types}
             value={[]}
         />
-    )).toThrow('The "block" field types only accepts booleans as "block_id_generator" schema option!');
+    )).toThrow('The "block" field type only accepts booleans as "block_id_generator" schema option!');
 });
 
 test('Should inject missing block ids on mount without dirtying the form when block_id_generator is enabled',
@@ -2182,7 +2182,6 @@ test('Should inject missing block ids on mount without dirtying the form when bl
         await new Promise((resolve) => setTimeout(resolve, 0));
 
         expect(ensureBlockIdsSpy).toHaveBeenCalledWith(value, types);
-        // Written with the isDefaultValue context so the injected ids never mark the form dirty.
         expect(changeSpy).toHaveBeenCalledWith([{type: 'default', _id: 'generated-id'}], {isDefaultValue: true});
 
         ensureBlockIdsSpy.mockRestore();
