@@ -34,17 +34,7 @@ export default class Collapsible extends React.Component<Props> {
         return this.props.expanded || !this.collapsible;
     }
 
-    handleClick = () => {
-        const {onExpand} = this.props;
-
-        if (!this.expanded && onExpand) {
-            onExpand();
-        }
-    };
-
-    handleToggleClick = (event: SyntheticEvent<HTMLButtonElement>) => {
-        event.stopPropagation();
-
+    handleHeaderClick = () => {
         const {onCollapse, onExpand} = this.props;
 
         if (this.expanded) {
@@ -67,13 +57,24 @@ export default class Collapsible extends React.Component<Props> {
             }
         );
 
+        const headerClass = classNames(
+            collapsibleStyles.header,
+            {
+                [collapsibleStyles.toggleable]: this.collapsible,
+            }
+        );
+
         return (
-            <section className={collapsibleClass} onClick={this.handleClick} role="switch">
+            <section className={collapsibleClass}>
                 {handle &&
                     <div className={collapsibleStyles.handle}>{handle}</div>
                 }
                 <div className={collapsibleStyles.content}>
-                    <header className={collapsibleStyles.header}>
+                    <header
+                        className={headerClass}
+                        onClick={this.collapsible ? this.handleHeaderClick : undefined}
+                        role="switch"
+                    >
                         <span className={collapsibleStyles.title}>{title}</span>
                         {subtitle &&
                             <span className={collapsibleStyles.subtitle}>{subtitle}</span>
@@ -83,10 +84,10 @@ export default class Collapsible extends React.Component<Props> {
                             <Action action={action} key={index} />
                         ))}
                         {this.collapsible &&
+                            // No own click handler: the click bubbles to the header, which toggles.
                             <button
                                 aria-expanded={expanded}
                                 className={collapsibleStyles.toggle}
-                                onClick={this.handleToggleClick}
                                 type="button"
                             >
                                 <Icon name={expanded ? 'su-collapse-vertical' : 'su-expand-vertical'} />

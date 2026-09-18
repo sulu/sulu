@@ -6,16 +6,19 @@ $collapsibleHandleColor: $black;
 $collapsibleHandleBackgroundColor: $silver;
 $collapsibleSubtitleColor: $gray;
 $collapsibleIconColor: $gray;
+$collapsibleIconSize: 14px;
+$collapsibleIconSpacing: 20px;
+$collapsibleHeaderPadding: 20px;
+
+/* the buttons are bigger than their icons to be easy to hit, the overhang is taken off the spacing */
+$collapsibleButtonSize: 32px;
+$collapsibleButtonOverhang: calc(($collapsibleButtonSize - $collapsibleIconSize) / 2);
 
 .collapsible {
     display: flex;
     background-color: $collapsibleBackgroundColor;
     border: 1px solid $collapsibleBorderColor;
     border-radius: 3px;
-
-    &:not(.expanded) {
-        cursor: pointer;
-    }
 }
 
 .handle {
@@ -41,7 +44,11 @@ $collapsibleIconColor: $gray;
     display: flex;
     align-items: center;
     height: 56px;
-    padding: 0 20px;
+    padding: 0 calc($collapsibleHeaderPadding - $collapsibleButtonOverhang) 0 $collapsibleHeaderPadding;
+}
+
+.toggleable {
+    cursor: pointer;
 }
 
 .title {
@@ -65,8 +72,14 @@ $collapsibleIconColor: $gray;
     border: none;
     background: none;
     color: $collapsibleIconColor;
-    font-size: 14px;
-    margin-left: 20px;
+    font-size: $collapsibleIconSize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: $collapsibleButtonSize;
+    height: $collapsibleButtonSize;
+    margin-left: calc($collapsibleIconSpacing - 2 * $collapsibleButtonOverhang);
     padding: 0;
 }
 

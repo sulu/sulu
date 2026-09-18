@@ -116,19 +116,36 @@ test('Clicking a collapsed collapsible should call the onExpand callback', async
     expect(expandSpy).toHaveBeenCalledWith();
 });
 
-test('Clicking an expanded collapsible should not call the onExpand callback', async() => {
+test('Clicking the header of an expanded collapsible should call the onCollapse callback', async() => {
+    const collapseSpy = jest.fn();
     const expandSpy = jest.fn();
     const user = userEvent.setup();
 
     render(
-        <Collapsible expanded={true} onCollapse={jest.fn()} onExpand={expandSpy} title="General">
+        <Collapsible expanded={true} onCollapse={collapseSpy} onExpand={expandSpy} title="General">
             Some collapsible content
         </Collapsible>
     );
 
     await user.click(screen.getByText('General'));
 
+    expect(collapseSpy).toHaveBeenCalledTimes(1);
     expect(expandSpy).not.toHaveBeenCalled();
+});
+
+test('Clicking the content of an expanded collapsible should not collapse it', async() => {
+    const collapseSpy = jest.fn();
+    const user = userEvent.setup();
+
+    render(
+        <Collapsible expanded={true} onCollapse={collapseSpy} onExpand={jest.fn()} title="General">
+            Some collapsible content
+        </Collapsible>
+    );
+
+    await user.click(screen.getByText('Some collapsible content'));
+
+    expect(collapseSpy).not.toHaveBeenCalled();
 });
 
 test('Clicking an action should call its callback without expanding the collapsible', async() => {

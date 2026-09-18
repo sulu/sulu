@@ -1,8 +1,9 @@
 // @flow
-import React from 'react';
+import React, {Fragment} from 'react';
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import CollapsibleCollection from '../../../components/CollapsibleCollection';
+import Icon from '../../../components/Icon';
 import Table from '../../../components/Table';
 import Router from '../../../services/Router';
 import Field from '../../Form/Field';
@@ -19,6 +20,7 @@ export type Row = {
 
 // subtitle is never set, CollapsibleConfig asks for the key
 type Group = {
+    id: string,
     rows: Array<Row>,
     sectionKey: string,
     subtitle?: string,
@@ -26,6 +28,7 @@ type Group = {
 };
 
 type Props = {|
+    allExpanded: boolean,
     data: Object,
     disabled: boolean,
     errors: {[string]: Error},
@@ -42,7 +45,7 @@ type Props = {|
  * Renders a product_attributes form as one collapsible card per attribute group with a label/field
  * row per attribute. Each row uses the form's Field, so any field type works. Values come from the
  * given form inspector, the one of the container's own store, errors from the errors map. Which rows
- * are shown is decided by the given filterItem callback.
+ * are shown is decided by the given filterItem callback, allExpanded expands or collapses all groups.
  *
  * @experimental We can not yet give BC Promise for this new container in Sulu 3.1.
  */
@@ -60,7 +63,7 @@ class ProductAttributesRenderer extends React.Component<Props> {
                     .map((name) => ({name, schema: items[name]}))
                     .filter((row) => filterItem(row));
 
-                return {rows, sectionKey, title: section.label || ''};
+                return {id: sectionKey, rows, sectionKey, title: section.label || ''};
             })
             .filter((group) => group.rows.length > 0);
     }
@@ -118,14 +121,25 @@ class ProductAttributesRenderer extends React.Component<Props> {
     handleCollectionChange = () => {};
 
     render() {
+        const {allExpanded, toolbar} = this.props;
+        const {groups} = this;
+
         return (
-            <CollapsibleCollection
-                movable={false}
-                onChange={this.handleCollectionChange}
-                renderCollapsibleContent={this.renderCollapsibleContent}
-                toolbar={this.props.toolbar}
-                value={this.groups}
-            />
+            <Fragment>
+                <CollapsibleCollection
+                    allExpanded={allExpanded}
+                    movable={false}
+                    onChange={this.handleCollectionChange}
+                    renderCollapsibleContent={this.renderCollapsibleContent}
+                    toolbar={toolbar}
+                    value={groups}
+                />
+                {groups.length === 0 &&
+                    <div className={productAttributesRendererStyles.placeholder}>
+                        <Icon className={productAttributesRendererStyles.placeholderIcon} name="su-battery-low" />
+                    </div>
+                }
+            </Fragment>
         );
     }
 }

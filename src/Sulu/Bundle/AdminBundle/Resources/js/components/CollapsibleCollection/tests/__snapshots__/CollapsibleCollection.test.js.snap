@@ -31,7 +31,6 @@ exports[`Render two collapsed collapsibles 1`] = `
     >
       <section
         class="collapsible"
-        role="switch"
       >
         <div
           class="handle"
@@ -45,7 +44,8 @@ exports[`Render two collapsed collapsibles 1`] = `
           class="content"
         >
           <header
-            class="header"
+            class="header toggleable"
+            role="switch"
           >
             <span
               class="title"
@@ -75,7 +75,6 @@ exports[`Render two collapsed collapsibles 1`] = `
       </section>
       <section
         class="collapsible"
-        role="switch"
       >
         <div
           class="handle"
@@ -89,7 +88,8 @@ exports[`Render two collapsed collapsibles 1`] = `
           class="content"
         >
           <header
-            class="header"
+            class="header toggleable"
+            role="switch"
           >
             <span
               class="title"
