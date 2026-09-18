@@ -166,10 +166,8 @@ class PageController extends AbstractRestController implements ClassResourceInte
                     );
 
                     // the copy is created below the destination, which can be in another webspace
-                    $destination = $this->documentManager->find(
-                        $this->getRequestParameter($request, 'destination', true),
-                        $locale
-                    );
+                    $destinationUuid = $this->getRequestParameter($request, 'destination', true);
+                    $destination = $this->documentManager->find($destinationUuid, $locale);
 
                     if (!$destination instanceof BasePageDocument) {
                         throw new RestException('Unrecognized destination for copy');
@@ -185,10 +183,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
                         'add'
                     );
 
-                    $copiedPath = $this->documentManager->copy(
-                        $document,
-                        $this->getRequestParameter($request, 'destination', true)
-                    );
+                    $copiedPath = $this->documentManager->copy($document, $destinationUuid);
                     $this->documentManager->flush();
 
                     $data = $this->documentManager->find($copiedPath, $locale);
