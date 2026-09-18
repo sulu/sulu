@@ -117,6 +117,9 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     @observable types: { [key: string]: SchemaType } = {};
     @observable schemaLoading: boolean = true;
     @observable typesLoading: boolean = true;
+    @observable schemaForbidden: boolean = false;
+    @observable schemaNotFound: boolean = false;
+    @observable schemaUnexpectedError: boolean = false;
     schemaDisposer: ?() => void;
     metadataOptions: ?{[string]: any};
 
@@ -129,7 +132,8 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         this.metadataOptions = metadataOptions;
 
         metadataStore.getSchemaTypes(this.formKey, this.metadataOptions)
-            .then(this.handleSchemaTypeResponse);
+            .then(this.handleSchemaTypeResponse)
+            .catch(this.handleSchemaError);
     }
 
     destroy() {
@@ -173,8 +177,32 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             Promise.all([
                 metadataStore.getSchema(this.formKey, this.type, this.metadataOptions),
                 metadataStore.getJsonSchema(this.formKey, this.type, this.metadataOptions),
-            ]).then(this.handleSchemaResponse);
+            ]).then(this.handleSchemaResponse).catch(this.handleSchemaError);
         });
+    };
+
+    /**
+     * The metadata requests fail e.g. when the user is not allowed to see one of the resources the form
+     * references (a 403): stop the loader and report the error like a failed data request would,
+     * instead of leaving the form in an infinite loading state.
+     */
+    @action handleSchemaError = (error: Object) => {
+        this.typesLoading = false;
+        this.setSchemaLoading(false);
+
+        const status = error && error.status;
+        if (status === 403) {
+            this.schemaForbidden = true;
+        } else if (status === 404) {
+            this.schemaNotFound = true;
+        } else {
+            log.error(
+                'ResourceFormStore failed to load the metadata of the "' + this.formKey + '" form'
+                + (status ? ' with status code "' + status + '"' : ''),
+                error
+            );
+            this.schemaUnexpectedError = true;
+        }
     };
 
     handleSchemaResponse = ([schema, jsonSchema]: [Schema, Object]) => {
@@ -310,15 +338,15 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     }
 
     @computed get forbidden(): boolean {
-        return this.resourceStore.forbidden;
+        return this.resourceStore.forbidden || this.schemaForbidden;
     }
 
     @computed get notFound(): boolean {
-        return this.resourceStore.notFound;
+        return this.resourceStore.notFound || this.schemaNotFound;
     }
 
     @computed get unexpectedError(): boolean {
-        return this.resourceStore.unexpectedError;
+        return this.resourceStore.unexpectedError || this.schemaUnexpectedError;
     }
 
     @computed get dirty(): boolean {
