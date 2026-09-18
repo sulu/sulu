@@ -1,18 +1,26 @@
 // @flow
 import {shallow} from 'enzyme';
-import {Requester} from 'sulu-admin-bundle/services';
+import {Requester, Router} from 'sulu-admin-bundle/services';
 import CacheClearToolbarAction from '../CacheClearToolbarAction';
 
 jest.mock('sulu-admin-bundle/services/Requester', () => ({
     delete: jest.fn(),
 }));
 
+jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function(attributes) {
+    this.attributes = attributes || {};
+}));
+
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+jest.mock('sulu-admin-bundle/views', () => ({
+    AbstractViewToolbarAction: require('sulu-admin-bundle/views/toolbarActions/AbstractViewToolbarAction').default,
+}));
+
 test('Return item config with correct icon, type and label and return closed dialog', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const cacheClearToolbarAction = new CacheClearToolbarAction(new Router({}));
 
     expect(cacheClearToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
         icon: 'su-paint',
@@ -31,9 +39,13 @@ test('Return item config with correct icon, type and label and return closed dia
 });
 
 test('Open dialog on toolbar item click', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction('sulu-io');
+    CacheClearToolbarAction.webspaceCachePermissions = {'sulu-io': true};
+    const cacheClearToolbarAction = new CacheClearToolbarAction(new Router({webspace: 'sulu-io'}));
 
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
     toolbarItemConfig.onClick();
 
     const element = shallow(cacheClearToolbarAction.getNode());
@@ -43,9 +55,12 @@ test('Open dialog on toolbar item click', () => {
 });
 
 test('Close dialog on cancel click', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const cacheClearToolbarAction = new CacheClearToolbarAction(new Router({}));
 
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
     toolbarItemConfig.onClick();
 
     let element = shallow(cacheClearToolbarAction.getNode());
@@ -61,13 +76,16 @@ test('Close dialog on cancel click', () => {
 });
 
 test('Call delete when dialog is confirmed', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const cacheClearToolbarAction = new CacheClearToolbarAction(new Router({}));
     CacheClearToolbarAction.clearCacheEndpoint = '/cache';
 
     const deletePromise = Promise.resolve();
     Requester.delete.mockReturnValue(deletePromise);
 
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
     toolbarItemConfig.onClick();
 
     let element = shallow(cacheClearToolbarAction.getNode());
@@ -91,14 +109,25 @@ test('Call delete when dialog is confirmed', () => {
     });
 });
 
+test('Return no item config when user has no cache permission for webspace', () => {
+    CacheClearToolbarAction.webspaceCachePermissions = {'sulu-io': false};
+    const cacheClearToolbarAction = new CacheClearToolbarAction(new Router({webspace: 'sulu-io'}));
+
+    expect(cacheClearToolbarAction.getToolbarItemConfig()).toEqual(undefined);
+});
+
 test('Call delete when dialog is confirmed with query parameter', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction('sulu-io');
+    CacheClearToolbarAction.webspaceCachePermissions = {'sulu-io': true};
+    const cacheClearToolbarAction = new CacheClearToolbarAction(new Router({webspace: 'sulu-io'}));
     CacheClearToolbarAction.clearCacheEndpoint = '/cache';
 
     const deletePromise = Promise.resolve();
     Requester.delete.mockReturnValue(deletePromise);
 
     const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
     toolbarItemConfig.onClick();
 
     let element = shallow(cacheClearToolbarAction.getNode());

@@ -4,9 +4,9 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import {Loader, Icon} from 'sulu-admin-bundle/components';
 import {formMetadataStore, List, ListStore, withToolbar} from 'sulu-admin-bundle/containers';
+import {AbstractViewToolbarAction, viewToolbarActionRegistry} from 'sulu-admin-bundle/views';
 import userStore from 'sulu-admin-bundle/stores/userStore/userStore';
 import {translate} from 'sulu-admin-bundle/utils';
-import {CacheClearToolbarAction} from 'sulu-website-bundle/containers';
 import {Route} from 'sulu-admin-bundle/services';
 import pageListStyles from './pageList.scss';
 import type {Localization} from 'sulu-admin-bundle/stores';
@@ -33,7 +33,7 @@ class PageList extends React.Component<Props> {
     page: IObservableValue<number> = observable.box();
     locale: IObservableValue<string> = observable.box();
     excludeGhostsAndShadows: IObservableValue<boolean> = observable.box(false);
-    cacheClearToolbarAction: CacheClearToolbarAction;
+    toolbarActions: Array<AbstractViewToolbarAction> = [];
     listStore: ListStore;
     excludeGhostsAndShadowsDisposer: () => void;
     webspaceKeyDisposer: () => void;
@@ -125,7 +125,13 @@ class PageList extends React.Component<Props> {
 
         observableOptions.locale = this.locale;
 
-        this.cacheClearToolbarAction = new CacheClearToolbarAction(webspace);
+        const {toolbarActions = []} = router.route.options;
+        toolbarActions.forEach((toolbarAction) => {
+            this.toolbarActions.push(new (viewToolbarActionRegistry.get(toolbarAction.type))(
+                router,
+                toolbarAction.options
+            ));
+        });
 
         this.listStore = new ListStore(
             PAGES_RESOURCE_KEY,
@@ -157,6 +163,7 @@ class PageList extends React.Component<Props> {
         this.webspaceKeyDisposer();
         this.listStore.destroy();
         this.excludeGhostsAndShadowsDisposer();
+        this.toolbarActions.forEach((toolbarAction) => toolbarAction.destroy());
     }
 
     handleEditClick = (id: string | number) => {
@@ -231,7 +238,7 @@ class PageList extends React.Component<Props> {
                         toolbarClassName={pageListStyles.listToolbar}
                     />
                 }
-                {this.cacheClearToolbarAction.getNode()}
+                {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
             </div>
         );
     }
@@ -255,7 +262,9 @@ const PageListWithToolbar = withToolbar(PageList, function() {
                 type: 'toggler',
                 value: !this.excludeGhostsAndShadows.get(),
             },
-            this.cacheClearToolbarAction.getToolbarItemConfig(),
+            ...this.toolbarActions
+                .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
+                .filter((item) => item != null),
         ],
         locale: {
             value: this.locale.get(),
