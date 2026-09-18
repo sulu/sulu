@@ -266,6 +266,7 @@ class ProductAttributes extends React.Component<Props> {
 
         return (
             <ProductAttributesRenderer
+                allExpanded={this.filter.trim() !== ''}
                 data={formStore.data}
                 disabled={disabled}
                 errors={this.errors}

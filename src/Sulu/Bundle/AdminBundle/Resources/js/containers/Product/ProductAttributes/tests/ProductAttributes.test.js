@@ -361,6 +361,20 @@ test('keeps only the rows whose label contains the typed filter', async() => {
         .toEqual(false);
 });
 
+test('expands the groups while a filter is typed', async() => {
+    await renderLoaded();
+
+    expect(rendererProps.allExpanded).toEqual(false);
+
+    await userEvent.type(screen.getByPlaceholderText('sulu_admin.filter_attributes'), 'eig');
+
+    expect(rendererProps.allExpanded).toEqual(true);
+
+    await userEvent.clear(screen.getByPlaceholderText('sulu_admin.filter_attributes'));
+
+    expect(rendererProps.allExpanded).toEqual(false);
+});
+
 test('reports an empty list and an empty object as empty', async() => {
     await renderLoaded({value: {'7': [], '8': {}}});
 

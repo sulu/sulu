@@ -181,8 +181,8 @@ test('orders attributes inside a group by position', async() => {
     renderComponent();
     await expandAllCards();
 
-    // Collapsible's root is <section role="switch">, so this scopes the query to one card.
-    const general = screen.getByText('General').closest('[role="switch"]');
+    // Collapsible's root is a <section>, so this scopes the query to one card.
+    const general = screen.getByText('General').closest('section');
     const names = within(general).getAllByText(/^(Fabric|Size)$/).map((node) => node.textContent);
 
     expect(names).toEqual(['Fabric', 'Size']);

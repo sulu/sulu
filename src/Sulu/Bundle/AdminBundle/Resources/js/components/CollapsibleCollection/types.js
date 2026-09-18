@@ -2,6 +2,7 @@
 import type {Node} from 'react';
 
 export type CollapsibleConfig = {
+    +id?: string | number,
     subtitle?: string,
     title: string,
     ...

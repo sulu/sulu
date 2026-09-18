@@ -4,7 +4,6 @@ exports[`Render an expanded collapsible with title, subtitle and handle 1`] = `
 <div>
   <section
     class="collapsible expanded"
-    role="switch"
   >
     <div
       class="handle"
@@ -17,7 +16,8 @@ exports[`Render an expanded collapsible with title, subtitle and handle 1`] = `
       class="content"
     >
       <header
-        class="header"
+        class="header toggleable"
+        role="switch"
       >
         <span
           class="title"

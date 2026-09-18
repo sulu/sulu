@@ -276,3 +276,73 @@ test('Render the toolbar even for a single collapsible', () => {
     expect(screen.getByText('toolbar-content')).toBeInTheDocument();
     expect(screen.queryByText('sulu_admin.collapse_all')).not.toBeInTheDocument();
 });
+
+test('Render all collapsibles expanded when allExpanded is set', () => {
+    renderCollapsibleCollection({allExpanded: true});
+
+    expect(screen.getByText('General content')).toBeInTheDocument();
+    expect(screen.getByText('Marketing content')).toBeInTheDocument();
+});
+
+test('Changing allExpanded should expand and collapse all collapsibles', () => {
+    const {rerenderCollapsibleCollection} = renderCollapsibleCollection();
+
+    rerenderCollapsibleCollection({allExpanded: true});
+
+    expect(screen.getByText('General content')).toBeInTheDocument();
+    expect(screen.getByText('Marketing content')).toBeInTheDocument();
+
+    rerenderCollapsibleCollection({allExpanded: false});
+
+    expect(screen.queryByText('General content')).not.toBeInTheDocument();
+    expect(screen.queryByText('Marketing content')).not.toBeInTheDocument();
+});
+
+test('An appended collapsible should start expanded when allExpanded is set', () => {
+    const {rerenderCollapsibleCollection} = renderCollapsibleCollection({allExpanded: true});
+
+    rerenderCollapsibleCollection({value: [...TWO_COLLAPSIBLES, {title: 'Shipping'}]});
+
+    expect(screen.getByText('Shipping content')).toBeInTheDocument();
+});
+
+test('A collapsible with an id should keep its state when a collapsible before it is removed', async() => {
+    const value = [{id: 'general', title: 'General'}, {id: 'dimensions', title: 'Dimensions'}];
+    const {rerenderCollapsibleCollection, user} = renderCollapsibleCollection({value});
+
+    await user.click(within(getCollapsible('Dimensions')).getByLabelText('su-expand-vertical'));
+    expect(screen.getByText('Dimensions content')).toBeInTheDocument();
+
+    rerenderCollapsibleCollection({value: [value[1]]});
+
+    expect(screen.getByText('Dimensions content')).toBeInTheDocument();
+});
+
+test('A collapsible with an id should keep its state when another one is collapsed by search', async() => {
+    const value = [{id: 'general', title: 'General'}, {id: 'dimensions', title: 'Dimensions'}];
+    const {rerenderCollapsibleCollection, user} = renderCollapsibleCollection({allExpanded: true, value});
+
+    await user.click(within(getCollapsible('General')).getByLabelText('su-collapse-vertical'));
+    expect(screen.queryByText('General content')).not.toBeInTheDocument();
+
+    rerenderCollapsibleCollection({value: [value[1]]});
+
+    expect(screen.getByText('Dimensions content')).toBeInTheDocument();
+});
+
+test('Sorting a collapsible with an id should move its expanded state along', async() => {
+    const value = [{id: 1, title: 'General'}, {id: 2, title: 'Marketing'}, {id: 3, title: 'Shipping'}];
+    const {ref, rerenderCollapsibleCollection, user} = renderCollapsibleCollection({value});
+
+    await user.click(within(getCollapsible('General')).getByLabelText('su-expand-vertical'));
+
+    act(() => {
+        ref.current.handleSortEnd({newIndex: 2, oldIndex: 0});
+    });
+
+    rerenderCollapsibleCollection({value: [value[1], value[2], value[0]]});
+
+    expect(screen.getByText('General content')).toBeInTheDocument();
+    expect(screen.queryByText('Marketing content')).not.toBeInTheDocument();
+    expect(screen.queryByText('Shipping content')).not.toBeInTheDocument();
+});

@@ -55,6 +55,7 @@ const DATA = {attribute_7: 12, attribute_9: ''};
 
 // The container decides which rows are shown; the default keeps them all.
 const filterItem = () => true;
+const filterVoltageOnly = (row) => row.name === 'attribute_9';
 
 // $FlowFixMe
 const formInspector: FormInspector = new FormInspector();
@@ -65,6 +66,7 @@ function renderComponent(props: Object = {}) {
 
     return render(
         <ProductAttributesRenderer
+            allExpanded={false}
             data={DATA}
             disabled={false}
             errors={{}}
@@ -229,4 +231,48 @@ test('collapsing a card hides its rows', async() => {
 
     expect(screen.queryByText('Colour')).not.toBeInTheDocument();
     expect(screen.getByText('Voltage (V)')).toBeInTheDocument();
+});
+
+test('expands every card when allExpanded is set', () => {
+    renderComponent({allExpanded: true});
+
+    expect(screen.getByText('Weight (kg) *')).toBeInTheDocument();
+    expect(screen.getByText('Voltage (V)')).toBeInTheDocument();
+});
+
+test('keeps a card expanded when a card before it is filtered out', async() => {
+    const {rerender} = renderComponent();
+
+    await userEvent.click(within(screen.getAllByRole('switch')[1]).getByLabelText('su-expand-vertical'));
+    expect(screen.getByText('Voltage (V)')).toBeInTheDocument();
+
+    rerender(
+        <ProductAttributesRenderer
+            allExpanded={false}
+            data={DATA}
+            disabled={false}
+            errors={{}}
+            filterItem={filterVoltageOnly}
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            router={undefined}
+            schema={SCHEMA}
+        />
+    );
+
+    expect(screen.queryByText('Dimensions')).not.toBeInTheDocument();
+    expect(screen.getByText('Voltage (V)')).toBeInTheDocument();
+});
+
+test('shows the empty list placeholder when no row is left', () => {
+    renderComponent({filterItem: () => false});
+
+    expect(screen.getByLabelText('su-battery-low')).toBeInTheDocument();
+});
+
+test('shows no placeholder while there are rows', () => {
+    renderComponent();
+
+    expect(screen.queryByLabelText('su-battery-low')).not.toBeInTheDocument();
 });

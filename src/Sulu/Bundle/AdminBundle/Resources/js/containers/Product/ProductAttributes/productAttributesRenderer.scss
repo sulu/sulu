@@ -85,3 +85,14 @@ $cellPaddingVertical: calc(($rowHeight - $inputHeight - 2 * $cellBorderWidth) / 
     flex: 0 0 auto;
     white-space: nowrap;
 }
+
+/* the empty state of a list, see Table */
+.placeholder {
+    color: $silver;
+    text-align: center;
+    padding: 40px;
+}
+
+.placeholder-icon {
+    font-size: 38px;
+}

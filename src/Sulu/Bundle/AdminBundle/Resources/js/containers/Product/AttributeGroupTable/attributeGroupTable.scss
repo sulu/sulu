@@ -2,7 +2,14 @@
 
 $rowHeight: 44px;
 $labelColumnWidth: 50%;
-$removeColumnWidth: 56px;
+
+/*
+ * The row's delete button mirrors the collapsible header's delete action, which sits left of the toggle:
+ * same button size and the same distance from the card's right edge (header padding, toggle, gap).
+ */
+$removeButtonSize: 32px;
+$removeButtonIconSize: 14px;
+$removeButtonInset: 45px;
 
 /* the card has no padding, the outer cells carry its inset */
 $cardInset: 20px;
@@ -78,8 +85,9 @@ $cardInset: 20px;
 
     th.removeCell,
     td.removeCell {
-        width: calc($removeColumnWidth + $cardInset);
-        padding: 0 $cardInset 0 0;
+        width: calc($removeButtonSize + $removeButtonInset);
+        padding: 0 $removeButtonInset 0 0;
+        border-right-width: 0;
     }
 }
 
@@ -88,12 +96,23 @@ $cardInset: 20px;
     justify-content: center;
 }
 
+.removeCell > div {
+    justify-content: flex-end;
+}
+
 /* own styling instead of core's button-cell, whose hover-only opacity is list behaviour */
 .removeButton {
     cursor: pointer;
     border: none;
     background: none;
     color: $gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $removeButtonSize;
+    height: $removeButtonSize;
+    padding: 0;
+    font-size: $removeButtonIconSize;
 
     &:disabled {
         cursor: default;
