@@ -12,7 +12,7 @@ import FormOverlay from '../FormOverlay';
 import snackbarStore from '../../stores/snackbarStore';
 import conditionDataProviderRegistry from '../Form/registries/conditionDataProviderRegistry';
 import {getDifference} from '../../utils/DifferenceCalculator';
-import blockIdGenerator from '../../services/blockIdGenerator';
+import blockIdGenerator, {createBlockIdBackfiller, readBlockIdGeneratorOption} from '../../services/blockIdGenerator';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
 import type {BlockError, ChangeContext, FieldTypeProps, FormStoreInterface} from '../Form/types';
@@ -33,6 +33,12 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     oldIconValue: ?Object;
     computedIcons: Array<Array<string>> = [];
 
+    // Shared with the image_map field: fills missing block ids without dirtying the form.
+    backfillBlockIds = createBlockIdBackfiller((value) => {
+        this.setValue(value);
+        this.props.onChange(value, {isDefaultValue: true});
+    });
+
     constructor(props: FieldTypeProps<Array<BlockEntry>>) {
         super(props);
 
@@ -40,6 +46,9 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     }
 
     @action componentDidMount() {
+        // Fill missing block ids on open, written with the isDefaultValue context so the form stays pristine.
+        this.generateMissingBlockIds(this.value);
+
         if (this.settingsFormKey) {
             // initialize empty blockSettingsFormStore because schema of the store is used for determining iconsMapping
             this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
@@ -56,13 +65,16 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         const {defaultType, onChange, types, value} = this.props;
         const {types: oldTypes} = prevProps;
 
-        if (!equals(toJS(prevProps.value), toJS(value))){
+        if (!equals(toJS(prevProps.value), toJS(value))) {
             // Only sync from props if no local changes were made since the last render.
             // This prevents stale echoed values from overwriting local changes
             // (e.g., default values applied by field components during mount).
             if (!this.value || equals(toJS(this.value), toJS(prevProps.value))) {
                 this.setValue(value);
             }
+
+            // Retry once reloaded data still lacks ids; a no-op when nothing is missing.
+            this.generateMissingBlockIds(value);
         }
 
         if (!types || !oldTypes) {
@@ -180,19 +192,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     }
 
     @computed get generateBlockIds() {
-        const {
-            schemaOptions: {
-                block_id_generator: {
-                    value: blockIdGenerator,
-                } = {},
-            },
-        } = this.props;
-
-        if (blockIdGenerator !== undefined && typeof blockIdGenerator !== 'boolean') {
-            throw new Error('The "block" field types only accepts booleans as "block_id_generator" schema option!');
-        }
-
-        return blockIdGenerator;
+        return readBlockIdGeneratorOption(this.props.schemaOptions, 'block');
     }
 
     @computed get iconsMapping() {
@@ -274,7 +274,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         return this.computedIcons;
     }
 
-    getConditionData(data: {[string]: any}, dataPath: ?string) {
+    getConditionData(data: { [string]: any }, dataPath: ?string) {
         const {formInspector} = this.props;
 
         return conditionDataProviderRegistry.getAll().reduce(
@@ -303,6 +303,14 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.setValue(newValues);
 
         onChange(newValues, context);
+    };
+
+    generateMissingBlockIds = (value: Object) => {
+        if (!this.generateBlockIds) {
+            return;
+        }
+
+        this.backfillBlockIds(value, this.props.types);
     };
 
     handleBlocksChange = (value: Object) => {
@@ -505,8 +513,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         if (!blockSettingsFormStore
             || openedBlockSettingsIndex === undefined
             || openedBlockSettingsIndex === null
-            || !oldValues)
-        {
+            || !oldValues) {
             return;
         }
 

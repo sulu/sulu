@@ -2,6 +2,7 @@
 import type {Node} from 'react';
 
 export type Hotspot = {
+    _id?: string,
     hotspot: {
         type: string,
     },

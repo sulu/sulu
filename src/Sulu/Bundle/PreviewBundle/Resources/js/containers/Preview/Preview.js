@@ -4,6 +4,7 @@ import {action, computed, observable, reaction, toJS, when} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import classNames from 'classnames';
+import equals from 'fast-deep-equal';
 import {DatePicker, Form, Loader, Toolbar} from 'sulu-admin-bundle/components';
 import {ResourceFormStore, sidebarStore} from 'sulu-admin-bundle/containers';
 import {Router} from 'sulu-admin-bundle/services';
@@ -20,6 +21,47 @@ type Props = {|
     formStore: ResourceFormStore,
     router: Router,
 |};
+
+const NAVIGATE_MESSAGE_TYPE = 'sulu.preview.navigate';
+
+function findBlockIdPath(data: mixed, targetId: string, path: Array<string> = []): ?Array<string> {
+    if (Array.isArray(data)) {
+        for (const item of data) {
+            const result = findBlockIdPath(item, targetId, path);
+            if (result) {
+                return result;
+            }
+        }
+
+        return undefined;
+    }
+
+    if (data && typeof data === 'object') {
+        // $FlowFixMe
+        const {_id} = data;
+        const nextPath = typeof _id === 'string' ? path.concat(_id) : path;
+
+        if (_id === targetId) {
+            return nextPath;
+        }
+
+        for (const key of Object.keys(data)) {
+            const result = findBlockIdPath(data[key], targetId, nextPath);
+            if (result) {
+                return result;
+            }
+        }
+    }
+
+    return undefined;
+}
+
+function findBlockElement(id: string): ?HTMLElement {
+    const element = Array.from(document.querySelectorAll('[data-sulu-block-id]'))
+        .find((candidate) => candidate.getAttribute('data-sulu-block-id') === id);
+
+    return element instanceof HTMLElement ? element : undefined;
+}
 
 @observer
 class Preview extends React.Component<Props> {
@@ -46,6 +88,9 @@ class Preview extends React.Component<Props> {
     schemaDisposer: () => mixed;
     dataDisposer: () => mixed;
     localeDisposer: () => mixed;
+
+    initialData: ?Object;
+    unmounted: boolean = false;
 
     @computed get webspaceKey() {
         const {
@@ -127,6 +172,10 @@ class Preview extends React.Component<Props> {
         }
     }
 
+    componentDidMount() {
+        window.addEventListener('message', this.handleMessage);
+    }
+
     componentDidUpdate(prevProps: Props) {
         const {
             formStore,
@@ -178,6 +227,14 @@ class Preview extends React.Component<Props> {
 
         previewStore.start();
 
+        // Snapshot the loaded server data (what the iframe renders) to detect a real change below.
+        when(
+            () => !formStore.loading,
+            () => {
+                this.initialData = toJS(formStore.data);
+            }
+        );
+
         when(
             () => !formStore.loading
                 && !previewStore.starting
@@ -209,15 +266,26 @@ class Preview extends React.Component<Props> {
             return;
         }
 
+        let firstRun = true;
+
         this.dataDisposer = reaction(
             () => toJS(formStore.data),
             (data) => {
+                const wasFirstRun = firstRun;
+                firstRun = false;
+
                 if (this.iframeRef === null && !this.previewWindow) {
                     return;
                 }
 
+                // Skip the first push when unchanged; the iframe already renders this server data.
+                if (wasFirstRun && this.initialData && equals(data, this.initialData)) {
+                    return;
+                }
+
                 this.updatePreview(data);
-            }
+            },
+            {fireImmediately: true}
         );
 
         this.schemaDisposer = reaction(
@@ -254,6 +322,9 @@ class Preview extends React.Component<Props> {
     };
 
     componentWillUnmount() {
+        this.unmounted = true;
+        window.removeEventListener('message', this.handleMessage);
+
         this.disposeFormStoreReactions();
 
         if (!this.started) {
@@ -263,6 +334,69 @@ class Preview extends React.Component<Props> {
         this.updatePreview.clear();
         this.previewStore.stop();
     }
+
+    handleMessage = (event: MessageEvent) => {
+        if (event.source !== this.getPreviewWindow()) {
+            return;
+        }
+
+        // event.source survives cross-origin navigation of the preview window, so also check origin.
+        if (event.origin !== window.location.origin) {
+            return;
+        }
+
+        const {data} = event;
+        if (!data || typeof data !== 'object') {
+            return;
+        }
+
+        if (data.type === NAVIGATE_MESSAGE_TYPE && typeof data.id === 'string') {
+            this.navigateToBlock(data.id);
+        }
+    };
+
+    navigateToBlock = (id: string) => {
+        const {formStore} = this.props;
+        const idPath = findBlockIdPath(toJS(formStore.data), id);
+        if (!idPath) {
+            return;
+        }
+
+        const maxMountAttempts = 30; // ~0.5s at 60fps, generous for a React re-render to commit
+
+        // idPath ends with the target block itself, so each entry (incl. the target) is clicked open.
+        const expandNext = (index: number, mountAttempt: number = 0) => {
+            // Stop if unmounted: a pending rAF callback must not keep clicking the left-behind form.
+            if (this.unmounted) {
+                return;
+            }
+
+            if (index >= idPath.length) {
+                const target = findBlockElement(idPath[idPath.length - 1]);
+                if (target) {
+                    target.scrollIntoView({behavior: 'smooth', block: 'start'});
+                }
+
+                return;
+            }
+
+            const element = findBlockElement(idPath[index]);
+            if (!element) {
+                if (mountAttempt >= maxMountAttempts) {
+                    // A parent's nested content never mounted (stale/removed block) - give up.
+                    return;
+                }
+
+                requestAnimationFrame(() => expandNext(index, mountAttempt + 1));
+                return;
+            }
+
+            element.click();
+            requestAnimationFrame(() => expandNext(index + 1));
+        };
+
+        expandNext(0);
+    };
 
     disposeFormStoreReactions() {
         if (this.schemaDisposer) {
