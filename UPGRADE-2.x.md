@@ -12,7 +12,7 @@ roles and grant `add` where users copy content, otherwise they get a `403`.
 
 If you replaced the snippet controller through `sulu_snippet.controller.snippet.class`, pass the
 `sulu_security.security_checker` as the last constructor argument. Without it the new check does nothing
-and copying stays open to everyone with `edit`.
+and copying stays open to everyone with `edit`. Leaving it out triggers a deprecation.
 
 ### Reference tracking for page and teaser selections
 

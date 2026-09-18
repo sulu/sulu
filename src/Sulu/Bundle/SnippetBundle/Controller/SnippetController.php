@@ -70,6 +70,9 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         private TranslatorInterface $translator,
         private ?SecurityCheckerInterface $securityChecker = null,
     ) {
+        if (null === $this->securityChecker) {
+            @trigger_deprecation('sulu/sulu', '2.6.27', 'Initializing "' . __CLASS__ . '" without securityChecker is deprecated, copying a snippet is not checked for permissions without it.');
+        }
     }
 
     /**
