@@ -110,6 +110,37 @@ trait WorkflowTransitionRequestTrait
         static::getEntityManager()->flush();
     }
 
+    /**
+     * A role on the content's context that grants nothing, so the real SecurityChecker refuses even
+     * reading. Used to prove the read endpoints ask for VIEW rather than answering to anyone signed in.
+     */
+    private function grantTestUserNoPermissions(): void
+    {
+        $entityManager = static::getEntityManager();
+        $testUser = static::getTestUser();
+
+        $role = new Role();
+        $role->setName('no_permissions');
+        $role->setSystem('Sulu');
+        $entityManager->persist($role);
+
+        $permission = new Permission();
+        $permission->setRole($role);
+        $permission->setContext(ExampleAdmin::SECURITY_CONTEXT);
+        $permission->setPermissions(0);
+        $entityManager->persist($permission);
+        $role->addPermission($permission);
+
+        $userRole = new UserRole();
+        $userRole->setUser($testUser);
+        $userRole->setRole($role);
+        $userRole->setLocale('["en"]');
+        $entityManager->persist($userRole);
+        $testUser->addUserRole($userRole);
+
+        $entityManager->flush();
+    }
+
     private function grantTestUserViewAndEditOnly(): void
     {
         $entityManager = static::getEntityManager();

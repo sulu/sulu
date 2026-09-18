@@ -5,6 +5,7 @@ import GhostIndicator from '../../../components/GhostIndicator';
 import PublishIndicator from '../../../components/PublishIndicator';
 import Table from '../../../components/Table';
 import listFieldTransformerRegistry from '../registries/listFieldTransformerRegistry';
+import getPublishIndicatorProps from './getPublishIndicatorProps';
 import AbstractAdapter from './AbstractAdapter';
 import abstractTableAdapterStyles from './abstractTableAdapter.scss';
 import type {Schema} from '../types';
@@ -54,20 +55,15 @@ export default class AbstractTableAdapter extends AbstractAdapter {
                         />
                     );
                 } else {
-                    if (item.publishedState !== undefined || item.published !== undefined) {
-                        const draft = !item.publishedState;
-                        const published = !!item.published;
-
-                        if (draft || !published) {
-                            indicators.push(
-                                <PublishIndicator
-                                    className={abstractTableAdapterStyles.publishIndicator}
-                                    draft={draft}
-                                    key="publish"
-                                    published={published}
-                                />
-                            );
-                        }
+                    const publishIndicatorProps = getPublishIndicatorProps(item);
+                    if (publishIndicatorProps) {
+                        indicators.push(
+                            <PublishIndicator
+                                className={abstractTableAdapterStyles.publishIndicator}
+                                key="publish"
+                                {...publishIndicatorProps}
+                            />
+                        );
                     }
                 }
             }
