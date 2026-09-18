@@ -19,6 +19,7 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 /**
  * Copying creates a new snippet, so it needs the add permission.
@@ -115,7 +116,13 @@ class SnippetControllerCopyPermissionTest extends SuluTestCase
         $user->setLocale('en');
 
         $passwordHasherFactory = self::getContainer()->get('sulu_security.encoder_factory');
-        $user->setPassword($passwordHasherFactory->getPasswordHasher($user)->hash($username));
+        if ($passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
+            $password = $passwordHasherFactory->getPasswordHasher($user)->hash($username);
+        } else {
+            $password = $passwordHasherFactory->getEncoder($user)->encodePassword($username, $user->getSalt());
+        }
+
+        $user->setPassword($password);
 
         $userRole = new UserRole();
         $userRole->setUser($user);
