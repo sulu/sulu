@@ -143,10 +143,14 @@ class ParameterResolver implements ParameterResolverInterface
         $segments = [];
         foreach ($webspace->getSegments() as $segment) {
             $segmentKey = $segment->getKey();
-            $segmentSwitchUrls[$segmentKey] = $this->segmentSwitchUrl . '?segment=' . $segmentKey . '&url=' . $url;
+            if (empty($segmentData = $structureData['extension']['excerpt']['segments']) || $segmentKey === $segmentData[$structureData['webspaceKey']]) {
+                $segmentUrl = $this->segmentSwitchUrl . '?segment=' . $segmentKey . '&url=' . $url;
+            } else {
+                $segmentUrl = $this->segmentSwitchUrl . '?segment=' . $segmentKey . '&url=' . $this->webspaceManager->findUrlByResourceLocator('/', null, $requestAnalyzer->getCurrentLocalization()->getLocale());
+            }
             $segments[$segmentKey] = [
                 'title' => $segment->getTitle($requestAnalyzer->getCurrentLocalization()->getLocale()),
-                'url' => $this->segmentSwitchUrl . '?segment=' . $segmentKey . '&url=' . $url,
+                'url' => $segmentUrl,
             ];
         }
 
