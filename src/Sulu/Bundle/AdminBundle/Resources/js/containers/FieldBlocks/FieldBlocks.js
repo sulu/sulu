@@ -12,7 +12,7 @@ import FormOverlay from '../FormOverlay';
 import snackbarStore from '../../stores/snackbarStore';
 import conditionDataProviderRegistry from '../Form/registries/conditionDataProviderRegistry';
 import {getDifference} from '../../utils/DifferenceCalculator';
-import blockIdGenerator from '../../services/blockIdGenerator';
+import blockIdGenerator, {createBlockIdBackfiller, readBlockIdGeneratorOption} from '../../services/blockIdGenerator';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
 import type {BlockError, ChangeContext, FieldTypeProps, FormStoreInterface} from '../Form/types';
@@ -32,8 +32,12 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     @observable value: Object;
     oldIconValue: ?Object;
     computedIcons: Array<Array<string>> = [];
-    generatingBlockIds: boolean = false;
-    pendingBlockIdValue: ?Object;
+
+    // Shared with the image_map field: fills missing block ids without dirtying the form.
+    backfillBlockIds = createBlockIdBackfiller((value) => {
+        this.setValue(value);
+        this.props.onChange(value, {isDefaultValue: true});
+    });
 
     constructor(props: FieldTypeProps<Array<BlockEntry>>) {
         super(props);
@@ -42,9 +46,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     }
 
     @action componentDidMount() {
-        // Inject missing block ids when the form opens, the same way field types apply their
-        // defaults: written with the isDefaultValue context so the form does not become dirty. This
-        // fills ids regardless of how the stored data was created (fixtures, imports, legacy data).
+        // Fill missing block ids on open, written with the isDefaultValue context so the form stays pristine.
         this.generateMissingBlockIds(this.value);
 
         if (this.settingsFormKey) {
@@ -71,8 +73,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                 this.setValue(value);
             }
 
-            // Retry the injection when the value (re)loaded still has blocks without an id. Since
-            // ensureBlockIds is a no-op when nothing is missing, this cannot loop on injected values.
+            // Retry once reloaded data still lacks ids; a no-op when nothing is missing.
             this.generateMissingBlockIds(value);
         }
 
@@ -191,19 +192,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     }
 
     @computed get generateBlockIds() {
-        const {
-            schemaOptions: {
-                block_id_generator: {
-                    value: blockIdGenerator,
-                } = {},
-            },
-        } = this.props;
-
-        if (blockIdGenerator !== undefined && typeof blockIdGenerator !== 'boolean') {
-            throw new Error('The "block" field types only accepts booleans as "block_id_generator" schema option!');
-        }
-
-        return blockIdGenerator;
+        return readBlockIdGeneratorOption(this.props.schemaOptions, 'block');
     }
 
     @computed get iconsMapping() {
@@ -316,40 +305,12 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         onChange(newValues, context);
     };
 
-    // Injects ids into blocks that have none. Written with the isDefaultValue context (like a field
-    // type applying its default) so it never marks the form dirty; on the happy path every block
-    // already carries an id and this stays silent.
-    generateMissingBlockIds = async(value: Object) => {
-        const {onChange, types} = this.props;
-
-        if (!this.generateBlockIds || !types || !value) {
+    generateMissingBlockIds = (value: Object) => {
+        if (!this.generateBlockIds) {
             return;
         }
 
-        if (this.generatingBlockIds) {
-            this.pendingBlockIdValue = value;
-
-            return;
-        }
-
-        this.generatingBlockIds = true;
-        try {
-            const updatedValue = await blockIdGenerator.ensureBlockIds(toJS(value), types);
-
-            if (updatedValue) {
-                this.setValue(updatedValue);
-                onChange(updatedValue, {isDefaultValue: true});
-            }
-        } finally {
-            this.generatingBlockIds = false;
-        }
-
-        // Re-check the value that arrived while a run was in flight; a no-op once nothing is missing.
-        if (this.pendingBlockIdValue) {
-            const pendingValue = this.pendingBlockIdValue;
-            this.pendingBlockIdValue = undefined;
-            this.generateMissingBlockIds(pendingValue);
-        }
+        this.backfillBlockIds(value, this.props.types);
     };
 
     handleBlocksChange = (value: Object) => {

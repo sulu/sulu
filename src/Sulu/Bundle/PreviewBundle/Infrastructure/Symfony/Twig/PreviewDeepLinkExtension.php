@@ -18,10 +18,8 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * Renders the HTML attribute the preview navigation JavaScript uses to jump from a clicked
- * element in the preview iframe to the matching field in the admin form. The attribute is only
- * rendered while the current request is an actual Sulu preview render, so it never reaches the
- * public website output.
+ * Renders the data-sulu-preview-id attribute the preview navigation uses to jump from a clicked
+ * preview element to the matching admin field. Only rendered during an actual Sulu preview render.
  */
 class PreviewDeepLinkExtension extends AbstractExtension
 {

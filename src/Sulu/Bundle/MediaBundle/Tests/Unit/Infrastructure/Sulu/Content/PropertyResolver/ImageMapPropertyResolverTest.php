@@ -346,7 +346,7 @@ class ImageMapPropertyResolverTest extends TestCase
             ['imageId' => 1, 'hotspots' => [
                 ['_id' => 'hotspot-id-1', 'type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title'],
                 // a hotspot without an id (e.g. content saved before ids existed) must not gain one here -
-                // the resolver only forwards what's already there, TemplateDataMapper is what backfills it
+                // the resolver only forwards what's already there; the admin backfills missing ids in the form
                 ['type' => 'text', 'hotspot' => ['type' => 'circle'], 'title' => 'Title'],
             ]],
             'en',

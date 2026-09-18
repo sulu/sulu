@@ -18,11 +18,10 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Injects the preview deep-link bridge script into the admin preview iframe content. The admin
- * preview replaces the whole iframe document on every change (the "update" routes return the
- * rendered content as JSON that is written into the iframe), so the script has to be part of every
- * render, not only the initial one. The public/shareable preview uses a different route
- * ("sulu_preview.public_render") and is intentionally left out: it has no admin form to navigate to.
+ * Injects the deep-link bridge script into the admin preview iframe, on every render (the "render"
+ * route and the JSON "update" routes) since the admin rewrites the whole document each change. Only
+ * content that uses sulu_preview_deep_link() gets it, so the overlay never alters previews that
+ * cannot navigate; the public preview route is left out as it has no admin form to reach.
  *
  * @internal No BC promises are given for this class. It may be changed or removed at any time.
  */
@@ -34,6 +33,8 @@ final class PreviewDeepLinkScriptSubscriber implements EventSubscriberInterface
      * Routes whose response is a JSON object with the rendered content under a "content" key.
      */
     private const UPDATE_ROUTES = ['sulu_preview.update', 'sulu_preview.update-context'];
+
+    private const DEEP_LINK_ATTRIBUTE = 'data-sulu-preview-id';
 
     private const SCRIPT_PATH = '/bundles/sulupreview/js/preview-deep-link.js';
 
@@ -83,6 +84,11 @@ final class PreviewDeepLinkScriptSubscriber implements EventSubscriberInterface
 
     private function injectScript(string $content): ?string
     {
+        // Skip content without a navigable target so the overlay is not appended to its body.
+        if (!\str_contains($content, self::DEEP_LINK_ATTRIBUTE)) {
+            return null;
+        }
+
         $position = \strripos($content, '</body>');
         if (false === $position) {
             return null;

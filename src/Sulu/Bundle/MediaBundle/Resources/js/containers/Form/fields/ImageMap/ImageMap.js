@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
 import {userStore} from 'sulu-admin-bundle/stores';
-import {blockIdGenerator} from 'sulu-admin-bundle/services';
+import {createBlockIdBackfiller, readBlockIdGeneratorOption} from 'sulu-admin-bundle/services';
 import ImageMapContainer from '../../../ImageMap';
 import FieldRenderer from './FieldRenderer';
 import type {FieldTypeProps, BlockError} from 'sulu-admin-bundle/types';
@@ -16,8 +16,12 @@ const MISSING_TYPE_ERROR_MESSAGE = 'The "image_map" field type needs at least on
 @observer
 class ImageMap extends React.Component<FieldTypeProps<Value>> {
     @observable value: Value;
-    generatingBlockIds: boolean = false;
-    blockIdsChangedWhileGenerating: boolean = false;
+
+    // Shared with FieldBlocks: fills missing hotspot ids without dirtying the form.
+    backfillBlockIds = createBlockIdBackfiller((value) => {
+        this.setValue(value);
+        this.props.onChange(value, {isDefaultValue: true});
+    });
 
     constructor(props: FieldTypeProps<Value>) {
         super(props);
@@ -40,55 +44,16 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
     }
 
     get generateBlockIds(): ?boolean {
-        const {
-            schemaOptions: {
-                block_id_generator: {
-                    value: blockIdGeneratorEnabled,
-                } = {},
-            },
-        } = this.props;
-
-        if (blockIdGeneratorEnabled !== undefined && typeof blockIdGeneratorEnabled !== 'boolean') {
-            throw new Error(
-                'The "image_map" field type only accepts booleans as "block_id_generator" schema option!'
-            );
-        }
-
-        return blockIdGeneratorEnabled;
+        return readBlockIdGeneratorOption(this.props.schemaOptions, 'image_map');
     }
 
-    // Backfills a generated `_id` on every hotspot that lacks one, written with the isDefaultValue
-    // context so it never marks the form dirty, matching the block path in FieldBlocks.
-    generateMissingBlockIds = async() => {
-        const {onChange, types, value} = this.props;
-
-        if (!this.generateBlockIds || !types || !value) {
+    generateMissingBlockIds = () => {
+        if (!this.generateBlockIds) {
             return;
         }
 
-        if (this.generatingBlockIds) {
-            this.blockIdsChangedWhileGenerating = true;
-
-            return;
-        }
-
-        this.generatingBlockIds = true;
-        try {
-            const updatedValue = await blockIdGenerator.ensureBlockIds(toJS(value), types);
-
-            if (updatedValue) {
-                this.setValue(updatedValue);
-                onChange(updatedValue, {isDefaultValue: true});
-            }
-        } finally {
-            this.generatingBlockIds = false;
-        }
-
-        // Re-check the value that arrived while a run was in flight; a no-op once nothing is missing.
-        if (this.blockIdsChangedWhileGenerating) {
-            this.blockIdsChangedWhileGenerating = false;
-            this.generateMissingBlockIds();
-        }
+        const {types, value} = this.props;
+        this.backfillBlockIds(value, types);
     };
 
     @action setValue = (value: Object) => {

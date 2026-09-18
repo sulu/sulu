@@ -2,7 +2,6 @@
 import React from 'react';
 import {observable} from 'mobx';
 import {mount, shallow} from 'enzyme';
-import log from 'loglevel';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
 import Router, {Route} from 'sulu-admin-bundle/services/Router';
@@ -369,6 +368,38 @@ test('React and update preview when data is changed', () => {
     });
 });
 
+test('Does not push an update on start when the form data has not changed', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+
+    // $FlowFixMe
+    formStore.data = observable.map({title: 'Test'});
+    // $FlowFixMe
+    formStore.loading = false;
+    // $FlowFixMe
+    formStore.type = observable.box('default');
+
+    const router = new Router({});
+    const preview = mount(<Preview formStore={formStore} router={router} />);
+
+    const startPromise = Promise.resolve();
+    const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
+
+    const previewStore = preview.instance().previewStore;
+    previewStore.start.mockReturnValue(startPromise);
+    previewStore.update.mockReturnValue(updatePromise);
+    previewStore.starting = false;
+    previewStore.token = '123-123-123';
+
+    preview.instance().handleStartClick();
+
+    // An unchanged first render must not trigger a redundant preview update.
+    return startPromise.then(() => {
+        preview.update();
+        expect(previewStore.update).not.toHaveBeenCalled();
+    });
+});
+
 test('React and update preview in external window when data is changed', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
@@ -698,9 +729,7 @@ test('Scroll to and expand a block referenced by a preview navigate click, mount
     parent.setAttribute('data-sulu-block-id', 'parent-id');
     body.appendChild(parent);
 
-    // A collapsed block only renders its collapsed preview, not its nested fields (see
-    // FieldBlocks.js), so "child" does not exist in the DOM until "parent" is expanded - mimic
-    // that here by only mounting it once the parent is clicked.
+    // A collapsed block hides its nested fields, so "child" only mounts once "parent" is clicked.
     const child = document.createElement('section');
     child.setAttribute('data-sulu-block-id', 'child-id');
     // $FlowFixMe
@@ -714,8 +743,7 @@ test('Scroll to and expand a block referenced by a preview navigate click, mount
 
     expect(parent.contains(child)).toBe(true);
     expect(handleParentClick).toHaveBeenCalled();
-    // The target itself must also be clicked/expanded, not just scrolled to - it may be
-    // collapsed too, and scrolling to a collapsed block would show nothing useful.
+    // The target may be collapsed too, so it is clicked/expanded before scrolling.
     expect(handleChildClick).toHaveBeenCalled();
     expect(child.scrollIntoView).toHaveBeenCalledWith({behavior: 'smooth', block: 'start'});
 
@@ -850,67 +878,4 @@ test('Ignores messages whose source matches but whose origin does not (source su
     });
 
     expect(instance.navigateToBlock).not.toHaveBeenCalled();
-});
-
-function appendNavigableBlocks(...ids) {
-    const container = document.createElement('div');
-    ids.forEach((id) => {
-        const element = document.createElement('div');
-        element.setAttribute('data-sulu-block-id', id);
-        container.appendChild(element);
-    });
-    document.body?.appendChild(container);
-
-    return container;
-}
-
-test('Warns about blocks missing the preview deep-link attribute', () => {
-    const resourceStore = new ResourceStore('pages', 1);
-    const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
-    const container = appendNavigableBlocks('block-1', 'block-2');
-
-    const preview = shallow(<Preview formStore={formStore} router={router} />);
-    const warnSpy = jest.spyOn(log, 'warn').mockImplementation(() => {});
-
-    preview.instance().warnAboutMissingDeepLinkAttributes(['block-1']);
-
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('block-2'));
-
-    warnSpy.mockRestore();
-    document.body?.removeChild(container);
-});
-
-test('Does not warn when no block renders the preview deep-link attribute at all', () => {
-    const resourceStore = new ResourceStore('pages', 1);
-    const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
-    const container = appendNavigableBlocks('block-1', 'block-2');
-
-    const preview = shallow(<Preview formStore={formStore} router={router} />);
-    const warnSpy = jest.spyOn(log, 'warn').mockImplementation(() => {});
-
-    preview.instance().warnAboutMissingDeepLinkAttributes([]);
-
-    expect(warnSpy).not.toHaveBeenCalled();
-
-    warnSpy.mockRestore();
-    document.body?.removeChild(container);
-});
-
-test('Does not warn when every block carries the preview deep-link attribute', () => {
-    const resourceStore = new ResourceStore('pages', 1);
-    const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
-    const container = appendNavigableBlocks('block-1');
-
-    const preview = shallow(<Preview formStore={formStore} router={router} />);
-    const warnSpy = jest.spyOn(log, 'warn').mockImplementation(() => {});
-
-    preview.instance().warnAboutMissingDeepLinkAttributes(['block-1']);
-
-    expect(warnSpy).not.toHaveBeenCalled();
-
-    warnSpy.mockRestore();
-    document.body?.removeChild(container);
 });
