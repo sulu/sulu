@@ -323,6 +323,85 @@ class RoutableDataMapperTest extends TestCase
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
+    public function testMapPageTreeRoutePropertyUsesParentRouteSlugOfCurrentLocale(): void
+    {
+        $uuid = Uuid::v4()->toRfc4122();
+
+        $data = [
+            'url' => [
+                'page' => [
+                    'uuid' => $uuid,
+                    'path' => '/parent-de',
+                ],
+                'suffix' => '/test-en',
+            ],
+        ];
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setStage('draft');
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setStage('draft');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldBeCalled();
+        $parentRoute = new Route('pages', $uuid, 'en', '/parent-en', 'sulu-io', null);
+        $this->routeRepository->findOneBy([
+            'resourceKey' => 'pages',
+            'resourceId' => $uuid,
+            'locale' => 'en',
+        ])
+            ->willReturn($parentRoute)
+            ->shouldBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithPageTreeRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('/parent-en/test-en', $localizedDimensionContent->getRoute()?->getSlug());
+        $this->assertSame($parentRoute, $localizedDimensionContent->getRoute()?->getParentRoute());
+    }
+
+    public function testMapPageTreeRoutePropertyFallsBackToSubmittedPagePath(): void
+    {
+        $uuid = Uuid::v4()->toRfc4122();
+
+        $data = [
+            'url' => [
+                'page' => [
+                    'uuid' => $uuid,
+                    'path' => '/parent-de',
+                ],
+                'suffix' => '/test-en',
+            ],
+        ];
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setStage('draft');
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setStage('draft');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldBeCalled();
+        $this->routeRepository->findOneBy([
+            'resourceKey' => 'pages',
+            'resourceId' => $uuid,
+            'locale' => 'en',
+        ])
+            ->willReturn(null)
+            ->shouldBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithPageTreeRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('/parent-de/test-en', $localizedDimensionContent->getRoute()?->getSlug());
+        $this->assertNull($localizedDimensionContent->getRoute()?->getParentRoute());
+    }
+
     public function testMapPageTreeRoutePropertyClearedThrowsWhenRouteIsMandatory(): void
     {
         $this->expectException(\RuntimeException::class);
