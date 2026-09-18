@@ -978,6 +978,35 @@ test('ListStore should copy item when onRequestItemCopy callback is called and o
     });
 });
 
+test('Should close the copy overlay and call onCopyError when copying fails', () => {
+    const errorData = {detail: 'Copying is not allowed'};
+    const copyResponse = {json: jest.fn().mockReturnValue(Promise.resolve(errorData))};
+    const copyErrorSpy = jest.fn();
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.copy.mockImplementation(() => Promise.reject(copyResponse));
+    mockStructureStrategyData = [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+    ];
+    const list = mount(<List adapters={['table']} onCopyError={copyErrorSpy} store={listStore} />);
+
+    list.find('TableAdapter').prop('onRequestItemCopy')(5);
+    list.update();
+    expect(list.find(SingleListOverlay).at(1).prop('open')).toEqual(true);
+
+    list.find(SingleListOverlay).at(1).prop('onConfirm')({id: 8});
+
+    return new Promise((resolve) => setTimeout(resolve)).then(() => {
+        list.update();
+        expect(list.find(SingleListOverlay).at(1).prop('open')).toEqual(false);
+        expect(copyErrorSpy).toHaveBeenCalledWith(errorData);
+    });
+});
+
 test('SingleListOverlay should disappear when onRequestItemMove callback is called and overlay is closed', () => {
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test_list', 'list_test', {page: observable.box(1)});

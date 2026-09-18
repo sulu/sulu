@@ -40105,6 +40105,18 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
+			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerCopyPermissionTest.php
+
+		-
+			message: '#^Instanceof between Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactory and Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerCopyPermissionTest.php
+
+		-
 			message: '#^Call to an undefined method object\:\:setLocale\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -54143,6 +54155,18 @@ parameters:
 			identifier: argument.type
 			count: 5
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetAreaControllerTest.php
+
+		-
+			message: '#^Cannot call method encodePassword\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerCopyPermissionTest.php
+
+		-
+			message: '#^Instanceof between Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactory and Symfony\\Component\\PasswordHasher\\Hasher\\PasswordHasherFactoryInterface will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerCopyPermissionTest.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
