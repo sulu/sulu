@@ -29,6 +29,7 @@ import List, {
     DeleteToolbarAction as ListDeleteToolbarAction,
     MoveToolbarAction as ListMoveToolbarAction,
     ExportToolbarAction as ListExportToolbarAction,
+    PublishingToolbarAction as ListPublishingToolbarAction,
     UploadToolbarAction as ListUploadToolbarAction,
 } from './views/List';
 import Tabs from './views/Tabs';
@@ -370,6 +371,7 @@ function registerListToolbarActions() {
     listToolbarActionRegistry.add('sulu_admin.delete', ListDeleteToolbarAction);
     listToolbarActionRegistry.add('sulu_admin.move', ListMoveToolbarAction);
     listToolbarActionRegistry.add('sulu_admin.export', ListExportToolbarAction);
+    listToolbarActionRegistry.add('sulu_admin.publishing', ListPublishingToolbarAction);
     listToolbarActionRegistry.add('sulu_admin.upload', ListUploadToolbarAction);
 }
 
