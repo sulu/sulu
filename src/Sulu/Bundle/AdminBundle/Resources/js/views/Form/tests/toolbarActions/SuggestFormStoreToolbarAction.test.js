@@ -319,8 +319,8 @@ test('Temporary error while generating keeps the dialog open with a snackbar', a
     expect(action.dialogSnackbarType).toBe('warning');
     expect(action.form.errors).toHaveLength(0);
     expect(action.form.warnings).toHaveLength(0);
-    // the dialog stays open over the *previous* suggestion, not a newly generated one - Insert
-    // must not be able to write that stale (or, on the very first generation, empty) suggestion
+    // generate() blanks the suggestion fields before requesting, so what's on screen behind
+    // this warning is empty, not the previous suggestion - Insert must stay disabled over it
     expect(action.hasSuggestion).toBe(false);
 });
 
@@ -490,6 +490,10 @@ test('Regenerate waits for the optimize form store to finish loading before send
 
     const config = action.getToolbarItemConfig();
     await config.onClick();
+    // config.onClick() only awaits handleClick(), which returns before generate()'s own
+    // internal awaits (including the schema wait) settle - give those a tick too, otherwise
+    // this assertion passes regardless of whether the wait is actually in place
+    await new Promise((resolve) => setTimeout(resolve));
 
     // formStore's schema has not resolved yet - the request must not have gone out with a
     // premature, still-loading "data" value
@@ -502,4 +506,112 @@ test('Regenerate waits for the optimize form store to finish loading before send
         content: {title: 'Existing title'},
         data: {optimize: true},
     });
+});
+
+test('Regenerate falls through to a warning if the options form never finishes loading', async() => {
+    jest.useFakeTimers();
+
+    try {
+        const action = createSuggestFormStoreToolbarAction({formKey: 'test_options_form'});
+        action.resourceFormStore.resourceStore.id = 5;
+        action.resourceFormStore.resourceStore.data = {title: 'Existing title'};
+        // $FlowFixMe
+        action.resourceFormStore.locale.get = jest.fn().mockReturnValue('en');
+
+        symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
+
+        // the options form's schema request failed without ever settling (SchemaFormStoreDecorator
+        // has no error state), so "loading" would otherwise stay true forever
+        memoryFormStoreFactory.createFromFormKey.mockImplementationOnce(() => ({
+            data: {},
+            loading: true,
+            destroy: jest.fn(),
+        }));
+
+        const config = action.getToolbarItemConfig();
+        const clickPromise = config.onClick();
+
+        // $FlowFixMe - not in the outdated jest flow-typed stub, but supported since Jest 27
+        await jest.advanceTimersByTimeAsync(10000);
+        await clickPromise;
+
+        expect(Requester.post).not.toHaveBeenCalled();
+        expect(action.loading).toBe(false);
+        expect(action.dialogSnackbarType).toBe('warning');
+        expect(action.dialogSnackbarMessage).toBe('sulu_admin.request_failed');
+    } finally {
+        jest.useRealTimers();
+    }
+});
+
+test('Insert stays disabled if a regenerate fails after a suggestion had already loaded', async() => {
+    const action = createSuggestFormStoreToolbarAction();
+    action.resourceFormStore.resourceStore.id = 5;
+    action.resourceFormStore.resourceStore.data = {title: 'Existing title'};
+    // $FlowFixMe
+    action.resourceFormStore.locale.get = jest.fn().mockReturnValue('en');
+    action.showDialog = true;
+    action.originalFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Existing title'}
+    );
+    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey('test_suggestion_form', {});
+
+    symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
+    Requester.post.mockResolvedValueOnce({title: 'First suggestion'});
+
+    const {rerender} = render(action.getNode());
+    await userEvent.click(screen.getByText('Regenerate'));
+    await new Promise((resolve) => setTimeout(resolve));
+
+    rerender(action.getNode());
+    expect(action.hasSuggestion).toBe(true);
+    expect(screen.getByRole('button', {name: 'Insert'})).toBeEnabled();
+
+    const error = new Error('Test Error');
+    // $FlowFixMe
+    error.json = jest.fn().mockResolvedValue({messageKey: 'sulu_ai.ai_request_failed'});
+    Requester.post.mockRejectedValueOnce(error);
+
+    await userEvent.click(screen.getByText('Regenerate'));
+    await new Promise((resolve) => setTimeout(resolve));
+
+    rerender(action.getNode());
+    expect(action.hasSuggestion).toBe(false);
+    expect(screen.getByRole('button', {name: 'Insert'})).toBeDisabled();
+});
+
+test('Insert only writes properties the suggestion actually answered, leaving the rest untouched', async() => {
+    const action = createSuggestFormStoreToolbarAction({
+        contentExpressions: [
+            {property: 'title', get: 'title', path: '/title'},
+            {property: 'article', get: 'article', path: '/article'},
+        ],
+    });
+    action.resourceFormStore.resourceStore.data = {title: 'Existing title', article: 'Existing article'};
+    // $FlowFixMe
+    action.resourceFormStore.change = jest.fn();
+    action.showDialog = true;
+    action.originalFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Existing title', article: 'Existing article'}
+    );
+    // the endpoint only answered "title" - "article" stays at blankSuggestionFields()'s
+    // undefined placeholder, exactly as it would live after an incomplete response
+    action.suggestionFormStore = memoryFormStoreFactory.createFromFormKey(
+        'test_suggestion_form',
+        {title: 'Suggested title', article: undefined}
+    );
+    action.hasSuggestion = true;
+
+    render(action.getNode());
+    await userEvent.click(screen.getByText('Insert'));
+
+    expect(action.resourceFormStore.change).toHaveBeenCalledWith('/title', 'Suggested title');
+    // expect.anything() does not match undefined, so a plain not.toHaveBeenCalledWith() check
+    // here would pass whether "/article" was skipped entirely or called with undefined - check
+    // the actual calls instead
+    // $FlowFixMe
+    const articleCalls = action.resourceFormStore.change.mock.calls.filter(([path]) => path === '/article');
+    expect(articleCalls).toHaveLength(0);
 });
