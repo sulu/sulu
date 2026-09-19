@@ -643,6 +643,12 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
 
 		-
+			message: '#^Strict comparison using \!\=\= between null and decimal\-int\-string&non\-falsy\-string will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
+
+		-
 			message: '#^Unsafe call to private method Sulu\\Bundle\\ActivityBundle\\Tests\\Functional\\UserInterface\\Controller\\ActivityControllerTest\:\:setUpUserRole\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 1
@@ -29535,6 +29541,12 @@ parameters:
 		-
 			message: '#^Property Sulu\\Bundle\\TrashBundle\\Tests\\Functional\\UserInterface\\Controller\\Admin\\TrashItemControllerTest\:\:\$repository is never read, only written\.$#'
 			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and decimal\-int\-string&non\-falsy\-string will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
 
