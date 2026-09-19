@@ -391,6 +391,12 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
 
 		-
+			message: '#^Strict comparison using \!\=\= between null and decimal\-int\-string&non\-falsy\-string will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
+
+		-
 			message: '#^Unsafe call to private method Sulu\\Bundle\\ActivityBundle\\Tests\\Functional\\UserInterface\\Controller\\ActivityControllerTest\:\:setUpUserRole\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 1
@@ -13831,7 +13837,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
 		-
-			message: '#^Parameter \#2 \$order of method Doctrine\\ORM\\QueryBuilder\:\:addOrderBy\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#2 \$order of method Doctrine\\ORM\\QueryBuilder\:\:addOrderBy\(\) expects SortDirection\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
@@ -20245,7 +20251,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
 		-
-			message: '#^Parameter \#2 \$order of method Doctrine\\ORM\\QueryBuilder\:\:addOrderBy\(\) expects string\|null, mixed given\.$#'
+			message: '#^Parameter \#2 \$order of method Doctrine\\ORM\\QueryBuilder\:\:addOrderBy\(\) expects SortDirection\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
@@ -29493,6 +29499,12 @@ parameters:
 		-
 			message: '#^Property Sulu\\Bundle\\TrashBundle\\Tests\\Functional\\UserInterface\\Controller\\Admin\\TrashItemControllerTest\:\:\$repository is never read, only written\.$#'
 			identifier: property.onlyWritten
+			count: 1
+			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and decimal\-int\-string&non\-falsy\-string will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
 
