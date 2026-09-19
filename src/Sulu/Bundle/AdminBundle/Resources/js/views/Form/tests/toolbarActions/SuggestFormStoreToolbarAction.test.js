@@ -511,6 +511,9 @@ test('Regenerate waits for the optimize form store to finish loading before send
 test('Regenerate falls through to a warning if the options form never finishes loading', async() => {
     jest.useFakeTimers();
 
+    // $FlowFixMe
+    let defaultCreateFromFormKey;
+
     try {
         const action = createSuggestFormStoreToolbarAction({formKey: 'test_options_form'});
         action.resourceFormStore.resourceStore.id = 5;
@@ -521,12 +524,23 @@ test('Regenerate falls through to a warning if the options form never finishes l
         symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
 
         // the options form's schema request failed without ever settling (SchemaFormStoreDecorator
-        // has no error state), so "loading" would otherwise stay true forever
-        memoryFormStoreFactory.createFromFormKey.mockImplementationOnce(() => ({
-            data: {},
-            loading: true,
-            destroy: jest.fn(),
-        }));
+        // has no error state), so "loading" would otherwise stay true forever. Keyed by formKey
+        // rather than call order, since originalFormStore/suggestionFormStore are also created
+        // (with the unrelated suggestionFormKey) in between the two "test_options_form" calls.
+        const stuckFormStore = {data: {}, loading: true, destroy: jest.fn()};
+        const recreatedFormStore = {data: {optimize: true}, loading: false, destroy: jest.fn()};
+        let optionsFormStoreCalls = 0;
+        defaultCreateFromFormKey = memoryFormStoreFactory.createFromFormKey.getMockImplementation();
+        memoryFormStoreFactory.createFromFormKey.mockImplementation((formKey, data) => {
+            if (formKey === 'test_options_form') {
+                optionsFormStoreCalls += 1;
+
+                return optionsFormStoreCalls === 1 ? stuckFormStore : recreatedFormStore;
+            }
+
+            // $FlowFixMe
+            return defaultCreateFromFormKey(formKey, data);
+        });
 
         const config = action.getToolbarItemConfig();
         const clickPromise = config.onClick();
@@ -539,8 +553,16 @@ test('Regenerate falls through to a warning if the options form never finishes l
         expect(action.loading).toBe(false);
         expect(action.dialogSnackbarType).toBe('warning');
         expect(action.dialogSnackbarMessage).toBe('sulu_admin.request_failed');
+
+        // the stuck store's own schema request never retries on its own - replacing it is what
+        // lets the next Regenerate actually ask for the schema again instead of timing out again
+        expect(stuckFormStore.destroy).toHaveBeenCalled();
+        expect(action.formStore).toBe(recreatedFormStore);
     } finally {
         jest.useRealTimers();
+        // clearMocks resets calls/instances between tests but not a persistent mockImplementation
+        // $FlowFixMe
+        memoryFormStoreFactory.createFromFormKey.mockImplementation(defaultCreateFromFormKey);
     }
 });
 

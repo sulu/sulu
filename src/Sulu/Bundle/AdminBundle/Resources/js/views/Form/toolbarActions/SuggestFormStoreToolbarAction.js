@@ -36,6 +36,7 @@ const FORM_STORE_LOAD_TIMEOUT = 10000;
  */
 export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormStoreToolbarAction {
     formStore: ?FormStoreInterface;
+    formMetadataOptions: ?Object;
     @observable originalFormStore: ?FormStoreInterface;
     @observable suggestionFormStore: ?FormStoreInterface;
     @observable hasSuggestion: boolean = false;
@@ -107,15 +108,10 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
 
             action(() => {
                 this.destroySuggestionStores();
+                this.formMetadataOptions = formMetadataOptions;
 
                 if (formKey) {
-                    this.formStore = memoryFormStoreFactory.createFromFormKey(
-                        formKey,
-                        {optimize: true},
-                        undefined,
-                        undefined,
-                        formMetadataOptions
-                    );
+                    this.formStore = this.createFormStore(formKey);
                 }
 
                 this.originalFormStore = memoryFormStoreFactory.createFromFormKey(this.suggestionFormKey, contentData);
@@ -156,6 +152,16 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
                 this.resourceFormStore.change(expr.path, value);
             }
         }
+    }
+
+    createFormStore(formKey: string): FormStoreInterface {
+        return memoryFormStoreFactory.createFromFormKey(
+            formKey,
+            {optimize: true},
+            undefined,
+            undefined,
+            this.formMetadataOptions
+        );
     }
 
     waitForFormStoreToLoad(formStore: FormStoreInterface): Promise<void> {
@@ -213,10 +219,18 @@ export default class SuggestFormStoreToolbarAction extends AbstractGenerateFormS
             try {
                 await this.waitForFormStoreToLoad(formStore);
             } catch (error) {
+                const formKey = this.formKey;
+
                 action(() => {
                     this.loading = false;
                     this.dialogSnackbarType = 'warning';
                     this.dialogSnackbarMessage = translate('sulu_admin.request_failed');
+
+                    // formStore's own schema request already failed once and never retries -
+                    // replace it so the next Regenerate asks for the schema again instead of
+                    // waiting out the same timeout forever, even once the endpoint recovers
+                    formStore.destroy();
+                    this.formStore = formKey ? this.createFormStore(formKey) : undefined;
                 })();
 
                 return;
