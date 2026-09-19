@@ -67,6 +67,7 @@ alone: `live` does not imply it.
 - Every resource key whose content can be published needs a service tagged
   `sulu_content.workflow_transition_request_security_context_provider` with that `resource-key`.
   Pages, articles and snippets ship one; a custom content type without one answers 500 on publish.
+- The first argument of the `IconController` is now the Symfony normalizer 
 
 ## 3.0.10
 

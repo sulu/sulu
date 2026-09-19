@@ -426,7 +426,7 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_admin.icon_controller', IconController::class)
         ->public()
         ->args([
-            new Reference('fos_rest.view_handler'),
+            new Reference('serializer'),
             '%sulu_admin.icon_sets%',
             tagged_iterator('sulu_admin.icon_provider', indexAttribute: 'type'),
         ])
