@@ -23,7 +23,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 #[AsCommand(name: 'sulu:admin:update-build', description: 'Updates the administration application JavaScript build by downloading the official build from the sulu/skeleton repository or building the assets via npm.')]
 class UpdateBuildCommand extends Command
 {
-    private const DEFAULT_DEV_VERSION = '3.0';
+    private const DEFAULT_DEV_VERSION = '3.1';
 
     public const EXIT_CODE_ABORTED_MANUAL_BUILD = 1;
     public const EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES = 2;
