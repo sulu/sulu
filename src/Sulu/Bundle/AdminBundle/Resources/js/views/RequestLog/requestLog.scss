@@ -1,0 +1,295 @@
+@import '../../containers/Application/colors.scss';
+
+$chainExpertColor: $blueZodiac;
+$chainUserColor: $shakespeare;
+$chainSuccessColor: #2da44e;
+$chainSystemColor: $dustyGray;
+$chainToolColor: $stormGray;
+
+.request-log {
+    height: 100%;
+}
+
+.title {
+    margin: 30px 0 20px;
+    color: $blueZodiac;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.detail {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 100px;
+    padding: 40px;
+}
+
+.detail-error {
+    margin: 0;
+    font-size: 14px;
+    color: $persianRed;
+}
+
+.facts-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px;
+    border-radius: 4px;
+    background-color: $white;
+}
+
+.identity {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.identity-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.feature-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: $blueZodiac;
+}
+
+.timestamp {
+    flex-shrink: 0;
+    font-size: 12px;
+    color: $gray;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: bold;
+
+    &.succeeded {
+        background-color: rgba($chainSuccessColor, .12);
+        color: $chainSuccessColor;
+    }
+
+    &.failed {
+        background-color: rgba($persianRed, .12);
+        color: $persianRed;
+    }
+}
+
+.request-id {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    font-size: 12px;
+}
+
+.request-id-label {
+    color: $gray;
+}
+
+.request-id-value {
+    font-family: monospace;
+    font-size: 11px;
+    color: $blueZodiac;
+}
+
+.divider {
+    height: 1px;
+    background-color: $mercury;
+}
+
+.facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin: 0;
+}
+
+.fact {
+    display: flex;
+    flex: 0 1 calc((100% - 96px) / 5);
+    flex-direction: column;
+    gap: 6px;
+    min-width: 120px;
+}
+
+.fact-label {
+    margin: 0;
+    font-size: 12px;
+    color: $gray;
+}
+
+.fact-value {
+    margin: 0;
+    font-size: 12px;
+    color: $blueZodiac;
+    word-break: break-word;
+}
+
+.error-banner {
+    padding: 12px 15px;
+    border: 1px solid rgba($persianRed, .3);
+    border-radius: 4px;
+    background-color: rgba($persianRed, .07);
+    color: $persianRed;
+
+    strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 12px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 13px;
+    }
+}
+
+.chain-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.chain-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.chain-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: $blueZodiac;
+}
+
+.chain-description {
+    margin: 0;
+    font-size: 12px;
+    color: $gray;
+}
+
+.translation-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+.chain {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.chain-step {
+    --chain-color: $chainSystemColor;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 30px;
+    border-left: 3px solid var(--chain-color);
+    border-radius: 4px;
+    background-color: $white;
+
+    &.expert {
+        --chain-color: $chainExpertColor;
+    }
+
+    &.user {
+        --chain-color: $chainUserColor;
+    }
+
+    &.success {
+        --chain-color: $chainSuccessColor;
+    }
+
+    &.tool {
+        --chain-color: $chainToolColor;
+    }
+}
+
+.chain-step-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.chain-step-number {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: var(--chain-color);
+    color: $white;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.chain-step-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--chain-color);
+}
+
+.chain-step-annotations {
+    font-size: 11px;
+    color: $gray;
+}
+
+.writeback {
+    margin: 0;
+    font-size: 11px;
+    color: $gray;
+}
+
+.content-box {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid $mercury;
+    border-radius: 2px;
+    background-color: $alabaster;
+    color: $blueZodiac;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.chain-step-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+
+.collapsed {
+    max-height: 180px;
+    overflow: hidden;
+}
+
+.show-full {
+    align-self: flex-start;
+    padding: 0;
+    border: none;
+    background: none;
+    color: $shakespeare;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}

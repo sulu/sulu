@@ -1,0 +1,23 @@
+@import '../../Application/colors.scss';
+
+$badgeSuccessColor: #2da44e;
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 2px;
+    background-color: rgba($dustyGray, .15);
+    color: $stormGray;
+    font-size: 11px;
+    font-weight: bold;
+
+    &.success {
+        background-color: rgba($badgeSuccessColor, .12);
+        color: $badgeSuccessColor;
+    }
+
+    &.error {
+        background-color: rgba($persianRed, .12);
+        color: $persianRed;
+    }
+}
