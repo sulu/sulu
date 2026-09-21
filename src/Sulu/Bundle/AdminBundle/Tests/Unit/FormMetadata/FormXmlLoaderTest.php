@@ -256,6 +256,18 @@ class FormXmlLoaderTest extends TestCase
                             'third',
                         ],
                         'type' => 'object',
+                        'properties' => [
+                            'first' => [
+                                'not' => [
+                                    'const' => '',
+                                ],
+                            ],
+                            'third' => [
+                                'not' => [
+                                    'const' => '',
+                                ],
+                            ],
+                        ],
                     ],
                     [
                         'anyOf' => [
@@ -324,6 +336,13 @@ class FormXmlLoaderTest extends TestCase
                                     'then' => [
                                         'required' => ['article'],
                                         'type' => 'object',
+                                        'properties' => [
+                                            'article' => [
+                                                'not' => [
+                                                    'const' => '',
+                                                ],
+                                            ],
+                                        ],
                                     ],
                                 ],
                                 [
@@ -339,6 +358,13 @@ class FormXmlLoaderTest extends TestCase
                                     'then' => [
                                         'required' => ['images'],
                                         'type' => 'object',
+                                        'properties' => [
+                                            'images' => [
+                                                'not' => [
+                                                    'const' => '',
+                                                ],
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],
