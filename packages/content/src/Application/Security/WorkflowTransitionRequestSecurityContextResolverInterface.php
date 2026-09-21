@@ -27,4 +27,6 @@ interface WorkflowTransitionRequestSecurityContextResolverInterface
      * @throws \RuntimeException if no provider is registered for the resource key
      */
     public function resolve(string $resourceKey, string $resourceId, string $locale): SecurityCondition;
+
+    public function has(string $resourceKey): bool;
 }

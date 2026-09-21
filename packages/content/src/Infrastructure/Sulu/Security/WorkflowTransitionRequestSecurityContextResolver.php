@@ -51,4 +51,9 @@ final class WorkflowTransitionRequestSecurityContextResolver implements Workflow
 
         return $this->providers[$resourceKey]->resolve($resourceId, $locale);
     }
+
+    public function has(string $resourceKey): bool
+    {
+        return isset($this->providers[$resourceKey]);
+    }
 }
