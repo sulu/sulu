@@ -59,14 +59,16 @@ alone: `live` does not imply it.
 
 - The permission mask meaning "everything" is 255, not 127: `PermissionTypes::REVIEW` occupies bit
   128. Code comparing a mask against 127 to mean full access has to be updated.
-- Publishing through the API takes `live`, or `edit` together with an approved active request: a role
-  with `edit` alone now gets a 403 where it previously published. `reject` and `reject_draft` take
-  `review`. A call with no authenticated user publishes on the system's behalf and passes through.
+- Publishing through the API takes `live`, or `edit` together with an approved active request, for
+  content a request workflow covers and for pages, articles and snippets: a role with `edit` alone gets
+  a 403 there. `reject` and `reject_draft` take `review`. A call with no authenticated user publishes on
+  the system's behalf and passes through.
 - A write to content covered by an open request answers 409. Publishing, rejecting and cancelling must
   be sent as a payload-less `POST ?action=...`; a `PUT` carrying the form is a write and is refused.
-- Every resource key whose content can be published needs a service tagged
-  `sulu_content.workflow_transition_request_security_context_provider` with that `resource-key`.
-  Pages, articles and snippets ship one; a custom content type without one answers 500 on publish.
+- A resource key needs a service tagged `sulu_content.workflow_transition_request_security_context_provider`
+  with that `resource-key` once a request workflow covers its content; without one, publishing that
+  content answers 500. Pages, articles and snippets ship one. A resource key without one whose content
+  no request workflow covers publishes as before.
 
 ## 3.0.10
 
