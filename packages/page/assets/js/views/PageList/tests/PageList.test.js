@@ -214,6 +214,12 @@ test('Should allow adding and copying pages when the webspace grants the add per
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {},
+    });
 
     const webspaceOverview = mount(
         <PageList
@@ -250,6 +256,12 @@ test('Should not allow adding and copying pages without the add permission on th
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {},
+    });
 
     const webspaceOverview = mount(
         <PageList
@@ -286,6 +298,12 @@ test('Should show the error of a failed copy in the toolbar', () => {
     router.attributes = {
         webspace: 'sulu',
     };
+    router.route = new Route({
+        name: 'sulu_page.page_list',
+        path: '/pages/:locale',
+        type: 'sulu_page.page_list',
+        options: {},
+    });
 
     const webspaceOverview = mount(
         <PageList
