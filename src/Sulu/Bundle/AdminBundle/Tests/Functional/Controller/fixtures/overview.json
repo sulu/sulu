@@ -262,6 +262,11 @@
                     }
                 ]
             },
+            "url": {
+                "not": {
+                    "const": ""
+                }
+            },
             "article": {
                 "anyOf": [
                     {
@@ -307,23 +312,14 @@
                                 ]
                             },
                             "then": {
-                                "type": "object",
-                                "properties": {
-                                    "text_editor": {
-                                        "anyOf": [
-                                            {
-                                                "type": "null"
-                                            },
-                                            {
-                                                "type": "string",
-                                                "maxLength": 0
-                                            },
-                                            {
-                                                "type": "string"
-                                            }
-                                        ]
-                                    }
-                                }
+                                "type": [
+                                    "number",
+                                    "string",
+                                    "boolean",
+                                    "object",
+                                    "array",
+                                    "null"
+                                ]
                             }
                         }
                     ]
@@ -346,23 +342,14 @@
                                 ]
                             },
                             "then": {
-                                "type": "object",
-                                "properties": {
-                                    "text_editor": {
-                                        "anyOf": [
-                                            {
-                                                "type": "null"
-                                            },
-                                            {
-                                                "type": "string",
-                                                "maxLength": 0
-                                            },
-                                            {
-                                                "type": "string"
-                                            }
-                                        ]
-                                    }
-                                }
+                                "type": [
+                                    "number",
+                                    "string",
+                                    "boolean",
+                                    "object",
+                                    "array",
+                                    "null"
+                                ]
                             }
                         }
                     ]

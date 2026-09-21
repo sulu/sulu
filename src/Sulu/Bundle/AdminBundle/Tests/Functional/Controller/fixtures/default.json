@@ -352,6 +352,11 @@
                         "type": "string",
                         "minLength": 1
                     },
+                    "url": {
+                        "not": {
+                            "const": ""
+                        }
+                    },
                     "animals": {
                         "anyOf": [
                             {
@@ -432,7 +437,7 @@
                                         ]
                                     },
                                     "then": {
-                                        "$ref": "#/definitions/text_block"
+                                        "$ref": "#\/definitions\/text_block"
                                     }
                                 },
                                 {
@@ -448,7 +453,7 @@
                                         ]
                                     },
                                     "then": {
-                                        "$ref": "#/definitions/text_block2"
+                                        "$ref": "#\/definitions\/text_block2"
                                     }
                                 },
                                 {
@@ -464,23 +469,14 @@
                                         ]
                                     },
                                     "then": {
-                                        "type": "object",
-                                        "properties": {
-                                            "text_editor": {
-                                                "anyOf": [
-                                                    {
-                                                        "type": "null"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "maxLength": 0
-                                                    },
-                                                    {
-                                                        "type": "string"
-                                                    }
-                                                ]
-                                            }
-                                        }
+                                        "type": [
+                                            "number",
+                                            "string",
+                                            "boolean",
+                                            "object",
+                                            "array",
+                                            "null"
+                                        ]
                                     }
                                 },
                                 {
@@ -529,7 +525,7 @@
                                                                 ]
                                                             },
                                                             "then": {
-                                                                "$ref": "#/definitions/text_block2"
+                                                                "$ref": "#\/definitions\/text_block2"
                                                             }
                                                         },
                                                         {
@@ -545,7 +541,7 @@
                                                                 ]
                                                             },
                                                             "then": {
-                                                                "$ref": "#/definitions/text_block3"
+                                                                "$ref": "#\/definitions\/text_block3"
                                                             }
                                                         }
                                                     ]
@@ -588,20 +584,6 @@
                         "type": "string",
                         "minLength": 1
                     },
-                    "description": {
-                        "anyOf": [
-                            {
-                                "type": "null"
-                            },
-                            {
-                                "type": "string",
-                                "maxLength": 0
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ]
-                    },
                     "blocks": {
                         "type": "array",
                         "items": {
@@ -619,7 +601,7 @@
                                         ]
                                     },
                                     "then": {
-                                        "$ref": "#/definitions/text_block2"
+                                        "$ref": "#\/definitions\/text_block2"
                                     }
                                 },
                                 {
@@ -635,23 +617,14 @@
                                         ]
                                     },
                                     "then": {
-                                        "type": "object",
-                                        "properties": {
-                                            "text_editor": {
-                                                "anyOf": [
-                                                    {
-                                                        "type": "null"
-                                                    },
-                                                    {
-                                                        "type": "string",
-                                                        "maxLength": 0
-                                                    },
-                                                    {
-                                                        "type": "string"
-                                                    }
-                                                ]
-                                            }
-                                        }
+                                        "type": [
+                                            "number",
+                                            "string",
+                                            "boolean",
+                                            "object",
+                                            "array",
+                                            "null"
+                                        ]
                                     }
                                 }
                             ]
@@ -668,20 +641,6 @@
                     "title": {
                         "type": "string",
                         "minLength": 1
-                    },
-                    "description": {
-                        "anyOf": [
-                            {
-                                "type": "null"
-                            },
-                            {
-                                "type": "string",
-                                "maxLength": 0
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ]
                     }
                 },
                 "required": [
@@ -694,20 +653,6 @@
                     "title": {
                         "type": "string",
                         "minLength": 1
-                    },
-                    "description": {
-                        "anyOf": [
-                            {
-                                "type": "null"
-                            },
-                            {
-                                "type": "string",
-                                "maxLength": 0
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ]
                     }
                 },
                 "required": [

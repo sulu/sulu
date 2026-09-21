@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AllOfsMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\IfThenElseMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NotMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\RefSchemaMetadata;
@@ -251,9 +252,14 @@ class FormMetadataMapper
                     ->mapPropertyMetadata($propertyMetadata);
             }
 
+            // types without a dedicated mapper produce no schema constraint, so a mandatory field would only be
+            // checked for presence and still accept an empty string; disallow "" explicitly to enforce the constraint
             return new PropertyMetadata(
                 $propertyMetadata->getName(),
+                $propertyMetadata->isRequired(),
                 $propertyMetadata->isRequired()
+                    ? new NotMetadata(new ConstMetadata(''))
+                    : null
             );
         }, $itemsMetadata));
     }
