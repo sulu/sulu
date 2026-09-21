@@ -17,6 +17,7 @@ use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
+use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -115,7 +116,7 @@ class WorkflowTransitionAuthorizationSubscriber implements EventSubscriberInterf
                 (string) $dimensionContent->getResource()->getId(),
                 $locale,
             );
-        } catch (AccessDeniedException $exception) {
+        } catch (AccessDeniedException|UnresolvableSecurityContextException $exception) {
             $guardEvent->addTransitionBlocker(new TransitionBlocker(
                 $exception->getMessage(),
                 ContentWorkflowInterface::BLOCKER_CODE_EXCEPTION,

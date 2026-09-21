@@ -25,6 +25,7 @@ use Sulu\Content\Application\RequestWorkflow\RequestWorkflow;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
+use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
@@ -157,18 +158,28 @@ class WorkflowTransitionAuthorizationSubscriberTest extends TestCase
 
     /**
      * Content in a request workflow is always authorized, so a resource key opted into review without
-     * a security context fails instead of publishing past the review.
+     * a security context is blocked with the configuration error instead of publishing past the review.
      */
-    public function testContentWithoutSecurityContextInARequestWorkflowIsAuthorized(): void
+    public function testContentWithoutSecurityContextInARequestWorkflowIsBlocked(): void
     {
+        $exception = new UnresolvableSecurityContextException('No security context provider');
+
         $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
-        $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en')->shouldBeCalled();
+        $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en')->willThrow($exception);
 
         $guardEvent = $this->createGuardEvent();
         $this->createSubscriber($authorizer, hasSecurityContext: false, requestWorkflow: new RequestWorkflow('review', [], 1))
             ->onPublish($guardEvent);
 
-        $this->assertFalse($guardEvent->isBlocked());
+        $this->assertTrue($guardEvent->isBlocked());
+
+        $blockers = \iterator_to_array($guardEvent->getTransitionBlockerList());
+        $this->assertCount(1, $blockers);
+        $this->assertSame(ContentWorkflowInterface::BLOCKER_CODE_EXCEPTION, $blockers[0]->getCode());
+        $this->assertSame(
+            $exception,
+            $blockers[0]->getParameters()[ContentWorkflowInterface::BLOCKER_EXCEPTION_PARAMETER],
+        );
     }
 
     /**
