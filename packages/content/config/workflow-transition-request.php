@@ -207,7 +207,11 @@ return static function(ContainerConfigurator $container) {
     $services->alias(WorkflowTransitionAdminAuthorizerInterface::class, 'sulu_content.workflow_transition_admin_authorizer');
 
     $services->set('sulu_content.workflow_transition_authorization_subscriber', WorkflowTransitionAuthorizationSubscriber::class)
-        ->args([new Reference('sulu_content.workflow_transition_admin_authorizer')])
+        ->args([
+            new Reference('sulu_content.workflow_transition_admin_authorizer'),
+            new Reference('sulu_content.request_workflow_resolver'),
+            new Reference('sulu_content.workflow_transition_request_security_context_resolver'),
+        ])
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);
 

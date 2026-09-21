@@ -14,7 +14,10 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentWorkflow\Subscriber;
 
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
+use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
+use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -41,6 +44,8 @@ class WorkflowTransitionAuthorizationSubscriber implements EventSubscriberInterf
 {
     public function __construct(
         private readonly WorkflowTransitionAdminAuthorizerInterface $workflowTransitionAdminAuthorizer,
+        private readonly RequestWorkflowResolverInterface $requestWorkflowResolver,
+        private readonly WorkflowTransitionRequestSecurityContextResolverInterface $securityContextResolver,
     ) {
     }
 
@@ -94,6 +99,14 @@ class WorkflowTransitionAuthorizationSubscriber implements EventSubscriberInterf
             return;
         }
 
+        // A resource key without a security context has nothing to be checked against, which is only
+        // an error once a request workflow covers the content. Until then it publishes as before.
+        if (!$this->securityContextResolver->has($dimensionContent::getResourceKey())
+            && null === $this->requestWorkflowResolver->resolveForContent($dimensionContent)
+        ) {
+            return;
+        }
+
         /** @var string $locale */
         $locale = $dimensionContent->getLocale();
 
@@ -103,7 +116,7 @@ class WorkflowTransitionAuthorizationSubscriber implements EventSubscriberInterf
                 (string) $dimensionContent->getResource()->getId(),
                 $locale,
             );
-        } catch (AccessDeniedException $exception) {
+        } catch (AccessDeniedException|UnresolvableSecurityContextException $exception) {
             $guardEvent->addTransitionBlocker(new TransitionBlocker(
                 $exception->getMessage(),
                 ContentWorkflowInterface::BLOCKER_CODE_EXCEPTION,

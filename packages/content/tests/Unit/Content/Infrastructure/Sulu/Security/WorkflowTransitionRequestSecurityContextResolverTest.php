@@ -47,4 +47,16 @@ class WorkflowTransitionRequestSecurityContextResolverTest extends TestCase
 
         $resolver->resolve('unknown', 'anything', 'en');
     }
+
+    public function testHasTellsWhetherAProviderIsRegisteredForTheResourceKey(): void
+    {
+        $entityManager = $this->prophesize(EntityManagerInterface::class);
+
+        $resolver = new WorkflowTransitionRequestSecurityContextResolver([
+            'articles' => new ResourceSecurityContextProvider($entityManager->reveal(), \stdClass::class, 'sulu.article.articles'),
+        ]);
+
+        $this->assertTrue($resolver->has('articles'));
+        $this->assertFalse($resolver->has('products'));
+    }
 }
