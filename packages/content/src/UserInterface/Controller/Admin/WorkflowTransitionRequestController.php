@@ -130,10 +130,16 @@ final class WorkflowTransitionRequestController extends AbstractRestController
         // Approving and rejecting are a reviewer's verdict. Re-running a check is not a verdict on
         // anything: it is how whoever is fixing the content clears a check that failed, so it takes
         // the same permission as editing.
-        $this->securityChecker->checkPermission(
-            $this->securityCondition($workflowTransitionRequest),
-            'retry' === $action ? PermissionTypes::EDIT : PermissionTypes::REVIEW,
-        );
+        //
+        // Resolved before the permission is checked, so an action nobody recognises answers 400
+        // rather than 403 to whoever happens to lack the permission it would have taken.
+        $permission = match ($action) {
+            'approve', 'reject' => PermissionTypes::REVIEW,
+            'retry' => PermissionTypes::EDIT,
+            default => throw new BadRequestHttpException(\sprintf('Unrecognized action "%s".', $action)),
+        };
+
+        $this->securityChecker->checkPermission($this->securityCondition($workflowTransitionRequest), $permission);
 
         $comment = $this->getComment($request);
 
@@ -148,7 +154,6 @@ final class WorkflowTransitionRequestController extends AbstractRestController
                 $id,
                 $this->getValidatorKey($request, $workflowTransitionRequest),
             ),
-            default => throw new BadRequestHttpException(\sprintf('Unrecognized action "%s".', $action)),
         };
 
         /** @var WorkflowTransitionRequest $workflowTransitionRequest */

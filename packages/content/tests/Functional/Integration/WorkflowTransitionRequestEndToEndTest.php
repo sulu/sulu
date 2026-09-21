@@ -155,6 +155,48 @@ class WorkflowTransitionRequestEndToEndTest extends SuluTestCase
         );
     }
 
+    /**
+     * A typo in the action name is the caller's mistake, not a permission problem. Without resolving
+     * the action first, an unrecognised one is checked against `review` and anybody who only holds
+     * `edit` is told 403, which points them at the wrong thing entirely.
+     */
+    public function testUnknownActionAnswers400EvenWithoutTheReviewPermission(): void
+    {
+        $this->grantTestUserViewAndEditOnly();
+
+        $example = $this->createExampleAtDraft();
+        $dimensionAttributes = ['stage' => DimensionContentInterface::STAGE_DRAFT, 'locale' => 'en'];
+
+        $this->contentManager->applyTransition(
+            $example,
+            $dimensionAttributes,
+            WorkflowInterface::WORKFLOW_TRANSITION_REQUEST_FOR_REVIEW_DRAFT,
+        );
+        static::getEntityManager()->flush();
+
+        $request = $this->workflowTransitionRequestRepository->getOneBy([
+            'resourceKey' => Example::RESOURCE_KEY,
+            'resourceId' => (string) $example->getId(),
+            'locale' => 'en',
+            'active' => true,
+        ]);
+
+        $this->renameTestUserTo('editor_no_review');
+        $this->client->setServerParameter('PHP_AUTH_USER', 'editor_no_review');
+        $this->client->setServerParameter('PHP_AUTH_PW', 'test');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/workflow-transition-requests/%s.json?action=explode', $request->getId()),
+        );
+
+        $this->assertSame(
+            400,
+            $this->client->getResponse()->getStatusCode(),
+            'An unrecognised action is a bad request, whatever the caller may or may not do.',
+        );
+    }
+
     public function testHappyPathFromDraftThroughApprovalToPublish(): void
     {
         $example = $this->createExampleAtDraft();
