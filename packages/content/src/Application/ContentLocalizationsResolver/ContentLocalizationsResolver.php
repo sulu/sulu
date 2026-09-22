@@ -13,75 +13,34 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentLocalizationsResolver;
 
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Psr\Container\ContainerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
-use Sulu\Content\Domain\Model\RoutableInterface;
-use Sulu\Content\Infrastructure\Sulu\Route\Exception\WebspaceUrlNotFoundException;
-use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
-use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 /**
- * Every webspace locale links to the start page, unless the content has a route in that locale.
+ * Hands the content to the resolver registered for its resource key, like the route defaults
+ * providers, and to the route-based default otherwise.
  *
  * @final
  */
 class ContentLocalizationsResolver implements ContentLocalizationsResolverInterface
 {
     public function __construct(
-        private readonly WebspaceManagerInterface $webspaceManager,
-        private readonly RouteRepositoryInterface $routeRepository,
-        private readonly RouteGeneratorInterface $routeGenerator,
+        private readonly ContainerInterface $resolverLocator,
+        private readonly ContentLocalizationsResolverInterface $defaultResolver,
     ) {
     }
 
     public function resolve(DimensionContentInterface $dimensionContent, string $webspaceKey): array
     {
-        if (!$dimensionContent instanceof RoutableInterface) {
-            return [];
+        $resourceKey = $dimensionContent::getResourceKey();
+
+        if (!$this->resolverLocator->has($resourceKey)) {
+            return $this->defaultResolver->resolve($dimensionContent, $webspaceKey);
         }
 
-        $webspaceLocales = $this->webspaceManager
-            ->getWebspaceCollection()
-            ->getWebspace($webspaceKey)
-            ?->getAllLocalizations() ?? [];
+        $resolver = $this->resolverLocator->get($resourceKey);
+        \assert($resolver instanceof ContentLocalizationsResolverInterface, 'The localizations resolver for "' . $resourceKey . '" must implement ContentLocalizationsResolverInterface but got: ' . \get_debug_type($resolver));
 
-        $localizations = [];
-        foreach ($webspaceLocales as $webspaceLocale) {
-            $locale = $webspaceLocale->getLocale(Localization::UNDERSCORE);
-            try {
-                $localizations[$locale] = [
-                    'url' => $this->routeGenerator->generate('/', $locale, $webspaceKey),
-                    'locale' => $locale,
-                    'alternate' => false,
-                ];
-            } catch (WebspaceUrlNotFoundException) {
-                continue;
-            }
-        }
-
-        $routes = [];
-        foreach ($this->routeRepository->findBy([
-            'resourceKey' => $dimensionContent::getResourceKey(),
-            'resourceId' => (string) $dimensionContent->getResource()->getId(),
-            'locales' => $dimensionContent->getAvailableLocales() ?? [],
-        ]) as $route) {
-            $routes[] = $route;
-        }
-
-        foreach ($routes as $route) {
-            $locale = $route->getLocale();
-            try {
-                $localizations[$locale] = [
-                    'url' => $this->routeGenerator->generate($route->getSlug(), $route->getLocale(), $webspaceKey),
-                    'locale' => $locale,
-                    'alternate' => true,
-                ];
-            } catch (WebspaceUrlNotFoundException) {
-                continue;
-            }
-        }
-
-        return $localizations;
+        return $resolver->resolve($dimensionContent, $webspaceKey);
     }
 }

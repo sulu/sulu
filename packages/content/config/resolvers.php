@@ -15,6 +15,7 @@ use Sulu\Content\Application\ContentEnhancer\ContentEnhancer;
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Content\Application\ContentLocalizationsResolver\ContentLocalizationsResolver;
 use Sulu\Content\Application\ContentLocalizationsResolver\ContentLocalizationsResolverInterface;
+use Sulu\Content\Application\ContentLocalizationsResolver\RouteLocalizationsResolver;
 use Sulu\Content\Application\ContentResolver\ContentResolver;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolver;
@@ -92,11 +93,17 @@ return static function(ContainerConfigurator $container) {
 
     $services->alias(ContentResolverInterface::class, 'sulu_content.content_resolver');
 
-    $services->set('sulu_content.content_localizations_resolver', ContentLocalizationsResolver::class)
+    $services->set('sulu_content.route_localizations_resolver', RouteLocalizationsResolver::class)
         ->args([
             new Reference('sulu_core.webspace.webspace_manager'),
             new Reference('sulu_route.route_repository'),
             new Reference('sulu_route.route_generator'),
+        ]);
+
+    $services->set('sulu_content.content_localizations_resolver', ContentLocalizationsResolver::class)
+        ->args([
+            tagged_locator('sulu_content.content_localizations_resolver', 'resource_key'),
+            new Reference('sulu_content.route_localizations_resolver'),
         ]);
 
     $services->alias(ContentLocalizationsResolverInterface::class, 'sulu_content.content_localizations_resolver');

@@ -19,6 +19,9 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 /**
  * Builds the `localizations` of a website page: the URL of the content in every locale of the
  * webspace, for the language switcher and the hreflang links.
+ *
+ * A resource whose pages link other URLs registers its own implementation, tagged
+ * `sulu_content.content_localizations_resolver` with its `resource_key`.
  */
 interface ContentLocalizationsResolverInterface
 {
