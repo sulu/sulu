@@ -121,6 +121,7 @@ class AdminContactReindexProviderTest extends SuluTestCase
                 'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,
             ],
         ];
+        /** @var array<array{id: string}> $results */
         $results = [...$results];
 
         // The provider queries without an ORDER BY, and PostgreSQL rewrites an updated row
