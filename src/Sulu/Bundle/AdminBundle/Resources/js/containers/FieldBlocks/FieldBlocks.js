@@ -47,7 +47,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
     @action componentDidMount() {
         // Fill missing block ids on open, written with the isDefaultValue context so the form stays pristine.
-        this.generateMissingBlockIds(this.value);
+        this.generateMissingBlockIds();
 
         if (this.settingsFormKey) {
             // initialize empty blockSettingsFormStore because schema of the store is used for determining iconsMapping
@@ -65,7 +65,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         const {defaultType, onChange, types, value} = this.props;
         const {types: oldTypes} = prevProps;
 
-        if (!equals(toJS(prevProps.value), toJS(value))) {
+        if (!equals(toJS(prevProps.value), toJS(value))){
             // Only sync from props if no local changes were made since the last render.
             // This prevents stale echoed values from overwriting local changes
             // (e.g., default values applied by field components during mount).
@@ -74,7 +74,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             }
 
             // Retry once reloaded data still lacks ids; a no-op when nothing is missing.
-            this.generateMissingBlockIds(value);
+            this.generateMissingBlockIds();
         }
 
         if (!types || !oldTypes) {
@@ -274,7 +274,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         return this.computedIcons;
     }
 
-    getConditionData(data: { [string]: any }, dataPath: ?string) {
+    getConditionData(data: {[string]: any}, dataPath: ?string) {
         const {formInspector} = this.props;
 
         return conditionDataProviderRegistry.getAll().reduce(
@@ -305,12 +305,13 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         onChange(newValues, context);
     };
 
-    generateMissingBlockIds = (value: Object) => {
+    generateMissingBlockIds = () => {
         if (!this.generateBlockIds) {
             return;
         }
 
-        this.backfillBlockIds(value, this.props.types);
+        // Getter so the backfiller merges the ids into the current value, not a stale snapshot.
+        this.backfillBlockIds(() => this.value, this.props.types);
     };
 
     handleBlocksChange = (value: Object) => {
@@ -513,7 +514,8 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         if (!blockSettingsFormStore
             || openedBlockSettingsIndex === undefined
             || openedBlockSettingsIndex === null
-            || !oldValues) {
+            || !oldValues)
+        {
             return;
         }
 

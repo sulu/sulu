@@ -96,36 +96,55 @@ const blockIdGenerator = {
             });
     },
 
-    // Assigns a generated `_id` to every typed item (block, hotspot, nested variant) that lacks one.
-    async ensureBlockIds(value: any, types: Object): Promise<any> {
+    // Counts the typed items in `value` that still lack an `_id`.
+    countMissingBlockIds(value: any, types: Object): number {
         if (value === undefined || value === null) {
-            return null;
+            return 0;
         }
 
-        // Read-only scan first: this runs on every user change, so bail without cloning when nothing is missing.
         const missing = [];
         collectFromValue(value, types, missing);
 
-        if (missing.length === 0) {
+        return missing.length;
+    },
+
+    // Clones `value` and hands the given ids, in order, to the items still missing one.
+    applyBlockIds(value: any, types: Object, ids: Array<string>): any {
+        if (value === undefined || value === null || !Array.isArray(ids) || ids.length === 0) {
             return null;
         }
 
-        // Something is missing: clone and re-collect the references into the clone before mutating
         const clone = deepClone(value);
         const pending = [];
         collectFromValue(clone, types, pending);
 
-        const ids = await this.generateBlockIds(pending.length);
-
-        if (!Array.isArray(ids) || ids.length !== pending.length) {
+        const count = Math.min(pending.length, ids.length);
+        if (count === 0) {
             return null;
         }
 
-        pending.forEach((item, index) => {
-            item._id = ids[index];
-        });
+        for (let index = 0; index < count; index++) {
+            pending[index]._id = ids[index];
+        }
 
         return clone;
+    },
+
+    // Assigns a generated `_id` to every typed item (block, hotspot, nested variant) that lacks one.
+    async ensureBlockIds(value: any, types: Object): Promise<any> {
+        const count = this.countMissingBlockIds(value, types);
+
+        if (count === 0) {
+            return null;
+        }
+
+        const ids = await this.generateBlockIds(count);
+
+        if (!Array.isArray(ids) || ids.length !== count) {
+            return null;
+        }
+
+        return this.applyBlockIds(value, types, ids);
     },
 };
 

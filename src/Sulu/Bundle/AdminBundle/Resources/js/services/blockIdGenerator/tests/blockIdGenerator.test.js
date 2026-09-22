@@ -244,3 +244,46 @@ test('ensureBlockIds returns null when the generator hands back an unexpected id
 
     expect(await blockIdGenerator.ensureBlockIds(value, types)).toEqual(null);
 });
+
+test('countMissingBlockIds counts only the items without an id', () => {
+    const types = {editor: {form: {}, title: 'Editor'}};
+
+    expect(blockIdGenerator.countMissingBlockIds(undefined, types)).toEqual(0);
+    expect(blockIdGenerator.countMissingBlockIds([{_id: 'a', type: 'editor'}], types)).toEqual(0);
+    expect(blockIdGenerator.countMissingBlockIds(
+        [{type: 'editor'}, {_id: '', type: 'editor'}, {_id: 'a', type: 'editor'}],
+        types
+    )).toEqual(2);
+});
+
+test('applyBlockIds fills the still-missing items and does not mutate the passed value', () => {
+    const types = {editor: {form: {}, title: 'Editor'}};
+    const value = [{type: 'editor'}, {_id: 'kept', type: 'editor'}, {type: 'editor'}];
+
+    const result = blockIdGenerator.applyBlockIds(value, types, ['id-1', 'id-2']);
+
+    expect(result).toEqual([
+        {_id: 'id-1', type: 'editor'},
+        {_id: 'kept', type: 'editor'},
+        {_id: 'id-2', type: 'editor'},
+    ]);
+    expect(value).toEqual([{type: 'editor'}, {_id: 'kept', type: 'editor'}, {type: 'editor'}]);
+});
+
+test('applyBlockIds fills only as many items as it has ids when more went missing meanwhile', () => {
+    const types = {editor: {form: {}, title: 'Editor'}};
+    const value = [{type: 'editor'}, {type: 'editor'}];
+
+    const result = blockIdGenerator.applyBlockIds(value, types, ['id-1']);
+
+    expect(result[0]._id).toEqual('id-1');
+    expect(result[1]._id).toBeUndefined();
+});
+
+test('applyBlockIds returns null when there is nothing to fill', () => {
+    const types = {editor: {form: {}, title: 'Editor'}};
+
+    expect(blockIdGenerator.applyBlockIds([{_id: 'a', type: 'editor'}], types, ['id-1'])).toEqual(null);
+    expect(blockIdGenerator.applyBlockIds([{type: 'editor'}], types, [])).toEqual(null);
+    expect(blockIdGenerator.applyBlockIds(null, types, ['id-1'])).toEqual(null);
+});

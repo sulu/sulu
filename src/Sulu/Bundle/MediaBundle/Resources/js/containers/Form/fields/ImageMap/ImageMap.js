@@ -52,8 +52,8 @@ class ImageMap extends React.Component<FieldTypeProps<Value>> {
             return;
         }
 
-        const {types, value} = this.props;
-        this.backfillBlockIds(value, types);
+        // Getter so the backfiller merges the ids into the current value, not a stale snapshot.
+        this.backfillBlockIds(() => this.value, this.props.types);
     };
 
     @action setValue = (value: Object) => {

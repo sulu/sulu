@@ -2164,8 +2164,11 @@ test('Should inject missing block ids on mount without dirtying the form when bl
         const value = [{type: 'default'}];
         const changeSpy = jest.fn();
 
-        const ensureBlockIdsSpy = jest.spyOn(blockIdGenerator, 'ensureBlockIds')
-            .mockReturnValue(Promise.resolve([{type: 'default', _id: 'generated-id'}]));
+        const countSpy = jest.spyOn(blockIdGenerator, 'countMissingBlockIds').mockReturnValue(1);
+        const generateSpy = jest.spyOn(blockIdGenerator, 'generateBlockIds')
+            .mockReturnValue(Promise.resolve(['generated-id']));
+        const applySpy = jest.spyOn(blockIdGenerator, 'applyBlockIds')
+            .mockReturnValue([{type: 'default', _id: 'generated-id'}]);
 
         shallow(
             <FieldBlocks
@@ -2181,10 +2184,13 @@ test('Should inject missing block ids on mount without dirtying the form when bl
 
         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        expect(ensureBlockIdsSpy).toHaveBeenCalledWith(value, types);
+        expect(countSpy).toHaveBeenCalledWith(value, types);
+        expect(generateSpy).toHaveBeenCalledWith(1);
         expect(changeSpy).toHaveBeenCalledWith([{type: 'default', _id: 'generated-id'}], {isDefaultValue: true});
 
-        ensureBlockIdsSpy.mockRestore();
+        countSpy.mockRestore();
+        generateSpy.mockRestore();
+        applySpy.mockRestore();
     });
 
 test('Should not inject block ids on mount when block_id_generator is disabled', async() => {
@@ -2202,7 +2208,7 @@ test('Should not inject block ids on mount when block_id_generator is disabled',
     };
     const changeSpy = jest.fn();
 
-    const ensureBlockIdsSpy = jest.spyOn(blockIdGenerator, 'ensureBlockIds');
+    const countSpy = jest.spyOn(blockIdGenerator, 'countMissingBlockIds');
 
     shallow(
         <FieldBlocks
@@ -2218,7 +2224,7 @@ test('Should not inject block ids on mount when block_id_generator is disabled',
 
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(ensureBlockIdsSpy).not.toHaveBeenCalled();
+    expect(countSpy).not.toHaveBeenCalled();
 
-    ensureBlockIdsSpy.mockRestore();
+    countSpy.mockRestore();
 });

@@ -19,37 +19,41 @@ export function readBlockIdGeneratorOption(schemaOptions: Object, fieldType: str
     return value;
 }
 
-// Fills a generated `_id` onto typed items (blocks, hotspots) that lack one and reports it via
-// `onFilled`. Serialises overlapping runs; the caller gates on its own enabled flag.
+// Fills generated ids onto items that lack one. `getValue` is read again once the ids arrive, so
+// only the new ids are merged in and anything typed during the request is kept. Serialises runs.
 export default function createBlockIdBackfiller(onFilled: (value: any) => void) {
     let generating = false;
-    let pending: ?Object = null;
+    let pending = false;
 
-    const run = async(value: ?Object, types: ?Object): Promise<void> => {
-        if (!value || !types) {
+    const run = async(getValue: () => ?Object, types: ?Object): Promise<void> => {
+        if (typeof getValue !== 'function' || !types) {
             return;
         }
 
         if (generating) {
-            pending = value;
+            pending = true;
 
             return;
         }
 
         generating = true;
         try {
-            const filledValue = await blockIdGenerator.ensureBlockIds(toJS(value), types);
-            if (filledValue) {
-                onFilled(filledValue);
+            const count = blockIdGenerator.countMissingBlockIds(toJS(getValue()), types);
+            if (count > 0) {
+                const ids = await blockIdGenerator.generateBlockIds(count);
+                // Apply to the value as it is now, not the snapshot the run started with.
+                const filledValue = blockIdGenerator.applyBlockIds(toJS(getValue()), types, ids);
+                if (filledValue) {
+                    onFilled(filledValue);
+                }
             }
         } finally {
             generating = false;
         }
 
         if (pending) {
-            const pendingValue = pending;
-            pending = null;
-            run(pendingValue, types);
+            pending = false;
+            run(getValue, types);
         }
     };
 
