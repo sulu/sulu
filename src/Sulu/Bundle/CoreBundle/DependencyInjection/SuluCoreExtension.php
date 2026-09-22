@@ -188,6 +188,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                             'fixtures' => [],
                             'system_collections' => [],
                             'security' => [],
+                            'search' => [],
                         ],
                     ],
                     'dev' => [
@@ -197,6 +198,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
                             'user' => [],
                             'system_collections' => [],
                             'security' => [],
+                            'search' => [],
                         ],
                     ],
                 ],
