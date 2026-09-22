@@ -41,8 +41,11 @@ class SelectFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
     getFormNode() {
         const {value} = this;
 
+        // Option keys are strings, but numeric values come back from the URL as numbers
+        const values = (value || []).map((item) => String(item));
+
         return (
-            <CheckboxGroup onChange={this.handleChange} values={value || []}>
+            <CheckboxGroup onChange={this.handleChange} values={values}>
                 {Object.keys(this.parameterOptions).map((optionKey) => (
                     <Checkbox
                         key={optionKey}
