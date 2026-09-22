@@ -270,5 +270,6 @@
     "sulu_admin.include_content_context": "Add whole content as context",
     "sulu_admin.send_feedback": "Send feedback",
     "sulu_admin.feedback": "Feedback",
-    "sulu_admin.send": "Send"
+    "sulu_admin.send": "Send",
+    "sulu_admin.text_part_language_marker": "Language: {language}"
 }

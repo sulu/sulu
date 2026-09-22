@@ -34,3 +34,27 @@ plugin must be compatible with the ckeditor version used in your project (which 
 The `ConfigRegistry` takes a function, which receives the config which is already there. The return value of this 
 function will be shallow merged with the previously existing config. You can reuse the old values from the config, 
 as seen e.g. in the above code snippet.
+
+## Text part language
+
+The editor ships the [`TextPartLanguage`](https://ckeditor.com/docs/ckeditor5/latest/features/language.html) feature,
+which lets an editor mark a selection with a language (`<span lang="…" dir="…">`) to satisfy the WCAG "language of
+parts" requirement. Marked text is highlighted in the editor and shows a tooltip with the language name; the saved
+content only contains the `lang` and `dir` attributes.
+
+The offered languages are configured under `language.textPartLanguage`. Their default titles are localised to the
+administration interface language via `Intl.DisplayNames`. Override the default list through the `ConfigRegistry`
+(an explicit `title` is used as given):
+
+```javascript static
+import {ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
+
+ckeditorConfigRegistry.add((config) => ({
+    language: {
+        textPartLanguage: [
+            {title: 'English', languageCode: 'en'},
+            {title: 'Arabic', languageCode: 'ar'},
+        ],
+    },
+}));
+```
