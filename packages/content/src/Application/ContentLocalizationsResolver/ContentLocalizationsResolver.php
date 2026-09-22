@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentLocalizationsResolver;
 
-use Psr\Container\ContainerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
  * Hands the content to the resolver registered for its resource key, like the route defaults
@@ -24,8 +24,11 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
  */
 class ContentLocalizationsResolver implements ContentLocalizationsResolverInterface
 {
+    /**
+     * @param ServiceLocator<ContentLocalizationsResolverInterface> $resolvers
+     */
     public function __construct(
-        private readonly ContainerInterface $resolverLocator,
+        private readonly ServiceLocator $resolvers,
         private readonly ContentLocalizationsResolverInterface $defaultResolver,
     ) {
     }
@@ -34,13 +37,10 @@ class ContentLocalizationsResolver implements ContentLocalizationsResolverInterf
     {
         $resourceKey = $dimensionContent::getResourceKey();
 
-        if (!$this->resolverLocator->has($resourceKey)) {
+        if (!$this->resolvers->has($resourceKey)) {
             return $this->defaultResolver->resolve($dimensionContent, $webspaceKey);
         }
 
-        $resolver = $this->resolverLocator->get($resourceKey);
-        \assert($resolver instanceof ContentLocalizationsResolverInterface, 'The localizations resolver for "' . $resourceKey . '" must implement ContentLocalizationsResolverInterface but got: ' . \get_debug_type($resolver));
-
-        return $resolver->resolve($dimensionContent, $webspaceKey);
+        return $this->resolvers->get($resourceKey)->resolve($dimensionContent, $webspaceKey);
     }
 }

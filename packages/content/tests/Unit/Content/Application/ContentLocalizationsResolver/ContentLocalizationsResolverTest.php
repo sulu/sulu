@@ -38,10 +38,10 @@ class ContentLocalizationsResolverTest extends TestCase
         $defaultResolver = $this->prophesize(ContentLocalizationsResolverInterface::class);
         $defaultResolver->resolve(Argument::cetera())->shouldNotBeCalled();
 
-        $resolver = new ContentLocalizationsResolver(
-            new ServiceLocator(['examples' => static fn () => $exampleResolver->reveal()]),
-            $defaultResolver->reveal(),
-        );
+        /** @var ServiceLocator<ContentLocalizationsResolverInterface> $resolvers */
+        $resolvers = new ServiceLocator(['examples' => static fn () => $exampleResolver->reveal()]);
+
+        $resolver = new ContentLocalizationsResolver($resolvers, $defaultResolver->reveal());
 
         $this->assertSame(self::LOCALIZATIONS, $resolver->resolve($dimensionContent, 'sulu-io'));
     }
@@ -53,7 +53,10 @@ class ContentLocalizationsResolverTest extends TestCase
         $defaultResolver = $this->prophesize(ContentLocalizationsResolverInterface::class);
         $defaultResolver->resolve($dimensionContent, 'sulu-io')->willReturn(self::LOCALIZATIONS)->shouldBeCalled();
 
-        $resolver = new ContentLocalizationsResolver(new ServiceLocator([]), $defaultResolver->reveal());
+        /** @var ServiceLocator<ContentLocalizationsResolverInterface> $resolvers */
+        $resolvers = new ServiceLocator([]);
+
+        $resolver = new ContentLocalizationsResolver($resolvers, $defaultResolver->reveal());
 
         $this->assertSame(self::LOCALIZATIONS, $resolver->resolve($dimensionContent, 'sulu-io'));
     }

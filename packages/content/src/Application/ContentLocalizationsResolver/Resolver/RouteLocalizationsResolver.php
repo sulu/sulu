@@ -11,10 +11,11 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Application\ContentLocalizationsResolver;
+namespace Sulu\Content\Application\ContentLocalizationsResolver\Resolver;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Content\Application\ContentLocalizationsResolver\ContentLocalizationsResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Infrastructure\Sulu\Route\Exception\WebspaceUrlNotFoundException;

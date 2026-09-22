@@ -15,7 +15,7 @@ use Sulu\Content\Application\ContentEnhancer\ContentEnhancer;
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
 use Sulu\Content\Application\ContentLocalizationsResolver\ContentLocalizationsResolver;
 use Sulu\Content\Application\ContentLocalizationsResolver\ContentLocalizationsResolverInterface;
-use Sulu\Content\Application\ContentLocalizationsResolver\RouteLocalizationsResolver;
+use Sulu\Content\Application\ContentLocalizationsResolver\Resolver\RouteLocalizationsResolver;
 use Sulu\Content\Application\ContentResolver\ContentResolver;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Application\ContentResolver\ContentViewResolver\ContentViewResolver;

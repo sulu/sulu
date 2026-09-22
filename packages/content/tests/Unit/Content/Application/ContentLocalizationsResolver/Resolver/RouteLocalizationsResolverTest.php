@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Tests\Unit\Content\Application\ContentLocalizationsResolver;
+namespace Sulu\Content\Tests\Unit\Content\Application\ContentLocalizationsResolver\Resolver;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -21,7 +21,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Content\Application\ContentLocalizationsResolver\RouteLocalizationsResolver;
+use Sulu\Content\Application\ContentLocalizationsResolver\Resolver\RouteLocalizationsResolver;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Sulu\Route\Exception\WebspaceUrlNotFoundException;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;

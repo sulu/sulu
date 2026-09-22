@@ -79,6 +79,13 @@ services:
         tags:
             - { name: 'sulu_route.route_defaults_provider', resource_key: 'examples' }
 
+    example_test.static_localizations_resolver:
+        class: Sulu\Content\Tests\Application\ExampleTestBundle\Route\StaticLocalizationsResolver
+        arguments:
+            - { en: { url: '/en/static', locale: 'en', alternate: true } }
+        tags:
+            - { name: 'sulu_content.content_localizations_resolver', resource_key: 'static_localizations' }
+
     example_test.example_selection_property_resolver:
         class: Sulu\Content\Tests\Application\ExampleTestBundle\PropertyResolver\ExampleSelectionPropertyResolver
         tags:
