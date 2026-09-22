@@ -4,6 +4,16 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.27
 
+### The target group select of the preview follows the audience targeting permission
+
+The preview offered its target group select as soon as the `SuluAudienceTargetingBundle` was installed, and the
+select loads the target groups through the API. A user without the `view` permission on
+`sulu.settings.target-groups` got a `403` there, which left the preview, and with it the whole page, unusable.
+The select is now offered only to users who have that permission.
+
+If you replaced `sulu_preview.admin`, pass the `sulu_security.security_checker` as the last constructor
+argument. Without it the select is offered to everyone, as before. Leaving it out triggers a deprecation.
+
 ### Copying a page or snippet requires the add permission
 
 Copying creates a new page or snippet, but only `edit` was checked so far. For pages the permission is checked
