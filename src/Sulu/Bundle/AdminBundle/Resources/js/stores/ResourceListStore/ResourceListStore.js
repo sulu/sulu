@@ -1,6 +1,8 @@
 // @flow
 import {action, computed, observable} from 'mobx';
 import ResourceRequester from '../../services/ResourceRequester';
+import {translate} from '../../utils/Translator';
+import snackbarStore from '../snackbarStore';
 
 export default class ResourceListStore {
     requestParameters: Object;
@@ -9,7 +11,9 @@ export default class ResourceListStore {
     @observable initialLoading: boolean = false;
     @observable deleting: boolean = false;
     @observable patching: boolean = false;
-    @observable data: Array<Object>;
+    // The request can fail, e.g. with a 403 when the user is not allowed to see the resource. Consumers
+    // read this list right away, so it stays an empty list instead of becoming undefined.
+    @observable data: Array<Object> = [];
 
     @computed get loading() {
         return this.initialLoading || this.deleting || this.patching;
@@ -26,6 +30,7 @@ export default class ResourceListStore {
             this.initialLoading = false;
         })).catch(action(() => {
             this.initialLoading = false;
+            snackbarStore.add({text: translate('sulu_admin.resource_list_load_error'), type: 'error'}, 4000);
         }));
     }
 
