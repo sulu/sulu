@@ -103,6 +103,30 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals('Anne', $result[2]['firstName']);
     }
 
+    public function testFindGetAllWithoutSorting(): void
+    {
+        $contact1 = $this->createContact('Max', 'Mustermann');
+        $contact2 = $this->createContact('Anne', 'Mustermann');
+        $this->em->flush();
+
+        // a PHP warning alone does not fail the suite, so turn it into an exception
+        \set_error_handler(static function(int $severity, string $message): never {
+            throw new \ErrorException($message, 0, $severity);
+        });
+
+        try {
+            $result = $this->contactRepository->findGetAll(null, null, null, []);
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertCount(2, $result);
+        $this->assertEqualsCanonicalizing(
+            ['Max', 'Anne'],
+            \array_column($result, 'firstName')
+        );
+    }
+
     public function testFindGetAllSortByIdAscWithLimit(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');

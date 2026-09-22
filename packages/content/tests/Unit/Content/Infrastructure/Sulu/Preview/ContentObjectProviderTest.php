@@ -32,11 +32,12 @@ use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
+use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
-use Sulu\Content\Infrastructure\Sulu\Preview\PreviewDimensionContentCollection;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Admin\ExampleAdmin;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
@@ -69,6 +70,11 @@ class ContentObjectProviderTest extends TestCase
     private $contentDataMapper;
 
     /**
+     * @var ObjectProphecy<ContentNormalizerInterface>
+     */
+    private $contentNormalizer;
+
+    /**
      * @var ContentObjectProvider<ExampleDimensionContent, Example>
      */
     private $contentObjectProvider;
@@ -83,6 +89,7 @@ class ContentObjectProviderTest extends TestCase
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->contentDataMapper = $this->prophesize(ContentDataMapperInterface::class);
+        $this->contentNormalizer = $this->prophesize(ContentNormalizerInterface::class);
 
         $this->contentObjectProvider = new ContentObjectProvider(
             $metadataProviderRegistry,
@@ -90,7 +97,8 @@ class ContentObjectProviderTest extends TestCase
             $this->contentAggregator->reveal(),
             $this->contentDataMapper->reveal(),
             Example::class,
-            ExampleAdmin::SECURITY_CONTEXT
+            ExampleAdmin::SECURITY_CONTEXT,
+            $this->contentNormalizer->reveal()
         );
     }
 
@@ -323,25 +331,46 @@ class ContentObjectProviderTest extends TestCase
         ]
     ): void {
         $example = new Example();
-        $exampleDimensionContent = new ExampleDimensionContent($example);
 
-        $previewContext = new PreviewContext(1, $locale);
-        $defaults = [
-            'object' => $exampleDimensionContent,
-            '_controller' => ContentController::class . '::indexAction',
-            'view' => 'pages/default',
-        ];
-        $this->contentObjectProvider->updateValues($previewContext, $defaults, $data);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $example->addDimensionContent($unlocalizedDimensionContent);
+
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale($locale);
+        $localizedDimensionContent->setStage(DimensionContentInterface::STAGE_DRAFT);
+        $example->addDimensionContent($localizedDimensionContent);
+
+        $mergedDimensionContent = new ExampleDimensionContent($example);
 
         $this->contentDataMapper->map(
             Argument::that(
-                function(PreviewDimensionContentCollection $dimensionContentCollection) use ($exampleDimensionContent) {
-                    return $exampleDimensionContent === $dimensionContentCollection->getDimensionContent([]);
+                function($dimensionContentCollection) use ($unlocalizedDimensionContent, $localizedDimensionContent) {
+                    // the localized and unlocalized dimension contents must be mapped as separate instances
+                    return $dimensionContentCollection instanceof DimensionContentCollection
+                        && ExampleDimensionContent::class === $dimensionContentCollection->getDimensionContentClass()
+                        && $unlocalizedDimensionContent === $dimensionContentCollection->getDimensionContent(['locale' => null])
+                        && $localizedDimensionContent === $dimensionContentCollection->getDimensionContent(['locale' => 'de']);
                 }
             ),
-            ['locale' => 'de', 'stage' => 'draft', 'version' => 0],
+            Argument::type('array'),
             $data
         )->shouldBeCalledTimes(1);
+
+        $this->contentAggregator->aggregate($example, Argument::type('array'))
+            ->willReturn($mergedDimensionContent)
+            ->shouldBeCalledTimes(1);
+
+        $previewContext = new PreviewContext(1, $locale);
+        $defaults = [
+            'object' => $localizedDimensionContent,
+            '_controller' => ContentController::class . '::indexAction',
+            'view' => 'pages/default',
+        ];
+
+        $result = $this->contentObjectProvider->updateValues($previewContext, $defaults, $data);
+
+        $this->assertSame($mergedDimensionContent, $result['object']);
     }
 
     /**
@@ -360,6 +389,60 @@ class ContentObjectProviderTest extends TestCase
         $this->contentObjectProvider->updateContext($previewContext, $defaults, $context);
 
         $this->assertSame($context['template'], $dimensionContent->getTemplateKey());
+    }
+
+    public function testSerialize(): void
+    {
+        $dimensionContent = new ExampleDimensionContent(new Example());
+
+        $this->contentNormalizer->normalize($dimensionContent)
+            ->willReturn(['template' => 'default', 'title' => 'Edited'])
+            ->shouldBeCalledTimes(1);
+
+        $result = $this->contentObjectProvider->serialize(new PreviewContext(1, 'de'), [
+            'object' => $dimensionContent,
+            '_controller' => ContentController::class . '::indexAction',
+            'view' => 'pages/default',
+        ]);
+
+        $this->assertSame('{"template":"default","title":"Edited"}', $result);
+    }
+
+    public function testSerializeWithoutContentNormalizer(): void
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            $contentObjectProvider = $this->createContentObjectProviderWithoutSecurityContext();
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(
+            ['Since sulu/sulu 3.0: Instantiating ContentObjectProvider without the $contentNormalizer argument is deprecated.'],
+            $deprecations
+        );
+
+        $result = $contentObjectProvider->serialize(new PreviewContext(1, 'de'), [
+            'object' => new ExampleDimensionContent(new Example()),
+        ]);
+
+        $this->assertSame('', $result);
+    }
+
+    public function testDeserializeNonExisting(): void
+    {
+        $this->entityManager->createQueryBuilder()->willThrow(NoResultException::class)->shouldBeCalledTimes(1);
+        $this->contentDataMapper->map(Argument::cetera())->shouldNotBeCalled();
+
+        $result = $this->contentObjectProvider->deserialize(new PreviewContext(1, 'de'), '{"title":"Edited"}');
+
+        $this->assertSame([], $result);
     }
 
     public function testGetSecurityContext(): void

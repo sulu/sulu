@@ -1,5 +1,62 @@
 # Upgrade
 
+## 3.0.10
+
+### Cache tags now match the invalidation
+
+Pages are tagged with the resource key of a resource (`tags-5`, `contacts-3`), while the invalidation used
+the aliases of 2.x (`tag-news`, `contact-3`), so tags, categories, contacts and accounts were never
+invalidated. Both sides use the resource key and the id of the resource now. Projects that add cache tags
+with the old aliases need to switch to the resource key:
+
+```php
+$cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->getId());
+```
+
+### Add and live permissions are enforced for pages, snippets and articles
+
+The admin API now checks these permissions:
+
+- Creating a page requires `add` on its webspace.
+- Publishing, unpublishing and removing a draft require `live`.
+- Copying requires `add`. For pages it is checked on the page the copy is created under.
+
+Before, users without these permissions could still create, publish and copy through the API and parts of
+the admin. Check your roles and grant `add` and `live` where users need them, otherwise they get a `403`.
+
+### Additional Optional Parameter contentNormalizer for ContentObjectProvider
+
+The `ContentObjectProvider` gained an optional `$contentNormalizer` argument, which it uses to keep the
+edited state of a preview between two requests. Omitting it is deprecated, so integrators registering
+their own provider service should start passing the `sulu_content.content_normalizer` service now to
+remain compatible with a future version where it is required:
+
+```yaml
+services:
+    app.example_preview_provider:
+        class: Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider
+        arguments:
+            - '@sulu_admin.metadata_provider_registry'
+            - '@doctrine.orm.entity_manager'
+            - '@sulu_content.content_aggregator'
+            - '@sulu_content.content_data_mapper'
+            - App\Entity\Example
+            - null
+            - '@sulu_content.content_normalizer'
+```
+
+Without it, the preview keeps rendering the last saved version when it is reloaded without form data.
+
+### Reference tracking for teaser selections
+
+The `teaser_selection` content type now registers its items in the reference table, like the
+`single_page_selection` content type already does. Content using teaser selections only gets reference
+rows on its next save, so refresh existing content once after upgrading:
+
+```bash
+bin/console sulu:reference:refresh
+```
+
 ## 3.0.9
 
 ### Widened webspace, slug and template key column lengths

@@ -293,7 +293,7 @@ class ContactRepository extends EntityRepository implements ContactRepositoryInt
      * Add sorting to querybuilder.
      *
      * @param QueryBuilder $qb
-     * @param array $sorting
+     * @param array<string, string>|null $sorting column => direction
      * @param string $prefix
      *
      * @return QueryBuilder
@@ -301,7 +301,7 @@ class ContactRepository extends EntityRepository implements ContactRepositoryInt
     private function addSorting($qb, $sorting, $prefix = 'u')
     {
         // Add order by
-        foreach ($sorting as $k => $d) {
+        foreach ($sorting ?? [] as $k => $d) {
             $qb->addOrderBy($prefix . '.' . $k, $d);
         }
 

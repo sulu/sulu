@@ -233,6 +233,13 @@
             <entity-name>dimensionContent</entity-name>
         </property>
 
+        <property name="workflowPlace" translation="sulu_content.workflow_place" visibility="never">
+            <field-name>workflowPlace</field-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+        </property>
+
         <property name="linkProvider" visibility="never">
             <field-name>linkProvider</field-name>
             <entity-name>dimensionContent</entity-name>

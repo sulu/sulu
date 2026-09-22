@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderInterface;
 use Sulu\Bundle\AdminBundle\Teaser\Teaser;
 use Sulu\Bundle\AdminBundle\Teaser\TeaserTagPropertyExtractor;
+use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\ExternalLinkProvider;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\ContentEnhancerInterface;
@@ -36,6 +37,7 @@ class PageTeaserProvider implements TeaserProviderInterface
         protected ContentEnhancerInterface $contentEnhancer,
         protected TranslatorInterface $translator,
         protected TeaserTagPropertyExtractor $teaserTagPropertyExtractor,
+        protected ReferenceStoreInterface $referenceStore,
     ) {
     }
 
@@ -67,6 +69,8 @@ class PageTeaserProvider implements TeaserProviderInterface
         foreach ($pages as $page) {
             $teaser = $this->createTeaserFromPage($page, $locale);
             if (null !== $teaser) {
+                $this->referenceStore->add((string) $teaser->getId(), PageInterface::RESOURCE_KEY);
+
                 $teasers[] = $teaser;
             }
         }
@@ -162,7 +166,8 @@ class PageTeaserProvider implements TeaserProviderInterface
 
     protected function resolveTitle(PageDimensionContentInterface $dimensionContent): ?string
     {
-        $title = $dimensionContent->getExcerptTitle() ?? $dimensionContent->getTitle();
+        $excerptTitle = $dimensionContent->getExcerptTitle();
+        $title = '' !== ($excerptTitle ?? '') ? $excerptTitle : $dimensionContent->getTitle();
 
         return '' !== ($title ?? '') ? $title : null;
     }

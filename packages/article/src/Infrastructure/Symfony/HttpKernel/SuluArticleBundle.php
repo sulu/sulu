@@ -306,6 +306,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_core.list_builder.field_descriptor_factory'),
                 new Reference('sulu_core.doctrine_list_builder_factory'),
                 new Reference('sulu_core.doctrine_rest_helper'),
+                new Reference('sulu_security.security_checker'),
                 param('sulu_core.is_single_locale'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
@@ -334,6 +335,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_data_mapper'),
                 '%sulu.model.article.class%',
                 ArticleAdmin::SECURITY_CONTEXT,
+                new Reference('sulu_content.content_normalizer'),
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu_preview.object_provider', ['provider-key' => 'articles']);
@@ -346,6 +348,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_enhancer'),
                 new Reference('translator'),
                 new Reference('sulu_admin.teaser_tag_property_extractor'),
+                new Reference('sulu_http_cache.reference_store'),
             ])
             ->tag('sulu.teaser.provider', ['alias' => ArticleInterface::RESOURCE_KEY]);
 

@@ -285,6 +285,58 @@ test('Should execute PATCH request and return JSON', () => {
     return requestPromise;
 });
 
+test('Should execute PATCH request and transform dates instead of serializing them to an empty object', () => {
+    const response = {
+        json: jest.fn(),
+        ok: true,
+    };
+    response.json.mockReturnValue(Promise.resolve({}));
+    const promise = new Promise((resolve) => resolve(response));
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    const requestPromise = Requester.patch('/some-url', {
+        filter: {birthday: {from: new Date(1990, 0, 1), to: new Date(2005, 11, 31)}},
+    });
+
+    expect(window.fetch).toHaveBeenCalledWith('/some-url', {
+        method: 'PATCH',
+        body: JSON.stringify({
+            filter: {birthday: {from: '1990-01-01 00:00', to: '2005-12-31 00:00'}},
+        }),
+        credentials: 'same-origin',
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        signal: expect.any(AbortSignal),
+    });
+
+    return requestPromise;
+});
+
+test('Should execute POST request and transform dates in arrays', () => {
+    const response = {
+        json: jest.fn(),
+        ok: true,
+    };
+    response.json.mockReturnValue(Promise.resolve({}));
+    const promise = new Promise((resolve) => resolve(response));
+
+    window.fetch = jest.fn();
+    window.fetch.mockReturnValue(promise);
+
+    const requestPromise = Requester.post('/some-url', {dates: [new Date(1990, 0, 1)]});
+
+    expect(window.fetch).toHaveBeenCalledWith('/some-url', {
+        method: 'POST',
+        body: JSON.stringify({dates: ['1990-01-01 00:00']}),
+        credentials: 'same-origin',
+        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+        signal: expect.any(AbortSignal),
+    });
+
+    return requestPromise;
+});
+
 test('Should execute DELETE request and return JSON', () => {
     const response = {
         json: jest.fn(),

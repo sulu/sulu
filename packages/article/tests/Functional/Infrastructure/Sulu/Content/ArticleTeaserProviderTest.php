@@ -116,6 +116,28 @@ class ArticleTeaserProviderTest extends WebsiteTestCase
         $this->assertSame('Article Without Excerpt Title', $teasers[0]->getTitle());
     }
 
+    public function testFindReturnsArticleTitleWhenExcerptTitleIsEmptyString(): void
+    {
+        $article = self::createArticle([
+            'en' => [
+                'live' => [
+                    'title' => 'Article With Empty Excerpt Title',
+                    'template' => 'article',
+                    'url' => '/empty-excerpt-title',
+                    'mainWebspace' => 'blog',
+                    'excerpt' => [
+                        'title' => '',
+                    ],
+                ],
+            ],
+        ]);
+
+        $teasers = $this->teaserProvider->find([$article->getUuid()], 'en');
+
+        $this->assertCount(1, $teasers);
+        $this->assertSame('Article With Empty Excerpt Title', $teasers[0]->getTitle());
+    }
+
     public function testFindReturnsTeaserWithMediaId(): void
     {
         $collection = self::createCollection();

@@ -160,14 +160,18 @@ class SmartContentSmartResolver implements SmartResolverInterface
             ? \array_replace($defaultProperties, $passedProperties)
             : ($passedProperties ?: null);
 
-        return ContentView::createResolvables(
-            ids: \array_map(static fn (array $item) => $item['id'], $result),
-            resourceLoaderKey: $smartContentProvider->getResourceLoaderKey(),
-            view: $view,
-            metadata: [
-                'properties' => $properties,
-            ]
+        $resolvableResources = \array_map(
+            static fn (array $item): ResolvableResource => new ResolvableResource(
+                id: $item['id'],
+                resourceLoaderKey: $smartContentProvider->getResourceLoaderKey(),
+                priority: 0,
+                metadata: ['properties' => $properties],
+                resourceKey: $smartContentProvider->getType(),
+            ),
+            $result,
         );
+
+        return ContentView::create($resolvableResources, $view);
     }
 
     public static function getType(): string

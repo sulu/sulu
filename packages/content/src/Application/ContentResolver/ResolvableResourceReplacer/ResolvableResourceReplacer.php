@@ -82,10 +82,6 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
             return $this->replaceUnresolvedWithNull($content);
         }
 
-        if (0 === \count($resolvedResources)) {
-            return $content;
-        }
-
         $onlyResolvableResources = true;
         foreach ($content as $key => $value) {
             $currentPath = [...$path, $key];
@@ -229,10 +225,6 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
         int $depth,
         int $maxDepth
     ): array {
-        if (0 === \count($resolvedResources)) {
-            return $view;
-        }
-
         /** @var array<string, mixed> $result */
         $result = $this->replaceInViewRecursively($view, $resolvedResources, $depth, $maxDepth);
 

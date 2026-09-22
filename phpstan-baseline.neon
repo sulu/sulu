@@ -17209,6 +17209,12 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Build/DatabaseBuilder.php
 
 		-
+			message: '#^Cannot call method getOption\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/CoreBundle/Build/SearchBuilder.php
+
+		-
 			message: '#^Cannot access offset ''command'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -20357,66 +20363,6 @@ parameters:
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/FileInspector/UploadFileSubscriber.php
-
-		-
-			message: '#^Cannot access offset ''defaultTitle'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Markup/Link/MediaLinkProvider.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Markup/Link/MediaLinkProvider.php
-
-		-
-			message: '#^Cannot access offset ''name'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Markup/Link/MediaLinkProvider.php
-
-		-
-			message: '#^Cannot access offset ''title'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Markup/Link/MediaLinkProvider.php
-
-		-
-			message: '#^Cannot access offset ''version'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Markup/Link/MediaLinkProvider.php
-
-		-
-			message: '#^Parameter \#1 \$id of class Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkItem constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Markup/Link/MediaLinkProvider.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManagerInterface\:\:getUrl\(\) expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Markup/Link/MediaLinkProvider.php
-
-		-
-			message: '#^Parameter \#2 \$fileName of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManagerInterface\:\:getUrl\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Markup/Link/MediaLinkProvider.php
-
-		-
-			message: '#^Parameter \#2 \$title of class Sulu\\Bundle\\MarkupBundle\\Markup\\Link\\LinkItem constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Markup/Link/MediaLinkProvider.php
-
-		-
-			message: '#^Parameter \#3 \$version of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManagerInterface\:\:getUrl\(\) expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Markup/Link/MediaLinkProvider.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\MediaBundle\\Media\\DispositionType\\DispositionTypeResolver\:\:__construct\(\) has parameter \$mimeTypesAttachment with no value type specified in iterable type array\.$#'
@@ -25477,7 +25423,7 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Infrastructure/Symfony/DependencyInjection/Compiler/RegisterPreviewWebspaceClassPassTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Provider\\PreviewDefaultsProviderInterface@anonymous/src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest\.php\:78\:\:getSecurityContext\(\) never returns null so it can be removed from the return type\.$#'
+			message: '#^Method Sulu\\Bundle\\PreviewBundle\\Preview\\Provider\\PreviewDefaultsProviderInterface@anonymous/src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest\.php\:79\:\:getSecurityContext\(\) never returns null so it can be removed from the return type\.$#'
 			identifier: return.unusedType
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/PreviewTest.php

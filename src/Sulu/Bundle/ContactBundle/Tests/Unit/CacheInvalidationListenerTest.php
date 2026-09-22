@@ -48,8 +48,8 @@ class CacheInvalidationListenerTest extends TestCase
     public static function provideData()
     {
         return [
-            [ContactInterface::class, 'contact'],
-            [AccountInterface::class, 'account'],
+            [ContactInterface::class, ContactInterface::RESOURCE_KEY],
+            [AccountInterface::class, AccountInterface::RESOURCE_KEY],
             [\stdClass::class, null],
         ];
     }
@@ -120,8 +120,8 @@ class CacheInvalidationListenerTest extends TestCase
     public static function provideDataWithTagsAndCategories()
     {
         return [
-            [ContactInterface::class, 'contact'],
-            [AccountInterface::class, 'account'],
+            [ContactInterface::class, ContactInterface::RESOURCE_KEY],
+            [AccountInterface::class, AccountInterface::RESOURCE_KEY],
         ];
     }
 
@@ -135,15 +135,15 @@ class CacheInvalidationListenerTest extends TestCase
         $tags[0]->getId()->willReturn(1);
         $tags[1]->getId()->willReturn(2);
         $entity->getTags()->willReturn(new ArrayCollection([$tags[0]->reveal(), $tags[1]->reveal()]));
-        $this->cacheManager->invalidateReference('tag', 1)->shouldBeCalled();
-        $this->cacheManager->invalidateReference('tag', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, 2)->shouldBeCalled();
 
         $categories = [$this->prophesize(CategoryInterface::class), $this->prophesize(CategoryInterface::class)];
         $categories[0]->getId()->willReturn(1);
         $categories[1]->getId()->willReturn(2);
         $entity->getCategories()->willReturn(new ArrayCollection([$categories[0]->reveal(), $categories[1]->reveal()]));
-        $this->cacheManager->invalidateReference('category', 1)->shouldBeCalled();
-        $this->cacheManager->invalidateReference('category', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, 2)->shouldBeCalled();
 
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventArgs->getObject()->willReturn($entity->reveal());
@@ -163,15 +163,15 @@ class CacheInvalidationListenerTest extends TestCase
         $tags[0]->getId()->willReturn(1);
         $tags[1]->getId()->willReturn(2);
         $entity->getTags()->willReturn(new ArrayCollection([$tags[0]->reveal(), $tags[1]->reveal()]));
-        $this->cacheManager->invalidateReference('tag', 1)->shouldBeCalled();
-        $this->cacheManager->invalidateReference('tag', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, 2)->shouldBeCalled();
 
         $categories = [$this->prophesize(CategoryInterface::class), $this->prophesize(CategoryInterface::class)];
         $categories[0]->getId()->willReturn(1);
         $categories[1]->getId()->willReturn(2);
         $entity->getCategories()->willReturn(new ArrayCollection([$categories[0]->reveal(), $categories[1]->reveal()]));
-        $this->cacheManager->invalidateReference('category', 1)->shouldBeCalled();
-        $this->cacheManager->invalidateReference('category', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, 2)->shouldBeCalled();
 
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventArgs->getObject()->willReturn($entity->reveal());
@@ -191,15 +191,15 @@ class CacheInvalidationListenerTest extends TestCase
         $tags[0]->getId()->willReturn(1);
         $tags[1]->getId()->willReturn(2);
         $entity->getTags()->willReturn(new ArrayCollection([$tags[0]->reveal(), $tags[1]->reveal()]));
-        $this->cacheManager->invalidateReference('tag', 1)->shouldBeCalled();
-        $this->cacheManager->invalidateReference('tag', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, 2)->shouldBeCalled();
 
         $categories = [$this->prophesize(CategoryInterface::class), $this->prophesize(CategoryInterface::class)];
         $categories[0]->getId()->willReturn(1);
         $categories[1]->getId()->willReturn(2);
         $entity->getCategories()->willReturn(new ArrayCollection([$categories[0]->reveal(), $categories[1]->reveal()]));
-        $this->cacheManager->invalidateReference('category', 1)->shouldBeCalled();
-        $this->cacheManager->invalidateReference('category', 2)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, 1)->shouldBeCalled();
+        $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, 2)->shouldBeCalled();
 
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventArgs->getObject()->willReturn($entity->reveal());

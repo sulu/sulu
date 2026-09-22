@@ -126,7 +126,7 @@ class TrashItemControllerTest extends SuluTestCase
                     $resourceSecurityObjectId
                 );
 
-                if (null !== $resourceSecurityObjectType && null !== $resourceSecurityObjectId) {
+                if (null !== $resourceSecurityObjectType) {
                     $accessControlManager->setPermissions(
                         $resourceSecurityObjectType,
                         $resourceSecurityObjectId,

@@ -445,6 +445,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_data_mapper'),
                 '%sulu.model.page.class%',
                 null, // pages resolve their webspace context via SecuredEntityInterface
+                new Reference('sulu_content.content_normalizer'),
             ])
             ->tag('sulu.context', ['context' => 'admin'])
             ->tag('sulu_preview.object_provider', ['provider-key' => 'pages']);
@@ -470,6 +471,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_content.content_enhancer'),
                 new Reference('translator'),
                 new Reference('sulu_admin.teaser_tag_property_extractor'),
+                new Reference('sulu_http_cache.reference_store'),
             ])
             ->tag('sulu.teaser.provider', ['alias' => PageInterface::RESOURCE_KEY]);
 

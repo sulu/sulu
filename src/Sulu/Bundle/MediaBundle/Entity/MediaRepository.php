@@ -238,7 +238,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     /**
      * Extracts filter vars.
      *
-     * @return array
+     * @return array{mixed, mixed, mixed, mixed, mixed, string|null, mixed} collection, systemCollections, types, search, orderBy, orderSort, ids
      */
     private function extractFilterVars(array $filter)
     {
@@ -247,7 +247,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $types = \array_key_exists('types', $filter) ? $filter['types'] : null;
         $search = \array_key_exists('search', $filter) ? $filter['search'] : null;
         $orderBy = \array_key_exists('orderBy', $filter) ? $filter['orderBy'] : null;
-        $orderSort = \array_key_exists('orderSort', $filter) ? $filter['orderSort'] : null;
+        // the query builder only takes a string direction
+        $orderSort = isset($filter['orderSort']) && \is_string($filter['orderSort']) ? $filter['orderSort'] : null;
         $ids = \array_key_exists('ids', $filter) ? $filter['ids'] : null;
 
         return [$collection, $systemCollections, $types, $search, $orderBy, $orderSort, $ids];

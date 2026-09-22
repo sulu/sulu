@@ -14,11 +14,24 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\PropertyResolver\Resolver;
 
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\ContentResolver\Value\Reference;
+use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ResourceLoader\Loader\LinkResourceLoader;
 
 class LinkPropertyResolver implements PropertyResolverInterface
 {
+    /**
+     * @var array<string, string>
+     */
+    private array $resourceKeys = [];
+
+    public function __construct(
+        private LinkProviderPoolInterface $linkProviderPool,
+    ) {
+    }
+
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
         if (
@@ -34,16 +47,14 @@ class LinkPropertyResolver implements PropertyResolverInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? LinkResourceLoader::getKey();
 
-        return ContentView::createResolvable(
+        $reference = $this->createReference($data['provider'], (string) $data['href']);
+
+        $resolvableResource = new ResolvableResource(
             id: $data['provider'] . '::' . $data['href'],
             resourceLoaderKey: $resourceLoaderKey,
-            view: [
-                ...$data,
-                ...$params,
-            ],
             priority: -50,
             // external links are not passed as a LinkItem
-            closure: static function(LinkItem $linkItem) use ($data) {
+            resourceCallback: static function(LinkItem $linkItem) use ($data) {
                 $url = $linkItem->getUrl();
                 if (isset($data['query']) && \is_string($data['query'])) {
                     $url = \sprintf('%s?%s', $url, \ltrim($data['query'], '?'));
@@ -53,12 +64,40 @@ class LinkPropertyResolver implements PropertyResolverInterface
                 }
 
                 return $url;
-            }
+            },
+        );
+
+        return ContentView::createWithReferences(
+            $resolvableResource,
+            [
+                ...$data,
+                ...$params,
+            ],
+            null !== $reference ? [$reference] : [],
         );
     }
 
     public static function getType(): string
     {
         return 'link';
+    }
+
+    private function createReference(string $provider, string $href): ?Reference
+    {
+        if (!isset($this->resourceKeys[$provider])) {
+            if (!$this->linkProviderPool->hasProvider($provider)) {
+                return null;
+            }
+
+            $this->resourceKeys[$provider] = $this->linkProviderPool->getProvider($provider)
+                ->getConfigurationBuilder()
+                ->getLinkConfiguration()
+                ->getResourceKey();
+        }
+
+        // an external link has no resource key, it points at a url instead of a resource
+        $resourceKey = $this->resourceKeys[$provider];
+
+        return '' !== $resourceKey ? new Reference($href, $resourceKey) : null;
     }
 }

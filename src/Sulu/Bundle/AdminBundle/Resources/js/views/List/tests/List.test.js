@@ -146,6 +146,8 @@ jest.mock('../../../utils/Translator', () => ({
                 return 'Snippets';
             case 'sulu_admin.export':
                 return 'Export';
+            case 'sulu_admin.unexpected_copy_server_error':
+                return 'An unexpected error occurred while copying.';
         }
     },
 }));
@@ -929,6 +931,26 @@ test('Should propagate errors to toolbar', () => {
     const toolbarConfig = toolbarFunction.call(list.instance());
     expect(toolbarConfig.errors.length).toBe(1);
     expect(toolbarConfig.errors[0]).toBe(error);
+});
+
+test('Should show the error of a failed copy in the toolbar', () => {
+    const List = require('../List').default;
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'snippets',
+                resourceKey: 'snippets',
+            },
+        },
+    };
+
+    const list = shallow(<List router={router} />);
+    list.find('List').prop('onCopyError')({detail: 'Copying is not allowed'});
+    list.find('List').prop('onCopyError')({});
+
+    expect(list.instance().errors).toEqual(['Copying is not allowed', 'An unexpected error occurred while copying.']);
 });
 
 test('Should navigate to defined route on back button click without locale', () => {

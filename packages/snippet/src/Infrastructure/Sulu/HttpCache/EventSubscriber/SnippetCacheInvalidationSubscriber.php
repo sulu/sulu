@@ -13,12 +13,15 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Infrastructure\Sulu\HttpCache\EventSubscriber;
 
+use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
+use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Domain\Exception\ContentNotFoundException;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Snippet\Domain\Event\SnippetRemovedEvent;
 use Sulu\Snippet\Domain\Event\SnippetWorkflowTransitionAppliedEvent;
+use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -89,11 +92,11 @@ class SnippetCacheInvalidationSubscriber implements EventSubscriberInterface
         }
 
         foreach ($dimensionContent->getExcerptTags() as $tag) {
-            $this->cacheManager->invalidateReference('tag', $tag->getName());
+            $this->cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->getId());
         }
 
         foreach ($dimensionContent->getExcerptCategoryIds() as $categoryId) {
-            $this->cacheManager->invalidateReference('category', (string) $categoryId);
+            $this->cacheManager->invalidateReference(CategoryInterface::RESOURCE_KEY, (string) $categoryId);
         }
     }
 
@@ -123,7 +126,7 @@ class SnippetCacheInvalidationSubscriber implements EventSubscriberInterface
                 continue;
             }
 
-            $this->cacheManager->invalidateReference('snippet_area', $area['areaKey']);
+            $this->cacheManager->invalidateReference(SnippetAreaInterface::RESOURCE_KEY, $area['areaKey']);
             break;
         }
     }

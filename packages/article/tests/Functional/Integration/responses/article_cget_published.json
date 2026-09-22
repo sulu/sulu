@@ -13,7 +13,8 @@
                 "locale": "@string@",
                 "published": "@datetime@",
                 "publishedState": true,
-                "title": "Test Article"
+                "title": "Test Article",
+                "workflowPlace": "published"
             }
         ]
     },

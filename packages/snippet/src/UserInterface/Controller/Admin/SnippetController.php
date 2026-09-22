@@ -18,6 +18,9 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -56,6 +59,17 @@ final class SnippetController implements SecuredControllerInterface
     use HandleTrait;
 
     /**
+     * Permissions the request method based check of the SuluSecurityListener does not cover:
+     * the live actions change the live content, copying creates a snippet.
+     */
+    private const ACTION_PERMISSIONS = [
+        WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH => PermissionTypes::LIVE,
+        WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH => PermissionTypes::LIVE,
+        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT => PermissionTypes::LIVE,
+        'copy' => PermissionTypes::ADD,
+    ];
+
+    /**
      * @param SnippetAreaConfig $snippetAreas
      */
     public function __construct(
@@ -66,6 +80,7 @@ final class SnippetController implements SecuredControllerInterface
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
+        private SecurityCheckerInterface $securityChecker,
         private array $snippetAreas = [],
         private bool $isSingleLocale = false,
     ) {
@@ -98,6 +113,7 @@ final class SnippetController implements SecuredControllerInterface
         $listBuilder->addSelectField($fieldDescriptors['locale']);
         $listBuilder->addSelectField($fieldDescriptors['published']);
         $listBuilder->addSelectField($fieldDescriptors['publishedState']);
+        $listBuilder->addSelectField($fieldDescriptors['workflowPlace']);
 
         if (isset($fieldDescriptors['ghostLocale'])) {
             $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
@@ -227,6 +243,8 @@ final class SnippetController implements SecuredControllerInterface
 
     public function postAction(Request $request): Response
     {
+        $this->checkActionPermission($request);
+
         $message = new CreateSnippetMessage($this->getData($request));
 
         /** @see \Sulu\Snippet\Application\MessageHandler\CreateSnippetMessageHandler */
@@ -243,6 +261,8 @@ final class SnippetController implements SecuredControllerInterface
 
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
+        $this->checkActionPermission($request);
+
         $message = new ModifySnippetMessage(['uuid' => $id], $this->getData($request));
         /** @see \Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
@@ -254,6 +274,8 @@ final class SnippetController implements SecuredControllerInterface
 
     public function postTriggerAction(Request $request, string $id): Response
     {
+        $this->checkActionPermission($request);
+
         $result = $this->handleAction($request, $id);
 
         return $this->getAction($request, $result?->getUuid() ?? $id);
@@ -358,5 +380,19 @@ final class SnippetController implements SecuredControllerInterface
     public function getSecurityContext()
     {
         return SnippetAdmin::SECURITY_CONTEXT;
+    }
+
+    private function checkActionPermission(Request $request): void
+    {
+        $permission = self::ACTION_PERMISSIONS[$request->query->getString('action')] ?? null;
+
+        if (null === $permission) {
+            return;
+        }
+
+        $this->securityChecker->checkPermission(
+            new SecurityCondition($this->getSecurityContext(), $this->getLocale($request)),
+            $permission,
+        );
     }
 }

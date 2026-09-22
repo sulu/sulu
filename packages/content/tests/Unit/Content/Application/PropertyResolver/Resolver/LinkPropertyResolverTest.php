@@ -15,17 +15,48 @@ namespace Sulu\Content\Tests\Unit\Content\Application\PropertyResolver\Resolver;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfigurationBuilder;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
+use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\PropertyResolver\Resolver\LinkPropertyResolver;
 
 class LinkPropertyResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
     private LinkPropertyResolver $resolver;
 
     protected function setUp(): void
     {
-        $this->resolver = new LinkPropertyResolver();
+        $linkProviderPool = $this->prophesize(LinkProviderPoolInterface::class);
+        $linkProviderPool->hasProvider('external')->willReturn(true);
+        $linkProviderPool->getProvider('external')->willReturn($this->createProvider(''));
+        $linkProviderPool->hasProvider('article')->willReturn(true);
+        $linkProviderPool->getProvider('article')->willReturn($this->createProvider('articles'));
+        $linkProviderPool->hasProvider(Argument::any())->willReturn(false);
+
+        $this->resolver = new LinkPropertyResolver($linkProviderPool->reveal());
+    }
+
+    private function createProvider(string $resourceKey): LinkProviderInterface
+    {
+        $provider = $this->prophesize(LinkProviderInterface::class);
+        $provider->getConfigurationBuilder()->willReturn(
+            LinkConfigurationBuilder::create()
+                ->setTitle('')
+                ->setResourceKey($resourceKey)
+                ->setListAdapter('')
+                ->setDisplayProperties([])
+                ->setOverlayTitle('')
+                ->setEmptyText('')
+                ->setIcon('')
+        );
+
+        return $provider->reveal();
     }
 
     public function testResolveEmpty(): void
@@ -161,5 +192,33 @@ class LinkPropertyResolverTest extends TestCase
     public function testGetType(): void
     {
         $this->assertSame('link', LinkPropertyResolver::getType());
+    }
+
+    public function testResolveTracksTheLinkedResource(): void
+    {
+        $contentView = $this->resolver->resolve([
+            'provider' => 'article',
+            'href' => '123-123-123',
+            'title' => 'Test',
+        ], 'en');
+
+        $references = $contentView->getReferences();
+        $this->assertCount(1, $references);
+        $this->assertSame('123-123-123', $references[0]->getResourceId());
+        $this->assertSame('articles', $references[0]->getResourceKey());
+
+        $this->assertInstanceOf(ResolvableResource::class, $contentView->getContent());
+    }
+
+    public function testResolveTracksNoResourceForExternalLinks(): void
+    {
+        $contentView = $this->resolver->resolve([
+            'provider' => 'external',
+            'href' => 'https://sulu.io',
+            'title' => 'Test',
+        ], 'en');
+
+        $this->assertSame([], $contentView->getReferences());
+        $this->assertInstanceOf(ResolvableResource::class, $contentView->getContent());
     }
 }

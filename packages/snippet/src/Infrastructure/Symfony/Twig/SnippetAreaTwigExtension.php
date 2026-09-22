@@ -19,6 +19,7 @@ use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
+use Sulu\Snippet\Domain\Model\SnippetAreaInterface;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
@@ -112,6 +113,7 @@ class SnippetAreaTwigExtension extends AbstractExtension
         $resolvedContent = $this->contentResolver->resolve($dimensionContent, $properties);
 
         $this->referenceStore->add($snippet->getUuid(), SnippetInterface::RESOURCE_KEY);
+        $this->referenceStore->add($areaKey, SnippetAreaInterface::RESOURCE_KEY);
 
         return $resolvedContent;
     }
