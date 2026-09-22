@@ -12,7 +12,6 @@
                 "published": null,
                 "publishedState": false,
                 "title": "Test Snippet 2",
-                "shadowLocale": null,
                 "templateKey": "snippet",
                 "_group": "default",
                 "workflowPlace": "unpublished"

@@ -308,7 +308,6 @@ class PublishTransitionSubscriberTest extends TestCase
                 'data' => [
                     'shadowOn' => true,
                     'shadowLocale' => 'de',
-                    'published' => null,
                 ],
             ]
         )

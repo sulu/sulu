@@ -663,6 +663,41 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertResponseSnapshot('snippet_get_shadow_locale.json', $response, 200);
     }
 
+    public function testPutShadowLocaleWithoutTemplateKeepsSnippetInList(): void
+    {
+        // The settings tab enables a shadow with template: null; it must still keep a template key.
+        self::purgeDatabase();
+
+        $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Source EN',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $id = $content['id'];
+
+        $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => null,
+            'title' => 'Source EN',
+            'shadowOn' => true,
+            'shadowLocale' => 'en',
+        ]) ?: null);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array{template: ?string} $shadow */
+        $shadow = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $templateKey = $shadow['template'] ?? null;
+        $this->assertNotNull($templateKey, 'The shadow draft must keep a template key.');
+
+        $this->client->request('GET', '/admin/api/snippets?locale=de&templateKeys=' . $templateKey);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        /** @var array{_embedded: array{snippets: array<array{id: string}>}} $list */
+        $list = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $ids = \array_column($list['_embedded']['snippets'], 'id');
+        $this->assertContains($id, $ids, 'The shadow snippet must stay in the template-filtered list.');
+    }
+
     protected function getSnapshotFolder(): string
     {
         return 'responses';
