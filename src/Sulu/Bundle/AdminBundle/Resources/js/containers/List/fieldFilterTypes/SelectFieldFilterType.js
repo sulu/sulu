@@ -5,16 +5,6 @@ import Checkbox, {CheckboxGroup} from '../../../components/Checkbox';
 import {translate} from '../../../utils/Translator';
 import AbstractFieldFilterType from './AbstractFieldFilterType';
 
-// The keys of the options are always strings, but numeric keys are restored as numbers from the URL. Therefore the
-// values have to be casted to strings again, because they would not match the option keys otherwise.
-function normalizeValues(values: ?Array<string>): Array<string> {
-    if (!values) {
-        return [];
-    }
-
-    return values.map((value) => String(value));
-}
-
 class SelectFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
     @computed get parameterOptions(): Object {
         const {parameters} = this;
@@ -51,8 +41,11 @@ class SelectFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
     getFormNode() {
         const {value} = this;
 
+        // Option keys are strings, but numeric values come back from the URL as numbers
+        const values = (value || []).map((item) => String(item));
+
         return (
-            <CheckboxGroup onChange={this.handleChange} values={normalizeValues(value)}>
+            <CheckboxGroup onChange={this.handleChange} values={values}>
                 {Object.keys(this.parameterOptions).map((optionKey) => (
                     <Checkbox
                         key={optionKey}
@@ -70,9 +63,7 @@ class SelectFieldFilterType extends AbstractFieldFilterType<?Array<string>> {
             return Promise.resolve(null);
         }
 
-        return Promise.resolve(
-            normalizeValues(values).map((value) => translate(this.parameterOptions[value])).join(', ')
-        );
+        return Promise.resolve(values.map((value) => translate(this.parameterOptions[value])).join(', '));
     }
 }
 
