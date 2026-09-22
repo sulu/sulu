@@ -33,12 +33,11 @@ export default class CopyToolbarAction extends AbstractFormToolbarAction {
             visible_condition: visibleCondition,
         } = this.options;
 
-        const {id} = this.resourceFormStore;
         const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
 
         if (visibleConditionFulfilled) {
             return {
-                disabled: !id,
+                disabled: this.isDisabled(),
                 icon: 'su-copy',
                 label: translate('sulu_admin.create_copy'),
                 onClick: action(() => {
@@ -81,4 +80,10 @@ export default class CopyToolbarAction extends AbstractFormToolbarAction {
     @action handleCopyDialogClose = () => {
         this.showCopyDialog = false;
     };
+
+    isDisabled(): boolean {
+        const disabled = super.isDisabled();
+
+        return disabled || !this.resourceFormStore.id;
+    }
 }

@@ -65,6 +65,7 @@ export default class TogglerToolbarAction extends AbstractFormToolbarAction {
 
         return {
             type: 'toggler',
+            disabled: this.isDisabled(),
             onClick: this.handleTogglerClick,
             label: this.label,
             loading: this.loading,
