@@ -126,7 +126,7 @@ test('Create a CKEditor5 instance with the text part language feature', () => {
         language: expect.objectContaining({
             textPartLanguage: expect.arrayContaining([
                 expect.objectContaining({languageCode: 'en', title: expect.any(String)}),
-                expect.objectContaining({languageCode: 'ar', title: expect.any(String)}),
+                expect.objectContaining({languageCode: 'de', title: expect.any(String)}),
             ]),
         }),
         plugins: expect.arrayContaining([TextPartLanguage, TextPartLanguageVisibility]),

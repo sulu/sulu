@@ -45,7 +45,7 @@ type Props = {|
     value: ?string,
 |};
 
-const TEXT_PART_LANGUAGES = ['en', 'de', 'fr', 'it', 'es', 'ar'];
+const TEXT_PART_LANGUAGES = ['en', 'de'];
 
 /**
  * React component that renders a classic ck-editor.
