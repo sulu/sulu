@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Snippet\Infrastructure\Sulu\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
@@ -56,6 +57,9 @@ class SnippetAreaAdmin extends Admin
                 ->setOption('snippetEditViews', $this->getSnippetEditViews())
                 ->setOption('tabTitle', 'sulu_snippet.webspace_default_snippets')
                 ->setOption('tabOrder', 3072)
+                ->setOption('toolbarActions', [
+                    new ToolbarAction('sulu_website.cache_clear'),
+                ])
                 ->setParent(PageAdmin::WEBSPACE_TABS_VIEW)
                 ->addRerenderAttribute('webspace'),
         );

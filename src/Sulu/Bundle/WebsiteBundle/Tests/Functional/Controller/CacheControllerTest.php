@@ -18,7 +18,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
+use Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class CacheControllerTest extends SuluTestCase
@@ -61,7 +61,7 @@ class CacheControllerTest extends SuluTestCase
         $entityManager->persist($role);
 
         $suluWebspacePermission = new Permission();
-        $suluWebspacePermission->setContext(PageAdmin::getPageSecurityContext('sulu_io'));
+        $suluWebspacePermission->setContext(WebsiteAdmin::getCacheSecurityContext('sulu_io'));
         $suluWebspacePermission->setPermissions(127);
         $suluWebspacePermission->setRole($role);
         $role->addPermission($suluWebspacePermission);

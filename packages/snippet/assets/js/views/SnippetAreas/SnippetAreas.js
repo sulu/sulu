@@ -4,8 +4,8 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Button, Dialog, Loader, Table} from 'sulu-admin-bundle/components';
 import {SingleListOverlay, withToolbar} from 'sulu-admin-bundle/containers';
+import {AbstractViewToolbarAction, viewToolbarActionRegistry} from 'sulu-admin-bundle/views';
 import {translate} from 'sulu-admin-bundle/utils';
-import {CacheClearToolbarAction} from 'sulu-website-bundle/containers';
 import Hint from 'sulu-admin-bundle/components/Hint';
 import SnippetAreaStore from './stores/SnippetAreaStore';
 import snippetAreasStyles from './snippetAreas.scss';
@@ -16,7 +16,7 @@ class SnippetAreas extends React.Component<ViewProps> {
     @observable openedAreaKey: ?string = undefined;
     snippetAreaStore: SnippetAreaStore;
     @observable deleteAreaKey: ?string = undefined;
-    cacheClearToolbarAction: CacheClearToolbarAction;
+    toolbarActions: Array<AbstractViewToolbarAction> = [];
 
     constructor(props: ViewProps) {
         super(props);
@@ -33,7 +33,18 @@ class SnippetAreas extends React.Component<ViewProps> {
         }
 
         this.snippetAreaStore = new SnippetAreaStore(webspace);
-        this.cacheClearToolbarAction = new CacheClearToolbarAction(webspace);
+
+        const {toolbarActions = []} = router.route.options;
+        toolbarActions.forEach((toolbarAction) => {
+            this.toolbarActions.push(new (viewToolbarActionRegistry.get(toolbarAction.type))(
+                router,
+                toolbarAction.options
+            ));
+        });
+    }
+
+    componentWillUnmount() {
+        this.toolbarActions.forEach((toolbarAction) => toolbarAction.destroy());
     }
 
     @action handleSnippetClick = (areaKey: string) => {
@@ -178,7 +189,7 @@ class SnippetAreas extends React.Component<ViewProps> {
                 >
                     {translate('sulu_admin.delete_warning_text')}
                 </Dialog>
-                {this.cacheClearToolbarAction.getNode()}
+                {this.toolbarActions.map((toolbarAction) => toolbarAction.getNode())}
             </Fragment>
         );
     }
@@ -186,8 +197,8 @@ class SnippetAreas extends React.Component<ViewProps> {
 
 export default withToolbar(SnippetAreas, function() {
     return {
-        items: [
-            this.cacheClearToolbarAction.getToolbarItemConfig(),
-        ],
+        items: this.toolbarActions
+            .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
+            .filter((item) => item != null),
     };
 });

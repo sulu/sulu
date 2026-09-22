@@ -11,11 +11,11 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin;
 use Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -39,10 +39,10 @@ class CacheController
     public function clearAction(Request $request)
     {
         $webspaceKey = $request->query->get('webspaceKey');
-        if ($webspaceKey && !$this->checkLivePermissionForWebspace($webspaceKey)) {
+        if ($webspaceKey && !$this->checkCachePermissionForWebspace($webspaceKey)) {
             return new JsonResponse(null, 403);
         }
-        if (!$webspaceKey && !$this->checkLivePermissionForAllWebspaces()) {
+        if (!$webspaceKey && !$this->checkCachePermissionForAllWebspaces()) {
             return new JsonResponse(null, 403);
         }
 
@@ -58,15 +58,14 @@ class CacheController
 
     /**
      * Check the permissions for all webspaces.
-     * Returns true if the user has live permission in all webspaces.
+     * Returns true if the user has cache permission in all webspaces.
      *
      * @return bool
      */
-    private function checkLivePermissionForAllWebspaces()
+    private function checkCachePermissionForAllWebspaces()
     {
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $context = PageAdmin::getPageSecurityContext($webspace->getKey());
-            if (!$this->securityChecker->hasPermission($context, PermissionTypes::LIVE)) {
+            if (!$this->checkCachePermissionForWebspace($webspace->getKey())) {
                 return false;
             }
         }
@@ -74,11 +73,11 @@ class CacheController
         return true;
     }
 
-    private function checkLivePermissionForWebspace(string $webspaceKey): bool
+    private function checkCachePermissionForWebspace(string $webspaceKey): bool
     {
         return $this->securityChecker->hasPermission(
-            PageAdmin::getPageSecurityContext($webspaceKey),
-            PermissionTypes::LIVE
+            WebsiteAdmin::getCacheSecurityContext($webspaceKey),
+            PermissionTypes::DELETE
         );
     }
 }
