@@ -214,6 +214,32 @@ test('Render a field without a const error', () => {
     ).toMatchSnapshot();
 });
 
+test('Show the required error message for a not error', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+
+    const field = shallow(
+        <Field
+            data={{}}
+            dataPath=""
+            error={{keyword: 'not', parameters: {}}}
+            formInspector={formInspector}
+            name="test"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSuccess={undefined}
+            router={undefined}
+            schema={{label: 'label1', type: 'text'}}
+            schemaPath=""
+        />
+    );
+
+    expect(field.find('Field').prop('error')).toEqual('sulu_admin.error_required');
+});
+
 test('Render a field with a error collection', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
 
