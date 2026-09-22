@@ -99,31 +99,36 @@ class AdminContactReindexProviderTest extends SuluTestCase
 
         $this->assertCount(2, $results);
 
-        $this->assertSame(
+        $expectedResults = [
             [
-                [
-                    'id' => ContactInterface::RESOURCE_KEY . '__' . $contact1->getId(),
-                    'resourceKey' => ContactInterface::RESOURCE_KEY,
-                    'resourceId' => (string) $contact1->getId(),
-                    'mediaId' => (string) $contact1->getAvatar()?->getId(),
-                    'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
-                    'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
-                    'title' => $contact1->getFullName(),
-                    'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,
-                ],
-                [
-                    'id' => ContactInterface::RESOURCE_KEY . '__' . $contact2->getId(),
-                    'resourceKey' => ContactInterface::RESOURCE_KEY,
-                    'resourceId' => (string) $contact2->getId(),
-                    'mediaId' => '',
-                    'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
-                    'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
-                    'title' => $contact2->getFullName(),
-                    'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,
-                ],
+                'id' => ContactInterface::RESOURCE_KEY . '__' . $contact1->getId(),
+                'resourceKey' => ContactInterface::RESOURCE_KEY,
+                'resourceId' => (string) $contact1->getId(),
+                'mediaId' => (string) $contact1->getAvatar()?->getId(),
+                'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
+                'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
+                'title' => $contact1->getFullName(),
+                'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,
             ],
-            [...$results],
-        );
+            [
+                'id' => ContactInterface::RESOURCE_KEY . '__' . $contact2->getId(),
+                'resourceKey' => ContactInterface::RESOURCE_KEY,
+                'resourceId' => (string) $contact2->getId(),
+                'mediaId' => '',
+                'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
+                'title' => $contact2->getFullName(),
+                'securityContext' => ContactAdmin::CONTACT_SECURITY_CONTEXT,
+            ],
+        ];
+        $results = [...$results];
+
+        // The provider queries without an ORDER BY, and PostgreSQL rewrites an updated row
+        // at the end of the heap, so the two rows can come back either way round.
+        \usort($expectedResults, fn ($a, $b) => \strcmp($a['id'], $b['id']));
+        \usort($results, fn ($a, $b) => \strcmp($a['id'], $b['id']));
+
+        $this->assertSame($expectedResults, $results);
     }
 
     public function testProvideWithSpecificIdentifiers(): void

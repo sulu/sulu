@@ -96,31 +96,36 @@ class AdminAccountReindexProviderTest extends SuluTestCase
 
         $this->assertCount(2, $results);
 
-        $this->assertSame(
+        $expectedResults = [
             [
-                [
-                    'id' => AccountInterface::RESOURCE_KEY . '__' . $account1->getId(),
-                    'resourceKey' => AccountInterface::RESOURCE_KEY,
-                    'resourceId' => (string) $account1->getId(),
-                    'mediaId' => (string) $account1->getLogo()?->getId(),
-                    'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
-                    'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
-                    'title' => $account1->getName(),
-                    'securityContext' => ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
-                ],
-                [
-                    'id' => AccountInterface::RESOURCE_KEY . '__' . $account2->getId(),
-                    'resourceKey' => AccountInterface::RESOURCE_KEY,
-                    'resourceId' => (string) $account2->getId(),
-                    'mediaId' => '',
-                    'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
-                    'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
-                    'title' => $account2->getName(),
-                    'securityContext' => ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
-                ],
+                'id' => AccountInterface::RESOURCE_KEY . '__' . $account1->getId(),
+                'resourceKey' => AccountInterface::RESOURCE_KEY,
+                'resourceId' => (string) $account1->getId(),
+                'mediaId' => (string) $account1->getLogo()?->getId(),
+                'changedAt' => (new \DateTimeImmutable($changedDateString1))->format('c'),
+                'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
+                'title' => $account1->getName(),
+                'securityContext' => ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
             ],
-            [...$results],
-        );
+            [
+                'id' => AccountInterface::RESOURCE_KEY . '__' . $account2->getId(),
+                'resourceKey' => AccountInterface::RESOURCE_KEY,
+                'resourceId' => (string) $account2->getId(),
+                'mediaId' => '',
+                'changedAt' => (new \DateTimeImmutable($changedDateString2))->format('c'),
+                'createdAt' => (new \DateTimeImmutable('2000-01-01 12:00:00'))->format('c'),
+                'title' => $account2->getName(),
+                'securityContext' => ContactAdmin::ACCOUNT_SECURITY_CONTEXT,
+            ],
+        ];
+        $results = [...$results];
+
+        // The provider queries without an ORDER BY, and PostgreSQL rewrites an updated row
+        // at the end of the heap, so the two rows can come back either way round.
+        \usort($expectedResults, fn ($a, $b) => \strcmp($a['id'], $b['id']));
+        \usort($results, fn ($a, $b) => \strcmp($a['id'], $b['id']));
+
+        $this->assertSame($expectedResults, $results);
     }
 
     public function testProvideWithSpecificIdentifiers(): void
