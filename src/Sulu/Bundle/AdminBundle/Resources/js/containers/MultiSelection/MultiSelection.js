@@ -13,6 +13,20 @@ import MultiListOverlay from '../MultiListOverlay';
 import multiSelectionStyles from './multiSelection.scss';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
+// The "fields" request parameter restricts the properties returned by the API. The display properties have to be
+// requested as well, otherwise the already selected items would be rendered as empty rows.
+function addDisplayPropertiesToFields(options: Object, displayProperties: Array<string>) {
+    const {fields} = options;
+
+    if (fields === undefined || displayProperties.length === 0) {
+        return options;
+    }
+
+    const requestedFields = typeof fields === 'string' ? fields.split(',') : fields;
+
+    return {...options, fields: [...new Set([...requestedFields, ...displayProperties])]};
+}
+
 type Props = {|
     adapter: string,
     allowDeselectForDisabledItems: boolean,
@@ -55,10 +69,16 @@ class MultiSelection extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {locale, options, resourceKey, value} = this.props;
+        const {displayProperties, locale, options, resourceKey, value} = this.props;
 
         // TODO instead of creating the store here and passing the props required for this, we should pass a store prop
-        this.selectionStore = new MultiSelectionStore(resourceKey, value, locale, 'ids', options);
+        this.selectionStore = new MultiSelectionStore(
+            resourceKey,
+            value,
+            locale,
+            'ids',
+            addDisplayPropertiesToFields(options, displayProperties)
+        );
 
         this.changeSelectionDisposer = reaction(
             () => (this.selectionStore.items.map((item) => item.id)),
@@ -74,7 +94,9 @@ class MultiSelection extends React.Component<Props> {
         this.changeOptionsDisposer = reaction(
             () => this.props.options,
             (options) => {
-                this.selectionStore.setRequestParameters(options);
+                this.selectionStore.setRequestParameters(
+                    addDisplayPropertiesToFields(options, this.props.displayProperties)
+                );
                 this.selectionStore.loadItems(this.props.value);
             },
             {equals: comparer.structural}
