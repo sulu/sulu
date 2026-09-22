@@ -201,6 +201,72 @@ test('Construct MultiSelectionStore with correct parameters', () => {
     expect(MultiSelectionStore).toHaveBeenCalledWith('snippets', [1, 2, 5], locale, 'ids', {key: 'value-1'});
 });
 
+test('Construct MultiSelectionStore with the display properties added to the fields request parameter', () => {
+    const locale = observable.box('en');
+
+    shallow(
+        <MultiSelection
+            adapter="table"
+            displayProperties={['title']}
+            listKey="snippets"
+            locale={locale}
+            onChange={jest.fn()}
+            options={{fields: 'key'}}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[1, 2, 5]}
+        />
+    );
+
+    expect(MultiSelectionStore).toHaveBeenCalledWith('snippets', [1, 2, 5], locale, 'ids', {fields: ['key', 'title']});
+});
+
+test('Construct MultiSelectionStore without fields request parameter if none was given', () => {
+    const locale = observable.box('en');
+
+    shallow(
+        <MultiSelection
+            adapter="table"
+            displayProperties={['title']}
+            listKey="snippets"
+            locale={locale}
+            onChange={jest.fn()}
+            options={{key: 'value-1'}}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[1, 2, 5]}
+        />
+    );
+
+    expect(MultiSelectionStore).toHaveBeenCalledWith('snippets', [1, 2, 5], locale, 'ids', {key: 'value-1'});
+});
+
+test('Update requestParameters with the display properties added to the fields request parameter', () => {
+    const locale = observable.box('en');
+
+    const selection = shallow(
+        <MultiSelection
+            adapter="table"
+            displayProperties={['title']}
+            listKey="snippets"
+            locale={locale}
+            onChange={jest.fn()}
+            options={{fields: 'key'}}
+            overlayTitle="Selection"
+            resourceKey="snippets"
+            value={[1, 2, 5]}
+        />
+    );
+
+    selection.setProps({
+        options: {fields: 'name'},
+    });
+
+    expect(selection.instance().selectionStore.setRequestParameters)
+        .toHaveBeenCalledWith({fields: ['name', 'title']});
+    expect(selection.instance().selectionStore.loadItems).toHaveBeenCalledWith([1, 2, 5]);
+});
+
 test('Update requestParameters and reload items of MultiSelectionStore when options prop is changed', () => {
     const locale = observable.box('en');
 
