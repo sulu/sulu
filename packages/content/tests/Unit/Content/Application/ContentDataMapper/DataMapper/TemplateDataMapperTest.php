@@ -162,6 +162,26 @@ class TemplateDataMapperTest extends TestCase
         $this->assertSame('some-existing-template', $localizedDimensionContent->getTemplateKey());
     }
 
+    public function testMapNullTemplateNewShadowFallsBackToDefault(): void
+    {
+        // New shadow, no existing key, template: null from the settings tab: falls back to the default type.
+        $data = [
+            'template' => null,
+            'shadowOn' => true,
+            'shadowLocale' => 'en',
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('de');
+
+        $templateMapper = $this->createTemplateDataMapperInstance([], 'template-key');
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
+    }
+
     public function testMapData(): void
     {
         $data = [

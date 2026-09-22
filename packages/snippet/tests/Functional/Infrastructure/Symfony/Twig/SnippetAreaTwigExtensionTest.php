@@ -152,6 +152,8 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
 
     public function testLoadSnippetByAreaWithShadowLocale(): void
     {
+        // Publishing a shadow copies the source content into the shadow's own live row (see
+        // SnippetShadowPublishTest); the extension resolves that row directly.
         $snippet = static::createSnippet([
             'en' => [
                 'live' => [
@@ -161,6 +163,8 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
             ],
             'de' => [
                 'live' => [
+                    'template' => 'snippet',
+                    'title' => 'English Snippet',
                     'shadowOn' => true,
                     'shadowLocale' => 'en',
                 ],

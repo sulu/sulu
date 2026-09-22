@@ -39,6 +39,16 @@ and `extension` are seeded before any resolver runs, so a `[root]` resolver cann
 any priority. Two resolvers returning the same `type` are not rejected; the later one replaces the
 earlier, as before this release.
 
+### Snippets support shadow locales
+
+Snippet dimension contents can now shadow another locale, like pages and articles. Two columns,
+`shadowLocale` and `shadowLocales`, back the feature on `sn_snippet_dimension_contents`; run the
+migration to add them:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
 ### New workflow transition request tables
 
 The review flow stores its requests in `ct_workflow_transition_requests` and every verdict on them,
@@ -57,6 +67,12 @@ alone: `live` does not imply it.
 
 ### BC breaks
 
+- `SnippetDimensionContentInterface` now also extends `Sulu\Content\Domain\Model\ShadowInterface`. A
+  project with its own implementation of the interface (rather than extending the shipped
+  `SnippetDimensionContent`) must implement the `ShadowInterface` methods, most simply by applying
+  `Sulu\Content\Domain\Model\ShadowTrait`.
+- `TypedFormMetadata::getDefaultType()` now returns `?string` instead of `string` and no longer throws
+  when no default type is set. Callers relying on a non-null return have to handle `null`.
 - The permission mask meaning "everything" is 255, not 127: `PermissionTypes::REVIEW` occupies bit
   128. Code comparing a mask against 127 to mean full access has to be updated.
 - Publishing through the API takes `live`, or `edit` together with an approved active request: a role
