@@ -96,10 +96,8 @@ function buildApprovalRows(request: WorkflowTransitionRequestData): Array<CheckR
 
 type Props = {|
     canAct: boolean,
-    /** Carrying out an approved request: live, or edit because the approval delegates the right. */
+    /** Publishing at all: the approved request the reviewers signed off, or past an open one. */
     canPublish?: boolean,
-    /** Publishing past an unfinished review, which takes the live permission. */
-    canPublishWithoutReview?: boolean,
     /** Re-running a check takes the edit permission, not the reviewer's, so it is its own answer. */
     canRetry?: boolean,
     mode?: 'review' | 'view',
@@ -203,39 +201,35 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
      * An editor who may carry out an approved request has no publish entry in the toolbar dropdown.
      */
     renderPublishButtons(): Array<Node> {
-        const {canPublish, canPublishWithoutReview, onPublish, request} = this.props;
+        const {canPublish, onPublish, request} = this.props;
 
-        if (isClosed(request)) {
+        if (isClosed(request) || !canPublish || !onPublish) {
             return [];
         }
 
         if (request.status === 'approved') {
-            return canPublish && onPublish
-                ? [
-                    <Button
-                        className={workflowCheckCardStyles.confirmButton}
-                        key="publish"
-                        onClick={onPublish}
-                        skin="primary"
-                    >
-                        {translate('sulu_admin.publish')}
-                    </Button>,
-                ]
-                : [];
+            return [
+                <Button
+                    className={workflowCheckCardStyles.confirmButton}
+                    key="publish"
+                    onClick={onPublish}
+                    skin="primary"
+                >
+                    {translate('sulu_admin.publish')}
+                </Button>,
+            ];
         }
 
-        return canPublishWithoutReview && onPublish
-            ? [
-                <Button
-                    className={workflowTransitionRequestReviewOverlayStyles.rejectButton}
-                    key="publish_without_review"
-                    onClick={onPublish}
-                    skin="secondary"
-                >
-                    {translate('sulu_content.workflow_transition_request.publish_without_review')}
-                </Button>,
-            ]
-            : [];
+        return [
+            <Button
+                className={workflowTransitionRequestReviewOverlayStyles.rejectButton}
+                key="publish_without_review"
+                onClick={onPublish}
+                skin="secondary"
+            >
+                {translate('sulu_content.workflow_transition_request.publish_without_review')}
+            </Button>,
+        ];
     }
 
     renderFooter() {

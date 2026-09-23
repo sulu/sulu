@@ -43,6 +43,17 @@ export type ApprovalProgress = {|
     required: number,
 |};
 
+/**
+ * What the server lets the current user do with this request. Content without object security, an
+ * article or a snippet, carries no permissions of its own, so the answer travels with the request.
+ */
+export type WorkflowTransitionRequestPermissions = {|
+    cancel: boolean,
+    publish: boolean,
+    retry: boolean,
+    review: boolean,
+|};
+
 export type WorkflowTransitionRequestData = {|
     approvalProgress: ApprovalProgress,
     approvals: Array<WorkflowTransitionRequestApproval>,
@@ -50,6 +61,7 @@ export type WorkflowTransitionRequestData = {|
     createdBy: ?User,
     id: string,
     locale: string,
+    permissions: WorkflowTransitionRequestPermissions,
     requestedAt: string,
     resourceId: string,
     resourceKey: string,

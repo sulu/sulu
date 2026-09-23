@@ -2366,7 +2366,7 @@ test('Should cancel a workflow transition request without sending the form', () 
     );
 });
 
-function mountLockedReviewForm(request, permissions) {
+function mountLockedReviewForm(request) {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const ResourceRequester = require('../../../services/ResourceRequester');
@@ -2379,7 +2379,6 @@ function mountLockedReviewForm(request, permissions) {
     const resourceStore = new ResourceStore('pages', 5);
     resourceStore.data = {
         _locked: true,
-        _permissions: permissions,
         activeWorkflowTransitionRequest: request,
         workflowPlace: 'review',
     };
@@ -2403,30 +2402,41 @@ function mountLockedReviewForm(request, permissions) {
     return toolbarFunction.call(form.instance()).warnings;
 }
 
-test('Should offer the cancel action to a user with the edit permission', () => {
-    const warnings = mountLockedReviewForm({createdBy: {id: 7}, status: 'open'}, {edit: true});
+test('Should offer the cancel action to a user the request says may cancel', () => {
+    const warnings = mountLockedReviewForm({
+        createdBy: {id: 7},
+        permissions: {cancel: true, publish: false, retry: true, review: false},
+        status: 'open',
+    });
 
     expect(warnings[warnings.length - 1].actions).toEqual([
         expect.objectContaining({label: 'sulu_content.workflow_transition_request.cancel_request_action'}),
     ]);
 });
 
-test('Should offer the cancel action when the resource has no permission map at all', () => {
-    const warnings = mountLockedReviewForm({createdBy: {id: 7}, status: 'open'}, undefined);
+// The request answers for articles and snippets, which carry no permissions of their own.
+test('Should not offer the cancel action while the request carries no permissions', () => {
+    const warnings = mountLockedReviewForm({createdBy: {id: 7}, status: 'open'});
 
-    expect(warnings[warnings.length - 1].actions).toEqual([
-        expect.objectContaining({label: 'sulu_content.workflow_transition_request.cancel_request_action'}),
-    ]);
+    expect(warnings[warnings.length - 1].actions).toEqual([]);
 });
 
 test('Should not offer the cancel action without the edit permission, even to a reviewer', () => {
-    const warnings = mountLockedReviewForm({createdBy: {id: 7}, status: 'open'}, {edit: false, review: true});
+    const warnings = mountLockedReviewForm({
+        createdBy: {id: 7},
+        permissions: {cancel: false, publish: false, retry: false, review: true},
+        status: 'open',
+    });
 
     expect(warnings[warnings.length - 1].actions).toEqual([]);
 });
 
 test('Should title the locked banner so an approved request does not read as a warning', () => {
-    const warnings = mountLockedReviewForm({createdBy: {id: 7}, status: 'approved'}, {edit: true});
+    const warnings = mountLockedReviewForm({
+        createdBy: {id: 7},
+        permissions: {cancel: true, publish: true, retry: true, review: false},
+        status: 'approved',
+    });
 
     expect(warnings[warnings.length - 1]).toEqual(expect.objectContaining({
         message: 'sulu_content.workflow_transition_request.banner_approved',

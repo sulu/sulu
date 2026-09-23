@@ -22,6 +22,15 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 interface WorkflowTransitionAdminAuthorizerInterface
 {
     /**
+     * What the current user may do with one request, answered by the same rules the assertions
+     * enforce. The admin renders its buttons from this, because content without object security
+     * carries no permissions the frontend could read.
+     *
+     * @return array{cancel: bool, publish: bool, retry: bool, review: bool}
+     */
+    public function getPermissions(string $resourceKey, string $resourceId, string $locale): array;
+
+    /**
      * @throws AccessDeniedException when the user holds neither the LIVE permission nor the EDIT
      *                               permission together with an approved active request
      */

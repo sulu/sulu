@@ -22,6 +22,7 @@ use Sulu\Content\Application\RequestWorkflow\RequestWorkflow;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowRegistryInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\RequestWorkflowValidatorInterface;
 use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\WorkflowTransitionRequestViewFactory;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
@@ -94,11 +95,28 @@ class WorkflowTransitionRequestViewFactoryTest extends TestCase
         $this->assertSame(['id' => 1, 'fullName' => 'Creator'], $view['createdBy']);
     }
 
+    public function testViewCarriesWhatTheUserMayDo(): void
+    {
+        $permissions = ['cancel' => true, 'publish' => false, 'retry' => true, 'review' => false];
+
+        $view = $this->createFactory(1, [], $permissions)->build($this->createRequest());
+
+        $this->assertSame(
+            $permissions,
+            $view['permissions'],
+            'Content without object security carries no permissions, so the request answers for it.',
+        );
+    }
+
     /**
      * @param list<string> $requiredValidatorKeys
+     * @param array{cancel: bool, publish: bool, retry: bool, review: bool}|null $permissions
      */
-    private function createFactory(int $requiredUserApprovals = 1, array $requiredValidatorKeys = []): WorkflowTransitionRequestViewFactory
-    {
+    private function createFactory(
+        int $requiredUserApprovals = 1,
+        array $requiredValidatorKeys = [],
+        ?array $permissions = null,
+    ): WorkflowTransitionRequestViewFactory {
         $registry = $this->prophesize(RequestWorkflowRegistryInterface::class);
         $registry->has(WorkflowTransitionRequest::DEFAULT_WORKFLOW_NAME)->willReturn(true);
         $registry->get(WorkflowTransitionRequest::DEFAULT_WORKFLOW_NAME)->willReturn(new RequestWorkflow(
@@ -111,7 +129,15 @@ class WorkflowTransitionRequestViewFactoryTest extends TestCase
         $statusResolver->resolve(Argument::type(WorkflowTransitionRequest::class))
             ->willReturn(WorkflowTransitionRequestStatusEnum::PENDING);
 
-        return new WorkflowTransitionRequestViewFactory($registry->reveal(), $statusResolver->reveal());
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
+        $authorizer->getPermissions('pages', Argument::type('string'), 'en')
+            ->willReturn($permissions ?? ['cancel' => true, 'publish' => true, 'retry' => true, 'review' => true]);
+
+        return new WorkflowTransitionRequestViewFactory(
+            $registry->reveal(),
+            $statusResolver->reveal(),
+            $authorizer->reveal(),
+        );
     }
 
     private function settle(

@@ -103,6 +103,36 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
         $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en');
     }
 
+    /**
+     * The admin renders its buttons from this, so it has to answer with the same rules the
+     * assertions enforce.
+     */
+    public function testPermissionsFollowTheSameRulesAsTheAssertions(): void
+    {
+        $securityChecker = $this->securityChecker(live: false, edit: true);
+        $securityChecker->hasPermission(Argument::any(), PermissionTypes::REVIEW)->willReturn(false);
+
+        $permissions = $this->createAuthorizer($securityChecker, $this->activeRequest($this->approvedRequest()))
+            ->getPermissions(Example::RESOURCE_KEY, '1', 'en');
+
+        $this->assertSame(
+            ['cancel' => true, 'publish' => true, 'retry' => true, 'review' => false],
+            $permissions,
+            'The edit permission carries out an approved request, but decides nothing.',
+        );
+    }
+
+    public function testPermissionsRefusePublishingPastAnOpenRequestWithoutLive(): void
+    {
+        $securityChecker = $this->securityChecker(live: false, edit: true);
+        $securityChecker->hasPermission(Argument::any(), PermissionTypes::REVIEW)->willReturn(true);
+
+        $permissions = $this->createAuthorizer($securityChecker, $this->activeRequest($this->openRequest()))
+            ->getPermissions(Example::RESOURCE_KEY, '1', 'en');
+
+        $this->assertFalse($permissions['publish'], 'Bypassing an unfinished review takes the live permission.');
+    }
+
     public function testCanRejectWithTheReviewPermission(): void
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);

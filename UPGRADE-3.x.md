@@ -78,6 +78,10 @@ alone: `live` does not imply it.
 - `ContentViewBuilderFactoryInterface::getWorkflowTransitionRequestToolbarActions()` returns a plain
   `ToolbarAction` for `approval` instead of a `DropdownToolbarAction`.
 - The `sulu_content.bypass_review_and_publish` form toolbar action was removed.
+- An active workflow transition request carries a `permissions` object (`cancel`, `publish`, `retry`,
+  `review`) saying what the current user may do with it. The admin renders the review overlay and the
+  banner's cancel action from it, because content without object security, an article or a snippet,
+  delivers no `_permissions` of its own.
 
 ## 3.0.10
 

@@ -706,10 +706,9 @@ export default withToolbar(Form, function() {
             ? translate('sulu_content.workflow_transition_request.banner_approved')
             : translate('sulu_content.workflow_transition_request.banner_pending');
 
-        // Cancelling frees the content for editing again, so like the server it takes the edit
-        // permission. Articles and snippets carry no `_permissions`, so a missing map grants.
-        const canCancel = !!activeWorkflowTransitionRequest
-            && (!formData._permissions || !!formData._permissions.edit);
+        // Cancelling frees the content for editing again, so it takes the edit permission. The
+        // request carries the server's answer, which content without object security cannot give.
+        const canCancel = !!activeWorkflowTransitionRequest?.permissions?.cancel;
 
         warnings.push({
             actions: canCancel

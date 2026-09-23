@@ -545,15 +545,49 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
     {
         $saveAction = $toolbarActions['save'] ?? null;
 
-        if (!$saveAction instanceof ToolbarAction || 'sulu_admin.save_with_publishing' !== $saveAction->getType()) {
+        if (!$saveAction instanceof ToolbarAction) {
             return $toolbarActions;
         }
 
-        $toolbarActions['save'] = new ToolbarAction(
-            $saveAction->getType(),
-            \array_merge($saveAction->getOptions(), ['publish_visible_condition' => 'false']),
-        );
+        if ('sulu_admin.save_with_publishing' === $saveAction->getType()) {
+            $toolbarActions['save'] = new ToolbarAction(
+                $saveAction->getType(),
+                \array_merge($saveAction->getOptions(), ['publish_visible_condition' => 'false']),
+            );
+
+            return $toolbarActions;
+        }
+
+        // The request workflow replaces that action with a dropdown, whose publish entries carry the
+        // same condition and so need the same removal.
+        if ($saveAction instanceof DropdownToolbarAction) {
+            $toolbarActions['save'] = $this->withoutPublishingEntries($saveAction);
+        }
 
         return $toolbarActions;
+    }
+
+    private function withoutPublishingEntries(DropdownToolbarAction $saveAction): DropdownToolbarAction
+    {
+        $options = $saveAction->getOptions();
+        $label = $options['label'] ?? null;
+        $icon = $options['icon'] ?? null;
+
+        /** @var ToolbarAction[] $entries */
+        $entries = $options['toolbarActions'] ?? [];
+
+        return new DropdownToolbarAction(
+            \is_string($label) ? $label : 'sulu_admin.save',
+            \is_string($icon) ? $icon : 'su-save',
+            \array_values(\array_filter($entries, static function(ToolbarAction $entry) {
+                if ('sulu_admin.publish' === $entry->getType()) {
+                    return false;
+                }
+
+                $entryOptions = $entry->getOptions()['options'] ?? null;
+
+                return !\is_array($entryOptions) || 'publish' !== ($entryOptions['action'] ?? null);
+            })),
+        );
     }
 }

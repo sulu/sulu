@@ -13,12 +13,19 @@ export default class ReviewWorkflowTransitionRequestToolbarAction extends Abstra
     @observable open: boolean = false;
 
     /**
+     * What the user may do with the request is the server's answer, carried on the request itself:
+     * articles and snippets have no permissions of their own the form could read.
+     */
+    @computed get permissions(): {[string]: boolean} {
+        return this.resourceFormStore.data.activeWorkflowTransitionRequest?.permissions || {};
+    }
+
+    /**
      * Deciding takes the review permission and a request somebody else made: the overlay is also open
      * to editors, who come for the retry rather than for a verdict.
      */
     @computed get canAct(): boolean {
-        const permissions = this.resourceFormStore.data._permissions;
-        if (permissions && !permissions.review) {
+        if (!this.permissions.review) {
             return false;
         }
 
@@ -27,28 +34,17 @@ export default class ReviewWorkflowTransitionRequestToolbarAction extends Abstra
         return String(creatorId) !== String(userStore.user?.id);
     }
 
-    /** Carrying out an approved request: `live`, or `edit`, because the approval delegates the right. */
-    @computed get canPublish(): boolean {
-        const permissions = this.resourceFormStore.data._permissions;
-
-        return !permissions || !!permissions.live || !!permissions.edit;
-    }
-
-    /** Publishing past an unfinished review is the `live` holder's own authority. */
-    @computed get canPublishWithoutReview(): boolean {
-        const permissions = this.resourceFormStore.data._permissions;
-
-        return !permissions || !!permissions.live;
-    }
-
     /**
-     * Re-running a failed check is how the content gets fixed, so it takes the edit permission and
-     * is open to the request's own author. Resources without a permission map grant it.
+     * One answer for both publish buttons, because the server draws the same line: `live` publishes
+     * whenever, `edit` only carries out what the reviewers approved.
      */
-    @computed get canRetry(): boolean {
-        const permissions = this.resourceFormStore.data._permissions;
+    @computed get canPublish(): boolean {
+        return !!this.permissions.publish;
+    }
 
-        return !permissions || !!permissions.edit;
+    /** Re-running a failed check is how the content gets fixed, so it takes the edit permission. */
+    @computed get canRetry(): boolean {
+        return !!this.permissions.retry;
     }
 
     @computed get userDecision(): ?ApprovalStatus {
@@ -137,7 +133,6 @@ export default class ReviewWorkflowTransitionRequestToolbarAction extends Abstra
             <WorkflowTransitionRequestReviewOverlay
                 canAct={this.canAct}
                 canPublish={this.canPublish}
-                canPublishWithoutReview={this.canPublishWithoutReview}
                 canRetry={this.canRetry}
                 key={`workflow-transition-request-review-${index ?? 0}`}
                 onApprove={this.handleApprove}
