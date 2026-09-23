@@ -878,6 +878,37 @@ test('Should open and close block settings overlay when confirm button is clicke
     ]);
 });
 
+test('Should pass the owning block without its settings as "__block" to the block settings form store', async() => {
+    const user = userEvent.setup();
+    const createSpy = jest.spyOn(memoryFormStoreFactory, 'createFromFormKey').mockReturnValue({
+        data: {},
+        dirty: false,
+        schema: {},
+        destroy: jest.fn(),
+    });
+    const formInspector = createFormInspector();
+
+    renderFieldBlocks({
+        defaultType: 'image',
+        formInspector,
+        schemaOptions: {settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}},
+        types: {image: {title: 'Image', form: {url: {label: 'Url', type: 'text_line'}}}},
+        value: [{type: 'image', url: 'logo.png', settings: {hidden: false}}],
+    });
+
+    await user.click(screen.getByRole('button', {name: 'settings-0'}));
+
+    expect(createSpy).toHaveBeenLastCalledWith(
+        'content_block_settings',
+        {hidden: false},
+        formInspector.locale,
+        undefined,
+        formInspector.options,
+        {__block: {type: 'image', url: 'logo.png'}}
+    );
+    createSpy.mockRestore();
+});
+
 test('Should destroy create new formstore when block settings overlay is opened for another block', async() => {
     const user = userEvent.setup();
     const formInspector = createFormInspector();
