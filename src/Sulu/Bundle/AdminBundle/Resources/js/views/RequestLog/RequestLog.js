@@ -5,6 +5,7 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Loader from '../../components/Loader';
 import Overlay from '../../components/Overlay';
+import Snackbar from '../../components/Snackbar';
 import {default as ListContainer, ListStore} from '../../containers/List';
 import BadgeFieldTransformer from '../../containers/List/fieldTransformers/BadgeFieldTransformer';
 import DateTimeFieldTransformer from '../../containers/List/fieldTransformers/DateTimeFieldTransformer';
@@ -447,6 +448,13 @@ class RequestLog extends React.Component<ViewProps> {
         return (
             <React.Fragment>
                 {this.renderFactsCard(detail)}
+                {detail.status === 'failed' &&
+                    <Snackbar
+                        message={detail.errorMessage || ''}
+                        title={detail.errorCode || undefined}
+                        type="error"
+                    />
+                }
                 {isTranslation && original && translation &&
                     this.renderTranslationSection(detail, original, translation)
                 }
@@ -476,10 +484,6 @@ class RequestLog extends React.Component<ViewProps> {
             ? this.translateKey('feature.' + detail.feature)
             : this.translateKey('detail_title');
 
-        const snackbarMessage = detail && detail.status === 'failed'
-            ? [detail.errorCode, detail.errorMessage].filter(Boolean).join(': ')
-            : undefined;
-
         return (
             <Overlay
                 confirmText={translate('sulu_admin.close')}
@@ -487,8 +491,6 @@ class RequestLog extends React.Component<ViewProps> {
                 onConfirm={this.handleOverlayClose}
                 open={selectedId !== null}
                 size="large"
-                snackbarMessage={snackbarMessage}
-                snackbarType="error"
                 title={title}
             >
                 <div className={requestLogStyles.detail}>
