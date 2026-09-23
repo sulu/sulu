@@ -84,6 +84,10 @@ class TemplateXmlLoader extends AbstractLoader
             $form->setTitles($meta['title']);
         }
 
+        if (\array_key_exists('priority', $meta)) {
+            $form->setPriority($meta['priority']);
+        }
+
         $form->setTemplate($this->templateXmlParser->load($xpath, $templateNode));
 
         $propertiesNode = ($xpath->query('/x:template/x:properties') ?: null)?->item(0);
