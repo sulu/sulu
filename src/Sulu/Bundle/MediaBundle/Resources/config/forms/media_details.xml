@@ -28,16 +28,6 @@
                     </meta>
                 </property>
 
-                <property name="mediaLanguages" type="select" visibleCondition="type == 'document' || type == 'video'">
-                    <meta>
-                        <title>sulu_media.media_language</title>
-                    </meta>
-
-                    <params>
-                        <param name="values" type="collection"/>
-                    </params>
-                </property>
-
                 <property name="origin" type="single_select">
                     <meta>
                         <title>sulu_media.origin</title>
@@ -71,6 +61,16 @@
                                 </meta>
                             </param>
                         </param>
+                    </params>
+                </property>
+
+                <property name="mediaLanguages" type="select" visibleCondition="type == 'document' || type == 'video'">
+                    <meta>
+                        <title>sulu_media.media_language</title>
+                    </meta>
+
+                    <params>
+                        <param name="values" type="collection"/>
                     </params>
                 </property>
 
