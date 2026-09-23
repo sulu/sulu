@@ -15,6 +15,9 @@ jest.mock('../../../utils/Translator');
 jest.mock('../../../containers/Toolbar', () => ({
     withToolbar: (Component) => Component,
 }));
+jest.mock('../../../containers', () => ({
+    TextEditor: jest.fn(({value}) => <div data-testid="text-editor">{value}</div>),
+}));
 
 const router = {
     route: {
@@ -207,6 +210,94 @@ test('shows a translation as original next to result', async() => {
     expect(screen.getByText('test_request_log.translation_result')).toBeInTheDocument();
     expect(screen.getByText('deepl')).toBeInTheDocument();
     expect(screen.queryByText('test_request_log.expert_key_label')).not.toBeInTheDocument();
+});
+
+test('renders an html translation column through the read-only text editor once expanded', async() => {
+    const long = '<p>' + 'a'.repeat(700) + '</p>';
+    ResourceRequester.get.mockReturnValue(Promise.resolve({
+        ...detailPayload,
+        chain: [
+            {annotations: [], content: long, contentType: 'html', title: 'User', type: 'user'},
+            {annotations: [], content: '<p>Hallo</p>', contentType: 'html', title: 'Response', type: 'response'},
+        ],
+        expertKey: null,
+        expertName: null,
+        model: null,
+        provider: 'deepl',
+        requestType: 'translation',
+    }));
+
+    // $FlowFixMe
+    render(<RequestLog router={router} />);
+
+    await userEvent.click(screen.getByText('open-item'));
+
+    // long content starts collapsed - no editor mounted yet, only a stripped-tag preview
+    expect(await screen.findByText('Hallo')).toBeInTheDocument();
+    expect(screen.queryAllByTestId('text-editor')).toHaveLength(0);
+
+    await userEvent.click(screen.getByText('test_request_log.show_full'));
+
+    expect(screen.getAllByTestId('text-editor')).toHaveLength(2);
+    expect(screen.getByText(long)).toBeInTheDocument();
+});
+
+test('shows one original/result pair per field for a full-content translation, keyed by segment', async() => {
+    ResourceRequester.get.mockReturnValue(Promise.resolve({
+        ...detailPayload,
+        chain: [
+            {
+                annotations: [],
+                content: '<p>Hello world</p>',
+                contentType: 'html',
+                segmentKey: 'article',
+                title: 'article',
+                type: 'user',
+            },
+            {
+                annotations: [],
+                content: '<p>Hallo Welt</p>',
+                contentType: 'html',
+                segmentKey: 'article',
+                title: 'article',
+                type: 'response',
+            },
+            {
+                annotations: [],
+                content: 'Hello',
+                contentType: 'text',
+                segmentKey: 'title',
+                title: 'title',
+                type: 'user',
+            },
+            {
+                annotations: [],
+                content: 'Hallo',
+                contentType: 'text',
+                segmentKey: 'title',
+                title: 'title',
+                type: 'response',
+            },
+        ],
+        expertKey: null,
+        expertName: null,
+        model: null,
+        provider: 'deepl',
+        requestType: 'translation',
+    }));
+
+    // $FlowFixMe
+    render(<RequestLog router={router} />);
+
+    await userEvent.click(screen.getByText('open-item'));
+
+    expect(await screen.findByText('article')).toBeInTheDocument();
+    expect(screen.getByText('title')).toBeInTheDocument();
+    expect(screen.getByText('Hello')).toBeInTheDocument();
+    expect(screen.getByText('Hallo')).toBeInTheDocument();
+    // short content is never collapsed, so the html field's pair renders straight through the editor
+    expect(screen.getByText('<p>Hello world</p>')).toBeInTheDocument();
+    expect(screen.getByText('<p>Hallo Welt</p>')).toBeInTheDocument();
 });
 
 test('merges a writeback step into the preceding response card instead of its own step', async() => {

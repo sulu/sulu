@@ -10,6 +10,7 @@ import {default as ListContainer, ListStore} from '../../containers/List';
 import BadgeFieldTransformer from '../../containers/List/fieldTransformers/BadgeFieldTransformer';
 import DateTimeFieldTransformer from '../../containers/List/fieldTransformers/DateTimeFieldTransformer';
 import DurationFieldTransformer from '../../containers/List/fieldTransformers/DurationFieldTransformer';
+import {TextEditor} from '../../containers';
 import {withToolbar} from '../../containers/Toolbar';
 import ResourceRequester from '../../services/ResourceRequester';
 import {translate} from '../../utils/Translator';
@@ -25,7 +26,8 @@ const COLLAPSE_LENGTH_THRESHOLD = 600;
 type ChainStep = {
     annotations: Array<string>,
     content: ?string,
-    contentType: 'text' | 'json',
+    contentType: 'text' | 'json' | 'html',
+    segmentKey: ?string,
     title: string,
     type: string,
 };
@@ -33,6 +35,13 @@ type ChainStep = {
 type ChainCard = {
     step: ChainStep,
     writeback: ?string,
+};
+
+type TranslationSegment = {
+    key: string,
+    original: ChainStep,
+    title: ?string,
+    translation: ChainStep,
 };
 
 type RequestLogDetail = {
@@ -98,6 +107,42 @@ function isContentLong(content: ?string): boolean {
         || formattedContent.split('\n').length > COLLAPSE_LINE_THRESHOLD;
 }
 
+function stripHtml(content: string): string {
+    return content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+// A full-content translation records one user/response pair per segmentKey (one per translated
+// field); a single translate() call has none, and falls back to the one legacy pair in
+// renderDetailContent. Steps missing their counterpart (a malformed or partial chain) are dropped
+// rather than rendered with a missing column.
+function groupTranslationSegments(chain: Array<ChainStep>): Array<TranslationSegment> {
+    const originals: {[string]: ChainStep} = {};
+    const translations: {[string]: ChainStep} = {};
+    const order = [];
+
+    chain.forEach((step) => {
+        const {segmentKey} = step;
+
+        if (segmentKey === null || segmentKey === undefined) {
+            return;
+        }
+
+        if (!(segmentKey in originals) && !(segmentKey in translations)) {
+            order.push(segmentKey);
+        }
+
+        if (step.type === 'user') {
+            originals[segmentKey] = step;
+        } else if (step.type === 'response') {
+            translations[segmentKey] = step;
+        }
+    });
+
+    return order
+        .filter((key) => !!originals[key] && !!translations[key])
+        .map((key) => ({key, title: key, original: originals[key], translation: translations[key]}));
+}
+
 function groupChainSteps(chain: Array<ChainStep>): Array<ChainCard> {
     const cards: Array<ChainCard> = [];
 
@@ -152,7 +197,7 @@ class RequestLog extends React.Component<ViewProps> {
     @observable detailLoading: boolean = false;
     @observable detailError: boolean = false;
     @observable expandedChainSteps: {[number]: boolean} = {};
-    @observable translationExpanded: boolean = false;
+    @observable expandedTranslationSegments: {[string]: boolean} = {};
 
     constructor(props: ViewProps) {
         super(props);
@@ -195,7 +240,7 @@ class RequestLog extends React.Component<ViewProps> {
     @action handleItemClick = (itemId: string | number) => {
         this.selectedId = itemId;
         this.expandedChainSteps = {};
-        this.translationExpanded = false;
+        this.expandedTranslationSegments = {};
         this.loadDetail(itemId);
     };
 
@@ -214,8 +259,17 @@ class RequestLog extends React.Component<ViewProps> {
         };
     };
 
-    @action handleToggleTranslationExpand = () => {
-        this.translationExpanded = !this.translationExpanded;
+    @action handleToggleTranslationExpand = (event: SyntheticEvent<HTMLButtonElement>) => {
+        const key = event.currentTarget.dataset.segmentKey;
+
+        this.expandedTranslationSegments = {
+            ...this.expandedTranslationSegments,
+            [key]: !this.expandedTranslationSegments[key],
+        };
+    };
+
+    handleReadOnlyEditorChange = () => {
+        // the translation columns are always read-only, this exists only to satisfy TextEditor's props
     };
 
     @action loadDetail(itemId: string | number) {
@@ -323,10 +377,34 @@ class RequestLog extends React.Component<ViewProps> {
         );
     }
 
-    renderContentBox(content: string, expanded: boolean) {
+    renderContentBox(content: string, expanded: boolean, contentType: 'text' | 'json' | 'html' = 'text') {
         return (
             <div className={classNames(requestLogStyles.chainStepBody, {[requestLogStyles.collapsed]: !expanded})}>
-                <div className={requestLogStyles.contentBox}>{formatContent(content)}</div>
+                {contentType === 'html'
+                    ? this.renderHtmlContentBox(content, expanded)
+                    : <div className={requestLogStyles.contentBox}>{formatContent(content)}</div>
+                }
+            </div>
+        );
+    }
+
+    // A collapsed row never mounts the editor: with dozens of translated fields on one page, that
+    // would mean dozens of live CKEditor instances, most of them clipped to 180px by .collapsed and
+    // never seen.
+    renderHtmlContentBox(content: string, expanded: boolean) {
+        if (!expanded) {
+            return <div className={requestLogStyles.contentBox}>{stripHtml(content)}</div>;
+        }
+
+        return (
+            <div className={requestLogStyles.contentBox}>
+                <TextEditor
+                    adapter="ckeditor5"
+                    disabled={true}
+                    locale={observable.box((this.detail && this.detail.locale) || 'en')}
+                    onChange={this.handleReadOnlyEditorChange}
+                    value={content}
+                />
             </div>
         );
     }
@@ -398,18 +476,45 @@ class RequestLog extends React.Component<ViewProps> {
                 <div className={requestLogStyles.chainStepHead}>
                     <span className={requestLogStyles.chainStepTitle}>{this.translateKey(titleKey)}</span>
                 </div>
-                {step.content !== null && step.content !== undefined && this.renderContentBox(step.content, expanded)}
+                {step.content !== null && step.content !== undefined &&
+                    this.renderContentBox(step.content, expanded, step.contentType)
+                }
             </div>
         );
     }
 
-    renderTranslationSection(detail: RequestLogDetail, original: ChainStep, translation: ChainStep) {
+    renderTranslationSegment(segment: TranslationSegment) {
+        const {key, original, title, translation} = segment;
         const isLong = isContentLong(original.content) || isContentLong(translation.content);
-        const expanded = !isLong || this.translationExpanded;
+        const expanded = !isLong || !!this.expandedTranslationSegments[key];
         const showFullLabelKey = expanded
             ? 'show_less'
             : 'show_full';
 
+        return (
+            <div className={requestLogStyles.translationSegment} key={key}>
+                {title !== null &&
+                    <p className={requestLogStyles.translationSegmentTitle}>{title}</p>
+                }
+                <div className={requestLogStyles.translationColumns}>
+                    {this.renderTranslationColumn(original, 'translation_original', expanded)}
+                    {this.renderTranslationColumn(translation, 'translation_result', expanded)}
+                </div>
+                {isLong &&
+                    <button
+                        className={classNames(requestLogStyles.showFull, requestLogStyles.centered)}
+                        data-segment-key={key}
+                        onClick={this.handleToggleTranslationExpand}
+                        type="button"
+                    >
+                        {this.translateKey(showFullLabelKey)}
+                    </button>
+                }
+            </div>
+        );
+    }
+
+    renderTranslationSection(detail: RequestLogDetail, segments: Array<TranslationSegment>) {
         return (
             <div className={requestLogStyles.chainSection}>
                 <div className={requestLogStyles.chainHeader}>
@@ -422,28 +527,23 @@ class RequestLog extends React.Component<ViewProps> {
                         {this.translateKey('translation_description')}
                     </p>
                 </div>
-                <div className={requestLogStyles.translationColumns}>
-                    {this.renderTranslationColumn(original, 'translation_original', expanded)}
-                    {this.renderTranslationColumn(translation, 'translation_result', expanded)}
-                </div>
-                {isLong &&
-                    <button
-                        className={classNames(requestLogStyles.showFull, requestLogStyles.centered)}
-                        onClick={this.handleToggleTranslationExpand}
-                        type="button"
-                    >
-                        {this.translateKey(showFullLabelKey)}
-                    </button>
-                }
+                {segments.map((segment) => this.renderTranslationSegment(segment))}
             </div>
         );
     }
 
     renderDetailContent(detail: RequestLogDetail) {
         const chainCards = groupChainSteps(detail.chain);
-        const original = detail.chain.find((step) => step.type === 'user');
-        const translation = detail.chain.find((step) => step.type === 'response' && !!step.content);
-        const isTranslation = detail.requestType === 'translation' && !!original && !!translation;
+        const segments = groupTranslationSegments(detail.chain);
+        const original = detail.chain.find((step) => step.type === 'user' && !step.segmentKey);
+        const translation = detail.chain.find(
+            (step) => step.type === 'response' && !!step.content && !step.segmentKey
+        );
+        const legacySegment = original && translation
+            ? [{key: 'default', title: null, original, translation}]
+            : [];
+        const translationSegments = segments.length > 0 ? segments : legacySegment;
+        const isTranslation = detail.requestType === 'translation' && translationSegments.length > 0;
 
         return (
             <React.Fragment>
@@ -455,9 +555,7 @@ class RequestLog extends React.Component<ViewProps> {
                         type="error"
                     />
                 }
-                {isTranslation && original && translation &&
-                    this.renderTranslationSection(detail, original, translation)
-                }
+                {isTranslation && this.renderTranslationSection(detail, translationSegments)}
                 {!isTranslation && <div className={requestLogStyles.chainSection}>
                     <div className={requestLogStyles.chainHeader}>
                         <p className={requestLogStyles.chainTitle}>
