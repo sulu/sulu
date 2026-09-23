@@ -466,6 +466,7 @@ class MediaManager implements MediaManagerInterface
                 || 'aiDisclosureDisabled' === $attribute
                 || 'aiDisclosureText' === $attribute
                 || 'aiDisclosureIconVariant' === $attribute
+                || 'mediaLanguages' === $attribute
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -579,6 +580,17 @@ class MediaManager implements MediaManagerInterface
                         break;
                     case 'aiDisclosureIconVariant':
                         $media->setAiDisclosureIconVariant($value ?? 'auto');
+                        break;
+                    case 'mediaLanguages':
+                        $mediaLanguages = [];
+                        if (\is_array($value)) {
+                            foreach ($value as $language) {
+                                if (\is_string($language)) {
+                                    $mediaLanguages[] = $language;
+                                }
+                            }
+                        }
+                        $media->setMediaLanguages($mediaLanguages);
                         break;
                 }
             }

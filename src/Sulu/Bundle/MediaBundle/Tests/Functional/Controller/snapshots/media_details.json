@@ -71,6 +71,42 @@
                     "tags": [],
                     "label": "Description"
                 },
+                "mediaLanguages": {
+                    "disabledCondition": null,
+                    "visibleCondition": "type == 'document' || type == 'video'",
+                    "type": "select",
+                    "colSpan": 12,
+                    "options": {
+                        "values": {
+                            "name": "values",
+                            "type": "collection",
+                            "value": [
+                                {
+                                    "name": "de_at",
+                                    "type": null,
+                                    "value": "de_at",
+                                    "title": "German"
+                                },
+                                {
+                                    "name": "de",
+                                    "type": null,
+                                    "value": "de",
+                                    "title": "German"
+                                }
+                            ]
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Media language"
+                },
                 "origin": {
                     "disabledCondition": null,
                     "visibleCondition": null,

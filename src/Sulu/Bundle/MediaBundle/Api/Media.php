@@ -344,6 +344,29 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @param string[] $mediaLanguages
+     */
+    public function setMediaLanguages(array $mediaLanguages): static
+    {
+        $this->getFileVersion()->setMediaLanguages($mediaLanguages);
+
+        return $this;
+    }
+
+    /**
+     * Returns the content language(s) of the media file, independent of the content locale.
+     *
+     * @return string[]
+     */
+    #[VirtualProperty]
+    #[SerializedName('mediaLanguages')]
+    #[Groups(['partialMedia', 'Default'])]
+    public function getMediaLanguages(): array
+    {
+        return $this->getFileVersion()->getMediaLanguages();
+    }
+
+    /**
      * @param string|null $copyright
      *
      * @return $this

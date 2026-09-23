@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\MediaBundle\Entity\FileVersionMediaLanguage" table="me_file_version_media_languages">
+        <indexes>
+            <index columns="language"/>
+        </indexes>
+        <unique-constraints>
+            <unique-constraint columns="idFileVersions,language"/>
+        </unique-constraints>
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="language" type="string" column="language" length="15"/>
+
+        <many-to-one field="fileVersion" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersion" inversed-by="mediaLanguages">
+            <join-columns>
+                <join-column name="idFileVersions" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+            </join-columns>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

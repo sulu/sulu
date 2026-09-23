@@ -65,6 +65,12 @@
                 <cascade-persist />
             </cascade>
         </one-to-many>
+        <one-to-many field="mediaLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMediaLanguage" mapped-by="fileVersion" orphan-removal="true">
+            <cascade>
+                <cascade-persist />
+                <cascade-remove />
+            </cascade>
+        </one-to-many>
 
         <many-to-one field="file" target-entity="Sulu\Bundle\MediaBundle\Entity\File" inversed-by="fileVersions">
             <join-columns>
