@@ -4,13 +4,11 @@ import React from 'react';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/extend-expect';
-import symfonyRouting from 'fos-jsrouting/router';
-import Requester from '../../../services/Requester';
+import ResourceRequester from '../../../services/ResourceRequester';
 import {translate} from '../../../utils/Translator';
 import RequestLog from '../RequestLog';
 
-jest.mock('fos-jsrouting/router');
-jest.mock('../../../services/Requester', () => ({
+jest.mock('../../../services/ResourceRequester', () => ({
     get: jest.fn(),
 }));
 jest.mock('../../../utils/Translator');
@@ -21,7 +19,6 @@ jest.mock('../../../containers/Toolbar', () => ({
 const router = {
     route: {
         options: {
-            detailRoute: 'test_request_log_detail',
             translationPrefix: 'test_request_log.',
         },
     },
@@ -106,8 +103,6 @@ jest.mock('../../../containers/List', () => {
 });
 
 beforeEach(() => {
-    symfonyRouting.generate.mockImplementation((route, params) => '/' + route + '/' + (params?.id ?? ''));
-
     // $FlowFixMe
     translate.mockImplementation((key) => key);
 });
@@ -129,14 +124,14 @@ test('creates the list store against the request_log resource and list key', () 
 });
 
 test('loads and renders the detail overlay when a row is clicked', async() => {
-    Requester.get.mockReturnValue(Promise.resolve(detailPayload));
+    ResourceRequester.get.mockReturnValue(Promise.resolve(detailPayload));
 
     // $FlowFixMe
     render(<RequestLog router={router} />);
 
     await userEvent.click(screen.getByText('open-item'));
 
-    expect(Requester.get).toHaveBeenCalledWith('/test_request_log_detail/42');
+    expect(ResourceRequester.get).toHaveBeenCalledWith('request_log', {id: 42});
     expect(await screen.findByText('You are an SEO expert.')).toBeInTheDocument();
     expect(screen.getByText('Optimize this page.')).toBeInTheDocument();
     expect(screen.getByText(
@@ -150,7 +145,7 @@ test('loads and renders the detail overlay when a row is clicked', async() => {
 
 test('indents a message that is JSON and collapses long content', async() => {
     const context = {content: {title: 'A', blocks: [1, 2, 3, 4, 5, 6], article: 'x'.repeat(50)}};
-    Requester.get.mockReturnValue(Promise.resolve({
+    ResourceRequester.get.mockReturnValue(Promise.resolve({
         ...detailPayload,
         chain: [{
             annotations: [],
@@ -174,7 +169,7 @@ test('indents a message that is JSON and collapses long content', async() => {
 
 test('leaves markdown with citations untouched', async() => {
     const answer = 'It is a test page.[[1]](https://example.com/a) See also [2](https://example.com/b).';
-    Requester.get.mockReturnValue(Promise.resolve({
+    ResourceRequester.get.mockReturnValue(Promise.resolve({
         ...detailPayload,
         chain: [{annotations: [], content: answer, contentType: 'text', title: 'Response', type: 'response'}],
     }));
@@ -188,7 +183,7 @@ test('leaves markdown with citations untouched', async() => {
 });
 
 test('shows a translation as original next to result', async() => {
-    Requester.get.mockReturnValue(Promise.resolve({
+    ResourceRequester.get.mockReturnValue(Promise.resolve({
         ...detailPayload,
         chain: [
             {annotations: [], content: 'Hello world', contentType: 'text', title: 'User', type: 'user'},
@@ -214,11 +209,20 @@ test('shows a translation as original next to result', async() => {
     expect(screen.queryByText('test_request_log.expert_key_label')).not.toBeInTheDocument();
 });
 
-test('leaves markdown citations in an answer untouched', async() => {
-    const answer = 'It is a test page.[[1]](https://example.com/a) See also [2](https://example.com/b).';
-    Requester.get.mockReturnValue(Promise.resolve({
+test('merges a writeback step into the preceding response card instead of its own step', async() => {
+    ResourceRequester.get.mockReturnValue(Promise.resolve({
         ...detailPayload,
-        chain: [{annotations: [], content: answer, contentType: 'text', title: 'Response', type: 'response'}],
+        chain: [
+            {annotations: [], content: 'Optimize this page.', contentType: 'text', title: 'User', type: 'user'},
+            {annotations: [], content: 'Done.', contentType: 'text', title: 'Response', type: 'response'},
+            {
+                annotations: [],
+                content: null,
+                contentType: 'text',
+                title: 'test_request_log.chain.writeback',
+                type: 'writeback',
+            },
+        ],
     }));
 
     // $FlowFixMe
@@ -226,11 +230,29 @@ test('leaves markdown citations in an answer untouched', async() => {
 
     await userEvent.click(screen.getByText('open-item'));
 
-    expect(await screen.findByText(answer)).toBeInTheDocument();
+    expect(await screen.findByText('test_request_log.chain.writeback')).toBeInTheDocument();
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+});
+
+test('shows the error banner with the error code and message for a failed request', async() => {
+    ResourceRequester.get.mockReturnValue(Promise.resolve({
+        ...detailPayload,
+        status: 'failed',
+        errorCode: 'RATE_LIMIT',
+        errorMessage: 'Too many requests.',
+    }));
+
+    // $FlowFixMe
+    render(<RequestLog router={router} />);
+
+    await userEvent.click(screen.getByText('open-item'));
+
+    expect(await screen.findByText('RATE_LIMIT')).toBeInTheDocument();
+    expect(screen.getByText('Too many requests.')).toBeInTheDocument();
 });
 
 test('renders an error message when loading the detail fails', async() => {
-    Requester.get.mockReturnValue(Promise.reject(new Error('failed')));
+    ResourceRequester.get.mockReturnValue(Promise.reject(new Error('failed')));
 
     // $FlowFixMe
     render(<RequestLog router={router} />);
