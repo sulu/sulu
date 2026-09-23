@@ -1,5 +1,8 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
 
+/* the QR code and the verification input below it are meant to line up exactly */
+$qrBoxWidth: 210px;
+
 .methods,
 .setup {
     display: flex;
@@ -16,14 +19,21 @@
     gap: 30px;
 }
 
+.method-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
 .hint {
-    color: $dustyGray;
+    color: $mineShaft;
     line-height: 20px;
     margin: 0;
 }
 
 .method {
-    align-items: center;
+    align-items: flex-start;
     background: $white;
     border: 1px solid $silver;
     border-radius: 3px;
@@ -63,12 +73,13 @@
 }
 
 .method-description {
-    color: $dustyGray;
+    color: $mineShaft;
     font-size: 12px;
     line-height: 16px;
 }
 
 .method-arrow {
+    align-self: center;
     color: $silver;
     flex-shrink: 0;
 }
@@ -77,8 +88,10 @@
     background: $white;
     border: 1px solid $silver;
     border-radius: 3px;
+    box-sizing: border-box;
     display: inline-flex;
     padding: 20px;
+    width: $qrBoxWidth;
 }
 
 .section {
@@ -104,7 +117,7 @@
 
 .code-input {
     margin: 0 auto;
-    max-width: 220px;
+    width: $qrBoxWidth;
 }
 
 .backup-codes {

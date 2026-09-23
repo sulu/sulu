@@ -150,14 +150,16 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
                 <p className={twoFactorSetupOverlayStyles.hint}>
                     {translate('sulu_security.two_factor_required_hint')}
                 </p>
-                {TwoFactorSetupOverlay.methods.map((method) => (
-                    <TwoFactorMethodButton
-                        disabled={this.loading}
-                        key={method}
-                        method={method}
-                        onClick={this.handleMethodClick}
-                    />
-                ))}
+                <div className={twoFactorSetupOverlayStyles.methodList}>
+                    {TwoFactorSetupOverlay.methods.map((method) => (
+                        <TwoFactorMethodButton
+                            disabled={this.loading}
+                            key={method}
+                            method={method}
+                            onClick={this.handleMethodClick}
+                        />
+                    ))}
+                </div>
             </div>
         );
     }
@@ -201,11 +203,6 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
                         />
                     </div>
                 </div>
-                {TwoFactorSetupOverlay.methods.length > 1 &&
-                    <Button icon="su-angle-left" onClick={this.handleBack} skin="link">
-                        {translate('sulu_security.two_factor_setup_back')}
-                    </Button>
-                }
             </div>
         );
     }
@@ -259,6 +256,10 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
             },
             method: {},
             setup: {
+                actions: TwoFactorSetupOverlay.methods.length > 1 ? [{
+                    onClick: this.handleBack,
+                    title: translate('sulu_security.two_factor_setup_back'),
+                }] : [],
                 confirmDisabled: !this.code,
                 confirmText: translate('sulu_security.two_factor_setup_activate'),
                 onConfirm: this.handleActivate,
