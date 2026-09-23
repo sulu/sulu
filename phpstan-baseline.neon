@@ -58371,7 +58371,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''excerpt'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 4
 			path: src/Sulu/Bundle/WebsiteBundle/Navigation/NavigationMapper.php
 
 		-
