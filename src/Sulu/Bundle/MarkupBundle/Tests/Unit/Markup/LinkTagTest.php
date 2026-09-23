@@ -303,8 +303,8 @@ class LinkTagTest extends TestCase
 
     public function testParseAllKeepsEncodedQuotesEncoded(): void
     {
-        // parseAll() prints the attributes without escaping, so a decoded quote would break
-        // out of the href and inject an attribute
+        // the decoded quote must be escaped again when the href is written, or it breaks out of
+        // the attribute and injects one
         $href = '123-123-123&#x23;a&quot; onmouseover=&quot;alert(1)';
         $tag = '<sulu-link href="' . $href . '" provider="article">Test-Content</sulu-link>';
 
@@ -324,7 +324,6 @@ class LinkTagTest extends TestCase
 
     public function testParseAllWithEncodedAmpersandInQuery(): void
     {
-        // "&amp;" is how an "&" is written in an html attribute, so it belongs to the query
         $href = '123-123-123?first=1&amp;second=2';
         $tag = '<sulu-link href="' . $href . '" provider="article">Test-Content</sulu-link>';
 
@@ -337,7 +336,27 @@ class LinkTagTest extends TestCase
         );
 
         $this->assertEquals(
-            [$tag => '<a href="http://sulu.lo/de/test?first=1&second=2">Test-Content</a>'],
+            [$tag => '<a href="http://sulu.lo/de/test?first=1&amp;second=2">Test-Content</a>'],
+            $result
+        );
+    }
+
+    public function testParseAllEscapesDecodedMarkupInAnchor(): void
+    {
+        // HtmlMarkupParser parses its own output again, so decoded markup must not come out raw
+        $href = '123-123-123#&lt;sulu-link&gt;x&lt;/sulu-link&gt;';
+        $tag = '<sulu-link href="' . $href . '" provider="article">Test-Content</sulu-link>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'provider' => 'article', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="http://sulu.lo/de/test#&lt;sulu-link&gt;x&lt;/sulu-link&gt;">Test-Content</a>'],
             $result
         );
     }
