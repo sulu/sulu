@@ -119,15 +119,16 @@ test('Create a CKEditor5 instance with the text part language feature', () => {
         ...defaultEditor,
     };
     ClassicEditor.create.mockReturnValue(Promise.resolve(editor));
+    CKEditor5.textPartLanguages = ['en', 'de'];
 
     mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
     expect(ClassicEditor.create).toHaveBeenCalledWith(expect.objectContaining({
         language: expect.objectContaining({
-            textPartLanguage: expect.arrayContaining([
-                expect.objectContaining({languageCode: 'en', title: expect.any(String)}),
-                expect.objectContaining({languageCode: 'de', title: expect.any(String)}),
-            ]),
+            textPartLanguage: [
+                {languageCode: 'en', title: expect.any(String)},
+                {languageCode: 'de', title: expect.any(String)},
+            ],
         }),
         plugins: expect.arrayContaining([TextPartLanguage, TextPartLanguageVisibility]),
         toolbar: expect.arrayContaining(['textPartLanguage']),

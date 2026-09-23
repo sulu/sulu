@@ -45,8 +45,6 @@ type Props = {|
     value: ?string,
 |};
 
-const TEXT_PART_LANGUAGES = ['en', 'de'];
-
 /**
  * React component that renders a classic ck-editor.
  *
@@ -56,6 +54,8 @@ const TEXT_PART_LANGUAGES = ['en', 'de'];
 export default class CKEditor5 extends React.Component<Props> {
     containerRef: ?ElementRef<'div'>;
     editorInstance: any;
+
+    static textPartLanguages: Array<string> = [];
 
     static defaultProps = {
         disabled: false,
@@ -184,7 +184,7 @@ export default class CKEditor5 extends React.Component<Props> {
                 ].filter((entry) => entry !== undefined),
             },
             language: {
-                textPartLanguage: TEXT_PART_LANGUAGES.map((languageCode) => ({
+                textPartLanguage: CKEditor5.textPartLanguages.map((languageCode) => ({
                     languageCode,
                     title: languageNames.of(languageCode) || languageCode,
                 })),

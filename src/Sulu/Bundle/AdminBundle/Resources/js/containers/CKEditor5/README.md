@@ -42,19 +42,14 @@ which lets an editor mark a selection with a language (`<span lang="â€¦" dir="â€
 parts" requirement. Marked text is highlighted in the editor and shows a tooltip with the language name; the saved
 content only contains the `lang` and `dir` attributes.
 
-The offered languages are configured under `language.textPartLanguage`. Their default titles are localised to the
-administration interface language via `Intl.DisplayNames`. Override the default list through the `ConfigRegistry`
-(an explicit `title` is used as given):
+The offered languages default to the languages of all webspace localizations, without their country variants. Their titles are localised to the
+administration interface language via `Intl.DisplayNames`. Configure a different list in
+`config/packages/sulu_admin.yaml`:
 
-```javascript static
-import {ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
-
-ckeditorConfigRegistry.add((config) => ({
-    language: {
-        textPartLanguage: [
-            {title: 'English', languageCode: 'en'},
-            {title: 'Arabic', languageCode: 'ar'},
-        ],
-    },
-}));
+```yaml
+sulu_admin:
+    ckeditor:
+        text_part_languages: ['en', 'de', 'ar']
 ```
+
+Only language codes without a country (`de`, not `de_at`) are accepted.
