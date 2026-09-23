@@ -4,12 +4,13 @@ import classNames from 'classnames';
 import moment from 'moment';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import symfonyRouting from 'fos-jsrouting/router';
 import Loader from '../../components/Loader';
 import Overlay from '../../components/Overlay';
 import {default as ListContainer, ListStore} from '../../containers/List';
+import BadgeFieldTransformer from '../../containers/List/fieldTransformers/BadgeFieldTransformer';
+import DurationFieldTransformer from '../../containers/List/fieldTransformers/DurationFieldTransformer';
 import {withToolbar} from '../../containers/Toolbar';
-import Requester from '../../services/Requester';
+import ResourceRequester from '../../services/ResourceRequester';
 import {translate} from '../../utils/Translator';
 import requestLogStyles from './requestLog.scss';
 import type {ViewProps} from '../../containers/ViewRenderer';
@@ -119,12 +120,12 @@ function formatBoolean(value: ?boolean): string {
     return translate(value ? 'sulu_admin.yes' : 'sulu_admin.no');
 }
 
-function formatDuration(durationMs: ?number): string {
-    if (durationMs === null || durationMs === undefined) {
-        return EMPTY_VALUE_PLACEHOLDER;
-    }
+const durationFieldTransformer = new DurationFieldTransformer();
 
-    return (durationMs / 1000).toFixed(1) + 's';
+function formatDuration(durationMs: ?number): string {
+    const transformed = durationFieldTransformer.transform(durationMs);
+
+    return transformed === null || transformed === undefined ? EMPTY_VALUE_PLACEHOLDER : String(transformed);
 }
 
 function formatDateTime(startedAt: string): string {
@@ -142,7 +143,6 @@ function formatDateTime(startedAt: string): string {
  */
 @observer
 class RequestLog extends React.Component<ViewProps> {
-    detailRoute: string;
     translationPrefix: string;
     listStore: ListStore;
     list: ?ElementRef<typeof ListContainer>;
@@ -156,8 +156,7 @@ class RequestLog extends React.Component<ViewProps> {
     constructor(props: ViewProps) {
         super(props);
 
-        const {detailRoute, translationPrefix} = props.router.route.options;
-        this.detailRoute = detailRoute;
+        const {translationPrefix} = props.router.route.options;
         this.translationPrefix = translationPrefix;
 
         this.listStore = new ListStore(
@@ -217,7 +216,7 @@ class RequestLog extends React.Component<ViewProps> {
         this.detailLoading = true;
         this.detailError = false;
 
-        Requester.get(symfonyRouting.generate(this.detailRoute, {id: itemId}))
+        ResourceRequester.get(RESOURCE_KEY, {id: itemId})
             .then(action((response) => {
                 this.detail = response;
                 this.detailLoading = false;
@@ -229,16 +228,11 @@ class RequestLog extends React.Component<ViewProps> {
     }
 
     renderStatusBadge(status: string) {
-        const badgeClass = classNames(
-            requestLogStyles.statusBadge,
-            requestLogStyles[status]
-        );
-
-        return (
-            <span className={badgeClass}>
-                {this.translateKey('status.' + status)}
-            </span>
-        );
+        return new BadgeFieldTransformer().transform(status, {
+            error: 'failed',
+            prefix: this.translationPrefix + 'status.',
+            success: 'succeeded',
+        });
     }
 
     renderFact(labelKey: string, value: string) {

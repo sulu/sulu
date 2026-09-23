@@ -65,23 +65,6 @@ $chainToolColor: $stormGray;
     color: $gray;
 }
 
-.status-badge {
-    padding: 4px 10px;
-    border-radius: 2px;
-    font-size: 11px;
-    font-weight: bold;
-
-    &.succeeded {
-        background-color: rgba($chainSuccessColor, .12);
-        color: $chainSuccessColor;
-    }
-
-    &.failed {
-        background-color: rgba($persianRed, .12);
-        color: $persianRed;
-    }
-}
-
 .request-id {
     display: flex;
     gap: 10px;

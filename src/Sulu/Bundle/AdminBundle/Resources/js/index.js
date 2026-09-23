@@ -205,7 +205,7 @@ function registerViews() {
     viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs, {disableDefaultSpacing: true});
     viewRegistry.add('sulu_admin.tabs', Tabs, {disableDefaultSpacing: true});
     viewRegistry.add('sulu_ai_platform.subscription', Subscription);
-    viewRegistry.add('sulu_admin.request_log', RequestLog);
+    viewRegistry.add('sulu_ai_platform.request_log', RequestLog);
 }
 
 function registerListAdapters() {
