@@ -134,3 +134,70 @@ test('Return value node observable array options', () => {
         expect(valueNode).toEqual('Option Zero, Option Two');
     });
 });
+
+test('Pass correct props to CheckboxGroup if the values are numbers', () => {
+    const selectFieldFilterType = new SelectFieldFilterType(
+        jest.fn(),
+        {options: {'1': 'Open', '2': 'Approved', '3': 'Rejected'}},
+        // $FlowFixMe: numeric option keys are restored as numbers from the URL
+        [1, 3]
+    );
+
+    const selectFieldFilterTypeForm = mount(selectFieldFilterType.getFormNode());
+
+    expect(selectFieldFilterTypeForm.find('CheckboxGroup').prop('values')).toEqual(['1', '3']);
+
+    expect(selectFieldFilterTypeForm.find('Checkbox').at(0).prop('checked')).toEqual(true);
+    expect(selectFieldFilterTypeForm.find('Checkbox').at(1).prop('checked')).toEqual(false);
+    expect(selectFieldFilterTypeForm.find('Checkbox').at(2).prop('checked')).toEqual(true);
+});
+
+test('Call onChange handler without duplicates if the values are numbers', () => {
+    const changeSpy = jest.fn();
+    const selectFieldFilterType = new SelectFieldFilterType(
+        changeSpy,
+        {options: {'1': 'Open', '2': 'Approved', '3': 'Rejected'}},
+        // $FlowFixMe: numeric option keys are restored as numbers from the URL
+        [1, 3]
+    );
+
+    const selectFieldFilterTypeForm = mount(selectFieldFilterType.getFormNode());
+
+    selectFieldFilterTypeForm.find('Checkbox').at(1).prop('onChange')(true, '2');
+    expect(changeSpy).toHaveBeenLastCalledWith(['1', '3', '2']);
+
+    selectFieldFilterTypeForm.find('Checkbox').at(0).prop('onChange')(false, '1');
+    expect(changeSpy).toHaveBeenLastCalledWith(['3']);
+});
+
+test('Return value node with number values', () => {
+    const selectFieldFilterType = new SelectFieldFilterType(
+        jest.fn(),
+        {options: {'1': 'Open', '2': 'Approved', '3': 'Rejected'}},
+        undefined
+    );
+
+    // $FlowFixMe: numeric option keys are restored as numbers from the URL
+    const valueNodePromise = selectFieldFilterType.getValueNode([1, 3]);
+
+    if (!valueNodePromise) {
+        throw new Error('The getValueNode function must return a promise!');
+    }
+
+    return valueNodePromise.then((valueNode) => {
+        expect(valueNode).toEqual('Open, Rejected');
+    });
+});
+
+test('Pass correct props to CheckboxGroup if the values are an observable array of numbers', () => {
+    const selectFieldFilterType = new SelectFieldFilterType(
+        jest.fn(),
+        {options: {'1': 'Open', '2': 'Approved', '3': 'Rejected'}},
+        // $FlowFixMe: numeric option keys are restored as numbers from the URL
+        observable([1, 3])
+    );
+
+    const selectFieldFilterTypeForm = mount(selectFieldFilterType.getFormNode());
+
+    expect(selectFieldFilterTypeForm.find('CheckboxGroup').prop('values')).toEqual(['1', '3']);
+});
