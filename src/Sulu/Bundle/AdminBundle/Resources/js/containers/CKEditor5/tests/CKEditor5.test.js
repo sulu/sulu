@@ -57,6 +57,10 @@ const defaultEditor = {
     },
 };
 
+afterEach(() => {
+    CKEditor5.textPartLanguages = [];
+});
+
 test('Create a CKEditor5 instance', () => {
     const editor = {
         ...defaultEditor,
