@@ -102,6 +102,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_content.request_workflow_registry'),
             new Reference('sulu_content.workflow_transition_request_status_resolver'),
+            new Reference('sulu_content.workflow_transition_admin_authorizer'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 

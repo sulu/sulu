@@ -53,6 +53,7 @@ const request = {
     createdBy: {fullName: 'Adam Ministrator', id: 5},
     id: 'request-1',
     locale: 'en',
+    permissions: {cancel: true, publish: true, retry: true, review: true},
     requestedAt: '2026-01-01T08:00:00+00:00',
     resourceId: '3',
     resourceKey: 'pages',
@@ -150,25 +151,39 @@ test('Report no decision of the current user while they have not decided', () =>
 
 test('An editor without the review permission may retry but not decide', () => {
     const toolbarAction = createReviewToolbarAction();
-    toolbarAction.resourceFormStore.resourceStore.data._permissions = {edit: true, review: false};
+    toolbarAction.resourceFormStore.resourceStore.data.activeWorkflowTransitionRequest = {
+        ...request,
+        permissions: {cancel: true, publish: false, retry: true, review: false},
+    };
 
     expect(toolbarAction.canRetry).toBe(true);
     expect(toolbarAction.canAct).toBe(false);
+    expect(toolbarAction.canPublish).toBe(false);
 });
 
 test('A reviewer who is not the author may decide', () => {
     const toolbarAction = createReviewToolbarAction();
-    toolbarAction.resourceFormStore.resourceStore.data._permissions = {edit: true, review: true};
+    toolbarAction.resourceFormStore.resourceStore.data.activeWorkflowTransitionRequest = request;
 
     expect(toolbarAction.canAct).toBe(true);
     expect(toolbarAction.canRetry).toBe(true);
+    expect(toolbarAction.canPublish).toBe(true);
 });
 
-test('A resource without a permission map grants both', () => {
+/**
+ * Articles and snippets carry no permissions of their own, so a request that answers nothing must
+ * not be read as permission granted.
+ */
+test('Grant nothing while the request carries no permissions', () => {
     const toolbarAction = createReviewToolbarAction();
+    toolbarAction.resourceFormStore.resourceStore.data.activeWorkflowTransitionRequest = {
+        ...request,
+        permissions: undefined,
+    };
 
-    expect(toolbarAction.canRetry).toBe(true);
-    expect(toolbarAction.canAct).toBe(true);
+    expect(toolbarAction.canRetry).toBe(false);
+    expect(toolbarAction.canAct).toBe(false);
+    expect(toolbarAction.canPublish).toBe(false);
 });
 
 test('Report the decision the current user already made on the request', () => {

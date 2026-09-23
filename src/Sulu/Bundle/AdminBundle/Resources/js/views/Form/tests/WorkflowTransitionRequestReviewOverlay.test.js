@@ -65,7 +65,6 @@ function renderOverlay(props?: Object = {}) {
         <WorkflowTransitionRequestReviewOverlay
             canAct={props.canAct ?? true}
             canPublish={props.canPublish}
-            canPublishWithoutReview={props.canPublishWithoutReview}
             canRetry={props.canRetry ?? true}
             mode={props.mode}
             onApprove={props.onApprove ?? jest.fn()}
@@ -388,7 +387,7 @@ test('offers publishing without review to a live holder', async() => {
     const user = userEvent.setup();
     const publishSpy = jest.fn();
 
-    renderOverlay({canPublishWithoutReview: true, onPublish: publishSpy});
+    renderOverlay({canPublish: true, onPublish: publishSpy});
 
     await user.click(screen.getByRole('button', {
         name: 'sulu_content.workflow_transition_request.publish_without_review',
@@ -399,10 +398,18 @@ test('offers publishing without review to a live holder', async() => {
 
 test('offers no publishing without review once the request is approved', () => {
     renderOverlay({
-        canPublishWithoutReview: true,
+        canPublish: true,
         onPublish: jest.fn(),
         request: createRequest({status: 'approved'}),
     });
+
+    expect(screen.queryByRole('button', {
+        name: 'sulu_content.workflow_transition_request.publish_without_review',
+    })).not.toBeInTheDocument();
+});
+
+test('offers no publishing without review without the permission', () => {
+    renderOverlay({canPublish: false, onPublish: jest.fn()});
 
     expect(screen.queryByRole('button', {
         name: 'sulu_content.workflow_transition_request.publish_without_review',

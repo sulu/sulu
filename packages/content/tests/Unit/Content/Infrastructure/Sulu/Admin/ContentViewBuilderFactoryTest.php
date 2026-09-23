@@ -378,6 +378,70 @@ class ContentViewBuilderFactoryTest extends TestCase
         );
     }
 
+    /**
+     * The request workflow replaces the save action with a dropdown. Its publish entries are guarded
+     * by `_permissions`, which content without object security never delivers, so they go the way
+     * the old action's publish options do.
+     */
+    public function testCreateViewsWithoutLivePermissionDropsThePublishingEntriesOfTheSaveDropdown(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $contentViewBuilder = $this->createContentViewBuilder($contentMetadataInspector->reveal(), $securityChecker->reveal());
+
+        $securityChecker->hasPermission('test_context', PermissionTypes::ADD)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::EDIT)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::DELETE)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::LIVE)->willReturn(false);
+
+        $views = $contentViewBuilder->createViews(
+            Example::class,
+            'edit_parent_key',
+            'add_parent_key',
+            'test_context',
+            $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(ExampleDimensionContent::getResourceKey()),
+        );
+
+        $this->assertSame(
+            [['sulu_admin.save', 'sulu_content.request_for_publish']],
+            $this->getSaveDropdownEntries($views),
+            'Every view carrying the save dropdown drops its publish entries.',
+        );
+    }
+
+    public function testCreateViewsWithLivePermissionKeepsThePublishingEntriesOfTheSaveDropdown(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $contentViewBuilder = $this->createContentViewBuilder($contentMetadataInspector->reveal(), $securityChecker->reveal());
+
+        $securityChecker->hasPermission('test_context', PermissionTypes::ADD)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::EDIT)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::DELETE)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::LIVE)->willReturn(true);
+
+        $views = $contentViewBuilder->createViews(
+            Example::class,
+            'edit_parent_key',
+            'add_parent_key',
+            'test_context',
+            $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(ExampleDimensionContent::getResourceKey()),
+        );
+
+        $this->assertSame(
+            [['sulu_admin.save', 'sulu_content.request_for_publish', 'sulu_admin.save', 'sulu_admin.publish']],
+            $this->getSaveDropdownEntries($views),
+        );
+    }
+
     public function testCreateViewsWithLivePermissionKeepsPublishing(): void
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
@@ -513,6 +577,44 @@ class ContentViewBuilderFactoryTest extends TestCase
      * @param ViewBuilderInterface[] $views
      *
      * @return array<int, mixed>
+     */
+    /**
+     * @param ViewBuilderInterface[] $views
+     *
+     * @return array<int, string[]> the distinct entry types the save dropdowns of the views carry
+     */
+    private function getSaveDropdownEntries(array $views): array
+    {
+        $entries = [];
+
+        foreach ($views as $viewBuilder) {
+            /** @var ToolbarAction[] $toolbarActions */
+            $toolbarActions = $viewBuilder->getView()->getOption('toolbarActions') ?? [];
+
+            foreach ($toolbarActions as $toolbarAction) {
+                if ('sulu_admin.dropdown' !== $toolbarAction->getType()
+                    || 'sulu_admin.save' !== ($toolbarAction->getOptions()['label'] ?? null)
+                ) {
+                    continue;
+                }
+
+                /** @var ToolbarAction[] $dropdownEntries */
+                $dropdownEntries = $toolbarAction->getOptions()['toolbarActions'] ?? [];
+
+                $entries[] = \array_map(
+                    static fn (ToolbarAction $entry) => $entry->getType(),
+                    $dropdownEntries,
+                );
+            }
+        }
+
+        return \array_values(\array_unique($entries, \SORT_REGULAR));
+    }
+
+    /**
+     * @param ViewBuilderInterface[] $views
+     *
+     * @return list<mixed>
      */
     private function getPublishVisibleConditions(array $views): array
     {
