@@ -7,7 +7,7 @@ import type {Node} from 'react';
 import type {FieldTransformer} from '../types';
 
 /**
- * @internal
+ * @experimental We can not yet give BC Promise for this new component in Sulu 2.6.
  */
 export default class BadgeFieldTransformer implements FieldTransformer {
     transform(value: *, parameters: {[string]: any}): Node {
