@@ -18,7 +18,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
@@ -267,25 +266,15 @@ class AdminControllerTest extends TestCase
         $dataProviders = [];
         $this->dataProviderPool->getAll()->willReturn($dataProviders);
 
-        $admin1 = $this->prophesize(Admin::class);
-        $admin1Config = ['test1' => 'value1'];
-        $admin1->getConfig()->willReturn($admin1Config);
-        $admin1->getConfigKey()->willReturn('admin1');
-
-        $admin2 = $this->prophesize(Admin::class);
-        $admin2Config = ['test2' => 'value2'];
-        $admin2->getConfig()->willReturn($admin2Config);
-        $admin2->getConfigKey()->willReturn('admin2');
-
-        $admin3 = $this->prophesize(Admin::class);
-        $admin3->getConfig()->shouldBeCalled();
-        $admin3->getConfigKey()->shouldBeCalled();
-
-        $this->adminPool->getAdmins()->willReturn([$admin1, $admin2, $admin3]);
+        $this->adminPool->getAdminConfigs()
+            ->willReturn([
+                'admin1' => ['test1' => 'value1'],
+                'admin2' => ['test2' => 'value2'],
+            ]);
 
         $this->viewHandler->handle(
             Argument::that(
-                function(View $view) use ($dataProviders, $fieldTypeOptions, $views, $admin1Config, $admin2Config) {
+                function(View $view) use ($dataProviders, $fieldTypeOptions, $views) {
                     $data = $view->getData();
 
                     return 'json' === $view->getFormat()
@@ -297,8 +286,8 @@ class AdminControllerTest extends TestCase
                         && $data['sulu_admin']['resources'] === $this->resources
                         && true === $data['sulu_admin']['collaborationEnabled']
                         && 10000 === $data['sulu_admin']['collaborationInterval']
-                        && $data['admin1'] === $admin1Config
-                        && $data['admin2'] === $admin2Config;
+                        && $data['admin1'] === ['test1' => 'value1']
+                        && $data['admin2'] === ['test2' => 'value2'];
                 }
             )
         )->shouldBeCalled()->willReturn(new Response());
