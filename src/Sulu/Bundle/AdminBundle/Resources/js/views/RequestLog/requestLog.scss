@@ -140,6 +140,25 @@ $chainToolColor: $stormGray;
     color: $gray;
 }
 
+.translation-segment {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    & + & {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid $mercury;
+    }
+}
+
+.translation-segment-title {
+    margin: 0;
+    font-family: monospace;
+    font-size: 11px;
+    color: $gray;
+}
+
 .translation-columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
