@@ -2474,6 +2474,7 @@ function mountPreValidationForm(resourceStore, route) {
     return {
         form,
         ready: Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]),
+        router,
     };
 }
 
@@ -2502,6 +2503,41 @@ test('Should reload the saved resource when a pre-validation error refuses its t
         return putPromise.catch(() => {
             setTimeout(() => {
                 expect(resourceStore.reload).toHaveBeenCalled();
+                done();
+            });
+        });
+    });
+});
+
+// The content is written before the transition is refused, so the author has to land on the form
+// that carries the SEO and excerpt tabs the overlay asks them to fill, but only once they read it.
+test('Should go to the edit view when the pre-validation overlay of a new resource is closed', (done) => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const postPromise = Promise.reject(preValidationError({id: 'created-id'}));
+    ResourceRequester.post.mockReturnValue(postPromise);
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', undefined, {locale: observable.box()});
+
+    const route = {
+        options: {editView: 'sulu_snippet.edit_form', formKey: 'snippets', locales: [], toolbarActions: []},
+    };
+    const {form, ready, router} = mountPreValidationForm(resourceStore, route);
+    resourceStore.reload = jest.fn();
+
+    ready.then(() => {
+        form.find('Form').at(1).instance().submit({action: 'request_for_review'});
+
+        return postPromise.catch(() => {
+            setTimeout(() => {
+                expect(router.navigate).not.toHaveBeenCalled();
+
+                form.update();
+                form.find('PreValidationOverlay').prop('onClose')();
+
+                expect(router.navigate).toHaveBeenCalledWith(
+                    'sulu_snippet.edit_form',
+                    expect.objectContaining({id: 'created-id'})
+                );
                 done();
             });
         });
