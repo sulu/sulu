@@ -18,12 +18,12 @@ use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
 /**
- * Filters media by their content language, with an extra value that matches media without any language set.
+ * Filters media by content language, plus a value matching media without any language set.
  */
 class MediaLanguageFilterType implements FilterTypeInterface
 {
     /**
-     * Sentinel value selecting media that have no language set (relies on the LEFT join to the language table).
+     * Matches media with no language set, via IS NULL on the LEFT join.
      */
     public const NONE_VALUE = '_none';
 

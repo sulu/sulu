@@ -14,8 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
- * Language of the content inside a media file (for example the language a document or video is in),
- * maintained per file version and independent of the content locale.
+ * Content language of a file version, independent of the content locale.
  */
 class FileVersionMediaLanguage
 {
@@ -61,9 +60,6 @@ class FileVersionMediaLanguage
         return $this;
     }
 
-    /**
-     * don't clone id to create a new entity.
-     */
     public function __clone()
     {
         if (isset($this->id)) {

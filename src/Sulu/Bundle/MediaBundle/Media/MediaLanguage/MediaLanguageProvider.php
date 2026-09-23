@@ -15,10 +15,9 @@ use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Component\Intl\Languages;
 
 /**
- * Provides the set of languages selectable as media language: the configured list when set,
- * otherwise the installation's content locales.
+ * Selectable media languages: the configured list, or the content locales by default.
  *
- * @internal is not part of the public API
+ * @internal
  */
 class MediaLanguageProvider
 {

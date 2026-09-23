@@ -35,7 +35,7 @@ class MediaLanguageFormMetadataVisitor implements FormMetadataVisitorInterface
             return;
         }
 
-        // the field is nested inside a section, so the top-level items are sections, not fields
+        // the field is nested in a section, so getItems() returns sections, not the field
         $mediaLanguagesField = $this->findField($formMetadata->getItems(), 'mediaLanguages');
         if (!$mediaLanguagesField instanceof FieldMetadata) {
             return;
