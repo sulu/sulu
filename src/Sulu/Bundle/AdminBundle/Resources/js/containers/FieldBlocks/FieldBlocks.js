@@ -474,8 +474,8 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             this.props.formInspector.locale,
             undefined,
             this.props.formInspector.options,
-            // expose the owning block as "__parent" so a setting can condition on the block type
-            {__parent: {...this.value[index]}}
+            // expose the owning block
+            {__block: {...this.value[index]}}
         );
 
         this.openedBlockSettingsIndex = index;

@@ -1418,7 +1418,7 @@ test('Should open and close block settings overlay when confirm button is clicke
     });
 });
 
-test('Should pass the owning block as "__parent" to the block settings form store', () => {
+test('Should pass the owning block as "__block" to the block settings form store', () => {
     const changeSpy = jest.fn();
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {
@@ -1466,10 +1466,10 @@ test('Should pass the owning block as "__parent" to the block settings form stor
         fieldBlocks.update();
         const settingsFormStore = fieldBlocks.find('FormOverlay').prop('formStore');
 
-        expect(settingsFormStore.options.__parent).toEqual(
+        expect(settingsFormStore.options.__block).toEqual(
             {type: 'image', url: 'logo.png', settings: {hidden: false}}
         );
-        expect(settingsFormStore.data.__parent).toBeUndefined();
+        expect(settingsFormStore.data.__block).toBeUndefined();
     });
 });
 
