@@ -1,6 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
-$indicatorDraftBackgroundColor: $gold;
+$indicatorDraftBackgroundColor: $silver;
+$indicatorReviewBackgroundColor: $gold;
 $indicatorPublishedBackgroundColor: $mantis;
 $indicatorBorderColor: $white;
 $indicatorDimension: 18px;
@@ -11,7 +12,8 @@ $indicatorOverlap: 10px;
 }
 
 .published,
-.draft {
+.draft,
+.review {
     display: inline-block;
     border: 2px $indicatorBorderColor solid;
     border-radius: 50%;
@@ -19,12 +21,17 @@ $indicatorOverlap: 10px;
     width: $indicatorDimension;
 }
 
-.published + .draft {
+.published + .draft,
+.published + .review {
     margin-left: -$indicatorOverlap;
 }
 
 .draft {
     background-color: $indicatorDraftBackgroundColor;
+}
+
+.review {
+    background-color: $indicatorReviewBackgroundColor;
 }
 
 .published {

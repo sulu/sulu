@@ -193,7 +193,7 @@ const BASELINE = [
     'src/Sulu/Bundle/SecurityBundle/Resources/js/containers/RolePermissions/tests/SystemRolePermissions.test.js',
     'src/Sulu/Bundle/TrashBundle/Resources/js/containers/RestoreFormOverlay/tests/RestoreFormOverlay.test.js',
     'src/Sulu/Bundle/TrashBundle/Resources/js/views/List/itemActions/tests/RestoreItemAction.test.js',
-    'src/Sulu/Bundle/WebsiteBundle/Resources/js/containers/CacheClearToolbarAction/tests/CacheClearToolbarAction.test.js',
+    'src/Sulu/Bundle/WebsiteBundle/Resources/js/views/toolbarActions/tests/CacheClearToolbarAction.test.js',
     'src/Sulu/Bundle/WebsiteBundle/Resources/js/containers/Form/tests/fields/AnalyticsDomainSelect.test.js',
     'tests/js/testSetup.config.js',
 ];
