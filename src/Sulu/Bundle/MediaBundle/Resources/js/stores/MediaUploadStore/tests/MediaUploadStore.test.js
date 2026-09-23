@@ -226,6 +226,54 @@ test('Calling "delete" method should call the "delete" method of the ResourceReq
     });
 });
 
+test('Calling "delete" method with force should pass it to the ResourceRequester', () => {
+    const mediaUploadStore = new MediaUploadStore(
+        {
+            id: 2,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+            adminUrl: '',
+        },
+        observable.box('en')
+    );
+
+    ResourceRequester.delete.mockReturnValue(Promise.resolve());
+
+    const deletePromise = mediaUploadStore.delete({force: true});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('media', {force: true, id: 2});
+
+    return deletePromise.then(() => {
+        expect(mediaUploadStore.media).toEqual(undefined);
+    });
+});
+
+test('Calling "delete" method should reject without setting an error if the media is referenced', () => {
+    const mediaUploadStore = new MediaUploadStore(
+        {
+            id: 2,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+            adminUrl: '',
+        },
+        observable.box('en')
+    );
+
+    const errorResponse = {status: 409};
+    ResourceRequester.delete.mockReturnValue(Promise.reject(errorResponse));
+
+    return mediaUploadStore.delete().catch((error) => {
+        expect(error).toBe(errorResponse);
+        expect(mediaUploadStore.error).toEqual(undefined);
+        expect(mediaUploadStore.media).not.toEqual(undefined);
+    });
+});
+
 test('Calling "deletePreviewImage" method should call the "delete" method of the ResourceRequester', () => {
     const mediaUploadStore = new MediaUploadStore(
         {
