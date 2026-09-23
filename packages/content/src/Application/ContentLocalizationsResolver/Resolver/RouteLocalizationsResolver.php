@@ -62,14 +62,11 @@ class RouteLocalizationsResolver implements ContentLocalizationsResolverInterfac
             }
         }
 
-        $routes = [];
-        foreach ($this->routeRepository->findBy([
+        $routes = $this->routeRepository->findBy([
             'resourceKey' => $dimensionContent::getResourceKey(),
             'resourceId' => (string) $dimensionContent->getResource()->getId(),
             'locales' => $dimensionContent->getAvailableLocales() ?? [],
-        ]) as $route) {
-            $routes[] = $route;
-        }
+        ]);
 
         foreach ($routes as $route) {
             $locale = $route->getLocale();
