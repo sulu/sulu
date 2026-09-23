@@ -239,16 +239,8 @@ final class MediaTrashItemHandler implements
                 $fileVersion->setOrigin($fileVersionData['origin'] ?? 'unknown');
                 $fileVersion->setAiDisclosureDisabled($fileVersionData['aiDisclosureDisabled'] ?? false);
                 $fileVersion->setAiDisclosureIconVariant($fileVersionData['aiDisclosureIconVariant'] ?? 'auto');
-                $mediaLanguages = [];
-                $mediaLanguagesData = \is_array($fileVersionData) ? ($fileVersionData['mediaLanguages'] ?? []) : [];
-                if (\is_array($mediaLanguagesData)) {
-                    foreach ($mediaLanguagesData as $language) {
-                        if (\is_string($language)) {
-                            $mediaLanguages[] = $language;
-                        }
-                    }
-                }
-                $fileVersion->setMediaLanguages($mediaLanguages);
+                $mediaLanguages = \is_array($fileVersionData) ? $fileVersionData['mediaLanguages'] ?? [] : [];
+                $fileVersion->setMediaLanguages(\is_array($mediaLanguages) ? \array_filter($mediaLanguages, 'is_string') : []);
                 $fileVersion->setCreator($this->findEntity(UserInterface::class, $fileVersionData['creatorId']));
 
                 foreach ($fileVersionData['meta'] as $metaData) {

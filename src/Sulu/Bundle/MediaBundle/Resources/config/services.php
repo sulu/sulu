@@ -47,8 +47,6 @@ use Sulu\Bundle\MediaBundle\FileInspector\UploadFileSubscriber;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\SmartContent\MediaSmartContentProvider;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\Visitor\MediaSmartContentFiltersVisitor;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\MediaLanguageFilterType;
-use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Metadata\MediaLanguageFormMetadataVisitor;
-use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Metadata\MediaLanguageListMetadataVisitor;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionIndexListener;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionReindexProvider;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaIndexListener;
@@ -542,23 +540,12 @@ return static function(ContainerConfigurator $container) {
         ->tag('cmsig_seal.reindex_provider');
 
     $services->set('sulu_media.media_language_provider', MediaLanguageProvider::class)
+        ->public()
         ->args([
             '%sulu_media.media_languages%',
             new Reference('sulu.core.localization_manager'),
         ]);
 
-    $services->set('sulu_media.media_language_form_metadata_visitor', MediaLanguageFormMetadataVisitor::class)
-        ->args([
-            new Reference('sulu_media.media_language_provider'),
-        ])
-        ->tag('sulu_admin.form_metadata_visitor');
-
-    $services->set('sulu_media.media_language_list_metadata_visitor', MediaLanguageListMetadataVisitor::class)
-        ->args([
-            new Reference('sulu_media.media_language_provider'),
-        ])
-        ->tag('sulu_admin.list_metadata_visitor');
-
     $services->set('sulu_media.media_language_filter_type', MediaLanguageFilterType::class)
-        ->tag('sulu_core.list_builder_filter_type', ['alias' => 'media_language']);
+        ->tag('sulu_core.list_builder_filter_type');
 };

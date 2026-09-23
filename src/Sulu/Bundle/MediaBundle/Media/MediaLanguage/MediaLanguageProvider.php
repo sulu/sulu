@@ -11,8 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\MediaLanguage;
 
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\MediaLanguageFilterType;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Component\Intl\Languages;
+use Symfony\Component\Intl\Locales;
 
 /**
  * Selectable media languages: the configured list, or the content locales by default.
@@ -31,9 +33,36 @@ class MediaLanguageProvider
     }
 
     /**
+     * @return array<array{name: string, title: string}>
+     */
+    public function getValues(string $locale): array
+    {
+        $values = [];
+        foreach ($this->getLanguageCodes() as $code) {
+            $values[] = ['name' => $code, 'title' => $this->getLanguageName($code, $locale)];
+        }
+
+        return $values;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getFilterOptions(string $locale): array
+    {
+        $options = [];
+        foreach ($this->getLanguageCodes() as $code) {
+            $options[$code] = $this->getLanguageName($code, $locale);
+        }
+        $options[MediaLanguageFilterType::NONE_VALUE] = 'sulu_media.media_language_none';
+
+        return $options;
+    }
+
+    /**
      * @return string[]
      */
-    public function getLanguageCodes(): array
+    private function getLanguageCodes(): array
     {
         if ([] !== $this->configuredLanguages) {
             return \array_values(\array_unique($this->configuredLanguages));
@@ -42,29 +71,16 @@ class MediaLanguageProvider
         return \array_values(\array_unique($this->localizationManager->getLocales()));
     }
 
-    /**
-     * @return array<string, string> language code mapped to its localized display name
-     */
-    public function getLanguageNames(string $displayLocale): array
+    private function getLanguageName(string $code, string $displayLocale): string
     {
-        $names = [];
-        foreach ($this->getLanguageCodes() as $code) {
-            $names[$code] = $this->getLanguageName($code, $displayLocale);
+        $parts = \explode('_', \str_replace('-', '_', $code));
+        $language = \strtolower($parts[0]);
+        $locale = isset($parts[1]) ? $language . '_' . \strtoupper($parts[1]) : $language;
+
+        if (Locales::exists($locale)) {
+            return Locales::getName($locale, $displayLocale);
         }
 
-        return $names;
-    }
-
-    public function getLanguageName(string $code, string $displayLocale): string
-    {
-        $normalized = \str_replace('-', '_', $code);
-
-        foreach ([$normalized, \explode('_', $normalized)[0]] as $candidate) {
-            if (Languages::exists($candidate)) {
-                return Languages::getName($candidate, $displayLocale);
-            }
-        }
-
-        return $code;
+        return Languages::exists($language) ? Languages::getName($language, $displayLocale) : $code;
     }
 }

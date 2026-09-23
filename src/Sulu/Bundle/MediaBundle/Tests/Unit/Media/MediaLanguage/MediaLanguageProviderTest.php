@@ -16,6 +16,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\MediaLanguage;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\MediaLanguageFilterType;
 use Sulu\Bundle\MediaBundle\Media\MediaLanguage\MediaLanguageProvider;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 
@@ -33,40 +34,56 @@ class MediaLanguageProviderTest extends TestCase
         $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
     }
 
-    public function testGetLanguageCodesUsesConfiguredLanguages(): void
+    public function testGetValuesUsesConfiguredLanguages(): void
     {
         $this->localizationManager->getLocales()->shouldNotBeCalled();
         $provider = new MediaLanguageProvider(['fr', 'de', 'fr'], $this->localizationManager->reveal());
 
-        self::assertSame(['fr', 'de'], $provider->getLanguageCodes());
+        self::assertSame(
+            [['name' => 'fr', 'title' => 'French'], ['name' => 'de', 'title' => 'German']],
+            $provider->getValues('en')
+        );
     }
 
-    public function testGetLanguageCodesFallsBackToContentLocales(): void
+    public function testGetValuesFallsBackToContentLocales(): void
     {
         $this->localizationManager->getLocales()->willReturn(['en', 'de']);
         $provider = new MediaLanguageProvider([], $this->localizationManager->reveal());
 
-        self::assertSame(['en', 'de'], $provider->getLanguageCodes());
+        self::assertSame(
+            [['name' => 'en', 'title' => 'Englisch'], ['name' => 'de', 'title' => 'Deutsch']],
+            $provider->getValues('de')
+        );
     }
 
-    public function testGetLanguageNamesLocalizesTheDisplayName(): void
+    public function testGetValuesKeepsRegionLocalesApart(): void
     {
-        $provider = new MediaLanguageProvider(['de', 'en'], $this->localizationManager->reveal());
+        $provider = new MediaLanguageProvider(['de_at', 'de', 'en-US'], $this->localizationManager->reveal());
 
-        self::assertSame(['de' => 'German', 'en' => 'English'], $provider->getLanguageNames('en'));
+        self::assertSame(
+            [
+                ['name' => 'de_at', 'title' => 'German (Austria)'],
+                ['name' => 'de', 'title' => 'German'],
+                ['name' => 'en-US', 'title' => 'English (United States)'],
+            ],
+            $provider->getValues('en')
+        );
     }
 
-    public function testGetLanguageNameReducesARegionLocaleToItsLanguage(): void
+    public function testGetValuesReturnsTheCodeWhenUnknown(): void
     {
-        $provider = new MediaLanguageProvider([], $this->localizationManager->reveal());
+        $provider = new MediaLanguageProvider(['zz'], $this->localizationManager->reveal());
 
-        self::assertSame('English', $provider->getLanguageName('en_US', 'en'));
+        self::assertSame([['name' => 'zz', 'title' => 'zz']], $provider->getValues('en'));
     }
 
-    public function testGetLanguageNameReturnsTheCodeWhenUnknown(): void
+    public function testGetFilterOptionsAddsTheNoneOption(): void
     {
-        $provider = new MediaLanguageProvider([], $this->localizationManager->reveal());
+        $provider = new MediaLanguageProvider(['de'], $this->localizationManager->reveal());
 
-        self::assertSame('zz', $provider->getLanguageName('zz', 'en'));
+        self::assertSame(
+            ['de' => 'German', MediaLanguageFilterType::NONE_VALUE => 'sulu_media.media_language_none'],
+            $provider->getFilterOptions('en')
+        );
     }
 }

@@ -132,18 +132,14 @@
                     "options": {
                         "values": {
                             "name": "values",
-                            "type": "collection",
+                            "type": "expression",
                             "value": [
                                 {
                                     "name": "de_at",
-                                    "type": null,
-                                    "value": "de_at",
-                                    "title": "German"
+                                    "title": "German (Austria)"
                                 },
                                 {
                                     "name": "de",
-                                    "type": null,
-                                    "value": "de",
                                     "title": "German"
                                 }
                             ]

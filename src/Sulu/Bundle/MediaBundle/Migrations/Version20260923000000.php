@@ -40,7 +40,7 @@ final class Version20260923000000 extends AbstractMigration
         $table->addColumn('idFileVersions', Types::INTEGER, ['notnull' => true]);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['language']);
-        $table->addUniqueConstraint(['idFileVersions', 'language']);
+        $table->addUniqueIndex(['idFileVersions', 'language']);
         $table->addForeignKeyConstraint(
             self::FILE_VERSIONS_TABLE,
             ['idFileVersions'],

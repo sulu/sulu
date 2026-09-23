@@ -14,7 +14,10 @@ declare(strict_types=1);
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Migrations;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\Tools\SchemaTool;
 use Psr\Log\NullLogger;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMediaLanguage;
 use Sulu\Bundle\MediaBundle\Migrations\Version20260923000000;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -50,6 +53,29 @@ class Version20260923000000Test extends SuluTestCase
         self::assertTrue($this->hasTable(self::TABLE));
         self::assertTrue($this->hasColumn(self::TABLE, 'language'));
         self::assertTrue($this->hasColumn(self::TABLE, 'idFileVersions'));
+    }
+
+    public function testUpMatchesTheOrmMapping(): void
+    {
+        $this->runMigration('down');
+        $this->runMigration('up');
+
+        $entityManager = self::getEntityManager();
+        $ormSchema = (new SchemaTool($entityManager))->getSchemaFromMetadata([
+            $entityManager->getClassMetadata(FileVersion::class),
+            $entityManager->getClassMetadata(FileVersionMediaLanguage::class),
+        ]);
+        $schemaManager = $this->connection->createSchemaManager();
+        $tableDiff = $schemaManager->createComparator()->compareTables(
+            $schemaManager->introspectTable(self::TABLE),
+            $ormSchema->getTable(self::TABLE)
+        );
+
+        self::assertSame(
+            [],
+            $this->connection->getDatabasePlatform()->getAlterTableSQL($tableDiff),
+            'The migrated table must not differ from the ORM mapping.'
+        );
     }
 
     public function testUpIsIdempotent(): void

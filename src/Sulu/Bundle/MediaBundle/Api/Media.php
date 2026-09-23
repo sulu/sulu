@@ -360,7 +360,6 @@ class Media extends ApiWrapper
      */
     #[VirtualProperty]
     #[SerializedName('mediaLanguages')]
-    #[Groups(['partialMedia', 'Default'])]
     public function getMediaLanguages(): array
     {
         return $this->getFileVersion()->getMediaLanguages();

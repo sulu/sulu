@@ -307,7 +307,11 @@
                 </join>
             </joins>
 
-            <filter type="media_language"/>
+            <filter type="media_language">
+                <params>
+                    <param name="options" type="expression" value="service('sulu_media.media_language_provider').getFilterOptions(locale)"/>
+                </params>
+            </filter>
         </property>
 
         <property name="lft" visibility="never">

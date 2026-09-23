@@ -49,6 +49,15 @@ migration to apply the schema change:
 bin/console doctrine:migrations:migrate
 ```
 
+### Media language table
+
+Documents and videos can record the language(s) they are in, which are stored in the new
+`me_file_version_media_languages` table. Run the new migration to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
 ### Review permission
 
 `PermissionTypes::REVIEW` is new and no existing role carries its bit, so approving and rejecting is

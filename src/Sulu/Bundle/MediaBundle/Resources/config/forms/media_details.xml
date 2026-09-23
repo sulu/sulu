@@ -70,7 +70,7 @@
                     </meta>
 
                     <params>
-                        <param name="values" type="collection"/>
+                        <param name="values" type="expression" value="service('sulu_media.media_language_provider').getValues(locale)"/>
                     </params>
                 </property>
 
