@@ -1459,11 +1459,11 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(409, $this->client->getResponse());
 
-        /** @var array{code: int, resource: array{id: string, resourceKey: string}, referencingResources: array<int, array{resourceKey: string, title: string}>, referencingResourcesCount: int} $response */
+        /** @var array{code: int, resource: array{id: int, resourceKey: string}, referencingResources: array<int, array{resourceKey: string, title: string}>, referencingResourcesCount: int} $response */
         $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
         $this->assertSame(1106, $response['code']);
         $this->assertSame(1, $response['referencingResourcesCount']);
-        $this->assertSame((string) $mediaId, $response['resource']['id']);
+        $this->assertSame($mediaId, $response['resource']['id']);
         $this->assertSame(MediaInterface::RESOURCE_KEY, $response['resource']['resourceKey']);
         $this->assertSame('pages', $response['referencingResources'][0]['resourceKey']);
         $this->assertSame('Referencing page', $response['referencingResources'][0]['title']);

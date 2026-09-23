@@ -388,7 +388,7 @@ class MediaController extends AbstractMediaController implements
 
             if (\count($referencingResources) > 0) {
                 throw new ReferencingResourcesFoundException(
-                    ['id' => $id, 'resourceKey' => MediaInterface::RESOURCE_KEY],
+                    ['id' => (int) $id, 'resourceKey' => MediaInterface::RESOURCE_KEY],
                     $referencingResources,
                     \count($referencingResources)
                 );

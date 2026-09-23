@@ -528,31 +528,50 @@ export default class ListStore {
             }));
     };
 
-    @action deleteSelection = () => {
-        const deletePromises = [];
+    @action deleteSelection = (options: Object = {}): Promise<void> => {
+        return this.deleteSelectionSettled(options)
+            .then((errors) => {
+                if (errors.length > 0) {
+                    return Promise.reject(errors[0]);
+                }
+            });
+    };
+
+    /**
+     * Waits for all deletions and resolves with the error responses of the failed ones.
+     * Deleted items are removed from the list, the failed ones stay selected.
+     */
+    @action deleteSelectionSettled = (options: Object = {}): Promise<Array<Object>> => {
+        const deletedIds = [];
+        const errors = [];
         this.deletingSelection = true;
-        this.selectionIds.forEach((id) => {
-            deletePromises.push(
-                ResourceRequester.delete(this.resourceKey, {...this.queryOptions, id})
-                    .catch((error) => {
-                        if (error.status !== 404) {
-                            return Promise.reject(error);
-                        }
-                    })
-            );
-        });
+
+        const deletePromises = this.selectionIds.map((id) =>
+            ResourceRequester.delete(this.resourceKey, {...this.queryOptions, ...options, id})
+                .then(() => {
+                    deletedIds.push(id);
+                })
+                .catch((error) => {
+                    if (error.status === 404) {
+                        deletedIds.push(id);
+
+                        return;
+                    }
+
+                    errors.push(error);
+                })
+        );
 
         return Promise.all(deletePromises)
             .then(action(() => {
-                this.selectionIds.forEach(this.remove);
-                this.clearSelection();
+                deletedIds.forEach((id) => {
+                    this.remove(id);
+                    this.deselectById(id);
+                });
                 this.reload();
                 this.deletingSelection = false;
-            }))
-            .catch(action((error) => {
-                this.deletingSelection = false;
 
-                return Promise.reject(error);
+                return errors;
             }));
     };
 
