@@ -347,9 +347,7 @@ class FileVersion implements AuditableInterface
                 $newMediaLanguages[] = clone $mediaLanguage;
             }
 
-            // assign a fresh collection instead of clearing the shared one: the clone still
-            // references the source's collection here, and orphanRemoval would otherwise delete
-            // the source version's languages on flush
+            // fresh collection, not clear() on the shared one: orphanRemoval would delete the source rows
             $this->mediaLanguages = new ArrayCollection();
             foreach ($newMediaLanguages as $newMediaLanguage) {
                 $newMediaLanguage->setFileVersion($this);
@@ -511,19 +509,20 @@ class FileVersion implements AuditableInterface
      */
     public function setMediaLanguages(array $languages): static
     {
-        $this->removeMediaLanguages();
+        $languages = \array_values(\array_unique($languages));
 
-        foreach (\array_values(\array_unique($languages)) as $language) {
-            $this->mediaLanguages->add(new FileVersionMediaLanguage($this, $language));
+        // keep unchanged rows so orphanRemoval does not delete and re-insert the same unique (fileVersion, language)
+        foreach ($this->mediaLanguages->toArray() as $mediaLanguage) {
+            if (!\in_array($mediaLanguage->getLanguage(), $languages, true)) {
+                $this->mediaLanguages->removeElement($mediaLanguage);
+            }
         }
 
-        return $this;
-    }
-
-    public function removeMediaLanguages(): static
-    {
-        foreach ($this->mediaLanguages as $mediaLanguage) {
-            $this->mediaLanguages->removeElement($mediaLanguage);
+        $existingLanguages = $this->getMediaLanguages();
+        foreach ($languages as $language) {
+            if (!\in_array($language, $existingLanguages, true)) {
+                $this->mediaLanguages->add(new FileVersionMediaLanguage($this, $language));
+            }
         }
 
         return $this;

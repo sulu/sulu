@@ -100,6 +100,31 @@ class FileVersionMediaLanguageTest extends SuluTestCase
         self::assertEquals(4, $count);
     }
 
+    public function testResavingAnOverlappingLanguageSetKeepsUnchangedRows(): void
+    {
+        $id = $this->persistFileVersion(['en']);
+
+        $this->entityManager->clear();
+        $fileVersion = $this->entityManager->find(FileVersion::class, $id);
+        self::assertInstanceOf(FileVersion::class, $fileVersion);
+        // 'en' stays and 'fr' is added: the kept row must not be deleted and re-inserted
+        $fileVersion->setMediaLanguages(['en', 'fr']);
+        $this->entityManager->flush();
+
+        $this->entityManager->clear();
+        $reloaded = $this->entityManager->find(FileVersion::class, $id);
+        self::assertInstanceOf(FileVersion::class, $reloaded);
+        self::assertSame(['en', 'fr'], $reloaded->getMediaLanguages());
+
+        // re-saving the identical set is a no-op
+        $reloaded->setMediaLanguages(['en', 'fr']);
+        $this->entityManager->flush();
+
+        $count = $this->entityManager->getConnection()
+            ->fetchOne('SELECT COUNT(*) FROM me_file_version_media_languages');
+        self::assertEquals(2, $count);
+    }
+
     /**
      * @param string[] $languages
      */
