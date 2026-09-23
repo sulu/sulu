@@ -247,8 +247,7 @@ test('shows the error banner with the error code and message for a failed reques
 
     await userEvent.click(screen.getByText('open-item'));
 
-    expect(await screen.findByText('RATE_LIMIT')).toBeInTheDocument();
-    expect(screen.getByText('Too many requests.')).toBeInTheDocument();
+    expect(await screen.findByText('- RATE_LIMIT: Too many requests.')).toBeInTheDocument();
 });
 
 test('renders an error message when loading the detail fails', async() => {
