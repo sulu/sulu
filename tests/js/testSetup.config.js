@@ -4,6 +4,82 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import {isObservableArray, toJS} from 'mobx';
 import '@testing-library/jest-dom';
 
+const DEFAULT_INTL_LOCALE = 'en-US';
+
+function withDefaultLocale(IntlConstructor) {
+    const WrappedConstructor = function(locales, options) {
+        const resolvedLocales = locales === undefined ? DEFAULT_INTL_LOCALE : locales;
+
+        return new IntlConstructor(resolvedLocales, options);
+    };
+
+    WrappedConstructor.prototype = IntlConstructor.prototype;
+    Object.setPrototypeOf(WrappedConstructor, IntlConstructor);
+    WrappedConstructor.supportedLocalesOf = IntlConstructor.supportedLocalesOf.bind(IntlConstructor);
+
+    return WrappedConstructor;
+}
+
+function withDefaultLocaleArgument(localizedFunction) {
+    return function(locales, options) {
+        const resolvedLocales = locales === undefined ? DEFAULT_INTL_LOCALE : locales;
+
+        return localizedFunction.call(this, resolvedLocales, options);
+    };
+}
+
+function withDefaultLocaleSecondArgument(localizedFunction) {
+    return function(value, locales, options) {
+        const resolvedLocales = locales === undefined ? DEFAULT_INTL_LOCALE : locales;
+
+        return localizedFunction.call(this, value, resolvedLocales, options);
+    };
+}
+
+function withDefaultLocaleSingleArgument(localizedFunction) {
+    return function(locales) {
+        const resolvedLocales = locales === undefined ? DEFAULT_INTL_LOCALE : locales;
+
+        return localizedFunction.call(this, resolvedLocales);
+    };
+}
+
+Intl.Collator = withDefaultLocale(Intl.Collator);
+Intl.DateTimeFormat = withDefaultLocale(Intl.DateTimeFormat);
+Intl.DisplayNames = Intl.DisplayNames ? withDefaultLocale(Intl.DisplayNames) : Intl.DisplayNames;
+Intl.ListFormat = Intl.ListFormat ? withDefaultLocale(Intl.ListFormat) : Intl.ListFormat;
+Intl.NumberFormat = withDefaultLocale(Intl.NumberFormat);
+Intl.PluralRules = withDefaultLocale(Intl.PluralRules);
+Intl.RelativeTimeFormat = Intl.RelativeTimeFormat
+    ? withDefaultLocale(Intl.RelativeTimeFormat)
+    : Intl.RelativeTimeFormat;
+
+Date.prototype.toLocaleString = withDefaultLocaleArgument(Date.prototype.toLocaleString);
+Date.prototype.toLocaleDateString = withDefaultLocaleArgument(Date.prototype.toLocaleDateString);
+Date.prototype.toLocaleTimeString = withDefaultLocaleArgument(Date.prototype.toLocaleTimeString);
+Number.prototype.toLocaleString = withDefaultLocaleArgument(Number.prototype.toLocaleString);
+String.prototype.localeCompare = withDefaultLocaleSecondArgument(String.prototype.localeCompare);
+String.prototype.toLocaleLowerCase = withDefaultLocaleSingleArgument(String.prototype.toLocaleLowerCase);
+String.prototype.toLocaleUpperCase = withDefaultLocaleSingleArgument(String.prototype.toLocaleUpperCase);
+Array.prototype.toLocaleString = withDefaultLocaleArgument(Array.prototype.toLocaleString);
+const BigIntConstructor = window.BigInt;
+
+if (BigIntConstructor && BigIntConstructor.prototype.toLocaleString) {
+    BigIntConstructor.prototype.toLocaleString = withDefaultLocaleArgument(
+        BigIntConstructor.prototype.toLocaleString
+    );
+}
+
+Object.defineProperty(window.navigator, 'language', {
+    configurable: true,
+    value: DEFAULT_INTL_LOCALE,
+});
+
+Object.defineProperty(window.navigator, 'languages', {
+    configurable: true,
+    value: [DEFAULT_INTL_LOCALE],
+});
+
 Enzyme.configure({adapter: new Adapter()});
 
 function mobxAwareEqualityTester(a, b, customTesters) {
