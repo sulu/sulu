@@ -1,20 +1,20 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import moment from 'moment';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Loader from '../../components/Loader';
 import Overlay from '../../components/Overlay';
 import {default as ListContainer, ListStore} from '../../containers/List';
 import BadgeFieldTransformer from '../../containers/List/fieldTransformers/BadgeFieldTransformer';
+import DateTimeFieldTransformer from '../../containers/List/fieldTransformers/DateTimeFieldTransformer';
 import DurationFieldTransformer from '../../containers/List/fieldTransformers/DurationFieldTransformer';
 import {withToolbar} from '../../containers/Toolbar';
 import ResourceRequester from '../../services/ResourceRequester';
 import {translate} from '../../utils/Translator';
 import requestLogStyles from './requestLog.scss';
 import type {ViewProps} from '../../containers/ViewRenderer';
-import type {ElementRef} from 'react';
+import type {ElementRef, Node} from 'react';
 
 const RESOURCE_KEY = 'request_log';
 const EMPTY_VALUE_PLACEHOLDER = '-';
@@ -86,6 +86,17 @@ function formatContent(content: string): string {
     }
 }
 
+function isContentLong(content: ?string): boolean {
+    if (content === null || content === undefined) {
+        return false;
+    }
+
+    const formattedContent = formatContent(content);
+
+    return formattedContent.length > COLLAPSE_LENGTH_THRESHOLD
+        || formattedContent.split('\n').length > COLLAPSE_LINE_THRESHOLD;
+}
+
 function groupChainSteps(chain: Array<ChainStep>): Array<ChainCard> {
     const cards: Array<ChainCard> = [];
 
@@ -112,14 +123,6 @@ function formatValue(value: mixed): string {
     return String(value);
 }
 
-function formatBoolean(value: ?boolean): string {
-    if (value === null || value === undefined) {
-        return EMPTY_VALUE_PLACEHOLDER;
-    }
-
-    return translate(value ? 'sulu_admin.yes' : 'sulu_admin.no');
-}
-
 const durationFieldTransformer = new DurationFieldTransformer();
 
 function formatDuration(durationMs: ?number): string {
@@ -128,14 +131,10 @@ function formatDuration(durationMs: ?number): string {
     return transformed === null || transformed === undefined ? EMPTY_VALUE_PLACEHOLDER : String(transformed);
 }
 
-function formatDateTime(startedAt: string): string {
-    const momentObject = moment(startedAt, moment.ISO_8601);
+const dateTimeFieldTransformer = new DateTimeFieldTransformer();
 
-    if (!momentObject.isValid()) {
-        return EMPTY_VALUE_PLACEHOLDER;
-    }
-
-    return momentObject.format('L') + ' · ' + momentObject.format('LTS');
+function formatDateTime(startedAt: string): Node {
+    return dateTimeFieldTransformer.transform(startedAt, {format: 'default_with_seconds'}) ?? EMPTY_VALUE_PLACEHOLDER;
 }
 
 /**
@@ -152,6 +151,7 @@ class RequestLog extends React.Component<ViewProps> {
     @observable detailLoading: boolean = false;
     @observable detailError: boolean = false;
     @observable expandedChainSteps: {[number]: boolean} = {};
+    @observable translationExpanded: boolean = false;
 
     constructor(props: ViewProps) {
         super(props);
@@ -194,6 +194,7 @@ class RequestLog extends React.Component<ViewProps> {
     @action handleItemClick = (itemId: string | number) => {
         this.selectedId = itemId;
         this.expandedChainSteps = {};
+        this.translationExpanded = false;
         this.loadDetail(itemId);
     };
 
@@ -210,6 +211,10 @@ class RequestLog extends React.Component<ViewProps> {
             ...this.expandedChainSteps,
             [index]: !this.expandedChainSteps[index],
         };
+    };
+
+    @action handleToggleTranslationExpand = () => {
+        this.translationExpanded = !this.translationExpanded;
     };
 
     @action loadDetail(itemId: string | number) {
@@ -265,7 +270,10 @@ class RequestLog extends React.Component<ViewProps> {
                 <dl className={requestLogStyles.facts}>
                     {this.renderFact('webspace_key', formatValue(detail.webspaceKey))}
                     {this.renderFact('duration', formatDuration(detail.durationMs))}
-                    {this.renderFact('streamed', formatBoolean(detail.streamed))}
+                    {this.renderFact(
+                        'streamed',
+                        detail.streamed ? translate('sulu_admin.yes') : translate('sulu_admin.no')
+                    )}
                     {this.renderFact('credits', formatValue(detail.credits))}
                     {detail.trigger &&
                         this.renderFact('trigger', formatValue(detail.trigger))
@@ -314,6 +322,14 @@ class RequestLog extends React.Component<ViewProps> {
         );
     }
 
+    renderContentBox(content: string, expanded: boolean) {
+        return (
+            <div className={classNames(requestLogStyles.chainStepBody, {[requestLogStyles.collapsed]: !expanded})}>
+                <div className={requestLogStyles.contentBox}>{formatContent(content)}</div>
+            </div>
+        );
+    }
+
     renderChainStepContent(step: ChainStep, index: number) {
         const {content} = step;
 
@@ -321,9 +337,7 @@ class RequestLog extends React.Component<ViewProps> {
             return null;
         }
 
-        const formattedContent = formatContent(content);
-        const isLong = formattedContent.length > COLLAPSE_LENGTH_THRESHOLD
-            || formattedContent.split('\n').length > COLLAPSE_LINE_THRESHOLD;
+        const isLong = isContentLong(content);
         const expanded = !isLong || !!this.expandedChainSteps[index];
         const showFullLabelKey = expanded
             ? 'show_less'
@@ -331,9 +345,7 @@ class RequestLog extends React.Component<ViewProps> {
 
         return (
             <React.Fragment>
-                <div className={classNames(requestLogStyles.chainStepBody, {[requestLogStyles.collapsed]: !expanded})}>
-                    <div className={requestLogStyles.contentBox}>{formattedContent}</div>
-                </div>
+                {this.renderContentBox(content, expanded)}
                 {isLong &&
                     <button
                         className={requestLogStyles.showFull}
@@ -374,7 +386,7 @@ class RequestLog extends React.Component<ViewProps> {
         );
     }
 
-    renderTranslationColumn(step: ChainStep, titleKey: string, index: number) {
+    renderTranslationColumn(step: ChainStep, titleKey: string, expanded: boolean) {
         const cardClass = classNames(
             requestLogStyles.chainStep,
             requestLogStyles[chainStepColorModifier(step.type)]
@@ -385,12 +397,18 @@ class RequestLog extends React.Component<ViewProps> {
                 <div className={requestLogStyles.chainStepHead}>
                     <span className={requestLogStyles.chainStepTitle}>{this.translateKey(titleKey)}</span>
                 </div>
-                {this.renderChainStepContent(step, index)}
+                {step.content !== null && step.content !== undefined && this.renderContentBox(step.content, expanded)}
             </div>
         );
     }
 
     renderTranslationSection(detail: RequestLogDetail, original: ChainStep, translation: ChainStep) {
+        const isLong = isContentLong(original.content) || isContentLong(translation.content);
+        const expanded = !isLong || this.translationExpanded;
+        const showFullLabelKey = expanded
+            ? 'show_less'
+            : 'show_full';
+
         return (
             <div className={requestLogStyles.chainSection}>
                 <div className={requestLogStyles.chainHeader}>
@@ -404,9 +422,18 @@ class RequestLog extends React.Component<ViewProps> {
                     </p>
                 </div>
                 <div className={requestLogStyles.translationColumns}>
-                    {this.renderTranslationColumn(original, 'translation_original', 0)}
-                    {this.renderTranslationColumn(translation, 'translation_result', 1)}
+                    {this.renderTranslationColumn(original, 'translation_original', expanded)}
+                    {this.renderTranslationColumn(translation, 'translation_result', expanded)}
                 </div>
+                {isLong &&
+                    <button
+                        className={classNames(requestLogStyles.showFull, requestLogStyles.centered)}
+                        onClick={this.handleToggleTranslationExpand}
+                        type="button"
+                    >
+                        {this.translateKey(showFullLabelKey)}
+                    </button>
+                }
             </div>
         );
     }
@@ -420,12 +447,6 @@ class RequestLog extends React.Component<ViewProps> {
         return (
             <React.Fragment>
                 {this.renderFactsCard(detail)}
-                {detail.status === 'failed' &&
-                    <div className={requestLogStyles.errorBanner}>
-                        {detail.errorCode && <strong>{detail.errorCode}</strong>}
-                        {detail.errorMessage && <p>{detail.errorMessage}</p>}
-                    </div>
-                }
                 {isTranslation && original && translation &&
                     this.renderTranslationSection(detail, original, translation)
                 }
@@ -455,14 +476,19 @@ class RequestLog extends React.Component<ViewProps> {
             ? this.translateKey('feature.' + detail.feature)
             : this.translateKey('detail_title');
 
+        const snackbarMessage = detail && detail.status === 'failed'
+            ? [detail.errorCode, detail.errorMessage].filter(Boolean).join(': ')
+            : undefined;
+
         return (
             <Overlay
-                actions={[
-                    {onClick: this.handleOverlayClose, title: translate('sulu_admin.close')},
-                ]}
+                confirmText={translate('sulu_admin.close')}
                 onClose={this.handleOverlayClose}
+                onConfirm={this.handleOverlayClose}
                 open={selectedId !== null}
                 size="large"
+                snackbarMessage={snackbarMessage}
+                snackbarType="error"
                 title={title}
             >
                 <div className={requestLogStyles.detail}>

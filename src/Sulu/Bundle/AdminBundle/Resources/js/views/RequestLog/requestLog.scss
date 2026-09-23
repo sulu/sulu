@@ -115,25 +115,6 @@ $chainToolColor: $stormGray;
     word-break: break-word;
 }
 
-.error-banner {
-    padding: 12px 15px;
-    border: 1px solid rgba($persianRed, .3);
-    border-radius: 4px;
-    background-color: rgba($persianRed, .07);
-    color: $persianRed;
-
-    strong {
-        display: block;
-        margin-bottom: 4px;
-        font-size: 12px;
-    }
-
-    p {
-        margin: 0;
-        font-size: 13px;
-    }
-}
-
 .chain-section {
     display: flex;
     flex-direction: column;
@@ -163,7 +144,6 @@ $chainToolColor: $stormGray;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-    align-items: start;
 }
 
 .chain {
@@ -243,6 +223,7 @@ $chainToolColor: $stormGray;
 
 .content-box {
     width: 100%;
+    flex: 1;
     padding: 14px 16px;
     border: 1px solid $mercury;
     border-radius: 2px;
@@ -256,6 +237,7 @@ $chainToolColor: $stormGray;
 
 .chain-step-body {
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 8px;
     position: relative;
@@ -275,4 +257,8 @@ $chainToolColor: $stormGray;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
+
+    &.centered {
+        align-self: center;
+    }
 }
