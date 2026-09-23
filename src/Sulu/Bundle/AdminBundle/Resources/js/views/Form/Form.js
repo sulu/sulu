@@ -52,6 +52,7 @@ class Form extends React.Component<Props> {
     @observable showDirtyWarning: boolean = false;
     @observable showHasChangedWarning: boolean = false;
     postponedSaveOptions: Object;
+    navigateAfterPreValidation: ?() => void;
     postponedUpdateRouteMethod: ?UpdateRouteMethod;
     postponedRoute: ?Route;
     postponedRouteAttributes: ?AttributeMap;
@@ -431,6 +432,20 @@ class Form extends React.Component<Props> {
                 }
 
                 this.handleTransitionError(error);
+
+                // The content is written before the transition is applied, so a refused request has
+                // turned the create into an edit. The author reads the overlay first and lands on the
+                // form carrying the tabs it asked them to fill when they close it.
+                if (editView && resourceStore.id && error.code === ERROR_CODE_PRE_VALIDATION_FAILED) {
+                    this.navigateAfterPreValidation = () => router.navigate(
+                        editView,
+                        {
+                            id: resourceStore.id,
+                            locale: resourceStore.locale,
+                            ...editViewParameters,
+                        }
+                    );
+                }
             }));
     };
 
@@ -470,6 +485,10 @@ class Form extends React.Component<Props> {
             // next save sends a stale `_hash` and trips the has-changed dialog, and the
             // form never learns that a workflow covers it. A no-op without an id.
             resourceStore.reload();
+
+            // What the author typed is on the server, so the form holds nothing unsaved. Leaving it
+            // dirty would ask them to discard changes that are already stored.
+            this.resourceFormStore.dirty = false;
 
             return;
         }
@@ -517,6 +536,10 @@ class Form extends React.Component<Props> {
 
     @action handlePreValidationClose = () => {
         this.preValidationResults = [];
+
+        const navigate = this.navigateAfterPreValidation;
+        this.navigateAfterPreValidation = undefined;
+        navigate?.();
     };
 
     @action clearErrors = () => {
