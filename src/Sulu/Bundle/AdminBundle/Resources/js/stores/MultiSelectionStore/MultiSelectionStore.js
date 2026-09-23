@@ -59,7 +59,7 @@ export default class MultiSelectionStore<T = string | number, U: {id: T} = Objec
     }
 
     loadItems(itemIds: ?Array<T>) {
-        if (!itemIds || itemIds.length === 0) {
+        if (!itemIds || itemIds.length === 0 || !(Array.isArray(itemIds))) {
             this.set([]);
             return;
         }
