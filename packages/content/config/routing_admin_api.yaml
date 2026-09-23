@@ -9,3 +9,21 @@ sulu_content.post_version:
     methods: POST
     controller: sulu_content.version_controller::postTriggerAction
     format: json
+
+sulu_content.get_workflow_transition_requests:
+    path: /workflow-transition-requests.{_format}
+    methods: GET
+    controller: sulu_content.workflow_transition_request_controller::cgetAction
+    format: json
+
+sulu_content.get_workflow_transition_request:
+    path: /workflow-transition-requests/{id}.{_format}
+    methods: GET
+    controller: sulu_content.workflow_transition_request_controller::getAction
+    format: json
+
+sulu_content.post_workflow_transition_request:
+    path: /workflow-transition-requests/{id}.{_format}
+    methods: POST
+    controller: sulu_content.workflow_transition_request_controller::postTriggerAction
+    format: json

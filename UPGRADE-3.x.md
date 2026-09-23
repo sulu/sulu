@@ -69,6 +69,8 @@ alone: `live` does not imply it.
   with that `resource-key` once a request workflow covers its content; without one, publishing that
   content answers 500. Pages, articles and snippets ship one. A resource key without one whose content
   no request workflow covers publishes as before.
+- The `draft` dot of the `PublishIndicator` is grey instead of yellow, yellow now means "in review".
+  This changes the list and form indicators of every project.
 
 ## 3.0.10
 
