@@ -18,6 +18,7 @@ interface RouteGeneratorInterface
 {
     /**
      * @throws MissingRequestContextParameterException
+     * @throws \RuntimeException if the webspace has no url for the locale
      */
     public function generate(string $slug, ?string $locale = null, ?string $webspace = null, int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string;
 }
