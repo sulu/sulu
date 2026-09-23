@@ -70,7 +70,7 @@ class LinkTag implements TagInterface
                 }
 
                 $title = $item->getTitle();
-                $attributes['href'] = $url;
+                $attributes['href'] = \htmlspecialchars($url, \ENT_QUOTES, 'UTF-8');
             } elseif ($this->isPreview && self::VALIDATE_UNPUBLISHED === $validationState) {
                 // render anchor without href to keep styling even if target is not published in preview
                 $title = $this->getContent($attributes);
@@ -212,11 +212,7 @@ class LinkTag implements TagInterface
      */
     private function getPartsFromHref($href): array
     {
-        // The href comes from an html attribute, so "#", "?" and "&" may be escaped as entities
-        // and have to be decoded before they can be used as separators. Quotes are deliberately
-        // left encoded: the parts are re-appended to the href that parseAll() prints without
-        // escaping, so decoding a quote here would let it break out of the attribute.
-        $href = $href ? \html_entity_decode((string) $href, \ENT_NOQUOTES | \ENT_HTML5, 'UTF-8') : null;
+        $href = $href ? \html_entity_decode((string) $href, \ENT_QUOTES | \ENT_HTML5, 'UTF-8') : null;
 
         /** @var string[] $hrefParts */
         $hrefParts = $href ? \explode('#', $href, 2) : [];
