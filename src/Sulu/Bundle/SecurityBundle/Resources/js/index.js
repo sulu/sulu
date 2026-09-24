@@ -18,7 +18,11 @@ fieldRegistry.add('two_factor', TwoFactor);
 formToolbarActionRegistry.add('sulu_security.enable_user', EnableUserToolbarAction);
 formToolbarActionRegistry.add('sulu_security.reset_two_factor', ResetTwoFactorToolbarAction);
 
-blockingOverlayRegistry.add('sulu_security.two_factor_setup', TwoFactorSetupOverlay);
+blockingOverlayRegistry.add(
+    'sulu_security.two_factor_setup',
+    TwoFactorSetupOverlay,
+    () => userStore.twoFactorSetupRequired
+);
 
 initializer.addUpdateConfigHook('sulu_security', (config: Object) => {
     TwoFactor.endpoints = config.endpoints;

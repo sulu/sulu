@@ -165,8 +165,15 @@ test('Render based on current route', () => {
     expect(view).toMatchSnapshot();
 });
 
-test('Do not render the view while a forced two factor setup is pending', () => {
-    mockUserStoreTwoFactorSetupRequired.mockReturnValue(true);
+test('Do not render the view while a blocking overlay is open', () => {
+    blockingOverlayRegistry.clear();
+    blockingOverlayRegistry.add(
+        'test_overlay',
+        function TestBlockingOverlay() {
+            return <div>blocking overlay mock</div>;
+        },
+        () => true
+    );
 
     const router = new Router({});
     router.route = new Route({
@@ -178,6 +185,8 @@ test('Do not render the view while a forced two factor setup is pending', () => 
     const view = mount(<Application appVersion={null} router={router} suluVersion="2.0.0-RC1" />);
 
     expect(view.find('ViewRenderer')).toHaveLength(0);
+
+    blockingOverlayRegistry.clear();
 });
 
 test('Render the registered blocking overlays', () => {

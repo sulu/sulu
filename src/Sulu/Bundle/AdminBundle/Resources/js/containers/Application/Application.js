@@ -193,7 +193,7 @@ class Application extends React.Component<Props>{
                             <div className={contentClass}>
                                 <main className={applicationStyles.main}>
                                     <div className={applicationStyles.viewContainer}>
-                                        {router.route && !userStore.twoFactorSetupRequired &&
+                                        {router.route && !blockingOverlayRegistry.isAnyBlocking() &&
                                             <ViewRenderer router={router} />
                                         }
                                     </div>
