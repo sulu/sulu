@@ -55,6 +55,20 @@ bin/console doctrine:migrations:migrate
 refused everywhere until roles are granted it in **Settings** -> **User Roles**. Approving is `review`
 alone: `live` does not imply it.
 
+### Website localizations come from a service
+
+`ContentController` built the `localizations` of a page in a private method. They now come from
+`ContentLocalizationsResolverInterface`, service `sulu_content.content_localizations_resolver`.
+
+A resource whose pages link other URLs than their own registers a resolver for its resource key.
+Content without one keeps the route-based default:
+
+```php
+$services->set('acme_product.product_localizations_resolver', ProductLocalizationsResolver::class)
+    ->args([new Reference('sulu_content.route_localizations_resolver')])
+    ->tag('sulu_content.content_localizations_resolver', ['resource_key' => 'products']);
+```
+
 ### BC breaks
 
 - The permission mask meaning "everything" is 255, not 127: `PermissionTypes::REVIEW` occupies bit
