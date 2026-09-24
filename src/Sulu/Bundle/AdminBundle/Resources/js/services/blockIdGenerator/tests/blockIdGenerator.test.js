@@ -101,57 +101,13 @@ test('Should handle API errors gracefully', () => {
     });
 });
 
-// Hands out predictable ids ('id-1', 'id-2', ...) so assertions can check assignment order.
-function mockGenerator() {
-    let counter = 0;
-
-    return jest.spyOn(blockIdGenerator, 'generateBlockIds').mockImplementation(
-        (count) => Promise.resolve(Array.from({length: count}, () => 'id-' + (++counter)))
-    );
-}
-
-test('ensureBlockIds returns null and generates nothing when value is empty', async() => {
-    const generateBlockIds = mockGenerator();
-
-    expect(await blockIdGenerator.ensureBlockIds(undefined, {})).toEqual(null);
-    expect(await blockIdGenerator.ensureBlockIds(null, {})).toEqual(null);
-    expect(await blockIdGenerator.ensureBlockIds([], {})).toEqual(null);
-    expect(generateBlockIds).not.toHaveBeenCalled();
+test('countMissingBlockIds returns 0 for an empty value', () => {
+    expect(blockIdGenerator.countMissingBlockIds(undefined, {})).toEqual(0);
+    expect(blockIdGenerator.countMissingBlockIds(null, {})).toEqual(0);
+    expect(blockIdGenerator.countMissingBlockIds([], {})).toEqual(0);
 });
 
-test('ensureBlockIds returns null when every block already has an id', async() => {
-    const generateBlockIds = mockGenerator();
-    const types = {editor: {form: {}, title: 'Editor'}};
-    const value = [
-        {_id: 'existing-1', type: 'editor'},
-        {_id: 'existing-2', type: 'editor'},
-    ];
-
-    expect(await blockIdGenerator.ensureBlockIds(value, types)).toEqual(null);
-    expect(generateBlockIds).not.toHaveBeenCalled();
-});
-
-test('ensureBlockIds assigns ids to top-level blocks that miss one, keeping existing ids', async() => {
-    const generateBlockIds = mockGenerator();
-    const types = {editor: {form: {}, title: 'Editor'}};
-    const value = [
-        {_id: 'existing-1', type: 'editor'},
-        {type: 'editor'},
-        {_id: '', type: 'editor'},
-    ];
-
-    const result = await blockIdGenerator.ensureBlockIds(value, types);
-
-    expect(generateBlockIds).toHaveBeenCalledWith(2);
-    expect(result).toEqual([
-        {_id: 'existing-1', type: 'editor'},
-        {_id: 'id-1', type: 'editor'},
-        {_id: 'id-2', type: 'editor'},
-    ]);
-});
-
-test('ensureBlockIds assigns ids to blocks nested inside another block regardless of mount state', async() => {
-    mockGenerator();
+test('countMissingBlockIds and applyBlockIds handle blocks nested inside another block', () => {
     const types = {
         container: {
             title: 'Container',
@@ -175,15 +131,16 @@ test('ensureBlockIds assigns ids to blocks nested inside another block regardles
         },
     ];
 
-    const result = await blockIdGenerator.ensureBlockIds(value, types);
+    expect(blockIdGenerator.countMissingBlockIds(value, types)).toEqual(2);
+
+    const result = blockIdGenerator.applyBlockIds(value, types, ['id-1', 'id-2']);
 
     expect(result[0]._id).toEqual('id-1');
     expect(result[0].children[0]._id).toEqual('id-2');
     expect(result[0].children[1]._id).toEqual('nested-existing');
 });
 
-test('ensureBlockIds assigns ids to image_map hotspots wrapped under a hotspots key', async() => {
-    mockGenerator();
+test('countMissingBlockIds and applyBlockIds handle image_map hotspots wrapped under a hotspots key', () => {
     const types = {default: {form: {}, title: 'Default'}};
     const value = {
         imageId: 5,
@@ -193,15 +150,16 @@ test('ensureBlockIds assigns ids to image_map hotspots wrapped under a hotspots 
         ],
     };
 
-    const result = await blockIdGenerator.ensureBlockIds(value, types);
+    expect(blockIdGenerator.countMissingBlockIds(value, types)).toEqual(1);
+
+    const result = blockIdGenerator.applyBlockIds(value, types, ['id-1']);
 
     expect(result.imageId).toEqual(5);
     expect(result.hotspots[0]._id).toEqual('id-1');
     expect(result.hotspots[1]._id).toEqual('hotspot-existing');
 });
 
-test('ensureBlockIds descends into fields nested in sections', async() => {
-    mockGenerator();
+test('countMissingBlockIds and applyBlockIds descend into fields nested in sections', () => {
     const types = {
         container: {
             title: 'Container',
@@ -222,27 +180,11 @@ test('ensureBlockIds descends into fields nested in sections', async() => {
         {type: 'container', children: [{type: 'editor'}]},
     ];
 
-    const result = await blockIdGenerator.ensureBlockIds(value, types);
+    expect(blockIdGenerator.countMissingBlockIds(value, types)).toEqual(2);
+
+    const result = blockIdGenerator.applyBlockIds(value, types, ['id-1', 'id-2']);
 
     expect(result[0].children[0]._id).toEqual('id-2');
-});
-
-test('ensureBlockIds does not mutate the passed value', async() => {
-    mockGenerator();
-    const types = {editor: {form: {}, title: 'Editor'}};
-    const value = [{type: 'editor'}];
-
-    await blockIdGenerator.ensureBlockIds(value, types);
-
-    expect(value).toEqual([{type: 'editor'}]);
-});
-
-test('ensureBlockIds returns null when the generator hands back an unexpected id count', async() => {
-    jest.spyOn(blockIdGenerator, 'generateBlockIds').mockReturnValue(Promise.resolve(['only-one', 'too-many']));
-    const types = {editor: {form: {}, title: 'Editor'}};
-    const value = [{type: 'editor'}];
-
-    expect(await blockIdGenerator.ensureBlockIds(value, types)).toEqual(null);
 });
 
 test('countMissingBlockIds counts only the items without an id', () => {
