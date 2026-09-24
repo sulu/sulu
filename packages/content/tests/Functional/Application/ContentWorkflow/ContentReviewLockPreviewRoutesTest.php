@@ -19,8 +19,7 @@ use Sulu\Content\Application\ContentWorkflow\Subscriber\ContentReviewLockSubscri
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * The review lock lets the preview through by route name, so a renamed preview route would lock the
- * preview again without any other test noticing.
+ * A renamed preview route would lock the preview again.
  */
 #[CoversNothing]
 class ContentReviewLockPreviewRoutesTest extends SuluTestCase
