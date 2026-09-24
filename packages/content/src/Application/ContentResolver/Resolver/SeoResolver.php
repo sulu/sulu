@@ -48,6 +48,14 @@ readonly class SeoResolver implements ResolverInterface
             return !\in_array($item->getType(), $this->excludedPropertyTypes(), true);
         });
         $data = $this->getSeoData($dimensionContent);
+        // Seo data is always flat ("seo/title"), so fill in the missing keys to keep the
+        // MetadataResolver from nesting the properties when no seo value is saved yet.
+        foreach (\array_keys($formMetadataItems) as $name) {
+            if (\str_starts_with((string) $name, 'seo/') && !\array_key_exists($name, $data)) {
+                $data[$name] = null;
+            }
+        }
+
         $nullProperties = [];
         if (null !== $properties) {
             $filteredFormMetadataItems = [];
