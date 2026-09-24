@@ -41,9 +41,9 @@ function findViewLinkItemInSelection(editor: Object, linkTag: string) {
 }
 
 function removePTags(htmlString: string): string {
-    // Checks if this is a single paragraph
-    const match = htmlString.match(/^<p>([^<>]*)<\/p>$/);
-    if (match) {
+    // A single paragraph is unwrapped whatever it contains, because the markers below end up in the stored value.
+    const match = htmlString.match(/^<p(?:\s[^>]*)?>([\s\S]*)<\/p>$/);
+    if (match && !match[1].includes('<p')) {
         return match[1];
     }
 
