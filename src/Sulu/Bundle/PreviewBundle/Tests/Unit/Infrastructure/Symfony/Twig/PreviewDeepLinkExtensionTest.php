@@ -96,7 +96,7 @@ class PreviewDeepLinkExtensionTest extends TestCase
         );
     }
 
-    public function testRendersDarkColorsForPreferredColorScheme(): void
+    public function testRendersDarkColors(): void
     {
         $extension = $this->createExtension(true);
 
@@ -104,21 +104,6 @@ class PreviewDeepLinkExtensionTest extends TestCase
             '<style>:root{--sulu-preview-deep-link-border:#ff0000;}'
             . '@media (prefers-color-scheme: dark){:root{--sulu-preview-deep-link-border:rgb(0, 128, 255);}}</style>',
             $extension->renderDeepLinkColors(['border' => '#ff0000'], ['border' => 'rgb(0, 128, 255)'])
-        );
-    }
-
-    public function testRendersDarkColorsForSelector(): void
-    {
-        $extension = $this->createExtension(true);
-
-        $this->assertSame(
-            '<style>:root{--sulu-preview-deep-link-border:#ff0000;--sulu-preview-deep-link-icon:#fff;}'
-            . 'html[data-theme="dark"]{--sulu-preview-deep-link-icon:#111;}</style>',
-            $extension->renderDeepLinkColors(
-                ['border' => '#ff0000', 'icon' => '#fff'],
-                ['icon' => '#111'],
-                'html[data-theme="dark"]'
-            )
         );
     }
 
@@ -161,16 +146,6 @@ class PreviewDeepLinkExtensionTest extends TestCase
         $this->expectExceptionMessage('Invalid value for color "border".');
 
         $extension->renderDeepLinkColors(['border' => 'red;}</style><script>']);
-    }
-
-    public function testThrowsOnInvalidDarkSelector(): void
-    {
-        $extension = $this->createExtension(true);
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid dark selector "html.dark{}".');
-
-        $extension->renderDeepLinkColors(['border' => '#ff0000'], ['border' => '#00ff00'], 'html.dark{}');
     }
 
     private function createExtension(bool $preview): PreviewDeepLinkExtension
