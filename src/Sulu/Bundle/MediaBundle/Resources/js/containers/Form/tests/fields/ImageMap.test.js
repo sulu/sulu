@@ -3,6 +3,7 @@ import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {observable} from 'mobx';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {blockIdGenerator} from 'sulu-admin-bundle/services';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import fieldRegistry from 'sulu-admin-bundle/containers/Form/registries/fieldRegistry';
@@ -385,4 +386,98 @@ test('Should set correct default values for multiple single_select in form', () 
             }], 'imageId': 55,
         }
     );
+});
+
+test('Should backfill missing hotspot ids on mount when block_id_generator is enabled', async() => {
+    const changeSpy = jest.fn();
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+    const value = {imageId: 33, hotspots: [{type: 'default', hotspot: {type: 'circle'}}]};
+    const enrichedValue = {imageId: 33, hotspots: [{type: 'default', hotspot: {type: 'circle'}, _id: 'generated-id'}]};
+
+    const countSpy = jest.spyOn(blockIdGenerator, 'countMissingBlockIds').mockReturnValue(1);
+    const generateSpy = jest.spyOn(blockIdGenerator, 'generateBlockIds')
+        .mockReturnValue(Promise.resolve(['generated-id']));
+    const applySpy = jest.spyOn(blockIdGenerator, 'applyBlockIds').mockReturnValue(enrichedValue);
+
+    shallow(
+        <ImageMap
+            {...fieldTypeDefaultProps}
+            defaultType="default"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={{block_id_generator: {name: 'block_id_generator', value: true}}}
+            types={types}
+            value={value}
+        />
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(countSpy).toHaveBeenCalledWith(value, types);
+    expect(generateSpy).toHaveBeenCalledWith(1);
+    expect(changeSpy).toHaveBeenCalledWith(enrichedValue, {isDefaultValue: true});
+
+    countSpy.mockRestore();
+    generateSpy.mockRestore();
+    applySpy.mockRestore();
+});
+
+test('Should not backfill hotspot ids on mount when block_id_generator is disabled', async() => {
+    const changeSpy = jest.fn();
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text: {
+                    label: 'Text',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+
+    const countSpy = jest.spyOn(blockIdGenerator, 'countMissingBlockIds');
+
+    shallow(
+        <ImageMap
+            {...fieldTypeDefaultProps}
+            defaultType="default"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={{block_id_generator: {name: 'block_id_generator', value: false}}}
+            types={types}
+            value={{imageId: 33, hotspots: [{type: 'default', hotspot: {type: 'circle'}}]}}
+        />
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(countSpy).not.toHaveBeenCalled();
+    expect(changeSpy).not.toHaveBeenCalled();
+
+    countSpy.mockRestore();
 });

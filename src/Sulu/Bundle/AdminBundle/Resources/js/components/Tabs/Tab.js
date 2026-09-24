@@ -10,6 +10,7 @@ type Props = {
     children: string,
     hidden: boolean,
     index?: number,
+    navigationId?: string,
     onClick?: (index: ?number) => void,
     selected: boolean,
     tabRef?: (index: ?number, ref: ?ElementRef<'li'>) => void,
@@ -44,6 +45,7 @@ class Tab extends React.PureComponent<Props> {
             badges,
             children,
             hidden,
+            navigationId,
             type,
             selected,
         } = this.props;
@@ -60,6 +62,7 @@ class Tab extends React.PureComponent<Props> {
         return (
             <li className={tabClass} ref={this.setTabRef}>
                 <button
+                    data-sulu-block-id={navigationId}
                     disabled={selected}
                     onClick={this.handleClick}
                     title={children}
