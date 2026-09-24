@@ -63,8 +63,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
     }
 
     /**
-     * The `save` dropdown is shown while no request is active; once one is open it gives way to the single
-     * `approval` button, which opens the overlay where the request is acted on.
+     * The `save` dropdown shows while no request is active, the `approval` button once one is open.
      *
      * @return array{save: DropdownToolbarAction, approval: ToolbarAction}
      */
@@ -72,8 +71,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         string $resourceKey,
         string $saveVisibleCondition = '(!_permissions || _permissions.edit)',
         string $publishVisibleCondition = '(!_permissions || _permissions.live)',
-        // Opening the overlay takes `edit` or `live` too: retrying a failed check and publishing
-        // without review both live in it. The decision buttons inside are still gated on `review`.
+        // Opening the overlay takes `edit` or `live` too; the decisions inside are gated on `review`.
         string $reviewVisibleCondition = '(!_permissions || _permissions.review || _permissions.edit || _permissions.live)',
     ): array {
         $noActiveRequest = '!activeWorkflowTransitionRequest';

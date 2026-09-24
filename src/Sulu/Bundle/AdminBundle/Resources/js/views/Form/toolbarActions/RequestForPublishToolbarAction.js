@@ -27,9 +27,8 @@ export default class RequestForPublishToolbarAction extends AbstractFormToolbarA
         const {data, dirty, id, resourceKey} = this.resourceFormStore;
 
         if (!id) {
-            // Nothing is saved on the create form, so there is no workflow place to read and no
-            // `workflowTransitionRequestEnabled` either. Only the picked template answers it, and
-            // which templates are covered is the server's answer, taken from the admin config.
+            // Nothing is saved yet, so the picked template answers, against the list the admin
+            // config carries.
             if (!hasRequestWorkflow(resourceKey, data.template)) {
                 return;
             }

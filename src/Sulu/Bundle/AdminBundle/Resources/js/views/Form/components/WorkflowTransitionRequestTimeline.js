@@ -30,8 +30,8 @@ function decisionTime(entry: {+decidedAt: ?string}): number {
     return new Date(entry.decidedAt ?? 0).getTime();
 }
 
-// Numbers the approvals 1..N in decision order, so each entry shows the count as of that moment.
-// Only people are numbered: a check does not count towards the gate, so it carries no "n of m".
+// Numbers the approvals 1..N in decision order. Only people count towards the gate, so a check
+// carries no "n of m".
 function buildApprovalRunningCounts(approvals: Array<WorkflowTransitionRequestApproval>): Map<string, number> {
     const runningCounts = new Map();
 

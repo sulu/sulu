@@ -8,8 +8,8 @@ import type {ToolbarItemConfig} from '../../../containers/Toolbar/types';
 import type {Node} from 'react';
 
 /**
- * Split out of the class so DropdownToolbarAction can apply the same rule to its children. The cast
- * is needed because ToolbarItemConfig is a union of exact object types, which a spread cannot match.
+ * Split out so DropdownToolbarAction applies the same rule to its children. The cast is needed
+ * because ToolbarItemConfig is a union of exact object types.
  */
 export function applyToolbarItemLock(config: ?ToolbarItemConfig<*>, locked: boolean): ?ToolbarItemConfig<*> {
     if (!config || !locked) {

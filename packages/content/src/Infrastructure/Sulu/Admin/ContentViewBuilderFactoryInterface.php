@@ -33,8 +33,8 @@ interface ContentViewBuilderFactoryInterface
     ): array;
 
     /**
-     * The `save` and `approval` dropdowns, merged over the default toolbar actions. Pass permission
-     * conditions when plain `_permissions` does not apply, as for webspace-scoped pages.
+     * The `save` dropdown and the `approval` button. Pass conditions where plain `_permissions`
+     * does not apply, as for webspace-scoped pages.
      *
      * @return array{save: DropdownToolbarAction, approval: ToolbarAction}
      */

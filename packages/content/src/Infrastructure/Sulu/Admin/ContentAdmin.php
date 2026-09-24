@@ -17,9 +17,8 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
 
 /**
- * Publishes the one content fact the admin cannot derive on its own: which templates a review
- * workflow covers. Saved content answers that through `workflowTransitionRequestEnabled`, but the
- * create form has nothing saved to ask, so it has to go by the template the author picked.
+ * Publishes which templates a review workflow covers. Saved content answers through
+ * `workflowTransitionRequestEnabled`; the create form has nothing saved to ask.
  *
  * @internal
  */

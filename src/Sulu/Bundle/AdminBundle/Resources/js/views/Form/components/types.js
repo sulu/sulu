@@ -44,8 +44,8 @@ export type ApprovalProgress = {|
 |};
 
 /**
- * What the server lets the current user do with this request. Content without object security, an
- * article or a snippet, carries no permissions of its own, so the answer travels with the request.
+ * What the current user may do with this request. Articles and snippets carry no `_permissions`, so
+ * the answer travels with the request.
  */
 export type WorkflowTransitionRequestPermissions = {|
     cancel: boolean,
