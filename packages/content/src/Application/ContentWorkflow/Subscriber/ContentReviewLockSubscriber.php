@@ -42,12 +42,13 @@ use Symfony\Component\Workflow\TransitionBlocker;
  */
 class ContentReviewLockSubscriber implements EventSubscriberInterface
 {
-    private const PREVIEW_ROUTES = [
-        'sulu_preview.start',
+    /**
+     * The preview routes that map form data onto the content.
+     */
+    public const PREVIEW_ROUTES = [
         'sulu_preview.render',
         'sulu_preview.update',
         'sulu_preview.update-context',
-        'sulu_preview.public_render',
     ];
 
     public function __construct(
