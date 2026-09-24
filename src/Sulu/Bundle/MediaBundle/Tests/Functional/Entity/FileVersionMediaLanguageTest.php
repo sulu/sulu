@@ -103,6 +103,7 @@ class FileVersionMediaLanguageTest extends SuluTestCase
     public function testResavingAnOverlappingLanguageSetKeepsUnchangedRows(): void
     {
         $id = $this->persistFileVersion(['en']);
+        $enRowId = $this->fetchMediaLanguageRowId($id, 'en');
 
         $this->entityManager->clear();
         $fileVersion = $this->entityManager->find(FileVersion::class, $id);
@@ -115,14 +116,26 @@ class FileVersionMediaLanguageTest extends SuluTestCase
         $reloaded = $this->entityManager->find(FileVersion::class, $id);
         self::assertInstanceOf(FileVersion::class, $reloaded);
         self::assertSame(['en', 'fr'], $reloaded->getMediaLanguages());
+        self::assertSame($enRowId, $this->fetchMediaLanguageRowId($id, 'en'));
+        $frRowId = $this->fetchMediaLanguageRowId($id, 'fr');
 
         // re-saving the identical set is a no-op
         $reloaded->setMediaLanguages(['en', 'fr']);
         $this->entityManager->flush();
 
-        $count = $this->entityManager->getConnection()
-            ->fetchOne('SELECT COUNT(*) FROM me_file_version_media_languages');
-        self::assertEquals(2, $count);
+        self::assertSame($enRowId, $this->fetchMediaLanguageRowId($id, 'en'));
+        self::assertSame($frRowId, $this->fetchMediaLanguageRowId($id, 'fr'));
+    }
+
+    private function fetchMediaLanguageRowId(int $fileVersionId, string $language): int
+    {
+        $rowId = $this->entityManager->getConnection()->fetchOne(
+            'SELECT id FROM me_file_version_media_languages WHERE idFileVersions = ? AND language = ?',
+            [$fileVersionId, $language],
+        );
+        self::assertIsNumeric($rowId);
+
+        return (int) $rowId;
     }
 
     /**

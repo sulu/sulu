@@ -290,7 +290,6 @@
             </filter>
         </property>
 
-        <!-- mediaLanguage property is only used for filtering and should never be included as column in a list -->
         <!-- when used as column, the property will lead to duplicated rows for entities with multiple media languages -->
         <property
             name="mediaLanguage"
