@@ -167,36 +167,32 @@ class MetadataResolverTest extends TestCase
         self::assertNull($result['excerpt/description']->getContent());
     }
 
-    public function testResolveFlatSlashPathsStayFlatWhenNoDataForRootExists(): void
+    public function testResolveNestsSlashPathsWhenNoDataForRootExists(): void
     {
         $propertyResolverProvider = new PropertyResolverProvider(
             new \ArrayIterator(['default' => new DefaultPropertyResolver()])
         );
         $metadataResolver = new MetadataResolver($propertyResolverProvider);
 
-        $fieldMetadata1 = new FieldMetadata('seo/title');
+        $fieldMetadata1 = new FieldMetadata('cta/label');
         $fieldMetadata1->setType('text_line');
 
-        $fieldMetadata2 = new FieldMetadata('seo/description');
+        $fieldMetadata2 = new FieldMetadata('cta/url');
         $fieldMetadata2->setType('text_line');
 
-        // No "seo" data at all (e.g. seo properties before any seo value has been
-        // saved). The properties must stay flat instead of being nested one level
-        // too deep into a "seo" root.
+        // e.g. a block whose cta fields were never filled - must still be nested
+        // so that "{{ block.cta.label }}" keeps working
         $result = $metadataResolver->resolveItems(
             [
-                'seo/title' => $fieldMetadata1,
-                'seo/description' => $fieldMetadata2,
+                'cta/label' => $fieldMetadata1,
+                'cta/url' => $fieldMetadata2,
             ],
-            ['seoNoIndex' => false],
+            ['type' => 'cta_block'],
             'en',
         );
 
-        self::assertCount(2, $result);
-        self::assertArrayHasKey('seo/title', $result);
-        self::assertArrayHasKey('seo/description', $result);
-        self::assertArrayNotHasKey('seo', $result);
-        self::assertNull($result['seo/title']->getContent());
-        self::assertNull($result['seo/description']->getContent());
+        self::assertCount(1, $result);
+        self::assertArrayHasKey('cta', $result);
+        self::assertSame(['label' => null, 'url' => null], $result['cta']->getContent());
     }
 }
