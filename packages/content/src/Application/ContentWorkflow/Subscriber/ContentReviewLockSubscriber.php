@@ -19,6 +19,7 @@ use Sulu\Content\Domain\Exception\ContentInReviewException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Workflow\Event\GuardEvent;
 use Symfony\Component\Workflow\TransitionBlocker;
 
@@ -32,13 +33,25 @@ use Symfony\Component\Workflow\TransitionBlocker;
  * Publishing, rejecting and cancelling leave the review and write only the live stage, so they never
  * reach this guard.
  *
+ * The preview maps its form data through the same data mappers but persists nothing, so its routes
+ * pass: a reviewer has to see what they are asked to approve.
+ *
  * @final
  *
  * @internal this class is internal and should not be extended from or used in another context
  */
 class ContentReviewLockSubscriber implements EventSubscriberInterface
 {
+    private const PREVIEW_ROUTES = [
+        'sulu_preview.start',
+        'sulu_preview.render',
+        'sulu_preview.update',
+        'sulu_preview.update-context',
+        'sulu_preview.public_render',
+    ];
+
     public function __construct(
+        private readonly RequestStack $requestStack,
         private readonly ActiveWorkflowTransitionRequestProviderInterface $activeWorkflowTransitionRequestProvider,
     ) {
     }
@@ -52,7 +65,7 @@ class ContentReviewLockSubscriber implements EventSubscriberInterface
     {
         $dimensionContent = $guardEvent->getSubject();
 
-        if (!$dimensionContent instanceof DimensionContentInterface) {
+        if (!$dimensionContent instanceof DimensionContentInterface || $this->isPreview()) {
             return;
         }
 
@@ -72,6 +85,13 @@ class ContentReviewLockSubscriber implements EventSubscriberInterface
             ContentWorkflowInterface::BLOCKER_CODE_EXCEPTION,
             [ContentWorkflowInterface::BLOCKER_EXCEPTION_PARAMETER => $exception],
         ));
+    }
+
+    private function isPreview(): bool
+    {
+        $route = $this->requestStack->getMainRequest()?->attributes->get('_route');
+
+        return \in_array($route, self::PREVIEW_ROUTES, true);
     }
 
     public static function getSubscribedEvents(): array
