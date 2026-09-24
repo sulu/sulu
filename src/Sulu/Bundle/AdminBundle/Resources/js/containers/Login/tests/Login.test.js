@@ -28,6 +28,8 @@ const mockUserStoreSetResetSuccess = jest.fn();
 const mockUserStoreLoading = jest.fn().mockReturnValue(false);
 const mockUserStoreForgotPasswordSuccess = jest.fn().mockReturnValue(false);
 const mockUserStoreLoginMethod = jest.fn().mockReturnValue(false);
+const mockUserStoreSetLoginMethod = jest.fn();
+const mockUserStoreGetTwoFactorMethods = jest.fn().mockReturnValue([]);
 const mockUserStoreHasSingleSignOn = jest.fn();
 const mockUserStoreRedirectUrl = jest.fn().mockReturnValue('');
 
@@ -71,6 +73,14 @@ jest.mock('../../../stores/userStore', () => {
 
         get loginMethod() {
             return mockUserStoreLoginMethod();
+        }
+
+        setLoginMethod(value) {
+            return mockUserStoreSetLoginMethod(value);
+        }
+
+        get twoFactorMethods() {
+            return mockUserStoreGetTwoFactorMethods();
         }
 
         hasSingleSignOn() {
@@ -285,4 +295,67 @@ test('Should render the Login with only password', () => {
     );
 
     expect(loginForm.render()).toMatchSnapshot();
+});
+
+test('Should stay on the login form after the username step with single sign on', () => {
+    const router = new Router();
+    const loginSuccessSpy = jest.fn();
+    mockUserStoreHasSingleSignOn.mockReturnValue(true);
+    mockUserStoreLoginMethod.mockReturnValue('json_login');
+    mockUserStoreGetTwoFactorMethods.mockReturnValue([]);
+
+    const login = mount(
+        <Login initialized={true} onLoginSuccess={loginSuccessSpy} router={router} />
+    );
+
+    login.find('LoginForm').prop('onSubmit')({username: 'testUser', password: ''});
+
+    return Promise.resolve().then(() => {
+        login.update();
+        expect(login.find('TwoFactorForm')).toHaveLength(0);
+        expect(login.find('LoginForm')).toHaveLength(1);
+        expect(loginSuccessSpy).not.toHaveBeenCalled();
+    });
+});
+
+test('Should show the two factor form after the password step with single sign on', () => {
+    const router = new Router();
+    const loginSuccessSpy = jest.fn();
+    mockUserStoreHasSingleSignOn.mockReturnValue(true);
+    mockUserStoreLoginMethod.mockReturnValue('json_login');
+    mockUserStoreGetTwoFactorMethods.mockReturnValue(['email']);
+
+    const login = mount(
+        <Login initialized={true} onLoginSuccess={loginSuccessSpy} router={router} />
+    );
+
+    login.find('LoginForm').prop('onSubmit')({username: 'testUser', password: 'testPassword'});
+
+    return Promise.resolve().then(() => {
+        login.update();
+        expect(login.find('TwoFactorForm')).toHaveLength(1);
+        expect(loginSuccessSpy).not.toHaveBeenCalled();
+    });
+});
+
+test('Should reset the login method when going back to the login form', () => {
+    const router = new Router();
+    mockUserStoreHasSingleSignOn.mockReturnValue(true);
+    mockUserStoreLoginMethod.mockReturnValue('json_login');
+    mockUserStoreGetTwoFactorMethods.mockReturnValue(['email']);
+
+    const login = mount(
+        <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
+    );
+
+    login.find('LoginForm').prop('onSubmit')({username: 'testUser', password: 'testPassword'});
+
+    return Promise.resolve().then(() => {
+        login.update();
+        login.find('TwoFactorForm').prop('onChangeForm')();
+        login.update();
+
+        expect(mockUserStoreSetLoginMethod).toHaveBeenCalledWith('');
+        expect(login.find('LoginForm')).toHaveLength(1);
+    });
 });
