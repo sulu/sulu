@@ -10,7 +10,7 @@ test('Return nothing if the form has no owning block', () => {
 });
 
 test('Return the owning block from the form options', () => {
-    const block = {type: 'image', settings: {hidden: false}};
+    const block = {type: 'image'};
     const formStore = new MemoryFormStore({hidden: false}, {}, undefined, undefined, undefined, {__block: block});
     const formInspector = new FormInspector(formStore);
 

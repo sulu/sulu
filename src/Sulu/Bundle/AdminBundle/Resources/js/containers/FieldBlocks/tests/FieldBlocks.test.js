@@ -1466,9 +1466,7 @@ test('Should pass the owning block as "__block" to the block settings form store
         fieldBlocks.update();
         const settingsFormStore = fieldBlocks.find('FormOverlay').prop('formStore');
 
-        expect(settingsFormStore.options.__block).toEqual(
-            {type: 'image', url: 'logo.png', settings: {hidden: false}}
-        );
+        expect(settingsFormStore.options.__block).toEqual({type: 'image', url: 'logo.png'});
         expect(settingsFormStore.data.__block).toBeUndefined();
     });
 });
