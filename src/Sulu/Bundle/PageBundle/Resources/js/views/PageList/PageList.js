@@ -200,6 +200,12 @@ class PageList extends React.Component<Props> {
         return indicators;
     };
 
+    @action handleCopyError = (error?: Object): void => {
+        const message = error?.detail || error?.title || translate('sulu_admin.unexpected_copy_server_error');
+
+        this.errors.push(message);
+    };
+
     @action handleDeleteError = (error?: Object): void => {
         const message = error?.detail || error?.title || translate('sulu_admin.unexpected_delete_server_error');
 
@@ -208,6 +214,7 @@ class PageList extends React.Component<Props> {
 
     render() {
         const {getIndicators} = this;
+        const {webspace} = this.props;
 
         return (
             <div className={pageListStyles.pageList}>
@@ -221,9 +228,11 @@ class PageList extends React.Component<Props> {
                             },
                         }}
                         adapters={['column_list', 'tree_table']}
+                        copyable={!!(webspace && webspace._permissions.add)}
+                        onCopyError={this.handleCopyError}
                         onCopyFinished={this.handleCopyFinished}
                         onDeleteError={this.handleDeleteError}
-                        onItemAdd={this.handleItemAdd}
+                        onItemAdd={webspace && webspace._permissions.add ? this.handleItemAdd : undefined}
                         onItemClick={this.handleEditClick}
                         searchable={false}
                         selectable={false}

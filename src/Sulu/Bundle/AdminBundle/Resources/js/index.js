@@ -32,6 +32,7 @@ import List, {
 } from './views/List';
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
+import CKEditor5Container from './containers/CKEditor5';
 import {
     ArrayFieldTransformer,
     BooleanFieldFilterType,
@@ -116,6 +117,7 @@ import Form, {
     TypeToolbarAction as FormTypeToolbarAction,
     TogglerToolbarAction as FormTogglerToolbarAction,
     UpdateFormStoreToolbarAction as FormUpdateFormStoreToolbarAction,
+    SuggestFormStoreToolbarAction as FormSuggestFormStoreToolbarAction,
     ReloadFormStoreToolbarAction as FormReloadFormStoreToolbarAction,
 } from './views/Form';
 import {navigationRegistry} from './containers/Navigation';
@@ -348,6 +350,7 @@ function registerFormToolbarActions() {
     formToolbarActionRegistry.add('sulu_admin.type', FormTypeToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.toggler', FormTogglerToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.update_form_store', FormUpdateFormStoreToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.suggest_form_store', FormSuggestFormStoreToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.reload_form_store', FormReloadFormStoreToolbarAction);
 }
 
@@ -374,6 +377,7 @@ function processConfig(config: Object) {
     smartContentConfigStore.setConfig(config.smartContent);
     CollaborationStore.enabled = config.collaborationEnabled;
     CollaborationStore.interval = config.collaborationInterval;
+    CKEditor5Container.textPartLanguages = config.textPartLanguages;
 }
 
 function startAdmin() {

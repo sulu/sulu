@@ -107,6 +107,39 @@ test('The filter value should be updated when set from the outside and only a si
         .toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.filter', {});
 });
 
+test('The filter setting should transform stored date strings back to Date objects', () => {
+    userStore.getPersistentSetting.mockReturnValueOnce({
+        birthday: {from: '1990-01-01 00:00', to: '2005-12-31 00:00'},
+    });
+
+    const filter = ListStore.getFilterSetting('tests', 'list_test');
+
+    expect(userStore.getPersistentSetting).toHaveBeenCalledWith('sulu_admin.list_store.tests.list_test.filter');
+    expect(filter).toEqual({birthday: {from: new Date(1990, 0, 1), to: new Date(2005, 11, 31)}});
+    expect(filter.birthday.from).toBeInstanceOf(Date);
+    expect(filter.birthday.to).toBeInstanceOf(Date);
+});
+
+test('The filter setting should leave values that are not dates untouched', () => {
+    userStore.getPersistentSetting.mockReturnValueOnce({
+        salutation: {eq: 'Dear'},
+        tagId: [1, 2],
+        enabled: {eq: true},
+    });
+
+    expect(ListStore.getFilterSetting('tests', 'list_test')).toEqual({
+        salutation: {eq: 'Dear'},
+        tagId: [1, 2],
+        enabled: {eq: true},
+    });
+});
+
+test('The filter setting should return undefined if nothing was stored', () => {
+    userStore.getPersistentSetting.mockReturnValueOnce(undefined);
+
+    expect(ListStore.getFilterSetting('tests', 'list_test')).toEqual(undefined);
+});
+
 test('The limit value should be updated when set from the outside', () => {
     const listStore = new ListStore('tests', 'tests', 'list_test', {page: observable.box()});
     expect(listStore.limit.get()).toEqual(10);
@@ -186,6 +219,43 @@ test('The loading strategy should be called when a request is sent', () => {
             sortBy: undefined,
             sortOrder: undefined,
         },
+        undefined
+    );
+
+    listStore.destroy();
+});
+
+test('The loading strategy should keep a "fields" option coming from the request options', () => {
+    const loadingStrategy = new LoadingStrategy();
+    const structureStrategy = new StructureStrategy();
+    const page = observable.box(1);
+    const locale = observable.box();
+    const listStore = new ListStore(
+        'categories',
+        'categories',
+        'list_test',
+        {
+            page,
+            locale,
+        },
+        {
+            fields: 'key',
+        },
+        undefined
+    );
+    listStore.schema = {};
+
+    listStore.updateLoadingStrategy(loadingStrategy);
+    listStore.updateStructureStrategy(structureStrategy);
+
+    expect(loadingStrategy.load).toHaveBeenCalledWith(
+        'categories',
+        expect.objectContaining({
+            fields: [
+                'id',
+                'key',
+            ],
+        }),
         undefined
     );
 
@@ -2015,6 +2085,22 @@ test('Should move all selected items to the new given parent and reload the list
                 undefined
             );
         });
+    });
+});
+
+test('Should reset copying and pass the error on when copying fails', () => {
+    expect.assertions(3);
+
+    const listStore = new ListStore('snippets', 'snippets', 'list_test', {page: observable.box()});
+    const error = {status: 403};
+    ResourceRequester.post.mockImplementation(() => Promise.reject(error));
+
+    const copyPromise = listStore.copy(5, 8);
+    expect(listStore.copying).toEqual(true);
+
+    return copyPromise.catch((copyError) => {
+        expect(copyError).toBe(error);
+        expect(listStore.copying).toEqual(false);
     });
 });
 

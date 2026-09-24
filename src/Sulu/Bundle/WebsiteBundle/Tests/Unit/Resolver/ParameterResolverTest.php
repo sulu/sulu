@@ -437,4 +437,116 @@ class ParameterResolverTest extends TestCase
             'segments' => [],
         ], $resolvedData);
     }
+
+    public function testResolveWithAssignedSegment(): void
+    {
+        $parameterResolver = new ParameterResolver(
+            $this->structureResolver->reveal(),
+            $this->requestAnalyzerResolver->reveal(),
+            $this->webspaceManager->reveal(),
+            $this->requestStack->reveal(),
+            '_sulu_segment_switch'
+        );
+
+        $localization1 = $this->prophesize(Localization::class);
+        $localization1->getLocale()->willReturn('en');
+        $localization1->getCountry()->willReturn(null);
+        $localization2 = $this->prophesize(Localization::class);
+        $localization2->getLocale()->willReturn('de');
+        $localization2->getCountry()->willReturn(null);
+
+        $this->structureResolver->resolve($this->structure->reveal(), true)
+            ->shouldBeCalledTimes(1)
+            ->willReturn([
+                'content' => [],
+                'view' => [],
+                'urls' => [
+                    'en' => '/test',
+                    'de' => '/test',
+                ],
+                'extension' => [
+                    'seo' => [],
+                    'excerpt' => [
+                        'segments' => [
+                            'sulu' => 'w',
+                        ],
+                    ],
+                ],
+                'segmentKey' => 'w',
+                'webspaceKey' => 'sulu',
+            ]);
+        $this->requestAnalyzerResolver->resolve($this->requestAnalyzer)
+            ->shouldBeCalledTimes(1)
+            ->willReturn(['request' => [], 'webspaceKey' => 'sulu']);
+        $this->webspaceManager->findUrlByResourceLocator('/test', null, 'en')->willReturn('/en/test');
+        $this->webspaceManager->findUrlByResourceLocator('/test', null, 'de')->willReturn('/de/test');
+        $this->webspaceManager->findUrlByResourceLocator('/', null, 'en')->willReturn('/en');
+        $this->request->getUri()->willReturn('/test');
+        $this->requestAnalyzer->getPortal()->willReturn($this->portal->reveal())->shouldBeCalledTimes(1);
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization1->reveal());
+        $this->portal->getLocalizations()
+            ->willReturn([$localization1->reveal(), $localization2->reveal()])->shouldBeCalledTimes(1);
+
+        $segment1 = new Segment();
+        $segment1->setKey('s');
+        $segment1->setMetadata(['title' => ['en' => 'Summer']]);
+        $segment2 = new Segment();
+        $segment2->setKey('w');
+        $segment2->setMetadata(['title' => ['en' => 'Winter']]);
+        $this->webspace->getSegments()->willReturn([$segment1, $segment2]);
+        $this->requestAnalyzer->getSegment()->willReturn($segment2);
+
+        $resolvedData = $parameterResolver->resolve(
+            [
+                'testKey' => 'testValue',
+            ],
+            $this->requestAnalyzer->reveal(),
+            $this->structure->reveal()
+        );
+
+        $this->assertEquals([
+            'testKey' => 'testValue',
+            'content' => [],
+            'view' => [],
+            'urls' => [
+                'en' => '/en/test',
+                'de' => '/de/test',
+            ],
+            'extension' => [
+                'seo' => [],
+                'excerpt' => [
+                    'segments' => [
+                        'sulu' => 'w',
+                    ],
+                ],
+            ],
+            'localizations' => [
+                'en' => [
+                    'locale' => 'en',
+                    'url' => '/en/test',
+                    'country' => null,
+                    'alternate' => true,
+                ],
+                'de' => [
+                    'locale' => 'de',
+                    'url' => '/de/test',
+                    'country' => null,
+                    'alternate' => true,
+                ],
+            ],
+            'segmentKey' => 'w',
+            'webspaceKey' => 'sulu',
+            'segments' => [
+                's' => [
+                    'title' => 'Summer',
+                    'url' => '_sulu_segment_switch?segment=s&url=/en',
+                ],
+                'w' => [
+                    'title' => 'Winter',
+                    'url' => '_sulu_segment_switch?segment=w&url=/test',
+                ],
+            ],
+            'request' => [],
+        ], $resolvedData);
+    }
 }

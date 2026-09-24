@@ -1,8 +1,9 @@
 // @flow
-import {action, autorun, computed, intercept, observable, untracked} from 'mobx';
+import {action, autorun, computed, intercept, isArrayLike, observable, untracked} from 'mobx';
 import equals from 'fast-deep-equal';
 import log from 'loglevel';
 import ResourceRequester, {RequestPromise} from '../../../services/ResourceRequester';
+import {transformUrlToDate} from '../../../utils/Date';
 import userStore from '../../../stores/userStore';
 import metadataStore from './metadataStore';
 import type {
@@ -22,6 +23,30 @@ const USER_SETTING_SORT_ORDER = 'sort_order';
 const USER_SETTING_FILTER = 'filter';
 const USER_SETTING_LIMIT = 'limit';
 const USER_SETTING_SCHEMA = 'schema';
+
+function transformFilterValue(value) {
+    if (typeof value === 'string') {
+        return transformUrlToDate(value) || value;
+    }
+
+    if (isArrayLike(value)) {
+        return value.map(transformFilterValue);
+    }
+
+    if (value instanceof Object) {
+        return transformFilterObject(value);
+    }
+
+    return value;
+}
+
+function transformFilterObject(value) {
+    return Object.keys(value).reduce((transformedValue, key) => {
+        transformedValue[key] = transformFilterValue(value[key]);
+
+        return transformedValue;
+    }, {});
+}
 
 export default class ListStore {
     @observable pageCount: ?number = 0;
@@ -74,10 +99,10 @@ export default class ListStore {
         userStore.setPersistentSetting(key, value);
     }
 
-    static getFilterSetting(listKey: string, userSettingsKey: string): string {
+    static getFilterSetting(listKey: string, userSettingsKey: string): Object {
         const key = [USER_SETTING_PREFIX, listKey, userSettingsKey, USER_SETTING_FILTER].join('.');
 
-        return userStore.getPersistentSetting(key);
+        return transformFilterValue(userStore.getPersistentSetting(key));
     }
 
     static setFilterSetting(listKey: string, userSettingsKey: string, value: *) {
@@ -496,6 +521,10 @@ export default class ListStore {
                 // TODO do not hardcode "id", but use some metadata instead
                 this.activate(response.id);
                 this.clear();
+            }))
+            .catch(action((error) => {
+                this.copying = false;
+                throw error;
             }));
     };
 
@@ -566,7 +595,12 @@ export default class ListStore {
         options.sortBy = this.sortColumn.get();
         options.sortOrder = this.sortOrder.get();
         options.limit = this.limit.get();
-        options.fields = this.fields;
+        // "fields" can also arrive through the request options, e.g. a selection field asking for
+        // a property its list does not display. Both sets are requested instead of one winning.
+        const requestedFields = typeof options.fields === 'string'
+            ? options.fields.split(',')
+            : (options.fields || []);
+        options.fields = [...new Set([...this.fields, ...requestedFields])];
         if (Object.keys(this.filterQueryOption).length > 0) {
             options.filter = this.filterQueryOption;
         }

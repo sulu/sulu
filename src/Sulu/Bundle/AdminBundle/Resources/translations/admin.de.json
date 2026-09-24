@@ -223,6 +223,7 @@
     "sulu_admin.activity_versions": "Aktivität & Versionierung",
     "sulu_admin.insights": "Einblicke",
     "sulu_admin.insufficient_descendant_permissions": "Nicht ausreichende Berechtigungen für {count} untergeordnete Elemente.",
+    "sulu_admin.unexpected_copy_server_error": "Beim Kopieren ist ein unerwarteter Fehler aufgetreten.",
     "sulu_admin.unexpected_delete_server_error": "Beim Löschen ist ein unerwarteter Fehler aufgetreten.",
     "sulu_admin.two_factor_authentication": "Zwei-Faktor Authentifizierung",
     "sulu_admin.two_factor_authentication_failed": "Verifizierungscode ist ungültig. Bitte versuchen Sie es erneut.",
@@ -244,6 +245,9 @@
     "sulu_admin.%count%_blocks_pasted": "{count} {count, plural, =1 {Block} other {Blöcke}} eingefügt.",
     "sulu_admin.writing_assistant": "Schreibassistent",
     "sulu_admin.insert": "Einfügen",
+    "sulu_admin.current_content": "Aktueller Inhalt",
+    "sulu_admin.suggestion": "Vorschlag",
+    "sulu_admin.regenerate": "Neu generieren",
     "sulu_admin.writing_assistant_prompt_placeholder": "Wie kann Sulu dir helfen?",
     "sulu_admin.sucessfully_copied_to_clipboard": "Erfolgreich in die Zwischenablage kopiert",
     "sulu_admin.selected_text": "Ausgewählter Text",
@@ -270,5 +274,6 @@
     "sulu_admin.link_target_blank": "_blank",
     "sulu_admin.link_target_self": "_self",
     "sulu_admin.link_target_parent": "_parent",
-    "sulu_admin.link_target_top": "_top"
+    "sulu_admin.link_target_top": "_top",
+    "sulu_admin.text_part_language_marker": "Sprache: {language}"
 }

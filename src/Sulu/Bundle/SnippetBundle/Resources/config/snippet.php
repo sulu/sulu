@@ -76,6 +76,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_core.list_rest_helper'),
             new Reference('sulu_document_manager.metadata_factory.base'),
             new Reference('translator'),
+            new Reference('sulu_security.security_checker', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 

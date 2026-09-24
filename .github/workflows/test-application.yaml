@@ -115,6 +115,9 @@ jobs:
             - name: Lint SCSS
               run: npm run lint:scss
 
+            - name: Check for new Enzyme tests
+              run: npm run lint:enzyme
+
             - name: Flow
               run: npm run flow -- check
 

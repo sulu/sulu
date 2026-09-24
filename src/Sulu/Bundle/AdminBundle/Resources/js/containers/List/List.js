@@ -53,6 +53,7 @@ type Props = {|
     itemActionsProvider?: ItemActionsProvider,
     itemDisabledCondition?: ?string,
     movable: boolean,
+    onCopyError?: (error?: Object) => void,
     onCopyFinished?: (response: Object) => void,
     onDeleteError?: (error?: Object) => void,
     onItemAdd?: (id: ?string | number) => void,
@@ -416,14 +417,28 @@ class List extends React.Component<Props> {
             }
 
             // TODO do not hardcode "id", but use some kind of metadata instead
-            this.props.store.copy(id, response.parent.id, this.props?.onCopyFinished).then(action(() => {
-                this.showCopyOverlay = false;
-            }));
+            this.props.store.copy(id, response.parent.id, this.props?.onCopyFinished)
+                .then(action(() => {
+                    this.showCopyOverlay = false;
+                }))
+                .catch(this.handleCopyResponseError);
 
             return response;
         }));
 
         return copyPromise;
+    };
+
+    @action handleCopyResponseError = (response: Object) => {
+        const {onCopyError} = this.props;
+
+        this.showCopyOverlay = false;
+
+        response.json().then((data) => {
+            if (onCopyError) {
+                onCopyError(data);
+            }
+        });
     };
 
     @action handleCopyOverlayConfirmClick = (parent: Object) => {

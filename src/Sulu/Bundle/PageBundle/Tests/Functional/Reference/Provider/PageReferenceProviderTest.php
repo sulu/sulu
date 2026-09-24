@@ -81,6 +81,59 @@ class PageReferenceProviderTest extends SuluTestCase
         self::assertSame($snippet->getUuid(), $references[0]->getResourceId());
     }
 
+    public function testUpdatePageAndTeaserReferences(): void
+    {
+        /** @var PageDocument $targetPage */
+        $targetPage = $this->documentManager->create('page');
+        $targetPage->setTitle('Target page');
+        $targetPage->setLocale('en');
+        $targetPage->setStructureType('test_page');
+        $targetPage->setResourceSegment('/target-page');
+        $targetPage->setParent($this->documentManager->find($this->sessionManager->getContentPath('sulu_io')));
+        $targetPage->getStructure()->bind([
+            'title' => 'Target page',
+            'template' => 'test_page',
+            'url' => '/target-page',
+        ]);
+        $this->documentManager->persist($targetPage, 'en');
+        $this->documentManager->publish($targetPage, 'en');
+        $this->documentManager->flush();
+
+        /** @var PageDocument $page */
+        $page = $this->documentManager->create('page');
+        $page->setTitle('Example page');
+        $page->setLocale('en');
+        $page->setStructureType('test_page');
+        $page->setResourceSegment('/example-page-123');
+        $page->setParent($this->documentManager->find($this->sessionManager->getContentPath('sulu_io')));
+
+        $page->getStructure()->bind([
+            'title' => 'Example page',
+            'template' => 'test_page',
+            'url' => '/test',
+            'page' => $targetPage->getUuid(),
+            'pages' => [$targetPage->getUuid()],
+            'teaser' => ['items' => [['type' => 'pages', 'id' => $targetPage->getUuid()]]],
+        ]);
+
+        $this->documentManager->persist($page, 'en');
+        $this->documentManager->publish($page, 'en');
+        $this->documentManager->flush();
+
+        $this->pageReferenceProvider->updateReferences($page, 'en', 'test');
+        $this->getEntityManager()->flush();
+
+        /** @var Reference[] $references */
+        $references = $this->referenceRepository->findBy(['referenceContext' => 'test'], ['referenceProperty' => 'ASC']);
+
+        // one reference each from the single_page_selection, page_selection and teaser_selection, all pointing at the target page
+        $this->assertCount(3, $references);
+        foreach ($references as $reference) {
+            self::assertSame(PageDocument::RESOURCE_KEY, $reference->getResourceKey());
+            self::assertSame($targetPage->getUuid(), $reference->getResourceId());
+        }
+    }
+
     public function testUpdateUnpublishedReferences(): void
     {
         /** @var SnippetDocument $snippet */

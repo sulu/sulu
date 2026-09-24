@@ -1,5 +1,6 @@
 // @flow
 import {isArrayLike} from 'mobx';
+import {transformDateForUrl} from '../../utils/Date';
 import RequestPromise from './RequestPromise';
 import type {HandleResponseHook} from './types';
 
@@ -59,6 +60,12 @@ function transformRequestObject(data: Object): Object {
             return transformedData;
         }
 
+        if (value instanceof Date) {
+            transformedData[key] = transformDateForUrl(value);
+
+            return transformedData;
+        }
+
         if (isArrayLike(value)) {
             transformedData[key] = transformRequestArray(value);
 
@@ -79,6 +86,10 @@ function transformRequestObject(data: Object): Object {
 
 function transformRequestArray(data) {
     return data.map((value) => {
+        if (value instanceof Date) {
+            return transformDateForUrl(value);
+        }
+
         if (isArrayLike(value)) {
             return transformRequestArray(value);
         }

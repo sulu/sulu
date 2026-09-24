@@ -14,6 +14,9 @@ namespace Sulu\Bundle\PageBundle\Content\Types;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use Sulu\Bundle\PageBundle\Content\PageSelectionContainer;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -28,7 +31,7 @@ use Sulu\Component\Util\ArrayableInterface;
 /**
  * content type for internal links selection.
  */
-class PageSelection extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
+class PageSelection extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, ReferenceContentTypeInterface
 {
     /**
      * @param bool $showDrafts
@@ -162,6 +165,26 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
 
         foreach ($uuids as $uuid) {
             $this->referenceStore->add($uuid);
+        }
+    }
+
+    public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
+    {
+        $uuids = $property->getValue();
+        if (!\is_array($uuids)) {
+            return;
+        }
+
+        foreach ($uuids as $uuid) {
+            if (!\is_string($uuid) || '' === $uuid) {
+                continue;
+            }
+
+            $referenceCollector->addReference(
+                BasePageDocument::RESOURCE_KEY,
+                $uuid,
+                $propertyPrefix . $property->getName()
+            );
         }
     }
 }
