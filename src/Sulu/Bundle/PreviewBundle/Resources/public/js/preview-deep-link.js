@@ -33,16 +33,19 @@
         var root = host.attachShadow({mode: 'closed'});
 
         var style = document.createElement('style');
+        // Colors come from custom properties set by sulu_preview_deep_link_colors(); they inherit into
+        // the shadow tree because `all` does not reset custom properties.
         style.textContent =
-            ':host { all: initial; }' +
+            ':host { all: initial; --border: var(--sulu-preview-deep-link-border, #23a3ec);' +
+            ' --icon: var(--sulu-preview-deep-link-icon, #fff); }' +
             '.outline { position: fixed; z-index: 2147483647; pointer-events: none;' +
-            ' outline: 2px solid #23a3ec; outline-offset: -2px; box-sizing: border-box;' +
-            ' background: rgba(35, 163, 236, 0.08); display: none; }' +
+            ' outline: 2px solid var(--border); outline-offset: -2px; box-sizing: border-box;' +
+            ' background: color-mix(in srgb, var(--border) 8%, transparent); display: none; }' +
             '.button { all: initial; position: fixed; z-index: 2147483647; pointer-events: auto;' +
             ' display: none; align-items: center; justify-content: center;' +
-            ' width: 28px; height: 28px; border-radius: 4px; background: #23a3ec; cursor: pointer;' +
-            ' box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }' +
-            '.button svg { width: 16px; height: 16px; fill: #fff; }';
+            ' width: 28px; height: 28px; border-radius: 4px; background: var(--border); cursor: pointer;' +
+            ' color: var(--icon); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }' +
+            '.button svg { width: 16px; height: 16px; }';
         root.appendChild(style);
 
         var outline = document.createElement('div');
@@ -51,14 +54,14 @@
 
         var button = document.createElement('div');
         button.className = 'button';
-        button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" ' +
+        button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
             'stroke-linecap="round">' +
             '<circle cx="12" cy="12" r="7" fill="none"/>' +
             '<path d="M12 0v4"/>' +
             '<path d="M12 20v4"/>' +
             '<path d="M0 12h4"/>' +
             '<path d="M20 12h4"/>' +
-            '<circle cx="12" cy="12" r="1.3" fill="#fff" stroke="none"/>' +
+            '<circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>' +
             '</svg>';
         root.appendChild(button);
 
