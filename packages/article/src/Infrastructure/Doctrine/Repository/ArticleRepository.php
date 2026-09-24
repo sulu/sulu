@@ -14,6 +14,7 @@ namespace Sulu\Article\Infrastructure\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Article\Domain\Exception\ArticleNotFoundException;
@@ -98,7 +99,10 @@ final class ArticleRepository implements ArticleRepositoryInterface
 
         try {
             /** @var ArticleInterface $article */
-            $article = $queryBuilder->getQuery()->getSingleResult();
+            $article = $this->dimensionContentQueryEnhancer->executeQuery(
+                $queryBuilder,
+                static fn (Query $query): mixed => $query->getSingleResult()
+            );
         } catch (NoResultException $e) {
             throw new ArticleNotFoundException($filters, 0, $e);
         }
@@ -112,7 +116,10 @@ final class ArticleRepository implements ArticleRepositoryInterface
 
         try {
             /** @var ArticleInterface $article */
-            $article = $queryBuilder->getQuery()->getSingleResult();
+            $article = $this->dimensionContentQueryEnhancer->executeQuery(
+                $queryBuilder,
+                static fn (Query $query): mixed => $query->getSingleResult()
+            );
         } catch (NoResultException $e) {
             return null;
         }
@@ -144,7 +151,10 @@ final class ArticleRepository implements ArticleRepositoryInterface
         $queryBuilder = $this->createQueryBuilder($filters, $sortBy, $selects);
 
         /** @var iterable<ArticleInterface> $articles */
-        $articles = $queryBuilder->getQuery()->getResult();
+        $articles = $this->dimensionContentQueryEnhancer->executeQuery(
+            $queryBuilder,
+            static fn (Query $query): mixed => $query->getResult()
+        );
 
         foreach ($articles as $article) {
             yield $article;

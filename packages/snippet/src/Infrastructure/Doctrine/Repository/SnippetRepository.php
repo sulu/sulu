@@ -14,6 +14,7 @@ namespace Sulu\Snippet\Infrastructure\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -98,7 +99,10 @@ final class SnippetRepository implements SnippetRepositoryInterface
 
         try {
             /** @var SnippetInterface $snippet */
-            $snippet = $queryBuilder->getQuery()->getSingleResult();
+            $snippet = $this->dimensionContentQueryEnhancer->executeQuery(
+                $queryBuilder,
+                static fn (Query $query): mixed => $query->getSingleResult()
+            );
         } catch (NoResultException $e) {
             throw new SnippetNotFoundException($filters, 0, $e);
         }
@@ -112,7 +116,10 @@ final class SnippetRepository implements SnippetRepositoryInterface
 
         try {
             /** @var SnippetInterface $snippet */
-            $snippet = $queryBuilder->getQuery()->getSingleResult();
+            $snippet = $this->dimensionContentQueryEnhancer->executeQuery(
+                $queryBuilder,
+                static fn (Query $query): mixed => $query->getSingleResult()
+            );
         } catch (NoResultException $e) {
             return null;
         }
@@ -144,7 +151,10 @@ final class SnippetRepository implements SnippetRepositoryInterface
         $queryBuilder = $this->createQueryBuilder($filters, $sortBy, $selects);
 
         /** @var iterable<SnippetInterface> $snippets */
-        $snippets = $queryBuilder->getQuery()->getResult();
+        $snippets = $this->dimensionContentQueryEnhancer->executeQuery(
+            $queryBuilder,
+            static fn (Query $query): mixed => $query->getResult()
+        );
 
         foreach ($snippets as $snippet) {
             yield $snippet;

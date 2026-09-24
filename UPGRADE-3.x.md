@@ -2,6 +2,33 @@
 
 ## 3.0.10
 
+### Custom content repositories need to execute their queries through the DimensionContentQueryEnhancer
+
+The dimension contents are fetch joined restricted to the requested dimension. Doctrine treats a to-many
+association as the complete set of related rows and therefore never refills an already initialized
+collection, so loading a content rich entity for a second dimension - another locale for example - kept
+the dimension contents of the first one and dropped the joined rows. Saving that entity then created a
+second dimension content, and with it a duplicated route.
+
+The repositories of pages, articles and snippets execute their queries through
+`DimensionContentQueryEnhancer::executeQuery()` now, which rehydrates the collections. Projects with their
+own repository for a content rich entity should do the same:
+
+**Old**
+
+```php
+$example = $queryBuilder->getQuery()->getSingleResult();
+```
+
+**New**
+
+```php
+$example = $this->dimensionContentQueryEnhancer->executeQuery(
+    $queryBuilder,
+    static fn (Query $query): mixed => $query->getSingleResult()
+);
+```
+
 ### Cache tags now match the invalidation
 
 Pages are tagged with the resource key of a resource (`tags-5`, `contacts-3`), while the invalidation used

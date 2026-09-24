@@ -13,6 +13,7 @@ namespace Sulu\Page\Infrastructure\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
@@ -126,7 +127,10 @@ final class NavigationRepository implements NavigationRepositoryInterface
         $filters = $this->buildChildrenFilters($uuid, $locale, $webspaceKey, $depth, $navigationContext);
 
         /** @var iterable<PageInterface> $pages */
-        $pages = $this->createQueryBuilder($filters)->getQuery()->getResult();
+        $pages = $this->dimensionContentQueryEnhancer->executeQuery(
+            $this->createQueryBuilder($filters),
+            static fn (Query $query): mixed => $query->getResult()
+        );
 
         return $this->resolveAndNormalizePages($pages, $locale, $properties);
     }
@@ -152,25 +156,31 @@ final class NavigationRepository implements NavigationRepositoryInterface
         array $properties = []
     ): array {
         /** @var PageInterface|null $page */
-        $page = $this->createQueryBuilder([
-            'uuid' => $uuid,
-            'locale' => $locale,
-            'stage' => DimensionContentInterface::STAGE_LIVE,
-        ])->getQuery()->getOneOrNullResult();
+        $page = $this->dimensionContentQueryEnhancer->executeQuery(
+            $this->createQueryBuilder([
+                'uuid' => $uuid,
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+            ]),
+            static fn (Query $query): mixed => $query->getOneOrNullResult()
+        );
 
         if (null === $page) {
             return [];
         }
 
         /** @var PageInterface[] $ancestors */
-        $ancestors = $this->createQueryBuilder([
-            'ancestorLft' => $page->getLft(),
-            'ancestorRgt' => $page->getRgt(),
-            'webspaceKey' => $webspaceKey,
-            'locale' => $locale,
-            'stage' => DimensionContentInterface::STAGE_LIVE,
-            'skipAccessControl' => true,
-        ])->getQuery()->getResult();
+        $ancestors = $this->dimensionContentQueryEnhancer->executeQuery(
+            $this->createQueryBuilder([
+                'ancestorLft' => $page->getLft(),
+                'ancestorRgt' => $page->getRgt(),
+                'webspaceKey' => $webspaceKey,
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'skipAccessControl' => true,
+            ]),
+            static fn (Query $query): mixed => $query->getResult()
+        );
 
         /** @var PageInterface[] $pages */
         $pages = [...$ancestors, $page];
@@ -268,10 +278,13 @@ final class NavigationRepository implements NavigationRepositoryInterface
      */
     private function findBy(array $filters = []): \Generator
     {
-        $query = $this->createQueryBuilder($filters)->getQuery();
+        $pages = $this->dimensionContentQueryEnhancer->executeQuery(
+            $this->createQueryBuilder($filters),
+            static fn (Query $query): mixed => $query->getResult()
+        );
 
         /** @var PageInterface $page */
-        foreach ($query->getResult() as $page) { // @phpstan-ignore-line foreach.nonIterable
+        foreach ($pages as $page) { // @phpstan-ignore-line foreach.nonIterable
             yield $page;
         }
     }

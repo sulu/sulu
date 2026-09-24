@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Functional\Infrastructure\Doctrine;
 
+use Doctrine\ORM\PersistentCollection;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
@@ -62,6 +63,63 @@ class DimensionContentQueryEnhancerTest extends SuluTestCase
 
         $examples = \iterator_to_array($this->exampleRepository->findBy(['locale' => null, 'stage' => 'draft']));
         $this->assertCount(3, $examples);
+    }
+
+    public function testExecuteQueryRehydratesDimensionContentsOfAnotherDimension(): void
+    {
+        static::purgeDatabase();
+
+        $example = static::createExample();
+        static::createExampleContent($example, ['locale' => 'en', 'templateData' => ['title' => 'Example EN']]);
+        static::createExampleContent($example, ['locale' => 'de', 'templateData' => ['title' => 'Example DE']]);
+        static::getEntityManager()->flush();
+        static::getEntityManager()->clear();
+
+        $selects = [ExampleRepository::SELECT_EXAMPLE_CONTENT => [ExampleRepository::GROUP_SELECT_EXAMPLE_ADMIN => true]];
+
+        $this->exampleRepository->getOneBy(['id' => $example->getId(), 'locale' => 'en', 'stage' => 'draft'], $selects);
+
+        // loading the same example for another locale must not keep the dimension contents of the
+        // previously loaded locale, otherwise the content services do not see the "de" content
+        $loadedExample = $this->exampleRepository->getOneBy(
+            ['id' => $example->getId(), 'locale' => 'de', 'stage' => 'draft'],
+            $selects
+        );
+
+        $dimensionContentCollection = new DimensionContentCollection(
+            $loadedExample->getDimensionContents(),
+            ['locale' => 'de', 'stage' => 'draft'],
+            ExampleDimensionContent::class
+        );
+
+        $dimensionContent = $dimensionContentCollection->getDimensionContent(['locale' => 'de', 'stage' => 'draft']);
+        $this->assertNotNull($dimensionContent);
+        $this->assertSame(['title' => 'Example DE'], $dimensionContent->getTemplateData());
+    }
+
+    public function testExecuteQueryKeepsDimensionContentsOfExamplesOutsideOfTheResult(): void
+    {
+        static::purgeDatabase();
+
+        $example = static::createExample();
+        static::createExampleContent($example, ['locale' => 'en', 'templateData' => ['title' => 'Example A']]);
+        $example2 = static::createExample();
+        static::createExampleContent($example2, ['locale' => 'en', 'templateData' => ['title' => 'Example B']]);
+        static::getEntityManager()->flush();
+        static::getEntityManager()->clear();
+
+        $selects = [ExampleRepository::SELECT_EXAMPLE_CONTENT => [ExampleRepository::GROUP_SELECT_EXAMPLE_ADMIN => true]];
+
+        $loadedExample2 = $this->exampleRepository->getOneBy(
+            ['id' => $example2->getId(), 'locale' => 'en', 'stage' => 'draft'],
+            $selects
+        );
+
+        $this->exampleRepository->getOneBy(['id' => $example->getId(), 'locale' => 'en', 'stage' => 'draft'], $selects);
+
+        $dimensionContents = $loadedExample2->getDimensionContents();
+        $this->assertInstanceOf(PersistentCollection::class, $dimensionContents);
+        $this->assertTrue($dimensionContents->isInitialized(), 'Eager loaded dimension contents should not be dropped');
     }
 
     public function testInvalidOperator(): void
