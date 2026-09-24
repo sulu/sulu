@@ -166,4 +166,33 @@ class MetadataResolverTest extends TestCase
         self::assertSame('Excerpt Title', $result['excerpt/title']->getContent());
         self::assertNull($result['excerpt/description']->getContent());
     }
+
+    public function testResolveNestsSlashPathsWhenNoDataForRootExists(): void
+    {
+        $propertyResolverProvider = new PropertyResolverProvider(
+            new \ArrayIterator(['default' => new DefaultPropertyResolver()])
+        );
+        $metadataResolver = new MetadataResolver($propertyResolverProvider);
+
+        $fieldMetadata1 = new FieldMetadata('cta/label');
+        $fieldMetadata1->setType('text_line');
+
+        $fieldMetadata2 = new FieldMetadata('cta/url');
+        $fieldMetadata2->setType('text_line');
+
+        // e.g. a block whose cta fields were never filled - must still be nested
+        // so that "{{ block.cta.label }}" keeps working
+        $result = $metadataResolver->resolveItems(
+            [
+                'cta/label' => $fieldMetadata1,
+                'cta/url' => $fieldMetadata2,
+            ],
+            ['type' => 'cta_block'],
+            'en',
+        );
+
+        self::assertCount(1, $result);
+        self::assertArrayHasKey('cta', $result);
+        self::assertSame(['label' => null, 'url' => null], $result['cta']->getContent());
+    }
 }
