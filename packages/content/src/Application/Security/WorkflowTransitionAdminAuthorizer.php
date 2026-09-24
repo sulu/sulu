@@ -17,6 +17,7 @@ use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
@@ -42,6 +43,26 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
     ) {
     }
 
+    public function getPermissions(string $resourceKey, string $resourceId, string $locale): array
+    {
+        // Outside the admin this class authorizes nothing, so it refuses nothing either.
+        if (!$this->isAuthorizedAdminCall()) {
+            return ['cancel' => true, 'publish' => true, 'retry' => true, 'review' => true];
+        }
+
+        $condition = $this->securityContextResolver->resolve($resourceKey, $resourceId, $locale);
+        $edit = $this->securityChecker->hasPermission($condition, PermissionTypes::EDIT);
+
+        return [
+            // Withdrawing a request frees the content for editing again, so it takes EDIT.
+            'cancel' => $edit,
+            'publish' => $this->isPublishGranted($condition, $resourceKey, $resourceId, $locale),
+            // Re-running a check is part of fixing the content, not a verdict on it.
+            'retry' => $edit,
+            'review' => $this->securityChecker->hasPermission($condition, PermissionTypes::REVIEW),
+        ];
+    }
+
     public function assertCanPublish(string $resourceKey, string $resourceId, string $locale): void
     {
         if (!$this->isAuthorizedAdminCall()) {
@@ -50,15 +71,7 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
 
         $condition = $this->securityContextResolver->resolve($resourceKey, $resourceId, $locale);
 
-        if ($this->securityChecker->hasPermission($condition, PermissionTypes::LIVE)) {
-            return;
-        }
-
-        // An approval delegates the publish right for that one request: EDIT is enough to carry out
-        // what the reviewers signed off, but only while the approved request is still the active one.
-        if ($this->securityChecker->hasPermission($condition, PermissionTypes::EDIT)
-            && $this->hasApprovedRequest($resourceKey, $resourceId, $locale)
-        ) {
+        if ($this->isPublishGranted($condition, $resourceKey, $resourceId, $locale)) {
             return;
         }
 
@@ -108,6 +121,25 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
         )) {
             throw new WorkflowTransitionRequestCancelNotAllowedException($request);
         }
+    }
+
+    /**
+     * An approval delegates the publish right for that one request, so EDIT carries it out while the
+     * approved request is the active one.
+     */
+    private function isPublishGranted(
+        SecurityCondition $condition,
+        string $resourceKey,
+        string $resourceId,
+        string $locale,
+    ): bool {
+        // Asked first and alone, so the live permission answers without looking up the request.
+        if ($this->securityChecker->hasPermission($condition, PermissionTypes::LIVE)) {
+            return true;
+        }
+
+        return $this->securityChecker->hasPermission($condition, PermissionTypes::EDIT)
+            && $this->hasApprovedRequest($resourceKey, $resourceId, $locale);
     }
 
     /**

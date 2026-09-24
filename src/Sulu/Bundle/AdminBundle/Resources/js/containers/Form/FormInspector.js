@@ -37,6 +37,10 @@ export default class FormInspector {
         return this.formStore.id;
     }
 
+    @computed get locked(): boolean {
+        return !!this.formStore.locked;
+    }
+
     getValueByPath(path: string): mixed {
         return this.formStore.getValueByPath(path);
     }

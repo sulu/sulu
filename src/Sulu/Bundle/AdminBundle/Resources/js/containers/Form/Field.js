@@ -47,7 +47,11 @@ class Field extends React.Component<Props> {
     }
 
     @computed get disabled() {
-        const {schema} = this.props;
+        const {formInspector, schema} = this.props;
+
+        if (formInspector.locked) {
+            return true;
+        }
 
         if (!schema.disabledCondition) {
             return false;

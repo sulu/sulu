@@ -22,6 +22,14 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 interface WorkflowTransitionAdminAuthorizerInterface
 {
     /**
+     * What the current user may do with one request, by the same rules the assertions enforce.
+     * Content without object security carries no `_permissions` for the admin to read.
+     *
+     * @return array{cancel: bool, publish: bool, retry: bool, review: bool}
+     */
+    public function getPermissions(string $resourceKey, string $resourceId, string $locale): array;
+
+    /**
      * @throws AccessDeniedException when the user holds neither the LIVE permission nor the EDIT
      *                               permission together with an approved active request
      */

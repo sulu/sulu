@@ -102,6 +102,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_content.request_workflow_registry'),
             new Reference('sulu_content.workflow_transition_request_status_resolver'),
+            new Reference('sulu_content.workflow_transition_admin_authorizer'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
@@ -197,7 +198,10 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_content.workflow_transition_request_security_context_resolver', WorkflowTransitionRequestSecurityContextResolver::class)
-        ->args([tagged_iterator('sulu_content.workflow_transition_request_security_context_provider', indexAttribute: 'resource-key')])
+        ->args([
+            new Reference('doctrine.orm.entity_manager'),
+            '%sulu_admin.resources%',
+        ])
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->alias(WorkflowTransitionRequestSecurityContextResolverInterface::class, 'sulu_content.workflow_transition_request_security_context_resolver');

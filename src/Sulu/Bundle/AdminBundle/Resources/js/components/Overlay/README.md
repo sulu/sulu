@@ -63,3 +63,23 @@ const snackbarMessage = snackbarType === 'error'
     </Overlay>
 </div>
 ```
+
+The `footer` prop replaces the default footer with own content, e.g. to align several buttons on the right.
+
+```javascript
+const [open, setOpen] = React.useState(false);
+
+const footer = (
+    <div style={{marginLeft: 'auto', display: 'flex', gap: '12px'}}>
+        <button onClick={() => setOpen(false)}>Reject</button>
+        <button onClick={() => setOpen(false)}>Approve</button>
+    </div>
+);
+
+<div>
+    <button onClick={() => setOpen(true)}>Open overlay</button>
+    <Overlay footer={footer} onClose={() => setOpen(false)} open={open} size="small" title="Review">
+        <div style={{padding: '50px'}}>Decide on this content.</div>
+    </Overlay>
+</div>
+```

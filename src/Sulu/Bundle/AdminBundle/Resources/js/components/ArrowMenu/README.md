@@ -202,3 +202,19 @@ const button = (<button onClick={handleButtonClick}>Open ArrowMenu</button>);
     </Section>
 </ArrowMenu>
 ```
+
+Example with the `dark` skin, a centered arrow and without the backdrop, as it is used for menus that open on hover:
+
+```javascript
+const Section = ArrowMenu.Section;
+
+const [open, setOpen] = React.useState(false);
+
+const button = (
+    <button onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>Hover me</button>
+);
+
+<ArrowMenu anchorElement={button} backdrop={false} horizontalAnchorMode="center" open={open} skin="dark">
+    <Section>Rejected by Anna Berger</Section>
+</ArrowMenu>
+```

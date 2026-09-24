@@ -9,6 +9,9 @@ import DeleteToolbarAction from './toolbarActions/DeleteToolbarAction';
 import DropdownToolbarAction from './toolbarActions/DropdownToolbarAction';
 import PublishToolbarAction from './toolbarActions/PublishToolbarAction';
 import ReloadFormStoreToolbarAction from './toolbarActions/ReloadFormStoreToolbarAction';
+import RequestForPublishToolbarAction from './toolbarActions/RequestForPublishToolbarAction';
+import ReviewWorkflowTransitionRequestToolbarAction
+    from './toolbarActions/ReviewWorkflowTransitionRequestToolbarAction';
 import SaveWithPublishingToolbarAction from './toolbarActions/SaveWithPublishingToolbarAction';
 import SaveWithFormDialogToolbarAction from './toolbarActions/SaveWithFormDialogToolbarAction';
 import SaveToolbarAction from './toolbarActions/SaveToolbarAction';
@@ -31,6 +34,8 @@ export {
     DropdownToolbarAction,
     PublishToolbarAction,
     ReloadFormStoreToolbarAction,
+    RequestForPublishToolbarAction,
+    ReviewWorkflowTransitionRequestToolbarAction,
     SaveWithPublishingToolbarAction,
     SaveToolbarAction,
     SaveWithFormDialogToolbarAction,

@@ -114,6 +114,8 @@ import Form, {
     DropdownToolbarAction as FormDropdownToolbarAction,
     SaveToolbarAction as FormSaveToolbarAction,
     PublishToolbarAction as FormPublishToolbarAction,
+    RequestForPublishToolbarAction as FormRequestForPublishToolbarAction,
+    ReviewWorkflowTransitionRequestToolbarAction as FormReviewWorkflowTransitionRequestToolbarAction,
     SaveWithFormDialogToolbarAction as FormSaveWithFormDialogToolbarAction,
     SaveWithPublishingToolbarAction as FormSaveWithPublishingToolbarAction,
     SetUnpublishedToolbarAction as FormSetUnpublishedToolbarAction,
@@ -366,6 +368,14 @@ function registerFormToolbarActions() {
     formToolbarActionRegistry.add('sulu_admin.update_form_store', FormUpdateFormStoreToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.suggest_form_store', FormSuggestFormStoreToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.reload_form_store', FormReloadFormStoreToolbarAction);
+    formToolbarActionRegistry.add(
+        'sulu_content.request_for_publish',
+        FormRequestForPublishToolbarAction
+    );
+    formToolbarActionRegistry.add(
+        'sulu_content.review_workflow_transition_request',
+        FormReviewWorkflowTransitionRequestToolbarAction
+    );
 }
 
 function registerListToolbarActions() {

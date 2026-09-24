@@ -105,6 +105,7 @@ export interface FormStoreInterface {
     +isFieldModified: (dataPath: string) => boolean,
     +loading: boolean,
     +locale: ?IObservableValue<string>,
+    +locked?: boolean,
     +metadataOptions: ?{[string]: any},
     +notFound: boolean,
     +options: SchemaOptions,

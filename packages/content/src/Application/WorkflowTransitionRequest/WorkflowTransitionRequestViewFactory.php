@@ -16,6 +16,7 @@ namespace Sulu\Content\Application\WorkflowTransitionRequest;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowRegistryInterface;
 use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecision;
 
@@ -27,6 +28,7 @@ final class WorkflowTransitionRequestViewFactory implements WorkflowTransitionRe
     public function __construct(
         private readonly RequestWorkflowRegistryInterface $registry,
         private readonly WorkflowTransitionRequestStatusResolverInterface $statusResolver,
+        private readonly WorkflowTransitionAdminAuthorizerInterface $authorizer,
     ) {
     }
 
@@ -42,6 +44,12 @@ final class WorkflowTransitionRequestViewFactory implements WorkflowTransitionRe
             'resourceId' => $request->getResourceId(),
             'locale' => $request->getLocale(),
             'status' => $this->statusResolver->resolve($request)->value,
+            // The admin gates its buttons on these, so the rules live on the server alone.
+            'permissions' => $this->authorizer->getPermissions(
+                $request->getResourceKey(),
+                $request->getResourceId(),
+                $request->getLocale(),
+            ),
             'requestedAt' => $request->getCreated()->format(\DATE_ATOM),
             'createdBy' => $this->serializeUser($request->getCreator()),
             'approvalProgress' => [
