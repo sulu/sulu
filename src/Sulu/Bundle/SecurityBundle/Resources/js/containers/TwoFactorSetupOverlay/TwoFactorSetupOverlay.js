@@ -2,11 +2,11 @@
 import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
-import QRCode from 'react-qr-code';
-import {Button, Input, Overlay} from 'sulu-admin-bundle/components';
+import {Overlay} from 'sulu-admin-bundle/components';
 import {initializer, Requester} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
+import {TwoFactorBackupCodesList, TwoFactorSetupFields} from '../TwoFactorFields';
 import TwoFactorMethodButton from './TwoFactorMethodButton';
 import twoFactorSetupOverlayStyles from './twoFactorSetupOverlay.scss';
 
@@ -168,42 +168,19 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
         const isEmail = this.method === 'email';
 
         return (
-            <div className={twoFactorSetupOverlayStyles.setup}>
-                <p className={twoFactorSetupOverlayStyles.hint}>
-                    {translate(isEmail
-                        ? 'sulu_security.two_factor_setup_email_hint'
-                        : 'sulu_security.two_factor_setup_scan_hint'
-                    )}
-                </p>
-                {!isEmail &&
-                    <Fragment>
-                        <div className={twoFactorSetupOverlayStyles.qrCode}>
-                            <QRCode size={168} value={this.qrContent || ''} />
-                        </div>
-                        <div className={twoFactorSetupOverlayStyles.section}>
-                            <div className={twoFactorSetupOverlayStyles.label}>
-                                {translate('sulu_security.two_factor_setup_manual_secret')}
-                            </div>
-                            <code className={twoFactorSetupOverlayStyles.secret}>{this.secret}</code>
-                        </div>
-                    </Fragment>
-                }
-                <div className={twoFactorSetupOverlayStyles.section}>
-                    <div className={twoFactorSetupOverlayStyles.label}>
-                        {translate('sulu_admin.two_factor_verification_code')}
-                    </div>
-                    <div className={twoFactorSetupOverlayStyles.codeInput}>
-                        <Input
-                            alignment="center"
-                            autocomplete="one-time-code"
-                            inputMode="numeric"
-                            onChange={this.handleCodeChange}
-                            valid={this.codeValid}
-                            value={this.code}
-                        />
-                    </div>
-                </div>
-            </div>
+            <TwoFactorSetupFields
+                code={this.code}
+                codeValid={this.codeValid}
+                hint={translate(isEmail
+                    ? 'sulu_security.two_factor_setup_email_hint'
+                    : 'sulu_security.two_factor_setup_scan_hint'
+                )}
+                onCodeChange={this.handleCodeChange}
+                qrContent={this.qrContent}
+                secret={this.secret}
+                showSecret={!isEmail}
+                styles={twoFactorSetupOverlayStyles}
+            />
         );
     }
 
@@ -218,22 +195,12 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
     }
 
     renderBackupCodes() {
-        const {backupCodes} = this;
-
         return (
-            <div className={twoFactorSetupOverlayStyles.setup}>
-                <p className={twoFactorSetupOverlayStyles.hint}>
-                    {translate('sulu_security.two_factor_backup_codes_hint')}
-                </p>
-                <ul className={twoFactorSetupOverlayStyles.backupCodes}>
-                    {(backupCodes || []).map((backupCode) => (
-                        <li key={backupCode}>{backupCode}</li>
-                    ))}
-                </ul>
-                <Button icon="su-copy" onClick={this.handleBackupCodesCopy} skin="link">
-                    {translate('sulu_admin.copy')}
-                </Button>
-            </div>
+            <TwoFactorBackupCodesList
+                backupCodes={this.backupCodes}
+                onCopy={this.handleBackupCodesCopy}
+                styles={twoFactorSetupOverlayStyles}
+            />
         );
     }
 

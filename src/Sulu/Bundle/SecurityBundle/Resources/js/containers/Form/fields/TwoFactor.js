@@ -2,10 +2,10 @@
 import React, {Fragment} from 'react';
 import {action, isArrayLike, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
-import QRCode from 'react-qr-code';
-import {Button, Dialog, Input, Overlay, SingleSelect} from 'sulu-admin-bundle/components';
+import {Button, Dialog, Overlay, SingleSelect} from 'sulu-admin-bundle/components';
 import {Requester} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
+import {TwoFactorBackupCodesList, TwoFactorSetupFields} from '../../TwoFactorFields';
 import twoFactorStyles from './twoFactor.scss';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
 
@@ -162,55 +162,29 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
 
     renderSetup() {
         return (
-            <div className={twoFactorStyles.setup}>
-                <p className={twoFactorStyles.hint}>{translate('sulu_security.two_factor_setup_scan_hint')}</p>
-                <div className={twoFactorStyles.qrCode}>
-                    <QRCode size={168} value={this.qrContent || ''} />
-                </div>
-                <div className={twoFactorStyles.section}>
-                    <div className={twoFactorStyles.label}>
-                        {translate('sulu_security.two_factor_setup_manual_secret')}
-                    </div>
-                    <code className={twoFactorStyles.secret}>{this.secret}</code>
-                </div>
-                <div className={twoFactorStyles.section}>
-                    <div className={twoFactorStyles.label}>
-                        {translate('sulu_admin.two_factor_verification_code')}
-                    </div>
-                    <div className={twoFactorStyles.codeInput}>
-                        <Input
-                            alignment="center"
-                            autocomplete="one-time-code"
-                            inputMode="numeric"
-                            onChange={this.handleCodeChange}
-                            valid={this.codeValid}
-                            value={this.code}
-                        />
-                    </div>
-                </div>
-            </div>
+            <TwoFactorSetupFields
+                code={this.code}
+                codeValid={this.codeValid}
+                hint={translate('sulu_security.two_factor_setup_scan_hint')}
+                onCodeChange={this.handleCodeChange}
+                qrContent={this.qrContent}
+                secret={this.secret}
+                styles={twoFactorStyles}
+            />
         );
     }
 
     renderBackupCodes() {
-        const {backupCodes} = this;
-
-        if (!backupCodes) {
+        if (!this.backupCodes) {
             return null;
         }
 
         return (
-            <div className={twoFactorStyles.setup}>
-                <p className={twoFactorStyles.hint}>{translate('sulu_security.two_factor_backup_codes_hint')}</p>
-                <ul className={twoFactorStyles.backupCodes}>
-                    {backupCodes.map((backupCode) => (
-                        <li key={backupCode}>{backupCode}</li>
-                    ))}
-                </ul>
-                <Button icon="su-copy" onClick={this.handleBackupCodesCopy} skin="link">
-                    {translate('sulu_admin.copy')}
-                </Button>
-            </div>
+            <TwoFactorBackupCodesList
+                backupCodes={this.backupCodes}
+                onCopy={this.handleBackupCodesCopy}
+                styles={twoFactorStyles}
+            />
         );
     }
 
