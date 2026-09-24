@@ -1418,6 +1418,59 @@ test('Should open and close block settings overlay when confirm button is clicke
     });
 });
 
+test('Should pass the owning block as "__block" to the block settings form store', () => {
+    const changeSpy = jest.fn();
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const types = {
+        image: {
+            title: 'Image',
+            form: {
+                url: {
+                    label: 'Url',
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+    const value = [
+        {type: 'image', url: 'logo.png', settings: {hidden: false}},
+    ];
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const schemaPromise = Promise.resolve({
+        hidden: {
+            tags: [],
+            type: 'checkbox',
+        },
+    });
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="image"
+            formInspector={formInspector}
+            onChange={changeSpy}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}}}
+            types={types}
+            value={value}
+        />
+    );
+
+    fieldBlocks.find('Block').at(0).simulate('click');
+    fieldBlocks.find('Block').at(0).find('Icon[name="su-cog"]').simulate('click');
+
+    return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
+        fieldBlocks.update();
+        const settingsFormStore = fieldBlocks.find('FormOverlay').prop('formStore');
+
+        expect(settingsFormStore.options.__block).toEqual({type: 'image', url: 'logo.png'});
+        expect(settingsFormStore.data.__block).toBeUndefined();
+    });
+});
+
 test('Should destroy create new formstore when block settings overlay is opened for another block', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const types = {

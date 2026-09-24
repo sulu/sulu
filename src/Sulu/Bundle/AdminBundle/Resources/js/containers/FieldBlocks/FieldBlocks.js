@@ -468,12 +468,15 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         // create new formstore to make sure that overlay displays correct data
         this.blockSettingsFormStore?.destroy();
+        // the settings are left out, because the copy would not follow changes made in the overlay
+        const {[SETTINGS_KEY]: settings, ...block} = this.value[index];
         this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
             settingsFormKey,
             {...this.value[index][SETTINGS_KEY]},
             this.props.formInspector.locale,
             undefined,
-            this.props.formInspector.options
+            this.props.formInspector.options,
+            {__block: block}
         );
 
         this.openedBlockSettingsIndex = index;

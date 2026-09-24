@@ -11,7 +11,7 @@ const ajv = createAjv();
 
 export default class MemoryFormStore extends AbstractFormStore implements FormStoreInterface {
     id = undefined;
-    options = {};
+    options: {[string]: any} = {};
     resourceKey = undefined;
     @observable data: {[string]: any};
     @observable dirty: boolean = false;
@@ -23,7 +23,8 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         schema: Schema,
         jsonSchema: ?Object,
         locale: ?IObservableValue<string>,
-        metadataOptions: ?{[string]: any}
+        metadataOptions: ?{[string]: any},
+        options: ?{[string]: any}
     ) {
         super();
 
@@ -33,6 +34,7 @@ export default class MemoryFormStore extends AbstractFormStore implements FormSt
         this.addMissingSchemaProperties();
         this.validator = jsonSchema ? ajv.compile(jsonSchema) : undefined;
         this.metadataOptions = metadataOptions;
+        this.options = options || {};
     }
 
     @action change(dataPath: string, value: mixed, context?: ChangeContext) {
