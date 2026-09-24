@@ -58,31 +58,23 @@ class PreviewDeepLinkExtension extends AbstractExtension
     }
 
     /**
-     * The dark colors apply where $darkSelector matches the html or body element, or with a dark
-     * prefers-color-scheme when no selector is given.
+     * The dark colors apply with a dark prefers-color-scheme.
      *
      * @param array<string, mixed> $light
      * @param array<string, mixed>|null $dark
      */
-    public function renderDeepLinkColors(array $light, ?array $dark = null, ?string $darkSelector = null): string
+    public function renderDeepLinkColors(array $light, ?array $dark = null): string
     {
         $lightDeclarations = $this->buildDeclarations($light);
         $darkDeclarations = null !== $dark ? $this->buildDeclarations($dark) : '';
-
-        if (null !== $darkSelector && \preg_match('/[{}<>;]/', $darkSelector)) {
-            throw new \InvalidArgumentException(\sprintf('Invalid dark selector "%s".', $darkSelector));
-        }
 
         if (!$this->isPreview()) {
             return '';
         }
 
-        // The light block comes first so a dark selector as specific as :root still wins by order.
         $css = '' !== $lightDeclarations ? \sprintf(':root{%s}', $lightDeclarations) : '';
         if ('' !== $darkDeclarations) {
-            $css .= null !== $darkSelector
-                ? \sprintf('%s{%s}', $darkSelector, $darkDeclarations)
-                : \sprintf('@media (prefers-color-scheme: dark){:root{%s}}', $darkDeclarations);
+            $css .= \sprintf('@media (prefers-color-scheme: dark){:root{%s}}', $darkDeclarations);
         }
 
         if ('' === $css) {
