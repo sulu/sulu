@@ -94,7 +94,7 @@ class PageAdmin extends Admin
         $reviewVisibleCondition = '(' . $createPageReviewVisibleCondition . ') || (' . $editPageReviewVisibleCondition . ')';
 
         $workflowToolbarActions = $this->contentViewBuilderFactory->getWorkflowTransitionRequestToolbarActions(
-            PageInterface::RESOURCE_KEY,
+            PageInterface::class,
             $saveVisibleCondition,
             $publishVisibleCondition,
             $reviewVisibleCondition,

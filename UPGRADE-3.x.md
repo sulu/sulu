@@ -65,12 +65,20 @@ alone: `live` does not imply it.
   the system's behalf and passes through.
 - A write to content covered by an open request answers 409. Publishing, rejecting and cancelling must
   be sent as a payload-less `POST ?action=...`; a `PUT` carrying the form is a write and is refused.
-- A resource key needs a service tagged `sulu_content.workflow_transition_request_security_context_provider`
-  with that `resource-key` once a request workflow covers its content; without one, publishing that
-  content answers 500. Pages, articles and snippets ship one. A resource key without one whose content
-  no request workflow covers publishes as before.
+- A resource key needs a `security_context` under `sulu_admin.resources` once a request workflow
+  covers its content; without one, publishing that content answers 500. Pages, articles and snippets
+  declare one. A resource key without one whose content no request workflow covers publishes as before.
+  A resource whose `security_class` implements `SecuredEntityInterface`, as pages do, takes its
+  context off the entity, which is what fills the `#webspace#` placeholder.
+- `ContentViewBuilderFactoryInterface::getDefaultToolbarActions()` returns a `save` dropdown and an
+  `approval` action for content implementing `WorkflowInterface`, instead of the deprecated
+  `sulu_admin.save_with_publishing`. An admin reading the default toolbar gets the review flow with it.
 - `Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface` gained
-  `getWorkflowTransitionRequestToolbarActions()`.
+  `getWorkflowTransitionRequestToolbarActions()`, taking the content-rich entity class, for an admin
+  passing visible conditions of its own.
+- The `sulu_content.request_for_publish` toolbar action carries the template keys a review workflow
+  covers in its `templates` option, which the create form matches its picked template against. The
+  factory resolves them from the entity class, so no admin declares anything for it.
 - Admin JS form toolbar actions must extend `AbstractFormToolbarAction`: the form now calls
   `getLockAwareToolbarItemConfig()` on each.
 - The `draft` dot of the `PublishIndicator` is grey instead of yellow, yellow now means "in review".

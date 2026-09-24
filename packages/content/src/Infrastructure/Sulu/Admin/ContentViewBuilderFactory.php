@@ -24,6 +24,9 @@ use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterf
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
+use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
@@ -56,6 +59,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         private PreviewObjectProviderRegistryInterface $objectProviderRegistry,
         private ContentMetadataInspectorInterface $contentMetadataInspector,
         private SecurityCheckerInterface $securityChecker,
+        private RequestWorkflowResolverInterface $requestWorkflowResolver,
         private array $settingsForms,
         private array $excerptForms = [],
         private array $seoForms = [],
@@ -65,10 +69,14 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
     /**
      * The `save` dropdown shows while no request is active, the `approval` button once one is open.
      *
+     * @template T of DimensionContentInterface
+     *
+     * @param class-string<ContentRichEntityInterface<T>> $contentRichEntityClass
+     *
      * @return array{save: DropdownToolbarAction, approval: ToolbarAction}
      */
     public function getWorkflowTransitionRequestToolbarActions(
-        string $resourceKey,
+        string $contentRichEntityClass,
         string $saveVisibleCondition = '(!_permissions || _permissions.edit)',
         string $publishVisibleCondition = '(!_permissions || _permissions.live)',
         // Opening the overlay takes `edit` or `live` too; the decisions inside are gated on `review`.
@@ -94,6 +102,8 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                         'sulu_content.request_for_publish',
                         [
                             'visible_condition' => '(' . $saveVisibleCondition . ') && ' . $noActiveRequest,
+                            // The create form has nothing saved to ask, so it matches its picked template.
+                            'templates' => $this->resolveTemplateKeysWithWorkflow($contentRichEntityClass),
                         ]
                     ),
                     new ToolbarAction(
@@ -121,6 +131,27 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         ];
     }
 
+    /**
+     * @template T of DimensionContentInterface
+     *
+     * @param class-string<ContentRichEntityInterface<T>> $contentRichEntityClass
+     *
+     * @return list<string>
+     */
+    private function resolveTemplateKeysWithWorkflow(string $contentRichEntityClass): array
+    {
+        $dimensionContentClass = $this->contentMetadataInspector->getDimensionContentClass($contentRichEntityClass);
+
+        if (!\is_subclass_of($dimensionContentClass, TemplateInterface::class)) {
+            return [];
+        }
+
+        return $this->requestWorkflowResolver->resolveTemplateKeysWithWorkflow(
+            $dimensionContentClass::getResourceKey(),
+            $dimensionContentClass::getTemplateType(),
+        );
+    }
+
     public function getDefaultToolbarActions(
         string $contentRichEntityClass
     ): array {
@@ -129,13 +160,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         $toolbarActions = [];
 
         if (\is_subclass_of($dimensionContentClass, WorkflowInterface::class)) {
-            $toolbarActions['save'] = new ToolbarAction(
-                'sulu_admin.save_with_publishing',
-                [
-                    'publish_visible_condition' => '(!_permissions || _permissions.live)',
-                    'save_visible_condition' => '(!_permissions || _permissions.edit)',
-                ]
-            );
+            $toolbarActions = $this->getWorkflowTransitionRequestToolbarActions($contentRichEntityClass);
         } else {
             $toolbarActions['save'] = new ToolbarAction(
                 'sulu_admin.save'

@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Unit\Content\Infrastructure\Sulu\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
@@ -32,6 +33,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
+use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -68,11 +70,15 @@ class ContentViewBuilderFactoryTest extends TestCase
             $previewObjectProviderRegistry = $this->createPreviewObjectProviderRegistry([]);
         }
 
+        $requestWorkflowResolver = $this->prophesize(RequestWorkflowResolverInterface::class);
+        $requestWorkflowResolver->resolveTemplateKeysWithWorkflow(Argument::cetera())->willReturn([]);
+
         return new ContentViewBuilderFactory(
             new ViewBuilderFactory(),
             $previewObjectProviderRegistry,
             $contentMetadataInspector,
             $securityChecker,
+            $requestWorkflowResolver->reveal(),
             $settingsForms
         );
     }
@@ -222,11 +228,11 @@ class ContentViewBuilderFactoryTest extends TestCase
                     PermissionTypes::DELETE => true,
                 ],
                 [
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_content.review_workflow_transition_request', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_content.review_workflow_transition_request', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
                     [],
                     [],
                 ],
@@ -239,10 +245,10 @@ class ContentViewBuilderFactoryTest extends TestCase
                     PermissionTypes::DELETE => true,
                 ],
                 [
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_content.review_workflow_transition_request', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
                     [],
                     [],
                 ],
@@ -255,10 +261,10 @@ class ContentViewBuilderFactoryTest extends TestCase
                     PermissionTypes::DELETE => false,
                 ],
                 [
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type'],
-                    ['sulu_admin.save_with_publishing'],
-                    ['sulu_admin.save_with_publishing'],
-                    ['sulu_admin.save_with_publishing'],
+                    ['sulu_admin.dropdown', 'sulu_content.review_workflow_transition_request', 'sulu_admin.type'],
+                    ['sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown'],
                     [],
                     [],
                 ],
@@ -271,7 +277,7 @@ class ContentViewBuilderFactoryTest extends TestCase
                     PermissionTypes::DELETE => true,
                 ],
                 [
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_content.review_workflow_transition_request', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
                 ],
             ],
             [
@@ -282,11 +288,11 @@ class ContentViewBuilderFactoryTest extends TestCase
                     PermissionTypes::DELETE => true,
                 ],
                 [
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete'],
-                    ['sulu_admin.save_with_publishing'],
-                    ['sulu_admin.save_with_publishing'],
-                    ['sulu_admin.save_with_publishing'],
+                    ['sulu_admin.dropdown', 'sulu_content.review_workflow_transition_request', 'sulu_admin.type', 'sulu_admin.delete'],
+                    ['sulu_admin.dropdown', 'sulu_content.review_workflow_transition_request', 'sulu_admin.type', 'sulu_admin.delete'],
+                    ['sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown'],
                     [],
                     [],
                 ],
@@ -299,11 +305,11 @@ class ContentViewBuilderFactoryTest extends TestCase
                     PermissionTypes::DELETE => false,
                 ],
                 [
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_content.review_workflow_transition_request', 'sulu_admin.type', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_content.review_workflow_transition_request', 'sulu_admin.type', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
                     [],
                     [],
                 ],
@@ -350,34 +356,6 @@ class ContentViewBuilderFactoryTest extends TestCase
         }
     }
 
-    public function testCreateViewsWithoutLivePermissionHidesPublishing(): void
-    {
-        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-
-        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
-        $contentMetadataInspector->getDimensionContentClass(Example::class)
-            ->willReturn(ExampleDimensionContent::class);
-
-        $contentViewBuilder = $this->createContentViewBuilder($contentMetadataInspector->reveal(), $securityChecker->reveal());
-
-        $securityChecker->hasPermission('test_context', PermissionTypes::ADD)->willReturn(true);
-        $securityChecker->hasPermission('test_context', PermissionTypes::EDIT)->willReturn(true);
-        $securityChecker->hasPermission('test_context', PermissionTypes::DELETE)->willReturn(true);
-        $securityChecker->hasPermission('test_context', PermissionTypes::LIVE)->willReturn(false);
-
-        $views = $contentViewBuilder->createViews(
-            Example::class,
-            'edit_parent_key',
-            'add_parent_key',
-            'test_context'
-        );
-
-        $this->assertSame(
-            ['false', 'false', 'false', 'false', 'false'],
-            $this->getPublishVisibleConditions($views),
-        );
-    }
-
     /**
      * The request workflow replaces the save action with a dropdown. Its publish entries are guarded
      * by `_permissions`, which content without object security never delivers, so they go the way
@@ -403,7 +381,7 @@ class ContentViewBuilderFactoryTest extends TestCase
             'edit_parent_key',
             'add_parent_key',
             'test_context',
-            $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(ExampleDimensionContent::getResourceKey()),
+            $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(Example::class),
         );
 
         $this->assertSame(
@@ -433,42 +411,12 @@ class ContentViewBuilderFactoryTest extends TestCase
             'edit_parent_key',
             'add_parent_key',
             'test_context',
-            $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(ExampleDimensionContent::getResourceKey()),
+            $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(Example::class),
         );
 
         $this->assertSame(
             [['sulu_admin.save', 'sulu_content.request_for_publish', 'sulu_admin.save', 'sulu_admin.publish']],
             $this->getSaveDropdownEntries($views),
-        );
-    }
-
-    public function testCreateViewsWithLivePermissionKeepsPublishing(): void
-    {
-        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
-
-        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
-        $contentMetadataInspector->getDimensionContentClass(Example::class)
-            ->willReturn(ExampleDimensionContent::class);
-
-        $contentViewBuilder = $this->createContentViewBuilder($contentMetadataInspector->reveal(), $securityChecker->reveal());
-
-        $securityChecker->hasPermission('test_context', PermissionTypes::ADD)->willReturn(true);
-        $securityChecker->hasPermission('test_context', PermissionTypes::EDIT)->willReturn(true);
-        $securityChecker->hasPermission('test_context', PermissionTypes::DELETE)->willReturn(true);
-        $securityChecker->hasPermission('test_context', PermissionTypes::LIVE)->willReturn(true);
-
-        $views = $contentViewBuilder->createViews(
-            Example::class,
-            'edit_parent_key',
-            'add_parent_key',
-            'test_context'
-        );
-
-        $condition = '(!_permissions || _permissions.live)';
-
-        $this->assertSame(
-            [$condition, $condition, $condition, $condition, $condition],
-            $this->getPublishVisibleConditions($views),
         );
     }
 
@@ -560,7 +508,9 @@ class ContentViewBuilderFactoryTest extends TestCase
             $toolbarActions = $viewBuilder->getView()->getOption('toolbarActions') ?? [];
 
             foreach ($toolbarActions as $toolbarAction) {
-                if (!$toolbarAction instanceof DropdownToolbarAction) {
+                if (!$toolbarAction instanceof DropdownToolbarAction
+                    || 'sulu_admin.edit' !== $toolbarAction->getOptions()['label']
+                ) {
                     continue;
                 }
 
@@ -573,11 +523,6 @@ class ContentViewBuilderFactoryTest extends TestCase
         return $dropdowns;
     }
 
-    /**
-     * @param ViewBuilderInterface[] $views
-     *
-     * @return array<int, mixed>
-     */
     /**
      * @param ViewBuilderInterface[] $views
      *
@@ -609,31 +554,6 @@ class ContentViewBuilderFactoryTest extends TestCase
         }
 
         return \array_values(\array_unique($entries, \SORT_REGULAR));
-    }
-
-    /**
-     * @param ViewBuilderInterface[] $views
-     *
-     * @return list<mixed>
-     */
-    private function getPublishVisibleConditions(array $views): array
-    {
-        $conditions = [];
-
-        foreach ($views as $viewBuilder) {
-            /** @var ToolbarAction[] $toolbarActions */
-            $toolbarActions = $viewBuilder->getView()->getOption('toolbarActions') ?? [];
-
-            foreach ($toolbarActions as $toolbarAction) {
-                if ('sulu_admin.save_with_publishing' !== $toolbarAction->getType()) {
-                    continue;
-                }
-
-                $conditions[] = $toolbarAction->getOptions()['publish_visible_condition'] ?? null;
-            }
-        }
-
-        return $conditions;
     }
 
     /**
@@ -731,11 +651,11 @@ class ContentViewBuilderFactoryTest extends TestCase
                     }
                 },
                 [
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_content.review_workflow_transition_request', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_content.review_workflow_transition_request', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
+                    ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
                     [],
                     [],
                 ],

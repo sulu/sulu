@@ -129,7 +129,6 @@ import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 import Subscription from './views/Subscription';
-import {setRequestWorkflowTemplates} from './views/Form/requestWorkflowConfig';
 import {setSubscriptionConfig} from './views/Subscription/subscriptionConfig';
 import {initializeJexl} from './utils/jexl';
 import {ExternalLinkTypeOverlay, linkOverlayRegistry, LinkTypeOverlay} from './containers/Link';
@@ -479,10 +478,6 @@ function startAdmin() {
 
 initializer.addUpdateConfigHook('sulu_ai_platform', (config: Object) => {
     setSubscriptionConfig(config?.['subscription']);
-});
-
-initializer.addUpdateConfigHook('sulu_content', (config: Object) => {
-    setRequestWorkflowTemplates(config?.['requestWorkflowTemplates']);
 });
 
 initializer.addUpdateConfigHook('sulu_ai', (config: Object, initialized: boolean) => {

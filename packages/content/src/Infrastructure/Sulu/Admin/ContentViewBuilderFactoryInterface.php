@@ -36,10 +36,14 @@ interface ContentViewBuilderFactoryInterface
      * The `save` dropdown and the `approval` button. Pass conditions where plain `_permissions`
      * does not apply, as for webspace-scoped pages.
      *
+     * @template T of DimensionContentInterface
+     *
+     * @param class-string<ContentRichEntityInterface<T>> $contentRichEntityClass
+     *
      * @return array{save: DropdownToolbarAction, approval: ToolbarAction}
      */
     public function getWorkflowTransitionRequestToolbarActions(
-        string $resourceKey,
+        string $contentRichEntityClass,
         string $saveVisibleCondition = '(!_permissions || _permissions.edit)',
         string $publishVisibleCondition = '(!_permissions || _permissions.live)',
         string $reviewVisibleCondition = '(!_permissions || _permissions.review || _permissions.edit || _permissions.live)',

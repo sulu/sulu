@@ -30,7 +30,6 @@ use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedExcep
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestPreValidationFailedException;
 use Sulu\Content\Infrastructure\Doctrine\EventListener\RouteCleanupListener;
-use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ContentTemplateTypePass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ExcerptFormPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ResourceLoaderCacheCompilerPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\SeoFormPass;
@@ -238,7 +237,6 @@ final class SuluContentBundle extends AbstractBundle
         $container->addCompilerPass(new SeoFormPass());
         $container->addCompilerPass(new ResourceLoaderCacheCompilerPass());
         $container->addCompilerPass(new ValidateRequestWorkflowsPass());
-        $container->addCompilerPass(new ContentTemplateTypePass());
 
         $container->registerForAutoconfiguration(ResourceLoaderInterface::class)
             ->addTag('sulu_content.resource_loader');

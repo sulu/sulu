@@ -4,7 +4,6 @@ import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
 import RequestForPublishToolbarAction from '../../toolbarActions/RequestForPublishToolbarAction';
-import {setRequestWorkflowTemplates} from '../../requestWorkflowConfig';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -14,10 +13,6 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
     this.data = {};
     this.resourceKey = resourceKey;
 }));
-
-beforeEach(() => {
-    setRequestWorkflowTemplates({test: ['covered']});
-});
 
 jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
     class {
@@ -98,7 +93,7 @@ test.each([
 });
 
 test('Request the review of what the create form will save, which is unpublished and has no place yet', () => {
-    const toolbarAction = createRequestForPublishToolbarAction({}, null);
+    const toolbarAction = createRequestForPublishToolbarAction({templates: ['covered']}, null);
     toolbarAction.resourceFormStore.resourceStore.data.template = 'covered';
 
     const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
@@ -159,7 +154,7 @@ test('Return no item config if passed visible_condition is not met', () => {
 });
 
 test('Offer nothing on the create form when no workflow covers the picked template', () => {
-    const toolbarAction = createRequestForPublishToolbarAction({}, null);
+    const toolbarAction = createRequestForPublishToolbarAction({templates: ['covered']}, null);
     toolbarAction.resourceFormStore.resourceStore.data.template = 'not-covered';
 
     expect(toolbarAction.getToolbarItemConfig()).toBeUndefined();

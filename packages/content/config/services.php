@@ -40,7 +40,6 @@ use Sulu\Content\Infrastructure\Doctrine\ContactFactory;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Content\Infrastructure\Doctrine\MetadataLoader;
 use Sulu\Content\Infrastructure\Doctrine\TagFactory;
-use Sulu\Content\Infrastructure\Sulu\Admin\ContentAdmin;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactory;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Content\Infrastructure\Sulu\HttpCache\EventSubscriber\DimensionContentTagSubscriber;
@@ -55,20 +54,13 @@ return static function(ContainerConfigurator $container) {
         ->args(['%kernel.bundles%'])
         ->tag('doctrine.event_listener', ['event' => 'loadClassMetadata', 'priority' => 100]);
 
-    $services->set('sulu_content.admin', ContentAdmin::class)
-        ->args([
-            new Reference('sulu_content.request_workflow_resolver'),
-            '%sulu_content.content_template_types%',
-        ])
-        ->tag('sulu.admin')
-        ->tag('sulu.context', ['context' => 'admin']);
-
     $services->set('sulu_content.content_view_builder_factory', ContentViewBuilderFactory::class)
         ->args([
             new Reference('sulu_admin.view_builder_factory'),
             new Reference('sulu_preview.preview_object_provider_registry'),
             new Reference('sulu_content.content_metadata_inspector'),
             new Reference('sulu_security.security_checker'),
+            new Reference('sulu_content.request_workflow_resolver'),
             '%sulu_content.content_settings_forms%',
             '%sulu_content.content_excerpt_forms%',
             '%sulu_content.content_seo_forms%',
