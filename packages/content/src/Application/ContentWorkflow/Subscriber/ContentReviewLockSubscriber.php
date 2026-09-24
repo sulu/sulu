@@ -25,7 +25,7 @@ use Symfony\Component\Workflow\TransitionBlocker;
 
 /**
  * Every write applies `edit`, so this guard refuses them while an open request covers the content.
- * The preview persists nothing, so its routes pass.
+ * A preview persists nothing, so it passes.
  *
  * @final
  *
@@ -33,15 +33,6 @@ use Symfony\Component\Workflow\TransitionBlocker;
  */
 class ContentReviewLockSubscriber implements EventSubscriberInterface
 {
-    /**
-     * Preview routes that map form data.
-     */
-    public const PREVIEW_ROUTES = [
-        'sulu_preview.render',
-        'sulu_preview.update',
-        'sulu_preview.update-context',
-    ];
-
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly ActiveWorkflowTransitionRequestProviderInterface $activeWorkflowTransitionRequestProvider,
@@ -81,9 +72,7 @@ class ContentReviewLockSubscriber implements EventSubscriberInterface
 
     private function isPreview(): bool
     {
-        $route = $this->requestStack->getMainRequest()?->attributes->get('_route');
-
-        return \in_array($route, self::PREVIEW_ROUTES, true);
+        return true === $this->requestStack->getMainRequest()?->attributes->getBoolean('preview');
     }
 
     public static function getSubscribedEvents(): array

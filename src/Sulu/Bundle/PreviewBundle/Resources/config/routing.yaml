@@ -5,15 +5,21 @@ sulu_preview.start:
 sulu_preview.render:
     path: /render
     controller: sulu_preview.preview_controller::renderAction
+    defaults:
+        preview: true
 
 sulu_preview.update:
     path: /update
     methods: [POST]
     controller: sulu_preview.preview_controller::updateAction
+    defaults:
+        preview: true
 
 sulu_preview.update-context:
     path: /update-context
     controller: sulu_preview.preview_controller::updateContextAction
+    defaults:
+        preview: true
     
 sulu_preview.stop:
     path: /stop
