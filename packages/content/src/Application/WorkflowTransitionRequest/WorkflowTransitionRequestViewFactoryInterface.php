@@ -16,11 +16,8 @@ namespace Sulu\Content\Application\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 
 /**
- * Builds the single canonical array representation of a {@see WorkflowTransitionRequest} shared by the
- * content normalizer (form view) and the admin controller (by-id), including every reviewer row,
- * people and validators alike, and what the current user may do with the request.
- *
- * It answers for a person working in the admin, which is where both of its callers live.
+ * The array representation of a {@see WorkflowTransitionRequest} shared by the content normalizer
+ * and the admin controller: reviewer rows, checks, and what the admin user may do with it.
  *
  * @internal this interface is internal and should not be implemented or used in another context
  */

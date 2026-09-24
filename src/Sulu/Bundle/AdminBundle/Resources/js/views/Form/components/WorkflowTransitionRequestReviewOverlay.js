@@ -53,8 +53,7 @@ function buildCheckRows(request: WorkflowTransitionRequestData, canRetry: boolea
             ? translate('sulu_content.workflow_transition_request.retry')
             : null,
         actionValue: check.validatorKey,
-        // A required check that has not passed is the reason the request is still pending, so it
-        // says so instead of leaving the reader to guess between "2 of 2 approved" and the banner.
+        // A required check that has not passed is why the request is still pending, so the row says so.
         caption: check.required && check.status !== 'approved'
             ? translate('sulu_content.workflow_transition_request.check_caption_required')
             : translate(CHECK_CAPTION[check.status]),

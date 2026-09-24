@@ -22,9 +22,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 interface WorkflowTransitionAdminAuthorizerInterface
 {
     /**
-     * What the current user may do with one request, answered by the same rules the assertions
-     * enforce. The admin renders its buttons from this, because content without object security
-     * carries no permissions the frontend could read.
+     * What the current user may do with one request, by the same rules the assertions enforce.
+     * Content without object security carries no `_permissions` for the admin to read.
      *
      * @return array{cancel: bool, publish: bool, retry: bool, review: bool}
      */

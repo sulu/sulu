@@ -88,8 +88,7 @@ class PageAdmin extends Admin
         $editPagePublishVisibleCondition = '_permissions && _permissions.live';
         $publishVisibleCondition = '(' . $createPagePublishVisibleCondition . ') || (' . $editPagePublishVisibleCondition . ')';
 
-        // The overlay opens for `edit` and `live` too: retrying a failed check and publishing without
-        // review both live in it; the decisions inside it are still gated on `review`.
+        // The overlay opens for `edit` and `live` too; the decisions inside are gated on `review`.
         $createPageReviewVisibleCondition = '!_permissions && (!__webspace || __webspace._permissions.review || __webspace._permissions.edit || __webspace._permissions.live)';
         $editPageReviewVisibleCondition = '(!_permissions || _permissions.review || _permissions.edit || _permissions.live)';
         $reviewVisibleCondition = '(' . $createPageReviewVisibleCondition . ') || (' . $editPageReviewVisibleCondition . ')';

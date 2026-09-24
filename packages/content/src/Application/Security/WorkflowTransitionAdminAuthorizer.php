@@ -124,8 +124,8 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
     }
 
     /**
-     * An approval delegates the publish right for that one request: EDIT is enough to carry out what
-     * the reviewers signed off, but only while the approved request is still the active one.
+     * An approval delegates the publish right for that one request, so EDIT carries it out while the
+     * approved request is the active one.
      */
     private function isPublishGranted(
         SecurityCondition $condition,

@@ -17,8 +17,8 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Collects which template type each content resource uses. The content package cannot know its own
- * consumers, so pages, articles and snippets declare the pair on the tag.
+ * Collects the template type of each content resource, declared on the tag by pages, articles and
+ * snippets.
  *
  * @internal
  */

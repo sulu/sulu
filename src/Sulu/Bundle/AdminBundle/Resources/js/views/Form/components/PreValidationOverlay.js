@@ -34,9 +34,7 @@ function buildRows(results: Array<PreValidationResult>): Array<CheckRow> {
 }
 
 /**
- * Reads like the review overlay, because it answers the same question: which checks does this
- * content still have to pass. Here they are the workflow's pre-validators, so the list holds
- * however many are configured.
+ * The workflow's pre-validators, one row each, in the shape the review overlay uses for its checks.
  */
 export default class PreValidationOverlay extends React.Component<Props> {
     renderFooter() {

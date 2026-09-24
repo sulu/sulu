@@ -31,8 +31,8 @@ interface RequestWorkflowResolverInterface
     public function resolveForContent(DimensionContentInterface $dimensionContent): ?RequestWorkflow;
 
     /**
-     * The template keys of `$templateType` whose content is subject to a review request. The create
-     * form has no content to resolve from, so the toolbar needs the answer per template up front.
+     * The template keys of `$templateType` a review workflow covers. The create form has no content
+     * to resolve from, so the toolbar asks per template.
      *
      * @return list<string>
      */

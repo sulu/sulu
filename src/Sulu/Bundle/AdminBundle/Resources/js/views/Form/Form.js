@@ -433,9 +433,8 @@ class Form extends React.Component<Props> {
 
                 this.handleTransitionError(error);
 
-                // The content is written before the transition is applied, so a refused request has
-                // turned the create into an edit. The author reads the overlay first and lands on the
-                // form carrying the tabs it asked them to fill when they close it.
+                // A refused request turned the create into an edit, so the view follows once the
+                // overlay is closed: the tabs it asks to fill are on the edit form.
                 if (editView && resourceStore.id && error.code === ERROR_CODE_PRE_VALIDATION_FAILED) {
                     this.navigateAfterPreValidation = () => router.navigate(
                         editView,
@@ -449,8 +448,8 @@ class Form extends React.Component<Props> {
             }));
     };
 
-    // A transition on locked content must not carry the form: the workflow refuses a write while a
-    // review is open, so only the action travels and what goes live is what the reviewers saw.
+    // A transition on locked content carries no form: the workflow refuses a write while a review
+    // is open, so what goes live is what the reviewers saw.
     trigger = (transition: string) => {
         const {id, locale, options, resourceKey} = this.resourceFormStore;
 
@@ -469,8 +468,8 @@ class Form extends React.Component<Props> {
     handleTransitionError = action((error: Object) => {
         const {resourceStore} = this.props;
 
-        // Every check travels as its own row, so the overlay lists them the way the review
-        // overlay lists reviewers instead of squeezing them into one snackbar line.
+        // Every pre-validator travels as its own row, so the overlay lists them instead of one
+        // snackbar line.
         if (error.code === ERROR_CODE_PRE_VALIDATION_FAILED && error.preValidationResults) {
             this.preValidationResults = error.preValidationResults;
 
@@ -480,14 +479,12 @@ class Form extends React.Component<Props> {
                 resourceStore.set('id', error.id);
             }
 
-            // The content is written before the transition is applied, so a refused
-            // transition leaves it saved and the store has to catch up: without this the
-            // next save sends a stale `_hash` and trips the has-changed dialog, and the
-            // form never learns that a workflow covers it. A no-op without an id.
+            // The content is written before the transition is applied, so the store has to catch
+            // up: a stale `_hash` trips the has-changed dialog on the next save. A no-op without an id.
             resourceStore.reload();
 
-            // What the author typed is on the server, so the form holds nothing unsaved. Leaving it
-            // dirty would ask them to discard changes that are already stored.
+            // What the author typed is on the server, so leaving the form dirty would ask them to
+            // discard stored changes.
             this.resourceFormStore.dirty = false;
 
             return;
@@ -729,8 +726,8 @@ export default withToolbar(Form, function() {
             ? translate('sulu_content.workflow_transition_request.banner_approved')
             : translate('sulu_content.workflow_transition_request.banner_pending');
 
-        // Cancelling frees the content for editing again, so it takes the edit permission. The
-        // request carries the server's answer, which content without object security cannot give.
+        // Cancelling takes the edit permission, which the request answers for content without
+        // object security.
         const canCancel = !!activeWorkflowTransitionRequest?.permissions?.cancel;
 
         warnings.push({
@@ -745,8 +742,8 @@ export default withToolbar(Form, function() {
         });
     }
 
-    // Only the last warning is rendered, and closing it pops from this.warnings, so the close
-    // action must disappear as soon as another source appended a warning after those.
+    // Only the last warning renders and closing pops from this.warnings, so the close action goes
+    // once another source appended one.
     const displayedWarningClosable = this.warnings.length > 0
         && warnings[warnings.length - 1] === this.warnings[this.warnings.length - 1];
 

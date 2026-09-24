@@ -151,10 +151,7 @@ type Props = {|
     rows: Array<CheckRow>,
 |};
 
-/**
- * The list of checks a piece of content has to pass, shared by the review overlay and the
- * pre-validation overlay: reviewers and pre-validators read the same way, so they look the same.
- */
+/** The rows of checks or reviewers, shared by the review overlay and the pre-validation overlay. */
 export default class WorkflowCheckCard extends React.Component<Props> {
     render() {
         const {emptyText, headerCount, headerDetail, headerText, onAction, rows} = this.props;

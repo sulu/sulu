@@ -12,18 +12,12 @@ import type {ApprovalStatus} from '../components/types';
 export default class ReviewWorkflowTransitionRequestToolbarAction extends AbstractFormToolbarAction {
     @observable open: boolean = false;
 
-    /**
-     * What the user may do with the request is the server's answer, carried on the request itself:
-     * articles and snippets have no permissions of their own the form could read.
-     */
+    /** The server's answer, carried on the request: articles and snippets have no `_permissions`. */
     @computed get permissions(): {[string]: boolean} {
         return this.resourceFormStore.data.activeWorkflowTransitionRequest?.permissions || {};
     }
 
-    /**
-     * Deciding takes the review permission and a request somebody else made: the overlay is also open
-     * to editors, who come for the retry rather than for a verdict.
-     */
+    /** Deciding takes `review` and somebody else's request; the overlay is open to editors for the retry. */
     @computed get canAct(): boolean {
         if (!this.permissions.review) {
             return false;
@@ -34,10 +28,7 @@ export default class ReviewWorkflowTransitionRequestToolbarAction extends Abstra
         return String(creatorId) !== String(userStore.user?.id);
     }
 
-    /**
-     * One answer for both publish buttons, because the server draws the same line: `live` publishes
-     * whenever, `edit` only carries out what the reviewers approved.
-     */
+    /** One answer for both publish buttons: `live` publishes whenever, `edit` only an approved request. */
     @computed get canPublish(): boolean {
         return !!this.permissions.publish;
     }
