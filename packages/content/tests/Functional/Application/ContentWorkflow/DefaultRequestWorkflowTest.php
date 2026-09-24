@@ -21,7 +21,6 @@ use Sulu\Content\Domain\Exception\NoRequestWorkflowException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
-use Sulu\Content\Infrastructure\Sulu\Admin\ContentAdmin;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Content\Tests\Application\DefaultRequestWorkflowKernel;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
@@ -88,12 +87,17 @@ class DefaultRequestWorkflowTest extends SuluTestCase
         );
     }
 
-    public function testAdminConfigListsTheTemplatesTheCreateFormMayOfferTheReviewPathFor(): void
+    public function testTheRequestForPublishActionListsTheTemplatesTheCreateFormMayOfferItFor(): void
     {
-        /** @var ContentAdmin $contentAdmin */
-        $contentAdmin = static::getContainer()->get('sulu_content.admin');
+        /** @var ContentViewBuilderFactoryInterface $contentViewBuilderFactory */
+        $contentViewBuilderFactory = static::getContainer()->get('sulu_content.content_view_builder_factory');
 
-        $templates = $contentAdmin->getConfig()['requestWorkflowTemplates'][Example::RESOURCE_KEY] ?? null;
+        $templates = null;
+        foreach ($this->getSaveDropdownEntries($contentViewBuilderFactory) as $action) {
+            if ('sulu_content.request_for_publish' === $action->getType()) {
+                $templates = $action->getOptions()['templates'] ?? null;
+            }
+        }
         $this->assertIsArray($templates);
 
         $this->assertContains(
@@ -113,15 +117,8 @@ class DefaultRequestWorkflowTest extends SuluTestCase
         /** @var ContentViewBuilderFactoryInterface $contentViewBuilderFactory */
         $contentViewBuilderFactory = static::getContainer()->get('sulu_content.content_view_builder_factory');
 
-        $saveActions = $contentViewBuilderFactory
-            ->getWorkflowTransitionRequestToolbarActions(Example::RESOURCE_KEY)['save']
-            ->getOptions()['toolbarActions'];
-        $this->assertIsArray($saveActions);
-
         $conditions = [];
-        foreach ($saveActions as $action) {
-            $this->assertInstanceOf(ToolbarAction::class, $action);
-
+        foreach ($this->getSaveDropdownEntries($contentViewBuilderFactory) as $action) {
             $options = $action->getOptions();
             $label = $options['label'] ?? $action->getType();
             $this->assertIsString($label);
@@ -145,5 +142,23 @@ class DefaultRequestWorkflowTest extends SuluTestCase
             $conditions['sulu_admin.publish'],
             'It gives way to the review button once a request is open.',
         );
+    }
+
+    /**
+     * @return list<ToolbarAction>
+     */
+    private function getSaveDropdownEntries(ContentViewBuilderFactoryInterface $contentViewBuilderFactory): array
+    {
+        $entries = $contentViewBuilderFactory
+            ->getWorkflowTransitionRequestToolbarActions(Example::class)['save']
+            ->getOptions()['toolbarActions'];
+        $this->assertIsArray($entries);
+
+        foreach ($entries as $entry) {
+            $this->assertInstanceOf(ToolbarAction::class, $entry);
+        }
+
+        /** @var list<ToolbarAction> $entries */
+        return $entries;
     }
 }

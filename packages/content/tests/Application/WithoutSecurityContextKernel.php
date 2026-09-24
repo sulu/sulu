@@ -13,15 +13,16 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Application;
 
+use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Kernel in which the `examples` resource key registers no workflow transition request security
- * context provider, as a content type of a bundle that does not ship one.
+ * Kernel in which the `examples` resource declares no security context, as a content type of a
+ * bundle that secures nothing.
  */
-class WithoutSecurityContextProviderKernel extends Kernel
+class WithoutSecurityContextKernel extends Kernel
 {
     protected function build(ContainerBuilder $container): void
     {
@@ -30,8 +31,10 @@ class WithoutSecurityContextProviderKernel extends Kernel
         $container->addCompilerPass(new class() implements CompilerPassInterface {
             public function process(ContainerBuilder $container): void
             {
-                $container->getDefinition('example_test.example_security_context_provider')
-                    ->clearTag('sulu_content.workflow_transition_request_security_context_provider');
+                /** @var array<string, array<string, mixed>> $resources */
+                $resources = $container->getParameter('sulu_admin.resources');
+                unset($resources[Example::RESOURCE_KEY]['security_context']);
+                $container->setParameter('sulu_admin.resources', $resources);
             }
         }, PassConfig::TYPE_BEFORE_OPTIMIZATION);
     }

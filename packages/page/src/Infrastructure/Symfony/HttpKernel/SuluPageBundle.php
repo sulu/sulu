@@ -16,8 +16,6 @@ namespace Sulu\Page\Infrastructure\Symfony\HttpKernel;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
-use Sulu\Content\Infrastructure\Sulu\Security\ResourceSecurityContextProvider;
-use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ContentTemplateTypePass;
 use Sulu\Page\Application\ContentNormalizer\DefaultTemplateNormalizer;
 use Sulu\Page\Application\Mapper\PageContentMapper;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
@@ -261,20 +259,6 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
-
-        $services->set('sulu_page.workflow_transition_request_security_context_provider')
-            ->class(ResourceSecurityContextProvider::class)
-            ->args([
-                new Reference('doctrine.orm.entity_manager'),
-                '%sulu.model.page.class%',
-                null, // pages resolve their webspace context via SecuredEntityInterface
-            ])
-            ->tag('sulu_content.workflow_transition_request_security_context_provider', ['resource-key' => PageInterface::RESOURCE_KEY])
-            ->tag(ContentTemplateTypePass::TAG, [
-                'resource-key' => PageInterface::RESOURCE_KEY,
-                'template-type' => PageInterface::TEMPLATE_TYPE,
-            ])
-            ->tag('sulu.context', ['context' => 'admin']);
 
         // Mapper service
         $services->set('sulu_page.page_content_mapper')

@@ -164,8 +164,7 @@ class ArticleAdmin extends Admin
                 ->setTitleProperty('title'),
         );
 
-        $formToolbarActions = $this->contentViewBuilderFactory->getWorkflowTransitionRequestToolbarActions(ArticleInterface::RESOURCE_KEY)
-            + $this->contentViewBuilderFactory->getDefaultToolbarActions(ArticleInterface::class);
+        $formToolbarActions = $this->contentViewBuilderFactory->getDefaultToolbarActions(ArticleInterface::class);
         $formToolbarActions['delete'] = new DropdownToolbarAction(
             'sulu_admin.delete',
             'su-trash-alt',

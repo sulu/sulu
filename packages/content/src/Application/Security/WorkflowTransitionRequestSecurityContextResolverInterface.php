@@ -24,7 +24,7 @@ interface WorkflowTransitionRequestSecurityContextResolverInterface
      * Resolves the security condition for the given resource: context, locale, and the object
      * identity where the resource has per-object access control.
      *
-     * @throws \RuntimeException if no provider is registered for the resource key
+     * @throws \RuntimeException if the resource declares no security context
      */
     public function resolve(string $resourceKey, string $resourceId, string $locale): SecurityCondition;
 

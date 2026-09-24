@@ -57,6 +57,7 @@ class ExampleTestExtension extends Extension implements PrependExtensionInterfac
                                 'list' => 'example_test.get_examples',
                                 'detail' => 'example_test.get_example',
                             ],
+                            'security_context' => 'sulu.example.examples',
                         ],
                     ],
                     'templates' => [

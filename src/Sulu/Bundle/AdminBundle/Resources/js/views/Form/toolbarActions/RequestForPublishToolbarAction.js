@@ -1,7 +1,6 @@
 // @flow
 import jexl from 'jexl';
 import {translate} from '../../../utils/Translator';
-import {hasRequestWorkflow} from '../requestWorkflowConfig';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 // The request is applied after the save, so a published page is a draft again by the time it runs.
@@ -15,6 +14,7 @@ export default class RequestForPublishToolbarAction extends AbstractFormToolbarA
     getToolbarItemConfig() {
         const {
             disabled_condition: disabledCondition,
+            templates,
             visible_condition: visibleCondition,
         } = this.options;
 
@@ -24,12 +24,11 @@ export default class RequestForPublishToolbarAction extends AbstractFormToolbarA
             return;
         }
 
-        const {data, dirty, id, resourceKey} = this.resourceFormStore;
+        const {data, dirty, id} = this.resourceFormStore;
 
         if (!id) {
-            // Nothing is saved yet, so the picked template answers, against the list the admin
-            // config carries.
-            if (!hasRequestWorkflow(resourceKey, data.template)) {
+            // Nothing is saved yet, so the picked template answers, against the list the action carries.
+            if (!Array.isArray(templates) || !templates.includes(data.template)) {
                 return;
             }
 

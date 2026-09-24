@@ -15,7 +15,7 @@ namespace Sulu\Content\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Content\Tests\Application\WithoutSecurityContextProviderKernel;
+use Sulu\Content\Tests\Application\WithoutSecurityContextKernel;
 use Sulu\Content\Tests\Traits\WorkflowTransitionRequestTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -24,7 +24,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
  * until a request workflow covers its content.
  */
 #[CoversNothing]
-class WorkflowTransitionAuthorizationWithoutSecurityContextProviderTest extends SuluTestCase
+class WorkflowTransitionAuthorizationWithoutSecurityContextTest extends SuluTestCase
 {
     use WorkflowTransitionRequestTrait;
 
@@ -34,7 +34,7 @@ class WorkflowTransitionAuthorizationWithoutSecurityContextProviderTest extends 
 
     protected static function getKernelClass(): string
     {
-        return WithoutSecurityContextProviderKernel::class;
+        return WithoutSecurityContextKernel::class;
     }
 
     protected function setUp(): void
@@ -68,10 +68,10 @@ class WorkflowTransitionAuthorizationWithoutSecurityContextProviderTest extends 
     }
 
     /**
-     * Content a request workflow covers is always authorized, so the missing provider is reported
+     * Content a request workflow covers is always authorized, so the missing declaration is reported
      * instead of the edit permission publishing past the review.
      */
-    public function testPublishInARequestWorkflowReportsTheMissingProvider(): void
+    public function testPublishInARequestWorkflowReportsTheMissingSecurityContext(): void
     {
         $example = $this->createExampleAtDraft(self::REVIEW_TEMPLATE);
 
@@ -85,7 +85,7 @@ class WorkflowTransitionAuthorizationWithoutSecurityContextProviderTest extends 
         /** @var array{message: string} $content */
         $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
         $this->assertStringContainsString(
-            'No security context provider is registered for resource key "examples"',
+            'Add it to "sulu_admin.resources.examples"',
             $content['message'],
         );
     }
