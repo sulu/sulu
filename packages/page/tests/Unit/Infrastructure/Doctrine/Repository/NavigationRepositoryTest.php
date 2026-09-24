@@ -108,6 +108,17 @@ class NavigationRepositoryTest extends TestCase
         $this->entityManager->getRepository(PageInterface::class)->willReturn($this->nestedTreeRepository->reveal());
         $this->entityManager->getRepository(PageDimensionContentInterface::class)->willReturn($this->dimensionContentRepository->reveal());
 
+        // the enhancer only wraps the execution of the query to rehydrate the dimension contents
+        $this->dimensionContentQueryEnhancer->executeQuery(Argument::cetera())
+            ->will(static function(array $arguments): mixed {
+                /** @var QueryBuilder $queryBuilder */
+                $queryBuilder = $arguments[0];
+                /** @var callable(Query<mixed, mixed>): mixed $execute */
+                $execute = $arguments[1];
+
+                return $execute($queryBuilder->getQuery());
+            });
+
         $this->nestedTreeRepository->getClassName()->willReturn('Sulu\Page\Domain\Model\Page');
         $this->dimensionContentRepository->getClassName()->willReturn('Sulu\Page\Domain\Model\PageDimensionContent');
 

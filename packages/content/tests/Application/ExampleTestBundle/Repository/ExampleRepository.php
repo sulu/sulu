@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Application\ExampleTestBundle\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
@@ -99,7 +100,10 @@ class ExampleRepository
 
         try {
             /** @var Example $example */
-            $example = $queryBuilder->getQuery()->getSingleResult();
+            $example = $this->dimensionContentQueryEnhancer->executeQuery(
+                $queryBuilder,
+                static fn (Query $query): mixed => $query->getSingleResult()
+            );
         } catch (NoResultException $e) {
             throw new ExampleNotFoundException($filters, 0, $e);
         }
@@ -126,7 +130,10 @@ class ExampleRepository
 
         try {
             /** @var Example $example */
-            $example = $queryBuilder->getQuery()->getSingleResult();
+            $example = $this->dimensionContentQueryEnhancer->executeQuery(
+                $queryBuilder,
+                static fn (Query $query): mixed => $query->getSingleResult()
+            );
         } catch (NoResultException $e) {
             return null;
         }
@@ -215,7 +222,10 @@ class ExampleRepository
 
         // TODO optimize hydration with toIterable()
         /** @var iterable<Example> $examples */
-        $examples = $queryBuilder->getQuery()->getResult();
+        $examples = $this->dimensionContentQueryEnhancer->executeQuery(
+            $queryBuilder,
+            static fn (Query $query): mixed => $query->getResult()
+        );
 
         foreach ($examples as $example) {
             yield $example;

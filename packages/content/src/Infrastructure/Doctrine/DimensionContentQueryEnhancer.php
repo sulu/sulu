@@ -15,8 +15,12 @@ namespace Sulu\Content\Infrastructure\Doctrine;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\ORM\PersistentCollection;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\TaxonomyInterface;
@@ -30,6 +34,11 @@ use Webmozart\Assert\Assert;
  */
 class DimensionContentQueryEnhancer
 {
+    /**
+     * Alias the dimension contents are fetch joined with by addSelects().
+     */
+    private const DIMENSION_CONTENT_ALIAS = 'dimensionContent';
+
     /**
      * Withs represents additional selects which can be load to join and select specific sub entities.
      * They are used by groups and fields.
@@ -280,8 +289,8 @@ class DimensionContentQueryEnhancer
         }
 
         $effectiveAttributes = $dimensionContentClassName::getEffectiveDimensionAttributes($dimensionAttributes);
-        $queryBuilder->addCriteria($this->getAttributesCriteria('dimensionContent', $effectiveAttributes));
-        $queryBuilder->addSelect('dimensionContent');
+        $queryBuilder->addCriteria($this->getAttributesCriteria(self::DIMENSION_CONTENT_ALIAS, $effectiveAttributes));
+        $queryBuilder->addSelect(self::DIMENSION_CONTENT_ALIAS);
 
         $locale = $dimensionAttributes['locale'] ?? null;
 
@@ -323,6 +332,101 @@ class DimensionContentQueryEnhancer
                     ->addSelect('route');
             }
         }
+    }
+
+    /**
+     * Executes a query which selects the dimension contents with addSelects().
+     *
+     * Those selects restrict the fetch joined dimension contents to the requested dimension. Doctrine
+     * treats a to-many association as the complete set of related rows, so an already initialized
+     * collection is never refilled: the rows joined by a later query for another dimension are
+     * dropped without being hydrated at all. The content rich entity would then be handed to the
+     * content services with the dimension contents of the previously loaded dimension, which for
+     * example makes the DimensionContentCollectionFactory create a second dimension content - and
+     * with it a second route - for a dimension which already exists.
+     *
+     * Marking the collections as not initialized before the query lets the hydrator refill them.
+     * Collections which were not part of the result are still not initialized afterwards and keep
+     * the dimension contents they were loaded with, so they are restored to avoid loading them again.
+     *
+     * @template T
+     *
+     * @param callable(Query<mixed, mixed>): T $execute
+     *
+     * @return T
+     */
+    public function executeQuery(QueryBuilder $queryBuilder, callable $execute): mixed
+    {
+        $collections = $this->uninitializeDimensionContentCollections($queryBuilder);
+
+        try {
+            return $execute($queryBuilder->getQuery());
+        } finally {
+            foreach ($collections as $collection) {
+                if (!$collection->isInitialized()) {
+                    $collection->setInitialized(true);
+                }
+            }
+        }
+    }
+
+    /**
+     * @return PersistentCollection<int, object>[]
+     */
+    private function uninitializeDimensionContentCollections(QueryBuilder $queryBuilder): array
+    {
+        if (!$this->selectsDimensionContents($queryBuilder)) {
+            return [];
+        }
+
+        $entityManager = $queryBuilder->getEntityManager();
+        $unitOfWork = $entityManager->getUnitOfWork();
+        $identityMap = $unitOfWork->getIdentityMap();
+
+        $collections = [];
+        foreach ($queryBuilder->getRootEntities() as $rootEntity) {
+            $rootEntityName = $entityManager->getClassMetadata($rootEntity)->rootEntityName;
+
+            foreach ($identityMap[$rootEntityName] ?? [] as $contentRichEntity) {
+                // an uninitialized proxy has no hydrated dimension contents yet and reading them
+                // would load the whole entity
+                if (!$contentRichEntity instanceof ContentRichEntityInterface
+                    || $unitOfWork->isUninitializedObject($contentRichEntity)
+                ) {
+                    continue;
+                }
+
+                $dimensionContents = $contentRichEntity->getDimensionContents();
+
+                // a dirty collection contains dimension contents which are not flushed yet and
+                // would be lost when the hydrator refills the collection
+                if (!$dimensionContents instanceof PersistentCollection
+                    || !$dimensionContents->isInitialized()
+                    || $dimensionContents->isDirty()
+                ) {
+                    continue;
+                }
+
+                $dimensionContents->setInitialized(false);
+                $collections[] = $dimensionContents;
+            }
+        }
+
+        return $collections;
+    }
+
+    private function selectsDimensionContents(QueryBuilder $queryBuilder): bool
+    {
+        /** @var Select[] $selects */
+        $selects = $queryBuilder->getDQLPart('select');
+
+        foreach ($selects as $select) {
+            if (\in_array(self::DIMENSION_CONTENT_ALIAS, $select->getParts(), true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
