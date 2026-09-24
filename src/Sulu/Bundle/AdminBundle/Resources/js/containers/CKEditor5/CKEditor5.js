@@ -6,13 +6,16 @@ import {Bold, Code, Italic, Strikethrough, Subscript, Superscript, Underline} fr
 import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
 import {Essentials} from '@ckeditor/ckeditor5-essentials';
 import {Heading} from '@ckeditor/ckeditor5-heading';
+import {TextPartLanguage} from '@ckeditor/ckeditor5-language';
 import {List} from '@ckeditor/ckeditor5-list';
 import {Paragraph} from '@ckeditor/ckeditor5-paragraph';
 import {Table, TableToolbar} from '@ckeditor/ckeditor5-table';
+import userStore from '../../stores/userStore';
 import {translate} from '../../utils/Translator';
 import {addPTags, removePTags} from './utils';
 import ExternalLinkPlugin from './plugins/ExternalLinkPlugin';
 import InternalLinkPlugin from './plugins/InternalLinkPlugin';
+import TextPartLanguageVisibility from './plugins/TextPartLanguageVisibility';
 import configRegistry from './registries/configRegistry';
 import pluginRegistry from './registries/pluginRegistry';
 import type {IObservableValue} from 'mobx/lib/mobx';
@@ -23,6 +26,7 @@ import '@ckeditor/ckeditor5-alignment/dist/index.css';
 import '@ckeditor/ckeditor5-basic-styles/dist/index.css';
 import '@ckeditor/ckeditor5-essentials/dist/index.css';
 import '@ckeditor/ckeditor5-heading/dist/index.css';
+import '@ckeditor/ckeditor5-language/dist/index.css';
 import '@ckeditor/ckeditor5-list/dist/index.css';
 import '@ckeditor/ckeditor5-paragraph/dist/index.css';
 import '@ckeditor/ckeditor5-table/dist/index.css';
@@ -50,6 +54,8 @@ type Props = {|
 export default class CKEditor5 extends React.Component<Props> {
     containerRef: ?ElementRef<'div'>;
     editorInstance: any;
+
+    static textPartLanguages: Array<string> = [];
 
     static defaultProps = {
         disabled: false,
@@ -110,6 +116,9 @@ export default class CKEditor5 extends React.Component<Props> {
             } = {},
         } = this.props;
 
+        const uiLocale = userStore.systemLocale;
+        const languageNames = new (Intl: any).DisplayNames([uiLocale], {type: 'language'});
+
         const defaultConfig = {
             licenseKey: 'GPL',
             toolbar: [
@@ -125,6 +134,7 @@ export default class CKEditor5 extends React.Component<Props> {
                 'externalLink',
                 'internalLink',
                 'alignment',
+                'textPartLanguage',
                 'insertTable',
                 'code',
             ],
@@ -173,6 +183,12 @@ export default class CKEditor5 extends React.Component<Props> {
                     } : undefined,
                 ].filter((entry) => entry !== undefined),
             },
+            language: {
+                textPartLanguage: CKEditor5.textPartLanguages.map((languageCode) => ({
+                    languageCode,
+                    title: languageNames.of(languageCode) || languageCode,
+                })),
+            },
             sulu: {
                 locale: locale && locale.get(),
             },
@@ -214,6 +230,8 @@ export default class CKEditor5 extends React.Component<Props> {
                     Code,
                     Table,
                     TableToolbar,
+                    TextPartLanguage,
+                    TextPartLanguageVisibility,
                     ...pluginRegistry.plugins,
                 ],
                 ...configRegistry.configs.reduce((previousConfig, config) => {

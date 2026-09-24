@@ -3,7 +3,9 @@ import React from 'react';
 import {observable} from 'mobx';
 import {mount} from 'enzyme';
 import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
+import {TextPartLanguage} from '@ckeditor/ckeditor5-language';
 import CKEditor5 from '../CKEditor5';
+import TextPartLanguageVisibility from '../plugins/TextPartLanguageVisibility';
 import configRegistry from '../registries/configRegistry';
 import pluginRegistry from '../registries/pluginRegistry';
 
@@ -54,6 +56,10 @@ const defaultEditor = {
     disableReadOnlyMode: () => {
     },
 };
+
+afterEach(() => {
+    CKEditor5.textPartLanguages = [];
+});
 
 test('Create a CKEditor5 instance', () => {
     const editor = {
@@ -109,6 +115,27 @@ test('Create a CKEditor5 instance', () => {
         sulu: {
             locale: 'en',
         },
+    }));
+});
+
+test('Create a CKEditor5 instance with the text part language feature', () => {
+    const editor = {
+        ...defaultEditor,
+    };
+    ClassicEditor.create.mockReturnValue(Promise.resolve(editor));
+    CKEditor5.textPartLanguages = ['en', 'de'];
+
+    mount(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
+
+    expect(ClassicEditor.create).toHaveBeenCalledWith(expect.objectContaining({
+        language: expect.objectContaining({
+            textPartLanguage: [
+                {languageCode: 'en', title: expect.any(String)},
+                {languageCode: 'de', title: expect.any(String)},
+            ],
+        }),
+        plugins: expect.arrayContaining([TextPartLanguage, TextPartLanguageVisibility]),
+        toolbar: expect.arrayContaining(['textPartLanguage']),
     }));
 });
 

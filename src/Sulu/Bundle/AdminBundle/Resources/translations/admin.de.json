@@ -274,5 +274,6 @@
     "sulu_admin.link_target_blank": "_blank",
     "sulu_admin.link_target_self": "_self",
     "sulu_admin.link_target_parent": "_parent",
-    "sulu_admin.link_target_top": "_top"
+    "sulu_admin.link_target_top": "_top",
+    "sulu_admin.text_part_language_marker": "Sprache: {language}"
 }
