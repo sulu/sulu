@@ -24,17 +24,8 @@ use Symfony\Component\Workflow\Event\GuardEvent;
 use Symfony\Component\Workflow\TransitionBlocker;
 
 /**
- * Holds content that an open request covers: every write goes through the `edit` transition, so this
- * is the one place that decides it, whatever content type or admin controller asked.
- *
- * Registered in the admin context only, like the rest of the review, so a write from the website
- * kernel is not held here.
- *
- * Publishing, rejecting and cancelling leave the review and write only the live stage, so they never
- * reach this guard.
- *
- * The preview maps its form data through the same data mappers but persists nothing, so its routes
- * pass: a reviewer has to see what they are asked to approve.
+ * Every write applies `edit`, so this guard refuses them while an open request covers the content.
+ * The preview persists nothing, so its routes pass.
  *
  * @final
  *
@@ -43,7 +34,7 @@ use Symfony\Component\Workflow\TransitionBlocker;
 class ContentReviewLockSubscriber implements EventSubscriberInterface
 {
     /**
-     * The preview routes that map form data onto the content.
+     * Preview routes that map form data.
      */
     public const PREVIEW_ROUTES = [
         'sulu_preview.render',

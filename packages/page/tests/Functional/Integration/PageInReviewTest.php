@@ -308,10 +308,6 @@ class PageInReviewTest extends SuluTestCase
         $this->assertNotNull($content['activeWorkflowTransitionRequest']);
     }
 
-    /**
-     * The preview renders what the reviewer is asked to approve: loading it goes through the same
-     * mapping as every keystroke, so both have to get past the review lock without writing anything.
-     */
     public function testPreviewShowsContentInReview(): void
     {
         $id = $this->createPageInReview();
@@ -367,9 +363,7 @@ class PageInReviewTest extends SuluTestCase
     }
 
     /**
-     * Runs the admin's preview provider the way the preview controller does, inside a request on a
-     * preview route: `render` rebuilds the object from its serialized form, `update` maps the form
-     * data onto it, skipped for no data.
+     * Runs the preview provider like the preview controller does, on a preview route.
      *
      * @param array<string, mixed> $data
      */
