@@ -353,28 +353,28 @@ class PageInReviewTest extends SuluTestCase
         $this->assertTrue($content['_locked']);
     }
 
-    public function testMappingOutsideThePreviewRoutesIsStillLocked(): void
+    public function testMappingOutsideThePreviewIsStillLocked(): void
     {
         $id = $this->createPageInReview();
 
         $this->expectException(ContentInReviewException::class);
 
-        $this->previewTitle($id, $this->previewData('Typed While In Review'), 'sulu_page.put_page');
+        $this->previewTitle($id, $this->previewData('Typed While In Review'), false);
     }
 
     /**
-     * Runs the preview provider like the preview controller does, on a preview route.
+     * Runs the preview provider like the preview controller does, in a preview request.
      *
      * @param array<string, mixed> $data
      */
-    private function previewTitle(string $id, array $data, string $route = 'sulu_preview.update'): mixed
+    private function previewTitle(string $id, array $data, bool $preview = true): mixed
     {
         /** @var CachablePreviewDefaultsProviderInterface $previewProvider */
         $previewProvider = self::getContainer()->get('sulu_page.page_preview_provider');
         $previewContext = new PreviewContext($id, 'en');
 
         $requestStack = self::getContainer()->get('request_stack');
-        $request = new Request(attributes: ['_route' => $route]);
+        $request = new Request(attributes: ['preview' => $preview]);
         $request->setSession(new Session(new MockArraySessionStorage()));
         $requestStack->push($request);
 

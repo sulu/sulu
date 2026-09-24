@@ -208,7 +208,7 @@ class ArticleInReviewTest extends SuluTestCase
         $previewContext = new PreviewContext($id, 'en');
 
         $requestStack = self::getContainer()->get('request_stack');
-        $request = new Request(attributes: ['_route' => 'sulu_preview.update']);
+        $request = new Request(attributes: ['preview' => true]);
         $request->setSession(new Session(new MockArraySessionStorage()));
         $requestStack->push($request);
 
