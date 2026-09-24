@@ -56,6 +56,19 @@ class AdminControllerTest extends SuluTestCase
         $this->assertIsObject($response->sulu_admin->resources);
         $this->assertTrue(\property_exists($response, 'sulu_preview'));
 
+        $decoded = \json_decode($this->client->getResponse()->getContent() ?: '', true);
+        $this->assertIsArray($decoded);
+        $suluAdmin = $decoded['sulu_admin'];
+        $this->assertIsArray($suluAdmin);
+        $textEditorConfigs = $suluAdmin['textEditorConfigs'];
+        $this->assertIsArray($textEditorConfigs);
+        /** @var array<string, array{enterMode: string, tags: string[]}> $textEditorConfigs */
+        $this->assertSame(['default', 'mini'], \array_keys($textEditorConfigs));
+        $this->assertSame('p', $textEditorConfigs['default']['enterMode']);
+        $this->assertSame('br', $textEditorConfigs['mini']['enterMode']);
+        $this->assertContains('table', $textEditorConfigs['default']['tags']);
+        $this->assertNotContains('table', $textEditorConfigs['mini']['tags']);
+
         /** @var array<object{locale: string}> $localizations */
         $localizations = $response->sulu_admin->localizations;
         $this->assertSame('en', $localizations[0]->locale);

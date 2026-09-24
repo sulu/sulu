@@ -1,9 +1,9 @@
 // @flow
 import React from 'react';
 import textEditorRegistry from '../../registries/textEditorRegistry';
-import type {TextEditorProps} from '../../types';
+import type {TextEditorAdapterProps} from '../../types';
 
-class TextEditor extends React.Component<TextEditorProps> {
+class TextEditor extends React.Component<TextEditorAdapterProps> {
 
 }
 

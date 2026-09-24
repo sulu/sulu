@@ -19,6 +19,14 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 final class Configuration implements ConfigurationInterface
 {
+    /**
+     * Keys whose plugin needs a block element to carry it, which "enter_mode: br" strips from the stored
+     * value. See Resources/js/containers/CKEditor5/utils.js removePTags().
+     */
+    private const BLOCK_TEXT_EDITOR_KEYS = [
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'table', 'style',
+    ];
+
     public function __construct(private bool $debug)
     {
     }
@@ -97,6 +105,44 @@ final class Configuration implements ConfigurationInterface
                     ->children()
                         ->arrayNode('directories')
                             ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('text_editor')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('configs')
+                            ->useAttributeAsKey('name')
+                            ->normalizeKeys(false)
+                            ->prototype('array')
+                                ->children()
+                                    ->enumNode('enter_mode')
+                                        ->values(['p', 'br'])
+                                        ->defaultValue('p')
+                                        ->info('Whether the editor produces paragraphs or line breaks')
+                                    ->end()
+                                    ->arrayNode('tags')
+                                        ->useAttributeAsKey('name')
+                                        ->normalizeKeys(false)
+                                        ->prototype('boolean')->end()
+                                        ->info('The HTML tags the editor is allowed to produce')
+                                    ->end()
+                                    ->arrayNode('attributes')
+                                        ->useAttributeAsKey('name')
+                                        ->normalizeKeys(false)
+                                        ->prototype('boolean')->end()
+                                        ->info('The HTML attributes the editor is allowed to write, e.g. "lang" or "style"')
+                                    ->end()
+                                ->end()
+                                ->validate()
+                                    ->ifTrue(fn ($config) => [] !== self::enabledBlockKeys($config))
+                                    ->thenInvalid(
+                                        'A text editor config with "enter_mode: br" cannot enable a key that needs a '
+                                        . 'block element, because the paragraphs carrying it are stripped from the '
+                                        . 'stored value. Remove the block key or use "enter_mode: p". Got %s'
+                                    )
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
@@ -257,5 +303,20 @@ final class Configuration implements ConfigurationInterface
         ->end();
 
         return $treeBuilder;
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function enabledBlockKeys(mixed $config): array
+    {
+        if (!\is_array($config) || 'br' !== ($config['enter_mode'] ?? null)) {
+            return [];
+        }
+
+        /** @var array{tags: array<string, bool>, attributes: array<string, bool>} $config */
+        $enabled = \array_keys(\array_filter([...$config['tags'], ...$config['attributes']]));
+
+        return \array_intersect(self::BLOCK_TEXT_EDITOR_KEYS, $enabled);
     }
 }
