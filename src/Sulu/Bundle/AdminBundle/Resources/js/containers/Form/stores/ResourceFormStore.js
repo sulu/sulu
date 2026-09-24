@@ -192,7 +192,13 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
     loadAndMergeRemoteData = (localSchema: Schema, remoteSchema: Schema) => {
         // load data only after initial schema was set to prevent duplicate requests during initialization
         if (localSchema) {
-            return this.resourceStore.requestRemoteData({template: this.type}).then((data: Object) => {
+            // Without an id there is nothing stored to load, like in ResourceStore.load(): requesting it anyway
+            // would hit the list endpoint and merge its response (e.g. "pages") into the form data
+            const remoteDataPromise = this.id
+                ? this.resourceStore.requestRemoteData({template: this.type})
+                : Promise.resolve({});
+
+            return remoteDataPromise.then((data: Object) => {
                 const result = mergeData(localSchema, remoteSchema, this.data, data);
                 this.setMultiple(result);
             });

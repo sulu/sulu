@@ -663,6 +663,63 @@ test('Change schema should merge locale and remote data', (done) => {
     }, 0);
 });
 
+test('Change schema without an id should not request remote data', (done) => {
+    const newSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+        pages: {
+            defaultType: 'page',
+            type: 'block',
+            types: {
+                page: {
+                    name: 'page',
+                    title: 'Page',
+                    form: {
+                        title: {
+                            label: 'Title',
+                            type: 'text_line',
+                        },
+                    },
+                },
+            },
+        },
+    };
+
+    const oldSchema = {
+        title: {
+            label: 'Title',
+            type: 'text_line',
+        },
+    };
+    const newSchemaPromise = Promise.resolve(newSchema);
+    const jsonSchemaPromise = Promise.resolve({});
+
+    // an add form: the resource has no id yet
+    const resourceStore = new ResourceStore('snippets');
+    resourceStore.data = observable({
+        title: 'Title',
+    });
+
+    // what the list endpoint answers when the resource is requested without an id
+    // $FlowFixMe
+    resourceStore.requestRemoteData.mockReturnValue(Promise.resolve({pages: 1, limit: 10, total: 1}));
+    metadataStore.getSchema.mockReturnValue(newSchemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+    resourceFormStore.schema = oldSchema;
+
+    setTimeout(() => {
+        expect(resourceFormStore.schema).toEqual(newSchema);
+        expect(resourceStore.requestRemoteData).not.toHaveBeenCalled();
+        expect(resourceStore.data.title).toEqual('Title');
+        expect(resourceStore.data.pages).toBeUndefined();
+        resourceFormStore.destroy();
+        done();
+    }, 0);
+});
+
 test('Change schema should merge current and origin data partially in block', (done) => {
     const oldSchema = {
         title: {
