@@ -31,11 +31,20 @@ class TwoFactorForceChecker
 
     public function isForced(User $user): bool
     {
+        return $this->isForcedForEmail($user->getEmail());
+    }
+
+    /**
+     * Checks the pattern against an email that is not necessarily the one currently
+     * stored on the user, e.g. one a profile update would change it to.
+     */
+    public function isForcedForEmail(?string $email): bool
+    {
         if (!$this->forcePattern) {
             return false;
         }
 
-        return (bool) \preg_match($this->forcePattern, $user->getEmail() ?: '');
+        return (bool) \preg_match($this->forcePattern, $email ?: '');
     }
 
     /**

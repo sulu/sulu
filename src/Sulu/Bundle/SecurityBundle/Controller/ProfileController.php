@@ -83,10 +83,23 @@ class ProfileController implements ClassResourceInterface
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        // the request may change the email the force pattern matches against, so the state has to
-        // be taken before saving, otherwise a forced user could disable the second factor by
-        // moving the account out of the pattern in the same request
-        $twoFactorForced = (bool) $this->twoFactorForceChecker?->isForced($user);
+        /** @var array{method?: string|null} $twoFactorData */
+        $twoFactorData = $request->request->all('twoFactor');
+        $twoFactorMethod = $twoFactorData['method'] ?? null;
+
+        // the request may change the email the force pattern matches against and may drop the
+        // two factor method, so both are validated against the state before saving: otherwise a
+        // forced user could disable the second factor, or leave the enforced pattern to do so in
+        // a later request, before anything was persisted
+        if ($this->twoFactorForceChecker?->isForced($user)) {
+            if (!$this->twoFactorForceChecker->isForcedForEmail((string) $request->request->get('email'))) {
+                throw new AccessDeniedHttpException('Two factor authentication is forced for this user and the email can not be changed to leave the pattern it is enforced for.');
+            }
+
+            if (!$twoFactorMethod) {
+                throw new AccessDeniedHttpException('Two factor authentication is forced for this user and can not be disabled.');
+            }
+        }
 
         $this->userManager->save($this->getData($request), $request->get('locale'), $user->getId(), true);
 
@@ -94,10 +107,6 @@ class ProfileController implements ClassResourceInterface
         $user->setLastName($request->request->get('lastName'));
 
         if ($user instanceof TwoFactorInterface) {
-            /** @var array{method?: string|null} $twoFactorData */
-            $twoFactorData = $request->request->all('twoFactor');
-            $twoFactorMethod = $twoFactorData['method'] ?? null;
-
             if ($twoFactorMethod) {
                 $twoFactor = $user->getTwoFactor();
                 if (!$twoFactor) {
@@ -131,10 +140,6 @@ class ProfileController implements ClassResourceInterface
 
                 $user->setTwoFactor($twoFactor);
             } else {
-                if ($twoFactorForced) {
-                    throw new AccessDeniedHttpException('Two factor authentication is forced for this user and can not be disabled.');
-                }
-
                 $twoFactor = $user->getTwoFactor();
                 if ($twoFactor) {
                     $user->setTwoFactor(null);

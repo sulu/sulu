@@ -89,6 +89,22 @@ class TwoFactorForceCheckerTest extends TestCase
         $this->assertFalse($checker->isSetupRequired($user));
     }
 
+    public function testIsForcedForEmailMatchingPattern(): void
+    {
+        $checker = new TwoFactorForceChecker('/^(.*)@sulu\.io$/', true, ['totp']);
+
+        $this->assertTrue($checker->isForcedForEmail('admin@sulu.io'));
+        $this->assertFalse($checker->isForcedForEmail('admin@localhost'));
+        $this->assertFalse($checker->isForcedForEmail(null));
+    }
+
+    public function testIsForcedForEmailWithoutPattern(): void
+    {
+        $checker = new TwoFactorForceChecker(null, true, ['totp']);
+
+        $this->assertFalse($checker->isForcedForEmail('admin@sulu.io'));
+    }
+
     /**
      * @param array<string, mixed> $options
      */
