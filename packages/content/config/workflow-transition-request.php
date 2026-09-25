@@ -192,7 +192,10 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_content.content_review_lock_subscriber', ContentReviewLockSubscriber::class)
-        ->args([new Reference('sulu_content.active_workflow_transition_request_provider')])
+        ->args([
+            new Reference('request_stack'),
+            new Reference('sulu_content.active_workflow_transition_request_provider'),
+        ])
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);
 

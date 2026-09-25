@@ -14,9 +14,12 @@ declare(strict_types=1);
 namespace Sulu\Article\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
+use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
+use Sulu\Bundle\PreviewBundle\Preview\Provider\CachablePreviewDefaultsProviderInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -25,6 +28,9 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * The admin submits every toolbar action as one request carrying the whole form plus an action, and
@@ -191,6 +197,44 @@ class ArticleInReviewTest extends SuluTestCase
         $this->assertSame('Draft Awaiting Review', $content['title']);
         $this->assertTrue($content['_locked']);
         $this->assertNotNull($content['activeWorkflowTransitionRequest']);
+    }
+
+    public function testPreviewShowsContentInReviewAndKeepsTheLock(): void
+    {
+        $id = $this->createArticleInReview();
+
+        /** @var CachablePreviewDefaultsProviderInterface $previewProvider */
+        $previewProvider = self::getContainer()->get('sulu_article.article_preview_provider');
+        $previewContext = new PreviewContext($id, 'en');
+
+        $requestStack = self::getContainer()->get('request_stack');
+        $request = new Request(attributes: ['preview' => true]);
+        $request->setSession(new Session(new MockArraySessionStorage()));
+        $requestStack->push($request);
+
+        try {
+            $defaults = $previewProvider->getDefaults($previewContext);
+            $defaults = $previewProvider->deserialize($previewContext, $previewProvider->serialize($previewContext, $defaults));
+            $defaults = $previewProvider->updateValues($previewContext, $defaults, [
+                'template' => 'review',
+                'title' => 'Typed While In Review',
+                'url' => '/article-in-review',
+                'mainWebspace' => 'sulu-io',
+            ]);
+        } finally {
+            $requestStack->pop();
+        }
+
+        /** @var ArticleDimensionContentInterface $object */
+        $object = $defaults['object'];
+        $this->assertSame('Typed While In Review', $object->getTemplateData()['title'] ?? null);
+
+        self::getEntityManager()->clear();
+
+        $this->put($id, ['action' => 'draft'], 'Typed While In Review');
+
+        $response = $this->client->getResponse();
+        $this->assertSame(409, $response->getStatusCode(), (string) $response->getContent());
     }
 
     private function latestVersion(string $id): int

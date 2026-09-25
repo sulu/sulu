@@ -19,18 +19,13 @@ use Sulu\Content\Domain\Exception\ContentInReviewException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Workflow\Event\GuardEvent;
 use Symfony\Component\Workflow\TransitionBlocker;
 
 /**
- * Holds content that an open request covers: every write goes through the `edit` transition, so this
- * is the one place that decides it, whatever content type or admin controller asked.
- *
- * Registered in the admin context only, like the rest of the review, so a write from the website
- * kernel is not held here.
- *
- * Publishing, rejecting and cancelling leave the review and write only the live stage, so they never
- * reach this guard.
+ * Every write applies `edit`, so this guard refuses them while an open request covers the content.
+ * A preview persists nothing, so it passes.
  *
  * @final
  *
@@ -39,6 +34,7 @@ use Symfony\Component\Workflow\TransitionBlocker;
 class ContentReviewLockSubscriber implements EventSubscriberInterface
 {
     public function __construct(
+        private readonly RequestStack $requestStack,
         private readonly ActiveWorkflowTransitionRequestProviderInterface $activeWorkflowTransitionRequestProvider,
     ) {
     }
@@ -52,7 +48,7 @@ class ContentReviewLockSubscriber implements EventSubscriberInterface
     {
         $dimensionContent = $guardEvent->getSubject();
 
-        if (!$dimensionContent instanceof DimensionContentInterface) {
+        if (!$dimensionContent instanceof DimensionContentInterface || $this->isPreview()) {
             return;
         }
 
@@ -72,6 +68,11 @@ class ContentReviewLockSubscriber implements EventSubscriberInterface
             ContentWorkflowInterface::BLOCKER_CODE_EXCEPTION,
             [ContentWorkflowInterface::BLOCKER_EXCEPTION_PARAMETER => $exception],
         ));
+    }
+
+    private function isPreview(): bool
+    {
+        return true === $this->requestStack->getMainRequest()?->attributes->getBoolean('preview');
     }
 
     public static function getSubscribedEvents(): array
