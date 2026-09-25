@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\DependencyInjection;
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin;
 use Sulu\Bundle\SecurityBundle\Exception\RoleKeyAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
@@ -219,6 +220,9 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                             'routes' => [
                                 'list' => 'sulu_security.get_roles',
                                 'detail' => 'sulu_security.get_role',
+                            ],
+                            'views' => [
+                                'detail' => SecurityAdmin::EDIT_FORM_VIEW,
                             ],
                         ],
                         'users' => [

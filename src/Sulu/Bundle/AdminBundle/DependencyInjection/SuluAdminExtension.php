@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\DependencyInjection;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewParameterProviderInterface;
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataVisitorInterface;
@@ -191,6 +192,9 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
 
         $container->registerForAutoconfiguration(TypedFormMetadataVisitorInterface::class)
             ->addTag('sulu_admin.typed_form_metadata_visitor');
+
+        $container->registerForAutoconfiguration(ResourceViewParameterProviderInterface::class)
+            ->addTag('sulu_admin.resource_view_parameter_provider');
 
         $this->loadFieldTypeOptions(
             $config['field_type_options'] ?? [],

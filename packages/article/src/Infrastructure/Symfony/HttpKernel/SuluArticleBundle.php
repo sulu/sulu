@@ -41,6 +41,7 @@ use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Article\Infrastructure\Doctrine\Repository\ArticleRepository;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
+use Sulu\Article\Infrastructure\Sulu\Admin\ArticleResourceViewParameterProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleSmartContentProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleTeaserProvider;
@@ -503,6 +504,14 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('cmsig_seal.reindex_provider');
 
+        $services->set('sulu_article.resource_view_parameter_provider')
+            ->class(ArticleResourceViewParameterProvider::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_admin.metadata_group_provider'),
+            ])
+            ->tag('sulu_admin.resource_view_parameter_provider');
+
         $services->set('sulu_article.website_article_index_listener')
             ->class(WebsiteArticleIndexListener::class)
             ->args([
@@ -574,6 +583,9 @@ final class SuluArticleBundle extends AbstractBundle
                             'routes' => [
                                 'list' => 'sulu_article.get_articles',
                                 'detail' => 'sulu_article.get_article',
+                            ],
+                            'views' => [
+                                'detail' => ArticleAdmin::EDIT_TABS_VIEW . '_{group}',
                             ],
                         ],
                         'articles_versions' => [
