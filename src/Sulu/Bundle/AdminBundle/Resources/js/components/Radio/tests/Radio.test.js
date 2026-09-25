@@ -41,11 +41,12 @@ test('The component pass the props correctly to the generic checkbox', () => {
 });
 
 test('The component pass the the value to the change callback', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     render(<Radio onChange={onChange} value="my-value">My label</Radio>);
 
     const checkbox = screen.queryByDisplayValue('my-value');
-    await userEvent.click(checkbox);
+    await user.click(checkbox);
 
     expect(onChange).toHaveBeenCalledWith('my-value');
 });

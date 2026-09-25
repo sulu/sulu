@@ -166,6 +166,7 @@ test('Render with emptyText if no children have been passed', () => {
 });
 
 test('Call onClick callback if left button is clicked', async() => {
+    const user = userEvent.setup();
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -174,12 +175,13 @@ test('Call onClick callback if left button is clicked', async() => {
     render(<SingleItemSelection leftButton={leftButton} />);
 
     const button = screen.queryByLabelText('su-document');
-    await userEvent.click(button);
+    await user.click(button);
 
     expect(leftButton.onClick).toHaveBeenCalledWith();
 });
 
 test('Call onClick callback with option value', async() => {
+    const user = userEvent.setup();
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -199,14 +201,15 @@ test('Call onClick callback with option value', async() => {
     render(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
 
     const icon = screen.queryByLabelText('su-display-default');
-    await userEvent.click(icon);
+    await user.click(icon);
     const action = screen.queryByText(/Test1/);
-    await userEvent.click(action);
+    await user.click(action);
 
     expect(rightButton.onClick).toHaveBeenCalledWith('test1');
 });
 
 test('Call onClick callback if right button is clicked', async() => {
+    const user = userEvent.setup();
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -220,12 +223,13 @@ test('Call onClick callback if right button is clicked', async() => {
     render(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
 
     const icon = screen.queryByLabelText('su-display-default');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(rightButton.onClick).toHaveBeenCalledWith();
 });
 
 test('Call onItemClick callback should not be called if item is clicked but no id is given', async() => {
+    const user = userEvent.setup();
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -235,12 +239,13 @@ test('Call onItemClick callback should not be called if item is clicked but no i
     render(<SingleItemSelection leftButton={leftButton} onItemClick={itemClickSpy}>item title</SingleItemSelection>);
 
     const item = screen.queryByText('item title');
-    await userEvent.click(item);
+    await user.click(item);
 
     expect(itemClickSpy).not.toHaveBeenCalled();
 });
 
 test('Call onItemClick callback should be called if item is clicked', async() => {
+    const user = userEvent.setup();
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -256,12 +261,13 @@ test('Call onItemClick callback should be called if item is clicked', async() =>
     );
 
     const item = screen.queryByText('item title');
-    await userEvent.click(item);
+    await user.click(item);
 
     expect(itemClickSpy).toHaveBeenCalledWith(5, value);
 });
 
 test('Call onRemove callback if remove button is clicked', async() => {
+    const user = userEvent.setup();
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -271,7 +277,7 @@ test('Call onRemove callback if remove button is clicked', async() => {
     render(<SingleItemSelection leftButton={leftButton} onRemove={removeSpy} />);
 
     const icon = screen.queryByLabelText('su-trash-alt');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(removeSpy).toHaveBeenCalled();
 });

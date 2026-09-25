@@ -1,154 +1,110 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore, ResourceLocatorHistory} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import bindValueToOnChange from 'sulu-admin-bundle/utils/TestHelper/bindValueToOnChange';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import CustomUrl from '../../fields/CustomUrl';
 
+let mockResourceLocatorHistoryProps: any;
+
+const mockReact = require('react');
+
 jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(function(resourceFormStore) {
-        this.id = resourceFormStore.id;
-        this.options = resourceFormStore.options;
-        this.getValueByPath = jest.fn();
+    ResourceLocatorHistory: jest.fn((props) => {
+        mockResourceLocatorHistoryProps = props;
+
+        return mockReact.createElement('div', {'data-testid': 'resource-locator-history'});
     }),
-    ResourceFormStore: jest.fn(function(formStore, formKey, options = {}) {
-        this.id = formStore.id;
-        this.options = options;
-    }),
-    ResourceLocatorHistory: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(function(resourceKey, id) {
-        this.id = id;
-    }),
-}));
+beforeEach(() => {
+    mockResourceLocatorHistoryProps = undefined;
+});
+
+function createFormInspector(id, baseDomain): any {
+    return {
+        getValueByPath: jest.fn((path) => {
+            if (path === '/baseDomain') {
+                return baseDomain;
+            }
+        }),
+        id,
+        options: {webspace: 'sulu_io'},
+    };
+}
 
 test('Pass correct props to CustomUrl component', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+    const formInspector = createFormInspector(undefined, '*.sulu.io/*');
 
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/baseDomain':
-                return '*.sulu.io/*';
-        }
-    });
+    render(<CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={['a', 'b']} />);
 
-    const customUrl = shallow(
-        <CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={['a', 'b']} />
-    );
-
-    expect(customUrl.find('CustomUrl').prop('baseDomain')).toEqual('*.sulu.io/*');
-    expect(customUrl.find('CustomUrl').prop('value')).toEqual(['a', 'b']);
-    expect(customUrl.find(ResourceLocatorHistory)).toHaveLength(0);
+    expect(screen.getByDisplayValue('a')).toBeInTheDocument();
+    expect(screen.getByText('.sulu.io/')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('b')).toBeInTheDocument();
+    expect(screen.queryByTestId('resource-locator-history')).not.toBeInTheDocument();
 });
 
 test('Pass correct props to ResourceLocatorHistory component if id an existing resource is loaded', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test', 2),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+    const formInspector = createFormInspector(2, '*.sulu.io/*');
 
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/baseDomain':
-                return '*.sulu.io/*';
-        }
-    });
+    render(<CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={['a', 'b']} />);
 
-    const customUrl = shallow(
-        <CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={['a', 'b']} />
-    );
-
-    expect(customUrl.find('CustomUrl').prop('baseDomain')).toEqual('*.sulu.io/*');
-    expect(customUrl.find('CustomUrl').prop('value')).toEqual(['a', 'b']);
-    expect(customUrl.find(ResourceLocatorHistory).prop('id')).toEqual(2);
-    expect(customUrl.find(ResourceLocatorHistory).prop('options')).toEqual({webspace: 'sulu_io'});
-    expect(customUrl.find(ResourceLocatorHistory).prop('resourceKey')).toEqual('custom_url_routes');
+    expect(screen.getByDisplayValue('a')).toBeInTheDocument();
+    expect(screen.getByText('.sulu.io/')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('b')).toBeInTheDocument();
+    expect(screen.getByTestId('resource-locator-history')).toBeInTheDocument();
+    expect(mockResourceLocatorHistoryProps.id).toEqual(2);
+    expect(mockResourceLocatorHistoryProps.options).toEqual({webspace: 'sulu_io'});
+    expect(mockResourceLocatorHistoryProps.resourceKey).toEqual('custom_url_routes');
 });
 
 test('Pass correct props with empty value to CustomUrl component', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+    const formInspector = createFormInspector(undefined, 'sulu.io/*');
 
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/baseDomain':
-                return 'sulu.io/*';
-        }
-    });
+    render(<CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={undefined} />);
 
-    const customUrl = shallow(
-        <CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} value={undefined} />
-    );
-
-    expect(customUrl.find('CustomUrl').prop('baseDomain')).toEqual('sulu.io/*');
-    expect(customUrl.find('CustomUrl').prop('value')).toEqual([]);
+    expect(screen.getByText('sulu.io/')).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toHaveValue('');
 });
 
-test('Call onChange when if a value changes', () => {
+test('Call onChange when if a value changes', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
+    const formInspector = createFormInspector(undefined, 'sulu.io/*');
+
+    render(
+        bindValueToOnChange(
+            <CustomUrl
+                {...fieldTypeDefaultProps}
+                formInspector={formInspector}
+                onChange={changeSpy}
+                value={undefined}
+            />
         )
     );
 
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/baseDomain':
-                return 'sulu.io/*';
-        }
-    });
+    await user.type(screen.getByRole('textbox'), 'test');
 
-    const customUrl = shallow(
-        <CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} onChange={changeSpy} value={undefined} />
-    );
-
-    customUrl.find('CustomUrl').prop('onChange')(['test']);
-
-    expect(changeSpy).toHaveBeenCalledWith(['test']);
+    expect(changeSpy).toHaveBeenLastCalledWith(['test']);
 });
 
-test('Call onFinish when if the field is blurred', () => {
+test('Call onFinish when if the field is blurred', async() => {
+    const user = userEvent.setup();
     const finishSpy = jest.fn();
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
+    const formInspector = createFormInspector(undefined, 'sulu.io/*');
+
+    render(
+        <CustomUrl
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onFinish={finishSpy}
+            value={undefined}
+        />
     );
 
-    formInspector.getValueByPath.mockImplementation((path) => {
-        switch (path) {
-            case '/baseDomain':
-                return 'sulu.io/*';
-        }
-    });
-
-    const customUrl = shallow(
-        <CustomUrl {...fieldTypeDefaultProps} formInspector={formInspector} onFinish={finishSpy} value={undefined} />
-    );
-
-    customUrl.find('CustomUrl').prop('onBlur')();
+    await user.click(screen.getByRole('textbox'));
+    await user.tab();
 
     expect(finishSpy).toHaveBeenCalledWith();
 });

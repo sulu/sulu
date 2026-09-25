@@ -45,11 +45,12 @@ test('Render disabled button', () => {
 });
 
 test('Click on button fires onClick callback', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     render(<Button onClick={clickSpy} />);
     const button = screen.queryByRole('button');
 
-    await userEvent.click(button);
+    await user.click(button);
 
     expect(clickSpy).toHaveBeenCalled();
 });
@@ -75,12 +76,13 @@ test('Render an active button', () => {
 });
 
 test('Click on button does not fire onClick callback if button is disabled', () => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     render(<Button disabled={true} onClick={clickSpy} />);
 
     const button = screen.queryByRole('button');
 
-    return userEvent.click(button).then(() => {
+    return user.click(button).then(() => {
         expect(clickSpy).toHaveBeenCalledTimes(0);
     });
 });

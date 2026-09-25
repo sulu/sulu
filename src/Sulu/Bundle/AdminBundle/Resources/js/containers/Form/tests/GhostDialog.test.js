@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import metadataStore from '../stores/metadataStore';
 import GhostDialog from '../GhostDialog';
 import SingleSelect from '../fields/SingleSelect';
@@ -64,14 +65,18 @@ const FORM = {
     },
 };
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 jest.mock('../stores/metadataStore', () => ({
-    getSchema: jest.fn().mockReturnValue(Promise.resolve(FORM)),
-    getJsonSchema: jest.fn().mockReturnValue(Promise.resolve({})),
+    getSchema: jest.fn(),
+    getJsonSchema: jest.fn(),
 }));
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    metadataStore.getSchema.mockReturnValue(Promise.resolve(FORM));
+    metadataStore.getJsonSchema.mockReturnValue(Promise.resolve({}));
+});
 
 afterEach(() => {
     if (document.body) {
@@ -79,47 +84,45 @@ afterEach(() => {
     }
 });
 
-test('Should render a Dialog', (resolve) => {
-    const ghostDialog = mount(
-        <GhostDialog locales={['en', 'de']} onCancel={jest.fn()} onConfirm={jest.fn()} open={true} />
-    );
-    setTimeout(() => {
-        expect(ghostDialog.render()).toMatchSnapshot();
+test('Should render a Dialog', async() => {
+    render(<GhostDialog locales={['en', 'de']} onCancel={jest.fn()} onConfirm={jest.fn()} open={true} />);
 
-        resolve();
-    }, 1);
+    expect(screen.getByTestId('backdrop')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.ghost_dialog_title')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.ghost_dialog_description')).toBeInTheDocument();
+    expect(await screen.findByText('Sprache wählen *')).toBeInTheDocument();
+    expect(screen.getByText('de')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.yes'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.no'})).toBeInTheDocument();
 });
 
-test('Should call onCancel callback if user chooses not to copy content', () => {
+test('Should call onCancel callback if user chooses not to copy content', async() => {
+    const user = userEvent.setup();
     const cancelSpy = jest.fn();
-    const ghostDialog = mount(
-        <GhostDialog locales={['en', 'de']} onCancel={cancelSpy} onConfirm={jest.fn()} open={true} />
-    );
 
-    ghostDialog.find('Button[skin="secondary"]').simulate('click');
+    render(<GhostDialog locales={['en', 'de']} onCancel={cancelSpy} onConfirm={jest.fn()} open={true} />);
+
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.no'}));
 
     expect(cancelSpy).toHaveBeenCalledWith();
 });
 
-test('Should call onConfirm callback with chosen locale if user chooses to copy content', (resolve) => {
+test('Should call onConfirm callback with chosen locale if user chooses to copy content', async() => {
+    const user = userEvent.setup();
     const confirmSpy = jest.fn();
-    const ghostDialog = mount(
-        <GhostDialog locales={['en', 'de']} onCancel={jest.fn()} onConfirm={confirmSpy} open={true} />
-    );
 
-    setTimeout(() => {
-        ghostDialog.update();
+    render(<GhostDialog locales={['en', 'de']} onCancel={jest.fn()} onConfirm={confirmSpy} open={true} />);
 
-        ghostDialog.find('SingleSelect').at(0).prop('onChange')('de');
-        ghostDialog.find('Button[skin="primary"]').at(0).simulate('click');
+    expect(await screen.findByText('Sprache wählen *')).toBeInTheDocument();
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByText('en'));
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.yes'}));
 
-        expect(confirmSpy).toHaveBeenCalledWith('de', {});
-
-        resolve();
-    }, 1);
+    expect(confirmSpy).toHaveBeenCalledWith('en', {});
 });
 
-test('Should call onConfirm callback with chosen locale if user chooses to copy content (with additional fields)', (resolve) => { // eslint-disable-line max-len
+test('Should call onConfirm callback with chosen locale if user chooses to copy content (with additional fields)', async() => { // eslint-disable-line max-len
+    const user = userEvent.setup();
     const formMetadata = {
         ...FORM,
         title: {
@@ -134,21 +137,15 @@ test('Should call onConfirm callback with chosen locale if user chooses to copy 
     metadataStore.getSchema.mockReturnValue(Promise.resolve(formMetadata));
 
     const confirmSpy = jest.fn();
-    const ghostDialog = mount(
-        <GhostDialog locales={['en', 'de']} onCancel={jest.fn()} onConfirm={confirmSpy} open={true} />
-    );
+    render(<GhostDialog locales={['en', 'de']} onCancel={jest.fn()} onConfirm={confirmSpy} open={true} />);
 
-    setTimeout(() => {
-        ghostDialog.update();
+    expect(await screen.findByText('Sprache wählen *')).toBeInTheDocument();
+    await user.type(screen.getByLabelText('Test'), 'Test 123');
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByText('en'));
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.yes'}));
 
-        ghostDialog.find('Input').at(0).prop('onChange')('Test 123');
-        ghostDialog.find('SingleSelect').at(0).prop('onChange')('de');
-        ghostDialog.find('Button[skin="primary"]').at(0).simulate('click');
-
-        expect(confirmSpy).toHaveBeenCalledWith('de', {
-            title: 'Test 123',
-        });
-
-        resolve();
-    }, 1);
+    expect(confirmSpy).toHaveBeenCalledWith('en', {
+        title: 'Test 123',
+    });
 });

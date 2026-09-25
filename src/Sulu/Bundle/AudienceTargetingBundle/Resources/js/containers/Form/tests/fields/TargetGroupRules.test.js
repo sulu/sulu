@@ -1,60 +1,59 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import TargetGroupRule from '../../fields/TargetGroupRules';
-import TargetGroupRulesComponent from '../../../../containers/TargetGroupRules';
 
-jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
-jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn());
+let mockTargetGroupRulesProps: Object = {};
+
+const mockReact = require('react');
+
+jest.mock('../../../../containers/TargetGroupRules', () => jest.fn((props) => {
+    mockTargetGroupRulesProps = props;
+
+    return mockReact.createElement(
+        'button',
+        {
+            onClick: () => props.onChange([{}]),
+            type: 'button',
+        },
+        'target-group-rules'
+    );
+}));
+
+beforeEach(() => {
+    mockTargetGroupRulesProps = {};
+});
 
 test('Pass a default value of an empty array to the component', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    render(<TargetGroupRule {...fieldTypeDefaultProps} />);
 
-    const targetGroupRules = shallow(
-        <TargetGroupRule
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-        />
-    );
-
-    expect(targetGroupRules.find(TargetGroupRulesComponent).prop('value')).toEqual([]);
+    expect(mockTargetGroupRulesProps.value).toEqual([]);
 });
 
 test('Pass the given value to the component', () => {
     const value = [];
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
 
-    const targetGroupRules = shallow(
-        <TargetGroupRule
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            value={value}
-        />
-    );
+    render(<TargetGroupRule {...fieldTypeDefaultProps} value={value} />);
 
-    expect(targetGroupRules.find(TargetGroupRulesComponent).prop('value')).toBe(value);
+    expect(mockTargetGroupRulesProps.value).toBe(value);
 });
 
-test('Call onChange and onFinish if value of componetn changes', () => {
+test('Call onChange and onFinish if value of componetn changes', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-
-    const targetGroupRules = shallow(
+    render(
         <TargetGroupRule
             {...fieldTypeDefaultProps}
-            formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
         />
     );
 
-    targetGroupRules.find(TargetGroupRulesComponent).prop('onChange')([{}]);
+    await user.click(screen.getByRole('button', {name: 'target-group-rules'}));
 
     expect(changeSpy).toHaveBeenCalledWith([{}]);
     expect(finishSpy).toHaveBeenCalledWith();

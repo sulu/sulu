@@ -82,6 +82,7 @@ test('DatePicker should pass input to inputRef prop', () => {
 });
 
 test('DatePicker should open overlay on icon-click', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     const {baseElement} = render(<DatePicker onChange={onChange} value={undefined} />);
 
@@ -90,12 +91,13 @@ test('DatePicker should open overlay on icon-click', async() => {
     expect(overlay).not.toHaveClass('rdtOpen');
 
     const icon = screen.queryByLabelText('su-calendar');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(overlay).toHaveClass('rdtOpen');
 });
 
 test('DatePicker should not open overlay on icon-click when disabled', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     const {baseElement} = render(<DatePicker disabled={true} onChange={onChange} value={undefined} />);
 
@@ -104,7 +106,7 @@ test('DatePicker should not open overlay on icon-click when disabled', async() =
     expect(overlay).not.toHaveClass('rdtOpen');
 
     const icon = screen.queryByLabelText('su-calendar');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(overlay).not.toHaveClass('rdtOpen');
 });
@@ -127,6 +129,7 @@ test('DatePicker should render with value', () => {
 });
 
 test('DatePicker should try to guess incomplete value using format on blur.', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     const options = {
         dateFormat: false,
@@ -135,8 +138,8 @@ test('DatePicker should try to guess incomplete value using format on blur.', as
     render(<DatePicker onChange={onChange} options={options} placeholder="My placeholder" value={null} />);
 
     const input = screen.queryByPlaceholderText('My placeholder');
-    await userEvent.type(input, '9');
-    await userEvent.tab(); // tab away from input
+    await user.type(input, '9');
+    await user.tab(); // tab away from input
 
     expect(onChange).toHaveBeenCalledWith(expect.any(Date));
     const newValue = onChange.mock.calls[0][0];
@@ -150,6 +153,7 @@ test('DatePicker should try to guess incomplete value using format on blur.', as
 });
 
 test('DatePicker should render error when invalid value is set', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     const options = {
         dateFormat: 'YYYY',
@@ -158,20 +162,21 @@ test('DatePicker should render error when invalid value is set', async() => {
 
     // check if showError is set correctly
     const input = screen.queryByPlaceholderText('My placeholder');
-    await userEvent.type(input, 'xxx');
-    await userEvent.tab(); // tab away from input
+    await user.type(input, 'xxx');
+    await user.tab(); // tab away from input
 
     expect(input.parentElement).toHaveClass('error');
 
     // now add a valid value
-    await userEvent.clear(input);
-    await userEvent.type(input, '2018');
-    await userEvent.tab(); // tab away from input
+    await user.clear(input);
+    await user.type(input, '2018');
+    await user.tab(); // tab away from input
 
     expect(input.parentElement).not.toHaveClass('error');
 });
 
 test('DatePicker should set class correctly when overlay was opened/closed', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     const {baseElement} = render(<DatePicker onChange={onChange} placeholder="My placeholder" value={null} />);
 
@@ -182,12 +187,12 @@ test('DatePicker should set class correctly when overlay was opened/closed', asy
 
     // open dialog and check if class is set
     const icon = screen.queryByLabelText('su-calendar');
-    await userEvent.click(icon);
+    await user.click(icon);
     expect(overlay).toHaveClass('rdtOpen');
 
     // choose a date and check if class was removed again
     const dateCell = screen.queryAllByText('26');
-    await userEvent.click(dateCell[0]);
+    await user.click(dateCell[0]);
     expect(overlay).not.toHaveClass('rdtOpen');
 
     // check if value is in input

@@ -10,11 +10,12 @@ test('The component should render', () => {
 });
 
 test('The component should call a function when clicked', async() => {
+    const user = userEvent.setup();
     const onClickSpy = jest.fn();
     render(<Backdrop onClick={onClickSpy} />);
     const backdrop = screen.queryByTestId('backdrop');
 
     expect(onClickSpy).toHaveBeenCalledTimes(0);
-    await userEvent.click(backdrop);
+    await user.click(backdrop);
     expect(onClickSpy).toHaveBeenCalledTimes(1);
 });

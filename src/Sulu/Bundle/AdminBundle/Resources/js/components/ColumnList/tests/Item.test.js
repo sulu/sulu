@@ -46,20 +46,22 @@ test('Should render item with order input', () => {
     expect(asFragment()).toMatchSnapshot();
 });
 
-test('Should call onDoubleClick', () => {
+test('Should call onDoubleClick', async() => {
+    const user = userEvent.setup();
     const doubleClickSpy = jest.fn();
 
     render(<Item id={2} onDoubleClick={doubleClickSpy}>Test with indicators</Item>);
-    fireEvent.doubleClick(screen.getByRole('button'));
+    await user.dblClick(screen.getByRole('button'));
 
     expect(doubleClickSpy).toHaveBeenCalled();
 });
 
-test('Should not call onDoubleClick if order field is shown', () => {
+test('Should not call onDoubleClick if order field is shown', async() => {
+    const user = userEvent.setup();
     const doubleClickSpy = jest.fn();
 
     render(<Item id={2} onDoubleClick={doubleClickSpy} showOrderField={true}>Test with indicators</Item>);
-    fireEvent.doubleClick(screen.getByRole('button'));
+    await user.dblClick(screen.getByRole('button'));
 
     expect(doubleClickSpy).not.toHaveBeenCalled();
 });

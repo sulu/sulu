@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
@@ -331,13 +331,13 @@ test('Return JSX for all child ToolbarActions', () => {
             case 'sulu_admin.delete':
                 return class {
                     getNode() {
-                        return <div className="delete" key="delete" />;
+                        return <div className="delete" data-testid="delete-node" key="delete" />;
                     }
                 };
             case 'sulu_admin.copy':
                 return class {
                     getNode() {
-                        return <div className="copy" key="copy" />;
+                        return <div className="copy" data-testid="copy-node" key="copy" />;
                     }
                 };
             case 'sulu_admin.nothing':
@@ -357,7 +357,11 @@ test('Return JSX for all child ToolbarActions', () => {
         ],
     });
 
-    expect(render(dropdownToolbarAction.getNode())).toMatchSnapshot();
+    render(dropdownToolbarAction.getNode());
+
+    expect(screen.getByTestId('delete-node')).toBeInTheDocument();
+    expect(screen.getByTestId('copy-node')).toBeInTheDocument();
+    expect(screen.queryByTestId('nothing-node')).not.toBeInTheDocument();
 });
 
 test('Throw error if toolbarActions are neither an object nor an array', () => {

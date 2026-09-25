@@ -1,8 +1,11 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render, screen, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import listAdapterDefaultProps from '../../../../utils/TestHelper/listAdapterDefaultProps';
 import TreeTableAdapter from '../../adapters/TreeTableAdapter';
+import StringFieldTransformer from '../../fieldTransformers/StringFieldTransformer';
+import listFieldTransformerRegistry from '../../registries/listFieldTransformerRegistry';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate(key) {
@@ -11,21 +14,168 @@ jest.mock('../../../../utils/Translator', () => ({
                 return 'Page';
             case 'sulu_admin.of':
                 return 'of';
+            case 'sulu_admin.per_page':
+                return 'per page';
+            default:
+                return key;
         }
     },
 }));
 
 jest.mock('../../registries/listFieldTransformerRegistry', () => ({
     add: jest.fn(),
-    get: jest.fn(() => {
-        return {
-            transform(value) {
-                return value;
-            },
-        };
-    }),
+    get: jest.fn(),
     has: jest.fn(),
 }));
+
+const TITLE_SCHEMA = {
+    title: {
+        filterType: null,
+        filterTypeParameters: null,
+        transformerTypeParameters: {},
+        type: 'string',
+        sortable: true,
+        visibility: 'yes',
+        label: 'Title',
+    },
+};
+
+const TITLE_DESCRIPTION_SCHEMA = {
+    title: {
+        filterType: null,
+        filterTypeParameters: null,
+        transformerTypeParameters: {},
+        label: 'Title',
+        sortable: true,
+        type: 'string',
+        visibility: 'no',
+    },
+    description: {
+        filterType: null,
+        filterTypeParameters: null,
+        transformerTypeParameters: {},
+        label: 'Description',
+        sortable: true,
+        type: 'string',
+        visibility: 'yes',
+    },
+};
+
+const TREE_DATA = [
+    {
+        data: {
+            id: 2,
+            title: 'Test1',
+        },
+        children: [],
+        hasChildren: false,
+    },
+    {
+        data: {
+            id: 3,
+            title: 'Test2',
+        },
+        children: [],
+        hasChildren: true,
+    },
+    {
+        data: {
+            id: 6,
+            title: 'Test3',
+        },
+        children: [
+            {
+                data: {
+                    id: 7,
+                    title: 'Test4',
+                },
+                children: [],
+                hasChildren: false,
+            },
+        ],
+        hasChildren: true,
+    },
+];
+
+function renderTreeTableAdapter(props: Object = {}) {
+    return render(
+        <TreeTableAdapter
+            {...listAdapterDefaultProps}
+            {...props}
+        />
+    );
+}
+
+function getButtonsByIcon(icon: string): Array<HTMLButtonElement> {
+    const buttons: Array<HTMLButtonElement> = [];
+
+    screen.queryAllByLabelText(icon).forEach((iconElement) => {
+        const button = iconElement.closest('button');
+
+        if (button instanceof HTMLButtonElement) {
+            buttons.push(button);
+        }
+    });
+
+    return buttons;
+}
+
+function getButtonByIconInRow(row: HTMLElement, icon: string): HTMLButtonElement {
+    const button = within(row).getByLabelText(icon).closest('button');
+
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error('The button with icon "' + icon + '" was not rendered in the row.');
+    }
+
+    return button;
+}
+
+function getNavigationButtonByIcon(icon: string): HTMLButtonElement {
+    const button = getButtonsByIcon(icon).find((button) => button.closest('nav'));
+
+    if (!(button instanceof HTMLButtonElement)) {
+        throw new Error('The pagination button with icon "' + icon + '" was not rendered.');
+    }
+
+    return button;
+}
+
+function getRowByText(text: string): HTMLTableRowElement {
+    const row = screen.getByText(text).closest('tr');
+
+    if (!(row instanceof HTMLTableRowElement)) {
+        throw new Error('Row with text "' + text + '" was not rendered.');
+    }
+
+    return row;
+}
+
+function getBodyRows(): Array<HTMLTableRowElement> {
+    const rows: Array<HTMLTableRowElement> = [];
+
+    screen.getAllByRole('row').forEach((row) => {
+        if (row instanceof HTMLTableRowElement && row.closest('tbody')) {
+            rows.push(row);
+        }
+    });
+
+    return rows;
+}
+
+function getCheckboxByValue(value: string): HTMLInputElement {
+    const checkbox = screen.getAllByRole('checkbox').find((checkbox) => checkbox.getAttribute('value') === value);
+
+    if (!(checkbox instanceof HTMLInputElement)) {
+        throw new Error('The checkbox with value "' + value + '" was not rendered.');
+    }
+
+    return checkbox;
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    listFieldTransformerRegistry.get.mockReturnValue(new StringFieldTransformer());
+});
 
 test('Render data with schema', () => {
     const data = [
@@ -115,228 +265,65 @@ test('Render data with schema', () => {
         },
     ];
 
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Title',
-        },
-    };
+    renderTreeTableAdapter({
+        data,
+        schema: TITLE_SCHEMA,
+    });
 
-    const treeTableAdapter = render(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            schema={schema}
-        />
-    );
-
-    expect(treeTableAdapter).toMatchSnapshot();
+    expect(screen.getByRole('columnheader', {name: 'Title'})).toBeInTheDocument();
+    expect(screen.getByText('Page 1')).toBeInTheDocument();
+    expect(screen.getByText('Page 8')).toBeInTheDocument();
+    expect(screen.getAllByText('de')).toHaveLength(4);
+    expect(screen.getAllByLabelText('su-angle-right')).toHaveLength(8);
+    expect(document.querySelector('.publishIndicator')).toBeInTheDocument();
 });
 
-test('Render data without header', () => {
-    const test1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-        },
-        children: [],
-        hasChildren: false,
-    };
-    const test2 = {
-        data: {
-            id: 3,
-            title: 'Test2',
-        },
-        children: [],
-        hasChildren: true,
-    };
-    const test3 = {
-        data: {
-            id: 6,
-            title: 'Test3',
-        },
-        children: [
-            {
-                data: {
-                    id: 7,
-                    title: 'Test4',
-                },
-                children: [],
-                hasChildren: false,
-            },
-        ],
-        hasChildren: true,
-    };
+test('Render data without header using the configured skin', () => {
+    renderTreeTableAdapter({
+        adapterOptions: {show_header: false},
+        data: TREE_DATA,
+        page: 1,
+        pageCount: 2,
+        paginated: false,
+        schema: TITLE_SCHEMA,
+    });
 
-    const data = [
-        test1,
-        test2,
-        test3,
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const treeListAdapter = render(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            adapterOptions={{show_header: false}}
-            data={data}
-            page={1}
-            pageCount={2}
-            paginated={false}
-            schema={schema}
-        />
-    );
-
-    expect(treeListAdapter).toMatchSnapshot();
+    expect(screen.queryByRole('columnheader')).not.toBeInTheDocument();
+    expect(screen.getByText('Test1')).toBeInTheDocument();
+    expect(screen.getByText('Test4')).toBeInTheDocument();
 });
 
 test('Render data with skin', () => {
-    const test1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-        },
-        children: [],
-        hasChildren: false,
-    };
-    const test2 = {
-        data: {
-            id: 3,
-            title: 'Test2',
-        },
-        children: [],
-        hasChildren: true,
-    };
-    const test3 = {
-        data: {
-            id: 6,
-            title: 'Test3',
-        },
-        children: [
-            {
-                data: {
-                    id: 7,
-                    title: 'Test4',
-                },
-                children: [],
-                hasChildren: false,
-            },
-        ],
-        hasChildren: true,
-    };
+    renderTreeTableAdapter({
+        adapterOptions: {skin: 'flat'},
+        data: TREE_DATA,
+        page: 1,
+        pageCount: 2,
+        paginated: false,
+        schema: TITLE_SCHEMA,
+    });
 
-    const data = [
-        test1,
-        test2,
-        test3,
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const treeListAdapter = render(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            adapterOptions={{skin: 'flat'}}
-            data={data}
-            page={1}
-            pageCount={2}
-            paginated={false}
-            schema={schema}
-        />
-    );
-
-    expect(treeListAdapter).toMatchSnapshot();
+    expect(screen.getByRole('table').closest('.tableContainer')).toHaveClass('flat');
+    expect(screen.getByRole('columnheader', {name: 'Title'})).toBeInTheDocument();
 });
 
 test('Render data without header', () => {
-    const test1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-        },
-        children: [],
-        hasChildren: false,
-    };
-    const test2 = {
-        data: {
-            id: 3,
-            title: 'Test2',
-        },
-        children: [],
-        hasChildren: true,
-    };
-    const test3 = {
-        data: {
-            id: 6,
-            title: 'Test3',
-        },
-        children: [
-            {
-                data: {
-                    id: 7,
-                    title: 'Test4',
-                },
-                children: [],
-                hasChildren: false,
-            },
-        ],
-        hasChildren: true,
-    };
+    renderTreeTableAdapter({
+        adapterOptions: {show_header: false},
+        data: TREE_DATA,
+        page: 1,
+        pageCount: 2,
+        paginated: false,
+        schema: TITLE_SCHEMA,
+    });
 
-    const data = [
-        test1,
-        test2,
-        test3,
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const treeListAdapter = render(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            adapterOptions={{show_header: false}}
-            data={data}
-            page={1}
-            pageCount={2}
-            paginated={false}
-            schema={schema}
-        />
-    );
-
-    expect(treeListAdapter).toMatchSnapshot();
+    expect(screen.queryByRole('columnheader')).not.toBeInTheDocument();
+    expect(screen.getByText('Test1')).toBeInTheDocument();
+    expect(screen.getByText('Test4')).toBeInTheDocument();
 });
 
-test('Attach onClick handler for sorting if schema says the header is sortable', () => {
+test('Attach onClick handler for sorting if schema says the header is sortable', async() => {
+    const user = userEvent.setup();
     const sortSpy = jest.fn();
 
     const schema = {
@@ -360,52 +347,49 @@ test('Attach onClick handler for sorting if schema says the header is sortable',
         },
     };
 
-    const treeTableAdapter = shallow(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            onSort={sortSpy}
-            schema={schema}
-        />
-    );
+    renderTreeTableAdapter({
+        onSort: sortSpy,
+        schema,
+    });
 
-    expect(treeTableAdapter.find('HeaderCell').at(0).prop('onClick')).toBe(sortSpy);
-    expect(treeTableAdapter.find('HeaderCell').at(1).prop('onClick')).toEqual(undefined);
+    await user.click(screen.getByRole('button', {name: 'Title'}));
+
+    expect(sortSpy).toHaveBeenCalledWith('title', 'asc');
+    expect(screen.queryByRole('button', {name: 'Description'})).not.toBeInTheDocument();
+    expect(screen.getByRole('columnheader', {name: 'Description'})).toBeInTheDocument();
 });
 
 test('Render data with two columns', () => {
-    const test1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-            title2: 'Title2 - Test1',
-        },
-        children: [],
-        hasChildren: false,
-    };
-    const test2 = {
-        data: {
-            id: 3,
-            title: 'Test2',
-            title2: 'Title2 - Test2',
-        },
-        children: [],
-        hasChildren: true,
-    };
-    const test3 = {
-        data: {
-            id: 6,
-            title: 'Test3',
-            title2: 'Title2 - Test3',
-        },
-        children: [],
-        hasChildren: true,
-    };
-
     const data = [
-        test1,
-        test2,
-        test3,
+        {
+            data: {
+                id: 2,
+                title: 'Test1',
+                title2: 'Title2 - Test1',
+            },
+            children: [],
+            hasChildren: false,
+        },
+        {
+            data: {
+                id: 3,
+                title: 'Test2',
+                title2: 'Title2 - Test2',
+            },
+            children: [],
+            hasChildren: true,
+        },
+        {
+            data: {
+                id: 6,
+                title: 'Test3',
+                title2: 'Title2 - Test3',
+            },
+            children: [],
+            hasChildren: true,
+        },
     ];
+
     const schema = {
         title: {
             filterType: null,
@@ -426,72 +410,34 @@ test('Render data with two columns', () => {
             label: 'Title2',
         },
     };
-    const treeListAdapter = render(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            schema={schema}
-        />
-    );
 
-    expect(treeListAdapter).toMatchSnapshot();
+    renderTreeTableAdapter({
+        data,
+        schema,
+    });
+
+    expect(screen.getByRole('columnheader', {name: 'Title'})).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', {name: 'Title2'})).toBeInTheDocument();
+    expect(getRowByText('Test1')).toHaveTextContent('Title2 - Test1');
+    expect(getRowByText('Test2')).toHaveTextContent('Title2 - Test2');
 });
 
 test('Render data with schema and selections', () => {
-    const test1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-        },
-        children: [],
-        hasChildren: false,
-    };
-    const test2 = {
-        data: {
-            id: 3,
-            title: 'Test2',
-        },
-        children: [],
-        hasChildren: true,
-    };
-    const test3 = {
-        data: {
-            id: 6,
-            title: 'Test3',
-        },
-        children: [],
-        hasChildren: true,
-    };
+    renderTreeTableAdapter({
+        data: TREE_DATA,
+        onItemSelectionChange: jest.fn(),
+        schema: TITLE_SCHEMA,
+        selections: [1, 3],
+    });
 
-    const data = [
-        test1,
-        test2,
-        test3,
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Title',
-        },
-    };
-    const treeListAdapter = render(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            schema={schema}
-            selections={[1, 3]}
-        />
-    );
-
-    expect(treeListAdapter).toMatchSnapshot();
+    expect(getCheckboxByValue('2')).not.toBeChecked();
+    expect(getCheckboxByValue('3')).toBeChecked();
+    expect(getCheckboxByValue('6')).not.toBeChecked();
 });
 
-test('Execute onItemActivate respectively onItemDeactivate callback when an item is clicked', () => {
+test('Execute onItemActivate respectively onItemDeactivate callback when an item is clicked', async() => {
+    const user = userEvent.setup();
+
     const test1 = {
         data: {
             id: 2,
@@ -536,77 +482,24 @@ test('Execute onItemActivate respectively onItemDeactivate callback when an item
         hasChildren: true,
     };
 
-    const data = [
-        test1,
-        test2,
-        test3,
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Title',
-        },
-    };
-
     const onItemActivateSpy = jest.fn();
     const onItemDeactivateSpy = jest.fn();
 
-    const treeListAdapter = mount(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemActivate={onItemActivateSpy}
-            onItemDeactivate={onItemDeactivateSpy}
-            schema={schema}
-        />
-    );
+    renderTreeTableAdapter({
+        data: [test1, test2, test3],
+        onItemActivate: onItemActivateSpy,
+        onItemDeactivate: onItemDeactivateSpy,
+        schema: TITLE_SCHEMA,
+    });
 
-    // expand the row
-    treeListAdapter.find('Row[id=6]').find('span.toggleIcon Icon').simulate('click');
+    await user.click(within(getRowByText('Test3')).getByLabelText('su-angle-right'));
     expect(onItemActivateSpy).toHaveBeenCalledWith(6);
 
-    // close the row
-    treeListAdapter.find('Row[id=3]').find('span.toggleIcon Icon').simulate('click');
+    await user.click(within(getRowByText('Test2')).getByLabelText('su-angle-down'));
     expect(onItemDeactivateSpy).toHaveBeenCalledWith(3);
 });
 
 test('Render data with pencil button and given itemActions when onItemEdit callback is passed', () => {
-    const test1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-        },
-        children: [],
-        hasChildren: false,
-    };
-    const data = [
-        test1,
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
     const actionsProvider = () => [
         {
             icon: 'su-process',
@@ -618,18 +511,26 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         },
     ];
 
-    const treeListAdapter = render(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            /* eslint-disable-next-line react/jsx-no-bind */
-            itemActionsProvider={actionsProvider}
-            onItemClick={jest.fn()}
-            schema={schema}
-        />
-    );
+    renderTreeTableAdapter({
+        data: [
+            {
+                data: {
+                    id: 2,
+                    title: 'Test1',
+                },
+                children: [],
+                hasChildren: false,
+            },
+        ],
+        itemActionsProvider: actionsProvider,
+        onItemClick: jest.fn(),
+        schema: TITLE_DESCRIPTION_SCHEMA,
+    });
 
-    expect(treeListAdapter).toMatchSnapshot();
+    expect(getButtonsByIcon('su-pen')).toHaveLength(1);
+    expect(getButtonsByIcon('su-process')).toHaveLength(1);
+    expect(getButtonsByIcon('su-trash')).toHaveLength(1);
+    expect(screen.getByRole('columnheader', {name: /Description/})).toBeInTheDocument();
 });
 
 test('Render correct buttons based on permissions when item permissions are provided', () => {
@@ -676,46 +577,37 @@ test('Render correct buttons based on permissions when item permissions are prov
             hasChildren: false,
         },
     ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
+
+    renderTreeTableAdapter({
+        data,
+        onItemAdd: jest.fn(),
+        onItemClick: jest.fn(),
+        schema: {
+            title: {
+                filterType: null,
+                filterTypeParameters: null,
+                transformerTypeParameters: {},
+                label: 'Title',
+                sortable: true,
+                type: 'string',
+                visibility: 'no',
+            },
         },
-    };
-    const treeListAdapter = mount(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemAdd={jest.fn()}
-            onItemClick={jest.fn()}
-            schema={schema}
-        />
-    );
+    });
 
-    expect(treeListAdapter.find('Row').at(0).find('ButtonCell').at(0).props().icon).toEqual('su-pen');
-    expect(treeListAdapter.find('Row').at(0).find('ButtonCell').at(0).props().disabled).toEqual(true);
-    expect(treeListAdapter.find('Row').at(0).find('ButtonCell').at(1).props().icon).toEqual('su-plus-circle');
-    expect(treeListAdapter.find('Row').at(0).find('ButtonCell').at(1).props().disabled).toEqual(false);
+    const rows = getBodyRows();
 
-    expect(treeListAdapter.find('Row').at(1).find('ButtonCell').at(0).props().icon).toEqual('su-eye');
-    expect(treeListAdapter.find('Row').at(1).find('ButtonCell').at(0).props().disabled).toEqual(false);
-    expect(treeListAdapter.find('Row').at(1).find('ButtonCell').at(1).props().icon).toEqual('su-plus-circle');
-    expect(treeListAdapter.find('Row').at(1).find('ButtonCell').at(1).props().disabled).toEqual(false);
+    expect(getButtonByIconInRow(rows[0], 'su-pen')).toBeDisabled();
+    expect(getButtonByIconInRow(rows[0], 'su-plus-circle')).toBeEnabled();
 
-    expect(treeListAdapter.find('Row').at(2).find('ButtonCell').at(0).props().icon).toEqual('su-pen');
-    expect(treeListAdapter.find('Row').at(2).find('ButtonCell').at(0).props().disabled).toEqual(false);
-    expect(treeListAdapter.find('Row').at(2).find('ButtonCell').at(1).props().icon).toEqual('su-plus-circle');
-    expect(treeListAdapter.find('Row').at(2).find('ButtonCell').at(1).props().disabled).toEqual(true);
+    expect(getButtonByIconInRow(rows[1], 'su-eye')).toBeEnabled();
+    expect(getButtonByIconInRow(rows[1], 'su-plus-circle')).toBeEnabled();
 
-    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(0).props().icon).toEqual('su-pen');
-    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(0).props().disabled).toEqual(false);
-    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(1).props().icon).toEqual('su-plus-circle');
-    expect(treeListAdapter.find('Row').at(3).find('ButtonCell').at(1).props().disabled).toEqual(false);
+    expect(getButtonByIconInRow(rows[2], 'su-pen')).toBeEnabled();
+    expect(getButtonByIconInRow(rows[2], 'su-plus-circle')).toBeDisabled();
+
+    expect(getButtonByIconInRow(rows[3], 'su-pen')).toBeEnabled();
+    expect(getButtonByIconInRow(rows[3], 'su-plus-circle')).toBeEnabled();
 });
 
 test('Render disabled rows based on given disabledIds prop', () => {
@@ -746,176 +638,90 @@ test('Render disabled rows based on given disabledIds prop', () => {
             hasChildren: true,
         },
     ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-    };
-    const treeListAdapter = mount(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            disabledIds={[1, 3]}
-            onItemAdd={jest.fn()}
-            onItemClick={jest.fn()}
-            schema={schema}
-        />
-    );
 
-    expect(treeListAdapter.find('Row').at(0).props().disabled).toEqual(true);
-    expect(treeListAdapter.find('Row').at(1).props().disabled).toEqual(false);
-    expect(treeListAdapter.find('Row').at(2).props().disabled).toEqual(true);
+    renderTreeTableAdapter({
+        data,
+        disabledIds: [1, 3],
+        onItemAdd: jest.fn(),
+        onItemClick: jest.fn(),
+        schema: TITLE_SCHEMA,
+    });
+
+    expect(getRowByText('First item')).toHaveClass('disabled');
+    expect(getRowByText('Second item')).not.toHaveClass('disabled');
+    expect(getRowByText('Child item')).toHaveClass('disabled');
 });
 
 test('Render data with plus button when onItemAdd callback is passed', () => {
-    const test1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-        },
-        children: [],
-        hasChildren: false,
-    };
-    const data = [
-        test1,
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const treeListAdapter = render(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemAdd={jest.fn()}
-            schema={schema}
-        />
-    );
+    renderTreeTableAdapter({
+        data: [
+            {
+                data: {
+                    id: 2,
+                    title: 'Test1',
+                },
+                children: [],
+                hasChildren: false,
+            },
+        ],
+        onItemAdd: jest.fn(),
+        schema: TITLE_DESCRIPTION_SCHEMA,
+    });
 
-    expect(treeListAdapter).toMatchSnapshot();
+    expect(getButtonsByIcon('su-plus-circle')).toHaveLength(1);
+    expect(screen.getByRole('columnheader', {name: /Description/})).toBeInTheDocument();
 });
 
-test('Click on pencil should execute onItemClick callback', () => {
+test('Click on pencil should execute onItemClick callback', async() => {
+    const user = userEvent.setup();
     const rowEditClickSpy = jest.fn();
-    const test1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-        },
-        children: [],
-        hasChildren: false,
-    };
-    const data = [
-        test1,
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
-    const treeListAdapter = shallow(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemClick={rowEditClickSpy}
-            schema={schema}
-        />
-    );
-    const buttons = treeListAdapter.find('Table').prop('buttons');
-    expect(buttons).toHaveLength(1);
-    expect(buttons[0].icon).toBe('su-pen');
 
-    buttons[0].onClick(1);
-    expect(rowEditClickSpy).toHaveBeenCalledWith(1);
+    renderTreeTableAdapter({
+        data: [
+            {
+                data: {
+                    id: 2,
+                    title: 'Test1',
+                },
+                children: [],
+                hasChildren: false,
+            },
+        ],
+        onItemClick: rowEditClickSpy,
+        schema: TITLE_DESCRIPTION_SCHEMA,
+    });
+
+    await user.click(getButtonsByIcon('su-pen')[0]);
+
+    expect(rowEditClickSpy).toHaveBeenCalledWith(2, 0);
 });
 
-test('Click on add should execute onItemAdd callback', () => {
-    const test1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-        },
-        children: [],
-        hasChildren: false,
-    };
-    const data = [
-        test1,
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
+test('Click on add should execute onItemAdd callback', async() => {
+    const user = userEvent.setup();
     const rowAddClickSpy = jest.fn();
-    const treeListAdapter = shallow(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemAdd={rowAddClickSpy}
-            schema={schema}
-        />
-    );
-    const buttons = treeListAdapter.find('Table').prop('buttons');
-    expect(buttons).toHaveLength(1);
-    expect(buttons[0].icon).toBe('su-plus-circle');
 
-    buttons[0].onClick(1);
-    expect(rowAddClickSpy).toHaveBeenCalledWith(1);
+    renderTreeTableAdapter({
+        data: [
+            {
+                data: {
+                    id: 2,
+                    title: 'Test1',
+                },
+                children: [],
+                hasChildren: false,
+            },
+        ],
+        onItemAdd: rowAddClickSpy,
+        schema: TITLE_DESCRIPTION_SCHEMA,
+    });
+
+    await user.click(getButtonsByIcon('su-plus-circle')[0]);
+
+    expect(rowAddClickSpy).toHaveBeenCalledWith(2, 0);
 });
 
-test('Click on itemAction should execute its callback', () => {
+test('Click on itemAction should execute its callback', async() => {
+    const user = userEvent.setup();
     const actionClickSpy = jest.fn();
     const item1Data = {
         id: 2,
@@ -926,27 +732,6 @@ test('Click on itemAction should execute its callback', () => {
         children: [],
         hasChildren: false,
     };
-    const data = [item1];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Title',
-            sortable: true,
-            type: 'string',
-            visibility: 'no',
-        },
-        description: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            label: 'Description',
-            sortable: true,
-            type: 'string',
-            visibility: 'yes',
-        },
-    };
     const actionsProvider = jest.fn(() => [
         {
             icon: 'su-process',
@@ -954,60 +739,46 @@ test('Click on itemAction should execute its callback', () => {
         },
     ]);
 
-    const treeListAdapter = shallow(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            itemActionsProvider={actionsProvider}
-            onItemAdd={jest.fn()}
-            schema={schema}
-        />
-    );
+    renderTreeTableAdapter({
+        data: [item1],
+        itemActionsProvider: actionsProvider,
+        onItemAdd: jest.fn(),
+        schema: TITLE_DESCRIPTION_SCHEMA,
+    });
 
     expect(actionsProvider).toHaveBeenCalledWith(item1Data);
 
-    const buttons = treeListAdapter.find('Table').prop('buttons');
-    expect(buttons).toHaveLength(2);
-    expect(buttons[1].icon).toBe('su-process');
+    await user.click(getButtonsByIcon('su-process')[0]);
 
-    buttons[1].onClick(1);
-    expect(actionClickSpy).toHaveBeenCalledWith(1);
+    expect(actionClickSpy).toHaveBeenCalledWith(2, 0);
 });
 
 test('Pagination should be passed correct props', () => {
     const pageChangeSpy = jest.fn();
     const limitChangeSpy = jest.fn();
 
-    const item1 = {
-        data: {
-            id: 2,
-            title: 'Test1',
-        },
-        children: [],
-        hasChildren: false,
-    };
-    const data = [item1];
-
-    const treeTableAdapter = shallow(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            limit={10}
-            onLimitChange={limitChangeSpy}
-            onPageChange={pageChangeSpy}
-            page={2}
-            pageCount={7}
-        />
-    );
-    expect(treeTableAdapter.find('Pagination').get(0).props).toEqual({
-        totalPages: 7,
-        currentPage: 2,
-        currentLimit: 10,
-        loading: false,
+    renderTreeTableAdapter({
+        data: [
+            {
+                data: {
+                    id: 2,
+                    title: 'Test1',
+                },
+                children: [],
+                hasChildren: false,
+            },
+        ],
+        limit: 10,
         onLimitChange: limitChangeSpy,
-        onPageChange: treeTableAdapter.instance().handlePageChange,
-        children: expect.anything(),
+        onPageChange: pageChangeSpy,
+        page: 2,
+        pageCount: 7,
     });
+
+    expect(screen.getByDisplayValue('2')).toBeInTheDocument();
+    expect(screen.getByText(/of/)).toHaveTextContent('of 7');
+    expect(getNavigationButtonByIcon('su-angle-left')).toBeEnabled();
+    expect(getNavigationButtonByIcon('su-angle-right')).toBeEnabled();
 });
 
 test('Pagination should not be rendered if API is not paginated', () => {
@@ -1037,51 +808,45 @@ test('Pagination should not be rendered if API is not paginated', () => {
         children: [item2],
         hasChildren: true,
     };
-    const data = [item1, item3];
 
-    const pageChangeSpy = jest.fn();
-    const limitChangeSpy = jest.fn();
-    const treeTableAdapter = shallow(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onLimitChange={limitChangeSpy}
-            onPageChange={pageChangeSpy}
-            page={1}
-            pageCount={undefined}
-        />
-    );
-    expect(treeTableAdapter.find('Pagination')).toHaveLength(0);
+    renderTreeTableAdapter({
+        data: [item1, item3],
+        onLimitChange: jest.fn(),
+        onPageChange: jest.fn(),
+        page: 1,
+        pageCount: undefined,
+    });
+
+    expect(screen.queryByDisplayValue('1')).not.toBeInTheDocument();
+    expect(screen.queryByText(/of/)).not.toBeInTheDocument();
 });
 
 test('Pagination should not be rendered if no data is available', () => {
-    const pageChangeSpy = jest.fn();
-    const limitChangeSpy = jest.fn();
-    const treeTableAdapter = shallow(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            onLimitChange={limitChangeSpy}
-            onPageChange={pageChangeSpy}
-            page={1}
-        />
-    );
-    expect(treeTableAdapter.find('Pagination')).toHaveLength(0);
+    renderTreeTableAdapter({
+        onLimitChange: jest.fn(),
+        onPageChange: jest.fn(),
+        page: 1,
+    });
+
+    expect(screen.queryByDisplayValue('1')).not.toBeInTheDocument();
+    expect(screen.queryByText(/of/)).not.toBeInTheDocument();
 });
 
 test('Pagination should not be rendered if pagination is false', () => {
-    const treeTableAdapter = shallow(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            limit={10}
-            page={2}
-            pageCount={7}
-            paginated={false}
-        />
-    );
-    expect(treeTableAdapter.find('Pagination')).toHaveLength(0);
+    renderTreeTableAdapter({
+        limit: 10,
+        page: 2,
+        pageCount: 7,
+        paginated: false,
+    });
+
+    expect(screen.queryByDisplayValue('2')).not.toBeInTheDocument();
+    expect(screen.queryByText(/of/)).not.toBeInTheDocument();
 });
 
-test('Next page should call onItemActiveate with undefined', () => {
+test('Next page should call onItemActiveate with undefined', async() => {
+    const user = userEvent.setup();
+
     const test1 = {
         data: {
             id: 2,
@@ -1118,39 +883,20 @@ test('Next page should call onItemActiveate with undefined', () => {
         hasChildren: true,
     };
 
-    const data = [
-        test1,
-        test2,
-    ];
-    const schema = {
-        title: {
-            filterType: null,
-            filterTypeParameters: null,
-            transformerTypeParameters: {},
-            type: 'string',
-            sortable: true,
-            visibility: 'yes',
-            label: 'Title',
-        },
-    };
-
     const onPageChangeSpy = jest.fn();
     const onItemActivateSpy = jest.fn();
 
-    const treeListAdapter = mount(
-        <TreeTableAdapter
-            {...listAdapterDefaultProps}
-            data={data}
-            onItemActivate={onItemActivateSpy}
-            onPageChange={onPageChangeSpy}
-            page={1}
-            pageCount={2}
-            schema={schema}
-        />
-    );
+    renderTreeTableAdapter({
+        data: [test1, test2],
+        onItemActivate: onItemActivateSpy,
+        onPageChange: onPageChangeSpy,
+        page: 1,
+        pageCount: 2,
+        schema: TITLE_SCHEMA,
+    });
 
-    // Click next page
-    treeListAdapter.find('Pagination').find('ButtonGroup Button').at(1).simulate('click');
+    await user.click(getNavigationButtonByIcon('su-angle-right'));
+
     expect(onPageChangeSpy).toHaveBeenCalledWith(2);
     expect(onItemActivateSpy).toHaveBeenCalledWith(undefined);
 });

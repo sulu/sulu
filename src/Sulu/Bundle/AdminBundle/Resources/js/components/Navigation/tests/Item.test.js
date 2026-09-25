@@ -80,6 +80,7 @@ test('The component should render with children an active child and expanded', (
 });
 
 test('The component should handle clicks correctly', async() => {
+    const user = userEvent.setup();
     const handleItemClick = jest.fn();
     const handleSubItemClick = jest.fn();
 
@@ -105,9 +106,9 @@ test('The component should handle clicks correctly', async() => {
         </Item>
     );
 
-    await userEvent.click(screen.queryByText('Settings'));
+    await user.click(screen.queryByText('Settings'));
     expect(handleItemClick).toHaveBeenCalledWith('settings');
 
-    await userEvent.click(screen.queryByText(/Settings 2/));
+    await user.click(screen.queryByText(/Settings 2/));
     expect(handleSubItemClick).toHaveBeenCalledWith('settings_2');
 });

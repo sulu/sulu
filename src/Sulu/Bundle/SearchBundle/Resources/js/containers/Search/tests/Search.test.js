@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {Router} from 'sulu-admin-bundle/services';
 import Search from '../Search';
 import indexStore from '../stores/indexStore';
@@ -10,9 +11,7 @@ jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../stores/indexStore', () => ({
     loadIndexes: jest.fn(),
@@ -20,21 +19,35 @@ jest.mock('../stores/indexStore', () => ({
 
 jest.mock('../stores/searchStore', () => ({
     indexName: undefined,
+    limit: undefined,
+    loading: false,
+    page: undefined,
+    pages: undefined,
     query: undefined,
-    results: [],
+    result: [],
     search: jest.fn(),
-    setPage: jest.fn(),
     setLimit: jest.fn(),
+    setPage: jest.fn(),
 }));
 
 beforeEach(() => {
     searchStore.indexName = undefined;
-    searchStore.query = undefined;
+    (searchStore: any).limit = undefined;
     searchStore.loading = false;
+    (searchStore: any).page = undefined;
+    searchStore.pages = undefined;
+    searchStore.query = undefined;
     searchStore.result = [];
+    searchStore.search.mockClear();
 });
 
-test('Render loader while loading indexes and show SearchField afterwards', () => {
+async function resolveIndexes(indexPromise: Promise<Array<Object>>) {
+    await act(async() => {
+        await indexPromise;
+    });
+}
+
+test('Render loader while loading indexes and show SearchField afterwards', async() => {
     const router = new Router({});
 
     const indexes = [
@@ -51,17 +64,16 @@ test('Render loader while loading indexes and show SearchField afterwards', () =
     const indexPromise = Promise.resolve(indexes);
     indexStore.loadIndexes.mockReturnValue(indexPromise);
 
-    const search = mount(<Search router={router} />);
+    const {asFragment} = render(<Search router={router} />);
 
-    expect(search.render()).toMatchSnapshot();
+    expect(asFragment()).toMatchSnapshot();
 
-    return indexPromise.then(() => {
-        search.update();
-        expect(search.render()).toMatchSnapshot();
-    });
+    await resolveIndexes(indexPromise);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render loader while loading search results', () => {
+test('Render loader while loading search results', async() => {
     const router = new Router({});
 
     const indexes = [
@@ -80,15 +92,14 @@ test('Render loader while loading search results', () => {
 
     searchStore.loading = true;
 
-    const search = mount(<Search router={router} />);
+    const {asFragment} = render(<Search router={router} />);
 
-    return indexPromise.then(() => {
-        search.update();
-        expect(search.render()).toMatchSnapshot();
-    });
+    await resolveIndexes(indexPromise);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render hint that nothing was found', () => {
+test('Render hint that nothing was found', async() => {
     const router = new Router({});
 
     const indexes = [
@@ -109,15 +120,14 @@ test('Render hint that nothing was found', () => {
     searchStore.result = [];
     searchStore.query = 'something';
 
-    const search = mount(<Search router={router} />);
+    const {asFragment} = render(<Search router={router} />);
 
-    return indexPromise.then(() => {
-        search.update();
-        expect(search.render()).toMatchSnapshot();
-    });
+    await resolveIndexes(indexPromise);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Render search results', () => {
+test('Render search results', async() => {
     const router = new Router({});
 
     const indexes = [
@@ -171,15 +181,14 @@ test('Render search results', () => {
     ];
     searchStore.query = 'something';
 
-    const search = mount(<Search router={router} />);
+    const {asFragment} = render(<Search router={router} />);
 
-    return indexPromise.then(() => {
-        search.update();
-        expect(search.render()).toMatchSnapshot();
-    });
+    await resolveIndexes(indexPromise);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Set the query and index name from the SearchStore as start value', () => {
+test('Set the query and index name from the SearchStore as start value', async() => {
     const router = new Router({});
 
     searchStore.indexName = undefined;
@@ -200,16 +209,16 @@ test('Set the query and index name from the SearchStore as start value', () => {
     const indexPromise = Promise.resolve(indexes);
     indexStore.loadIndexes.mockReturnValue(indexPromise);
 
-    const search = mount(<Search router={router} />);
+    render(<Search router={router} />);
 
-    return indexPromise.then(() => {
-        search.update();
-        expect(search.find('SearchField input').prop('value')).toEqual('Test');
-        expect(search.find('SearchField .indexButton .index').prop('children')).toEqual('Page');
-    });
+    await resolveIndexes(indexPromise);
+
+    expect(screen.getByRole('textbox')).toHaveValue('Test');
+    expect(screen.getByRole('button', {name: /Page/})).toBeInTheDocument();
 });
 
-test('Search when the search button is clicked', () => {
+test('Search when the search button is clicked', async() => {
+    const user = userEvent.setup();
     const router = new Router({});
 
     const indexes = [
@@ -234,17 +243,18 @@ test('Search when the search button is clicked', () => {
     const indexPromise = Promise.resolve(indexes);
     indexStore.loadIndexes.mockReturnValue(indexPromise);
 
-    const search = mount(<Search router={router} />);
+    render(<Search router={router} />);
 
-    return indexPromise.then(() => {
-        search.update();
-        search.find('SearchField input').prop('onChange')({currentTarget: {value: 'Test'}});
-        search.find('Icon[name="su-search"]').prop('onClick')();
-        expect(searchStore.search).toHaveBeenCalledWith('Test', undefined);
-    });
+    await resolveIndexes(indexPromise);
+
+    await user.type(screen.getByRole('textbox'), 'Test');
+    await user.click(screen.getByRole('button', {name: 'su-search'}));
+
+    expect(searchStore.search).toHaveBeenCalledWith('Test', undefined);
 });
 
-test('Navigate to route for search result item', () => {
+test('Navigate to route for search result item', async() => {
+    const user = userEvent.setup();
     const router = new Router({});
 
     const indexes = [
@@ -295,8 +305,8 @@ test('Navigate to route for search result item', () => {
             document: {
                 description: 'something 2',
                 id: 5,
-                index: 'contact',
                 imageUrl: '/image2.jgp',
+                index: 'contact',
                 locale: undefined,
                 resource: 'contact',
                 title: 'Max Mustermann',
@@ -305,16 +315,22 @@ test('Navigate to route for search result item', () => {
     ];
     searchStore.query = 'something';
 
-    const search = mount(<Search router={router} />);
+    render(<Search router={router} />);
 
-    return indexPromise.then(() => {
-        search.update();
-        search.find('SearchResult').at(1).find('div').at(0).simulate('click');
-        expect(router.navigate).toHaveBeenLastCalledWith('sulu_contact.edit_form', {id: 5});
-        search.find('SearchResult').at(0).find('div').at(0).simulate('click');
-        expect(router.navigate).toHaveBeenLastCalledWith(
-            'sulu_page.edit_form',
-            {id: 3, locale: 'de', webspace: 'example'}
-        );
-    });
+    await resolveIndexes(indexPromise);
+
+    const contactResult = screen.getByText('Max Mustermann').closest('[role="button"]');
+    const pageResult = screen.getByText('Test1').closest('[role="button"]');
+
+    if (!contactResult || !pageResult) {
+        throw new Error('Expected search result buttons to be rendered.');
+    }
+
+    await user.click(contactResult);
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_contact.edit_form', {id: 5});
+    await user.click(pageResult);
+    expect(router.navigate).toHaveBeenLastCalledWith(
+        'sulu_page.edit_form',
+        {id: 3, locale: 'de', webspace: 'example'}
+    );
 });

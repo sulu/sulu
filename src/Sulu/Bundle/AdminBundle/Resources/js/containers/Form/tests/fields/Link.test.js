@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import {observable} from 'mobx';
 import log from 'loglevel';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
@@ -10,6 +10,10 @@ import ResourceFormStore from '../../stores/ResourceFormStore';
 import Link from '../../fields/Link';
 import type {LinkValue} from '../../../Link/types';
 
+let mockLinkProps: Object = {};
+
+const mockReact = require('react');
+
 jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
@@ -17,6 +21,30 @@ jest.mock('loglevel', () => ({
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../../Link/Link', () => {
+    const LinkMock: any = jest.fn((props) => {
+        mockLinkProps = props;
+
+        return mockReact.createElement('div');
+    });
+
+    LinkMock.defaultProps = {
+        disabled: false,
+        enableAnchor: false,
+        enableQuery: false,
+        enableRel: false,
+        enableTarget: false,
+        enableTitle: false,
+        excludedTypes: [],
+        types: [],
+    };
+
+    return LinkMock;
+});
+
+beforeEach(() => {
+    mockLinkProps = {};
+});
 
 test('Pass props correctly to Link component', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
@@ -53,7 +81,7 @@ test('Pass props correctly to Link component', () => {
         },
     };
 
-    const link = shallow(
+    render(
         <Link
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -65,7 +93,7 @@ test('Pass props correctly to Link component', () => {
         />
     );
 
-    expect(link.find('Link').props()).toEqual({
+    expect(mockLinkProps).toEqual({
         'disabled': true,
         'enableAnchor': true,
         'enableQuery': true,
@@ -124,7 +152,7 @@ test('Pass props correctly to Link component with deprecated options', () => {
         },
     };
 
-    const link = shallow(
+    render(
         <Link
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -139,7 +167,7 @@ test('Pass props correctly to Link component with deprecated options', () => {
     expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "enable_target" schema option is deprecated'));
     expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('The "enable_title" schema option is deprecated'));
 
-    expect(link.find('Link').props()).toEqual({
+    expect(mockLinkProps).toEqual({
         'disabled': true,
         'enableAnchor': true,
         'enableQuery': false,
@@ -200,7 +228,7 @@ test('Pass props correctly to Link component filtered types', () => {
         },
     };
 
-    const link = shallow(
+    render(
         <Link
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -212,7 +240,7 @@ test('Pass props correctly to Link component filtered types', () => {
         />
     );
 
-    expect(link.find('Link').props()).toEqual({
+    expect(mockLinkProps).toEqual({
         'disabled': true,
         'enableAnchor': true,
         'enableQuery': false,
@@ -273,7 +301,7 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
         },
     };
 
-    const link = shallow(
+    render(
         <Link
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -285,7 +313,7 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
         />
     );
 
-    expect(link.find('Link').props()).toEqual({
+    expect(mockLinkProps).toEqual({
         'disabled': true,
         'enableAnchor': true,
         'enableQuery': false,
@@ -339,7 +367,7 @@ test('Pass props correctly to Link component disabled anchor, query, target and 
         },
     };
 
-    const link = shallow(
+    render(
         <Link
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -351,7 +379,7 @@ test('Pass props correctly to Link component disabled anchor, query, target and 
         />
     );
 
-    expect(link.find('Link').props()).toEqual({
+    expect(mockLinkProps).toEqual({
         'disabled': true,
         'enableAnchor': false,
         'enableQuery': false,

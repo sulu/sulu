@@ -70,11 +70,12 @@ test('Should render with skin link and dropdown icon', () => {
 });
 
 test('Should call the callback on click', async() => {
+    const user = userEvent.setup();
     const onClick = jest.fn();
     render(<Button onClick={onClick} skin="primary" />);
 
     const button = screen.queryByRole('button');
-    await userEvent.click(button);
+    await user.click(button);
     expect(onClick).toHaveBeenCalled();
 });
 

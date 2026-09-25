@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import SearchResult from '../SearchResult';
 
 test('Render only with title', () => {
-    expect(render(
+    const {asFragment} = render(
         <SearchResult
             description={undefined}
             icon={undefined}
@@ -15,11 +16,13 @@ test('Render only with title', () => {
             resource={undefined}
             title="Result"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with all data', () => {
-    expect(render(
+    const {asFragment} = render(
         <SearchResult
             description="Description"
             icon={undefined}
@@ -30,11 +33,13 @@ test('Render with all data', () => {
             resource="Page"
             title="Result"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with icon instead of image', () => {
-    expect(render(
+    const {asFragment} = render(
         <SearchResult
             description="Description"
             icon="su-test"
@@ -45,11 +50,13 @@ test('Render with icon instead of image', () => {
             resource="Page"
             title="Result"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with html description', () => {
-    expect(render(
+    const {asFragment} = render(
         <SearchResult
             description="<p>Description</p>"
             icon={undefined}
@@ -60,13 +67,16 @@ test('Render with html description', () => {
             resource="Page"
             title="Result"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Call callback with index when result is clicked', () => {
+test('Call callback with index when result is clicked', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
 
-    const searchResult = mount(
+    render(
         <SearchResult
             description="Description"
             icon={undefined}
@@ -79,7 +89,7 @@ test('Call callback with index when result is clicked', () => {
         />
     );
 
-    searchResult.find('div').at(0).simulate('click');
+    await user.click(screen.getByRole('button'));
 
     expect(clickSpy).toHaveBeenCalledWith(5);
 });

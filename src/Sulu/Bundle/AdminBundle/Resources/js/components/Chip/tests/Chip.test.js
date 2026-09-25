@@ -30,21 +30,23 @@ test('Should render chip as clickable', () => {
 });
 
 test('Should call onClick callback when the button is clicked', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     const value = {name: 'Test'};
     render(<Chip onClick={clickSpy} onDelete={jest.fn()} value={value}>Test</Chip>);
 
-    await userEvent.click(screen.queryByText('Test'));
+    await user.click(screen.queryByText('Test'));
 
     expect(clickSpy).toHaveBeenCalledWith(value);
 });
 
 test('Should call onDelete callback when the times icon is clicked', async() => {
+    const user = userEvent.setup();
     const deleteSpy = jest.fn();
     const value = {name: 'Test'};
     render(<Chip onDelete={deleteSpy} value={value}>Test</Chip>);
 
-    await userEvent.click(screen.queryByLabelText('su-times'));
+    await user.click(screen.queryByLabelText('su-times'));
 
     expect(deleteSpy).toHaveBeenCalledWith(value);
 });

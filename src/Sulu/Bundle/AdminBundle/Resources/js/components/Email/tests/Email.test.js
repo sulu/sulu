@@ -49,6 +49,7 @@ test('Email should render error', () => {
 });
 
 test('Email should not set onIconClick when value is invalid', async() => {
+    const user = userEvent.setup();
     const assignSpy = jest.spyOn(window.location, 'assign');
 
     const onChange = jest.fn();
@@ -57,12 +58,13 @@ test('Email should not set onIconClick when value is invalid', async() => {
     render(<Email onBlur={onBlur} onChange={onChange} valid={false} value={null} />);
 
     const icon = screen.queryByLabelText('su-envelope');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(assignSpy).not.toHaveBeenCalled();
 });
 
 test('Email should set onIconClick when value is valid and window should be opened', async() => {
+    const user = userEvent.setup();
     const assignSpy = jest.spyOn(window.location, 'assign');
 
     const onChange = jest.fn();
@@ -71,7 +73,7 @@ test('Email should set onIconClick when value is valid and window should be open
     render(<Email onBlur={onBlur} onChange={onChange} valid={true} value="abc@abc.abc" />);
 
     const icon = screen.queryByLabelText('su-envelope');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(assignSpy).toHaveBeenCalledWith('mailto:abc@abc.abc');
 });

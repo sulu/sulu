@@ -1,67 +1,109 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render a condition 1`] = `
-<div
-  class="conditionContainer"
->
+<DocumentFragment>
   <div
-    class="condition"
+    class="conditionContainer"
   >
     <div
-      class="select"
+      class="condition"
     >
       <div
         class="select"
-        role="none"
       >
-        <button
-          class="displayValue default"
-          type="button"
+        <div
+          class="select"
+          role="none"
         >
-          <div
-            aria-label="Browser"
-            class="croppedText"
-            title="Browser"
+          <button
+            class="displayValue default"
+            type="button"
           >
             <div
-              aria-hidden="true"
-              class="front"
+              aria-label="Browser"
+              class="croppedText"
+              title="Browser"
             >
-              Brow
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Brow
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  ser
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Browser
+              </div>
             </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down toggle"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        class="type"
+      >
+        <div
+          class="select"
+          role="none"
+        >
+          <button
+            class="displayValue default"
+            type="button"
+          >
             <div
-              aria-hidden="true"
-              class="back"
+              aria-label="Firefox"
+              class="croppedText"
+              title="Firefox"
             >
-              <span>
-                ser
-              </span>
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Fire
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  fox
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Firefox
+              </div>
             </div>
-            <div
-              class="whole"
-            >
-              Browser
-            </div>
-          </div>
-          <span
-            aria-label="su-angle-down"
-            class="su-angle-down toggle"
-          />
-        </button>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down toggle"
+            />
+          </button>
+        </div>
       </div>
     </div>
-    <div
-      class="type"
-    />
+    <button
+      class="button icon icon"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt buttonIcon"
+      />
+    </button>
   </div>
-  <button
-    class="button icon icon"
-    type="button"
-  >
-    <span
-      aria-label="su-trash-alt"
-      class="su-trash-alt buttonIcon"
-    />
-  </button>
-</div>
+</DocumentFragment>
 `;

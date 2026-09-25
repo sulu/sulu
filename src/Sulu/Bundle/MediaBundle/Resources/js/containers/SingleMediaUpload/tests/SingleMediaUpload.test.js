@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {render, shallow} from 'enzyme';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import SingleMediaUpload from '../SingleMediaUpload';
 import MediaUploadStore from '../../../stores/MediaUploadStore';
 
@@ -15,9 +16,50 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function(media) {
     this.media = media;
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+function getFileInput(container): HTMLInputElement {
+    const input = container.querySelector('input[type="file"]');
+
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error('Expected file input');
+    }
+
+    return input;
+}
+
+function queryDeleteDialog(): ?HTMLElement {
+    const title = screen.queryByText('sulu_media.delete_media_warning_title');
+
+    if (!title) {
+        return null;
+    }
+
+    const dialog = title.closest('.dialogContainer');
+
+    return dialog instanceof HTMLElement ? dialog : null;
+}
+
+function getDeleteDialog(): HTMLElement {
+    const dialog = queryDeleteDialog();
+
+    if (!dialog) {
+        throw new Error('Expected delete dialog');
+    }
+
+    return dialog;
+}
+
+function expectDeleteDialogClosed() {
+    const dialog = queryDeleteDialog();
+
+    if (!dialog) {
+        expect(dialog).toBeNull();
+        return;
+    }
+
+    expect(dialog).not.toHaveClass('open');
+}
 
 test('Render a SingleMediaUpload', () => {
     const mediaUploadStore = new MediaUploadStore(
@@ -33,9 +75,11 @@ test('Render a SingleMediaUpload', () => {
         observable.box('en')
     );
 
-    expect(
-        render(<SingleMediaUpload collectionId={5} mediaUploadStore={mediaUploadStore} uploadText="Upload media" />)
-    ).toMatchSnapshot();
+    const {container} = render(
+        <SingleMediaUpload collectionId={5} mediaUploadStore={mediaUploadStore} uploadText="Upload media" />
+    );
+
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
 test('Render a SingleMediaUpload in disabled state', () => {
@@ -52,14 +96,16 @@ test('Render a SingleMediaUpload in disabled state', () => {
         observable.box('en')
     );
 
-    expect(render(
+    const {container} = render(
         <SingleMediaUpload
             collectionId={5}
             disabled={true}
             mediaUploadStore={mediaUploadStore}
             uploadText="Upload media"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
 test('Render a SingleMediaUpload with an error message from the MediaUploadStore', () => {
@@ -73,14 +119,16 @@ test('Render a SingleMediaUpload with an error message from the MediaUploadStore
         'detail': 'The uploaded file exceeds the configured maximum filesize.',
     };
 
-    expect(render(
+    const {container} = render(
         <SingleMediaUpload
             collectionId={5}
             disabled={true}
             mediaUploadStore={mediaUploadStore}
             uploadText="Upload media"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
 test('Render a SingleMediaUpload with an empty icon if no image is passed', () => {
@@ -90,9 +138,11 @@ test('Render a SingleMediaUpload with an empty icon if no image is passed', () =
     );
     mediaUploadStore.getThumbnail.mockReturnValue(undefined);
 
-    expect(
-        render(<SingleMediaUpload collectionId={5} mediaUploadStore={mediaUploadStore} uploadText="Upload media" />)
-    ).toMatchSnapshot();
+    const {container} = render(
+        <SingleMediaUpload collectionId={5} mediaUploadStore={mediaUploadStore} uploadText="Upload media" />
+    );
+
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
 test('Render a SingleMediaUpload with the round skin', () => {
@@ -109,14 +159,16 @@ test('Render a SingleMediaUpload with the round skin', () => {
         observable.box('en')
     );
 
-    expect(render(
+    const {container} = render(
         <SingleMediaUpload
             collectionId={5}
             mediaUploadStore={mediaUploadStore}
             skin="round"
             uploadText="Upload media"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
 test('Render a SingleMediaUpload with a different image size', () => {
@@ -133,12 +185,14 @@ test('Render a SingleMediaUpload with a different image size', () => {
         observable.box('en')
     );
 
-    expect(render(
+    const {container} = render(
         <SingleMediaUpload
             mediaUploadStore={mediaUploadStore}
             uploadText="Upload media"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
 test('Render a SingleMediaUpload without delete and download button', () => {
@@ -155,18 +209,21 @@ test('Render a SingleMediaUpload without delete and download button', () => {
         observable.box('en')
     );
 
-    expect(render(
+    const {container} = render(
         <SingleMediaUpload
             deletable={false}
             downloadable={false}
             mediaUploadStore={mediaUploadStore}
             uploadText="Test"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container.innerHTML).toMatchSnapshot();
 });
 
-test('Call update on MediaUploadStore if id is given and drop event occurs', () => {
+test('Call update on MediaUploadStore if id is given and drop event occurs', async() => {
     const uploadCompleteSpy = jest.fn();
+    const user = userEvent.setup();
     const mediaUploadStore = new MediaUploadStore(
         {
             id: 1,
@@ -183,7 +240,7 @@ test('Call update on MediaUploadStore if id is given and drop event occurs', () 
     const promise = Promise.resolve({});
     mediaUploadStore.update.mockReturnValue(promise);
 
-    const singleMediaUpload = shallow(
+    const {container} = render(
         <SingleMediaUpload
             collectionId={7}
             mediaUploadStore={mediaUploadStore}
@@ -192,18 +249,18 @@ test('Call update on MediaUploadStore if id is given and drop event occurs', () 
         />
     );
 
-    const file = {name: 'test.jpg'};
-    singleMediaUpload.find('SingleMediaDropzone').prop('onDrop')(file);
+    const file = new File(['test'], 'test.jpg', {type: 'image/jpeg'});
+    await user.upload(getFileInput(container), file);
 
     expect(mediaUploadStore.update).toHaveBeenCalledWith(file);
 
-    return promise.then(() => {
-        expect(uploadCompleteSpy).toHaveBeenCalledWith({});
-    });
+    await promise;
+    expect(uploadCompleteSpy).toHaveBeenCalledWith({});
 });
 
-test('Call create with passed collectionId if id is not given and drop event occurs', () => {
+test('Call create with passed collectionId if id is not given and drop event occurs', async() => {
     const uploadCompleteSpy = jest.fn();
+    const user = userEvent.setup();
     const mediaUploadStore = new MediaUploadStore(
         undefined,
         observable.box('en')
@@ -212,7 +269,7 @@ test('Call create with passed collectionId if id is not given and drop event occ
     const promise = Promise.resolve({});
     mediaUploadStore.create.mockReturnValue(promise);
 
-    const singleMediaUpload = shallow(
+    const {container} = render(
         <SingleMediaUpload
             collectionId={7}
             mediaUploadStore={mediaUploadStore}
@@ -221,18 +278,18 @@ test('Call create with passed collectionId if id is not given and drop event occ
         />
     );
 
-    const file = {name: 'test.jpg'};
-    singleMediaUpload.find('SingleMediaDropzone').prop('onDrop')(file);
+    const file = new File(['test'], 'test.jpg', {type: 'image/jpeg'});
+    await user.upload(getFileInput(container), file);
 
     expect(mediaUploadStore.create).toHaveBeenCalledWith(7, file);
 
-    return promise.then(() => {
-        expect(uploadCompleteSpy).toHaveBeenCalledWith({});
-    });
+    await promise;
+    expect(uploadCompleteSpy).toHaveBeenCalledWith({});
 });
 
-test('Download the image when the download button is clicked', () => {
+test('Download the image when the download button is clicked', async() => {
     const assignSpy = jest.fn();
+    const user = userEvent.setup();
     window.location.assign = assignSpy;
 
     const mediaUploadStore = new MediaUploadStore(
@@ -248,18 +305,18 @@ test('Download the image when the download button is clicked', () => {
         observable.box('en')
     );
 
-    const singleMediaUpload = shallow(
+    render(
         <SingleMediaUpload
             mediaUploadStore={mediaUploadStore}
             uploadText="Upload media"
         />
     );
 
-    singleMediaUpload.find('Button[icon="su-download"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: /sulu_media.download_media/}));
     expect(assignSpy).toHaveBeenCalledWith('test.jpg');
 });
 
-test('Delete the image when the delete button is clicked and the overlay is confirmed', () => {
+test('Delete the image when the delete button is clicked and the overlay is confirmed', async() => {
     const mediaUploadStore = new MediaUploadStore(
         {
             id: 1,
@@ -272,12 +329,16 @@ test('Delete the image when the delete button is clicked and the overlay is conf
         },
         observable.box('en')
     );
-    const deletePromise = Promise.resolve();
+    let resolveDeletePromise: (media?: Object) => void = () => {};
+    const deletePromise = new Promise((resolve) => {
+        resolveDeletePromise = (media) => resolve(media);
+    });
+    const user = userEvent.setup();
     mediaUploadStore.delete.mockReturnValue(deletePromise);
 
     const uploadCompleteSpy = jest.fn();
 
-    const singleMediaUpload = shallow(
+    render(
         <SingleMediaUpload
             mediaUploadStore={mediaUploadStore}
             onUploadComplete={uploadCompleteSpy}
@@ -285,22 +346,22 @@ test('Delete the image when the delete button is clicked and the overlay is conf
         />
     );
 
-    singleMediaUpload.find('Button[icon="su-trash-alt"]').simulate('click');
-    expect(singleMediaUpload.find('Dialog').prop('open')).toEqual(true);
-    expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(false);
+    expectDeleteDialogClosed();
 
-    singleMediaUpload.find('Dialog').prop('onConfirm')();
+    await user.click(screen.getByRole('button', {name: /sulu_media.delete_media/}));
+    expect(getDeleteDialog()).toHaveClass('open');
+    expect(screen.getByRole('button', {name: 'sulu_admin.ok'})).toBeEnabled();
+
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(mediaUploadStore.delete).toHaveBeenCalled();
-    singleMediaUpload.update();
-    expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(true);
+    expect(screen.getByRole('button', {name: 'sulu_admin.ok'})).toBeDisabled();
 
-    return deletePromise.then(() => {
-        expect(uploadCompleteSpy).toHaveBeenCalled();
-        singleMediaUpload.update();
-        expect(singleMediaUpload.find('Dialog').prop('open')).toEqual(false);
-        expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(false);
-    });
+    resolveDeletePromise({id: 1});
+    await deletePromise;
+
+    expect(uploadCompleteSpy).toHaveBeenCalledWith({id: 1});
+    await waitFor(() => expectDeleteDialogClosed());
 });
 
 test('Throw exception if neither the collectionId nor the media is given', () => {
@@ -308,7 +369,7 @@ test('Throw exception if neither the collectionId nor the media is given', () =>
         undefined,
         observable.box('en')
     );
-    expect(() => shallow(
+    expect(() => render(
         <SingleMediaUpload mediaUploadStore={mediaUploadStore} uploadText="UploadMedia" />
     )).toThrow('"collectionId"');
 });

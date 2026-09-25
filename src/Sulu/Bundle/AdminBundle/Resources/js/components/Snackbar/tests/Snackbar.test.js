@@ -4,9 +4,7 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Snackbar from '../Snackbar';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('Render an error snackbar', () => {
     const {container} = render(<Snackbar message="Something went wrong" onCloseClick={jest.fn()} type="error" />);
@@ -67,11 +65,12 @@ test('Render an error snackbar without close button', () => {
 });
 
 test('Click the snackbar should call the onClick callback', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     render(<Snackbar message="Something went wrong" onClick={clickSpy} type="error" />);
 
     const snackbar = screen.queryByText('- Something went wrong');
-    await userEvent.click(snackbar);
+    await user.click(snackbar);
 
     expect(clickSpy).toHaveBeenCalled();
 });
@@ -113,6 +112,7 @@ test('Render the type as title when no title is given', () => {
 });
 
 test('Call the action callback without triggering onClick when the action is clicked', async() => {
+    const user = userEvent.setup();
     const actionClickSpy = jest.fn();
     const clickSpy = jest.fn();
     render(
@@ -124,18 +124,19 @@ test('Call the action callback without triggering onClick when the action is cli
         />
     );
 
-    await userEvent.click(screen.queryByText('Try Again'));
+    await user.click(screen.queryByText('Try Again'));
 
     expect(actionClickSpy).toHaveBeenCalled();
     expect(clickSpy).not.toHaveBeenCalled();
 });
 
 test('Call onCloseClick callback when close button is clicked', async() => {
+    const user = userEvent.setup();
     const closeClickSpy = jest.fn();
     render(<Snackbar message="Something went wrong" onCloseClick={closeClickSpy} type="error" />);
 
     const icon = screen.queryByLabelText('su-times');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(closeClickSpy).toHaveBeenCalledWith();
 });

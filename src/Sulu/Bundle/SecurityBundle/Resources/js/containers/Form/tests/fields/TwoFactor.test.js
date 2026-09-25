@@ -1,21 +1,27 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {act, render, screen, waitFor, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
-import QRCode from 'react-qr-code';
-import {Button, Dialog, Input, Overlay, SingleSelect} from 'sulu-admin-bundle/components';
+import {createDeferred} from 'sulu-admin-bundle/utils/TestHelper';
 import {Requester} from 'sulu-admin-bundle/services';
 import TwoFactor from '../../fields/TwoFactor';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/services', () => ({
     Requester: {
         post: jest.fn(),
     },
 }));
+
+jest.mock('react-qr-code', () => {
+    const React = require('react');
+
+    return jest.fn((props) => (
+        React.createElement('div', {'data-testid': 'qr-code', 'data-value': props.value})
+    ));
+});
 
 const formInspector: any = {
     getValueByPath: jest.fn(),
@@ -34,6 +40,8 @@ const schemaOptions = {
 };
 
 beforeEach(() => {
+    jest.clearAllMocks();
+    formInspector.getValueByPath.mockReturnValue(false);
     TwoFactor.endpoints = {
         twoFactorSetup: '/setup',
         twoFactorConfirm: '/confirm',
@@ -42,320 +50,239 @@ beforeEach(() => {
     TwoFactor.backupCodesEnabled = true;
 });
 
-test('Render a SingleSelect with the given values and value', () => {
-    const twoFactor = shallow(
-        <TwoFactor
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value="email"
-        />
-    );
+function renderTwoFactor(props: Object = {}) {
+    const defaultProps = {
+        ...fieldTypeDefaultProps,
+        formInspector,
+        schemaOptions,
+    };
+    const view = render(<TwoFactor {...defaultProps} {...props} />);
 
-    expect(twoFactor.find(SingleSelect).prop('value')).toEqual('email');
-    expect(twoFactor.find(SingleSelect.Option)).toHaveLength(4);
-    expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(false);
+    return {
+        ...view,
+        rerenderTwoFactor: (newProps: Object) => view.rerender(
+            <TwoFactor {...defaultProps} {...newProps} />
+        ),
+    };
+}
+
+async function selectMethod(user, title: string) {
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByText(title));
+}
+
+function getDialog(title: string): HTMLElement {
+    const dialog = screen.getAllByText(title)
+        .map((element) => element.closest('.dialogContainer'))
+        .find(Boolean);
+
+    if (!(dialog instanceof HTMLElement)) {
+        throw new Error('Expected dialog to be open');
+    }
+
+    return dialog;
+}
+
+function getOverlay(title: string): HTMLElement {
+    const overlay = screen.getByText(title).closest('.container');
+
+    if (!(overlay instanceof HTMLElement)) {
+        throw new Error('Expected overlay to be open');
+    }
+
+    return overlay;
+}
+
+test('Render a SingleSelect with the given values and value', async() => {
+    const user = userEvent.setup();
+
+    renderTwoFactor({value: 'email'});
+
+    expect(screen.getByText('Email')).toBeInTheDocument();
+    expect(screen.queryByText('sulu_security.two_factor_setup_title')).not.toBeInTheDocument();
+
+    await user.click(screen.getByLabelText('su-angle-down'));
+
+    expect(screen.getByText('None')).toBeInTheDocument();
+    expect(screen.getAllByText('Email')).not.toHaveLength(0);
+    expect(screen.getByText('Totp')).toBeInTheDocument();
+    expect(screen.getByText('Google Authenticator')).toBeInTheDocument();
 });
 
-test('Call onChange and onFinish directly for methods without setup', () => {
+test('Call onChange and onFinish directly for methods without setup', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const twoFactor = shallow(
-        <TwoFactor
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
-
-    twoFactor.find(SingleSelect).prop('onChange')('email');
+    renderTwoFactor({onChange: changeSpy, onFinish: finishSpy});
+    await selectMethod(user, 'Email');
 
     expect(changeSpy).toHaveBeenCalledWith('email');
     expect(finishSpy).toHaveBeenCalled();
     expect(Requester.post).not.toHaveBeenCalled();
 });
 
-test.each(['totp', 'google'])('Start the setup flow when the %s method is selected', (method) => {
+test.each([
+    ['totp', 'Totp'],
+    ['google', 'Google Authenticator'],
+])('Start the setup flow when the %s method is selected', async(method, title) => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
+    Requester.post.mockResolvedValue({secret: 'SECRET', qrContent: 'otpauth://totp/test'});
 
-    const setupPromise = Promise.resolve({secret: 'SECRET', qrContent: 'otpauth://totp/test'});
-    Requester.post.mockReturnValue(setupPromise);
-
-    const twoFactor = shallow(
-        <TwoFactor
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
-
-    twoFactor.find(SingleSelect).prop('onChange')(method);
+    renderTwoFactor({onChange: changeSpy});
+    await selectMethod(user, title);
 
     expect(Requester.post).toHaveBeenCalledWith('/setup', {method});
     expect(changeSpy).not.toHaveBeenCalled();
-
-    return setupPromise.then(() => {
-        twoFactor.update();
-        expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(true);
-        expect(twoFactor.find(QRCode).prop('value')).toEqual('otpauth://totp/test');
-    });
+    await waitFor(() => expect(screen.getByTestId('qr-code'))
+        .toHaveAttribute('data-value', 'otpauth://totp/test'));
+    expect(screen.getByText('SECRET')).toBeInTheDocument();
 });
 
-test('Ignore stale setup responses when another method was selected in the meantime', () => {
-    let resolveFirstSetup = jest.fn();
-    const firstSetupPromise = new Promise((resolve) => {
-        resolveFirstSetup = resolve;
-    });
-    let resolveSecondSetup = jest.fn();
-    const secondSetupPromise = new Promise((resolve) => {
-        resolveSecondSetup = resolve;
-    });
-    Requester.post.mockReturnValueOnce(firstSetupPromise).mockReturnValueOnce(secondSetupPromise);
+test('Ignore stale setup responses when another method was selected in the meantime', async() => {
+    const user = userEvent.setup();
+    const firstSetup = createDeferred<Object>();
+    const secondSetup = createDeferred<Object>();
+    Requester.post.mockReturnValueOnce(firstSetup.promise).mockReturnValueOnce(secondSetup.promise);
 
-    const twoFactor = shallow(
-        <TwoFactor
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-        />
-    );
+    renderTwoFactor();
+    await selectMethod(user, 'Totp');
+    await selectMethod(user, 'Google Authenticator');
 
-    twoFactor.find(SingleSelect).prop('onChange')('totp');
-    twoFactor.find(SingleSelect).prop('onChange')('google');
+    await act(async() => secondSetup.resolve({secret: 'GOOGLE', qrContent: 'otpauth://totp/google'}));
+    await waitFor(() => expect(screen.getByTestId('qr-code'))
+        .toHaveAttribute('data-value', 'otpauth://totp/google'));
 
-    // the response of the superseded totp request arrives after the google response
-    resolveSecondSetup({secret: 'GOOGLE', qrContent: 'otpauth://totp/google'});
-
-    return secondSetupPromise.then(() => {
-        resolveFirstSetup({secret: 'TOTP', qrContent: 'otpauth://totp/totp'});
-
-        return firstSetupPromise.then(() => {
-            twoFactor.update();
-
-            expect(twoFactor.find(QRCode).prop('value')).toEqual('otpauth://totp/google');
-        });
-    });
+    await act(async() => firstSetup.resolve({secret: 'TOTP', qrContent: 'otpauth://totp/totp'}));
+    expect(screen.getByTestId('qr-code')).toHaveAttribute('data-value', 'otpauth://totp/google');
 });
 
-test('Do not open the overlay when a method without setup was selected in the meantime', () => {
+test('Do not open the overlay when a method without setup was selected in the meantime', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
+    const setupRequest = createDeferred<Object>();
+    Requester.post.mockReturnValue(setupRequest.promise);
 
-    const setupPromise = Promise.resolve({secret: 'SECRET', qrContent: 'otpauth://totp/test'});
-    Requester.post.mockReturnValue(setupPromise);
-
-    const twoFactor = shallow(
-        <TwoFactor
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
-
-    twoFactor.find(SingleSelect).prop('onChange')('totp');
-    twoFactor.find(SingleSelect).prop('onChange')('email');
+    renderTwoFactor({onChange: changeSpy});
+    await selectMethod(user, 'Totp');
+    await selectMethod(user, 'Email');
 
     expect(changeSpy).toHaveBeenCalledWith('email');
 
-    return setupPromise.then(() => {
-        twoFactor.update();
-
-        expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(false);
-    });
+    await act(async() => setupRequest.resolve({secret: 'SECRET', qrContent: 'otpauth://totp/test'}));
+    expect(screen.queryByText('sulu_security.two_factor_setup_title')).not.toBeInTheDocument();
 });
 
-test('Activate the method and close the overlay when the code is confirmed', () => {
+test('Activate the method and close the overlay when the code is confirmed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
+    Requester.post.mockResolvedValueOnce({secret: 'SECRET', qrContent: 'otpauth://totp/test'});
 
-    const setupPromise = Promise.resolve({secret: 'SECRET', qrContent: 'otpauth://totp/test'});
-    Requester.post.mockReturnValue(setupPromise);
+    renderTwoFactor({onChange: changeSpy, onFinish: finishSpy});
+    await selectMethod(user, 'Totp');
+    expect(await screen.findByText('SECRET')).toBeInTheDocument();
 
-    const twoFactor = shallow(
-        <TwoFactor
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+    await user.type(screen.getByRole('textbox'), '123456');
+    Requester.post.mockResolvedValueOnce({});
+    await user.click(screen.getByRole('button', {name: 'sulu_security.two_factor_setup_activate'}));
 
-    twoFactor.find(SingleSelect).prop('onChange')('totp');
-
-    return setupPromise.then(() => {
-        twoFactor.update();
-
-        twoFactor.find(Input).prop('onChange')('123456');
-        twoFactor.update();
-
-        const confirmPromise = Promise.resolve({});
-        Requester.post.mockReturnValue(confirmPromise);
-
-        twoFactor.find(Overlay).at(0).prop('onConfirm')();
-
-        expect(Requester.post).toHaveBeenCalledWith('/confirm', {method: 'totp', code: '123456'});
-
-        return confirmPromise.then(() => {
-            twoFactor.update();
-
-            expect(changeSpy).toHaveBeenCalledWith('totp');
-            expect(finishSpy).toHaveBeenCalled();
-            expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(false);
-        });
-    });
+    expect(Requester.post).toHaveBeenLastCalledWith('/confirm', {method: 'totp', code: '123456'});
+    await waitFor(() => expect(changeSpy).toHaveBeenCalledWith('totp'));
+    expect(finishSpy).toHaveBeenCalled();
+    expect(getOverlay('sulu_security.two_factor_setup_title')).not.toHaveClass('isDown');
 });
 
 test('Show the backup codes button only when a method is active and backup codes are enabled', () => {
-    const twoFactor = shallow(
-        <TwoFactor
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value="email"
-        />
-    );
+    const {rerenderTwoFactor} = renderTwoFactor({value: 'email'});
 
-    expect(twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync')).toHaveLength(1);
+    expect(screen.getByRole('button', {name: /sulu_security.two_factor_backup_codes_generate/}))
+        .toBeInTheDocument();
 
-    twoFactor.setProps({value: undefined});
-    expect(twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync')).toHaveLength(0);
+    rerenderTwoFactor({value: undefined});
+    expect(screen.queryByRole('button', {name: /sulu_security.two_factor_backup_codes_generate/}))
+        .not.toBeInTheDocument();
 
     TwoFactor.backupCodesEnabled = false;
-    twoFactor.setProps({value: 'email'});
-    expect(twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync')).toHaveLength(0);
+    rerenderTwoFactor({value: 'email'});
+    expect(screen.queryByRole('button', {name: /sulu_security.two_factor_backup_codes_generate/}))
+        .not.toBeInTheDocument();
 });
 
-test('Generate backup codes without a dialog when no backup codes exist yet', () => {
-    formInspector.getValueByPath.mockReturnValue(false);
+test('Generate backup codes without a dialog when no backup codes exist yet', async() => {
+    const user = userEvent.setup();
+    const backupCodesRequest = createDeferred<Object>();
+    Requester.post.mockReturnValue(backupCodesRequest.promise);
 
-    const backupCodesPromise = Promise.resolve({backupCodes: ['11111111', '22222222']});
-    Requester.post.mockReturnValue(backupCodesPromise);
-
-    const twoFactor = shallow(
-        <TwoFactor
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value="totp"
-        />
-    );
-
-    twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('onClick')();
-    twoFactor.update();
-
-    expect(twoFactor.find(Dialog).prop('open')).toEqual(false);
-    expect(Requester.post).toHaveBeenCalledWith('/backup-codes');
-    expect(
-        twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('loading')
-    ).toEqual(true);
-
-    return backupCodesPromise.then(() => {
-        twoFactor.update();
-
-        expect(twoFactor.find(Overlay).at(1).prop('open')).toEqual(true);
-        expect(
-            twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('loading')
-        ).toEqual(false);
-
-        // a second generation would invalidate the codes that were just generated
-        twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('onClick')();
-        twoFactor.update();
-
-        expect(twoFactor.find(Dialog).prop('open')).toEqual(true);
+    renderTwoFactor({value: 'totp'});
+    const generateButton = screen.getByRole('button', {
+        name: /sulu_security.two_factor_backup_codes_generate/,
     });
+    await user.click(generateButton);
+
+    expect(screen.queryByText('sulu_security.two_factor_backup_codes_generate_warning')).not.toBeInTheDocument();
+    expect(Requester.post).toHaveBeenCalledWith('/backup-codes');
+    expect(generateButton).toBeDisabled();
+
+    await act(async() => backupCodesRequest.resolve({backupCodes: ['11111111', '22222222']}));
+    expect(await screen.findByText('11111111')).toBeInTheDocument();
+    expect(screen.getByText('22222222')).toBeInTheDocument();
+
+    await user.click(within(getOverlay('sulu_security.two_factor_backup_codes'))
+        .getByRole('button', {name: 'sulu_admin.ok'}));
+    await user.click(generateButton);
+
+    expect(screen.getByText('sulu_security.two_factor_backup_codes_generate_warning')).toBeInTheDocument();
 });
 
-test('Generate backup codes after the dialog was confirmed when backup codes already exist', () => {
+test('Generate backup codes after the dialog was confirmed when backup codes already exist', async() => {
+    const user = userEvent.setup();
     formInspector.getValueByPath.mockReturnValue(true);
 
-    const twoFactor = shallow(
-        <TwoFactor
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value="totp"
-        />
-    );
-
-    twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('onClick')();
-    twoFactor.update();
+    renderTwoFactor({value: 'totp'});
+    await user.click(screen.getByRole('button', {name: /sulu_security.two_factor_backup_codes_generate/}));
 
     expect(formInspector.getValueByPath).toHaveBeenCalledWith('/twoFactor/hasBackupCodes');
-    expect(twoFactor.find(Dialog).prop('open')).toEqual(true);
     expect(Requester.post).not.toHaveBeenCalled();
 
-    const backupCodesPromise = Promise.resolve({backupCodes: ['11111111', '22222222']});
-    Requester.post.mockReturnValue(backupCodesPromise);
-
-    twoFactor.find(Dialog).prop('onConfirm')();
+    const backupCodesRequest = createDeferred<Object>();
+    Requester.post.mockReturnValue(backupCodesRequest.promise);
+    await user.click(within(getDialog('sulu_security.two_factor_backup_codes_generate'))
+        .getByRole('button', {name: 'sulu_admin.ok'}));
 
     expect(Requester.post).toHaveBeenCalledWith('/backup-codes');
+    await act(async() => backupCodesRequest.resolve({backupCodes: ['11111111', '22222222']}));
 
-    return backupCodesPromise.then(() => {
-        twoFactor.update();
-
-        expect(twoFactor.find(Dialog).prop('open')).toEqual(false);
-        expect(twoFactor.find(Overlay).at(1).prop('open')).toEqual(true);
-        expect(twoFactor.find('li').map((element) => element.text())).toEqual(['11111111', '22222222']);
-    });
+    expect(await screen.findByText('11111111')).toBeInTheDocument();
+    expect(screen.getByText('22222222')).toBeInTheDocument();
 });
 
-test('Do not generate backup codes when the dialog was cancelled', () => {
+test('Do not generate backup codes when the dialog was cancelled', async() => {
+    const user = userEvent.setup();
     formInspector.getValueByPath.mockReturnValue(true);
 
-    const twoFactor = shallow(
-        <TwoFactor
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={schemaOptions}
-            value="totp"
-        />
-    );
+    renderTwoFactor({value: 'totp'});
+    await user.click(screen.getByRole('button', {name: /sulu_security.two_factor_backup_codes_generate/}));
 
-    twoFactor.find(Button).filterWhere((button) => button.prop('icon') === 'su-sync').prop('onClick')();
-    twoFactor.update();
+    const dialog = getDialog('sulu_security.two_factor_backup_codes_generate');
+    await user.click(within(dialog).getByRole('button', {name: 'sulu_admin.cancel'}));
 
-    twoFactor.find(Dialog).prop('onCancel')();
-    twoFactor.update();
-
-    expect(twoFactor.find(Dialog).prop('open')).toEqual(false);
+    expect(dialog).not.toHaveClass('open');
     expect(Requester.post).not.toHaveBeenCalled();
 });
 
-test('Close the overlay without activating when the setup is aborted', () => {
+test('Close the overlay without activating when the setup is aborted', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
+    Requester.post.mockResolvedValue({secret: 'SECRET', qrContent: 'otpauth://totp/test'});
 
-    const setupPromise = Promise.resolve({secret: 'SECRET', qrContent: 'otpauth://totp/test'});
-    Requester.post.mockReturnValue(setupPromise);
+    renderTwoFactor({onChange: changeSpy});
+    await selectMethod(user, 'Totp');
+    const overlay = getOverlay('sulu_security.two_factor_setup_title');
 
-    const twoFactor = shallow(
-        <TwoFactor
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            onChange={changeSpy}
-            schemaOptions={schemaOptions}
-        />
-    );
+    await user.click(within(overlay).getByLabelText('su-times'));
 
-    twoFactor.find(SingleSelect).prop('onChange')('totp');
-
-    return setupPromise.then(() => {
-        twoFactor.update();
-        expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(true);
-
-        twoFactor.find(Overlay).at(0).prop('onClose')();
-        twoFactor.update();
-
-        expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(false);
-        expect(changeSpy).not.toHaveBeenCalled();
-    });
+    expect(overlay).not.toHaveClass('isDown');
+    expect(changeSpy).not.toHaveBeenCalled();
 });

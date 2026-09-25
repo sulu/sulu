@@ -7,9 +7,7 @@ import Translator from '../Translator';
 
 jest.mock('../../../services/Requester');
 jest.mock('debounce', () => jest.fn((fn) => fn));
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../utils/Translator');
 
 jest.mock('../../../containers', () => ({
     TextEditor: jest.fn(() => <div data-testid="text-editor" />),
@@ -97,6 +95,7 @@ describe('Translator', () => {
     });
 
     test('translates text when source text changes', async() => {
+        const user = userEvent.setup();
         Requester.post.mockResolvedValue({
             response: {text: 'Hello', sourceLanguage: undefined, targetLanguage: 'en'},
         });
@@ -108,8 +107,8 @@ describe('Translator', () => {
         });
 
         const sourceInput = screen.getByDisplayValue('Hallo');
-        await userEvent.clear(sourceInput);
-        await userEvent.type(sourceInput, 'Auf wiedersehen');
+        await user.clear(sourceInput);
+        await user.type(sourceInput, 'Auf wiedersehen');
 
         await waitFor(() => {
             expect(Requester.post).toHaveBeenCalledWith('/api/translate', {
@@ -127,6 +126,7 @@ describe('Translator', () => {
     });
 
     test('changes source language', async() => {
+        const user = userEvent.setup();
         Requester.post.mockResolvedValue({
             response: {text: 'Hello', sourceLanguage: undefined, targetLanguage: 'en'},
         });
@@ -140,12 +140,12 @@ describe('Translator', () => {
             response: {text: 'Hello', sourceLanguage: 'de', targetLanguage: 'en'},
         });
 
-        await userEvent.click(screen.getByRole('button', {name: 'Source language'}));
+        await user.click(screen.getByRole('button', {name: 'Source language'}));
         await waitFor(() => {
             expect(screen.getAllByText('German').length).toBeGreaterThan(0);
         });
 
-        await userEvent.click(screen.getAllByText('German')[0]);
+        await user.click(screen.getAllByText('German')[0]);
 
         await waitFor(() => {
             expect(Requester.post).toHaveBeenCalledWith('/api/translate', {
@@ -161,6 +161,7 @@ describe('Translator', () => {
     });
 
     test('changes target language', async() => {
+        const user = userEvent.setup();
         Requester.post.mockResolvedValue({
             response: {text: 'Hello', sourceLanguage: undefined, targetLanguage: 'en'},
         });
@@ -174,12 +175,12 @@ describe('Translator', () => {
             response: {text: 'Hola', sourceLanguage: undefined, targetLanguage: 'fr'},
         });
 
-        await userEvent.click(screen.getByRole('button', {name: 'Target language'}));
+        await user.click(screen.getByRole('button', {name: 'Target language'}));
         await waitFor(() => {
             expect(screen.getAllByText('French').length).toBeGreaterThan(0);
         });
 
-        await userEvent.click(screen.getAllByText('French')[0]);
+        await user.click(screen.getAllByText('French')[0]);
 
         await waitFor(() => {
             expect(Requester.post).toHaveBeenCalledWith('/api/translate', {
@@ -243,6 +244,7 @@ describe('Translator', () => {
     });
 
     test('calls onConfirm with translated text', async() => {
+        const user = userEvent.setup();
         Requester.post.mockResolvedValue({
             response: {text: 'Bonjour', sourceLanguage: 'EN', targetLanguage: 'FR'},
         });
@@ -253,16 +255,17 @@ describe('Translator', () => {
             expect(screen.getByDisplayValue('Bonjour')).toBeInTheDocument();
         });
 
-        await userEvent.click(screen.getByText('Insert'));
+        await user.click(screen.getByText('Insert'));
 
         expect(mockProps.onConfirm).toHaveBeenCalledWith('Bonjour');
     });
 
     test('calls onDialogClose when closing', async() => {
+        const user = userEvent.setup();
         render(<Translator {...mockProps} />);
 
         const closeButton = screen.getAllByRole('button', {name: /su-times/i})[0];
-        await userEvent.click(closeButton);
+        await user.click(closeButton);
 
         expect(mockProps.onDialogClose).toHaveBeenCalled();
     });

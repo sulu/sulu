@@ -1,25 +1,27 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render an EditLine 1`] = `
-<div
-  class="editLine"
->
+<div>
   <div
-    class="input default left"
+    class="editLine"
   >
-    <input
-      type="text"
-      value="Test"
-    />
+    <div
+      class="input default left"
+    >
+      <input
+        type="text"
+        value="Test"
+      />
+    </div>
+    <button
+      class="button icon icon"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt buttonIcon"
+      />
+    </button>
   </div>
-  <button
-    class="button icon icon"
-    type="button"
-  >
-    <span
-      aria-label="su-trash-alt"
-      class="su-trash-alt buttonIcon"
-    />
-  </button>
 </div>
 `;

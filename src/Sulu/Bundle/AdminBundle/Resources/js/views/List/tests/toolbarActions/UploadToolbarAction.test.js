@@ -1,7 +1,6 @@
 // @flow
-import {render} from 'enzyme';
 import {observable} from 'mobx';
-import {act} from 'react-dom/test-utils';
+import {act, render} from '@testing-library/react';
 import SymfonyRouting from 'fos-jsrouting/router';
 import log from 'loglevel';
 import ListStore from '../../../../containers/List/stores/ListStore';
@@ -15,9 +14,7 @@ jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
 
 jest.mock('../../../../containers/List/stores/ListStore', () => jest.fn(function() {
     this.reload = jest.fn();
@@ -69,7 +66,16 @@ test('Should correctly render node', () => {
         multiple: false,
     });
 
-    expect(render(uploadToolbarAction.getNode())).toMatchSnapshot();
+    render(uploadToolbarAction.getNode());
+    const input = document.querySelector('input[type="file"]');
+
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error('Upload file input was not rendered.');
+    }
+
+    expect(input).toHaveAttribute('accept', 'text/csv');
+    expect(input).toHaveAttribute('type', 'file');
+    expect(input).not.toHaveAttribute('multiple');
 });
 
 test('Should return config for toolbar item', () => {

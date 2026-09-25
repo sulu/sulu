@@ -104,6 +104,7 @@ test('Render a Tabs component with a selected tab and a badge', () => {
 });
 
 test('Clicking on a Tab should call the onSelect handler', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const selectedTabIndex = 0;
 
@@ -116,7 +117,7 @@ test('Clicking on a Tab should call the onSelect handler', async() => {
     );
 
     const tab1 = screen.queryByText('Tab 1');
-    await userEvent.click(tab1);
+    await user.click(tab1);
 
     expect(changeSpy).toHaveBeenCalledWith(selectedTabIndex);
 });

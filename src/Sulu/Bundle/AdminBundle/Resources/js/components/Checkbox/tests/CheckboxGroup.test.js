@@ -30,6 +30,7 @@ test('The component should render disabled', () => {
 });
 
 test('The component should call onChange handler when checkboxes are clicked', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     render(
@@ -45,9 +46,9 @@ test('The component should call onChange handler when checkboxes are clicked', a
     const checkbox1 = screen.getByDisplayValue('value-1');
     const checkbox3 = screen.getByDisplayValue('value-3');
 
-    await userEvent.click(checkbox1);
+    await user.click(checkbox1);
     expect(changeSpy).toHaveBeenLastCalledWith(['value-2', 'value-3', 'value-1']);
 
-    await userEvent.click(checkbox3);
+    await user.click(checkbox3);
     expect(changeSpy).toHaveBeenLastCalledWith(['value-2']);
 });

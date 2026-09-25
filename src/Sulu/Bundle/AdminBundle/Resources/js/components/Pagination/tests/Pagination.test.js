@@ -181,6 +181,7 @@ test('Should call callback with updated page when changing total number of pages
 });
 
 test('Click previous link should call callback', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     render(
         <Pagination
@@ -194,11 +195,12 @@ test('Click previous link should call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.getByLabelText('su-angle-left'));
+    await user.click(screen.getByLabelText('su-angle-left'));
     expect(clickSpy).toHaveBeenCalledWith(4);
 });
 
 test('Click next link should call callback', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     render(
         <Pagination
@@ -212,11 +214,12 @@ test('Click next link should call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.getByLabelText('su-angle-right'));
+    await user.click(screen.getByLabelText('su-angle-right'));
     expect(clickSpy).toHaveBeenCalledWith(7);
 });
 
 test('Click previous link on first page should not call callback', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     render(
         <Pagination
@@ -230,11 +233,12 @@ test('Click previous link on first page should not call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.getByLabelText('su-angle-left'));
+    await user.click(screen.getByLabelText('su-angle-left'));
     expect(clickSpy).not.toHaveBeenCalled();
 });
 
 test('Click next link on last page should not call callback', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     render(
         <Pagination
@@ -248,11 +252,12 @@ test('Click next link on last page should not call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.getByLabelText('su-angle-right'));
+    await user.click(screen.getByLabelText('su-angle-right'));
     expect(clickSpy).not.toHaveBeenCalled();
 });
 
 test('Change limit should call callback', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     render(
         <Pagination
@@ -266,12 +271,13 @@ test('Change limit should call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.getByLabelText('su-angle-down'));
-    await userEvent.click(screen.getByText('20'));
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByText('20'));
     expect(changeSpy).toHaveBeenCalledWith(20);
 });
 
 test('Change limit to current limit should not call callback', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     render(
         <Pagination
@@ -285,12 +291,13 @@ test('Change limit to current limit should not call callback', async() => {
         </Pagination>
     );
 
-    await userEvent.click(screen.getByLabelText('su-angle-down'));
-    await userEvent.click(screen.getAllByText('10')[1]);
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getAllByText('10')[1]);
     expect(changeSpy).not.toHaveBeenCalled();
 });
 
 test('Change callback should be called on blur when input was changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     render(
         <Pagination
@@ -305,14 +312,15 @@ test('Change callback should be called on blur when input was changed', async() 
     );
 
     const input = screen.getByDisplayValue('2');
-    await userEvent.type(input, '5');
+    await user.type(input, '5');
     expect(changeSpy).not.toHaveBeenCalled();
 
-    await userEvent.tab(); // tab away from input
+    await user.tab(); // tab away from input
     expect(changeSpy).toHaveBeenCalledWith(25);
 });
 
 test('Change callback should be called on enter when input was changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     render(
         <Pagination
@@ -327,17 +335,18 @@ test('Change callback should be called on enter when input was changed', async()
     );
 
     const input = screen.getByDisplayValue('2');
-    await userEvent.type(input, '[Enter]');
+    await user.type(input, '[Enter]');
     expect(changeSpy).not.toHaveBeenCalled();
 
-    await userEvent.type(input, '5');
+    await user.type(input, '5');
     expect(changeSpy).not.toHaveBeenCalled();
 
-    await userEvent.type(input, '[Enter]');
+    await user.type(input, '[Enter]');
     expect(changeSpy).toHaveBeenCalledWith(25);
 });
 
 test('Change callback should be called with 1 if input value is lower than 1', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     render(
         <Pagination
@@ -352,15 +361,16 @@ test('Change callback should be called with 1 if input value is lower than 1', a
     );
 
     const input = screen.getByDisplayValue('6');
-    await userEvent.clear(input);
-    await userEvent.type(input, '0');
+    await user.clear(input);
+    await user.type(input, '0');
     expect(changeSpy).not.toHaveBeenCalled();
 
-    await userEvent.type(input, '[Enter]');
+    await user.type(input, '[Enter]');
     expect(changeSpy).toHaveBeenCalledWith(1);
 });
 
 test('Change callback should be called with value of totalPages if input value is higher than total pages', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     render(
         <Pagination
@@ -375,15 +385,16 @@ test('Change callback should be called with value of totalPages if input value i
     );
 
     const input = screen.getByDisplayValue('6');
-    await userEvent.clear(input);
-    await userEvent.type(input, '12');
+    await user.clear(input);
+    await user.type(input, '12');
     expect(changeSpy).not.toHaveBeenCalled();
 
-    await userEvent.type(input, '[Enter]');
+    await user.type(input, '[Enter]');
     expect(changeSpy).toHaveBeenCalledWith(10);
 });
 
 test('Change callback should not be called if input value is equal to currentPage', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     render(
         <Pagination
@@ -398,10 +409,10 @@ test('Change callback should not be called if input value is equal to currentPag
     );
 
     const input = screen.getByDisplayValue('6');
-    await userEvent.clear(input);
-    await userEvent.type(input, '6');
+    await user.clear(input);
+    await user.type(input, '6');
     expect(changeSpy).not.toHaveBeenCalled();
 
-    await userEvent.type(input, '[Enter]');
+    await user.type(input, '[Enter]');
     expect(changeSpy).not.toHaveBeenCalled();
 });

@@ -132,7 +132,7 @@ test('Should send a patch request with passed options as query parameters', () =
     expect(Requester.patch).toHaveBeenCalledWith('/snippets/5?locale=en&action=publish', data);
 });
 
-test('Should send a delete request and return the promise', () => {
+test('Should send a collection delete request and return the promise', () => {
     const promise = {};
     Requester.delete.mockReturnValue(promise);
     const result = ResourceRequester.delete('snippets', {id: 1});

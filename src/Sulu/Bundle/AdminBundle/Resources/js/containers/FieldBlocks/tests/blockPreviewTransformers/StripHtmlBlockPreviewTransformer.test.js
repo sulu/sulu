@@ -6,7 +6,7 @@ test('Return JSX for simple string', () => {
     expect(stripHtmlBlockPreviewTransformer.transform('<strong>Test</strong>')).toMatchSnapshot();
 });
 
-test('Return JSX for simple string', () => {
+test('Return truncated JSX for long string', () => {
     const stripHtmlBlockPreviewTransformer = new StripHtmlBlockPreviewTransformer();
     expect(stripHtmlBlockPreviewTransformer.transform('<strong>' + 'c'.repeat(1000) + '</strong>')).toMatchSnapshot();
 });

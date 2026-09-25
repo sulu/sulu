@@ -1,23 +1,28 @@
 // @flow
-import {shallow, mount} from 'enzyme/build';
 import mockReact from 'react';
+import {act, render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable} from 'mobx';
 import userStore from '../../../stores/userStore';
-import FormOverlay from '../../FormOverlay';
 import ProfileFormOverlay from '../ProfileFormOverlay';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../../Form/stores/ResourceFormStore';
+import {createTestRef} from '../../../utils/TestHelper';
 
 const React = mockReact;
+const mockForm = jest.fn();
 
 jest.mock('../../../containers/Form', () => class FormMock extends mockReact.Component<*> {
+    submit() {
+        this.props.onSubmit();
+    }
+
     render() {
+        mockForm(this.props);
         return <div>form container mock</div>;
     }
 });
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 jest.mock('../../../stores/userStore', () => ({
     setFullName: jest.fn(),
@@ -36,10 +41,11 @@ jest.mock('../../Form/stores/ResourceFormStore',
         this.options = options;
         this.metadataOptions = metadataOptions;
 
-        this.save = jest.fn();
+        this.save = jest.fn(() => Promise.resolve());
         this.destroy = jest.fn();
 
         mockExtendObservable(this, {
+            data: {},
             dirty: false,
             saving: false,
         });
@@ -47,38 +53,44 @@ jest.mock('../../Form/stores/ResourceFormStore',
 );
 
 test('Component should render', () => {
-    const profileFormOverlay = mount(
+    render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
         />
     );
 
-    expect(profileFormOverlay.render()).toMatchSnapshot();
+    expect(screen.getByRole('heading', {name: 'sulu_admin.edit_profile'})).toBeInTheDocument();
+    expect(screen.getByText('form container mock')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.save'})).toBeDisabled();
 });
 
-test('Should pass correct props to FormOverlay', () => {
+test('Should pass correct props to FormOverlay', async() => {
     const closeSpy = jest.fn();
+    const user = userEvent.setup();
+    const ref = createTestRef();
 
-    const profileFormOverlay = shallow(
+    render(
         <ProfileFormOverlay
             onClose={closeSpy}
             open={true}
+            ref={ref}
         />
     );
 
-    expect(profileFormOverlay.find(FormOverlay).props()).toEqual(expect.objectContaining({
-        confirmText: 'sulu_admin.save',
-        formStore: profileFormOverlay.instance().formStore,
-        onClose: closeSpy,
-        open: true,
-        size: 'large',
-        title: 'sulu_admin.edit_profile',
+    expect(screen.getByRole('heading', {name: 'sulu_admin.edit_profile'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.save'})).toBeDisabled();
+    expect(mockForm).toHaveBeenLastCalledWith(expect.objectContaining({
+        store: ref.current.formStore,
     }));
+
+    await user.click(screen.getAllByRole('button', {name: 'su-times'})[0]);
+
+    expect(closeSpy).toHaveBeenCalled();
 });
 
 test('Should construct ResourceStore and ResourceFormStore with correct parameters when mounted', () => {
-    shallow(
+    render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
@@ -90,18 +102,32 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
 });
 
 test('Should construct new ResourceStore and ResourceFormStore when closed and opened again', () => {
-    const profileFormOverlay = shallow(
+    const ref = createTestRef();
+    const {rerender} = render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
+            ref={ref}
         />
     );
 
-    const initialFormStore = profileFormOverlay.instance().formStore;
+    const initialFormStore = ref.current.formStore;
     expect(initialFormStore.destroy).not.toHaveBeenCalled();
 
-    profileFormOverlay.setProps({open: false});
-    profileFormOverlay.setProps({open: true});
+    rerender(
+        <ProfileFormOverlay
+            onClose={jest.fn()}
+            open={false}
+            ref={ref}
+        />
+    );
+    rerender(
+        <ProfileFormOverlay
+            onClose={jest.fn()}
+            open={true}
+            ref={ref}
+        />
+    );
 
     expect(ResourceStore).toHaveBeenCalledTimes(2);
     expect(ResourceStore).toHaveBeenLastCalledWith('profile', '-');
@@ -109,45 +135,54 @@ test('Should construct new ResourceStore and ResourceFormStore when closed and o
     expect(ResourceFormStore).toHaveBeenLastCalledWith(expect.anything(), 'profile_details');
 
     expect(initialFormStore.destroy).toHaveBeenCalled();
-    expect(initialFormStore).not.toEqual(profileFormOverlay.instance().formStore);
+    expect(initialFormStore).not.toEqual(ref.current.formStore);
 });
 
 test('Should destroy ResourceFormStore when component is unmounted', () => {
-    const profileFormOverlay = shallow(
+    const ref = createTestRef();
+    const {unmount} = render(
         <ProfileFormOverlay
             onClose={jest.fn()}
             open={true}
+            ref={ref}
         />
     );
 
-    const formStore = profileFormOverlay.instance().formStore;
+    const formStore = ref.current.formStore;
     expect(formStore.destroy).not.toHaveBeenCalled();
 
-    profileFormOverlay.unmount();
+    unmount();
 
     expect(formStore.destroy).toHaveBeenCalled();
 });
 
-test('Should update full name in UserStore and call onClose callback when FormOverlay is confirmed', () => {
+test('Should update full name in UserStore and call onClose callback when FormOverlay is confirmed', async() => {
     const closeSpy = jest.fn();
+    const user = userEvent.setup();
+    const ref = createTestRef();
 
-    const profileFormOverlay = shallow(
+    render(
         <ProfileFormOverlay
             onClose={closeSpy}
             open={true}
+            ref={ref}
         />
     );
 
-    profileFormOverlay.instance().formStore.data = {
-        firstName: 'Donald',
-        lastName: 'Duck',
-    };
+    act(() => {
+        ref.current.formStore.data = {
+            firstName: 'Donald',
+            lastName: 'Duck',
+        };
+        ref.current.formStore.dirty = true;
+    });
 
     expect(userStore.setFullName).not.toHaveBeenCalled();
     expect(closeSpy).not.toHaveBeenCalled();
 
-    profileFormOverlay.find(FormOverlay).props().onConfirm();
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.save'}));
 
-    expect(userStore.setFullName).toHaveBeenCalledWith('Donald Duck');
+    await waitFor(() => expect(userStore.setFullName).toHaveBeenCalledWith('Donald Duck'));
+
     expect(closeSpy).toHaveBeenCalled();
 });

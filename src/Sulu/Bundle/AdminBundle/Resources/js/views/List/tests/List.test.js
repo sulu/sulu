@@ -1,19 +1,82 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
-import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import {act, render, screen, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {observable} from 'mobx';
 import TableAdapter from '../../../containers/List/adapters/TableAdapter';
 import listFieldTransformRegistry from '../../../containers/List/registries/listFieldTransformerRegistry';
 import StringFieldTransformer from '../../../containers/List/fieldTransformers/StringFieldTransformer';
-import {findWithHighOrderFunction} from '../../../utils/TestHelper';
+import {
+    createDeferred,
+    createListStoreMock as mockCreateListStoreMock,
+    mockResizeObserver,
+} from '../../../utils/TestHelper';
 import ResourceStore from '../../../stores/ResourceStore';
+
+let mockListContainer;
+let mockListContainerProps;
+let mockListStores = [];
+
+mockResizeObserver();
 
 jest.mock('../../../services/ResourceRequester/registries/resourceRouteRegistry', () => ({
     getUrl: jest.fn()
         .mockReturnValue('testfile.csv?locale=en&flat=true&delimiter=%3B&escape=%5C&enclosure=%22&newLine=%5Cn'),
 }));
 
-jest.mock('../../../containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
+jest.mock('../../../containers/List/List', () => {
+    const React = require('react');
+    const ListContainer = jest.requireActual('../../../containers/List/List').default;
+
+    const ListContainerMock = React.forwardRef((props, forwardedRef) => {
+        mockListContainerProps = props;
+
+        function handleRef(listContainer) {
+            mockListContainer = listContainer;
+
+            if (typeof forwardedRef === 'function') {
+                forwardedRef(listContainer);
+            }
+        }
+
+        return React.createElement(ListContainer, {...props, ref: handleRef});
+    });
+    ListContainerMock.displayName = 'ListContainerMock';
+
+    return ListContainerMock;
+});
+
+jest.mock('../../../containers/SingleListOverlay/SingleListOverlay', () => {
+    const React = require('react');
+
+    return function SingleListOverlayMock(props) {
+        if (!props.open) {
+            return null;
+        }
+
+        function handleConfirm() {
+            props.onConfirm({id: 5});
+        }
+
+        return (
+            <div
+                aria-label={props.title}
+                data-list-key={props.listKey}
+                data-options={JSON.stringify(props.options)}
+                data-reload-on-open={String(props.reloadOnOpen)}
+                data-resource-key={props.resourceKey}
+                role="dialog"
+            >
+                <button onClick={props.onClose} type="button">Close</button>
+                {React.createElement(
+                    'button',
+                    {onClick: handleConfirm, type: 'button'},
+                    props.confirmLoading ? 'Moving' : 'Confirm move'
+                )}
+            </div>
+        );
+    };
+});
 
 jest.mock('../../../containers/List/stores/metadataStore', () => ({
     getSchema: jest.fn().mockReturnValue({}),
@@ -27,77 +90,18 @@ jest.mock('../../../stores/userStore', () => ({
 jest.mock(
     '../../../containers/List/stores/ListStore',
     () => jest.fn(function(resourceKey, listKey, userSettingsKey, observableOptions, options, metadataOptions) {
-        this.resourceKey = resourceKey;
-        this.listKey = listKey;
-        this.userSettingsKey = userSettingsKey;
-        this.observableOptions = observableOptions;
-        this.options = options;
-        this.metadataOptions = metadataOptions;
-        this.filterOptions = {
-            get: jest.fn().mockReturnValue({}),
-        };
-        this.loading = false;
-        this.pageCount = 3;
-        this.active = {
-            get: jest.fn(),
-        };
-        this.sortColumn = {
-            get: jest.fn(),
-        };
-        this.sortOrder = {
-            get: jest.fn(),
-        };
-        this.searchTerm = {
-            get: jest.fn(),
-        };
-        this.limit = {
-            get: jest.fn().mockReturnValue(10),
-        };
-        this.setLimit = jest.fn();
-        this.updateLoadingStrategy = jest.fn();
-        this.updateStructureStrategy = jest.fn();
-        this.data = [
-            {
-                id: 1,
-                title: 'Title 1',
-                description: 'Description 1',
-            },
-            {
-                id: 2,
-                title: 'Title 2',
-                description: 'Description 2',
-            },
-        ];
-        this.selections = [];
-        this.selectionIds = [];
-        this.deleteSelection = jest.fn();
-        this.getPage = jest.fn().mockReturnValue(2);
-        this.userSchema = {
-            title: {
-                type: 'string',
-                sortable: true,
-                visibility: 'no',
-                label: 'Title',
-            },
-            description: {
-                type: 'string',
-                sortable: true,
-                visibility: 'yes',
-                label: 'Description',
-            },
-        };
-        this.filterQueryOption = {};
-        this.destroy = jest.fn();
-        this.reset = jest.fn();
-        this.reload = jest.fn();
-        this.clearSelection = jest.fn();
-        this.remove = jest.fn();
-        this.moveSelection = jest.fn();
-
-        mockExtendObservable(this, {
-            moving: false,
-            movingSelection: false,
-        });
+        mockCreateListStoreMock(
+            resourceKey,
+            listKey,
+            userSettingsKey,
+            observableOptions,
+            options,
+            metadataOptions,
+            {},
+            this
+        );
+        this.selectionIds = require('mobx').observable([]);
+        mockListStores.push(this);
     })
 );
 
@@ -158,6 +162,9 @@ jest.mock('../../../services/initializer', () => ({
 
 beforeEach(() => {
     jest.resetModules();
+    mockListContainer = undefined;
+    mockListContainerProps = undefined;
+    mockListStores = [];
 
     const listAdapterRegistry = require('../../../containers/List/registries/listAdapterRegistry');
     listAdapterRegistry.has.mockReturnValue(true);
@@ -165,6 +172,27 @@ beforeEach(() => {
 
     listFieldTransformRegistry.get.mockReturnValue(new StringFieldTransformer());
 });
+
+function renderListElement(element) {
+    const {router} = element.props;
+    const Toolbar = require('../../../containers/Toolbar').default;
+
+    if (!router.addUpdateRouteHook) {
+        router.addUpdateRouteHook = jest.fn().mockReturnValue(jest.fn());
+    }
+
+    render(<Toolbar />);
+
+    return render(element);
+}
+
+function getListStore(userSettingsKey = 'list') {
+    return mockListStores.find((listStore) => listStore.userSettingsKey === userSettingsKey);
+}
+
+function getViewToolbar() {
+    return screen.getAllByRole('navigation')[0];
+}
 
 test('Should render the list with the correct resourceKey', () => {
     const List = require('../List').default;
@@ -179,8 +207,13 @@ test('Should render the list with the correct resourceKey', () => {
         },
     };
 
-    const list = render(<List router={router} title="Test 1" />);
-    expect(list).toMatchSnapshot();
+    renderListElement(<List router={router} title="Test 1" />);
+
+    expect(getListStore().resourceKey).toEqual('snippets');
+    expect(getListStore().listKey).toEqual('snippets');
+    expect(screen.getByRole('heading', {name: 'Test 1'})).toBeInTheDocument();
+    expect(screen.getByText('Description 1')).toBeInTheDocument();
+    expect(screen.getByText('Description 2')).toBeInTheDocument();
 });
 
 test('Should render the list with a title', () => {
@@ -198,8 +231,11 @@ test('Should render the list with a title', () => {
         },
     };
 
-    const list = render(<List router={router} title="Test 2" />);
-    expect(list).toMatchSnapshot();
+    renderListElement(<List router={router} title="Test 2" />);
+
+    expect(screen.getByRole('heading', {name: 'Snippets'})).toBeInTheDocument();
+    expect(screen.getByText('Description 1')).toBeInTheDocument();
+    expect(screen.getByText('Description 2')).toBeInTheDocument();
 });
 
 test('Should render the list with nodes of given ToolbarActions', () => {
@@ -207,6 +243,7 @@ test('Should render the list with nodes of given ToolbarActions', () => {
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
 
     const ToolbarActionMock1 = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn().mockReturnValue(<div key="node-1">toolbar action node</div>);
         this.getToolbarItemConfig = jest.fn().mockReturnValue({});
     });
@@ -230,8 +267,10 @@ test('Should render the list with nodes of given ToolbarActions', () => {
         },
     };
 
-    const list = mount(<List router={router} title="Test 2" />);
-    expect(list.render()).toMatchSnapshot();
+    renderListElement(<List router={router} title="Test 2" />);
+
+    expect(screen.getByRole('heading', {name: 'Snippets'})).toBeInTheDocument();
+    expect(screen.getByText('toolbar action node')).toBeInTheDocument();
 });
 
 test('Should render the list with nodes of given ListItemActions', () => {
@@ -262,8 +301,10 @@ test('Should render the list with nodes of given ListItemActions', () => {
         },
     };
 
-    const list = mount(<List router={router} title="Test 2" />);
-    expect(list.render()).toMatchSnapshot();
+    renderListElement(<List router={router} title="Test 2" />);
+
+    expect(screen.getByRole('heading', {name: 'Snippets'})).toBeInTheDocument();
+    expect(screen.getByText('item action node')).toBeInTheDocument();
 });
 
 test('Get ToolbarActions from listToolbarActionRegistry and instantiate them correct with the arguments', () => {
@@ -272,18 +313,24 @@ test('Get ToolbarActions from listToolbarActionRegistry and instantiate them cor
     const resourceStore = new ResourceStore('tests', '123-456-789');
 
     const ToolbarActionMock1 = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn().mockReturnValue(null);
         this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+        this.setLocales = jest.fn();
     });
 
     const ToolbarActionMock2 = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn().mockReturnValue(null);
         this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+        this.setLocales = jest.fn();
     });
 
     const ToolbarActionMock3 = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn().mockReturnValue(null);
         this.getToolbarItemConfig = jest.fn().mockReturnValue({});
+        this.setLocales = jest.fn();
     });
 
     listToolbarActionRegistry.add('mock1', ToolbarActionMock1);
@@ -313,19 +360,20 @@ test('Get ToolbarActions from listToolbarActionRegistry and instantiate them cor
         },
     };
 
-    const list = shallow(<List resourceStore={resourceStore} router={router} />);
+    renderListElement(<List resourceStore={resourceStore} router={router} />);
+    const listView = ToolbarActionMock1.mock.calls[0][1];
 
     expect(ToolbarActionMock1).toHaveBeenCalledWith(
-        list.instance().listStore,
-        list.instance(),
+        getListStore(),
+        listView,
         router,
         locales,
         resourceStore,
         {'test1': 'value1'}
     );
     expect(ToolbarActionMock2).toHaveBeenCalledWith(
-        list.instance().listStore,
-        list.instance(),
+        getListStore(),
+        listView,
         router,
         locales,
         resourceStore,
@@ -342,16 +390,19 @@ test('Get ListItemActions from listItemActionRegistry and instantiate them corre
     const ItemActionMock1 = jest.fn(function() {
         this.getNode = jest.fn().mockReturnValue(null);
         this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-eye'});
+        this.setLocales = jest.fn();
     });
 
     const ItemActionMock2 = jest.fn(function() {
         this.getNode = jest.fn().mockReturnValue(null);
         this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-eye'});
+        this.setLocales = jest.fn();
     });
 
     const ItemActionMock3 = jest.fn(function() {
         this.getNode = jest.fn().mockReturnValue(null);
         this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-eye'});
+        this.setLocales = jest.fn();
     });
 
     listItemActionRegistry.add('mock1', ItemActionMock1);
@@ -381,19 +432,20 @@ test('Get ListItemActions from listItemActionRegistry and instantiate them corre
         },
     };
 
-    const list = shallow(<List resourceStore={resourceStore} router={router} />);
+    renderListElement(<List resourceStore={resourceStore} router={router} />);
+    const listView = ItemActionMock1.mock.calls[0][1];
 
     expect(ItemActionMock1).toHaveBeenCalledWith(
-        list.instance().listStore,
-        list.instance(),
+        getListStore(),
+        listView,
         router,
         locales,
         resourceStore,
         {'test1': 'value1'}
     );
     expect(ItemActionMock2).toHaveBeenCalledWith(
-        list.instance().listStore,
-        list.instance(),
+        getListStore(),
+        listView,
         router,
         locales,
         resourceStore,
@@ -404,6 +456,7 @@ test('Get ListItemActions from listItemActionRegistry and instantiate them corre
 
 test('Throw error if "toolbarActions" route-option is not an array of objects', () => {
     const List = require('../List').default;
+    List.prototype.updateRouteHookDisposer = jest.fn();
     const locales = ['de', 'en'];
 
     const router = {
@@ -419,11 +472,12 @@ test('Throw error if "toolbarActions" route-option is not an array of objects', 
         },
     };
 
-    expect(() => shallow(<List router={router} />)).toThrow('but string was given');
+    expect(() => renderListElement(<List router={router} />)).toThrow('but string was given');
 });
 
 test('Throw error if "itemActions" route-option is not an array of objects', () => {
     const List = require('../List').default;
+    List.prototype.updateRouteHookDisposer = jest.fn();
     const locales = ['de', 'en'];
 
     const router = {
@@ -439,7 +493,7 @@ test('Throw error if "itemActions" route-option is not an array of objects', () 
         },
     };
 
-    expect(() => shallow(<List router={router} />)).toThrow('but string was given');
+    expect(() => renderListElement(<List router={router} />)).toThrow('but string was given');
 });
 
 test('Update locales of given ToolbarActions if "locales" prop is changed', () => {
@@ -448,6 +502,7 @@ test('Update locales of given ToolbarActions if "locales" prop is changed', () =
 
     const setLocalesSpy = jest.fn();
     const ToolbarActionMock1 = jest.fn(function() {
+        this.destroy = jest.fn();
         this.getNode = jest.fn().mockReturnValue(null);
         this.getToolbarItemConfig = jest.fn().mockReturnValue({});
         this.setLocales = setLocalesSpy;
@@ -473,10 +528,24 @@ test('Update locales of given ToolbarActions if "locales" prop is changed', () =
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const {rerender} = renderListElement(<List router={router} />);
 
+    setLocalesSpy.mockClear();
     expect(setLocalesSpy).not.toHaveBeenCalled();
-    list.setProps({router: {route: {options: {locales: ['de', 'ru']}}}});
+    rerender(
+        <List
+            router={{
+                ...router,
+                route: {
+                    ...router.route,
+                    options: {
+                        ...router.route.options,
+                        locales: ['de', 'ru'],
+                    },
+                },
+            }}
+        />
+    );
     expect(setLocalesSpy).toHaveBeenCalledWith(['de', 'ru']);
 });
 
@@ -511,14 +580,29 @@ test('Update locales of given ListItemActions if "locales" prop is changed', () 
         },
     };
 
-    const list = shallow(<List router={router} />);
+    const {rerender} = renderListElement(<List router={router} />);
 
+    setLocalesSpy.mockClear();
     expect(setLocalesSpy).not.toHaveBeenCalled();
-    list.setProps({router: {route: {options: {locales: ['de', 'ru']}}}});
+    rerender(
+        <List
+            router={{
+                ...router,
+                route: {
+                    ...router.route,
+                    options: {
+                        ...router.route.options,
+                        locales: ['de', 'ru'],
+                    },
+                },
+            }}
+        />
+    );
     expect(setLocalesSpy).toHaveBeenCalledWith(['de', 'ru']);
 });
 
-test('Should pass correct props to move list overlay', () => {
+test('Should configure the move list overlay', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const MoveToolbarAction = require('../toolbarActions/MoveToolbarAction').default;
@@ -539,14 +623,18 @@ test('Should pass correct props to move list overlay', () => {
         },
     };
 
-    const list = shallow(<List router={router} />);
+    renderListElement(<List router={router} />);
+    act(() => {
+        getListStore().selectionIds.push(1);
+    });
 
-    expect(list.find('SingleListOverlay').props()).toEqual(expect.objectContaining({
-        listKey: 'snippets_list',
-        options: {includeRoot: true},
-        reloadOnOpen: true,
-        resourceKey: 'snippets',
-    }));
+    await user.click(screen.getByRole('button', {name: /Move selected/}));
+
+    const overlay = screen.getByRole('dialog', {name: 'Move items'});
+    expect(overlay).toHaveAttribute('data-list-key', 'snippets_list');
+    expect(overlay).toHaveAttribute('data-options', JSON.stringify({includeRoot: true}));
+    expect(overlay).toHaveAttribute('data-resource-key', 'snippets');
+    expect(overlay).toHaveAttribute('data-reload-on-open', 'true');
 });
 
 test('Should pass the onItemClick callback when an editView has been passed', () => {
@@ -563,8 +651,8 @@ test('Should pass the onItemClick callback when an editView has been passed', ()
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('onItemClick')).toBeInstanceOf(Function);
+    renderListElement(<List router={router} />);
+    expect(mockListContainerProps.onItemClick).toBeInstanceOf(Function);
 });
 
 test('Should pass the onItemClick callback if onItemClick prop is set', () => {
@@ -580,8 +668,8 @@ test('Should pass the onItemClick callback if onItemClick prop is set', () => {
         },
     };
 
-    const list = shallow(<List onItemClick={jest.fn()} router={router} />);
-    expect(list.find('List').prop('onItemClick')).toBeInstanceOf(Function);
+    renderListElement(<List onItemClick={jest.fn()} router={router} />);
+    expect(mockListContainerProps.onItemClick).toBeInstanceOf(Function);
 });
 
 test('Should not pass the onItemClick callback if no editView has been passed and no onItemClick prop is set', () => {
@@ -597,8 +685,8 @@ test('Should not pass the onItemClick callback if no editView has been passed an
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('onItemClick')).not.toBeInstanceOf(Function);
+    renderListElement(<List router={router} />);
+    expect(mockListContainerProps.onItemClick).not.toBeInstanceOf(Function);
 });
 
 test('Should render the list with the add icon if a addView has been passed', () => {
@@ -622,8 +710,8 @@ test('Should render the list with the add icon if a addView has been passed', ()
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('onItemAdd')).toBeInstanceOf(Function);
+    renderListElement(<List router={router} />);
+    expect(mockListContainerProps.onItemAdd).toBeInstanceOf(Function);
 });
 
 test('Should render the list with the add icon if onItemAdd prop is set', () => {
@@ -646,8 +734,8 @@ test('Should render the list with the add icon if onItemAdd prop is set', () => 
         },
     };
 
-    const list = shallow(<List onItemAdd={jest.fn()} router={router} />);
-    expect(list.find('List').prop('onItemAdd')).toBeInstanceOf(Function);
+    renderListElement(<List onItemAdd={jest.fn()} router={router} />);
+    expect(mockListContainerProps.onItemAdd).toBeInstanceOf(Function);
 });
 
 test('Should render the list without add icon if no addView has been passed and onItemAdd prop is not set', () => {
@@ -663,8 +751,8 @@ test('Should render the list without add icon if no addView has been passed and 
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('onItemAdd')).not.toBeInstanceOf(Function);
+    renderListElement(<List router={router} />);
+    expect(mockListContainerProps.onItemAdd).not.toBeInstanceOf(Function);
 });
 
 test('Should render the list non-searchable if the searchable option has been passed as false', () => {
@@ -681,8 +769,8 @@ test('Should render the list non-searchable if the searchable option has been pa
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('searchable')).toEqual(false);
+    renderListElement(<List router={router} />);
+    expect(mockListContainerProps.searchable).toEqual(false);
 });
 
 test('Should render the list non-filterable if the filterable option has been passed as false', () => {
@@ -699,8 +787,8 @@ test('Should render the list non-filterable if the filterable option has been pa
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('filterable')).toEqual(false);
+    renderListElement(<List router={router} />);
+    expect(mockListContainerProps.filterable).toEqual(false);
 });
 
 test('Should render the list filterable if the filterable option has not been passed', () => {
@@ -716,8 +804,8 @@ test('Should render the list filterable if the filterable option has not been pa
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('filterable')).toEqual(true);
+    renderListElement(<List router={router} />);
+    expect(mockListContainer.props.filterable).toEqual(true);
 });
 
 test('Should render the list without columnOptions if the hideColumnOptions option has been passed as true', () => {
@@ -734,8 +822,8 @@ test('Should render the list without columnOptions if the hideColumnOptions opti
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('showColumnOptions')).toEqual(false);
+    renderListElement(<List router={router} />);
+    expect(mockListContainerProps.showColumnOptions).toEqual(false);
 });
 
 test('Should render the list with columnOptions if the hideColumnOptions option has not been passed', () => {
@@ -751,8 +839,8 @@ test('Should render the list with columnOptions if the hideColumnOptions option 
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('showColumnOptions')).toEqual(true);
+    renderListElement(<List router={router} />);
+    expect(mockListContainerProps.showColumnOptions).toEqual(true);
 });
 
 test('Should render the list non-selectable if the selectable option has been passed as false', () => {
@@ -769,8 +857,8 @@ test('Should render the list non-selectable if the selectable option has been pa
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('selectable')).toEqual(false);
+    renderListElement(<List router={router} />);
+    expect(mockListContainerProps.selectable).toEqual(false);
 });
 
 test('Should render the list with the passed itemDisabledCondition option', () => {
@@ -787,8 +875,8 @@ test('Should render the list with the passed itemDisabledCondition option', () =
         },
     };
 
-    const list = shallow(<List router={router} />);
-    expect(list.find('List').prop('itemDisabledCondition')).toEqual('(_permissions && !_permissions.view)');
+    renderListElement(<List router={router} />);
+    expect(mockListContainerProps.itemDisabledCondition).toEqual('(_permissions && !_permissions.view)');
 });
 
 test('Should throw an error when no resourceKey is defined in the route options', () => {
@@ -799,7 +887,7 @@ test('Should throw an error when no resourceKey is defined in the route options'
         },
     };
 
-    expect(() => render(<List router={router} />)).toThrow(/mandatory "resourceKey" option/);
+    expect(() => renderListElement(<List router={router} />)).toThrow(/mandatory "resourceKey" option/);
 });
 
 test('Should throw an error when no listKey is defined in the route options', () => {
@@ -812,23 +900,29 @@ test('Should throw an error when no listKey is defined in the route options', ()
         },
     };
 
-    expect(() => render(<List router={router} />)).toThrow(/mandatory "listKey" option/);
+    expect(() => renderListElement(<List router={router} />)).toThrow(/mandatory "listKey" option/);
 });
 
 test('Should destroy the store on unmount', () => {
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
+    const addToolbarActionDestroy = jest.fn();
+    const deleteToolbarActionDestroy = jest.fn();
 
-    listToolbarActionRegistry.add('sulu_admin.add', jest.fn(function() {
+    const AddToolbarAction = jest.fn(function() {
         this.getNode = jest.fn();
+        this.getToolbarItemConfig = jest.fn();
         this.setLocales = jest.fn();
-        this.destroy = jest.fn();
-    }));
+        this.destroy = addToolbarActionDestroy;
+    });
+    const DeleteToolbarAction = jest.fn(function() {
+        this.getNode = jest.fn();
+        this.getToolbarItemConfig = jest.fn();
+        this.setLocales = jest.fn();
+        this.destroy = deleteToolbarActionDestroy;
+    });
 
-    listToolbarActionRegistry.add('sulu_admin.delete', jest.fn(function() {
-        this.getNode = jest.fn();
-        this.setLocales = jest.fn();
-        this.destroy = jest.fn();
-    }));
+    listToolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
+    listToolbarActionRegistry.add('sulu_admin.delete', DeleteToolbarAction);
 
     const List = require('../List').default;
     const router = {
@@ -851,11 +945,11 @@ test('Should destroy the store on unmount', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    const {unmount} = renderListElement(<List router={router} />);
     const page = router.bind.mock.calls[0][1];
     const locale = router.bind.mock.calls[1][1];
 
-    const listStore = list.instance().listStore;
+    const listStore = getListStore();
 
     expect(page.get()).toBe(undefined);
     expect(locale.get()).toBe(undefined);
@@ -867,19 +961,16 @@ test('Should destroy the store on unmount', () => {
     expect(router.bind).toHaveBeenCalledWith('limit', listStore.limit, 10);
     expect(router.bind).toHaveBeenCalledWith('filter', listStore.filterOptions, {});
 
-    const toolbarActions = list.instance().toolbarActions;
-
-    list.unmount();
+    unmount();
 
     expect(listStore.destroy).toHaveBeenCalled();
-    expect(toolbarActions[0].destroy).toHaveBeenCalledWith();
-    expect(toolbarActions[1].destroy).toHaveBeenCalledWith();
+    expect(addToolbarActionDestroy).toHaveBeenCalledWith();
+    expect(deleteToolbarActionDestroy).toHaveBeenCalledWith();
 });
 
-test('Should navigate to defined route on back button click', () => {
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Should navigate to defined route on back button click', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const router = {
         bind: jest.fn(),
         restore: jest.fn(),
@@ -889,27 +980,22 @@ test('Should navigate to defined route on back button click', () => {
                 backView: 'backView',
                 addView: 'addView',
                 listKey: 'test',
+                locales: ['de', 'en'],
                 resourceKey: 'test',
             },
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.instance().locale = {
-        get() {
-            return 'de';
-        },
-    };
+    renderListElement(<List router={router} />);
+    const locale = router.bind.mock.calls.find(([key]) => key === 'locale')[1];
+    locale.set('de');
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
-    toolbarConfig.backButton.onClick();
+    await user.click(within(getViewToolbar()).getByRole('button', {name: 'su-angle-left'}));
     expect(router.restore).toHaveBeenCalledWith('backView', {locale: 'de'});
 });
 
 test('Should propagate errors to toolbar', () => {
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const router = {
         bind: jest.fn(),
         restore: jest.fn(),
@@ -924,16 +1010,15 @@ test('Should propagate errors to toolbar', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    renderListElement(<List router={router} />);
     const error = 'This is an error';
-    list.instance().errors.push(error);
+    act(() => mockListContainerProps.onDeleteError({detail: error}));
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
-    expect(toolbarConfig.errors.length).toBe(1);
-    expect(toolbarConfig.errors[0]).toBe(error);
+    expect(screen.getByRole('button', {name: new RegExp(error)})).toBeInTheDocument();
 });
 
-test('Should show the error of a failed copy in the toolbar', () => {
+test('Should show the error of a failed copy in the toolbar', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
     const router = {
         bind: jest.fn(),
@@ -946,17 +1031,21 @@ test('Should show the error of a failed copy in the toolbar', () => {
         },
     };
 
-    const list = shallow(<List router={router} />);
-    list.find('List').prop('onCopyError')({detail: 'Copying is not allowed'});
-    list.find('List').prop('onCopyError')({});
+    renderListElement(<List router={router} />);
 
-    expect(list.instance().errors).toEqual(['Copying is not allowed', 'An unexpected error occurred while copying.']);
+    act(() => mockListContainerProps.onCopyError({detail: 'Copying is not allowed'}));
+
+    expect(screen.getByRole('button', {name: /Copying is not allowed/})).toBeInTheDocument();
+
+    await user.click(screen.getByLabelText('su-times'));
+    act(() => mockListContainerProps.onCopyError({}));
+
+    expect(screen.getByRole('button', {name: /An unexpected error occurred while copying/})).toBeInTheDocument();
 });
 
-test('Should navigate to defined route on back button click without locale', () => {
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Should navigate to defined route on back button click without locale', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const router = {
         bind: jest.fn(),
         restore: jest.fn(),
@@ -971,17 +1060,14 @@ test('Should navigate to defined route on back button click without locale', () 
         },
     };
 
-    const list = mount(<List router={router} />);
+    renderListElement(<List router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
-    toolbarConfig.backButton.onClick();
+    await user.click(within(getViewToolbar()).getByRole('button', {name: 'su-angle-left'}));
     expect(router.restore).toHaveBeenCalledWith('backView', {});
 });
 
 test('Should not render back button when no backView is configured', () => {
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const router = {
         bind: jest.fn(),
         restore: jest.fn(),
@@ -995,16 +1081,13 @@ test('Should not render back button when no backView is configured', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
+    renderListElement(<List router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
-    expect(toolbarConfig.backButton).toBe(undefined);
+    expect(within(getViewToolbar()).queryByRole('button', {name: 'su-angle-left'})).not.toBeInTheDocument();
 });
 
-test('Should render the add button in the toolbar only if an addView has been passed in options', () => {
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Should render the add button in the toolbar when an addView is configured', () => {
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
@@ -1023,22 +1106,14 @@ test('Should render the add button in the toolbar only if an addView has been pa
         },
     };
 
-    const list = mount(<List router={router} />);
+    renderListElement(<List router={router} />);
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
-    expect(toolbarConfig.items).toEqual(
-        expect.arrayContaining(
-            [
-                expect.objectContaining({icon: 'su-plus-circle', label: 'Add'}),
-            ]
-        )
-    );
+    expect(screen.getByRole('button', {name: /Add/})).toBeInTheDocument();
 });
 
-test('Should navigate when add button is clicked and locales have been passed in options', () => {
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Should navigate when add button is clicked and locales have been passed in options', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
@@ -1059,23 +1134,17 @@ test('Should navigate when add button is clicked and locales have been passed in
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.instance().locale = {
-        get() {
-            return 'de';
-        },
-    };
-    const toolbarConfig = toolbarFunction.call(list.instance());
-
-    toolbarConfig.items[0].onClick();
+    renderListElement(<List router={router} />);
+    const locale = router.bind.mock.calls.find(([key]) => key === 'locale')[1];
+    locale.set('de');
+    await user.click(screen.getByRole('button', {name: /Add/}));
 
     expect(router.navigate).toHaveBeenCalledWith('addView', {locale: 'de'});
 });
 
-test('Should navigate without locale when add button is clicked', () => {
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Should navigate without locale when add button is clicked', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
@@ -1095,18 +1164,15 @@ test('Should navigate without locale when add button is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const toolbarConfig = toolbarFunction.call(list.instance());
-
-    toolbarConfig.items[0].onClick();
+    renderListElement(<List router={router} />);
+    await user.click(screen.getByRole('button', {name: /Add/}));
 
     expect(router.navigate).toHaveBeenCalledWith('addView', {});
 });
 
-test('Should fire callback instead of navigate when onItemAdd prop is set and add button is clicked', () => {
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Should fire callback instead of navigate when onItemAdd prop is set and add button is clicked', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const AddToolbarAction = require('../toolbarActions/AddToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.add', AddToolbarAction);
@@ -1127,10 +1193,8 @@ test('Should fire callback instead of navigate when onItemAdd prop is set and ad
     };
     const itemAddCallback = jest.fn();
 
-    const list = mount(<List onItemAdd={itemAddCallback} router={router} />);
-    const toolbarConfig = toolbarFunction.call(list.instance());
-
-    toolbarConfig.items[0].onClick();
+    renderListElement(<List onItemAdd={itemAddCallback} router={router} />);
+    await user.click(screen.getByRole('button', {name: /Add/}));
 
     expect(itemAddCallback).toHaveBeenCalledWith(undefined);
     expect(router.navigate).not.toHaveBeenCalled();
@@ -1152,13 +1216,10 @@ test('Should navigate when pencil button is clicked and locales have been passed
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.instance().locale = {
-        get() {
-            return 'de';
-        },
-    };
-    list.find('ButtonCell button').at(0).simulate('click');
+    renderListElement(<List router={router} />);
+    const locale = router.bind.mock.calls.find(([key]) => key === 'locale')[1];
+    locale.set('de');
+    mockListContainerProps.onItemClick(1);
     expect(router.navigate).toHaveBeenCalledWith('editView', {id: 1, locale: 'de'});
 });
 
@@ -1177,8 +1238,8 @@ test('Should navigate without locale when pencil button is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.find('ButtonCell button').at(0).simulate('click');
+    renderListElement(<List router={router} />);
+    mockListContainerProps.onItemClick(1);
     expect(router.navigate).toHaveBeenCalledWith('editView', {id: 1});
 });
 
@@ -1199,8 +1260,8 @@ test('Should fire callback instead of navigate when onItemClick prop is set and 
         },
     };
 
-    const list = mount(<List onItemClick={onItemClickCallback} router={router} />);
-    list.find('ButtonCell button').at(0).simulate('click');
+    renderListElement(<List onItemClick={onItemClickCallback} router={router} />);
+    mockListContainerProps.onItemClick(1);
 
     expect(onItemClickCallback).toHaveBeenCalledWith(1);
     expect(router.navigate).not.toHaveBeenCalled();
@@ -1313,9 +1374,7 @@ test('Should load the route attributes from the ListStore using the passed userS
 });
 
 test('Should render the delete item enabled only if something is selected', () => {
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const DeleteToolbarAction = require('../toolbarActions/DeleteToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.delete', DeleteToolbarAction);
@@ -1333,24 +1392,21 @@ test('Should render the delete item enabled only if something is selected', () =
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    renderListElement(<List router={router} />);
+    const listStore = getListStore();
 
-    let toolbarConfig, item;
-    toolbarConfig = toolbarFunction.call(list.instance());
-    item = toolbarConfig.items.find((item) => item.label === 'Delete');
-    expect(item.disabled).toBe(true);
+    const deleteButton = screen.getByRole('button', {name: /Delete/});
+    expect(deleteButton).toBeDisabled();
 
-    listStore.selectionIds.push(1);
-    toolbarConfig = toolbarFunction.call(list.instance());
-    item = toolbarConfig.items.find((item) => item.label === 'Delete');
-    expect(item.disabled).toBe(false);
+    act(() => {
+        listStore.selectionIds.push(1);
+    });
+    expect(deleteButton).toBeEnabled();
 });
 
-test('Should render the locale dropdown with the options from router', () => {
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Should render the locale dropdown with the options from router', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const router = {
         bind: jest.fn(),
         route: {
@@ -1363,25 +1419,19 @@ test('Should render the locale dropdown with the options from router', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    list.instance().locale = {
-        get() {
-            return 'de';
-        },
-    };
+    renderListElement(<List router={router} />);
+    const locale = router.bind.mock.calls.find(([key]) => key === 'locale')[1];
+    act(() => locale.set('de'));
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
-    expect(toolbarConfig.locale.value).toBe('de');
-    expect(toolbarConfig.locale.options).toEqual([
-        {value: 'en', label: 'en'},
-        {value: 'de', label: 'de'},
-    ]);
+    await user.click(screen.getByRole('button', {name: /^de/}));
+
+    expect(screen.getByRole('button', {name: 'en'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /^su-check de/})).toBeInTheDocument();
 });
 
-test('Should render the locale dropdown with the options from props', () => {
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Should render the locale dropdown with the options from props', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const router = {
         bind: jest.fn(),
         route: {
@@ -1393,19 +1443,14 @@ test('Should render the locale dropdown with the options from props', () => {
         },
     };
 
-    const list = mount(<List locales={['en', 'de']} router={router} />);
-    list.instance().locale = {
-        get() {
-            return 'de';
-        },
-    };
+    renderListElement(<List locales={['en', 'de']} router={router} />);
+    const locale = router.bind.mock.calls.find(([key]) => key === 'locale')[1];
+    act(() => locale.set('de'));
 
-    const toolbarConfig = toolbarFunction.call(list.instance());
-    expect(toolbarConfig.locale.value).toBe('de');
-    expect(toolbarConfig.locale.options).toEqual([
-        {value: 'en', label: 'en'},
-        {value: 'de', label: 'de'},
-    ]);
+    await user.click(screen.getByRole('button', {name: /^de/}));
+
+    expect(screen.getByRole('button', {name: 'en'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /^su-check de/})).toBeInTheDocument();
 });
 
 test('Should pass requestParameters from router to the ListStore', () => {
@@ -1425,8 +1470,8 @@ test('Should pass requestParameters from router to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    renderListElement(<List router={router} />);
+    const listStore = getListStore();
 
     expect(listStore.options.webspace).toEqual('example');
 });
@@ -1452,8 +1497,8 @@ test('Should pass router attributes from router to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    renderListElement(<List router={router} />);
+    const listStore = getListStore();
 
     expect(listStore.options.locale).toEqual('en');
     expect(listStore.options.parentId).toEqual('123-123-123');
@@ -1477,8 +1522,8 @@ test('Should pass resourceStore properties from router to the ListStore', () => 
         },
     };
 
-    const list = mount(<List resourceStore={resourceStore} router={router} />);
-    const listStore = list.instance().listStore;
+    renderListElement(<List resourceStore={resourceStore} router={router} />);
+    const listStore = getListStore();
 
     expect(listStore.options.locale).toEqual('de');
     expect(listStore.options.parentId).toEqual('123-456-789');
@@ -1506,8 +1551,8 @@ test('Should pass router attributes array from router to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    renderListElement(<List router={router} />);
+    const listStore = getListStore();
 
     expect(listStore.options.locale).toEqual('en');
     expect(listStore.options.id).toEqual('123-123-123');
@@ -1535,8 +1580,8 @@ test('Should pass router attributes array from router to the ListStore metadataO
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    renderListElement(<List router={router} />);
+    const listStore = getListStore();
 
     expect(listStore.metadataOptions.locale).toEqual('en');
     expect(listStore.metadataOptions.id).toEqual('123-123-123');
@@ -1566,8 +1611,8 @@ test('Should pass metadataRequestParameters to metadataOptions', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    renderListElement(<List router={router} />);
+    const listStore = getListStore();
     expect(listStore.metadataOptions.showResource).toEqual(true);
 });
 
@@ -1593,8 +1638,8 @@ test('Should pass resource-store properties array from router to the ListStore m
     };
     const resourceStore = new ResourceStore('tests', '123-123-123');
 
-    const list = mount(<List resourceStore={resourceStore} router={router} />);
-    const listStore = list.instance().listStore;
+    renderListElement(<List resourceStore={resourceStore} router={router} />);
+    const listStore = getListStore();
 
     expect(listStore.metadataOptions.locale).toEqual('de');
     expect(listStore.metadataOptions.pageId).toEqual('123-123-123');
@@ -1615,8 +1660,8 @@ test('Should pass locale and page observables to the ListStore', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    renderListElement(<List router={router} />);
+    const listStore = getListStore();
 
     expect(listStore.observableOptions).toHaveProperty('page');
     expect(listStore.observableOptions).toHaveProperty('locale');
@@ -1637,8 +1682,8 @@ test('Should pass locale observable from props to the ListStore if it is set', (
     };
 
     const locale = observable.box('ru');
-    const list = mount(<List locale={locale} router={router} />);
-    const listStore = list.instance().listStore;
+    renderListElement(<List locale={locale} router={router} />);
+    const listStore = getListStore();
 
     expect(listStore.observableOptions.locale).toEqual(locale);
 });
@@ -1656,43 +1701,26 @@ test('Should not pass the locale observable to the ListStore if no locales are d
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
+    renderListElement(<List router={router} />);
+    const listStore = getListStore();
 
     expect(listStore.observableOptions).toHaveProperty('page');
     expect(listStore.observableOptions).not.toHaveProperty('locale');
 });
 
-test('Should fire reload method of ListStore when reload method is called', () => {
-    const List = require('../List').default;
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                adapters: ['table'],
-                listKey: 'test',
-                resourceKey: 'test',
-            },
-        },
-    };
-
-    const listInstance = mount(<List router={router} />).instance();
-    listInstance.reload();
-
-    expect(listInstance.listStore.reload).toHaveBeenCalled();
-});
-
-test('Should delete selected items when delete button is clicked', () => {
-    function getDeleteItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Delete');
-    }
-
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Should fire reload method of ListStore when reload button is clicked', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
-    const DeleteToolbarAction = require('../toolbarActions/DeleteToolbarAction').default;
-    listToolbarActionRegistry.add('sulu_admin.delete', DeleteToolbarAction);
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
+    const ReloadToolbarAction = jest.fn(function(listStore, list) {
+        this.destroy = jest.fn();
+        this.getNode = jest.fn();
+        this.getToolbarItemConfig = jest.fn().mockReturnValue({
+            label: 'Reload',
+            onClick: list.reload,
+        });
+    });
+    listToolbarActionRegistry.add('reload', ReloadToolbarAction);
     const router = {
         bind: jest.fn(),
         route: {
@@ -1701,25 +1729,20 @@ test('Should delete selected items when delete button is clicked', () => {
                 listKey: 'test',
                 resourceKey: 'test',
                 toolbarActions: [
-                    {type: 'sulu_admin.delete', options: {}},
+                    {type: 'reload'},
                 ],
             },
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
-    listStore.selectionIds.push(1, 4, 6);
+    renderListElement(<List router={router} />);
+    await user.click(screen.getByRole('button', {name: 'Reload'}));
 
-    list.update();
-    expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
-
-    getDeleteItem().onClick();
-    list.update();
-    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+    expect(getListStore().reload).toHaveBeenCalled();
 });
 
-test('Should pass allowConflictDeletion correctly to List component', () => {
+test('Should delete selected items when delete button is clicked', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const DeleteToolbarAction = require('../toolbarActions/DeleteToolbarAction').default;
@@ -1738,25 +1761,51 @@ test('Should pass allowConflictDeletion correctly to List component', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
-    listStore.selectionIds.push(1, 4, 6);
-    list.instance().requestSelectionDelete(false);
+    renderListElement(<List router={router} />);
+    act(() => {
+        getListStore().selectionIds.push(1, 4, 6);
+    });
+    const requestSelectionDelete = jest.spyOn(mockListContainer, 'requestSelectionDelete');
 
-    list.update();
-    expect(list.find('Dialog').at(0).prop('open')).toEqual(true);
+    await user.click(screen.getByRole('button', {name: /Delete/}));
 
-    expect(list.find('List').at(1).instance().allowConflictDeletion).toEqual(false);
+    expect(requestSelectionDelete).toHaveBeenCalledWith(true);
 });
 
-test('Should make move overlay disappear if cancel is clicked', () => {
-    function getMoveItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Move selected');
-    }
-
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Should pass allowConflictDeletion correctly to List component', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
+    const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
+    const DeleteToolbarAction = require('../toolbarActions/DeleteToolbarAction').default;
+    listToolbarActionRegistry.add('sulu_admin.delete', DeleteToolbarAction);
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'test',
+                resourceKey: 'test',
+                toolbarActions: [
+                    {type: 'sulu_admin.delete', options: {allow_conflict_deletion: false}},
+                ],
+            },
+        },
+    };
+
+    renderListElement(<List router={router} />);
+    act(() => {
+        getListStore().selectionIds.push(1, 4, 6);
+    });
+    const requestSelectionDelete = jest.spyOn(mockListContainer, 'requestSelectionDelete');
+
+    await user.click(screen.getByRole('button', {name: /Delete/}));
+
+    expect(requestSelectionDelete).toHaveBeenCalledWith(false);
+});
+
+test('Should make move overlay disappear if cancel is clicked', async() => {
+    const user = userEvent.setup();
+    const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const MoveToolbarAction = require('../toolbarActions/MoveToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.move', MoveToolbarAction);
@@ -1774,30 +1823,23 @@ test('Should make move overlay disappear if cancel is clicked', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
-    listStore.selectionIds.push(1, 4, 6);
+    renderListElement(<List router={router} />);
+    act(() => {
+        getListStore().selectionIds.push(1, 4, 6);
+    });
+    expect(screen.queryByRole('dialog', {name: 'Move items'})).not.toBeInTheDocument();
 
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: /Move selected/}));
+    expect(screen.getByRole('dialog', {name: 'Move items'})).toBeInTheDocument();
 
-    getMoveItem().onClick();
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(true);
-    list.find('SingleListOverlay[title="Move items"]').prop('onClose')();
+    await user.click(screen.getByRole('button', {name: 'Close'}));
 
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(false);
+    expect(screen.queryByRole('dialog', {name: 'Move items'})).not.toBeInTheDocument();
 });
 
-test('Should move items after move overlay was confirmed', () => {
-    function getMoveItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Move selected');
-    }
-
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Should move items after move overlay was confirmed', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const MoveToolbarAction = require('../toolbarActions/MoveToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.move', MoveToolbarAction);
@@ -1815,46 +1857,45 @@ test('Should move items after move overlay was confirmed', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
-    listStore.selectionIds.push(1, 4, 6);
+    renderListElement(<List router={router} />);
+    const listStore = getListStore();
+    act(() => {
+        listStore.selectionIds.push(1, 4, 6);
+    });
 
-    const moveSelectionPromise = Promise.resolve();
-    listStore.moveSelection.mockReturnValue(moveSelectionPromise);
+    const moveSelectionRequest = createDeferred();
+    listStore.moveSelection.mockReturnValue(moveSelectionRequest.promise);
 
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(false);
+    expect(screen.queryByRole('dialog', {name: 'Move items'})).not.toBeInTheDocument();
 
-    getMoveItem().onClick();
-    listStore.movingSelection = true;
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(true);
-    list.find('SingleListOverlay[title="Move items"]').prop('onConfirm')({id: 5});
+    await user.click(screen.getByRole('button', {name: /Move selected/}));
+    act(() => {
+        listStore.movingSelection = true;
+    });
+    expect(screen.getByRole('dialog', {name: 'Move items'})).toBeInTheDocument();
+    await user.click(screen.getByRole('button', {name: 'Moving'}));
 
-    list.update();
-    expect(list.find('SingleListOverlay[title="Move items"]').prop('confirmLoading')).toEqual(true);
+    expect(screen.getByRole('button', {name: 'Moving'})).toBeInTheDocument();
 
     expect(listStore.moveSelection).toHaveBeenCalledWith(5);
 
-    return moveSelectionPromise.then(() => {
-        listStore.movingSelection = false;
-        list.update();
-        expect(list.find('SingleListOverlay[title="Move items"]').prop('confirmLoading')).toEqual(false);
-        expect(list.find('SingleListOverlay[title="Move items"]').prop('open')).toEqual(false);
+    await act(async() => {
+        moveSelectionRequest.resolve();
+        await moveSelectionRequest.promise;
     });
+    act(() => {
+        listStore.movingSelection = false;
+    });
+
+    expect(screen.queryByRole('dialog', {name: 'Move items'})).not.toBeInTheDocument();
 });
 
-test('Export dialog should open when the button is pressed', () => {
-    function getExportItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Export');
-    }
-
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Export dialog should open when the button is pressed', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const ExportToolbarAction = require('../toolbarActions/ExportToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.export', ExportToolbarAction);
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const router = {
         bind: jest.fn(),
         route: {
@@ -1869,30 +1910,24 @@ test('Export dialog should open when the button is pressed', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
-    listStore.selectionIds.push(1, 4, 6);
+    renderListElement(<List router={router} />);
+    act(() => {
+        getListStore().data.push({id: 1});
+    });
 
-    list.update();
-    expect(list.find('Overlay').find({confirmText: 'Export'}).prop('open')).toEqual(false);
+    expect(screen.queryByRole('button', {name: 'Export'})).not.toBeInTheDocument();
 
-    getExportItem().onClick();
-    list.update();
+    await user.click(screen.getByRole('button', {name: /Export/}));
 
-    expect(list.find('Overlay').find({confirmText: 'Export'}).prop('open')).toEqual(true);
+    expect(screen.getByRole('button', {name: 'Export'})).toBeInTheDocument();
 });
 
-test('Render export dialog', () => {
-    function getExportItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Export');
-    }
-
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
+test('Render export dialog', async() => {
+    const user = userEvent.setup();
     const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const ExportToolbarAction = require('../toolbarActions/ExportToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.export', ExportToolbarAction);
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const router = {
         bind: jest.fn(),
         route: {
@@ -1907,32 +1942,29 @@ test('Render export dialog', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
-    listStore.selectionIds.push(1, 4, 6);
+    renderListElement(<List router={router} />);
+    act(() => {
+        getListStore().data.push({id: 1});
+    });
 
-    list.update();
+    await user.click(screen.getByRole('button', {name: /Export/}));
 
-    getExportItem().onClick();
-    list.update();
-
-    expect(list.find('Overlay').find({confirmText: 'Export'}).render()).toMatchSnapshot();
+    expect(screen.getByRole('button', {name: 'Export'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: '; su-angle-down'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: '" su-angle-down'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: '\\ su-angle-down'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: '\\n su-angle-down'})).toBeInTheDocument();
 });
 
-test('Export method should be called when the export-button is pressed', () => {
-    function getExportItem() {
-        return toolbarFunction.call(list.instance()).items.find((item) => item.label === 'Export');
-    }
-
+test('Export method should be called when the export-button is pressed', async() => {
+    const user = userEvent.setup();
     window.location.assign = jest.fn();
 
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
     const List = require('../List').default;
     const listToolbarActionRegistry = require('../registries/listToolbarActionRegistry').default;
     const ExportToolbarAction = require('../toolbarActions/ExportToolbarAction').default;
     listToolbarActionRegistry.add('sulu_admin.export', ExportToolbarAction);
     const resourceRouteRegistry = require('../../../services/ResourceRequester/registries/resourceRouteRegistry');
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, List);
     const router = {
         bind: jest.fn(),
         route: {
@@ -1948,18 +1980,17 @@ test('Export method should be called when the export-button is pressed', () => {
         },
     };
 
-    const list = mount(<List router={router} />);
-    const listStore = list.instance().listStore;
-    listStore.selectionIds.push(1, 4, 6);
-    list.update();
+    renderListElement(<List router={router} />);
+    act(() => {
+        getListStore().data.push({id: 1});
+    });
 
-    getExportItem().onClick();
-    list.update();
+    await user.click(screen.getByRole('button', {name: /Export/}));
 
-    list.find('Overlay').find({confirmText: 'Export'}).find('Button').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'Export'}));
     expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('list', 'test', {
         _format: 'csv',
-        locale: list.instance().locale.get(),
+        locale: undefined,
         flat: true,
         delimiter: ';',
         escape: '\\',
@@ -1969,5 +2000,4 @@ test('Export method should be called when the export-button is pressed', () => {
     expect(window.location.assign).toHaveBeenCalledWith(
         'testfile.csv?locale=en&flat=true&delimiter=%3B&escape=%5C&enclosure=%22&newLine=%5Cn'
     );
-    expect(list.find('Overlay').find({confirmText: 'Export'}).prop('open')).toEqual(false);
 });

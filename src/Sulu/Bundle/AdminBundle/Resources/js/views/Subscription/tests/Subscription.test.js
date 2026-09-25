@@ -114,6 +114,7 @@ test('hides the contact box without a contact email', async() => {
 });
 
 test('renders the error state and retries on click', async() => {
+    const user = userEvent.setup();
     Requester.get.mockReturnValueOnce(Promise.reject(new Error('failed')));
 
     // $FlowFixMe
@@ -122,7 +123,7 @@ test('renders the error state and retries on click', async() => {
     expect(await screen.findByText('sulu_ai_platform.subscription_unavailable')).toBeInTheDocument();
 
     Requester.get.mockReturnValueOnce(Promise.resolve(payload));
-    await userEvent.click(screen.getByText('sulu_admin.try_again'));
+    await user.click(screen.getByText('sulu_admin.try_again'));
 
     expect(await screen.findByText('sulu_ai_platform.subscription_status_active')).toBeInTheDocument();
 });

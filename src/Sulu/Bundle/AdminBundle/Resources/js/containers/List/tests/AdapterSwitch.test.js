@@ -1,8 +1,8 @@
 // @flow
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import AdapterSwitch from '../AdapterSwitch';
-import AbstractAdapter from '../adapters/AbstractAdapter';
 import listAdapterRegistry from '../registries/listAdapterRegistry';
 
 jest.mock('../registries/listAdapterRegistry', () => ({
@@ -11,91 +11,58 @@ jest.mock('../registries/listAdapterRegistry', () => ({
     has: jest.fn(),
 }));
 
-class LoadingStrategy {
-    destroy = jest.fn();
-    initialize = jest.fn();
-    load = jest.fn();
-    reset = jest.fn();
-    setStructureStrategy = jest.fn();
-}
-
-class StructureStrategy {
-    data: Array<Object>;
-    visibleItems: Array<Object>;
-
-    addItem = jest.fn();
-    clear = jest.fn();
-    findById = jest.fn();
-    order = jest.fn();
-    remove = jest.fn();
-}
-
-class TestAdapter extends AbstractAdapter {
-    static LoadingStrategy = LoadingStrategy;
-
-    static StructureStrategy = StructureStrategy;
-
+class TestAdapter {
     static icon = 'su-th-large';
-
-    render() {
-        return (
-            <div>Test Adapter</div>
-        );
-    }
 }
 
 beforeEach(() => {
+    jest.clearAllMocks();
     listAdapterRegistry.has.mockReturnValue(true);
     listAdapterRegistry.get.mockReturnValue(TestAdapter);
 });
 
-test('The component should render with current adapter "folder"', () => {
-    const adapters = ['table', 'folder'];
-    const currentAdapterKey = 'folder';
-    const handleAdapterChange = jest.fn();
-    const view = mount(
+function renderAdapterSwitch(currentAdapter = 'table', onAdapterChange = jest.fn()) {
+    return render(
         <AdapterSwitch
-            adapters={adapters}
-            currentAdapter={currentAdapterKey}
-            onAdapterChange={handleAdapterChange}
+            adapters={['table', 'folder']}
+            currentAdapter={currentAdapter}
+            onAdapterChange={onAdapterChange}
         />
-    ).render();
+    );
+}
 
-    expect(view).toMatchSnapshot();
+function getAdapterButtons() {
+    return screen.getAllByLabelText('su-th-large').map((icon) => icon.closest('button'));
+}
+
+test('The component should render with current adapter "folder"', () => {
+    renderAdapterSwitch('folder');
+
+    const buttons = getAdapterButtons();
+
+    expect(buttons[0]).not.toHaveClass('active');
+    expect(buttons[1]).toHaveClass('active');
 });
 
 test('The component should render with current adapter "table"', () => {
-    const adapters = ['table', 'folder'];
-    const currentAdapterKey = 'table';
-    const handleAdapterChange = jest.fn();
-    const view = mount(
-        <AdapterSwitch
-            adapters={adapters}
-            currentAdapter={currentAdapterKey}
-            onAdapterChange={handleAdapterChange}
-        />
-    ).render();
+    renderAdapterSwitch('table');
 
-    expect(view).toMatchSnapshot();
+    const buttons = getAdapterButtons();
+
+    expect(buttons[0]).toHaveClass('active');
+    expect(buttons[1]).not.toHaveClass('active');
 });
 
-test('The component should handle adapter change correctly', () => {
-    const adapters = ['table', 'folder'];
-    const currentAdapterKey = 'table';
+test('The component should handle adapter change correctly', async() => {
+    const user = userEvent.setup();
     const handleAdapterChange = jest.fn();
-    const view = mount(
-        <AdapterSwitch
-            adapters={adapters}
-            currentAdapter={currentAdapterKey}
-            onAdapterChange={handleAdapterChange}
-        />
-    );
+    renderAdapterSwitch('table', handleAdapterChange);
 
-    // click on the active adapter shouldn't trigger the event
-    view.find('Button').at(0).simulate('click');
+    const buttons = getAdapterButtons();
+
+    await user.click(buttons[0]);
     expect(handleAdapterChange).not.toHaveBeenCalled();
 
-    // click on not active should trigger the event correctly
-    view.find('Button').at(1).simulate('click');
+    await user.click(buttons[1]);
     expect(handleAdapterChange).toHaveBeenCalledWith('folder');
 });

@@ -15,38 +15,42 @@ test('The component should render', () => {
 });
 
 test('The component should call the callbacks after a click', async() => {
+    const user = userEvent.setup();
     const onClick = jest.fn();
     const afterAction = jest.fn();
     render(<Action afterAction={afterAction} onClick={onClick} value="my-option">My action</Action>);
 
     const button = screen.queryByText('My action');
-    await userEvent.click(button);
+    await user.click(button);
 
     expect(onClick).toHaveBeenCalled();
     expect(afterAction).toHaveBeenCalled();
 });
 
 test('The component should call the onClick callbacks without a value', async() => {
+    const user = userEvent.setup();
     const onClick = jest.fn();
     render(<Action onClick={onClick}>My action</Action>);
 
     const button = screen.queryByText('My action');
-    await userEvent.click(button);
+    await user.click(button);
 
     expect(onClick).toHaveBeenCalledWith(undefined);
 });
 
 test('The component should call the onClick callbacks with its value', async() => {
+    const user = userEvent.setup();
     const onClick = jest.fn();
     render(<Action onClick={onClick} value="my-value">My action</Action>);
 
     const button = screen.queryByText('My action');
-    await userEvent.click(button);
+    await user.click(button);
 
     expect(onClick).toHaveBeenCalledWith('my-value');
 });
 
 test('A hover on the component should fire the callback', async() => {
+    const user = userEvent.setup();
     const onClick = jest.fn();
     const requestFocusSpy = jest.fn();
     render(
@@ -54,7 +58,7 @@ test('A hover on the component should fire the callback', async() => {
     );
 
     const item = screen.queryByRole('listitem');
-    await userEvent.hover(item);
+    await user.hover(item);
 
     expect(requestFocusSpy).toHaveBeenCalled();
 });

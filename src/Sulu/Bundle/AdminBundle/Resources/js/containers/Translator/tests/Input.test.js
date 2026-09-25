@@ -28,6 +28,7 @@ describe('Input', () => {
     });
 
     test('calls onChange when textarea value changes', async() => {
+        const user = userEvent.setup();
         const text = observable.box('Initial');
         const onChange = (value) => text.set(value);
 
@@ -35,7 +36,7 @@ describe('Input', () => {
         render(<Input onChange={onChange} text={text} type="text_area" />);
 
         const textarea = screen.getByRole('textbox');
-        await userEvent.type(textarea, ' Text');
+        await user.type(textarea, ' Text');
 
         expect(text.get()).toBe('Initial Text');
     });
