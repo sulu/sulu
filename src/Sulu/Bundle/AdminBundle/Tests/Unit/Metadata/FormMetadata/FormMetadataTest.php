@@ -141,10 +141,12 @@ class FormMetadataTest extends TestCase
 
         $formMetaData1 = new FieldMetadata('field1');
         $formMetaData1->setType('type1');
+        $formMetaData1->setMultilingual(false);
         $formMetaData1->setTypes([$globalBlock1, $globalBlock2]);
 
         $formMetaData2 = new FieldMetadata('field1');
         $formMetaData2->setType('type2');
+        $formMetaData2->setMultilingual(true);
         $formMetaData2->setTypes([$globalBlock2, $globalBlock3]);
 
         $sectionMetaData1 = new SectionMetadata('section_field1');
@@ -152,6 +154,7 @@ class FormMetadataTest extends TestCase
 
         $formMetaData3 = new FieldMetadata('field2');
         $formMetaData3->setType('type3');
+        $formMetaData3->setMultilingual(true);
         $formMetaData3->setTypes([$globalBlock2, $globalBlock3]);
 
         $form1 = new FormMetadata();
