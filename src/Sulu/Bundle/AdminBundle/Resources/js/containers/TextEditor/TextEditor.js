@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import textEditorRegistry from './registries/textEditorRegistry';
+import {resolveTextEditorConfig} from './utils';
 import type {TextEditorProps} from './types';
 
 type Props = {|
@@ -21,6 +22,6 @@ export default class TextEditor extends React.Component<Props> {
 
         const TextEditorAdapter = textEditorRegistry.get(adapter);
 
-        return <TextEditorAdapter {...textEditorProps} />;
+        return <TextEditorAdapter {...textEditorProps} config={resolveTextEditorConfig(this.props.options)} />;
     }
 }

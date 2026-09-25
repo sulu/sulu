@@ -41,9 +41,9 @@ function findViewLinkItemInSelection(editor: Object, linkTag: string) {
 }
 
 function removePTags(htmlString: string): string {
-    // Checks if this is a single paragraph
-    const match = htmlString.match(/^<p>([^<>]*)<\/p>$/);
-    if (match) {
+    // A single paragraph is unwrapped whatever it contains, because the markers below end up in the stored value.
+    const match = htmlString.match(/^<p(?:\s[^>]*)?>([\s\S]*)<\/p>$/);
+    if (match && !match[1].includes('<p')) {
         return match[1];
     }
 
@@ -62,6 +62,14 @@ function addPTags(htmlString: string): string {
         .replace(/<!--\/p-->/g, '</p>');
 }
 
+function normalizeKeys(keys: ?string | Array<string>): ?Array<string> {
+    if (keys === undefined || keys === null) {
+        return undefined;
+    }
+
+    return Array.isArray(keys) ? keys : [keys];
+}
+
 function replaceLast(str, search, replace) {
     const lastIndex = str.lastIndexOf(search);
 
@@ -72,4 +80,11 @@ function replaceLast(str, search, replace) {
     return str.slice(0, lastIndex) + replace + str.slice(lastIndex + search.length);
 }
 
-export {addLinkConversion, findModelItemInSelection, findViewLinkItemInSelection, removePTags, addPTags};
+export {
+    addLinkConversion,
+    findModelItemInSelection,
+    findViewLinkItemInSelection,
+    normalizeKeys,
+    removePTags,
+    addPTags,
+};
