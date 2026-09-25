@@ -437,14 +437,20 @@ class MediaController extends AbstractMediaController implements
                 continue;
             }
 
-            $referencingResources[] = [
+            // a resource has one reference per locale, but should only be listed once
+            $key = $reference['referenceResourceKey'] . '::' . $reference['referenceResourceId'];
+            if (isset($referencingResources[$key])) {
+                continue;
+            }
+
+            $referencingResources[$key] = [
                 'id' => $reference['referenceResourceId'],
                 'resourceKey' => $reference['referenceResourceKey'],
                 'title' => $reference['referenceTitle'],
             ];
         }
 
-        return $referencingResources;
+        return \array_values($referencingResources);
     }
 
     /**

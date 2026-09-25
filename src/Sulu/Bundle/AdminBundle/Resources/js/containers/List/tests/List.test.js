@@ -1539,6 +1539,64 @@ test('ListStore should ask once for all referenced items of a selection', (done)
     });
 });
 
+test('ListStore should list a resource referencing multiple items of a selection only once', (done) => {
+    const firstResponse = {
+        json: jest.fn().mockReturnValue(Promise.resolve({
+            code: 1106,
+            resource: {id: 5, resourceKey: 'media'},
+            referencingResources: [
+                {id: 7, resourceKey: 'pages', title: 'Team'},
+                {id: 8, resourceKey: 'pages', title: 'About us'},
+            ],
+            referencingResourcesCount: 2,
+        })),
+        status: 409,
+    };
+    const secondResponse = {
+        json: jest.fn().mockReturnValue(Promise.resolve({
+            code: 1106,
+            resource: {id: 6, resourceKey: 'media'},
+            referencingResources: [
+                {id: 7, resourceKey: 'pages', title: 'Team'},
+                {id: 8, resourceKey: 'pages', title: 'About us'},
+                {id: 8, resourceKey: 'snippets', title: 'Footer'},
+            ],
+            referencingResourcesCount: 3,
+        })),
+        status: 409,
+    };
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([firstResponse, secondResponse]));
+    listStore.selectionIds.push(5, 6);
+    mockStructureStrategyData = [
+        {id: 5},
+        {id: 6},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    list.instance().requestSelectionDelete(true);
+    list.update();
+    list.find('Dialog').at(0).prop('onConfirm')();
+
+    setTimeout(() => {
+        list.update();
+        expect(list.find('DeleteReferencedResourceDialog').prop('referencingResourcesData')).toEqual({
+            resource: {id: 5, resourceKey: 'media'},
+            referencingResources: [
+                {id: 7, resourceKey: 'pages', title: 'Team'},
+                {id: 8, resourceKey: 'pages', title: 'About us'},
+                {id: 8, resourceKey: 'snippets', title: 'Footer'},
+            ],
+            referencingResourcesCount: 3,
+        });
+        expect(list.find('DeleteReferencedResourceDialog li')).toHaveLength(3);
+        done();
+    });
+});
+
 test('ListStore should call onDeleteError if a selection fails for another reason than references', (done) => {
     const referencedResponse = {
         json: jest.fn().mockReturnValue(Promise.resolve({

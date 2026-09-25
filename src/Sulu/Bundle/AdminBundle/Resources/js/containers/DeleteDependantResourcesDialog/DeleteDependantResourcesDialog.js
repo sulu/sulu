@@ -79,8 +79,23 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
     }
 
     @computed get referencingResources(): Array<Resource> {
+        // a resource referencing multiple of the deleted resources is only listed once
+        const referencingResourceKeys = new Set();
+
         return this.referencingResourcesData.reduce(
-            (resources, {referencingResources}) => [...resources, ...referencingResources],
+            (resources, {referencingResources}) => [
+                ...resources,
+                ...referencingResources.filter((referencingResource) => {
+                    const key = referencingResource.resourceKey + '::' + referencingResource.id;
+                    if (referencingResourceKeys.has(key)) {
+                        return false;
+                    }
+
+                    referencingResourceKeys.add(key);
+
+                    return true;
+                }),
+            ],
             []
         );
     }

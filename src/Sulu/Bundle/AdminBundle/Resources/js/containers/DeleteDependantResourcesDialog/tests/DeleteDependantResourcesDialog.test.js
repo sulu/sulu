@@ -85,11 +85,11 @@ function mountDialog(onCancel, onError, onFinish) {
     );
 }
 
-function createReferencingResourcesResponse(id, title) {
+function createReferencingResourcesResponse(id, title, referencingId = 'page-' + id) {
     const data = {
         code: 1106,
         resource: {id, resourceKey: 'media'},
-        referencingResources: [{id: 'page-' + id, resourceKey: 'pages', title}],
+        referencingResources: [{id: referencingId, resourceKey: 'pages', title}],
         referencingResourcesCount: 1,
     };
 
@@ -291,6 +291,22 @@ test('The component should ask before deleting referenced resources and delete t
     expect(view.find('Dialog li')).toHaveLength(0);
     expect(onFinish).toHaveBeenCalled();
     expect(onError).not.toHaveBeenCalled();
+});
+
+test('The component should list a resource referencing multiple resources of a batch only once', async() => {
+    const view = mountDialog(jest.fn(), jest.fn(), jest.fn());
+
+    ResourceRequester.delete
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.reject(createReferencingResourcesResponse(2, 'Team', 'page-1')))
+        .mockReturnValueOnce(RequestPromise.reject(createReferencingResourcesResponse(3, 'Team', 'page-1')));
+
+    view.find('Button[skin="primary"]').simulate('click');
+    await flushPromises();
+    view.update();
+
+    expect(view.find('Dialog li').map((item) => item.text())).toEqual(['Team']);
 });
 
 test('The component should stop when deleting referenced resources is cancelled', async() => {

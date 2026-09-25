@@ -1387,6 +1387,81 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
     });
 });
 
+test('Cancelling the delete dependant resources dialog should reload the collections and media', (done) => {
+    const page = observable.box();
+    const locale = observable.box();
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
+    const mediaListStore = new ListStore(
+        MEDIA_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const collectionListStore = new ListStore(
+        COLLECTIONS_RESOURCE_KEY,
+        SETTINGS_KEY,
+        USER_SETTINGS_KEY,
+        {
+            page,
+            locale,
+        }
+    );
+    const CollectionStore = require('../../../stores/CollectionStore').default;
+    const collectionStore = new CollectionStore(1, locale);
+    // $FlowFixMe
+    collectionStore.resourceStore.delete = jest.fn().mockReturnValue(Promise.reject({
+        json: jest.fn().mockReturnValue(Promise.resolve({
+            code: 1105,
+            dependantResourceBatches: [[{id: 1, resourceKey: 'media'}]],
+            dependantResourcesCount: 1,
+            detail: 'Detail',
+            title: 'Title',
+        })),
+        status: 409,
+    }));
+
+    collectionStore.resourceStore.data = {
+        id: 1,
+        _permissions: {},
+    };
+
+    const mediaCollection = mount(
+        <MediaCollection
+            collectionListStore={collectionListStore}
+            collectionStore={collectionStore}
+            locale={locale}
+            mediaListAdapters={['media_card_overview']}
+            mediaListStore={mediaListStore}
+            onCollectionNavigate={jest.fn()}
+            onUploadOverlayClose={jest.fn()}
+            onUploadOverlayOpen={jest.fn()}
+            uploadOverlayOpen={false}
+        />
+    );
+
+    mediaCollection.find('DropdownButton').simulate('click');
+    mediaCollection.find('DropdownButton Action').find({children: 'sulu_admin.delete'}).simulate('click');
+    mediaCollection.find('Dialog Button[skin="primary"]').simulate('click');
+
+    setTimeout(() => {
+        mediaCollection.update();
+        expect(mediaCollection.find('DeleteDependantResourcesDialog')).toHaveLength(1);
+        expect(collectionListStore.reload).not.toHaveBeenCalled();
+        expect(mediaListStore.reload).not.toHaveBeenCalled();
+
+        mediaCollection.find('DeleteDependantResourcesDialog Button[skin="secondary"]').simulate('click');
+
+        mediaCollection.update();
+        expect(mediaCollection.find('DeleteDependantResourcesDialog')).toHaveLength(0);
+        expect(collectionListStore.reload).toHaveBeenCalledTimes(1);
+        expect(mediaListStore.reload).toHaveBeenCalledTimes(1);
+        done();
+    });
+});
+
 test('Confirming the move dialog should move the item', () => {
     const promise = new RequestPromise(function(resolve) {
         resolve({});

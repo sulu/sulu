@@ -240,11 +240,24 @@ class List extends React.Component<Props> {
                     }
 
                     // all failed items are referenced, therefore the user is asked once for all of them
+                    // a resource referencing multiple of the failed items is only listed once
                     const referencingResources = [];
+                    const referencingResourceKeys = new Set();
                     let referencingResourcesCount = 0;
                     errors.forEach(({data}) => {
-                        referencingResources.push(...data.referencingResources);
                         referencingResourcesCount += data.referencingResourcesCount;
+
+                        data.referencingResources.forEach((referencingResource) => {
+                            const key = referencingResource.resourceKey + '::' + referencingResource.id;
+                            if (referencingResourceKeys.has(key)) {
+                                referencingResourcesCount--;
+
+                                return;
+                            }
+
+                            referencingResourceKeys.add(key);
+                            referencingResources.push(referencingResource);
+                        });
                     });
 
                     const [firstError] = errors;
