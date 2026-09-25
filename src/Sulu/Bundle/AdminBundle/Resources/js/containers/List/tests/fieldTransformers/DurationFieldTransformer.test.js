@@ -27,3 +27,9 @@ test('Test values of an hour or more are shown as hours and minutes', () => {
     expect(durationFieldTransformer.transform(90 * 60 * 1000)).toBe('1h 30m');
     expect(durationFieldTransformer.transform(2 * 60 * 60 * 1000)).toBe('2h');
 });
+
+test('Test values are rounded to whole seconds before being split into minutes and hours', () => {
+    expect(durationFieldTransformer.transform(119700)).toBe('2m');
+    expect(durationFieldTransformer.transform(59999)).toBe('1m');
+    expect(durationFieldTransformer.transform(999.6)).toBe('1.0s');
+});

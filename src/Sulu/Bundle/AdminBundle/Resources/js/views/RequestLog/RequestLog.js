@@ -41,7 +41,7 @@ type TranslationSegment = {
     key: string,
     original: ChainStep,
     title: ?string,
-    translation: ChainStep,
+    translation: ?ChainStep,
 };
 
 type RequestLogDetail = {
@@ -113,8 +113,9 @@ function stripHtml(content: string): string {
 
 // A full-content translation records one user/response pair per segmentKey (one per translated
 // field); a single translate() call has none, and falls back to the one legacy pair in
-// renderDetailContent. Steps missing their counterpart (a malformed or partial chain) are dropped
-// rather than rendered with a missing column.
+// renderDetailContent. A segment still missing its response (a failed or in-flight translation)
+// renders with an empty result column rather than being dropped, since that is the field a
+// reader of the log is most likely looking for.
 function groupTranslationSegments(chain: Array<ChainStep>): Array<TranslationSegment> {
     const originals: {[string]: ChainStep} = {};
     const translations: {[string]: ChainStep} = {};
@@ -139,8 +140,8 @@ function groupTranslationSegments(chain: Array<ChainStep>): Array<TranslationSeg
     });
 
     return order
-        .filter((key) => !!originals[key] && !!translations[key])
-        .map((key) => ({key, title: key, original: originals[key], translation: translations[key]}));
+        .filter((key) => !!originals[key])
+        .map((key) => ({key, title: key, original: originals[key], translation: translations[key] || null}));
 }
 
 function groupChainSteps(chain: Array<ChainStep>): Array<ChainCard> {
@@ -465,10 +466,10 @@ class RequestLog extends React.Component<ViewProps> {
         );
     }
 
-    renderTranslationColumn(step: ChainStep, titleKey: string, expanded: boolean) {
+    renderTranslationColumn(step: ?ChainStep, titleKey: string, expanded: boolean) {
         const cardClass = classNames(
             requestLogStyles.chainStep,
-            requestLogStyles[chainStepColorModifier(step.type)]
+            step && requestLogStyles[chainStepColorModifier(step.type)]
         );
 
         return (
@@ -476,7 +477,7 @@ class RequestLog extends React.Component<ViewProps> {
                 <div className={requestLogStyles.chainStepHead}>
                     <span className={requestLogStyles.chainStepTitle}>{this.translateKey(titleKey)}</span>
                 </div>
-                {step.content !== null && step.content !== undefined &&
+                {step && step.content !== null && step.content !== undefined &&
                     this.renderContentBox(step.content, expanded, step.contentType)
                 }
             </div>
@@ -485,7 +486,7 @@ class RequestLog extends React.Component<ViewProps> {
 
     renderTranslationSegment(segment: TranslationSegment) {
         const {key, original, title, translation} = segment;
-        const isLong = isContentLong(original.content) || isContentLong(translation.content);
+        const isLong = isContentLong(original.content) || (!!translation && isContentLong(translation.content));
         const expanded = !isLong || !!this.expandedTranslationSegments[key];
         const showFullLabelKey = expanded
             ? 'show_less'
