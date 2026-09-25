@@ -79,6 +79,10 @@ $services->set('acme_product.product_localizations_resolver', ProductLocalizatio
   the system's behalf and passes through.
 - A write to content covered by an open request answers 409. Publishing, rejecting and cancelling must
   be sent as a payload-less `POST ?action=...`; a `PUT` carrying the form is a write and is refused.
+- Every resource key whose content can be published needs a service tagged
+  `sulu_content.workflow_transition_request_security_context_provider` with that `resource-key`.
+  Pages, articles and snippets ship one; a custom content type without one answers 500 on publish.
+- The first argument of the `IconController` is now the Symfony normalizer 
 - A resource key needs a service tagged `sulu_content.workflow_transition_request_security_context_provider`
   with that `resource-key` once a request workflow covers its content; without one, publishing that
   content answers 500. Pages, articles and snippets ship one. A resource key without one whose content
