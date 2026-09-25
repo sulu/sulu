@@ -1495,8 +1495,33 @@ class MediaControllerTest extends SuluTestCase
         $this->assertFalse(\file_exists($storagePath . '/1/photo.jpeg'));
     }
 
-    private function createMediaReference(int $mediaId, string $title): void
+    public function testDeleteByIdWithReferencesInMultipleLocales(): void
     {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $mediaId = (int) $media->getId();
+        $this->createMediaReference($mediaId, 'Team', 'page-uuid-1', 'en');
+        $this->createMediaReference($mediaId, 'Team (Deutsch)', 'page-uuid-1', 'de');
+        $this->createMediaReference($mediaId, 'About us', 'page-uuid-2', 'en');
+
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId);
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        /** @var array{referencingResources: array<int, array{id: string, resourceKey: string}>, referencingResourcesCount: int} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame(2, $response['referencingResourcesCount']);
+        $referencingIds = \array_map(fn (array $resource) => $resource['id'], $response['referencingResources']);
+        \sort($referencingIds);
+        $this->assertSame(['page-uuid-1', 'page-uuid-2'], $referencingIds);
+    }
+
+    private function createMediaReference(
+        int $mediaId,
+        string $title,
+        string $referenceResourceId = 'page-uuid-1',
+        string $locale = 'en',
+    ): void {
         /** @var ReferenceRepositoryInterface $referenceRepository */
         $referenceRepository = $this->getContainer()->get('sulu_reference.reference_repository');
 
@@ -1504,8 +1529,8 @@ class MediaControllerTest extends SuluTestCase
             MediaInterface::RESOURCE_KEY,
             (string) $mediaId,
             'pages',
-            'page-uuid-1',
-            'en',
+            $referenceResourceId,
+            $locale,
             $title,
             'default',
             'image'
