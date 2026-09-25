@@ -759,6 +759,9 @@ final class SuluPageBundle extends AbstractBundle
                                 'list' => 'sulu_page.get_pages',
                                 'detail' => 'sulu_page.get_page',
                             ],
+                            'views' => [
+                                'detail' => PageAdmin::EDIT_FORM_VIEW,
+                            ],
                             'security_class' => Page::class,
                             'security_context' => 'sulu.webspaces.#webspace#',
                         ],

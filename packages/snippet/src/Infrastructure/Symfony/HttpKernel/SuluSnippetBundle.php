@@ -49,6 +49,7 @@ use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetRepository;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\Provider\SnippetTemplateSelectProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAreaAdmin;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetResourceViewParameterProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SingleSnippetSelectionPropertyResolver;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPropertyResolver;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
@@ -471,6 +472,14 @@ final class SuluSnippetBundle extends AbstractBundle
                 tagged_iterator('sulu_snippet.admin_snippet_reindex_provider_enhancer'),
             ])
             ->tag('cmsig_seal.reindex_provider');
+
+        $services->set('sulu_snippet.resource_view_parameter_provider')
+            ->class(SnippetResourceViewParameterProvider::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_admin.metadata_group_provider'),
+            ])
+            ->tag('sulu_admin.resource_view_parameter_provider');
     }
 
     /**
@@ -505,6 +514,9 @@ final class SuluSnippetBundle extends AbstractBundle
                             'routes' => [
                                 'list' => 'sulu_snippet.get_snippets',
                                 'detail' => 'sulu_snippet.get_snippet',
+                            ],
+                            'views' => [
+                                'detail' => SnippetAdmin::EDIT_TABS_VIEW . '_{group}',
                             ],
                         ],
                         'snippets_versions' => [

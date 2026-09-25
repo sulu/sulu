@@ -82,7 +82,7 @@ class DomainEventNotificationFactoryTest extends TestCase
                 $this->viewRegistry->reveal(),
                 $this->requestStack->reveal(),
             );
-            $resourceViewUrlGenerator = new ResourceViewUrlGenerator($viewUrlGenerator, $resources);
+            $resourceViewUrlGenerator = new ResourceViewUrlGenerator($viewUrlGenerator, $resources, []);
         }
 
         return new DomainEventNotificationFactory(

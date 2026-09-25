@@ -318,6 +318,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_admin.view_url_generator'),
             '%sulu_admin.resources%',
+            tagged_iterator('sulu_admin.resource_view_parameter_provider'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
