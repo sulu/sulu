@@ -48,6 +48,13 @@ test('Test invalid skin type', () => {
     expect(log.error).toHaveBeenCalledWith('Transformer parameter "skin" needs to be of type string, number given.');
 });
 
+test('Test default_with_seconds format example', () => {
+    const dateTime = dateTimeFieldTransformer.transform('2018-03-10T14:09:04+01:00', {format: 'default_with_seconds'});
+
+    // $FlowFixMe
+    expect(dateTime.props.children).toBe('03/10/2018 · 2:09:04 PM');
+});
+
 test('Test relative format sameDay example', () => {
     const dateTime = dateTimeFieldTransformer.transform(moment(), {format: 'relative'});
 

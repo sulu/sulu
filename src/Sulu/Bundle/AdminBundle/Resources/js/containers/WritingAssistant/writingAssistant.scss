@@ -18,7 +18,7 @@
 
 /* slides out from behind the prompt, which covers it while it travels because it paints above */
 .account-limit {
-    padding: 0 50px;
+    padding: 0 40px;
     animation: account-limit-reveal 300ms ease-out;
 
     > div {
