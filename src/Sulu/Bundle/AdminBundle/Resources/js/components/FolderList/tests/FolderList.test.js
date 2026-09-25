@@ -33,6 +33,7 @@ test('Render a FolderList with Folder components inside', () => {
 });
 
 test('Clicking on a folder should call the click handler with the right id as argument', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     const clickedFolderId = 3;
     render(
@@ -56,7 +57,7 @@ test('Clicking on a folder should call the click handler with the right id as ar
     );
 
     const folderList = screen.queryByText('0 Objects');
-    await userEvent.click(folderList);
+    await user.click(folderList);
 
     expect(clickSpy).toHaveBeenCalledWith(clickedFolderId);
 });

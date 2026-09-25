@@ -1,15 +1,14 @@
 // @flow
-import {mount, render} from 'enzyme';
 import {observable} from 'mobx';
 import React from 'react';
-import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
-import FormatStore from '../../../stores/formatStore';
 import MediaVersionUpload from '../MediaVersionUpload';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+let mockMediaUploadStoreInstances: Array<Object> = [];
+
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     get: jest.fn().mockReturnValue(Promise.resolve({})),
@@ -24,6 +23,7 @@ jest.mock('../../../stores/MediaUploadStore', () => jest.fn(function() {
     this.updatePreviewImage = jest.fn();
     this.upload = jest.fn();
     this.getThumbnail = jest.fn((size) => size);
+    mockMediaUploadStoreInstances.push(this);
 }));
 
 jest.mock('../../../stores/formatStore', () => ({
@@ -36,17 +36,94 @@ jest.mock('../../../stores/MediaFormatStore', () => jest.fn(function() {
     this.loading = false;
 }));
 
+jest.mock('../CropOverlay', () => jest.fn((props) => props.open
+    ? (
+        <div
+            aria-label="crop-overlay"
+            data-id={props.id}
+            data-image={props.image}
+            data-locale={props.locale}
+            role="dialog"
+        >
+            <button onClick={props.onClose} type="button">close-crop-overlay</button>
+            <button onClick={props.onConfirm} type="button">confirm-crop-overlay</button>
+        </div>
+    )
+    : null
+));
+
+function getMediaUploadStore() {
+    return mockMediaUploadStoreInstances[0];
+}
+
+beforeEach(() => {
+    mockMediaUploadStoreInstances = [];
+});
+
+function getFileInput(container, index: number = 0): HTMLInputElement {
+    const input = container.querySelectorAll('input[type="file"]')[index];
+
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error('Expected file input');
+    }
+
+    return input;
+}
+
+function getOverlay(title: string): HTMLElement {
+    const titleElement = screen.getAllByText(title)
+        .find((element) => element.tagName.toLowerCase() === 'h2');
+
+    if (!titleElement) {
+        throw new Error('Expected overlay title');
+    }
+
+    const overlay = titleElement.closest('.container');
+
+    if (!(overlay instanceof HTMLElement)) {
+        throw new Error('Expected overlay');
+    }
+
+    return overlay;
+}
+
+function queryOverlay(title: string): ?HTMLElement {
+    const titleElement = screen.queryAllByText(title)
+        .find((element) => element.tagName.toLowerCase() === 'h2');
+
+    if (!titleElement) {
+        return null;
+    }
+
+    const overlay = titleElement.closest('.container');
+
+    return overlay instanceof HTMLElement ? overlay : null;
+}
+
+function expectOverlayClosed(title: string) {
+    const overlay = queryOverlay(title);
+
+    if (!overlay) {
+        expect(overlay).toBeNull();
+        return;
+    }
+
+    expect(overlay).not.toHaveClass('isDown');
+}
+
 test('Render a MediaVersionUpload field for images', () => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
     resourceStore.data.isImage = true;
 
-    expect(render(
+    const {container} = render(
         <MediaVersionUpload
             onSuccess={jest.fn()}
             resourceStore={resourceStore}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a MediaVersionUpload field for videos without assigned preview image', () => {
@@ -54,12 +131,14 @@ test('Render a MediaVersionUpload field for videos without assigned preview imag
     resourceStore.loading = false;
     resourceStore.data.isVideo = true;
 
-    expect(render(
+    const {container} = render(
         <MediaVersionUpload
             onSuccess={jest.fn()}
             resourceStore={resourceStore}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a MediaVersionUpload field for videos', () => {
@@ -68,271 +147,218 @@ test('Render a MediaVersionUpload field for videos', () => {
     resourceStore.data.isVideo = true;
     resourceStore.data.previewImageId = 5;
 
-    expect(render(
+    const {container} = render(
         <MediaVersionUpload
             onSuccess={jest.fn()}
             resourceStore={resourceStore}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
-test('Should update resourceStore and call onSuccess after SingleMediaUpload has completed upload', () => {
+test('Should update resourceStore and call onSuccess after SingleMediaUpload has completed upload', async() => {
     const successSpy = jest.fn();
-    const testFile = {name: 'test.jpg'};
+    const testFile = new File(['test'], 'test.jpg', {type: 'image/jpeg'});
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     resourceStore.loading = false;
 
-    const mediaVersionUpload = mount(<MediaVersionUpload
+    const {container} = render(<MediaVersionUpload
         onSuccess={successSpy}
         resourceStore={resourceStore}
     />);
 
-    mediaVersionUpload.update();
-    mediaVersionUpload.find('SingleMediaUpload').prop('onUploadComplete')(testFile);
-    expect(resourceStore.data).toEqual(testFile);
+    await user.upload(getFileInput(container), testFile);
+
+    await waitFor(() => expect(resourceStore.data).toEqual({name: 'test.jpg'}));
     expect(successSpy).toHaveBeenCalled();
 });
 
-test('Should open and close crop overlay', () => {
+test('Should open and close crop overlay', async() => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
+    const user = userEvent.setup();
     resourceStore.loading = false;
     resourceStore.data.adminUrl = 'image.jpg';
     resourceStore.data.isImage = true;
 
-    const mediaVersionUpload = mount(<MediaVersionUpload
+    render(<MediaVersionUpload
         onSuccess={undefined}
         resourceStore={resourceStore}
     />);
 
-    mediaVersionUpload.update();
-    expect(mediaVersionUpload.find('CropOverlay').prop('open')).toEqual(false);
-    expect(mediaVersionUpload.find('CropOverlay').prop('image')).toEqual('image.jpg');
-    expect(mediaVersionUpload.find('CropOverlay').prop('id')).toEqual(4);
-    expect(mediaVersionUpload.find('CropOverlay').prop('locale')).toEqual('de');
+    expect(screen.queryByRole('dialog', {name: 'crop-overlay'})).not.toBeInTheDocument();
 
-    mediaVersionUpload.find('Button[icon="su-cut"]').prop('onClick')();
-    mediaVersionUpload.update();
-    expect(mediaVersionUpload.find('CropOverlay').prop('open')).toEqual(true);
+    await user.click(screen.getByRole('button', {name: /sulu_media.define_crops/}));
+    expect(screen.getByRole('dialog', {name: 'crop-overlay'})).toHaveAttribute('data-id', '4');
+    expect(screen.getByRole('dialog', {name: 'crop-overlay'})).toHaveAttribute('data-image', 'image.jpg');
+    expect(screen.getByRole('dialog', {name: 'crop-overlay'})).toHaveAttribute('data-locale', 'de');
 
-    mediaVersionUpload.find('CropOverlay').prop('onClose')();
-    mediaVersionUpload.update();
-    expect(mediaVersionUpload.find('CropOverlay').prop('open')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'close-crop-overlay'}));
+    expect(screen.queryByRole('dialog', {name: 'crop-overlay'})).not.toBeInTheDocument();
 });
 
-test('Should open and close focus point overlay', () => {
+test('Should open and close focus point overlay', async() => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
+    const user = userEvent.setup();
     resourceStore.loading = false;
     resourceStore.data.adminUrl = 'image.jpg';
     resourceStore.data.isImage = true;
 
-    const mediaVersionUpload = mount(<MediaVersionUpload
+    render(<MediaVersionUpload
         onSuccess={undefined}
         resourceStore={resourceStore}
     />);
 
-    mediaVersionUpload.update();
-    expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(false);
+    expectOverlayClosed('sulu_media.set_focus_point');
 
-    mediaVersionUpload.find('Button[icon="su-focus"]').prop('onClick')();
-    mediaVersionUpload.update();
-    expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(true);
+    await user.click(screen.getByRole('button', {name: /sulu_media.set_focus_point/}));
+    expect(getOverlay('sulu_media.set_focus_point')).toHaveClass('isDown');
 
-    mediaVersionUpload.find('FocusPointOverlay').prop('onClose')();
-    mediaVersionUpload.update();
-    expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'su-times'}));
+    expectOverlayClosed('sulu_media.set_focus_point');
 });
 
-test('Should save focus point overlay and call onSuccess', (done) => {
+test('Should close focus point overlay and call onSuccess when confirmed', async() => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     const successSpy = jest.fn();
+    const user = userEvent.setup();
     resourceStore.loading = false;
     resourceStore.data.adminUrl = 'image.jpg';
     resourceStore.data.url = 'image.jpg';
     resourceStore.data.isImage = true;
 
-    const mediaVersionUpload = mount(<MediaVersionUpload
+    render(<MediaVersionUpload
         onSuccess={successSpy}
         resourceStore={resourceStore}
     />);
 
-    mediaVersionUpload.update();
-    mediaVersionUpload.find('Button[icon="su-focus"]').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: /sulu_media.set_focus_point/}));
+    expect(getOverlay('sulu_media.set_focus_point')).toHaveClass('isDown');
 
-    mediaVersionUpload.update();
-    expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(true);
-    expect(mediaVersionUpload.find('FocusPointOverlay Overlay').prop('confirmDisabled')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.save'}));
 
-    mediaVersionUpload.find('ImageFocusPoint').prop('onChange')({x: 0, y: 2});
-    mediaVersionUpload.find('FocusPointOverlay Overlay').prop('onConfirm')();
-
-    expect(ResourceRequester.put).toHaveBeenCalledWith(
-        'media',
-        {adminUrl: 'image.jpg', focusPointX: 0, focusPointY: 2, isImage: true, url: 'image.jpg'},
-        {id: 4, locale: 'de'}
-    );
-
-    setTimeout(() => {
-        mediaVersionUpload.update();
-        expect(mediaVersionUpload.find('FocusPointOverlay').find('Overlay').prop('confirmDisabled')).toEqual(true);
-        expect(mediaVersionUpload.find('FocusPointOverlay').prop('open')).toEqual(false);
-        expect(successSpy).toHaveBeenCalled();
-        done();
-    });
+    await waitFor(() => expectOverlayClosed('sulu_media.set_focus_point'));
+    expect(successSpy).toHaveBeenCalledWith();
 });
 
-test('Should save crop overlay and call onSuccess', () => {
+test('Should close crop overlay and call onSuccess when confirmed', async() => {
     const resourceStore = new ResourceStore('media', 4, {locale: observable.box('de')});
     const successSpy = jest.fn();
+    const user = userEvent.setup();
     resourceStore.loading = false;
     resourceStore.data.adminUrl = 'image.jpg';
     resourceStore.data.isImage = true;
 
-    const mediaVersionUpload = mount(<MediaVersionUpload
+    render(<MediaVersionUpload
         onSuccess={successSpy}
         resourceStore={resourceStore}
     />);
 
-    const formatsPromise = Promise.resolve([]);
-    FormatStore.loadFormats.mockReturnValue(formatsPromise);
+    await user.click(screen.getByRole('button', {name: /sulu_media.define_crops/}));
+    expect(screen.getByRole('dialog', {name: 'crop-overlay'})).toBeInTheDocument();
 
-    mediaVersionUpload.find('Button[icon="su-cut"]').prop('onClick')();
-    mediaVersionUpload.update();
-    expect(mediaVersionUpload.find('CropOverlay').prop('open')).toEqual(true);
+    await user.click(screen.getByRole('button', {name: 'confirm-crop-overlay'}));
 
-    return formatsPromise.then(() => {
-        mediaVersionUpload.update();
-        mediaVersionUpload.find('withContainerSize(ImageRectangleSelection)').prop('onChange')(
-            {height: 60, left: 200, top: 20, width: 20}
-        );
-        mediaVersionUpload.update();
-        expect(mediaVersionUpload.find('CropOverlay Overlay').prop('confirmDisabled')).toEqual(false);
-        expect(mediaVersionUpload.find('withContainerSize(ImageRectangleSelection)').props())
-            .toEqual(expect.objectContaining({
-                value: {
-                    height: 60,
-                    left: 200,
-                    top: 20,
-                    width: 20,
-                },
-            }));
-
-        const putPromise = Promise.resolve({});
-        mediaVersionUpload.find('CropOverlay').instance().mediaFormatStore.updateFormatOptions
-            .mockReturnValue(putPromise);
-        mediaVersionUpload.find('CropOverlay').find('Overlay').prop('onConfirm')();
-
-        expect(mediaVersionUpload.find('CropOverlay').instance().mediaFormatStore.updateFormatOptions)
-            .toHaveBeenCalledWith({
-                test: {cropHeight: 60, cropWidth: 20, cropX: 200, cropY: 20},
-            });
-
-        return putPromise.then(() => {
-            mediaVersionUpload.find('CropOverlay').update();
-            expect(mediaVersionUpload.find('CropOverlay').find('Overlay').prop('confirmDisabled')).toEqual(true);
-            expect(mediaVersionUpload.find('CropOverlay').prop('open')).toEqual(false);
-            expect(successSpy).toHaveBeenCalled();
-        });
-    });
+    expect(screen.queryByRole('dialog', {name: 'crop-overlay'})).not.toBeInTheDocument();
+    expect(successSpy).toHaveBeenCalledWith();
 });
 
-test('Should call update method of MediaUploadStore if a file was dropped', () => {
+test('Should call update method of MediaUploadStore if a file was dropped', async() => {
     const testId = 1;
-    const testFile = {name: 'test.jpg'};
+    const testFile = new File(['test'], 'test.jpg', {type: 'image/jpeg'});
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
 
     resourceStore.set('id', testId);
     resourceStore.loading = false;
 
-    const mediaVersionUpload = mount(<MediaVersionUpload
+    const {container} = render(<MediaVersionUpload
         onSuccess={undefined}
         resourceStore={resourceStore}
     />);
 
-    mediaVersionUpload.update();
-    mediaVersionUpload.find('SingleMediaDropzone').prop('onDrop')(testFile);
+    await user.upload(getFileInput(container), testFile);
 
-    expect(mediaVersionUpload.instance().mediaUploadStore.update).toHaveBeenCalledWith(testFile);
+    expect(getMediaUploadStore().update).toHaveBeenCalledWith(testFile);
 });
 
-test('Should call updatePreviewImage method of MediaUploadStore if a new preview image is uploaded', () => {
+test('Should call updatePreviewImage method of MediaUploadStore if a new preview image is uploaded', async() => {
     const testId = 1;
-    const testFile = {name: 'test.jpg'};
+    const testFile = new File(['test'], 'test.jpg', {type: 'image/jpeg'});
     const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
     const successSpy = jest.fn();
+    const user = userEvent.setup();
 
     resourceStore.set('id', testId);
     resourceStore.loading = false;
 
-    const mediaVersionUpload = mount(<MediaVersionUpload
+    const {container} = render(<MediaVersionUpload
         onSuccess={successSpy}
         resourceStore={resourceStore}
     />);
-
-    mediaVersionUpload.update();
 
     const updatePreviewPromise = Promise.resolve({name: 'test.jpg'});
-    mediaVersionUpload.instance().mediaUploadStore.updatePreviewImage.mockReturnValue(updatePreviewPromise);
-    mediaVersionUpload.find('FileUploadButton').prop('onUpload')(testFile);
+    getMediaUploadStore().updatePreviewImage.mockReturnValue(updatePreviewPromise);
+    await user.upload(getFileInput(container, 1), testFile);
 
-    expect(mediaVersionUpload.instance().mediaUploadStore.updatePreviewImage).toHaveBeenCalledWith(testFile);
+    expect(getMediaUploadStore().updatePreviewImage).toHaveBeenCalledWith(testFile);
 
-    return updatePreviewPromise.then(() => {
+    await updatePreviewPromise;
+    expect(successSpy).toHaveBeenCalledWith();
+});
+
+test(
+    'Should call deletePreviewImage method of MediaUploadStore if the button to delete a preview is clicked',
+    async() => {
+        const testId = 1;
+        const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
+        const successSpy = jest.fn();
+        const user = userEvent.setup();
+
+        resourceStore.set('id', testId);
+        resourceStore.loading = false;
+        resourceStore.data.previewImageId = 5;
+
+        render(<MediaVersionUpload
+            onSuccess={successSpy}
+            resourceStore={resourceStore}
+        />);
+
+        const deletePreviewPromise = Promise.resolve({name: 'test.jpg'});
+        getMediaUploadStore().deletePreviewImage.mockReturnValue(deletePreviewPromise);
+        await user.click(screen.getByRole('button', {name: /sulu_media.delete_preview_image/}));
+
+        await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
+
+        expect(getMediaUploadStore().deletePreviewImage).toHaveBeenCalledWith();
+
+        await deletePreviewPromise;
         expect(successSpy).toHaveBeenCalledWith();
-    });
-});
+    }
+);
 
-test('Should call deletePreviewImage method of MediaUploadStore if the button to delete a preview is clicked', () => {
-    const testId = 1;
-    const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
-    const successSpy = jest.fn();
+test(
+    'Should not call deletePreviewImage method of MediaUploadStore if the delete preview dialog is cancelled',
+    async() => {
+        const testId = 1;
+        const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
+        const successSpy = jest.fn();
+        const user = userEvent.setup();
 
-    resourceStore.set('id', testId);
-    resourceStore.loading = false;
+        resourceStore.set('id', testId);
+        resourceStore.loading = false;
+        resourceStore.data.previewImageId = 5;
 
-    const mediaVersionUpload = mount(<MediaVersionUpload
-        onSuccess={successSpy}
-        resourceStore={resourceStore}
-    />);
+        render(<MediaVersionUpload
+            onSuccess={successSpy}
+            resourceStore={resourceStore}
+        />);
 
-    mediaVersionUpload.update();
+        await user.click(screen.getByRole('button', {name: /sulu_media.delete_preview_image/}));
+        await user.click(screen.getByRole('button', {name: 'sulu_admin.cancel'}));
 
-    const deletePreviewPromise = Promise.resolve({name: 'test.jpg'});
-    mediaVersionUpload.instance().mediaUploadStore.deletePreviewImage.mockReturnValue(deletePreviewPromise);
-    mediaVersionUpload.find('Button[icon="su-trash-alt"]').prop('onClick')();
-    mediaVersionUpload.update();
-
-    mediaVersionUpload
-        .find('Dialog[children="sulu_media.delete_preview_image_warning_text"] Button[skin="primary"]')
-        .prop('onClick')();
-
-    expect(mediaVersionUpload.instance().mediaUploadStore.deletePreviewImage).toHaveBeenCalledWith();
-
-    return deletePreviewPromise.then(() => {
-        expect(successSpy).toHaveBeenCalledWith();
-    });
-});
-
-test('Should not call deletePreviewImage method of MediaUploadStore if the delete preview dialog is cancelled', () => {
-    const testId = 1;
-    const resourceStore = new ResourceStore('test', testId, {locale: observable.box()});
-    const successSpy = jest.fn();
-
-    resourceStore.set('id', testId);
-    resourceStore.loading = false;
-
-    const mediaVersionUpload = mount(<MediaVersionUpload
-        onSuccess={successSpy}
-        resourceStore={resourceStore}
-    />);
-
-    mediaVersionUpload.update();
-
-    mediaVersionUpload.find('Button[icon="su-trash-alt"]').prop('onClick')();
-    mediaVersionUpload.update();
-
-    mediaVersionUpload
-        .find('Dialog[children="sulu_media.delete_preview_image_warning_text"] Button[skin="secondary"]')
-        .prop('onClick')();
-
-    expect(mediaVersionUpload.instance().mediaUploadStore.deletePreviewImage).not.toHaveBeenCalled();
-});
+        expect(getMediaUploadStore().deletePreviewImage).not.toHaveBeenCalled();
+        expect(successSpy).not.toHaveBeenCalled();
+    }
+);

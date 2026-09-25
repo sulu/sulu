@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
@@ -9,10 +9,23 @@ import ResourceFormStore from '../../stores/ResourceFormStore';
 import TextEditor from '../../fields/TextEditor';
 import userStore from '../../../../stores/userStore';
 
+let mockTextEditorProps: Object = {};
+
+const mockReact = require('react');
+
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 jest.mock('../../../../stores/userStore', () => ({}));
+jest.mock('../../../TextEditor', () => jest.fn((props) => {
+    mockTextEditorProps = props;
+
+    return mockReact.createElement('div');
+}));
+
+beforeEach(() => {
+    mockTextEditorProps = {};
+});
 
 test('Pass props correctly to TextEditor', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
@@ -24,7 +37,7 @@ test('Pass props correctly to TextEditor', () => {
     // $FlowFixMe
     formInspector.locale = locale;
 
-    const textEditor = shallow(
+    render(
         <TextEditor
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -36,7 +49,7 @@ test('Pass props correctly to TextEditor', () => {
         />
     );
 
-    expect(textEditor.find('TextEditor').props()).toEqual(expect.objectContaining({
+    expect(mockTextEditorProps).toEqual(expect.objectContaining({
         adapter: 'ckeditor5',
         locale,
         onBlur: finishSpy,
@@ -56,7 +69,7 @@ test('Pass content locale from user to TextEditor if form has no locale', () => 
     // $FlowFixMe
     userStore.contentLocale = 'de';
 
-    const textEditor = shallow(
+    render(
         <TextEditor
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -68,15 +81,15 @@ test('Pass content locale from user to TextEditor if form has no locale', () => 
         />
     );
 
-    expect(textEditor.find('TextEditor').props().locale).toBeDefined();
-    expect(textEditor.find('TextEditor').props().locale.get()).toEqual('de');
+    expect(mockTextEditorProps.locale).toBeDefined();
+    expect(mockTextEditorProps.locale.get()).toEqual('de');
 });
 
 test('Call onFocus when editor get focus', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const focusSpy = jest.fn();
 
-    const textEditor = shallow(
+    render(
         <TextEditor
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -86,7 +99,7 @@ test('Call onFocus when editor get focus', () => {
 
     const target = new EventTarget();
 
-    textEditor.find('TextEditor').props().onFocus({target});
+    mockTextEditorProps.onFocus({target});
 
     expect(focusSpy).toHaveBeenCalledWith(target);
 });

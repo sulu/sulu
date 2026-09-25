@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
@@ -25,11 +26,10 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     }),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
-test('Pass correct props to SingleSelect', () => {
+test('Pass correct props to SingleSelect', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
@@ -42,7 +42,7 @@ test('Pass correct props to SingleSelect', () => {
         }
     });
 
-    const pageSettingsShadowSelect = shallow(
+    const {rerender} = render(
         <PageSettingsShadowLocaleSelect
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -51,15 +51,26 @@ test('Pass correct props to SingleSelect', () => {
         />
     );
 
-    expect(pageSettingsShadowSelect.find('SingleSelect').prop('disabled')).toEqual(true);
-    expect(pageSettingsShadowSelect.find('SingleSelect').prop('value')).toEqual('de');
-    expect(pageSettingsShadowSelect.find('Option').at(0).prop('children')).toEqual('de');
-    expect(pageSettingsShadowSelect.find('Option').at(0).prop('value')).toEqual('de');
-    expect(pageSettingsShadowSelect.find('Option').at(1).prop('children')).toEqual('nl');
-    expect(pageSettingsShadowSelect.find('Option').at(1).prop('value')).toEqual('nl');
+    expect(screen.getByRole('button', {name: /de/})).toBeDisabled();
+
+    rerender(
+        <PageSettingsShadowLocaleSelect
+            {...fieldTypeDefaultProps}
+            disabled={false}
+            formInspector={formInspector}
+            value="de"
+        />
+    );
+
+    await user.click(screen.getByLabelText('su-angle-down'));
+
+    expect(screen.getAllByRole('button', {name: /de/})).toHaveLength(2);
+    expect(screen.getByRole('button', {name: 'nl'})).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'en'})).not.toBeInTheDocument();
 });
 
-test('Pass correct props to SingleSelect when no shadow-locale exists', () => {
+test('Pass correct props to SingleSelect when no shadow-locale exists', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('de')}),
@@ -72,7 +83,7 @@ test('Pass correct props to SingleSelect when no shadow-locale exists', () => {
         }
     });
 
-    const pageSettingsShadowSelect = shallow(
+    const {rerender} = render(
         <PageSettingsShadowLocaleSelect
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -80,12 +91,23 @@ test('Pass correct props to SingleSelect when no shadow-locale exists', () => {
         />
     );
 
-    expect(pageSettingsShadowSelect.find('SingleSelect').prop('disabled')).toEqual(true);
-    expect(pageSettingsShadowSelect.find('SingleSelect').prop('value')).toEqual(undefined);
-    expect(pageSettingsShadowSelect.find('Option').length).toEqual(0);
+    expect(screen.getByRole('button', {name: /sulu_admin.please_choose/})).toBeDisabled();
+
+    rerender(
+        <PageSettingsShadowLocaleSelect
+            {...fieldTypeDefaultProps}
+            disabled={false}
+            formInspector={formInspector}
+        />
+    );
+
+    await user.click(screen.getByLabelText('su-angle-down'));
+
+    expect(screen.queryByRole('button', {name: 'de'})).not.toBeInTheDocument();
 });
 
-test('Call onChange and onFinish if the value is changed', () => {
+test('Call onChange and onFinish if the value is changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -101,7 +123,7 @@ test('Call onChange and onFinish if the value is changed', () => {
         }
     });
 
-    const pageSettingsShadowSelect = shallow(
+    render(
         <PageSettingsShadowLocaleSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -111,7 +133,9 @@ test('Call onChange and onFinish if the value is changed', () => {
         />
     );
 
-    pageSettingsShadowSelect.find('SingleSelect').prop('onChange')('en');
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByRole('button', {name: 'en'}));
+
     expect(changeSpy).toHaveBeenCalledWith('en');
     expect(finishSpy).toHaveBeenCalledWith();
 });

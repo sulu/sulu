@@ -1,6 +1,6 @@
 // @flow
-import {render} from 'enzyme';
 import React from 'react';
+import {render} from '@testing-library/react';
 import {listAdapterDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardOverviewAdapter from '../../adapters/MediaCardOverviewAdapter';
 
@@ -40,7 +40,7 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
             thumbnails,
         },
     ];
-    const mediaCardAdapter = render(
+    const {container} = render(
         <MediaCardOverviewAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -50,5 +50,5 @@ test('Render a basic Masonry view with the MediaCardOverviewAdapter', () => {
         />
     );
 
-    expect(mediaCardAdapter).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });

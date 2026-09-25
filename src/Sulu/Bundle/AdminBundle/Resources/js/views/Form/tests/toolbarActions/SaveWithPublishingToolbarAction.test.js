@@ -10,9 +10,7 @@ jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {
     this.data = {};
@@ -281,7 +279,7 @@ test('Return empty item config if no options are returned', () => {
     expect(toolbarItemConfig).toEqual(undefined);
 });
 
-test('Return item config with loading button when saving flag is set', () => {
+test('Return item config with loading button when saving flag is set for granted permissions', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     publishableSaveToolbarAction.resourceFormStore.resourceStore.saving = true;
 
@@ -290,7 +288,7 @@ test('Return item config with loading button when saving flag is set', () => {
     }));
 });
 
-test('Submit form with draft action when draft option is clicked', () => {
+test('Submit form with draft action when draft option is clicked for granted permissions', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     const toolbarItemConfig = publishableSaveToolbarAction.getToolbarItemConfig();
 
@@ -307,7 +305,7 @@ test('Submit form with draft action when draft option is clicked', () => {
     expect(publishableSaveToolbarAction.form.submit).toHaveBeenCalledWith({action: 'draft'});
 });
 
-test('Submit form with publish action when draft option is clicked', () => {
+test('Submit form with publish action when publish option is clicked for granted permissions', () => {
     const publishableSaveToolbarAction = createSaveWithPublishingToolbarAction();
     const toolbarItemConfig = publishableSaveToolbarAction.getToolbarItemConfig();
 

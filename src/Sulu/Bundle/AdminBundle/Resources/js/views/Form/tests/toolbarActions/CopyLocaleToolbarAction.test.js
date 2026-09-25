@@ -1,6 +1,6 @@
 // @flow
-import {mount} from 'enzyme';
 import log from 'loglevel';
+import {waitFor} from '@testing-library/react';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceRequester from '../../../../services/ResourceRequester';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -73,9 +73,7 @@ jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
     this.id = id;
@@ -144,6 +142,16 @@ function createCopyLocaleToolbarAction(locales, options = {}) {
     });
 
     return new CopyLocaleToolbarAction(formStore, form, router, locales, options, resourceStore);
+}
+
+function getDialogProps(copyLocaleToolbarAction: any): Object {
+    const node = copyLocaleToolbarAction.getNode();
+
+    if (!node) {
+        throw new Error('The copy locale dialog node should be rendered.');
+    }
+
+    return node.props;
 }
 
 test('Return enabled item config', () => {
@@ -249,26 +257,26 @@ test('Close dialog when cancel button of dialog is clicked', () => {
         throw new Error('A onClick callback should be registered on the copy locale option');
     }
 
-    let element = mount(copyLocaleToolbarAction.getNode()).at(0);
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    let dialogProps = getDialogProps(copyLocaleToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
 
     clickHandler();
-    element = mount(copyLocaleToolbarAction.getNode()).at(0);
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    dialogProps = getDialogProps(copyLocaleToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: true,
     }));
 
-    element.find('Dialog').prop('onCancel')();
+    dialogProps.onCancel();
     expect(copyLocaleToolbarAction.form.showSuccessSnackbar).not.toHaveBeenCalledWith();
-    element = mount(copyLocaleToolbarAction.getNode()).at(0);
-    expect(element.instance().props).toEqual(expect.objectContaining({
+    dialogProps = getDialogProps(copyLocaleToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
 });
 
-test('Close dialog and show success message when onClose from CopyLocaleDialog is called with true', (resolve) => {
+test('Close dialog and show success message when onClose from CopyLocaleDialog is called with true', async() => {
     const postPromise = Promise.resolve();
     ResourceRequester.post.mockReturnValue(postPromise);
 
@@ -291,39 +299,36 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
         throw new Error('A onClick callback should be registered on the copy locale option');
     }
 
-    const elementBefore = mount(copyLocaleToolbarAction.getNode());
-    expect(elementBefore.instance().props).toEqual(expect.objectContaining({
+    let dialogProps = getDialogProps(copyLocaleToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
 
     clickHandler();
+    dialogProps = getDialogProps(copyLocaleToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
+        open: true,
+    }));
 
-    setTimeout(() => {
-        let element = mount(copyLocaleToolbarAction.getNode());
-        expect(element.instance().props).toEqual(expect.objectContaining({
-            open: true,
-        }));
+    copyLocaleToolbarAction.formStore.change('locales', ['de', 'fr']);
+    await waitFor(() => expect(copyLocaleToolbarAction.formStore.data.locales).toEqual(['de', 'fr']));
+    dialogProps.onConfirm();
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
+        'snippets',
+        undefined,
+        {action: 'copy-locale', dest: ['de', 'fr'], id: 3, locale, webspace: 'sulu_io'}
+    );
 
-        element.find('Select').at(0).prop('onChange')(['de', 'fr']);
-        element.prop('onConfirm')();
-        expect(ResourceRequester.post).toHaveBeenCalledWith(
-            'snippets',
-            undefined,
-            {action: 'copy-locale', dest: ['de', 'fr'], id: 3, locale, webspace: 'sulu_io'}
-        );
+    await postPromise;
 
-        postPromise.then(() => {
-            expect(copyLocaleToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
-            element = mount(copyLocaleToolbarAction.getNode()).at(0);
-            expect(element.instance().props).toEqual(expect.objectContaining({
-                open: false,
-            }));
-            resolve();
-        });
-    }, 1);
+    expect(copyLocaleToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
+    dialogProps = getDialogProps(copyLocaleToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
+        open: false,
+    }));
 });
 
-test('Close dialog and show success message when onClose from CopyLocaleDialog is called with true (with additional fields)', (resolve) => { // eslint-disable-line max-len
+test('Close dialog and show success message when onClose from CopyLocaleDialog is called with true (with additional fields)', async() => { // eslint-disable-line max-len
     const formMetadata = {
         ...FORM,
         title: {
@@ -359,35 +364,35 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
         throw new Error('A onClick callback should be registered on the copy locale option');
     }
 
-    const elementBefore = mount(copyLocaleToolbarAction.getNode());
-    expect(elementBefore.instance().props).toEqual(expect.objectContaining({
+    let dialogProps = getDialogProps(copyLocaleToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
 
     clickHandler();
+    dialogProps = getDialogProps(copyLocaleToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
+        open: true,
+    }));
 
-    setTimeout(() => {
-        let element = mount(copyLocaleToolbarAction.getNode());
-        expect(element.instance().props).toEqual(expect.objectContaining({
-            open: true,
-        }));
+    copyLocaleToolbarAction.formStore.change('title', 'Test 123');
+    copyLocaleToolbarAction.formStore.change('locales', ['de', 'fr']);
+    await waitFor(() => expect(copyLocaleToolbarAction.formStore.data).toEqual(expect.objectContaining({
+        locales: ['de', 'fr'],
+        title: 'Test 123',
+    })));
+    dialogProps.onConfirm();
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
+        'snippets',
+        undefined,
+        {action: 'copy-locale', dest: ['de', 'fr'], id: 3, locale, webspace: 'sulu_io', title: 'Test 123'}
+    );
 
-        element.find('Input').at(0).prop('onChange')('Test 123');
-        element.find('Select').at(0).prop('onChange')(['de', 'fr']);
-        element.prop('onConfirm')();
-        expect(ResourceRequester.post).toHaveBeenCalledWith(
-            'snippets',
-            undefined,
-            {action: 'copy-locale', dest: ['de', 'fr'], id: 3, locale, webspace: 'sulu_io', title: 'Test 123'}
-        );
+    await postPromise;
 
-        postPromise.then(() => {
-            expect(copyLocaleToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
-            element = mount(copyLocaleToolbarAction.getNode()).at(0);
-            expect(element.instance().props).toEqual(expect.objectContaining({
-                open: false,
-            }));
-            resolve();
-        });
-    }, 1);
+    expect(copyLocaleToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
+    dialogProps = getDialogProps(copyLocaleToolbarAction);
+    expect(dialogProps).toEqual(expect.objectContaining({
+        open: false,
+    }));
 });

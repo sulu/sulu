@@ -1,10 +1,9 @@
 // @flow
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import BooleanFieldFilterType from '../../fieldFilterTypes/BooleanFieldFilterType';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
 
 test.each([
     [true],
@@ -12,13 +11,17 @@ test.each([
     [undefined],
 ])('Render with a value of "%s"', (value) => {
     const booleanFieldFilterType = new BooleanFieldFilterType(jest.fn(), {}, value);
-    expect(render(booleanFieldFilterType.getFormNode())).toMatchSnapshot();
+    const {asFragment} = render(booleanFieldFilterType.getFormNode());
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with value set by setValue', () => {
     const booleanFieldFilterType = new BooleanFieldFilterType(jest.fn(), {}, false);
     booleanFieldFilterType.setValue(true);
-    expect(render(booleanFieldFilterType.getFormNode())).toMatchSnapshot();
+    const {asFragment} = render(booleanFieldFilterType.getFormNode());
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Call onChange handler with false as a default value if undefined is given', () => {
@@ -28,14 +31,16 @@ test('Call onChange handler with false as a default value if undefined is given'
     expect(changeSpy).toHaveBeenCalledWith(false);
 });
 
-test('Call onChange handler with new value', () => {
+test('Call onChange handler with new value', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const booleanFieldFilterType = new BooleanFieldFilterType(changeSpy, {}, false);
-    const booleanFieldFilterTypeForm = mount(booleanFieldFilterType.getFormNode());
 
-    booleanFieldFilterTypeForm.find('Toggler').prop('onChange')(true);
+    render(booleanFieldFilterType.getFormNode());
 
-    expect(changeSpy).toHaveBeenCalledWith(true);
+    await user.click(screen.getByRole('checkbox'));
+
+    expect(changeSpy).toHaveBeenCalledWith(true, undefined);
 });
 
 test.each([

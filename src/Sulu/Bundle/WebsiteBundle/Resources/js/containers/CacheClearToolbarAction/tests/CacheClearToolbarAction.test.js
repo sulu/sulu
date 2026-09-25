@@ -1,5 +1,6 @@
 // @flow
-import {shallow} from 'enzyme';
+import {act, fireEvent, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {Requester} from 'sulu-admin-bundle/services';
 import CacheClearToolbarAction from '../CacheClearToolbarAction';
 
@@ -7,9 +8,27 @@ jest.mock('sulu-admin-bundle/services/Requester', () => ({
     delete: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+function openDialog(cacheClearToolbarAction: CacheClearToolbarAction, rerender: (node: React$Node) => void) {
+    const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
+    toolbarItemConfig.onClick();
+    rerender(cacheClearToolbarAction.getNode());
+}
+
+function finishDialogCloseTransition() {
+    const dialogContainer = document.querySelector('.dialogContainer');
+
+    if (!(dialogContainer instanceof HTMLElement)) {
+        throw new Error('Expected dialog container');
+    }
+
+    fireEvent.transitionEnd(dialogContainer);
+}
 
 test('Return item config with correct icon, type and label and return closed dialog', () => {
     const cacheClearToolbarAction = new CacheClearToolbarAction();
@@ -20,104 +39,101 @@ test('Return item config with correct icon, type and label and return closed dia
         type: 'button',
     }));
 
-    const element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
-        cancelText: 'sulu_admin.cancel',
-        children: 'sulu_website.cache_clear_warning_text',
-        confirmText: 'sulu_admin.ok',
-        open: false,
-        title: 'sulu_website.cache_clear_warning_title',
-    }));
+    render(cacheClearToolbarAction.getNode());
+
+    expect(screen.queryByText('sulu_website.cache_clear_warning_title')).not.toBeInTheDocument();
 });
 
 test('Open dialog on toolbar item click', () => {
-    const cacheClearToolbarAction = new CacheClearToolbarAction('sulu-io');
-
-    const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
-    toolbarItemConfig.onClick();
-
-    const element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
-        open: true,
-    }));
-});
-
-test('Close dialog on cancel click', () => {
     const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const {rerender} = render(cacheClearToolbarAction.getNode());
 
-    const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
-    toolbarItemConfig.onClick();
+    openDialog(cacheClearToolbarAction, rerender);
 
-    let element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
-        open: true,
-    }));
-
-    element.find('Button[skin="secondary"]').simulate('click');
-    element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
-        open: false,
-    }));
+    expect(screen.getByText('sulu_website.cache_clear_warning_title')).toBeInTheDocument();
+    expect(screen.getByText('sulu_website.cache_clear_warning_text')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.ok'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.cancel'})).toBeInTheDocument();
 });
 
-test('Call delete when dialog is confirmed', () => {
+test('Close dialog on cancel click', async() => {
+    const user = userEvent.setup();
+    const cacheClearToolbarAction = new CacheClearToolbarAction();
+    const {rerender} = render(cacheClearToolbarAction.getNode());
+
+    openDialog(cacheClearToolbarAction, rerender);
+
+    expect(screen.getByText('sulu_website.cache_clear_warning_title')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.cancel'}));
+    rerender(cacheClearToolbarAction.getNode());
+    finishDialogCloseTransition();
+
+    expect(screen.queryByText('sulu_website.cache_clear_warning_title')).not.toBeInTheDocument();
+});
+
+test('Call delete when dialog is confirmed', async() => {
+    const user = userEvent.setup();
     const cacheClearToolbarAction = new CacheClearToolbarAction();
     CacheClearToolbarAction.clearCacheEndpoint = '/cache';
 
-    const deletePromise = Promise.resolve();
+    let resolveDelete = () => {};
+    const deletePromise = new Promise((resolve) => {
+        resolveDelete = resolve;
+    });
     Requester.delete.mockReturnValue(deletePromise);
 
-    const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
-    toolbarItemConfig.onClick();
+    const {rerender} = render(cacheClearToolbarAction.getNode());
+    openDialog(cacheClearToolbarAction, rerender);
 
-    let element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
-        open: true,
-    }));
+    expect(screen.getByText('sulu_website.cache_clear_warning_title')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.ok'})).toBeEnabled();
 
-    expect(element.instance().props.confirmLoading).toEqual(false);
-    element.find('Button[skin="primary"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
     expect(Requester.delete).toHaveBeenCalledWith('/cache');
 
-    element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props.confirmLoading).toEqual(true);
+    rerender(cacheClearToolbarAction.getNode());
+    expect(screen.getByRole('button', {name: 'sulu_admin.ok'})).toBeDisabled();
 
-    return deletePromise.then(() => {
-        element = shallow(cacheClearToolbarAction.getNode());
-        expect(element.instance().props.confirmLoading).toEqual(false);
-        expect(element.instance().props).toEqual(expect.objectContaining({
-            open: false,
-        }));
+    await act(async() => {
+        resolveDelete();
+        await deletePromise;
     });
+    rerender(cacheClearToolbarAction.getNode());
+    finishDialogCloseTransition();
+
+    expect(screen.queryByText('sulu_website.cache_clear_warning_title')).not.toBeInTheDocument();
 });
 
-test('Call delete when dialog is confirmed with query parameter', () => {
+test('Call delete when dialog is confirmed with query parameter', async() => {
+    const user = userEvent.setup();
     const cacheClearToolbarAction = new CacheClearToolbarAction('sulu-io');
     CacheClearToolbarAction.clearCacheEndpoint = '/cache';
 
-    const deletePromise = Promise.resolve();
+    let resolveDelete = () => {};
+    const deletePromise = new Promise((resolve) => {
+        resolveDelete = resolve;
+    });
     Requester.delete.mockReturnValue(deletePromise);
 
-    const toolbarItemConfig = cacheClearToolbarAction.getToolbarItemConfig();
-    toolbarItemConfig.onClick();
+    const {rerender} = render(cacheClearToolbarAction.getNode());
+    openDialog(cacheClearToolbarAction, rerender);
 
-    let element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props).toEqual(expect.objectContaining({
-        open: true,
-    }));
+    expect(screen.getByText('sulu_website.cache_clear_warning_text_webspace')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.ok'})).toBeEnabled();
 
-    expect(element.instance().props.confirmLoading).toEqual(false);
-    element.find('Button[skin="primary"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
     expect(Requester.delete).toHaveBeenCalledWith('/cache?webspaceKey=sulu-io');
 
-    element = shallow(cacheClearToolbarAction.getNode());
-    expect(element.instance().props.confirmLoading).toEqual(true);
+    rerender(cacheClearToolbarAction.getNode());
+    expect(screen.getByRole('button', {name: 'sulu_admin.ok'})).toBeDisabled();
 
-    return deletePromise.then(() => {
-        element = shallow(cacheClearToolbarAction.getNode());
-        expect(element.instance().props.confirmLoading).toEqual(false);
-        expect(element.instance().props).toEqual(expect.objectContaining({
-            open: false,
-        }));
+    await act(async() => {
+        resolveDelete();
+        await deletePromise;
     });
+    rerender(cacheClearToolbarAction.getNode());
+    finishDialogCloseTransition();
+
+    expect(screen.queryByText('sulu_website.cache_clear_warning_title')).not.toBeInTheDocument();
 });

@@ -9,9 +9,7 @@ jest.mock('loglevel', () => ({
     warn: jest.fn(),
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../utils/Translator');
 
 test('Render an expanded block with multiple types', () => {
     const {container} = render(
@@ -103,36 +101,40 @@ test('Do not show settings icon if no onSettingsClick prop has been passed', () 
 });
 
 test('Clicking on a collapsed block should call the onExpand callback', async() => {
+    const user = userEvent.setup();
     const expandSpy = jest.fn();
     render(<Block onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
 
-    await userEvent.click(screen.queryByRole('switch'));
+    await user.click(screen.queryByRole('switch'));
 
     expect(expandSpy).toHaveBeenCalledTimes(1);
 });
 
 test('Clicking on a expanded block should not call the onExpand callback', async() => {
+    const user = userEvent.setup();
     const expandSpy = jest.fn();
     render(<Block expanded={true} onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
 
-    await userEvent.click(screen.queryByRole('switch'));
+    await user.click(screen.queryByRole('switch'));
 
     expect(expandSpy).not.toHaveBeenCalled();
 });
 
 test('Clicking the close icon in an expanded block should collapse it', async() => {
+    const user = userEvent.setup();
     const collapseSpy = jest.fn();
     render(<Block expanded={true} onCollapse={collapseSpy} onExpand={jest.fn()}>Block content</Block>);
 
     const closeIcon = screen.queryByLabelText('su-collapse-vertical');
     expect(closeIcon).toBeInTheDocument();
 
-    await userEvent.click(closeIcon);
+    await user.click(closeIcon);
 
     expect(collapseSpy).toHaveBeenCalledTimes(1);
 });
 
 test('Clicking the action icon should open a popover that displays the given actions', async() => {
+    const user = userEvent.setup();
     const actions = [
         {
             type: 'button',
@@ -164,13 +166,14 @@ test('Clicking the action icon should open a popover that displays the given act
     expect(screen.queryByText(/Test Action 1/)).not.toBeInTheDocument();
     expect(icon).toBeInTheDocument();
 
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(screen.getByText(/Test Action 1/)).toBeInTheDocument();
     expect(container).toMatchSnapshot();
 });
 
 test('Clicking an action in the action popover should fire the respective callback', async() => {
+    const user = userEvent.setup();
     const onActionClickSpy = jest.fn();
     const actions = [
         {
@@ -186,14 +189,15 @@ test('Clicking an action in the action popover should fire the respective callba
 
     const icon = screen.queryByLabelText('su-more-circle');
 
-    await userEvent.click(icon);
+    await user.click(icon);
     expect(onActionClickSpy).not.toHaveBeenCalled();
 
-    await userEvent.click(screen.queryByText('Test Action 1'));
+    await user.click(screen.queryByText('Test Action 1'));
     expect(onActionClickSpy).toHaveBeenCalledWith();
 });
 
 test('Render remove action if deprecated onRemove prop is set', async() => {
+    const user = userEvent.setup();
     const removeSpy = jest.fn();
     render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} onRemove={removeSpy}>Block content</Block>
@@ -204,16 +208,17 @@ test('Render remove action if deprecated onRemove prop is set', async() => {
 
     const actionIcon = screen.queryByLabelText('su-more-circle');
     expect(actionIcon).toBeInTheDocument();
-    await userEvent.click(actionIcon);
+    await user.click(actionIcon);
 
     const removeIcon = screen.queryByLabelText('su-trash-alt');
     expect(removeIcon).toBeInTheDocument();
-    await userEvent.click(removeIcon);
+    await user.click(removeIcon);
 
     expect(removeSpy).toHaveBeenCalledTimes(1);
 });
 
 test('Changing the type should call the onTypeChange callback', async() => {
+    const user = userEvent.setup();
     const typeChangeSpy = jest.fn();
     const types = {
         type1: 'Type 1',
@@ -234,10 +239,10 @@ test('Changing the type should call the onTypeChange callback', async() => {
     );
 
     const selectButton = screen.queryByText('Type 1');
-    await userEvent.click(selectButton);
+    await user.click(selectButton);
 
     const typeButton = screen.queryByText('Type 2');
-    await userEvent.click(typeButton);
+    await user.click(typeButton);
 
     expect(typeChangeSpy).toHaveBeenCalledWith('type2');
     expect(typeChangeSpy).toHaveBeenCalledTimes(1);

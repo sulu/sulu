@@ -36,6 +36,7 @@ test('Render a FileUploadButton with other skin and icon', () => {
 });
 
 test('Call onUpload callback when a file is uploaded', async() => {
+    const user = userEvent.setup();
     const uploadSpy = jest.fn();
     const file = new File(['hello'], 'hello.png', {type: 'image/png'});
 
@@ -47,13 +48,14 @@ test('Call onUpload callback when a file is uploaded', async() => {
 
     // eslint-disable-next-line testing-library/no-container
     const input = container.querySelector('input');
-    await userEvent.upload(input, file);
+    await user.upload(input, file);
 
     expect(uploadSpy).toHaveBeenCalledTimes(1);
     expect(uploadSpy).toHaveBeenCalledWith(file);
 });
 
 test('Filter dropped files by accept prop', async() => {
+    const user = userEvent.setup();
     const uploadSpy = jest.fn();
     const rejectedFile = new File(['hello'], 'hello.png', {type: 'image/png'});
     const acceptedFile = new File(['hello'], 'data.json', {type: 'application/json'});
@@ -66,10 +68,10 @@ test('Filter dropped files by accept prop', async() => {
 
     // eslint-disable-next-line testing-library/no-container
     const input = container.querySelector('input');
-    await userEvent.upload(input, rejectedFile);
+    await user.upload(input, rejectedFile);
     expect(uploadSpy).toHaveBeenCalledTimes(0);
 
-    await userEvent.upload(input, acceptedFile);
+    await user.upload(input, acceptedFile);
     expect(uploadSpy).toHaveBeenCalledWith(acceptedFile);
     expect(uploadSpy).toHaveBeenCalledTimes(1);
 });

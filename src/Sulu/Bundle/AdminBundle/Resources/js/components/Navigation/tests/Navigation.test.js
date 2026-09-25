@@ -4,11 +4,10 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Navigation from '../Navigation';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('The component should render and handle clicks correctly', async() => {
+    const user = userEvent.setup();
     const handleNavigationClick = jest.fn();
     const handleLogoutClick = jest.fn();
     const handleProfileClick = jest.fn();
@@ -29,13 +28,14 @@ test('The component should render and handle clicks correctly', async() => {
     );
 
     expect(container).toMatchSnapshot();
-    await userEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
+    await user.click(screen.queryByText(/sulu_admin.edit_profile/));
     expect(handleProfileClick).toHaveBeenCalled();
-    await userEvent.click(screen.queryByText(/sulu_admin.logout/));
+    await user.click(screen.queryByText(/sulu_admin.logout/));
     expect(handleLogoutClick).toHaveBeenCalled();
 });
 
 test('The component should render with all available props and handle clicks correctly', async() => {
+    const user = userEvent.setup();
     const handleNavigationClick = jest.fn();
     const handleLogoutClick = jest.fn();
     const handlePinClick = jest.fn();
@@ -80,17 +80,18 @@ test('The component should render with all available props and handle clicks cor
 
     expect(container).toMatchSnapshot();
 
-    await userEvent.click(screen.queryByLabelText('su-stick-right'));
+    await user.click(screen.queryByLabelText('su-stick-right'));
     expect(handlePinClick).toHaveBeenCalled();
 
-    await userEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
+    await user.click(screen.queryByText(/sulu_admin.edit_profile/));
     expect(handleProfileClick).toHaveBeenCalled();
 
-    await userEvent.click(screen.queryByText(/sulu_admin.logout/));
+    await user.click(screen.queryByText(/sulu_admin.logout/));
     expect(handleLogoutClick).toHaveBeenCalled();
 });
 
 test('The expanded prop should be set correct automatically', async() => {
+    const user = userEvent.setup();
     const handleNavigationClick = jest.fn();
     const handleLogoutClick = jest.fn();
     const handleProfileClick = jest.fn();
@@ -124,7 +125,7 @@ test('The expanded prop should be set correct automatically', async() => {
     expect(screen.getByText(/Contact 1/)).toBeInTheDocument();
     expect(screen.queryByText(/Setting 1/)).not.toBeInTheDocument();
 
-    await userEvent.click(screen.queryByText(/Settings/));
+    await user.click(screen.queryByText(/Settings/));
     expect(screen.queryByText(/Contact 1/)).not.toBeInTheDocument();
     expect(screen.getByText(/Setting 1/)).toBeInTheDocument();
 });

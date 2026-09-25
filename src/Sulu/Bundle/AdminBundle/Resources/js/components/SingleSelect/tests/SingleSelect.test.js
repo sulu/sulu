@@ -7,9 +7,7 @@ import SingleSelect from '../../SingleSelect';
 const Option = SingleSelect.Option;
 const Divider = SingleSelect.Divider;
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('The component should render a generic select', () => {
     const {container} = render(
@@ -164,6 +162,7 @@ test('The component should also select the option with the value 0', () => {
 });
 
 test('The component should trigger the change callback on select', async() => {
+    const user = userEvent.setup();
     const onChangeSpy = jest.fn();
     render(
         <SingleSelect onChange={onChangeSpy} value="option-2">
@@ -174,7 +173,7 @@ test('The component should trigger the change callback on select', async() => {
         </SingleSelect>
     );
 
-    await userEvent.click(screen.queryByLabelText('su-angle-down'));
-    await userEvent.click(screen.queryByText('Option 3'));
+    await user.click(screen.queryByLabelText('su-angle-down'));
+    await user.click(screen.queryByText('Option 3'));
     expect(onChangeSpy).toHaveBeenCalledWith('option-3');
 });

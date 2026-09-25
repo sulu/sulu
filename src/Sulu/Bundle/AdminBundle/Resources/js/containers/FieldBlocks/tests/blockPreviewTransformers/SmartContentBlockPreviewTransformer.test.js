@@ -2,9 +2,7 @@
 import SmartContentBlockPreviewTransformer from '../../blockPreviewTransformers/SmartContentBlockPreviewTransformer';
 import {translate} from '../../../../utils/Translator';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
 
 test('Return JSX for configuration with a limit of 5', () => {
     const smartContentBlockPreviewTransformer = new SmartContentBlockPreviewTransformer();

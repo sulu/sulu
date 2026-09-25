@@ -14,9 +14,7 @@ jest.mock('../../../utils', () => ({
     translate: (key) => key,
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 describe('PromptInput Component', () => {
     const defaultProps = {
@@ -42,6 +40,7 @@ describe('PromptInput Component', () => {
     });
 
     test('renders the SingleSelect when type is select', async() => {
+        const user = userEvent.setup();
         const selectExperts = {
             name: 'Expert Name',
             options: [
@@ -55,7 +54,7 @@ describe('PromptInput Component', () => {
 
         render(<PromptInput {...defaultProps} experts={selectExperts} />);
 
-        await userEvent.click(screen.getAllByText('Option 1')[0]);
+        await user.click(screen.getAllByText('Option 1')[0]);
 
         expect(screen.getAllByText('Option 1')[0]).toBeInTheDocument();
         expect(screen.getAllByText('Option 2')[0]).toBeInTheDocument();
@@ -81,6 +80,7 @@ describe('PromptInput Component', () => {
     });
 
     test('moves every prompt beyond the third one into a dropdown', async() => {
+        const user = userEvent.setup();
         const predefinedPrompts = {
             handleClick: jest.fn(),
             label: 'Predefined Prompts',
@@ -93,13 +93,14 @@ describe('PromptInput Component', () => {
         expect(screen.getByText('Prompt 3')).toBeInTheDocument();
         expect(screen.queryByText('Prompt 4')).not.toBeInTheDocument();
 
-        await userEvent.click(screen.getByText('More'));
+        await user.click(screen.getByText('More'));
 
         expect(screen.getByText('Prompt 4')).toBeInTheDocument();
         expect(screen.getByText('Prompt 5')).toBeInTheDocument();
     });
 
     test('calls handleClick with the prompt index when a quick action is clicked', async() => {
+        const user = userEvent.setup();
         const predefinedPrompts = {
             handleClick: jest.fn(),
             label: 'Predefined Prompts',
@@ -112,7 +113,7 @@ describe('PromptInput Component', () => {
 
         render(<PromptInput {...defaultProps} predefinedPrompts={predefinedPrompts} />);
 
-        await userEvent.click(screen.getByText('Prompt 2'));
+        await user.click(screen.getByText('Prompt 2'));
 
         expect(predefinedPrompts.handleClick).toHaveBeenCalledWith(1);
     });
@@ -134,28 +135,31 @@ describe('PromptInput Component', () => {
     });
 
     test('calls onAddMessage when the send button is clicked', async() => {
+        const user = userEvent.setup();
         render(<PromptInput {...defaultProps} />);
 
         const input = screen.getByPlaceholderText('Add Message');
-        await userEvent.type(input, 'Test message');
-        await userEvent.click(screen.getByText('Send'));
+        await user.type(input, 'Test message');
+        await user.click(screen.getByText('Send'));
 
         expect(defaultProps.onAddMessage).toHaveBeenCalledWith('Test message');
     });
 
     test('calls onAddMessage when Enter key is pressed', async() => {
+        const user = userEvent.setup();
         render(<PromptInput {...defaultProps} />);
 
         const input = screen.getByPlaceholderText('Add Message');
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         expect(defaultProps.onAddMessage).toHaveBeenCalledWith('Test message');
     });
 
     test('does not call onAddMessage when input is empty', async() => {
+        const user = userEvent.setup();
         render(<PromptInput {...defaultProps} />);
 
-        await userEvent.click(screen.getByRole('button', 'Send'));
+        await user.click(screen.getByRole('button', 'Send'));
 
         expect(defaultProps.onAddMessage).not.toHaveBeenCalled();
     });
@@ -168,10 +172,11 @@ describe('PromptInput Component', () => {
     });
 
     test('enables the send button when input is not empty', async() => {
+        const user = userEvent.setup();
         render(<PromptInput {...defaultProps} />);
 
         const input = screen.getByPlaceholderText('Add Message');
-        await userEvent.type(input, 'Test message');
+        await user.type(input, 'Test message');
 
         const button = screen.getByText('Send');
         expect(button).toBeEnabled();
@@ -209,6 +214,7 @@ describe('PromptInput Component', () => {
     });
 
     test('calls onIncludeContentContextChange when checkbox is toggled', async() => {
+        const user = userEvent.setup();
         const onIncludeContentContextChange = jest.fn();
 
         render(
@@ -228,7 +234,7 @@ describe('PromptInput Component', () => {
         );
 
         const checkbox = screen.getByRole('checkbox');
-        await userEvent.click(checkbox);
+        await user.click(checkbox);
 
         expect(onIncludeContentContextChange).toHaveBeenCalledWith(true, undefined);
     });

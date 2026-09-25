@@ -4,9 +4,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Dialog from '../Dialog';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('The component should render in body when open', () => {
     const {baseElement} = render(<Dialog
@@ -146,6 +144,7 @@ test('The component should not render in body when closed', () => {
 });
 
 test('The component should call the callback when the confirm button is clicked', async() => {
+    const user = userEvent.setup();
     const onCancel = jest.fn();
     const onConfirm = jest.fn();
     render(
@@ -163,11 +162,12 @@ test('The component should call the callback when the confirm button is clicked'
     const button = screen.queryByText('Confirm');
 
     expect(onConfirm).not.toHaveBeenCalled();
-    await userEvent.click(button);
+    await user.click(button);
     expect(onConfirm).toHaveBeenCalled();
 });
 
 test('The component should call the callback when the cancel button is clicked', async() => {
+    const user = userEvent.setup();
     const onConfirm = jest.fn();
     const onCancel = jest.fn();
     render(
@@ -185,7 +185,7 @@ test('The component should call the callback when the cancel button is clicked',
     const button = screen.queryByText('Cancel');
 
     expect(onCancel).not.toHaveBeenCalled();
-    await userEvent.click(button);
+    await user.click(button);
     expect(onCancel).toHaveBeenCalled();
 });
 
@@ -258,6 +258,7 @@ test('The component should render with an error if the type is unknown', () => {
 });
 
 test('The component should call the callback when the snackbar close button is clicked', async() => {
+    const user = userEvent.setup();
     const onSnackbarCloseClick = jest.fn();
     render(
         <Dialog
@@ -278,11 +279,12 @@ test('The component should call the callback when the snackbar close button is c
 
     expect(snackbar).toBeInTheDocument();
     expect(onSnackbarCloseClick).not.toHaveBeenCalled();
-    await userEvent.click(closeIcon);
+    await user.click(closeIcon);
     expect(onSnackbarCloseClick).toHaveBeenCalled();
 });
 
 test('The component should call the callback when the snackbar is clicked', async() => {
+    const user = userEvent.setup();
     const onSnackbarClick = jest.fn();
     render(
         <Dialog
@@ -302,6 +304,6 @@ test('The component should call the callback when the snackbar is clicked', asyn
 
     expect(snackbar).toBeInTheDocument();
     expect(onSnackbarClick).not.toHaveBeenCalled();
-    await userEvent.click(snackbar);
+    await user.click(snackbar);
     expect(onSnackbarClick).toHaveBeenCalled();
 });

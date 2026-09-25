@@ -1,189 +1,193 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render matrix with correct given values 1`] = `
-<div
-  class="spinner"
-  style="width: 40px; height: 40px;"
->
+<div>
   <div
-    class="doubleBounce1"
-  />
-  <div
-    class="doubleBounce2"
-  />
+    class="spinner"
+    style="width: 40px; height: 40px;"
+  >
+    <div
+      class="doubleBounce1"
+    />
+    <div
+      class="doubleBounce2"
+    />
+  </div>
 </div>
 `;
 
 exports[`Render matrix with correct given values 2`] = `
-<div
-  class="systemRolePermissions"
->
+<div>
   <div
-    class="line"
+    class="systemRolePermissions"
   >
     <div
-      class="label"
+      class="line"
     >
-      sulu_security.system_permission_heading
+      <div
+        class="label"
+      >
+        sulu_security.system_permission_heading
+      </div>
+      <label
+        class="label"
+        tabindex="-1"
+      >
+        <span
+          class="switch toggler"
+        >
+          <input
+            type="checkbox"
+            value=""
+          />
+          <span />
+        </span>
+      </label>
     </div>
-    <label
-      class="label"
-      tabindex="-1"
+    <table
+      class="matrix matrix"
     >
-      <span
-        class="switch toggler"
-      >
-        <input
-          type="checkbox"
-          value=""
-        />
-        <span />
-      </span>
-    </label>
+      <tbody>
+        <tr
+          class="row"
+        >
+          <td
+            class="name"
+          >
+            Admin
+          </td>
+          <td
+            class="items"
+          >
+            <button
+              class="item selected"
+              title="View"
+              type="button"
+            >
+              <span
+                aria-label="su-eye"
+                class="su-eye"
+              />
+            </button>
+            <button
+              class="item"
+              title="Add"
+              type="button"
+            >
+              <span
+                aria-label="su-plus-circle"
+                class="su-plus-circle"
+              />
+            </button>
+            <button
+              class="item selected"
+              title="Edit"
+              type="button"
+            >
+              <span
+                aria-label="su-pen"
+                class="su-pen"
+              />
+            </button>
+            <button
+              class="item selected"
+              title="Delete"
+              type="button"
+            >
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt"
+              />
+            </button>
+            <button
+              class="item"
+              title="Security"
+              type="button"
+            >
+              <span
+                aria-label="su-lock"
+                class="su-lock"
+              />
+            </button>
+            <button
+              class="rowButton"
+              type="button"
+            >
+              sulu_admin.deactivate_all
+            </button>
+          </td>
+        </tr>
+        <tr
+          class="row"
+        >
+          <td
+            class="name"
+          >
+            Contact Manager
+          </td>
+          <td
+            class="items"
+          >
+            <button
+              class="item selected"
+              title="View"
+              type="button"
+            >
+              <span
+                aria-label="su-eye"
+                class="su-eye"
+              />
+            </button>
+            <button
+              class="item selected"
+              title="Add"
+              type="button"
+            >
+              <span
+                aria-label="su-plus-circle"
+                class="su-plus-circle"
+              />
+            </button>
+            <button
+              class="item selected"
+              title="Edit"
+              type="button"
+            >
+              <span
+                aria-label="su-pen"
+                class="su-pen"
+              />
+            </button>
+            <button
+              class="item"
+              title="Delete"
+              type="button"
+            >
+              <span
+                aria-label="su-trash-alt"
+                class="su-trash-alt"
+              />
+            </button>
+            <button
+              class="item"
+              title="Security"
+              type="button"
+            >
+              <span
+                aria-label="su-lock"
+                class="su-lock"
+              />
+            </button>
+            <button
+              class="rowButton"
+              type="button"
+            >
+              sulu_admin.deactivate_all
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <table
-    class="matrix matrix"
-  >
-    <tbody>
-      <tr
-        class="row"
-      >
-        <td
-          class="name"
-        >
-          Admin
-        </td>
-        <td
-          class="items"
-        >
-          <button
-            class="item selected"
-            title="View"
-            type="button"
-          >
-            <span
-              aria-label="su-eye"
-              class="su-eye"
-            />
-          </button>
-          <button
-            class="item"
-            title="Add"
-            type="button"
-          >
-            <span
-              aria-label="su-plus-circle"
-              class="su-plus-circle"
-            />
-          </button>
-          <button
-            class="item selected"
-            title="Edit"
-            type="button"
-          >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </button>
-          <button
-            class="item selected"
-            title="Delete"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-          <button
-            class="item"
-            title="Security"
-            type="button"
-          >
-            <span
-              aria-label="su-lock"
-              class="su-lock"
-            />
-          </button>
-          <button
-            class="rowButton"
-            type="button"
-          >
-            sulu_admin.deactivate_all
-          </button>
-        </td>
-      </tr>
-      <tr
-        class="row"
-      >
-        <td
-          class="name"
-        >
-          Contact Manager
-        </td>
-        <td
-          class="items"
-        >
-          <button
-            class="item selected"
-            title="View"
-            type="button"
-          >
-            <span
-              aria-label="su-eye"
-              class="su-eye"
-            />
-          </button>
-          <button
-            class="item selected"
-            title="Add"
-            type="button"
-          >
-            <span
-              aria-label="su-plus-circle"
-              class="su-plus-circle"
-            />
-          </button>
-          <button
-            class="item selected"
-            title="Edit"
-            type="button"
-          >
-            <span
-              aria-label="su-pen"
-              class="su-pen"
-            />
-          </button>
-          <button
-            class="item"
-            title="Delete"
-            type="button"
-          >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt"
-            />
-          </button>
-          <button
-            class="item"
-            title="Security"
-            type="button"
-          >
-            <span
-              aria-label="su-lock"
-              class="su-lock"
-            />
-          </button>
-          <button
-            class="rowButton"
-            type="button"
-          >
-            sulu_admin.deactivate_all
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>
 `;

@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render a label and a SingleSelect for each granted webspace that has segments 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="webspaceSection"
   >
@@ -49,7 +49,7 @@ Array [
         />
       </button>
     </div>
-  </div>,
+  </div>
   <div
     class="webspaceSection"
   >
@@ -97,12 +97,12 @@ Array [
         />
       </button>
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;
 
-exports[`Render a label and a SingleSelect for each granted webspace that has segments 2`] = `
-Array [
+exports[`Render a label and a SingleSelect snapshot for each granted webspace that has segments 1`] = `
+<DocumentFragment>
   <div
     class="webspaceSection"
   >
@@ -150,7 +150,7 @@ Array [
         />
       </button>
     </div>
-  </div>,
+  </div>
   <div
     class="webspaceSection"
   >
@@ -198,6 +198,6 @@ Array [
         />
       </button>
     </div>
-  </div>,
-]
+  </div>
+</DocumentFragment>
 `;

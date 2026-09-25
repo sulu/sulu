@@ -4,11 +4,10 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import UserSection from '../UserSection';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('The component should render with all available props and handle clicks correctly', async() => {
+    const user = userEvent.setup();
     const handleLogoutClick = jest.fn();
     const handleProfileClick = jest.fn();
 
@@ -25,9 +24,9 @@ test('The component should render with all available props and handle clicks cor
 
     expect(container).toMatchSnapshot();
 
-    await userEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
+    await user.click(screen.queryByText(/sulu_admin.edit_profile/));
     expect(handleProfileClick).toHaveBeenCalled();
 
-    await userEvent.click(screen.queryByText(/sulu_admin.logout/));
+    await user.click(screen.queryByText(/sulu_admin.logout/));
     expect(handleLogoutClick).toHaveBeenCalled();
 });

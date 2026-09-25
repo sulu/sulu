@@ -1,5 +1,5 @@
 // @flow
-import {render, screen} from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import symfonyRouting from 'fos-jsrouting/router';
 import SuggestFormStoreToolbarAction from '../../toolbarActions/SuggestFormStoreToolbarAction';
@@ -152,10 +152,10 @@ test('Generate and apply directly when no content exists', async() => {
 
     const config = action.getToolbarItemConfig();
     await config.onClick();
-    await new Promise((resolve) => setTimeout(resolve));
+    await waitFor(() => expect(action.resourceFormStore.change)
+        .toHaveBeenCalledWith('/title', 'Generated title'));
 
     expect(action.showDialog).toBe(false);
-    expect(action.resourceFormStore.change).toHaveBeenCalledWith('/title', 'Generated title');
     expect(action.form.showSuccessSnackbar).toHaveBeenCalled();
 });
 
@@ -183,18 +183,17 @@ test('Open the dialog and start generating immediately when content exists, with
         undefined
     );
 
-    await new Promise((resolve) => setTimeout(resolve));
-
-    expect(Requester.post).toHaveBeenCalledWith('/test/5?locale=en', {
+    await waitFor(() => expect(Requester.post).toHaveBeenCalledWith('/test/5?locale=en', {
         content: {title: 'Existing title'},
         data: {optimize: true},
-    });
+    }));
     // $FlowFixMe
     expect(action.suggestionFormStore.data).toEqual({title: 'Suggested title'});
     expect(action.resourceFormStore.data.title).toBe('Existing title');
 });
 
 test('Insert writes the suggestion into the resource form store, closes, and keeps its content intact', async() => {
+    const user = userEvent.setup();
     const action = createSuggestFormStoreToolbarAction();
     action.resourceFormStore.resourceStore.data = {title: 'Existing title'};
     // $FlowFixMe
@@ -211,7 +210,7 @@ test('Insert writes the suggestion into the resource form store, closes, and kee
     action.hasSuggestion = true;
 
     render(action.getNode());
-    await userEvent.click(screen.getByText('Insert'));
+    await user.click(screen.getByText('Insert'));
 
     expect(action.resourceFormStore.change).toHaveBeenCalledWith('/title', 'Suggested title');
     expect(action.form.showSuccessSnackbar).toHaveBeenCalled();
@@ -225,6 +224,7 @@ test('Insert writes the suggestion into the resource form store, closes, and kee
 });
 
 test('Regenerate re-fetches without closing the dialog', async() => {
+    const user = userEvent.setup();
     const action = createSuggestFormStoreToolbarAction();
     action.resourceFormStore.resourceStore.id = 5;
     action.resourceFormStore.resourceStore.data = {title: 'Existing title'};
@@ -244,16 +244,19 @@ test('Regenerate re-fetches without closing the dialog', async() => {
     Requester.post.mockResolvedValue({title: 'Second suggestion'});
 
     render(action.getNode());
-    await userEvent.click(screen.getByText('Regenerate'));
+    await user.click(screen.getByText('Regenerate'));
 
-    await new Promise((resolve) => setTimeout(resolve));
+    await waitFor(() => {
+        const suggestionFormStore = action.suggestionFormStore;
+
+        expect(suggestionFormStore && suggestionFormStore.data).toEqual({title: 'Second suggestion'});
+    });
 
     expect(action.showDialog).toBe(true);
-    // $FlowFixMe
-    expect(action.suggestionFormStore.data).toEqual({title: 'Second suggestion'});
 });
 
 test('Regenerate blanks the suggestion fields while the new response is in flight', async() => {
+    const user = userEvent.setup();
     const action = createSuggestFormStoreToolbarAction();
     action.resourceFormStore.resourceStore.id = 5;
     action.resourceFormStore.resourceStore.data = {title: 'Existing title'};
@@ -276,7 +279,7 @@ test('Regenerate blanks the suggestion fields while the new response is in fligh
     }));
 
     render(action.getNode());
-    await userEvent.click(screen.getByText('Regenerate'));
+    await user.click(screen.getByText('Regenerate'));
 
     // $FlowFixMe
     expect(action.suggestionFormStore.data).toEqual({title: undefined});
@@ -284,7 +287,7 @@ test('Regenerate blanks the suggestion fields while the new response is in fligh
     expect(action.loading).toBe(true);
 
     resolveRequest({title: 'Second suggestion'});
-    await new Promise((resolve) => setTimeout(resolve));
+    await waitFor(() => expect(action.loading).toBe(false));
 
     // $FlowFixMe
     expect(action.suggestionFormStore.data).toEqual({title: 'Second suggestion'});
@@ -293,6 +296,7 @@ test('Regenerate blanks the suggestion fields while the new response is in fligh
 });
 
 test('Temporary error while generating keeps the dialog open with a snackbar', async() => {
+    const user = userEvent.setup();
     const action = createSuggestFormStoreToolbarAction();
     action.showDialog = true;
     action.originalFormStore = memoryFormStoreFactory.createFromFormKey(
@@ -310,12 +314,11 @@ test('Temporary error while generating keeps the dialog open with a snackbar', a
     Requester.post.mockRejectedValue(error);
 
     render(action.getNode());
-    await userEvent.click(screen.getByText('Regenerate'));
+    await user.click(screen.getByText('Regenerate'));
 
-    await new Promise((resolve) => setTimeout(resolve));
+    await waitFor(() => expect(action.dialogSnackbarMessage).toBe('sulu_admin.request_failed'));
 
     expect(action.showDialog).toBe(true);
-    expect(action.dialogSnackbarMessage).toBe('sulu_admin.request_failed');
     expect(action.dialogSnackbarType).toBe('warning');
     expect(action.form.errors).toHaveLength(0);
     expect(action.form.warnings).toHaveLength(0);
@@ -325,6 +328,7 @@ test('Temporary error while generating keeps the dialog open with a snackbar', a
 });
 
 test('Account limit error while generating closes the dialog with a terminal error', async() => {
+    const user = userEvent.setup();
     setAccountLimitContactEmail('admin@example.com');
 
     const action = createSuggestFormStoreToolbarAction();
@@ -344,9 +348,9 @@ test('Account limit error while generating closes the dialog with a terminal err
     Requester.post.mockRejectedValue(error);
 
     render(action.getNode());
-    await userEvent.click(screen.getByText('Regenerate'));
+    await user.click(screen.getByText('Regenerate'));
 
-    await new Promise((resolve) => setTimeout(resolve));
+    await waitFor(() => expect(action.form.errors).toHaveLength(1));
 
     expect(action.showDialog).toBe(false);
     const lastError = action.form.errors[action.form.errors.length - 1];
@@ -359,6 +363,7 @@ test('Account limit error while generating closes the dialog with a terminal err
 });
 
 test('Cancel closes the dialog without clearing its content mid-transition', async() => {
+    const user = userEvent.setup();
     const action = createSuggestFormStoreToolbarAction();
     action.showDialog = true;
     const originalFormStore = memoryFormStoreFactory.createFromFormKey(
@@ -372,7 +377,7 @@ test('Cancel closes the dialog without clearing its content mid-transition', asy
     );
 
     render(action.getNode());
-    await userEvent.click(screen.getByText('Cancel'));
+    await user.click(screen.getByText('Cancel'));
 
     expect(action.showDialog).toBe(false);
     // the stores are left alone here on purpose: the Dialog component keeps rendering its
@@ -414,6 +419,7 @@ test('Opening the dialog again destroys stores left over from the previous sessi
 });
 
 test('Insert stays disabled until a suggestion has loaded, even once the store exists', async() => {
+    const user = userEvent.setup();
     const action = createSuggestFormStoreToolbarAction();
     action.resourceFormStore.resourceStore.id = 5;
     action.resourceFormStore.resourceStore.data = {title: 'Existing title'};
@@ -433,8 +439,8 @@ test('Insert stays disabled until a suggestion has loaded, even once the store e
 
     symfonyRouting.generate.mockReturnValue('/test/5?locale=en');
     Requester.post.mockResolvedValue({title: 'Suggested title'});
-    await userEvent.click(screen.getByText('Regenerate'));
-    await new Promise((resolve) => setTimeout(resolve));
+    await user.click(screen.getByText('Regenerate'));
+    await waitFor(() => expect(action.hasSuggestion).toBe(true));
 
     rerender(action.getNode());
     expect(screen.getByRole('button', {name: 'Insert'})).toBeEnabled();
@@ -490,22 +496,21 @@ test('Regenerate waits for the optimize form store to finish loading before send
 
     const config = action.getToolbarItemConfig();
     await config.onClick();
-    // config.onClick() only awaits handleClick(), which returns before generate()'s own
-    // internal awaits (including the schema wait) settle - give those a tick too, otherwise
-    // this assertion passes regardless of whether the wait is actually in place
-    await new Promise((resolve) => setTimeout(resolve));
+    await waitFor(() => {
+        const formStore = action.formStore;
+
+        expect(formStore && formStore.loading).toBe(true);
+    });
 
     // formStore's schema has not resolved yet - the request must not have gone out with a
     // premature, still-loading "data" value
     expect(Requester.post).not.toHaveBeenCalled();
 
     resolveSchema({});
-    await new Promise((resolve) => setTimeout(resolve));
-
-    expect(Requester.post).toHaveBeenCalledWith('/test/5?locale=en', {
+    await waitFor(() => expect(Requester.post).toHaveBeenCalledWith('/test/5?locale=en', {
         content: {title: 'Existing title'},
         data: {optimize: true},
-    });
+    }));
 });
 
 test('Regenerate falls through to a warning if the options form never finishes loading', async() => {
@@ -567,6 +572,7 @@ test('Regenerate falls through to a warning if the options form never finishes l
 });
 
 test('Insert stays disabled if a regenerate fails after a suggestion had already loaded', async() => {
+    const user = userEvent.setup();
     const action = createSuggestFormStoreToolbarAction();
     action.resourceFormStore.resourceStore.id = 5;
     action.resourceFormStore.resourceStore.data = {title: 'Existing title'};
@@ -583,8 +589,8 @@ test('Insert stays disabled if a regenerate fails after a suggestion had already
     Requester.post.mockResolvedValueOnce({title: 'First suggestion'});
 
     const {rerender} = render(action.getNode());
-    await userEvent.click(screen.getByText('Regenerate'));
-    await new Promise((resolve) => setTimeout(resolve));
+    await user.click(screen.getByText('Regenerate'));
+    await waitFor(() => expect(action.hasSuggestion).toBe(true));
 
     rerender(action.getNode());
     expect(action.hasSuggestion).toBe(true);
@@ -595,8 +601,8 @@ test('Insert stays disabled if a regenerate fails after a suggestion had already
     error.json = jest.fn().mockResolvedValue({messageKey: 'sulu_ai.ai_request_failed'});
     Requester.post.mockRejectedValueOnce(error);
 
-    await userEvent.click(screen.getByText('Regenerate'));
-    await new Promise((resolve) => setTimeout(resolve));
+    await user.click(screen.getByText('Regenerate'));
+    await waitFor(() => expect(action.hasSuggestion).toBe(false));
 
     rerender(action.getNode());
     expect(action.hasSuggestion).toBe(false);
@@ -604,6 +610,7 @@ test('Insert stays disabled if a regenerate fails after a suggestion had already
 });
 
 test('Insert only writes properties the suggestion actually answered, leaving the rest untouched', async() => {
+    const user = userEvent.setup();
     const action = createSuggestFormStoreToolbarAction({
         contentExpressions: [
             {property: 'title', get: 'title', path: '/title'},
@@ -627,7 +634,7 @@ test('Insert only writes properties the suggestion actually answered, leaving th
     action.hasSuggestion = true;
 
     render(action.getNode());
-    await userEvent.click(screen.getByText('Insert'));
+    await user.click(screen.getByText('Insert'));
 
     expect(action.resourceFormStore.change).toHaveBeenCalledWith('/title', 'Suggested title');
     // expect.anything() does not match undefined, so a plain not.toHaveBeenCalledWith() check

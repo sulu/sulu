@@ -31,6 +31,7 @@ test('Use permission icon if hasPermissions flag is set', () => {
 });
 
 test('Call clickhandler when clicking on the folder', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     const folderId = 1;
     render(
@@ -44,7 +45,7 @@ test('Call clickhandler when clicking on the folder', async() => {
     );
 
     const folder = screen.queryByText('This is a folder');
-    await userEvent.click(folder);
+    await user.click(folder);
 
     expect(clickSpy).toHaveBeenCalledWith(folderId);
 });

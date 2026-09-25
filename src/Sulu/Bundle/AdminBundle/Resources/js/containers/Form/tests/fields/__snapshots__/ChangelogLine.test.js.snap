@@ -3,7 +3,7 @@
 exports[`Render loader if changer and creator are not loaded yet 1`] = `
 <div
   class="spinner"
-  style="width:40px;height:40px"
+  style="width: 40px; height: 40px;"
 >
   <div
     class="doubleBounce1"

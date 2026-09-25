@@ -3,9 +3,7 @@ import React from 'react';
 import {render} from '@testing-library/react';
 import QRCode from '../QRCode';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('QRCode should render', () => {
     const onChange = jest.fn();

@@ -1,20 +1,19 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
-import {Router, Route} from 'sulu-admin-bundle/services';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {Router} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
+import {createRoute, mockResizeObserver} from 'sulu-admin-bundle/utils/TestHelper';
 import WebspaceTabs from '../WebspaceTabs';
 import webspaceStore from '../../../stores/webspaceStore';
 
 jest.mock('debounce', () => jest.fn((callback) => callback));
 
-window.ResizeObserver = jest.fn(function() {
-    this.observe = jest.fn();
-    this.disconnect = jest.fn();
-});
+mockResizeObserver();
 
 jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
-    this.addUpdateRouteHook = jest.fn();
+    this.addUpdateRouteHook = jest.fn().mockReturnValue(jest.fn());
     this.bind = jest.fn();
 }));
 
@@ -31,7 +30,7 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
 test('Render webspace select with children when webspaces are not loaded yet', () => {
     const router = new Router({});
 
-    const route = new Route({
+    const route = createRoute({}, {}, [], {
         name: 'webspace_tabs',
         path: '/webspace_tabs',
         type: 'webspace_tabs',
@@ -45,14 +44,17 @@ test('Render webspace select with children when webspaces are not loaded yet', (
         }
     });
 
-    const webspaceTabs = mount(
+    const {container} = render(
         <WebspaceTabs isRootView={true} route={route} router={router}>
             {(props) => <h1>{props && props.webspace && props.webspace.key}</h1>}
         </WebspaceTabs>
     );
 
-    webspaceTabs.instance().webspaceKey.set('sulu_blog');
-    expect(webspaceTabs.children().render()).toMatchSnapshot();
+    const webspaceKey = router.bind.mock.calls[0][1];
+    act(() => webspaceKey.set('sulu_blog'));
+
+    expect(screen.getByRole('heading', {name: 'sulu_blog'})).toBeInTheDocument();
+    expect(container).toMatchSnapshot();
 });
 
 test('Load webspace userStore if no route attribute is given', () => {
@@ -77,10 +79,10 @@ test('Load webspace from route attributes', () => {
     expect(WebspaceTabs.getDerivedRouteAttributes(undefined, {webspace: 'abc'})).toEqual({webspace: 'abc'});
 });
 
-test('Should bind and unbind router attributes and updateRouteHook', () => {
+test('Should bind router attributes and dispose the updateRouteHook and webspace persistence', () => {
     const router = new Router({});
 
-    const route = new Route({
+    const route = createRoute({}, {}, [], {
         name: 'webspace_tabs',
         path: '/webspace_tabs',
         type: 'webspace_tabs',
@@ -88,34 +90,38 @@ test('Should bind and unbind router attributes and updateRouteHook', () => {
 
     const bindWebspaceToRouterDisposerSpy = jest.fn();
     router.addUpdateRouteHook.mockImplementationOnce(() => bindWebspaceToRouterDisposerSpy);
-    const webspaceTabs = mount(<WebspaceTabs route={route} router={router}>{() => null}</WebspaceTabs>);
+    const {unmount} = render(
+        <WebspaceTabs route={route} router={router}>{() => null}</WebspaceTabs>
+    );
 
-    expect(router.bind).toHaveBeenCalledWith('webspace', webspaceTabs.instance().webspaceKey);
-    expect(router.addUpdateRouteHook).toHaveBeenCalledWith(webspaceTabs.instance().bindWebspaceToRouter);
+    expect(router.bind).toHaveBeenCalledWith('webspace', expect.any(Object));
+    expect(router.addUpdateRouteHook).toHaveBeenCalledWith(expect.any(Function));
 
-    const webspaceDisposer = jest.fn();
-
-    webspaceTabs.instance().webspaceDisposer = webspaceDisposer;
-
-    webspaceTabs.unmount();
+    unmount();
     expect(bindWebspaceToRouterDisposerSpy).toHaveBeenCalledWith();
-    expect(webspaceDisposer).toHaveBeenCalledWith();
+
+    const webspaceKey = router.bind.mock.calls[0][1];
+    act(() => webspaceKey.set('sulu_blog'));
+    expect(userStore.setPersistentSetting).not.toHaveBeenCalled();
 });
 
-test('Save and update webspace when select value is changed', () => {
+test('Save and update webspace when select value is changed', async() => {
+    const user = userEvent.setup();
     const router = new Router({});
 
-    const route = new Route({
+    const route = createRoute({}, {}, [], {
         name: 'webspace_tabs',
         path: '/webspace_tabs',
         type: 'webspace_tabs',
     });
 
-    const webspace1 = {key: 'sulu', localizations: [{locale: 'en', default: true}]};
+    const webspace1 = {key: 'sulu', name: 'Sulu', localizations: [{locale: 'en', default: true}]};
     const webspace2 = {
+        name: 'Sulu Blog',
         key: 'sulu_blog',
         localizations: [{locale: 'en', default: false}, {locale: 'de', default: true}],
     };
+    (webspaceStore: any).grantedWebspaces = [webspace1, webspace2];
 
     webspaceStore.getWebspace.mockImplementation((key) => {
         if (key === 'sulu') {
@@ -127,18 +133,22 @@ test('Save and update webspace when select value is changed', () => {
         }
     });
 
-    const webspaceTabs = mount(<WebspaceTabs route={route} router={router}>{() => null}</WebspaceTabs>);
-    webspaceTabs.instance().webspaceKey.set('sulu_blog');
+    render(
+        <WebspaceTabs route={route} router={router}>
+            {(props) => <h1>{props && props.webspace && props.webspace.key}</h1>}
+        </WebspaceTabs>
+    );
 
-    webspaceTabs.update();
-    expect(webspaceTabs.find('WebspaceSelect').prop('value')).toEqual('sulu_blog');
-    expect(webspaceTabs.find('Tabs').at(0).prop('childrenProps'))
-        .toEqual(expect.objectContaining({webspace: webspace2}));
-    webspaceTabs.find('WebspaceSelect').prop('onChange')('sulu');
+    const webspaceKey = router.bind.mock.calls[0][1];
+    act(() => webspaceKey.set('sulu_blog'));
 
-    webspaceTabs.update();
+    expect(screen.getByRole('button', {name: /Sulu Blog/})).toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'sulu_blog'})).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', {name: /Sulu Blog/}));
+    await user.click(screen.getByText('Sulu'));
+
     expect(userStore.setPersistentSetting).toHaveBeenCalledWith('sulu_page.webspace_tabs.webspace', 'sulu');
-    expect(webspaceTabs.find('Tabs').at(0).prop('childrenProps'))
-        .toEqual(expect.objectContaining({webspace: webspace1}));
-    expect(webspaceTabs.find('WebspaceSelect').prop('value')).toEqual('sulu');
+    expect(screen.getByRole('heading', {name: 'sulu'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /Sulu su-angle-down/})).toBeInTheDocument();
 });

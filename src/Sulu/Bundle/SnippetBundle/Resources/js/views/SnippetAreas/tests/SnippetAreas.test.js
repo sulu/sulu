@@ -1,21 +1,54 @@
 // @flow
 import React from 'react';
-import {shallow, mount, render} from 'enzyme';
-import {Route, Router} from 'sulu-admin-bundle/services';
-import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
+import {
+    createDeferred,
+    createRoute,
+    createRouterMock,
+    mockResizeObserver,
+} from 'sulu-admin-bundle/utils/TestHelper';
+import {render, screen, waitFor, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-jest.mock('sulu-admin-bundle/containers', () => ({
-    SingleListOverlay: jest.fn(() => null),
-    withToolbar: jest.fn((Component) => Component),
-}));
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) =>key),
-}));
+jest.mock('sulu-admin-bundle/containers', () => {
+    const React = require('react');
+
+    return {
+        SingleListOverlay: jest.fn((props) => {
+            if (!props.open) {
+                return null;
+            }
+
+            function handleConfirm() {
+                props.onConfirm({id: 'some-uuid'});
+            }
+
+            return (
+                <div
+                    aria-label={props.title}
+                    data-options={JSON.stringify(props.options)}
+                    role="dialog"
+                >
+                    <button onClick={props.onClose} type="button">close-overlay</button>
+                    {React.createElement(
+                        'button',
+                        {onClick: handleConfirm, type: 'button'},
+                        'confirm-overlay'
+                    )}
+                </div>
+            );
+        }),
+        withToolbar: require('sulu-admin-bundle/containers/Toolbar/withToolbar').default,
+    };
+});
+jest.mock('sulu-admin-bundle/utils/Translator');
 jest.mock('../stores/SnippetAreaStore', () => jest.fn());
 
+const mockGetCacheClearNode = jest.fn();
+const mockGetCacheClearToolbarItemConfig = jest.fn().mockReturnValue({label: 'clear-cache'});
+
 jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.fn(function() {
-    this.getNode = jest.fn();
-    this.getToolbarItemConfig = jest.fn();
+    this.getNode = mockGetCacheClearNode;
+    this.getToolbarItemConfig = mockGetCacheClearToolbarItemConfig;
 }));
 jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
@@ -24,34 +57,90 @@ jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     };
 }));
 
+mockResizeObserver();
+
 beforeEach(() => {
+    jest.clearAllMocks();
     jest.resetModules();
 });
 
-test('Show loader when loading snippet areas', () => {
-    const SnippetAreas = require('../SnippetAreas').default;
-    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+function setSnippetAreaStore(store: Object) {
+    const SnippetAreaStore: any = require('../stores/SnippetAreaStore');
 
-    const router = new Router();
+    SnippetAreaStore.mockImplementation(() => store);
 
-    // $FlowFixMe
-    SnippetAreaStore.mockImplementation(function() {
-        this.loading = true;
+    return SnippetAreaStore;
+}
+
+function createSnippetRouter(routeOptions: Object = {}) {
+    const router = createRouterMock({
+        attributes: {
+            webspace: 'sulu',
+        },
+        route: createRoute(routeOptions, {}, [], {
+            name: 'snippet_areas',
+            path: '/snippet-areas',
+            type: 'snippet_areas',
+        }),
     });
+    router.addUpdateRouteHook.mockReturnValue(jest.fn());
 
-    const snippetAreas = shallow(<SnippetAreas route={router.route} router={router} />);
-    expect(snippetAreas.find('Loader')).toHaveLength(1);
+    return router;
+}
+
+function renderSnippetAreas(router) {
+    const SnippetAreas = require('../SnippetAreas').default;
+    const Toolbar = require('sulu-admin-bundle/containers/Toolbar').default;
+
+    render(<Toolbar />);
+
+    return render(<SnippetAreas route={router.route} router={router} />);
+}
+
+function getSingleListOverlay() {
+    return screen.getByRole('dialog', {name: 'sulu_snippet.selection_overlay_title'});
+}
+
+function querySingleListOverlay() {
+    return screen.queryByRole('dialog', {name: 'sulu_snippet.selection_overlay_title'});
+}
+
+function getDeleteDialog() {
+    return screen.getByText('sulu_admin.delete_warning_title').closest('.dialogContainer');
+}
+
+function queryDeleteDialog() {
+    const title = screen.queryByText('sulu_admin.delete_warning_title');
+
+    return title && title.closest('.dialogContainer');
+}
+
+function expectDeleteDialogClosed() {
+    const dialog = queryDeleteDialog();
+
+    if (!dialog) {
+        expect(dialog).toBeNull();
+        return;
+    }
+
+    expect(dialog).not.toHaveClass('open');
+}
+
+test('Show loader when loading snippet areas', () => {
+    const router = createSnippetRouter();
+
+    setSnippetAreaStore({loading: true});
+
+    renderSnippetAreas(router);
+    expect(screen.getByText((content, element) => !!element && element.classList.contains('spinner')))
+        .toBeInTheDocument();
 });
 
 test('Render snippet areas with data as table', () => {
-    const SnippetAreas = require('../SnippetAreas').default;
-    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+    const router = createSnippetRouter();
 
-    const router = new Router();
-
-    // $FlowFixMe
-    SnippetAreaStore.mockImplementation(function() {
-        this.snippetAreas = {
+    const SnippetAreaStore = setSnippetAreaStore({
+        snippetAreas: {
             default: {
                 defaultTitle: null,
                 defaultUuid: null,
@@ -64,274 +153,229 @@ test('Render snippet areas with data as table', () => {
                 key: 'footer',
                 title: 'Footer',
             },
-        };
+        },
     });
 
-    expect(render(<SnippetAreas route={router.route} router={router} />)).toMatchSnapshot();
+    const {container} = renderSnippetAreas(router);
+    expect(container).toMatchSnapshot();
     expect(SnippetAreaStore).toHaveBeenCalledWith('sulu');
 });
 
-test('Close after clicking add without choosing a snippet', () => {
-    const SnippetAreas = require('../SnippetAreas').default;
-    const SnippetAreaStore = require('../stores/SnippetAreaStore');
-    const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
+test('Close after clicking add without choosing a snippet', async() => {
+    const user = userEvent.setup();
 
-    const router = new Router();
+    const router = createSnippetRouter();
 
-    // $FlowFixMe
-    SnippetAreaStore.mockImplementation(function() {
-        this.snippetAreas = {
+    const snippetAreaStore = {
+        snippetAreas: {
             default: {
                 defaultTitle: null,
                 defaultUuid: null,
                 key: 'default',
                 title: 'Default',
             },
-        };
+        },
+        save: jest.fn(),
+    };
+    setSnippetAreaStore(snippetAreaStore);
 
-        this.save = jest.fn();
+    renderSnippetAreas(router);
+
+    expect(querySingleListOverlay()).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', {name: 'su-plus-circle'}));
+
+    await waitFor(() => {
+        expect(getSingleListOverlay()).toHaveAttribute('data-options', JSON.stringify({areas: 'default'}));
     });
 
-    const snippetAreas = mount(<SnippetAreas route={router.route} router={router} />);
-    // $FlowFixMe
-    const snippetAreaStore = SnippetAreaStore.mock.instances[0];
+    await user.click(screen.getByRole('button', {name: 'close-overlay'}));
 
-    expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(false);
-    snippetAreas.find('Button[className="addButton"] button').simulate('click');
-    expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(true);
-    expect(snippetAreas.find(SingleListOverlay).prop('options')).toEqual({areas: 'default'});
-
-    snippetAreas.find(SingleListOverlay).prop('onClose')();
-    snippetAreas.update();
-    expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(false);
+    expect(querySingleListOverlay()).not.toBeInTheDocument();
 
     expect(snippetAreaStore.save).not.toHaveBeenCalled();
 });
 
-test('Save after adding a new snippet area', () => {
-    const SnippetAreas = require('../SnippetAreas').default;
-    const SnippetAreaStore = require('../stores/SnippetAreaStore');
-    const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
+test('Save after adding a new snippet area', async() => {
+    const user = userEvent.setup();
 
-    const router = new Router();
+    const router = createSnippetRouter();
 
-    const savePromise = Promise.resolve();
-
-    // $FlowFixMe
-    SnippetAreaStore.mockImplementation(function() {
-        this.snippetAreas = {
+    const saveRequest = createDeferred<void>();
+    const snippetAreaStore = {
+        snippetAreas: {
             default: {
                 defaultTitle: null,
                 defaultUuid: null,
                 key: 'default',
                 title: 'Default',
             },
-        };
+        },
+        save: jest.fn().mockReturnValue(saveRequest.promise),
+    };
+    setSnippetAreaStore(snippetAreaStore);
 
-        this.save = jest.fn().mockReturnValue(savePromise);
-    });
+    renderSnippetAreas(router);
 
-    const snippetAreas = mount(<SnippetAreas route={router.route} router={router} />);
-    // $FlowFixMe
-    const snippetAreaStore = SnippetAreaStore.mock.instances[0];
+    expect(querySingleListOverlay()).not.toBeInTheDocument();
 
-    expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(false);
-    snippetAreas.find('Button[className="addButton"] button').simulate('click');
-    expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(true);
-    snippetAreas.find(SingleListOverlay).prop('onConfirm')({id: 'some-uuid'});
-    expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(true);
+    await user.click(screen.getByRole('button', {name: 'su-plus-circle'}));
+    await waitFor(() => expect(getSingleListOverlay()).toBeInTheDocument());
+
+    await user.click(screen.getByRole('button', {name: 'confirm-overlay'}));
+    expect(getSingleListOverlay()).toBeInTheDocument();
 
     expect(snippetAreaStore.save).toHaveBeenCalledWith('default', 'some-uuid');
 
-    return savePromise.then(() => {
-        snippetAreas.update();
-        expect(snippetAreas.find(SingleListOverlay).prop('open')).toEqual(false);
-    });
+    saveRequest.resolve();
+
+    await waitFor(() => expect(querySingleListOverlay()).not.toBeInTheDocument());
 });
 
-test('Close after clicking delete and cancel dialog', () => {
-    const SnippetAreas = require('../SnippetAreas').default;
-    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+test('Close after clicking delete and cancel dialog', async() => {
+    const user = userEvent.setup();
 
-    const router = new Router();
+    const router = createSnippetRouter();
 
-    // $FlowFixMe
-    SnippetAreaStore.mockImplementation(function() {
-        this.snippetAreas = {
+    const snippetAreaStore = {
+        snippetAreas: {
             default: {
                 defaultTitle: 'Default Snippet',
                 defaultUuid: 'some-uuid',
                 key: 1,
                 title: 'Default',
             },
-        };
+        },
+        delete: jest.fn(),
+    };
+    setSnippetAreaStore(snippetAreaStore);
 
-        this.save = jest.fn();
-    });
+    renderSnippetAreas(router);
 
-    const snippetAreas = mount(<SnippetAreas route={router.route} router={router} />);
-    // $FlowFixMe
-    const snippetAreaStore = SnippetAreaStore.mock.instances[0];
+    expectDeleteDialogClosed();
 
-    expect(snippetAreas.find('Dialog').prop('open')).toEqual(false);
-    snippetAreas.find('Button[className="deleteButton"] button').simulate('click');
-    expect(snippetAreas.find('Dialog').prop('open')).toEqual(true);
+    await user.click(screen.getByRole('button', {name: 'su-trash-alt'}));
+    expect(getDeleteDialog()).toHaveClass('open');
 
-    snippetAreas.find('Dialog').prop('onCancel')();
-    snippetAreas.update();
-    expect(snippetAreas.find('Dialog').prop('open')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.cancel'}));
+    expectDeleteDialogClosed();
 
-    expect(snippetAreaStore.save).not.toHaveBeenCalled();
+    expect(snippetAreaStore.delete).not.toHaveBeenCalled();
 });
 
-test('Delete after confirming the confirmation dialog', () => {
-    const SnippetAreas = require('../SnippetAreas').default;
-    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+test('Delete after confirming the confirmation dialog', async() => {
+    const user = userEvent.setup();
 
-    const router = new Router();
+    const router = createSnippetRouter();
 
-    const deletePromise = Promise.resolve();
-
-    // $FlowFixMe
-    SnippetAreaStore.mockImplementation(function() {
-        this.snippetAreas = {
+    const deleteRequest = createDeferred<void>();
+    const snippetAreaStore = {
+        snippetAreas: {
             default: {
                 defaultTitle: 'Default Snippet',
                 defaultUuid: 'some-uuid',
                 key: 'default',
                 title: 'Default',
             },
-        };
+        },
+        delete: jest.fn().mockReturnValue(deleteRequest.promise),
+    };
+    setSnippetAreaStore(snippetAreaStore);
 
-        this.delete = jest.fn().mockReturnValue(deletePromise);
-    });
+    renderSnippetAreas(router);
 
-    const snippetAreas = mount(<SnippetAreas route={router.route} router={router} />);
-    // $FlowFixMe
-    const snippetAreaStore = SnippetAreaStore.mock.instances[0];
+    expectDeleteDialogClosed();
 
-    expect(snippetAreas.find('Dialog').prop('open')).toEqual(false);
-    snippetAreas.find('Button[className="deleteButton"] button').simulate('click');
-    expect(snippetAreas.find('Dialog').prop('open')).toEqual(true);
-    snippetAreas.find('Dialog').prop('onConfirm')();
-    expect(snippetAreas.find('Dialog').prop('open')).toEqual(true);
+    await user.click(screen.getByRole('button', {name: 'su-trash-alt'}));
+    expect(getDeleteDialog()).toHaveClass('open');
+
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
+    expect(getDeleteDialog()).toHaveClass('open');
 
     expect(snippetAreaStore.delete).toHaveBeenCalledWith('default');
 
-    return deletePromise.then(() => {
-        snippetAreas.update();
-        expect(snippetAreas.find('Dialog').prop('open')).toEqual(false);
-    });
+    deleteRequest.resolve();
+
+    await waitFor(() => expectDeleteDialogClosed());
 });
 
-test('Navigate when selected default snippet is clicked', () => {
-    const SnippetAreas = require('../SnippetAreas').default;
-    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+test('Navigate when selected default snippet is clicked', async() => {
+    const user = userEvent.setup();
 
-    const route = new Route({
-        name: 'snippet_areas',
-        path: '/snippet-areas',
-        type: 'snippet_areas',
-        options: {
-            snippetEditView: 'sulu_snippet.edit_form',
-        },
+    const router = createSnippetRouter({
+        snippetEditView: 'sulu_snippet.edit_form',
     });
-    const router = new Router();
-
-    // $FlowFixMe
-    SnippetAreaStore.mockImplementation(function() {
-        this.snippetAreas = {
+    setSnippetAreaStore({
+        snippetAreas: {
             default: {
                 defaultTitle: 'Default Snippet',
                 defaultUuid: 'some-uuid',
                 key: 1,
                 title: 'Default',
             },
-        };
-
-        this.save = jest.fn();
+        },
+        save: jest.fn(),
     });
 
-    const snippetAreas = mount(<SnippetAreas route={route} router={router} />);
-    snippetAreas.find('Button[className="titleButton"] button').simulate('click');
+    renderSnippetAreas(router);
+    await user.click(screen.getByRole('button', {name: 'Default Snippet'}));
 
     expect(router.navigate).toHaveBeenCalledWith('sulu_snippet.edit_form', {id: 'some-uuid'});
 });
 
 test('Should use CacheClearToolbarAction for cache clearing', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const SnippetAreas = require('../SnippetAreas').default;
-    const SnippetAreaStore = require('../stores/SnippetAreaStore');
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, SnippetAreas);
-    const CacheClearToolbarAction = require('sulu-website-bundle/containers').CacheClearToolbarAction;
+    const router = createSnippetRouter();
 
-    const router = new Router();
-
-    // $FlowFixMe
-    SnippetAreaStore.mockImplementation(function() {
-        this.snippetAreas = {
+    setSnippetAreaStore({
+        snippetAreas: {
             default: {
                 defaultTitle: 'Default Snippet',
                 defaultUuid: 'some-uuid',
                 key: 'default',
                 title: 'Default',
             },
-        };
+        },
     });
 
-    const snippetAreas = mount(
-        <SnippetAreas route={router.route} router={router} />
-    );
+    renderSnippetAreas(router);
 
-    const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
-
-    expect(cacheClearToolbarAction.getNode).toHaveBeenCalledWith();
-
-    expect(cacheClearToolbarAction.getToolbarItemConfig).not.toHaveBeenCalled();
-    toolbarFunction.call(snippetAreas.instance());
-    expect(cacheClearToolbarAction.getToolbarItemConfig).toHaveBeenCalled();
+    expect(mockGetCacheClearNode).toHaveBeenCalledWith();
+    expect(mockGetCacheClearToolbarItemConfig).toHaveBeenCalledWith();
+    expect(screen.getByRole('button', {name: 'clear-cache'})).toBeInTheDocument();
 });
 
 test('Show forbidden hint when user has no permission', () => {
-    const SnippetAreas = require('../SnippetAreas').default;
-    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+    const router = createSnippetRouter();
 
-    const router = new Router();
-
-    // $FlowFixMe
-    SnippetAreaStore.mockImplementation(function() {
-        this.loading = false;
-        this.forbidden = true;
-        this.unexpectedError = false;
-        this.snippetAreas = {};
+    setSnippetAreaStore({
+        forbidden: true,
+        loading: false,
+        snippetAreas: {},
+        unexpectedError: false,
     });
 
-    const snippetAreas = shallow(<SnippetAreas route={router.route} router={router} />);
-    const hint = snippetAreas.find('Hint');
+    renderSnippetAreas(router);
 
-    expect(hint).toHaveLength(1);
-    expect(hint.prop('icon')).toEqual('su-lock');
-    expect(hint.prop('title')).toEqual('sulu_admin.no_permissions');
+    expect(screen.getByText('sulu_admin.no_permissions')).toBeInTheDocument();
+    expect(screen.getByLabelText('su-lock')).toBeInTheDocument();
 });
 
 test('Show error hint when unexpected error occurs', () => {
-    const SnippetAreas = require('../SnippetAreas').default;
-    const SnippetAreaStore = require('../stores/SnippetAreaStore');
+    const router = createSnippetRouter();
 
-    const router = new Router();
-
-    // $FlowFixMe
-    SnippetAreaStore.mockImplementation(function() {
-        this.loading = false;
-        this.forbidden = false;
-        this.unexpectedError = true;
-        this.snippetAreas = {};
+    setSnippetAreaStore({
+        forbidden: false,
+        loading: false,
+        snippetAreas: {},
+        unexpectedError: true,
     });
 
-    const snippetAreas = shallow(<SnippetAreas route={router.route} router={router} />);
-    const hint = snippetAreas.find('Hint');
+    renderSnippetAreas(router);
 
-    expect(hint).toHaveLength(1);
-    expect(hint.prop('icon')).toEqual('su-exclamation-triangle');
-    expect(hint.prop('title')).toEqual('sulu_admin.unexpected_error');
+    const hint = screen.getByText('sulu_admin.unexpected_error').closest('.hint');
+    if (!hint) {
+        throw new Error('Expected error hint to be rendered');
+    }
+
+    expect(within(hint).getByLabelText('su-exclamation-triangle')).toBeInTheDocument();
 });

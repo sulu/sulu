@@ -25,21 +25,23 @@ test('The component should render in disabled state', () => {
 });
 
 test('A click on the component should fire the callback', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     render(<Option onClick={clickSpy}>My option</Option>);
 
     const button = screen.queryByText('My option');
-    await userEvent.click(button);
+    await user.click(button);
 
     expect(clickSpy).toHaveBeenCalled();
 });
 
 test('A hover on the component should fire the callback', async() => {
+    const user = userEvent.setup();
     const requestFocusSpy = jest.fn();
     render(<Option requestFocus={requestFocusSpy}>My option</Option>);
 
     const item = screen.queryByRole('listitem');
-    await userEvent.hover(item);
+    await user.hover(item);
 
     expect(requestFocusSpy).toHaveBeenCalled();
 });

@@ -20,6 +20,7 @@ test('Should render disabled input-components when disabled', () => {
 });
 
 test('Should only call onChange when both values match after the debounced time', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     render(<PasswordConfirmation onChange={changeSpy} />);
 
@@ -27,18 +28,19 @@ test('Should only call onChange when both values match after the debounced time'
 
     expect(changeSpy).not.toHaveBeenCalled();
 
-    await userEvent.type(inputs[0], 'asdf');
-    await userEvent.type(inputs[1], 'jklö');
+    await user.type(inputs[0], 'asdf');
+    await user.type(inputs[1], 'jklö');
 
     expect(changeSpy).not.toHaveBeenCalled();
 
-    await userEvent.clear(inputs[1]);
-    await userEvent.type(inputs[1], 'asdf');
+    await user.clear(inputs[1]);
+    await user.type(inputs[1], 'asdf');
 
     expect(changeSpy).toHaveBeenCalledWith('asdf');
 });
 
 test('Should mark the input fields as invalid if they do not match', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const {container} = render(<PasswordConfirmation onChange={changeSpy} />);
 
@@ -46,15 +48,15 @@ test('Should mark the input fields as invalid if they do not match', async() => 
 
     expect(changeSpy).not.toHaveBeenCalled();
 
-    await userEvent.type(inputs[0], 'asdf');
-    await userEvent.type(inputs[1], 'jklö');
-    await userEvent.tab(); // tab away from input
+    await user.type(inputs[0], 'asdf');
+    await user.type(inputs[1], 'jklö');
+    await user.tab(); // tab away from input
 
     // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.error')).toBeInTheDocument();
 
-    await userEvent.clear(inputs[1]);
-    await userEvent.type(inputs[1], 'asdf');
+    await user.clear(inputs[1]);
+    await user.type(inputs[1], 'asdf');
 
     // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.error')).not.toBeInTheDocument();

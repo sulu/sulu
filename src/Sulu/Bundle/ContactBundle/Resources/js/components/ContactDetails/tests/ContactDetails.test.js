@@ -10,9 +10,7 @@ import Phone from '../../ContactDetails/Phone';
 import SocialMedia from '../../ContactDetails/SocialMedia';
 import Website from '../../ContactDetails/Website';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 beforeEach(() => {
     jest.clearAllMocks();
@@ -200,7 +198,7 @@ test('Add data should also work with predefined email and phone fields', () => {
     });
 });
 
-test('Remove data should call the onChange and onBlur callbacks', () => {
+test('Remove data should call the onChange and onBlur callbacks', async() => {
     const value = {
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -211,10 +209,11 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
 
     const blurSpy = jest.fn();
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
     render(<ContactDetails onBlur={blurSpy} onChange={changeSpy} value={value} />);
 
-    fireEvent.click(within(getField('sulu_contact.email')).getByRole('button', {name: 'su-trash-alt'}));
+    await user.click(within(getField('sulu_contact.email')).getByRole('button', {name: 'su-trash-alt'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -223,7 +222,7 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    fireEvent.click(within(getField('sulu_contact.fax')).getByRole('button', {name: 'su-trash-alt'}));
+    await user.click(within(getField('sulu_contact.fax')).getByRole('button', {name: 'su-trash-alt'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [],
@@ -232,7 +231,7 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    fireEvent.click(within(getField('sulu_contact.phone')).getByRole('button', {name: 'su-trash-alt'}));
+    await user.click(within(getField('sulu_contact.phone')).getByRole('button', {name: 'su-trash-alt'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -241,7 +240,7 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    fireEvent.click(within(getField('sulu_contact.social_media')).getByRole('button', {name: 'su-trash-alt'}));
+    await user.click(within(getField('sulu_contact.social_media')).getByRole('button', {name: 'su-trash-alt'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -250,7 +249,7 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    fireEvent.click(within(getField('sulu_contact.website')).getByRole('button', {name: 'su-trash-alt'}));
+    await user.click(within(getField('sulu_contact.website')).getByRole('button', {name: 'su-trash-alt'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],

@@ -14,17 +14,7 @@ jest.mock('../../../services', () => ({
     },
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
-
-const writeText = jest.fn();
-Object.assign(navigator, {
-    // $FlowFixMe
-    clipboard: {
-        writeText,
-    },
-});
+jest.mock('../../../utils/Translator');
 
 describe('WritingAssistant Component', () => {
     const defaultProps = {
@@ -66,9 +56,10 @@ describe('WritingAssistant Component', () => {
     });
 
     test('renders the expert select dropdown when multiple experts are available', async() => {
+        const user = userEvent.setup();
         render(<WritingAssistant {...defaultProps} />);
 
-        await userEvent.click(screen.getByText('Expert 1'));
+        await user.click(screen.getByText('Expert 1'));
 
         expect(screen.getAllByText('Expert 1')[1]).toBeInTheDocument();
         expect(screen.getAllByText('Expert 2')[0]).toBeInTheDocument();
@@ -97,10 +88,11 @@ describe('WritingAssistant Component', () => {
     });
 
     test('calls onAddMessage when a message is added', async() => {
+        const user = userEvent.setup();
         render(<WritingAssistant {...defaultProps} />);
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         await waitFor(() => {
             expect(screen.getByText('Optimized text')).toBeInTheDocument();
@@ -118,47 +110,52 @@ describe('WritingAssistant Component', () => {
     });
 
     test('calls onConfirm when the insert button is clicked', async() => {
+        const user = userEvent.setup();
         render(<WritingAssistant {...defaultProps} />);
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         await waitFor(() => {
             expect(screen.getByText('Optimized text')).toBeInTheDocument();
         });
 
         const insertButton = screen.getByText('sulu_admin.insert');
-        await userEvent.click(insertButton);
+        await user.click(insertButton);
 
         expect(defaultProps.onConfirm).toHaveBeenCalledWith('Optimized text');
     });
 
     test('calls onDialogClose when the close button is clicked', async() => {
+        const user = userEvent.setup();
         render(<WritingAssistant {...defaultProps} />);
 
         const closeButton = screen.getAllByRole('button', {name: /su-times/i})[0];
-        await userEvent.click(closeButton);
+        await user.click(closeButton);
 
         expect(defaultProps.onDialogClose).toHaveBeenCalled();
     });
 
     test('navigator clipboard writeText should be called when text is copied to clipboard', async() => {
+        const user = userEvent.setup();
+        const writeText = jest.spyOn(navigator.clipboard, 'writeText');
         render(<WritingAssistant {...defaultProps} />);
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         await waitFor(() => {
             expect(screen.getByText('Optimized text')).toBeInTheDocument();
         });
 
         const copyButton = screen.getAllByRole('button', {name: /su-copy/i})[1];
-        await userEvent.click(copyButton);
+        await user.click(copyButton);
 
         expect(writeText).toHaveBeenCalledWith('Optimized text');
     });
 
     test('sends resourceId and resourceKey even without content context', async() => {
+        const user = userEvent.setup();
         render(
             <WritingAssistant
                 {...defaultProps}
@@ -168,7 +165,7 @@ describe('WritingAssistant Component', () => {
         );
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         await waitFor(() => {
             expect(screen.getByText('Optimized text')).toBeInTheDocument();
@@ -186,6 +183,7 @@ describe('WritingAssistant Component', () => {
     });
 
     test('sends content data when includeContentContext is enabled', async() => {
+        const user = userEvent.setup();
         sessionStorage.setItem('sulu_admin.include_content_context', 'true');
 
         const contentData = {title: 'Page Title', description: 'Page Description'};
@@ -201,7 +199,7 @@ describe('WritingAssistant Component', () => {
         );
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Improve this{enter}');
+        await user.type(input, 'Improve this{enter}');
 
         await waitFor(() => {
             expect(screen.getByText('Optimized text')).toBeInTheDocument();
@@ -223,6 +221,7 @@ describe('WritingAssistant Component', () => {
     });
 
     test('does not send content data when includeContentContext is disabled', async() => {
+        const user = userEvent.setup();
         sessionStorage.setItem('sulu_admin.include_content_context', 'false');
 
         const contentData = {title: 'Page Title'};
@@ -238,7 +237,7 @@ describe('WritingAssistant Component', () => {
         );
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Improve this{enter}');
+        await user.type(input, 'Improve this{enter}');
 
         await waitFor(() => {
             expect(screen.getByText('Optimized text')).toBeInTheDocument();
@@ -258,6 +257,7 @@ describe('WritingAssistant Component', () => {
     });
 
     test('sends webspaceKey when provided', async() => {
+        const user = userEvent.setup();
         render(
             <WritingAssistant
                 {...defaultProps}
@@ -268,7 +268,7 @@ describe('WritingAssistant Component', () => {
         );
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         await waitFor(() => {
             expect(screen.getByText('Optimized text')).toBeInTheDocument();
@@ -320,6 +320,7 @@ describe('WritingAssistant Component', () => {
     });
 
     test('appends every answer below the previous one and collapses the older ones', async() => {
+        const user = userEvent.setup();
         Requester.post
             .mockResolvedValueOnce({response: {text: 'First answer'}})
             .mockResolvedValueOnce({response: {text: 'Second answer'}});
@@ -327,10 +328,10 @@ describe('WritingAssistant Component', () => {
         render(<WritingAssistant {...defaultProps} />);
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'first{enter}');
+        await user.type(input, 'first{enter}');
         expect(await screen.findByText('First answer')).toBeInTheDocument();
 
-        await userEvent.type(input, 'second{enter}');
+        await user.type(input, 'second{enter}');
         expect(await screen.findByText('Second answer')).toBeInTheDocument();
 
         const texts = [...document.querySelectorAll('[class*="message"] [class*="text"]')]
@@ -346,12 +347,13 @@ describe('WritingAssistant Component', () => {
     });
 
     test('shows the retryable error when the request fails', async() => {
+        const user = userEvent.setup();
         Requester.post.mockRejectedValueOnce({json: () => Promise.resolve({})});
 
         render(<WritingAssistant {...defaultProps} />);
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         await waitFor(() => {
             expect(screen.getByText(defaultProps.messages.requestFailed)).toBeInTheDocument();
@@ -364,6 +366,7 @@ describe('WritingAssistant Component', () => {
     });
 
     test('retries the failed prompt when try again is clicked', async() => {
+        const user = userEvent.setup();
         Requester.post
             .mockRejectedValueOnce({json: () => Promise.resolve({})})
             .mockResolvedValueOnce({response: {text: 'Optimized text'}});
@@ -371,13 +374,13 @@ describe('WritingAssistant Component', () => {
         render(<WritingAssistant {...defaultProps} />);
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         await waitFor(() => {
             expect(screen.getByText(defaultProps.messages.tryAgain)).toBeInTheDocument();
         });
 
-        await userEvent.click(screen.getByText(defaultProps.messages.tryAgain));
+        await user.click(screen.getByText(defaultProps.messages.tryAgain));
 
         await waitFor(() => {
             expect(screen.getByText('Optimized text')).toBeInTheDocument();
@@ -388,6 +391,7 @@ describe('WritingAssistant Component', () => {
     });
 
     test('shows the out of credits error and disables the input', async() => {
+        const user = userEvent.setup();
         Requester.post.mockRejectedValueOnce({
             json: () => Promise.resolve({messageKey: 'sulu_ai.out_of_credits'}),
         });
@@ -395,7 +399,7 @@ describe('WritingAssistant Component', () => {
         render(<WritingAssistant {...defaultProps} contactEmail="admin@example.com" />);
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         await waitFor(() => {
             expect(screen.getByText('sulu_ai.out_of_credits')).toBeInTheDocument();
@@ -409,6 +413,7 @@ describe('WritingAssistant Component', () => {
     });
 
     test('shows the subscription inactive error and disables the input', async() => {
+        const user = userEvent.setup();
         Requester.post.mockRejectedValueOnce({
             json: () => Promise.resolve({messageKey: 'sulu_ai.subscription_inactive'}),
         });
@@ -416,7 +421,7 @@ describe('WritingAssistant Component', () => {
         render(<WritingAssistant {...defaultProps} contactEmail="admin@example.com" />);
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         await waitFor(() => {
             expect(screen.getByText('sulu_ai.subscription_inactive')).toBeInTheDocument();
@@ -430,6 +435,7 @@ describe('WritingAssistant Component', () => {
     });
 
     test('blocks further requests when the platform rejects the credentials', async() => {
+        const user = userEvent.setup();
         Requester.post.mockRejectedValueOnce({
             json: () => Promise.resolve({messageKey: 'sulu_ai.platform_unauthorized'}),
         });
@@ -437,7 +443,7 @@ describe('WritingAssistant Component', () => {
         render(<WritingAssistant {...defaultProps} contactEmail="admin@example.com" />);
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         await waitFor(() => {
             expect(screen.getByText('sulu_ai.platform_unauthorized')).toBeInTheDocument();
@@ -449,6 +455,7 @@ describe('WritingAssistant Component', () => {
     });
 
     test('does not show the contact admin action without a contact email', async() => {
+        const user = userEvent.setup();
         Requester.post.mockRejectedValueOnce({
             json: () => Promise.resolve({messageKey: 'sulu_ai.out_of_credits'}),
         });
@@ -456,7 +463,7 @@ describe('WritingAssistant Component', () => {
         render(<WritingAssistant {...defaultProps} />);
 
         const input = screen.getByPlaceholderText(defaultProps.messages.addMessage);
-        await userEvent.type(input, 'Test message{enter}');
+        await user.type(input, 'Test message{enter}');
 
         await waitFor(() => {
             expect(screen.getByText('sulu_ai.out_of_credits')).toBeInTheDocument();

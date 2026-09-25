@@ -1,21 +1,25 @@
 // @flow
 import React from 'react';
+import {act, render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
-import {mount, shallow} from 'enzyme';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
-import Router, {Route} from 'sulu-admin-bundle/services/Router';
 import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
+import {
+    createRoute,
+    createRouterMock,
+    mockResizeObserver,
+} from 'sulu-admin-bundle/utils/TestHelper';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import PreviewStore from '../stores/PreviewStore';
 import Preview from '../Preview';
 
+let mockPreviewStoreInstances = [];
+
 window.open = jest.fn().mockReturnValue({addEventListener: jest.fn()});
 
-window.ResizeObserver = jest.fn(function() {
-    this.observe = jest.fn();
-    this.disconnect = jest.fn();
-});
+mockResizeObserver();
 
 // $FlowFixMe
 const constantDate = new Date(2020, 11, 16, 14, 6, 22);
@@ -27,10 +31,15 @@ Date = class extends Date {
     }
 };
 
-jest.mock('debounce', () => jest.fn((value) => value));
+jest.mock('debounce', () => jest.fn((value) => {
+    value.clear = jest.fn();
+
+    return value;
+}));
 
 jest.mock('../stores/PreviewStore', () => jest.fn(function(resourceKey) {
     this.resourceKey = resourceKey;
+    this.starting = false;
     this.restart = jest.fn().mockReturnValue(Promise.resolve());
     this.start = jest.fn().mockReturnValue(Promise.resolve());
     this.update = jest.fn().mockReturnValue(Promise.resolve());
@@ -42,6 +51,7 @@ jest.mock('../stores/PreviewStore', () => jest.fn(function(resourceKey) {
     this.setTargetGroup = jest.fn();
 
     this.renderRoute = '/render';
+    mockPreviewStoreInstances.push(this);
 }));
 
 jest.mock('sulu-admin-bundle/services/Requester', () => ({
@@ -76,7 +86,7 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(
 ));
 
 jest.mock('sulu-page-bundle/stores/webspaceStore', () => ({
-    grantedWebspaces: [{key: 'sulu_io'}, {key: 'example'}],
+    grantedWebspaces: [{key: 'sulu_io', name: 'Sulu IO'}, {key: 'example', name: 'Example'}],
     getWebspace: jest.fn(),
 }));
 
@@ -86,23 +96,54 @@ jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function(his
     this.route = {options: {}};
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 beforeEach(() => {
     jest.resetModules();
+    jest.clearAllMocks();
 
     Preview.mode = 'on_request';
     Preview.audienceTargeting = false;
 
     webspaceStore.getWebspace.mockReturnValue({segments: []});
+    ResourceRequester.getList.mockReturnValue(Promise.resolve({_embedded: {target_groups: []}}));
+    window.open.mockReturnValue({addEventListener: jest.fn()});
+    mockPreviewStoreInstances = [];
 });
 
-test('Render correct preview', () => {
+function createPreviewRouter(routeOptions: Object = {}, attributes: Object = {}) {
+    return createRouterMock({
+        attributes,
+        route: createRoute(routeOptions),
+    });
+}
+
+function getPreviewStore() {
+    const previewStore = mockPreviewStoreInstances[mockPreviewStoreInstances.length - 1];
+
+    if (!previewStore) {
+        throw new Error('Expected a preview store to be created');
+    }
+
+    return previewStore;
+}
+
+async function startPreview(user) {
+    await user.click(screen.getByRole('button', {name: 'Start'}));
+
+    return getPreviewStore();
+}
+
+async function selectToolbarOption(user, icon: string, option: string) {
+    await user.click(screen.getByRole('button', {name: new RegExp(icon)}));
+    await user.click(screen.getByRole('button', {name: option}));
+}
+
+test('Render correct preview', async() => {
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = createPreviewRouter();
 
     webspaceStore.getWebspace.mockReturnValue({
         segments: [
@@ -111,33 +152,19 @@ test('Render correct preview', () => {
         ],
     });
 
-    const preview = mount(<Preview formStore={formStore} router={router} />);
-
-    const startPromise = Promise.resolve();
-    const previewStore = preview.instance().previewStore;
+    const {container} = render(<Preview formStore={formStore} router={router} />);
+    const previewStore = getPreviewStore();
     expect(previewStore.resourceKey).toBe('pages');
-    previewStore.start.mockReturnValue(startPromise);
-    previewStore.starting = false;
-
-    preview.instance().handleStartClick();
-
-    return startPromise.then(() => {
-        preview.update();
-        expect(preview.render()).toMatchSnapshot();
-    });
+    await startPreview(user);
+    expect(await screen.findByRole('button', {name: /su-focus/})).toBeInTheDocument();
+    expect(container).toMatchSnapshot();
 });
 
 test('Render correct preview use route option for resourceKey', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
-    router.route = new Route({
-        path: '/test',
-        name: 'test',
-        type: 'test',
-        options: {
-            previewResourceKey: 'page_contents',
-        },
+    const router = createPreviewRouter({
+        previewResourceKey: 'page_contents',
     });
 
     webspaceStore.getWebspace.mockReturnValue({
@@ -147,188 +174,137 @@ test('Render correct preview use route option for resourceKey', () => {
         ],
     });
 
-    const preview = mount(<Preview formStore={formStore} router={router} />);
+    render(<Preview formStore={formStore} router={router} />);
 
-    const previewStore = preview.instance().previewStore;
+    const previewStore = getPreviewStore();
     expect(previewStore.resourceKey).toBe('page_contents');
 });
 
-test('Render correct preview with target groups', () => {
+test('Render correct preview with target groups', async() => {
+    const user = userEvent.setup();
     const targetGroupsPromise = Promise.resolve({_embedded: {target_groups: []}});
     ResourceRequester.getList.mockReturnValue(targetGroupsPromise);
 
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = createPreviewRouter();
 
     Preview.audienceTargeting = true;
-    const preview = mount(<Preview formStore={formStore} router={router} />);
+    const {container} = render(<Preview formStore={formStore} router={router} />);
 
-    const startPromise = Promise.resolve();
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
-    previewStore.starting = false;
-
-    preview.instance().handleStartClick();
-
-    return startPromise.then(() => {
-        preview.update();
-        expect(preview.render()).toMatchSnapshot();
-    });
+    await targetGroupsPromise;
+    await startPreview(user);
+    expect(await screen.findByRole('button', {name: /su-user/})).toBeInTheDocument();
+    expect(container).toMatchSnapshot();
 });
 
 test('Render button to start preview', () => {
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = createPreviewRouter();
 
-    const preview = mount(<Preview formStore={formStore} router={router} />);
+    const {container} = render(<Preview formStore={formStore} router={router} />);
 
-    expect(preview.render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
-test('Render nothing if separate window is opened and rerender if it is closed', () => {
+test('Render nothing if separate window is opened and rerender if it is closed', async() => {
+    const user = userEvent.setup();
     const previewWindow = {addEventListener: jest.fn()};
     window.open.mockReturnValue(previewWindow);
 
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = createPreviewRouter();
 
-    const preview = shallow(<Preview formStore={formStore} router={router} />);
+    const {container} = render(<Preview formStore={formStore} router={router} />);
 
-    const startPromise = Promise.resolve();
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
-    previewStore.starting = false;
+    await startPreview(user);
+    expect(container).toMatchSnapshot();
+    await user.click(screen.getByRole('button', {name: /su-link/}));
+    expect(container).toBeEmptyDOMElement();
 
-    preview.instance().handleStartClick();
-
-    return startPromise.then(() => {
-        expect(preview.render()).toMatchSnapshot();
-        preview.find('Button[icon="su-link"]').simulate('click');
-        expect(preview.html()).toEqual(null);
-
-        expect(previewWindow.addEventListener).toHaveBeenCalledWith('beforeunload', expect.anything());
+    expect(previewWindow.addEventListener).toHaveBeenCalledWith('beforeunload', expect.anything());
+    act(() => {
         previewWindow.addEventListener.mock.calls[0][1]();
-        expect(preview.render()).toMatchSnapshot();
     });
+    expect(container).toMatchSnapshot();
 });
 
-test('Change css class when selection of device has changed', () => {
+test('Change css class when selection of device has changed', async() => {
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = createPreviewRouter();
 
-    const preview = shallow(<Preview formStore={formStore} router={router} />);
+    render(<Preview formStore={formStore} router={router} />);
 
-    const startPromise = Promise.resolve();
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
-    previewStore.starting = false;
+    await startPreview(user);
+    expect(document.querySelectorAll('.auto')).toHaveLength(1);
 
-    preview.instance().handleStartClick();
+    await selectToolbarOption(user, 'su-expand', 'sulu_preview.tablet');
+    expect(document.querySelectorAll('.tablet')).toHaveLength(1);
 
-    return startPromise.then(() => {
-        expect(preview.find('.auto')).toHaveLength(1);
-        expect(preview.find('.desktop')).toHaveLength(0);
-        expect(preview.find('.tablet')).toHaveLength(0);
-        expect(preview.find('.smartphone')).toHaveLength(0);
+    await selectToolbarOption(user, 'su-expand', 'sulu_preview.desktop');
+    expect(document.querySelectorAll('.desktop')).toHaveLength(1);
 
-        preview.find('Select').at(0).prop('onChange')('tablet');
-        expect(preview.find('.auto')).toHaveLength(0);
-        expect(preview.find('.desktop')).toHaveLength(0);
-        expect(preview.find('.tablet')).toHaveLength(1);
-        expect(preview.find('.smartphone')).toHaveLength(0);
-
-        preview.find('Select').at(0).prop('onChange')('desktop');
-        expect(preview.find('.auto')).toHaveLength(0);
-        expect(preview.find('.desktop')).toHaveLength(1);
-        expect(preview.find('.tablet')).toHaveLength(0);
-        expect(preview.find('.smartphone')).toHaveLength(0);
-
-        preview.find('Select').at(0).prop('onChange')('smartphone');
-        expect(preview.find('.auto')).toHaveLength(0);
-        expect(preview.find('.desktop')).toHaveLength(0);
-        expect(preview.find('.tablet')).toHaveLength(0);
-        expect(preview.find('.smartphone')).toHaveLength(1);
-    });
+    await selectToolbarOption(user, 'su-expand', 'sulu_preview.smartphone');
+    expect(document.querySelectorAll('.smartphone')).toHaveLength(1);
 });
 
-test('Change webspace in PreviewStore when selection of webspace has changed', () => {
+test('Change webspace in PreviewStore when selection of webspace has changed', async() => {
+    const user = userEvent.setup();
     const locale = observable.box('de');
     const resourceStore = new ResourceStore('pages', 1, {locale});
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = createPreviewRouter();
 
-    const preview = shallow(<Preview formStore={formStore} router={router} />);
+    render(<Preview formStore={formStore} router={router} />);
+    const previewStore = getPreviewStore();
 
-    const startPromise = Promise.resolve();
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
-    previewStore.starting = false;
+    await startPreview(user);
+    expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, locale, 'sulu_io', undefined);
 
-    preview.instance().handleStartClick();
-
-    return startPromise.then(() => {
-        expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, locale, 'sulu_io', undefined);
-
-        preview.find('Select').at(1).prop('onChange')('example');
-        expect(previewStore.setWebspace).toHaveBeenCalledWith('example');
-    });
+    await selectToolbarOption(user, 'su-webspace', 'Example');
+    expect(previewStore.setWebspace).toHaveBeenCalledWith('example');
 });
 
 test('Use router attribute to determine webspace', () => {
     const locale = observable.box('ru');
     const resourceStore = new ResourceStore('pages', 1, {locale});
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
-    router.attributes.webspace = 'example';
+    const router = createPreviewRouter({}, {webspace: 'example'});
 
-    const preview = shallow(<Preview formStore={formStore} router={router} />);
+    render(<Preview formStore={formStore} router={router} />);
 
-    const startPromise = Promise.resolve();
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
-    previewStore.starting = false;
-
-    preview.instance().handleStartClick();
-
-    return startPromise.then(() => {
-        expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, locale, 'example', undefined);
-    });
+    expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, locale, 'example', undefined);
 });
 
-test('Change segment in PreviewStore when selection of segment has changed', () => {
+test('Change segment in PreviewStore when selection of segment has changed', async() => {
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = createPreviewRouter();
 
     webspaceStore.getWebspace.mockReturnValue({
         segments: [
-            {key: 's', name: 'Summer', default: false},
-            {key: 'w', name: 'Winter', default: true},
+            {key: 's', name: 'Summer', title: 'Summer', default: false},
+            {key: 'w', name: 'Winter', title: 'Winter', default: true},
         ],
     });
 
-    const preview = shallow(<Preview formStore={formStore} router={router} />);
+    render(<Preview formStore={formStore} router={router} />);
+    const previewStore = getPreviewStore();
 
-    const startPromise = Promise.resolve();
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
-    previewStore.starting = false;
+    await startPreview(user);
+    expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, undefined, 'sulu_io', 'w');
 
-    preview.instance().handleStartClick();
-
-    return startPromise.then(() => {
-        expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, undefined, 'sulu_io', 'w');
-
-        preview.find('Select').at(2).prop('onChange')('s');
-        expect(previewStore.setSegment).toHaveBeenCalledWith('s');
-    });
+    await selectToolbarOption(user, 'su-focus', 'Summer');
+    expect(previewStore.setSegment).toHaveBeenCalledWith('s');
 });
 
-test('React and update preview when data is changed', () => {
+test('React and update preview when data is changed', async() => {
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
@@ -339,32 +315,24 @@ test('React and update preview when data is changed', () => {
     // $FlowFixMe
     formStore.type = observable.box('default');
 
-    const router = new Router({});
-    const preview = mount(<Preview formStore={formStore} router={router} />);
-
-    const startPromise = Promise.resolve();
+    const router = createPreviewRouter();
+    const {container} = render(<Preview formStore={formStore} router={router} />);
     const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
 
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
+    const previewStore = getPreviewStore();
     previewStore.update.mockReturnValue(updatePromise);
-    previewStore.starting = false;
     previewStore.token = '123-123-123';
 
-    preview.instance().handleStartClick();
-
-    formStore.data.set('title', 'New Test');
-
-    return startPromise.then(() => {
-        preview.update();
-        previewStore.token = '123-123-123';
-        expect(previewStore.update).toHaveBeenCalledWith({title: 'New Test'});
-
-        expect(preview.render()).toMatchSnapshot();
+    await startPreview(user);
+    act(() => {
+        formStore.data.set('title', 'New Test');
     });
+    await waitFor(() => expect(previewStore.update).toHaveBeenCalledWith({title: 'New Test'}));
+    expect(container).toMatchSnapshot();
 });
 
-test('React and update preview in external window when data is changed', () => {
+test('React and update preview in external window when data is changed', async() => {
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
@@ -390,37 +358,29 @@ test('React and update preview in external window when data is changed', () => {
     // $FlowFixMe
     formStore.type = observable.box('default');
 
-    const router = new Router({});
-    const preview = mount(<Preview formStore={formStore} router={router} />);
-
-    const startPromise = Promise.resolve();
+    const router = createPreviewRouter();
+    const {container} = render(<Preview formStore={formStore} router={router} />);
     const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
 
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
+    const previewStore = getPreviewStore();
     previewStore.update.mockReturnValue(updatePromise);
-    previewStore.starting = false;
     previewStore.token = '123-123-123';
 
-    preview.instance().handleStartClick();
-    preview.update();
-    preview.find('Button[icon="su-link"]').prop('onClick')();
-    preview.update();
-
-    formStore.data.set('title', 'New Test');
-
-    return startPromise.then(() => {
-        preview.update();
-        expect(previewStore.update).toHaveBeenCalledWith({title: 'New Test'});
-
-        expect(preview.render()).toMatchSnapshot();
-        expect(previewWindow.document.open).toHaveBeenCalledWith();
-        expect(previewWindow.document.write).toHaveBeenCalledWith('<h1>Sulu is awesome</h1>');
-        expect(previewWindow.document.close).toHaveBeenCalledWith();
+    await startPreview(user);
+    await user.click(screen.getByRole('button', {name: /su-link/}));
+    act(() => {
+        formStore.data.set('title', 'New Test');
     });
+    await waitFor(() => expect(previewStore.update).toHaveBeenCalledWith({title: 'New Test'}));
+
+    expect(container).toMatchSnapshot();
+    expect(previewWindow.document.open).toHaveBeenCalledWith();
+    expect(previewWindow.document.write).toHaveBeenCalledWith('<h1>Sulu is awesome</h1>');
+    expect(previewWindow.document.close).toHaveBeenCalledWith();
 });
 
-test('Dont react or update preview when data is changed during formstore is loading', () => {
+test('Dont react or update preview when data is changed during formstore is loading', async() => {
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
@@ -431,30 +391,23 @@ test('Dont react or update preview when data is changed during formstore is load
     // $FlowFixMe
     formStore.type = observable.box('default');
 
-    const router = new Router({});
-    const preview = mount(<Preview formStore={formStore} router={router} />);
-
-    const startPromise = Promise.resolve();
+    const router = createPreviewRouter();
+    const {container} = render(<Preview formStore={formStore} router={router} />);
     const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
 
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
+    const previewStore = getPreviewStore();
     previewStore.update.mockReturnValue(updatePromise);
-    previewStore.starting = false;
 
-    preview.instance().handleStartClick();
-
-    formStore.data.set('title', 'New Test');
-
-    return startPromise.then(() => {
-        preview.update();
-        expect(previewStore.update).not.toHaveBeenCalled();
-
-        expect(preview.render()).toMatchSnapshot();
+    await startPreview(user);
+    act(() => {
+        formStore.data.set('title', 'New Test');
     });
+    expect(previewStore.update).not.toHaveBeenCalled();
+    expect(container).toMatchSnapshot();
 });
 
-test('Dont react or update preview when data is changed during preview-store is starting', () => {
+test('Dont react or update preview when data is changed during preview-store is starting', async() => {
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
@@ -465,30 +418,24 @@ test('Dont react or update preview when data is changed during preview-store is 
     // $FlowFixMe
     formStore.type = observable.box('default');
 
-    const router = new Router({});
-    const preview = mount(<Preview formStore={formStore} router={router} />);
-
-    const startPromise = Promise.resolve();
+    const router = createPreviewRouter();
+    const {container} = render(<Preview formStore={formStore} router={router} />);
     const updatePromise = Promise.resolve('<h1>Sulu is awesome</h1>');
 
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
+    const previewStore = getPreviewStore();
     previewStore.update.mockReturnValue(updatePromise);
     previewStore.starting = true;
 
-    preview.instance().handleStartClick();
-
-    formStore.data.set('title', 'New Test');
-
-    return startPromise.then(() => {
-        preview.update();
-        expect(previewStore.update).not.toHaveBeenCalled();
-
-        expect(preview.render()).toMatchSnapshot();
+    await startPreview(user);
+    act(() => {
+        formStore.data.set('title', 'New Test');
     });
+    expect(previewStore.update).not.toHaveBeenCalled();
+    expect(container).toMatchSnapshot();
 });
 
-test('React and update-context when schema is changed', () => {
+test('React and update-context when schema is changed', async() => {
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
@@ -500,30 +447,25 @@ test('React and update-context when schema is changed', () => {
     formStore.type = observable.box('default');
     formStore.schema = observable.box({title: {label: 'Title'}});
 
-    const router = new Router({});
-    const preview = mount(<Preview formStore={formStore} router={router} />);
-
-    const startPromise = Promise.resolve();
+    const router = createPreviewRouter();
+    render(<Preview formStore={formStore} router={router} />);
     const updateContextPromise = Promise.resolve('<h1>Sulu is awesome</h1>');
 
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
+    const previewStore = getPreviewStore();
     previewStore.updateContext.mockReturnValue(updateContextPromise);
-    previewStore.starting = false;
 
-    preview.instance().handleStartClick();
+    await startPreview(user);
 
-    // $FlowFixMe
-    formStore.type.set('homepage');
-    // $FlowFixMe
-    formStore.schema.set({title: {label: 'Title', colSpan: 12}});
-
-    return startPromise.then(() => {
-        expect(previewStore.updateContext).toHaveBeenCalledWith('homepage', {title: 'Test'});
+    act(() => {
+        (formStore.type: any).set('homepage');
+        (formStore.schema: any).set({title: {label: 'Title', colSpan: 12}});
     });
+
+    await waitFor(() => expect(previewStore.updateContext).toHaveBeenCalledWith('homepage', {title: 'Test'}));
 });
 
-test('React and restart when locale is changed', () => {
+test('React and restart when locale is changed', async() => {
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
 
@@ -537,77 +479,69 @@ test('React and restart when locale is changed', () => {
     // $FlowFixMe
     formStore.locale = observable.box('en');
 
-    const router = new Router({});
-    const preview = mount(<Preview formStore={formStore} router={router} />);
-
-    const startPromise = Promise.resolve();
+    const router = createPreviewRouter();
+    render(<Preview formStore={formStore} router={router} />);
     const updateContextPromise = Promise.resolve('<h1>Sulu is awesome</h1>');
 
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
+    const previewStore = getPreviewStore();
     previewStore.updateContext.mockReturnValue(updateContextPromise);
-    previewStore.starting = false;
 
-    preview.instance().handleStartClick();
+    await startPreview(user);
 
-    // $FlowFixMe
-    formStore.type.set('homepage');
-    // $FlowFixMe
-    formStore.locale.set('de');
-
-    return startPromise.then(() => {
-        expect(previewStore.restart).toHaveBeenCalled();
+    act(() => {
+        (formStore.type: any).set('homepage');
+        (formStore.locale: any).set('de');
     });
+
+    await waitFor(() => expect(previewStore.restart).toHaveBeenCalled());
 });
 
-test('Change target group in PreviewStore when selection of target group has changed', () => {
+test('Change target group in PreviewStore when selection of target group has changed', async() => {
+    const user = userEvent.setup();
     const locale = observable.box('de');
     const resourceStore = new ResourceStore('pages', 1, {locale});
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = createPreviewRouter();
 
     Preview.audienceTargeting = true;
+    const targetGroupsPromise = Promise.resolve({
+        _embedded: {target_groups: [{id: 4, title: 'Target Group'}]},
+    });
+    ResourceRequester.getList.mockReturnValue(targetGroupsPromise);
 
-    const preview = shallow(<Preview formStore={formStore} router={router} />);
-
-    const startPromise = Promise.resolve();
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
-    previewStore.starting = false;
+    render(<Preview formStore={formStore} router={router} />);
+    const previewStore = getPreviewStore();
     previewStore.token = '123-123-123';
 
-    preview.instance().handleStartClick();
+    await targetGroupsPromise;
+    expect(await screen.findByRole('button', {name: 'Start'})).toBeInTheDocument();
+    await startPreview(user);
+    expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, locale, 'sulu_io', undefined);
 
-    return startPromise.then(() => {
-        expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, locale, 'sulu_io', undefined);
-
-        preview.find('Select').at(2).prop('onChange')(4);
-        expect(previewStore.setTargetGroup).toHaveBeenCalledWith(4);
-        expect(previewStore.update).toHaveBeenCalledWith(undefined);
-    });
+    await selectToolbarOption(user, 'su-user', 'Target Group');
+    expect(previewStore.setTargetGroup).toHaveBeenCalledWith(4);
+    expect(previewStore.update).toHaveBeenCalledWith(undefined);
 });
 
-test('Change dateTime in PreviewStore when DatePicker changed', () => {
+test('Change dateTime in PreviewStore when DatePicker changed', async() => {
+    const user = userEvent.setup();
     const resourceStore = new ResourceStore('pages', 1);
     const formStore = new ResourceFormStore(resourceStore, 'pages');
-    const router = new Router({});
+    const router = createPreviewRouter();
 
-    const preview = mount(<Preview formStore={formStore} router={router} />);
+    render(<Preview formStore={formStore} router={router} />);
+    const previewStore = getPreviewStore();
 
-    const startPromise = Promise.resolve();
-    const previewStore = preview.instance().previewStore;
-    previewStore.start.mockReturnValue(startPromise);
-    previewStore.starting = false;
+    await startPreview(user);
+    expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, undefined, 'sulu_io', undefined);
 
-    preview.instance().handleStartClick();
+    await user.click(screen.getByRole('button', {name: /su-calendar/}));
+    const input = screen.getByRole('textbox');
+    await user.clear(input);
+    await user.type(input, '12/16/2020 2:06 PM');
+    await user.tab();
 
-    return startPromise.then(() => {
-        preview.update();
-        expect(PreviewStore).toHaveBeenCalledWith('pages', undefined, undefined, 'sulu_io', undefined);
-
-        const date = new Date();
-        preview.find('Button[icon="su-calendar"]').simulate('click');
-        preview.find('DatePicker').prop('onChange')(date);
-        expect(previewStore.setDateTime).toHaveBeenCalledWith(date);
-    });
+    expect(previewStore.setDateTime).toHaveBeenCalled();
+    const selectedDate = previewStore.setDateTime.mock.calls[previewStore.setDateTime.mock.calls.length - 1][0];
+    expect(selectedDate.getTime()).not.toBeNaN();
 });

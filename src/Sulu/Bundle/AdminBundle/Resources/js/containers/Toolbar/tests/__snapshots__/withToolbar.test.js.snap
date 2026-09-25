@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Pass props to rendered component 1`] = `
-<h1>
-  Test
-</h1>
+<DocumentFragment>
+  <h1>
+    Test
+  </h1>
+</DocumentFragment>
 `;

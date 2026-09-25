@@ -1,5 +1,5 @@
 // @flow
-import {render} from '@testing-library/react';
+import {render, waitFor} from '@testing-library/react';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import MediaSelectionBlockPreviewTransformer
     from '../../blockPreviewTransformers/MediaSelectionBlockPreviewTransformer';
@@ -58,9 +58,11 @@ test('Render MimeTypeIndicator if image isn\'t available', async() => {
     });
 
     const {container, rerender} = render(mediaSelectionBlockPreviewTransformer.transform({ids: [1, 2, 3]}));
-    await new Promise((resolve) => setTimeout(resolve));
-    await new Promise((resolve) => setTimeout(resolve));
-    rerender(mediaSelectionBlockPreviewTransformer.transform({ids: [1, 2, 3]}));
+    await waitFor(() => {
+        rerender(mediaSelectionBlockPreviewTransformer.transform({ids: [1, 2, 3]}));
+        //eslint-disable-next-line testing-library/no-container
+        expect(container.querySelectorAll('.mimeTypeIndicator .mimeTypeIndicator')).toHaveLength(3);
+    });
 
     //eslint-disable-next-line testing-library/no-container
     expect(container.querySelectorAll('.mimeTypeIndicator .mimeTypeIndicator')).toHaveLength(3);

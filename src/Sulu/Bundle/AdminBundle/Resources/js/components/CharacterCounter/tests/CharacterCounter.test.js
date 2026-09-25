@@ -3,9 +3,7 @@ import React from 'react';
 import {render} from '@testing-library/react';
 import CharacterCounter from '../CharacterCounter';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('Should show a positive count if nothing is passed', () => {
     const {container} = render(<CharacterCounter max={20} value={undefined} />);

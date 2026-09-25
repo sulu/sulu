@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import ViewRenderer from '../ViewRenderer';
 import viewRegistry from '../registries/viewRegistry';
 
@@ -9,62 +9,86 @@ jest.mock('../registries/viewRegistry', () => ({
     getConfig: jest.fn(),
 }));
 
-test('Render view returned from ViewRegistry', () => {
-    const router = {
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+function createRouter(route, attributes = {}) {
+    return {
         addUpdateRouteHook: jest.fn(),
-        route: {type: 'test'},
+        attributes,
+        clearBindings: jest.fn(),
+        route,
     };
+}
+
+function RemountProbeView(props) {
+    const [initialAttributes] = React.useState(props.router.attributes);
+
+    return (
+        <div data-testid="remount-probe">
+            {initialAttributes.webspace}
+            {initialAttributes.locale ? '__' + initialAttributes.locale : ''}
+        </div>
+    );
+}
+
+test('Render view returned from ViewRegistry', () => {
+    const router = createRouter({type: 'test'});
     viewRegistry.get.mockReturnValue(() => (<h1>Test</h1>));
     viewRegistry.getConfig.mockReturnValue({});
-    const view = mount(<ViewRenderer router={router} />);
-    expect(render(view)).toMatchSnapshot();
+
+    const {container} = render(<ViewRenderer router={router} />);
+
+    expect(screen.getByRole('heading', {name: 'Test'})).toBeInTheDocument();
+    expect(container.firstChild).toHaveClass('view');
     expect(viewRegistry.get).toHaveBeenCalledWith('test');
 });
 
 test('Render view returned from ViewRegistry with disableDefaultSpacing true', () => {
-    const router = {
-        addUpdateRouteHook: jest.fn(),
-        route: {type: 'test'},
-    };
+    const router = createRouter({type: 'test'});
     viewRegistry.get.mockReturnValue(() => (<h1>Test</h1>));
     viewRegistry.getConfig.mockReturnValue({disableDefaultSpacing: true});
-    const view = mount(<ViewRenderer router={router} />);
-    expect(render(view)).toMatchSnapshot();
+
+    const {container} = render(<ViewRenderer router={router} />);
+
+    expect(screen.getByRole('heading', {name: 'Test'})).toBeInTheDocument();
+    expect(container.firstChild.tagName).toEqual('H1');
     expect(viewRegistry.get).toHaveBeenCalledWith('test');
 });
 
 test('Render view returned from ViewRegistry with passed router', () => {
-    const router = {
-        route: {
+    const router = createRouter(
+        {
             type: 'test',
         },
-        attributes: {
+        {
             value: 'Test attribute',
-        },
-    };
+        }
+    );
 
     viewRegistry.get.mockReturnValue((props) => (<h1>{props.router.attributes.value}</h1>));
     viewRegistry.getConfig.mockReturnValue({});
-    const view = render(<ViewRenderer router={router} />);
-    expect(view).toMatchSnapshot();
+
+    render(<ViewRenderer router={router} />);
+
+    expect(screen.getByRole('heading', {name: 'Test attribute'})).toBeInTheDocument();
     expect(viewRegistry.get).toHaveBeenCalledWith('test');
 });
 
 test('Render view with parents should nest rendered views', () => {
-    const router = {
-        route: {
-            name: 'sulu_admin.form_tab',
-            type: 'form_tab',
+    const router = createRouter({
+        name: 'sulu_admin.form_tab',
+        type: 'form_tab',
+        parent: {
+            name: 'sulu_admin.form',
+            type: 'form',
             parent: {
-                name: 'sulu_admin.form',
-                type: 'form',
-                parent: {
-                    name: 'sulu_admin.app',
-                    type: 'app',
-                },
+                name: 'sulu_admin.app',
+                type: 'app',
             },
         },
-    };
+    });
 
     viewRegistry.get.mockImplementation((view) => {
         switch (view) {
@@ -101,24 +125,29 @@ test('Render view with parents should nest rendered views', () => {
     });
     viewRegistry.getConfig.mockReturnValue({});
 
-    expect(render(<ViewRenderer router={router} />)).toMatchSnapshot();
+    render(<ViewRenderer router={router} />);
+
+    expect(screen.getByRole('heading', {name: 'App'})).toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'Form'})).toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'Form Tab'})).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.app')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.form')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.form_tab')).toBeInTheDocument();
 });
 
 test('Render view with parents should nest rendered views and correctly pass children arguments', () => {
-    const router = {
-        route: {
-            name: 'sulu_admin.form_tab',
-            type: 'form_tab',
+    const router = createRouter({
+        name: 'sulu_admin.form_tab',
+        type: 'form_tab',
+        parent: {
+            name: 'sulu_admin.form',
+            type: 'form',
             parent: {
-                name: 'sulu_admin.form',
-                type: 'form',
-                parent: {
-                    name: 'sulu_admin.app',
-                    type: 'app',
-                },
+                name: 'sulu_admin.app',
+                type: 'app',
             },
         },
-    };
+    });
 
     viewRegistry.get.mockImplementation((view) => {
         switch (view) {
@@ -157,105 +186,74 @@ test('Render view with parents should nest rendered views and correctly pass chi
     });
     viewRegistry.getConfig.mockReturnValue({disableDefaultSpacing: true});
 
-    expect(render(<ViewRenderer router={router} />)).toMatchSnapshot();
+    render(<ViewRenderer router={router} />);
+
+    expect(screen.getByRole('heading', {name: 'App'})).toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'Form'})).toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'Form Tab'})).toBeInTheDocument();
+    expect(screen.getAllByText('App')).toHaveLength(2);
+    expect(screen.getAllByText('Form')).toHaveLength(2);
 });
 
 test('Render view with route that has no rerenderAttributes', () => {
-    const router = {
-        addUpdateRouteHook: jest.fn(),
-        route: {
-            name: 'route',
-            type: 'webspaceOverview',
-        },
-        attributes: {
-            webspace: 'test',
-        },
+    const route = {
+        name: 'route',
+        type: 'webspaceOverview',
     };
-
-    viewRegistry.get.mockImplementation((view) => {
-        switch (view) {
-            case 'webspaceOverview':
-                return function WebspaceOverview() {
-                    return (
-                        <div>
-                            <h3>Webspace</h3>
-                        </div>
-                    );
-                };
-        }
-    });
+    const router = createRouter(route, {webspace: 'test'});
+    viewRegistry.get.mockReturnValue(RemountProbeView);
     viewRegistry.getConfig.mockReturnValue({disableDefaultSpacing: true});
 
-    const viewRenderer = shallow(<ViewRenderer router={router} />);
-    expect(viewRenderer.key()).toBe('route');
+    const {rerender} = render(<ViewRenderer router={router} />);
+
+    expect(screen.getByTestId('remount-probe')).toHaveTextContent('test');
+
+    rerender(<ViewRenderer router={createRouter(route, {webspace: 'example'})} />);
+
+    expect(screen.getByTestId('remount-probe')).toHaveTextContent('test');
 });
 
 test('Render view with route that has rerenderAttributes', () => {
-    const router = {
-        addUpdateRouteHook: jest.fn(),
-        route: {
-            name: 'route',
-            type: 'webspaceOverview',
-            rerenderAttributes: [
-                'webspace',
-            ],
-        },
-        attributes: {
-            webspace: 'test',
-        },
+    const route = {
+        name: 'route',
+        type: 'webspaceOverview',
+        rerenderAttributes: [
+            'webspace',
+        ],
     };
-
-    viewRegistry.get.mockImplementation((view) => {
-        switch (view) {
-            case 'webspaceOverview':
-                return function WebspaceOverview() {
-                    return (
-                        <div>
-                            <h3>Webspace</h3>
-                        </div>
-                    );
-                };
-        }
-    });
+    const router = createRouter(route, {webspace: 'test'});
+    viewRegistry.get.mockReturnValue(RemountProbeView);
     viewRegistry.getConfig.mockReturnValue({disableDefaultSpacing: true});
 
-    const viewRenderer = shallow(<ViewRenderer router={router} />);
-    expect(viewRenderer.key()).toBe('route-test');
+    const {rerender} = render(<ViewRenderer router={router} />);
+
+    expect(screen.getByTestId('remount-probe')).toHaveTextContent('test');
+
+    rerender(<ViewRenderer router={createRouter(route, {webspace: 'example'})} />);
+
+    expect(screen.getByTestId('remount-probe')).toHaveTextContent('example');
 });
 
 test('Render view with route that has more than one rerenderAttributes', () => {
-    const router = {
-        addUpdateRouteHook: jest.fn(),
-        route: {
-            name: 'route',
-            type: 'webspaceOverview',
-            rerenderAttributes: [
-                'webspace',
-                'locale',
-            ],
-        },
-        attributes: {
-            webspace: 'test',
-            locale: 'de',
-        },
+    const route = {
+        name: 'route',
+        type: 'webspaceOverview',
+        rerenderAttributes: [
+            'webspace',
+            'locale',
+        ],
     };
-
-    viewRegistry.get.mockImplementation((view) => {
-        switch (view) {
-            case 'webspaceOverview':
-                return function WebspaceOverview() {
-                    return (
-                        <div>
-                            <h3>Webspace</h3>
-                        </div>
-                    );
-                };
-        }
-    });
+    const router = createRouter(route, {locale: 'de', webspace: 'test'});
+    viewRegistry.get.mockReturnValue(RemountProbeView);
     viewRegistry.getConfig.mockReturnValue({disableDefaultSpacing: true});
 
-    const viewRenderer = shallow(<ViewRenderer router={router} />);
-    expect(viewRenderer.key()).toBe('route-test__de');
+    const {rerender} = render(<ViewRenderer router={router} />);
+
+    expect(screen.getByTestId('remount-probe')).toHaveTextContent('test__de');
+
+    rerender(<ViewRenderer router={createRouter(route, {locale: 'fr', webspace: 'test'})} />);
+
+    expect(screen.getByTestId('remount-probe')).toHaveTextContent('test__fr');
 });
 
 test('Clear bindings of router everytime a new view is rendered', () => {
@@ -272,13 +270,9 @@ test('Clear bindings of router everytime a new view is rendered', () => {
         type: 'test',
     };
 
-    const router = {
-        addUpdateRouteHook: jest.fn(),
-        clearBindings: jest.fn(),
-        route: route1,
-    };
+    const router = createRouter(route1);
 
-    shallow(<ViewRenderer router={router} />);
+    render(<ViewRenderer router={router} />);
     expect(router.addUpdateRouteHook).toHaveBeenCalledWith(expect.anything(), 1024);
 
     const updateRouteHook = router.addUpdateRouteHook.mock.calls[0][0];
@@ -300,17 +294,12 @@ test('Clear bindings of router when same view with a different rerender attribut
         rerenderAttributes: ['webspace'],
     };
 
-    const router = {
-        addUpdateRouteHook: jest.fn(),
-        attributes: {
-            locale: 'de',
-            webspace: 'sulu',
-        },
-        clearBindings: jest.fn(),
-        route,
-    };
+    const router = createRouter(route, {
+        locale: 'de',
+        webspace: 'sulu',
+    });
 
-    shallow(<ViewRenderer router={router} />);
+    render(<ViewRenderer router={router} />);
     expect(router.addUpdateRouteHook).toHaveBeenCalledWith(expect.anything(), 1024);
 
     const updateRouteHook = router.addUpdateRouteHook.mock.calls[0][0];

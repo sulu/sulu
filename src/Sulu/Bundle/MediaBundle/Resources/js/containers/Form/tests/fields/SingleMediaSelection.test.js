@@ -1,15 +1,16 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
-import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {extendObservable as mockExtendObservable, observable} from 'mobx';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {createRouterMock, fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import FormInspector from 'sulu-admin-bundle/containers/Form/FormInspector';
 import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/ResourceFormStore';
-import Router from 'sulu-admin-bundle/services/Router';
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
-import {observable} from 'mobx';
-import SingleMediaSelectionComponent from '../../../SingleMediaSelection';
 import SingleMediaSelection from '../../fields/SingleMediaSelection';
+
+let mockSingleSelectionStoreInstances: Array<Object> = [];
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
@@ -19,7 +20,9 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resou
     this.locale = observableOptions.locale;
 }));
 
-jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn());
+jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn(function() {
+    mockSingleSelectionStoreInstances.push(this);
+}));
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
     this.locale = resourceStore.locale;
@@ -29,15 +32,54 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
     this.locale = formStore.locale;
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'userContentLocale',
 }));
 
-jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(() => null));
+function mockSingleMediaSelectionOverlay(props) {
+    if (!props.open) {
+        return null;
+    }
+
+    return React.createElement('div', {}, props.types.join(','));
+}
+
+jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(mockSingleMediaSelectionOverlay));
+
+const SingleSelectionStoreMock = (SingleSelectionStore: any);
+
+function getLatestSingleSelectionStore() {
+    const store = mockSingleSelectionStoreInstances[mockSingleSelectionStoreInstances.length - 1];
+
+    if (!store) {
+        throw new Error('Expected a single selection store to be created');
+    }
+
+    return store;
+}
+
+function mockSingleSelectionStoreOnce(implementation) {
+    SingleSelectionStoreMock.mockImplementationOnce(function(...args) {
+        implementation.apply(this, args);
+        mockSingleSelectionStoreInstances.push(this);
+    });
+}
+
+beforeEach(() => {
+    mockSingleSelectionStoreInstances = [];
+});
+
+function getLatestSingleSelectionStoreCall() {
+    const call = SingleSelectionStoreMock.mock.calls[SingleSelectionStoreMock.mock.calls.length - 1];
+
+    if (!call) {
+        throw new Error('Expected a single selection store call');
+    }
+
+    return call;
+}
 
 test('Pass correct props to SingleMediaSelection component', () => {
     const formInspector = new FormInspector(
@@ -47,7 +89,7 @@ test('Pass correct props to SingleMediaSelection component', () => {
         )
     );
 
-    const mediaSelection = shallow(
+    render(
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -57,10 +99,11 @@ test('Pass correct props to SingleMediaSelection component', () => {
         />
     );
 
-    expect(mediaSelection.find(SingleMediaSelectionComponent).props().disabled).toEqual(true);
-    expect(mediaSelection.find(SingleMediaSelectionComponent).props().valid).toEqual(false);
-    expect(mediaSelection.find(SingleMediaSelectionComponent).props().locale.get()).toEqual('en');
-    expect(mediaSelection.find(SingleMediaSelectionComponent).props().value).toEqual({id: 33});
+    expect(getLatestSingleSelectionStoreCall()[0]).toEqual('media');
+    expect(getLatestSingleSelectionStoreCall()[1]).toEqual(33);
+    expect(getLatestSingleSelectionStoreCall()[2].get()).toEqual('en');
+    expect(screen.getByRole('button', {name: 'su-image'})).toBeDisabled();
+    expect(screen.getByText('sulu_media.select_media_singular').closest('.singleItemSelection')).toHaveClass('error');
 });
 
 test('Pass content-locale of user to SingleMediaSelection if locale is not present in form-inspector', () => {
@@ -71,7 +114,7 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
         )
     );
 
-    const mediaSelection = shallow(
+    render(
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -80,10 +123,11 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
         />
     );
 
-    expect(mediaSelection.find(SingleMediaSelectionComponent).props().locale.get()).toEqual('userContentLocale');
+    expect(getLatestSingleSelectionStoreCall()[2].get()).toEqual('userContentLocale');
 });
 
-test('Set types on SingleMediaSelectionComponent', () => {
+test('Set types on SingleMediaSelectionComponent', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const schemaOptions = {
         types: {name: 'types', value: 'image,video'},
@@ -96,7 +140,7 @@ test('Set types on SingleMediaSelectionComponent', () => {
         )
     );
 
-    const singleMediaSelection = shallow(
+    render(
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -105,7 +149,9 @@ test('Set types on SingleMediaSelectionComponent', () => {
         />
     );
 
-    expect(singleMediaSelection.find(SingleMediaSelectionComponent).props().types).toEqual(['image', 'video']);
+    await user.click(screen.getByRole('button', {name: 'su-image'}));
+
+    expect(screen.getByText('image,video')).toBeInTheDocument();
 });
 
 test('Set default display option if no value is passed', () => {
@@ -128,7 +174,7 @@ test('Set default display option if no value is passed', () => {
         )
     );
 
-    shallow(
+    render(
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -160,7 +206,7 @@ test('Do not set default display option if value is passed', () => {
         )
     );
 
-    shallow(
+    render(
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -184,24 +230,36 @@ test('Should call onChange and onFinish if the selection changes', () => {
         )
     );
 
-    const mediaSelection = shallow(
+    // $FlowFixMe
+    mockSingleSelectionStoreOnce(function() {
+        this.loadItem = jest.fn();
+        mockExtendObservable(this, {
+            item: undefined,
+        });
+    });
+
+    render(
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
-            disabled={true}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
-            value={{displayOption: undefined, id: 55}}
         />
     );
 
-    mediaSelection.find(SingleMediaSelectionComponent).props().onChange({id: 44});
+    getLatestSingleSelectionStore().item = {
+        id: 44,
+        locale: 'en',
+        mimeType: 'application/pdf',
+        title: 'Media 44',
+    };
 
     expect(changeSpy).toHaveBeenCalledWith({id: 44});
     expect(finishSpy).toHaveBeenCalled();
 });
 
-test('Should call onItemClick if item is clicked', () => {
+test('Should call onItemClick if item is clicked', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
@@ -209,24 +267,23 @@ test('Should call onItemClick if item is clicked', () => {
         )
     );
 
-    const router = new Router();
+    const router = createRouterMock();
 
     // $FlowFixMe
-    SingleSelectionStore.mockImplementation(function() {
-        this.item = {id: 6, locale: 'de', title: 'Test', mimeType: 'image/jpeg'};
+    mockSingleSelectionStoreOnce(function() {
+        this.item = {id: 6, locale: 'de', mimeType: 'image/jpeg', title: 'Test'};
     });
 
-    const mediaSelection = mount(
+    render(
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
-            disabled={true}
             formInspector={formInspector}
             router={router}
             value={{displayOption: undefined, id: 55}}
         />
     );
 
-    mediaSelection.find('SingleItemSelection .item').simulate('click');
+    await user.click(screen.getByText('Test'));
 
     expect(router.navigate).toHaveBeenCalledWith('sulu_media.form', {id: 6, locale: 'de'});
 });
@@ -239,7 +296,7 @@ test('Should throw an error if given value is not an object', () => {
         )
     );
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -248,7 +305,7 @@ test('Should throw an error if given value is not an object', () => {
     )).toThrow(/expects an object with an "id" property/);
 });
 
-test('Should throw an error if displayOptions schemaOption is given but not an array', () => {
+test('Should throw an error if displayOptions schemaOption contains an invalid value', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
@@ -256,7 +313,7 @@ test('Should throw an error if displayOptions schemaOption is given but not an a
         )
     );
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -273,7 +330,7 @@ test('Should throw an error if displayOptions schemaOption is given but not an a
         )
     );
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -290,7 +347,7 @@ test('Should throw an error if types schemaOption is given but not an array', ()
         )
     );
 
-    expect(() => shallow(
+    expect(() => render(
         <SingleMediaSelection
             {...fieldTypeDefaultProps}
             formInspector={formInspector}

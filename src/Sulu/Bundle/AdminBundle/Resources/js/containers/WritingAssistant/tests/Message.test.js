@@ -10,9 +10,7 @@ jest.mock('../../../containers', () => ({
     TextEditor: jest.fn(({value}) => <div data-testid="text-editor">{value}</div>),
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 describe('Message Component', () => {
     const defaultProps = {
@@ -61,33 +59,37 @@ describe('Message Component', () => {
     });
 
     test('calls onClick when the message is clicked', async() => {
+        const user = userEvent.setup();
         render(<Message {...defaultProps} />);
 
-        await userEvent.click(screen.getByText(defaultProps.text));
+        await user.click(screen.getByText(defaultProps.text));
 
         expect(defaultProps.onClick).toHaveBeenCalledWith(defaultProps.index);
     });
 
     test('calls onRetry when the retry button is clicked', async() => {
+        const user = userEvent.setup();
         render(<Message {...defaultProps} />);
 
-        await userEvent.click(screen.getAllByRole('button', {name: /su-sync/i})[1]);
+        await user.click(screen.getAllByRole('button', {name: /su-sync/i})[1]);
 
         expect(defaultProps.onRetry).toHaveBeenCalledWith(defaultProps.index);
     });
 
     test('calls onCopy when the copy button is clicked', async() => {
+        const user = userEvent.setup();
         render(<Message {...defaultProps} />);
 
-        await userEvent.click(screen.getAllByRole('button', {name: /su-copy/i})[1]);
+        await user.click(screen.getAllByRole('button', {name: /su-copy/i})[1]);
 
         expect(defaultProps.onCopy).toHaveBeenCalledWith(defaultProps.text);
     });
 
     test('calls onInsert when the insert button is clicked', async() => {
+        const user = userEvent.setup();
         render(<Message {...defaultProps} />);
 
-        await userEvent.click(screen.getByText('sulu_admin.insert'));
+        await user.click(screen.getByText('sulu_admin.insert'));
 
         expect(defaultProps.onInsert).toHaveBeenCalledWith(defaultProps.text);
     });

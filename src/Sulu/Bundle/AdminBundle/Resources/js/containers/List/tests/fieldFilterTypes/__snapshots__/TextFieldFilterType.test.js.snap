@@ -1,34 +1,40 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render with value 1`] = `
-<div
-  class="input default left"
->
-  <input
-    type="text"
-    value="Filter"
-  />
-</div>
+<DocumentFragment>
+  <div
+    class="input default left"
+  >
+    <input
+      type="text"
+      value="Filter"
+    />
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render with value of undefined 1`] = `
-<div
-  class="input default left"
->
-  <input
-    type="text"
-    value=""
-  />
-</div>
+<DocumentFragment>
+  <div
+    class="input default left"
+  >
+    <input
+      type="text"
+      value=""
+    />
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Render with value set by setValue 1`] = `
-<div
-  class="input default left"
->
-  <input
-    type="text"
-    value="New value"
-  />
-</div>
+<DocumentFragment>
+  <div
+    class="input default left"
+  >
+    <input
+      type="text"
+      value="New value"
+    />
+  </div>
+</DocumentFragment>
 `;

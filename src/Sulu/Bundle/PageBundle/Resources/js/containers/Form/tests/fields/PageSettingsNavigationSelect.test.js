@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
@@ -20,15 +21,14 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../../../../stores/webspaceStore', () => ({
     getWebspace: jest.fn(),
 }));
 
-test('Pass correct props to MultiSelect', () => {
+test('Pass correct props to MultiSelect', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test'),
@@ -45,7 +45,7 @@ test('Pass correct props to MultiSelect', () => {
     };
     webspaceStore.getWebspace.mockReturnValue(webspace);
 
-    const pageSettingsNavigationSelect = shallow(
+    const {rerender} = render(
         <PageSettingsNavigationSelect
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -55,16 +55,25 @@ test('Pass correct props to MultiSelect', () => {
     );
 
     expect(webspaceStore.getWebspace).toHaveBeenCalledWith('sulu_io');
+    expect(screen.getByRole('button', {name: /Footer Navigation/})).toBeDisabled();
 
-    expect(pageSettingsNavigationSelect.find('MultiSelect').prop('disabled')).toEqual(true);
-    expect(pageSettingsNavigationSelect.find('MultiSelect').prop('values')).toEqual(['footer']);
-    expect(pageSettingsNavigationSelect.find('Option').at(0).prop('children')).toEqual('Main Navigation');
-    expect(pageSettingsNavigationSelect.find('Option').at(0).prop('value')).toEqual('main');
-    expect(pageSettingsNavigationSelect.find('Option').at(1).prop('children')).toEqual('Footer Navigation');
-    expect(pageSettingsNavigationSelect.find('Option').at(1).prop('value')).toEqual('footer');
+    rerender(
+        <PageSettingsNavigationSelect
+            {...fieldTypeDefaultProps}
+            disabled={false}
+            formInspector={formInspector}
+            value={['footer']}
+        />
+    );
+
+    await user.click(screen.getByLabelText('su-angle-down'));
+
+    expect(screen.getByRole('button', {name: 'Main Navigation'})).toBeInTheDocument();
+    expect(screen.getAllByRole('button', {name: /Footer Navigation/})).toHaveLength(2);
 });
 
-test('Call onChange and onBlur if the value is changed', () => {
+test('Call onChange and onBlur if the value is changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -84,7 +93,7 @@ test('Call onChange and onBlur if the value is changed', () => {
     };
     webspaceStore.getWebspace.mockReturnValue(webspace);
 
-    const pageSettingsNavigationSelect = shallow(
+    render(
         <PageSettingsNavigationSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -94,7 +103,9 @@ test('Call onChange and onBlur if the value is changed', () => {
         />
     );
 
-    pageSettingsNavigationSelect.find('MultiSelect').prop('onChange')(['footer', 'main']);
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByRole('button', {name: 'Main Navigation'}));
+
     expect(changeSpy).toHaveBeenCalledWith(['footer', 'main']);
     expect(finishSpy).toHaveBeenCalledWith();
 });

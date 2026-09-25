@@ -1,25 +1,33 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import {Router} from 'sulu-admin-bundle/services';
-import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
 import SearchContainer from '../../../containers/Search';
 
-jest.mock('sulu-admin-bundle/containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
+jest.mock('sulu-admin-bundle/containers/Toolbar/stores/toolbarStorePool', () => ({
+    __esModule: true,
+    DEFAULT_STORE_KEY: 'default',
+    default: {
+        setToolbarConfig: jest.fn(),
+    },
+}));
 
 jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
     this.bind = jest.fn();
+    this.addUpdateRouteHook = jest.fn().mockReturnValue(jest.fn());
 }));
 
+jest.mock('../../../containers/Search', () => jest.fn(() => null));
+
 test('Render search component', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
+    const toolbarStorePool = require(
+        'sulu-admin-bundle/containers/Toolbar/stores/toolbarStorePool'
+    ).default;
     const Search = require('../Search').default;
 
     const router = new Router({});
-    const search = shallow(<Search route={router.route} router={router} />);
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, Search);
+    render(<Search route={router.route} router={router} />);
 
-    expect(search.find(SearchContainer)).toHaveLength(1);
-    expect(search.find(SearchContainer).prop('router')).toEqual(router);
-    expect(toolbarFunction()).toEqual({});
+    expect(SearchContainer).toHaveBeenLastCalledWith(expect.objectContaining({router}), {});
+    expect(toolbarStorePool.setToolbarConfig).toHaveBeenCalledWith('default', {});
 });

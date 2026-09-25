@@ -57,6 +57,7 @@ test('The component should pass the disabled state to the radios', () => {
 });
 
 test('The component should pass the change callback to the radios', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     render(
         <RadioGroup onChange={onChange} value="0">
@@ -72,9 +73,9 @@ test('The component should pass the change callback to the radios', async() => {
         screen.queryByDisplayValue('3'),
     ];
 
-    await userEvent.click(radioGroup[0]);
-    await userEvent.click(radioGroup[1]);
-    await userEvent.click(radioGroup[2]);
+    await user.click(radioGroup[0]);
+    await user.click(radioGroup[1]);
+    await user.click(radioGroup[2]);
 
     expect(onChange).toHaveBeenCalledTimes(3);
 });

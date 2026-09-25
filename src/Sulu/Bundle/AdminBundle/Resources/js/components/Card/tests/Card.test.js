@@ -15,21 +15,23 @@ test('Render a card with its children, edit and remove icon', () => {
 });
 
 test('Call onEdit callback when edit icon is clicked', async() => {
+    const user = userEvent.setup();
     const editSpy = jest.fn();
     render(<Card id={6} onEdit={editSpy}>Content</Card>);
     const icon = screen.queryByLabelText('su-pen');
 
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(editSpy).toHaveBeenCalledWith(6);
 });
 
 test('Call onRemove callback when remove icon is clicked', async() => {
+    const user = userEvent.setup();
     const removeSpy = jest.fn();
     render(<Card id={2} onRemove={removeSpy}>Content</Card>);
     const icon = screen.queryByLabelText('su-trash-alt');
 
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(removeSpy).toHaveBeenCalledWith(2);
 });

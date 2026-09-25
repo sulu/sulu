@@ -1,115 +1,61 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import React, {default as mockReact} from 'react';
+import React from 'react';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable} from 'mobx';
-import {mount, render} from 'enzyme';
-import {findWithHighOrderFunction} from 'sulu-admin-bundle/utils/TestHelper';
-import MediaCardOverviewAdapter from '../../../containers/List/adapters/MediaCardOverviewAdapter';
+import {createDeferred, mockResizeObserver} from 'sulu-admin-bundle/utils/TestHelper';
 
-jest.mock(
-    'react-dropzone',
-    () => mockReact.forwardRef(({children}, ref) => children({getInputProps: jest.fn(), getRootProps: jest.fn(), ref}))
-);
+const mockListStores = [];
+const mockRequestSelectionDelete = jest.fn();
+let mockResourceStore;
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function() {
-    this.destroy = jest.fn();
-}));
+mockResizeObserver();
 
 jest.mock('sulu-admin-bundle/containers/CKEditor5', () => jest.fn(() => null));
-jest.mock('sulu-admin-bundle/containers/Toolbar/withToolbar', () => jest.fn((Component) => Component));
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/memoryFormStoreFactory', () => ({
-    createFromFormKey: jest.fn(() => ({
-        destroy: jest.fn(),
-    })),
-}));
+jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => {
+    const ListStore = jest.fn(function(resourceKey, listKey, userSettingsKey, observableOptions) {
+        this.observableOptions = observableOptions;
+        this.moveSelection = jest.fn();
+        this.reload = jest.fn();
+        this.filterOptions = {
+            get: jest.fn().mockReturnValue({}),
+        };
+        this.sortColumn = {
+            get: jest.fn(),
+        };
+        this.sortOrder = {
+            get: jest.fn(),
+        };
+        this.searchTerm = {
+            get: jest.fn(),
+        };
+        this.limit = {
+            get: jest.fn().mockReturnValue(10),
+        };
+        this.destroy = jest.fn();
+        this.clearSelection = jest.fn();
+        this.clear = jest.fn();
+        this.sort = jest.fn();
 
-jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function(resourceKey, observableOptions) {
-    const COLLECTIONS_RESOURCE_KEY = 'collections';
-
-    const collectionData = [
-        {
-            id: 1,
-            title: 'Title 1',
-            objectCount: 1,
-            description: 'Description 1',
-        },
-        {
-            id: 2,
-            title: 'Title 2',
-            objectCount: 0,
-            description: 'Description 2',
-        },
-    ];
-
-    const thumbnails = {
-        'sulu-240x': 'http://lorempixel.com/240/100',
-        'sulu-100x100': 'http://lorempixel.com/100/100',
-    };
-
-    const mediaData = [
-        {
-            id: 1,
-            title: 'Title 1',
-            mimeType: 'image/png',
-            size: 12345,
-            url: 'http://lorempixel.com/500/500',
-            thumbnails,
-        },
-        {
-            id: 2,
-            title: 'Title 1',
-            mimeType: 'image/jpeg',
-            size: 54321,
-            url: 'http://lorempixel.com/500/500',
-            thumbnails,
-        },
-    ];
-
-    this.observableOptions = observableOptions;
-    this.loading = false;
-    this.pageCount = 3;
-    this.moveSelection = jest.fn();
-    this.reload = jest.fn();
-    this.filterOptions = {
-        get: jest.fn().mockReturnValue({}),
-    };
-    this.active = {
-        get: jest.fn(),
-    };
-    this.sortColumn = {
-        get: jest.fn(),
-    };
-    this.sortOrder = {
-        get: jest.fn(),
-    };
-    this.searchTerm = {
-        get: jest.fn(),
-    };
-    this.limit = {
-        get: jest.fn().mockReturnValue(10),
-    };
-    this.setLimit = jest.fn();
-    this.data = (resourceKey === COLLECTIONS_RESOURCE_KEY)
-        ? collectionData
-        : mediaData;
-    this.selections = [];
-    this.selectionIds = [];
-    this.getPage = jest.fn().mockReturnValue(2);
-    this.getSchema = jest.fn().mockReturnValue({
-        title: {},
-        description: {},
+        mockExtendObservable(this, {
+            loading: false,
+            selectionIds: [],
+        });
+        mockListStores.push(this);
     });
-    this.destroy = jest.fn();
-    this.sendRequest = jest.fn();
-    this.clearSelection = jest.fn();
-    this.clear = jest.fn();
-    this.updateLoadingStrategy = jest.fn();
-    this.updateStructureStrategy = jest.fn();
-    this.sort = jest.fn();
-}));
+
+    ListStore.getFilterSetting = jest.fn();
+    ListStore.getLimitSetting = jest.fn();
+    ListStore.getSortColumnSetting = jest.fn();
+    ListStore.getSortOrderSetting = jest.fn();
+
+    return ListStore;
+});
 
 jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(function() {
+        mockResourceStore = this;
         this.destroy = jest.fn();
         this.id = 1;
 
@@ -129,49 +75,92 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     }),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../containers/MediaCollection', () => {
+    const React = require('react');
 
-jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', () => {
-    const getAllAdaptersMock = jest.fn();
+    return jest.fn((props) => {
+        props.mediaListRef({requestSelectionDelete: mockRequestSelectionDelete});
 
-    return {
-        getAllAdaptersMock,
-        add: jest.fn(),
-        get: jest.fn((key) => getAllAdaptersMock()[key]),
-        getOptions: jest.fn().mockReturnValue({}),
-        has: jest.fn(),
-    };
-});
+        function handleCollectionNavigate() {
+            props.onCollectionNavigate(1);
+        }
 
-jest.mock('sulu-admin-bundle/containers/SingleListOverlay/SingleListOverlay', () => jest.fn(() => null));
+        function handleMediaNavigate() {
+            props.onMediaNavigate(1);
+        }
 
-beforeEach(() => {
-    jest.resetModules();
+        function handleUploadError() {
+            props.onUploadError([{detail: 'Upload failed.'}]);
+        }
 
-    const listAdapterRegistry = require('sulu-admin-bundle/containers/List/registries/listAdapterRegistry');
+        function handleMultipleUploadErrors() {
+            props.onUploadError([{detail: 'First error'}, {detail: 'Second error'}]);
+        }
 
-    listAdapterRegistry.has.mockReturnValue(true);
-    listAdapterRegistry.getAllAdaptersMock.mockReturnValue({
-        'folder': require('sulu-admin-bundle/containers/List/adapters/FolderAdapter').default,
-        'table': require('sulu-admin-bundle/containers/List/adapters/TableAdapter').default,
-        'media_card_overview': MediaCardOverviewAdapter,
+        return (
+            <div>
+                {React.createElement(
+                    'button',
+                    {onClick: handleCollectionNavigate, type: 'button'},
+                    'Open collection'
+                )}
+                {React.createElement('button', {onClick: handleMediaNavigate, type: 'button'}, 'Open media')}
+                {props.uploadOverlayOpen &&
+                    <button onClick={props.onUploadOverlayClose} type="button">Close upload</button>
+                }
+                {React.createElement(
+                    'button',
+                    {onClick: handleUploadError, type: 'button'},
+                    'Report upload error'
+                )}
+                {React.createElement(
+                    'button',
+                    {onClick: handleMultipleUploadErrors, type: 'button'},
+                    'Report multiple upload errors'
+                )}
+            </div>
+        );
     });
 });
 
-test('Render a simple MediaOverview', () => {
-    const MediaOverview = require('../MediaOverview').default;
-    const router = {
-        attributes: {},
+jest.mock('sulu-admin-bundle/containers/SingleListOverlay/SingleListOverlay', () => {
+    const React = require('react');
+
+    return jest.fn((props) => {
+        if (!props.open) {
+            return null;
+        }
+
+        function handleConfirm() {
+            props.onConfirm({id: 8});
+        }
+
+        return (
+            <div aria-label={props.title} role="dialog">
+                <button onClick={props.onClose} type="button">Close</button>
+                {React.createElement(
+                    'button',
+                    {onClick: handleConfirm, type: 'button'},
+                    props.confirmLoading ? 'Moving' : 'Move'
+                )}
+            </div>
+        );
+    });
+});
+
+function createRouter(options = {}) {
+    return {
+        attributes: options.attributes || {},
         bind: jest.fn(),
+        addUpdateRouteHook: jest.fn().mockReturnValue(jest.fn()),
+        navigate: jest.fn(),
+        restore: jest.fn(),
         route: {
             options: {
-                permissions: {
+                locales: options.locales,
+                permissions: options.permissions || {
                     add: true,
                     delete: true,
                     edit: true,
@@ -179,39 +168,71 @@ test('Render a simple MediaOverview', () => {
             },
         },
     };
+}
 
-    const mediaOverview = render(<MediaOverview router={router} />);
-    expect(mediaOverview).toMatchSnapshot();
+function renderMediaOverview(router = createRouter()) {
+    const MediaOverview = require('../MediaOverview').default;
+    const Toolbar = require('sulu-admin-bundle/containers/Toolbar').default;
+
+    render(<Toolbar />);
+
+    return {
+        MediaOverview,
+        router,
+        ...render(<MediaOverview router={router} />),
+    };
+}
+
+function getListStores() {
+    return {
+        collectionListStore: mockListStores[0],
+        mediaListStore: mockListStores[1],
+    };
+}
+
+function getBoundValue(router, attributeName) {
+    return router.bind.mock.calls.find(([name]) => name === attributeName)[1];
+}
+
+function setRouteValues(router, values) {
+    act(() => {
+        Object.keys(values).forEach((attributeName) => {
+            getBoundValue(router, attributeName).set(values[attributeName]);
+        });
+    });
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    jest.resetModules();
+    mockListStores.length = 0;
+    mockResourceStore = undefined;
+});
+
+test('Render a simple MediaOverview', () => {
+    const router = createRouter();
+
+    renderMediaOverview(router);
+
+    expect(screen.getByRole('button', {name: 'Open collection'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'Open media'})).toBeInTheDocument();
 });
 
 test('Destroy all stores on unmount', () => {
-    const MediaOverview = require('../MediaOverview').default;
-    const router = {
-        attributes: {},
-        bind: jest.fn(),
-        route: {
-            options: {
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
-    };
+    const router = createRouter();
+    const {unmount} = renderMediaOverview(router);
+    const {collectionListStore, mediaListStore} = getListStores();
+    const collectionResourceStore = mockResourceStore;
+    const collectionPage = getBoundValue(router, 'collectionPage');
+    const mediaPage = getBoundValue(router, 'mediaPage');
+    const locale = getBoundValue(router, 'locale');
+    const collectionLimit = getBoundValue(router, 'collectionLimit');
+    const mediaFilter = getBoundValue(router, 'mediaFilter');
+    const mediaLimit = getBoundValue(router, 'mediaLimit');
+    const mediaSortColumn = getBoundValue(router, 'mediaSortColumn');
+    const mediaSortOrder = getBoundValue(router, 'mediaSortOrder');
 
-    const mediaOverview = mount(<MediaOverview router={router} />);
-    const mediaOverviewInstance = mediaOverview.instance();
-    const collectionPage = router.bind.mock.calls[0][1];
-    const mediaPage = router.bind.mock.calls[1][1];
-    const locale = router.bind.mock.calls[2][1];
-    const collectionLimit = router.bind.mock.calls[5][1];
-    const mediaFilter = router.bind.mock.calls[6][1];
-    const mediaLimit = router.bind.mock.calls[7][1];
-    const mediaSortColumn = router.bind.mock.calls[8][1];
-    const mediaSortOrder = router.bind.mock.calls[9][1];
-
-    expect(mediaOverviewInstance.collectionListStore.sort).toHaveBeenCalledWith('title', 'asc');
+    expect(collectionListStore.sort).toHaveBeenCalledWith('title', 'asc');
     expect(collectionPage.get()).toBe(undefined);
     expect(mediaPage.get()).toBe(1);
     expect(locale.get()).toBe(undefined);
@@ -224,44 +245,30 @@ test('Destroy all stores on unmount', () => {
     expect(router.bind).toHaveBeenCalledWith('mediaSortColumn', mediaSortColumn);
     expect(router.bind).toHaveBeenCalledWith('mediaSortOrder', mediaSortOrder);
 
-    mediaOverview.unmount();
-    expect(mediaOverviewInstance.mediaListStore.destroy).toHaveBeenCalled();
-    expect(mediaOverviewInstance.collectionListStore.destroy).toHaveBeenCalled();
-    expect(mediaOverviewInstance.collectionStore.resourceStore.destroy).toHaveBeenCalled();
+    unmount();
+    expect(mediaListStore.destroy).toHaveBeenCalled();
+    expect(collectionListStore.destroy).toHaveBeenCalled();
+    expect(collectionResourceStore.destroy).toHaveBeenCalled();
 });
 
-test('Should navigate to defined route on back button click', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
+test('Should navigate to defined route on back button click', async() => {
+    const user = userEvent.setup();
+    const router = createRouter({
         attributes: {
             id: 4,
         },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
-    mediaOverview.collectionId.set(4);
-    mediaOverview.locale.set('de');
+        locales: ['de'],
+    });
+    renderMediaOverview(router);
+    const {collectionListStore, mediaListStore} = getListStores();
+    setRouteValues(router, {id: 4, locale: 'de'});
 
-    const toolbarConfig = toolbarFunction.call(mediaOverview);
-    toolbarConfig.backButton.onClick();
-    expect(mediaOverview.mediaListStore.clear).toHaveBeenCalled();
-    expect(mediaOverview.mediaListStore.clearSelection).toHaveBeenCalled();
-    expect(mediaOverview.collectionListStore.clear).toHaveBeenCalled();
-    expect(mediaOverview.collectionListStore.clearSelection).toHaveBeenCalled();
+    await user.click(screen.getByRole('button', {name: 'su-angle-left'}));
+
+    expect(mediaListStore.clear).toHaveBeenCalled();
+    expect(mediaListStore.clearSelection).toHaveBeenCalled();
+    expect(collectionListStore.clear).toHaveBeenCalled();
+    expect(collectionListStore.clearSelection).toHaveBeenCalled();
     expect(router.restore).toHaveBeenCalledWith('sulu_media.overview', {
         'collectionPage': '1',
         'id': 1,
@@ -269,489 +276,280 @@ test('Should navigate to defined route on back button click', () => {
     });
 });
 
-test('Router navigate should be called when a media was clicked', () => {
-    const MediaOverview = require('../MediaOverview').default;
+test('Router navigate should be called when a media was clicked', async() => {
+    const user = userEvent.setup();
     const locale = 'de';
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [locale],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
+    const router = createRouter({
         attributes: {
             id: 4,
         },
-        navigate: jest.fn(),
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />);
-    mediaOverview.instance().locale.set(locale);
+        locales: [locale],
+    });
+    renderMediaOverview(router);
+    setRouteValues(router, {locale});
 
-    mediaOverview.find('.media').at(0).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'Open media'}));
+
     expect(router.navigate).toHaveBeenCalledWith(
         'sulu_media.form.details',
         {'id': 1, locale}
     );
 });
 
-test('The collectionId should be update along with the content when a collection was clicked', () => {
-    const MediaOverview = require('../MediaOverview').default;
+test('The collectionId should be update along with the content when a collection was clicked', async() => {
+    const user = userEvent.setup();
     const locale = 'de';
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: [locale],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
+    const router = createRouter({
         attributes: {
             id: 4,
         },
-        navigate: jest.fn(),
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />);
-    mediaOverview.instance().locale.set(locale);
-    mediaOverview.instance().mediaPage.set(3);
-    mediaOverview.instance().collectionPage.set(2);
-    mediaOverview.instance().collectionId.set(4);
+        locales: [locale],
+    });
+    renderMediaOverview(router);
+    const {collectionListStore, mediaListStore} = getListStores();
+    setRouteValues(router, {collectionPage: 2, id: 4, locale, mediaPage: 3});
 
-    mediaOverview.find('Folder').at(0).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'Open collection'}));
 
-    expect(mediaOverview.instance().collectionId.get()).toEqual(1);
-    expect(mediaOverview.instance().collectionPage.get()).toEqual(1);
-    expect(mediaOverview.instance().mediaPage.get()).toEqual(1);
-    expect(mediaOverview.instance().mediaListStore.clearSelection).toHaveBeenCalled();
-    expect(mediaOverview.instance().mediaListStore.clear).toHaveBeenCalled();
-    expect(mediaOverview.instance().collectionListStore.clearSelection).toHaveBeenCalled();
-    expect(mediaOverview.instance().collectionListStore.clear).toHaveBeenCalled();
+    expect(getBoundValue(router, 'id').get()).toEqual(1);
+    expect(getBoundValue(router, 'collectionPage').get()).toEqual(1);
+    expect(getBoundValue(router, 'mediaPage').get()).toEqual(1);
+    expect(mediaListStore.clearSelection).toHaveBeenCalled();
+    expect(mediaListStore.clear).toHaveBeenCalled();
+    expect(collectionListStore.clearSelection).toHaveBeenCalled();
+    expect(collectionListStore.clear).toHaveBeenCalled();
 });
 
-test('Delete overlay should be shown when delete button is clicked', () => {
-    function getDeleteItem() {
-        return toolbarFunction.call(mediaOverview.instance()).items
-            .find((item) => item.label === 'sulu_admin.delete_selected');
-    }
+test('Delete overlay should be shown when delete button is clicked', async() => {
+    const user = userEvent.setup();
+    const router = createRouter();
+    renderMediaOverview(router);
+    const {mediaListStore} = getListStores();
+    act(() => {
+        mediaListStore.selectionIds.push(1, 4, 6);
+    });
 
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-    const router = {
-        bind: jest.fn(),
-        route: {
-            options: {
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
-    };
+    const deleteButton = screen.getByRole('button', {name: /sulu_admin\.delete_selected/});
+    expect(deleteButton).toBeEnabled();
+    await user.click(deleteButton);
 
-    const mediaOverview = mount(<MediaOverview router={router} />);
-    const mediaListStore = mediaOverview.instance().mediaListStore;
-    mediaListStore.selectionIds.push(1, 4, 6);
-
-    mediaOverview.update();
-    expect(mediaOverview.find('List').at(1).find('Dialog[title="sulu_admin.delete_warning_title"]').at(0).prop('open'))
-        .toEqual(false);
-
-    getDeleteItem().onClick();
-    mediaOverview.update();
-    expect(mediaOverview.find('List').at(1).find('Dialog[title="sulu_admin.delete_warning_title"]').at(0).prop('open'))
-        .toEqual(true);
+    expect(mockRequestSelectionDelete).toHaveBeenCalledWith();
 });
 
 test('Upload button should be disabled if collection is loading', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
+    const router = createRouter({
+        locales: ['de'],
+    });
+    renderMediaOverview(router);
+    setRouteValues(router, {id: 4, locale: 'de'});
+    const resourceStore = mockResourceStore;
 
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
-    mediaOverview.locale.set('de');
-    mediaOverview.collectionId.set(4);
+    act(() => {
+        resourceStore.loading = true;
+    });
+    expect(screen.getByRole('button', {name: /sulu_media\.upload_file/})).toBeDisabled();
 
-    mediaOverview.collectionStore.resourceStore.loading = true;
-    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload_file');
-    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toBeTruthy();
-
-    mediaOverview.collectionStore.resourceStore.loading = false;
-    expect(toolbarFunction.call(mediaOverview).items[0].disabled).toBeFalsy();
+    act(() => {
+        resourceStore.loading = false;
+    });
+    expect(screen.getByRole('button', {name: /sulu_media\.upload_file/})).toBeEnabled();
 });
 
-test('Upload overlay should be opened and closed as it requests', () => {
-    const MediaOverview = require('../MediaOverview').default;
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
+test('Upload overlay should be opened and closed as requested', async() => {
+    const user = userEvent.setup();
+    const router = createRouter({
         attributes: {
             id: 4,
         },
-    };
+        locales: ['de'],
+    });
+    renderMediaOverview(router);
 
-    const mediaOverview = mount(<MediaOverview router={router} />);
+    expect(screen.queryByRole('button', {name: 'Close upload'})).not.toBeInTheDocument();
 
-    expect(mediaOverview.find('MediaCollection').prop('uploadOverlayOpen')).toEqual(false);
-    mediaOverview.find('MediaCollection').prop('onUploadOverlayOpen')();
-    mediaOverview.update();
-    expect(mediaOverview.find('MediaCollection').prop('uploadOverlayOpen')).toEqual(true);
-    mediaOverview.find('MediaCollection').prop('onUploadOverlayClose')();
-    mediaOverview.update();
-    expect(mediaOverview.find('MediaCollection').prop('uploadOverlayOpen')).toEqual(false);
+    await user.click(screen.getByRole('button', {name: /sulu_media\.upload_file/}));
+    expect(screen.getByRole('button', {name: 'Close upload'})).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', {name: 'Close upload'}));
+    expect(screen.queryByRole('button', {name: 'Close upload'})).not.toBeInTheDocument();
 });
 
 test('Toolbar buttons should disappear when permissions are missing', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: false,
-                    delete: false,
-                    edit: false,
-                },
-            },
-        },
+    const router = createRouter({
         attributes: {
             id: 4,
         },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
-    mediaOverview.collectionId.set(4);
-    mediaOverview.locale.set('de');
+        locales: ['de'],
+        permissions: {
+            add: false,
+            delete: false,
+            edit: false,
+        },
+    });
+    renderMediaOverview(router);
+    setRouteValues(router, {id: 4, locale: 'de'});
 
-    expect(toolbarFunction.call(mediaOverview).items).toHaveLength(0);
+    expect(screen.queryByRole('button', {name: /sulu_media\.upload_file/})).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: /sulu_admin\.delete_selected/})).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: /sulu_admin\.move_selected/})).not.toBeInTheDocument();
 });
 
 test('Toolbar buttons should disappear when permissions are missing on current collection', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
+    const router = createRouter({
         attributes: {
             id: 4,
         },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />);
-    mediaOverview.instance().collectionId.set(4);
-    mediaOverview.instance().locale.set('de');
+        locales: ['de'],
+    });
+    renderMediaOverview(router);
+    setRouteValues(router, {id: 4, locale: 'de'});
 
-    mediaOverview.instance().collectionStore.resourceStore.data = {
-        _permissions: {add: false, delete: false, edit: false},
-    };
+    act(() => {
+        mockResourceStore.data = {
+            _permissions: {add: false, delete: false, edit: false},
+        };
+    });
 
-    expect(toolbarFunction.call(mediaOverview.instance()).items).toHaveLength(0);
+    expect(screen.queryByRole('button', {name: /sulu_media\.upload_file/})).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: /sulu_admin\.delete_selected/})).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: /sulu_admin\.move_selected/})).not.toBeInTheDocument();
 });
 
 test('Move button should be disabled if nothing is selected', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
+    const router = createRouter({
         attributes: {
             id: 4,
         },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
-    mediaOverview.collectionId.set(4);
-    mediaOverview.locale.set('de');
+        locales: ['de'],
+    });
+    renderMediaOverview(router);
+    setRouteValues(router, {id: 4, locale: 'de'});
+    const {mediaListStore} = getListStores();
 
-    expect(toolbarFunction.call(mediaOverview).items[2].disabled).toEqual(true);
-    expect(toolbarFunction.call(mediaOverview).items[2].label).toEqual('sulu_admin.move_selected');
+    const moveButton = screen.getByRole('button', {name: /sulu_admin\.move_selected/});
+    expect(moveButton).toBeDisabled();
 
-    mediaOverview.mediaListStore.selectionIds.push(8);
-    expect(toolbarFunction.call(mediaOverview).items[2].disabled).toEqual(false);
+    act(() => {
+        mediaListStore.selectionIds.push(8);
+    });
+    expect(moveButton).toBeEnabled();
 });
 
 test('Upload and move button should disappear if collection is locked', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
+    const router = createRouter({
         attributes: {
             id: 4,
         },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />).at(0).instance();
-    mediaOverview.collectionId.set(4);
-    mediaOverview.locale.set('de');
-
-    mediaOverview.collectionStore.resourceStore.data.locked = false;
-    expect(toolbarFunction.call(mediaOverview).items).toHaveLength(3);
-    expect(toolbarFunction.call(mediaOverview).items[0].label).toEqual('sulu_media.upload_file');
-    expect(toolbarFunction.call(mediaOverview).items[2].label).toEqual('sulu_admin.move_selected');
-
-    mediaOverview.collectionStore.resourceStore.data.locked = true;
-    expect(toolbarFunction.call(mediaOverview).items).toHaveLength(1);
-    expect(toolbarFunction.call(mediaOverview).items[0].label).not.toEqual('sulu_media.upload_file');
-    expect(toolbarFunction.call(mediaOverview).items[0].label).not.toEqual('sulu_media.move_selected');
-});
-
-test('Move overlay should disappear when overlay is closed', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
-        attributes: {
-            id: 4,
-        },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />);
-    mediaOverview.instance().collectionId.set(4);
-    mediaOverview.instance().locale.set('de');
-
-    const toolbarConfig = toolbarFunction.call(mediaOverview.instance());
-
-    expect(toolbarConfig.items[2].label).toEqual('sulu_admin.move_selected');
-    toolbarConfig.items[2].onClick();
-    mediaOverview.update();
-    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('listKey'))
-        .toEqual('collections');
-    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('resourceKey'))
-        .toEqual('collections');
-    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('open')).toEqual(true);
-
-    mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('onClose')();
-    mediaOverview.update();
-    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('open')).toEqual(false);
-});
-
-test('Media should be moved when overlay is confirmed', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const SingleListOverlay = require('sulu-admin-bundle/containers').SingleListOverlay;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
-        attributes: {
-            id: 4,
-        },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />);
-    mediaOverview.instance().collectionId.set(4);
-    mediaOverview.instance().locale.set('de');
-    const movePromise = Promise.resolve();
-    mediaOverview.instance().mediaListStore.moveSelection.mockReturnValue(movePromise);
-
-    const toolbarConfig = toolbarFunction.call(mediaOverview.instance());
-
-    expect(toolbarConfig.items[2].label).toEqual('sulu_admin.move_selected');
-    toolbarConfig.items[2].onClick();
-    mediaOverview.update();
-    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('resourceKey'))
-        .toEqual('collections');
-    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('confirmLoading'))
-        .toEqual(false);
-    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('open')).toEqual(true);
-
-    mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('onConfirm')({id: 8});
-    mediaOverview.update();
-    expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('confirmLoading'))
-        .toEqual(true);
-
-    expect(mediaOverview.instance().mediaListStore.moveSelection).toHaveBeenCalledWith(8);
-
-    return movePromise.then(() => {
-        mediaOverview.update();
-        expect(mediaOverview.instance().collectionListStore.reload).toHaveBeenCalledTimes(1);
-        expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('open'))
-            .toEqual(false);
-        expect(mediaOverview.find(SingleListOverlay).find('[title="sulu_media.move_media"]').prop('confirmLoading'))
-            .toEqual(false);
-        expect(mediaOverview.instance().mediaListStore.clearSelection).toHaveBeenCalled();
+        locales: ['de'],
     });
+    renderMediaOverview(router);
+    setRouteValues(router, {id: 4, locale: 'de'});
+    const resourceStore = mockResourceStore;
+
+    act(() => {
+        resourceStore.data.locked = false;
+    });
+    expect(screen.getByRole('button', {name: /sulu_media\.upload_file/})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /sulu_admin\.move_selected/})).toBeInTheDocument();
+
+    act(() => {
+        resourceStore.data.locked = true;
+    });
+    expect(screen.queryByRole('button', {name: /sulu_media\.upload_file/})).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: /sulu_admin\.move_selected/})).not.toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /sulu_admin\.delete_selected/})).toBeInTheDocument();
 });
 
-test('Should show generic error if upload of multiple files fails in MediaCollection', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
+test('Move overlay should disappear when overlay is closed', async() => {
+    const user = userEvent.setup();
+    const router = createRouter({
         attributes: {
             id: 4,
         },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />);
-    mediaOverview.instance().collectionId.set(4);
-    mediaOverview.instance().locale.set('de');
+        locales: ['de'],
+    });
+    renderMediaOverview(router);
+    setRouteValues(router, {id: 4, locale: 'de'});
+    const {mediaListStore} = getListStores();
 
-    expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual([]);
+    act(() => {
+        mediaListStore.selectionIds.push(8);
+    });
 
-    mediaOverview.find('MediaCollection').props().onUploadError(
-        [
-            {
-                'code': 5003,
-                'detail': 'The uploaded file exceeds the configured maximum filesize.',
-            },
-            {
-                'code': 5003,
-                'detail': 'The uploaded file exceeds the configured maximum filesize.',
-            },
-        ]
-    );
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.move_selected/}));
+    expect(screen.getByRole('dialog', {name: 'sulu_media.move_media'})).toBeInTheDocument();
 
-    expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual(['sulu_media.upload_server_error']);
+    await user.click(screen.getByRole('button', {name: 'Close'}));
+    expect(screen.queryByRole('dialog', {name: 'sulu_media.move_media'})).not.toBeInTheDocument();
 });
 
-test('Should show error message from serve if upload of a single files fails in MediaCollection', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const MediaOverview = require('../MediaOverview').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, MediaOverview);
-
-    const router = {
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route: {
-            options: {
-                locales: ['de'],
-                permissions: {
-                    add: true,
-                    delete: true,
-                    edit: true,
-                },
-            },
-        },
+test('Media should be moved when overlay is confirmed', async() => {
+    const user = userEvent.setup();
+    const router = createRouter({
         attributes: {
             id: 4,
         },
-    };
-    const mediaOverview = mount(<MediaOverview router={router} />);
-    mediaOverview.instance().collectionId.set(4);
-    mediaOverview.instance().locale.set('de');
+        locales: ['de'],
+    });
+    renderMediaOverview(router);
+    setRouteValues(router, {id: 4, locale: 'de'});
+    const {collectionListStore, mediaListStore} = getListStores();
+    const moveRequest = createDeferred();
+    mediaListStore.moveSelection.mockReturnValue(moveRequest.promise);
+    act(() => {
+        mediaListStore.selectionIds.push(8);
+    });
 
-    expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual([]);
+    await user.click(screen.getByRole('button', {name: /sulu_admin\.move_selected/}));
+    expect(screen.getByRole('button', {name: 'Move'})).toBeInTheDocument();
 
-    mediaOverview.find('MediaCollection').props().onUploadError(
-        [
-            {
-                'code': 5003,
-                'detail': 'The uploaded file exceeds the configured maximum filesize.',
-            },
-        ]
-    );
+    await user.click(screen.getByRole('button', {name: 'Move'}));
+    expect(screen.getByRole('button', {name: 'Moving'})).toBeInTheDocument();
 
-    expect(toolbarFunction.call(mediaOverview.instance()).errors).toEqual(
-        ['The uploaded file exceeds the configured maximum filesize.']
-    );
+    expect(mediaListStore.moveSelection).toHaveBeenCalledWith(8);
+
+    await act(async() => {
+        moveRequest.resolve();
+        await moveRequest.promise;
+    });
+
+    expect(collectionListStore.reload).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('dialog', {name: 'sulu_media.move_media'})).not.toBeInTheDocument();
+    expect(mediaListStore.clearSelection).toHaveBeenCalled();
+});
+
+test('Should show generic error if upload of multiple files fails in MediaCollection', async() => {
+    const user = userEvent.setup();
+    const router = createRouter({
+        attributes: {
+            id: 4,
+        },
+        locales: ['de'],
+    });
+    renderMediaOverview(router);
+    setRouteValues(router, {id: 4, locale: 'de'});
+
+    expect(screen.queryByRole('button', {name: /sulu_media\.upload_server_error/})).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', {name: 'Report multiple upload errors'}));
+
+    expect(screen.getByRole('button', {name: /sulu_media\.upload_server_error/})).toBeInTheDocument();
+});
+
+test('Should show error message from server if upload of a single file fails in MediaCollection', async() => {
+    const user = userEvent.setup();
+    const router = createRouter({
+        attributes: {
+            id: 4,
+        },
+        locales: ['de'],
+    });
+    renderMediaOverview(router);
+    setRouteValues(router, {id: 4, locale: 'de'});
+
+    expect(screen.queryByRole('button', {name: /Upload failed\./})).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', {name: 'Report upload error'}));
+
+    expect(screen.getByRole('button', {name: /Upload failed\./})).toBeInTheDocument();
 });

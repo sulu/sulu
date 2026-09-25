@@ -1,10 +1,10 @@
 // @flow
-import {mount} from 'enzyme';
 import React from 'react';
+import {render, screen, waitFor} from '@testing-library/react';
+import SymfonyRouting from 'fos-jsrouting/router';
 import Router from '../../../services/Router';
 import Requester from '../../../services/Requester';
 import Badge from '../Badge';
-import BadgeStore from '../stores/BadgeStore';
 
 jest.mock('../../../services/Requester', () => ({
     get: jest.fn(),
@@ -31,8 +31,9 @@ test('Should create new BadgeStore', () => {
     const promise = Promise.resolve({data: 'foo'});
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
+    SymfonyRouting.generate.mockReturnValue('badge-url');
 
-    const badge = mount(
+    const {unmount} = render(
         <Badge
             dataPath="/data"
             requestParameters={{
@@ -49,33 +50,28 @@ test('Should create new BadgeStore', () => {
         />
     );
 
-    const store = badge.instance().store;
-
-    expect(store).toBeInstanceOf(BadgeStore);
-    expect(store.routeName).toBe('foo');
-    expect(store.dataPath).toBe('/data');
-    expect(store.requestParameters).toEqual({
+    expect(SymfonyRouting.generate).toHaveBeenCalledWith('foo', {
+        entityId: 5,
         limit: 0,
+        locale: 'en',
     });
-    expect(store.routerAttributesToRequest).toEqual({
-        id: 'entityId',
-        locale: 'locale',
-    });
-    expect(store.tabViewRoute).toBe(tabViewRoute);
+    expect(Requester.get).toHaveBeenCalledWith('badge-url');
+    expect(Requester.handleResponseHooks).toHaveLength(1);
 
-    return promise.then(() => {
-        expect(store.value).toBe('foo');
-    });
+    unmount();
+
+    expect(Requester.handleResponseHooks).toHaveLength(0);
 });
 
-test('Should pass correct props to badge component', () => {
+test('Should pass correct props to badge component', async() => {
     const router = new Router({});
 
     const promise = Promise.resolve('hello');
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
+    SymfonyRouting.generate.mockReturnValue('badge-url');
 
-    const badge = mount(
+    render(
         <Badge
             dataPath={null}
             requestParameters={{
@@ -92,21 +88,18 @@ test('Should pass correct props to badge component', () => {
         />
     );
 
-    return promise.then(() => {
-        badge.update();
-        expect(badge.children().find('Badge').length).toBe(1);
-        expect(badge.children().find('Badge').text()).toBe('hello');
-    });
+    expect(await screen.findByText('hello')).toBeInTheDocument();
 });
 
-test('Should not render Badge component if visibleCondition fails', () => {
+test('Should not render Badge component if visibleCondition fails', async() => {
     const router = new Router({});
 
     const promise = Promise.resolve({data: 0});
     Requester.get.mockReturnValue(promise);
     Requester.handleResponseHooks = [];
+    SymfonyRouting.generate.mockReturnValue('badge-url');
 
-    const badge = mount(
+    render(
         <Badge
             dataPath="/data"
             requestParameters={{
@@ -123,8 +116,7 @@ test('Should not render Badge component if visibleCondition fails', () => {
         />
     );
 
-    return promise.then(() => {
-        badge.update();
-        expect(badge.children().find('Badge').length).toBe(0);
-    });
+    await waitFor(() => expect(promise).resolves.toEqual({data: 0}));
+
+    expect(screen.queryByText('0')).not.toBeInTheDocument();
 });

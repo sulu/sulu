@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
+import {act, render, screen} from '@testing-library/react';
 import {observable} from 'mobx';
-import {shallow, render} from 'enzyme';
 import ResourceStore from '../../../stores/ResourceStore';
 import Field from '../Field';
 import Section from '../Section';
@@ -27,17 +27,23 @@ jest.mock('../registries/fieldRegistry', () => ({
     getOptions: jest.fn(),
 }));
 
-test('Render section with children', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+function createFormInspector() {
+    return new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+}
 
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="text" />;
-    });
+function renderSection(props: Object = {}) {
+    const formInspector = props.formInspector || createFormInspector();
+    const data = props.data || {};
 
-    expect(render(
-        <Section data={{}} formInspector={formInspector} name="section" schema={{label: 'Section', type: 'section'}}>
+    return render(
+        <Section
+            data={data}
+            formInspector={formInspector}
+            name="section"
+            schema={{label: 'Section', type: 'section', ...props.schema}}
+        >
             <Field
-                data={{}}
+                data={data}
                 dataPath=""
                 formInspector={formInspector}
                 name="test"
@@ -49,80 +55,61 @@ test('Render section with children', () => {
                 schemaPath=""
             />
         </Section>
-    )).toMatchSnapshot();
+    );
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    conditionDataProviderRegistry.clear();
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input data-testid="field-type" type="text" />;
+    });
+    fieldRegistry.getOptions.mockReturnValue(undefined);
+});
+
+test('Render section with children', () => {
+    renderSection();
+
+    expect(screen.getByText('Section')).toBeInTheDocument();
+    expect(screen.getByText('label1')).toBeInTheDocument();
+    expect(screen.getByTestId('field-type')).toBeInTheDocument();
 });
 
 test('Do not render anything if visibleCondition evaluates to false', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="date" />;
-    });
-
-    const schema = {
-        label: 'Text',
-        type: 'text_line',
-        visibleCondition: 'title != "Test"',
-    };
-
     const data = observable({title: 'Test'});
 
-    const section = shallow(
-        <Section data={data} formInspector={formInspector} name="section" schema={schema}>
-            <Field
-                data={data}
-                dataPath=""
-                formInspector={formInspector}
-                name="test"
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
-                onSuccess={jest.fn()}
-                router={undefined}
-                schema={{label: 'label1', type: 'text'}}
-                schemaPath=""
-            />
-        </Section>
-    );
+    renderSection({
+        data,
+        schema: {
+            label: 'Text',
+            type: 'text_line',
+            visibleCondition: 'title != "Test"',
+        },
+    });
 
-    expect(section.find('Section')).toHaveLength(0);
+    expect(screen.queryByText('Text')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('field-type')).not.toBeInTheDocument();
 
-    data.title = 'Changed title!';
-    expect(section.find('Section')).toHaveLength(1);
+    act(() => {
+        data.title = 'Changed title!';
+    });
+
+    expect(screen.getByText('Text')).toBeInTheDocument();
+    expect(screen.getByTestId('field-type')).toBeInTheDocument();
 });
 
 test('Render the section if visibleCondition with conditionDataProvider evaluates to true', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
-
     conditionDataProviderRegistry.add((data) => ({__test: data.test}));
 
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="date" />;
+    renderSection({
+        data: {test: 'Test'},
+        schema: {
+            label: 'Text',
+            type: 'text_line',
+            visibleCondition: '__test == "Test"',
+        },
     });
 
-    const schema = {
-        label: 'Text',
-        type: 'text_line',
-        visibleCondition: '__test == "Test"',
-    };
-
-    const data = {test: 'Test'};
-
-    const section = shallow(
-        <Section data={data} formInspector={formInspector} name="section" schema={schema}>
-            <Field
-                data={data}
-                dataPath=""
-                formInspector={formInspector}
-                name="test"
-                onChange={jest.fn()}
-                onFinish={jest.fn()}
-                onSuccess={jest.fn()}
-                router={undefined}
-                schema={{label: 'label1', type: 'text'}}
-                schemaPath=""
-            />
-        </Section>
-    );
-
-    expect(section.find('Section')).toHaveLength(1);
+    expect(screen.getByText('Text')).toBeInTheDocument();
+    expect(screen.getByTestId('field-type')).toBeInTheDocument();
 });

@@ -5,9 +5,7 @@ import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
 import PublishToolbarAction from '../../toolbarActions/PublishToolbarAction';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
 
 jest.mock('../../../../stores/ResourceStore', () => jest.fn(function() {
     this.data = {};

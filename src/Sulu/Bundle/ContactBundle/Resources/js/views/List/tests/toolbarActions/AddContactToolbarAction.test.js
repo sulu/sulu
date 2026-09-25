@@ -1,14 +1,39 @@
 // @flow
+import {act, fireEvent, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
-import {shallow} from 'enzyme';
 import {ListStore} from 'sulu-admin-bundle/containers';
 import {ResourceRequester, Router} from 'sulu-admin-bundle/services';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {List} from 'sulu-admin-bundle/views';
 import AddContactToolbarAction from '../../toolbarActions/AddContactToolbarAction';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+jest.mock('sulu-admin-bundle/containers/SingleAutoComplete', () => jest.fn(function(props) {
+    const React = require('react');
+
+    return React.createElement(
+        'div',
+        {'data-options': JSON.stringify(props.options), 'data-testid': 'contact-select'},
+        React.createElement('span', {}, props.selectionStore.item ? props.selectionStore.item.id : 'none'),
+        React.createElement(
+            'button',
+            {onClick: () => props.selectionStore.set({id: 3}), type: 'button'},
+            'select contact'
+        )
+    );
+}));
+
+jest.mock('sulu-admin-bundle/containers/ResourceSingleSelect', () => jest.fn(function(props) {
+    const React = require('react');
+
+    return React.createElement(
+        'div',
+        {'data-editable': props.editable, 'data-testid': 'position-select'},
+        React.createElement('span', {}, props.value === undefined ? 'none' : props.value),
+        React.createElement('button', {onClick: () => props.onChange(5), type: 'button'}, 'select position')
+    );
 }));
 
 jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
@@ -42,6 +67,24 @@ function createAddContactToolbarAction() {
     return new AddContactToolbarAction(listStore, list, router, locales, resourceStore, {});
 }
 
+function openOverlay(addContactToolbarAction, rerender) {
+    act(() => addContactToolbarAction.getToolbarItemConfig().onClick());
+    rerender(addContactToolbarAction.getNode());
+}
+
+function finishOverlayCloseTransition() {
+    const title = screen.queryByText('sulu_contact.add_contact_to_organization');
+    const container = title && title.closest('section')?.parentElement?.parentElement;
+
+    if (container) {
+        fireEvent.transitionEnd(container);
+    }
+}
+
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
 test('Return config for toolbar item', () => {
     const addContactToolbarAction = createAddContactToolbarAction();
 
@@ -54,136 +97,116 @@ test('Return config for toolbar item', () => {
 
 test('Open dialog if button is clicked', () => {
     const addContactToolbarAction = createAddContactToolbarAction();
-    const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
+    const {rerender} = render(addContactToolbarAction.getNode());
 
-    expect(shallow(addContactToolbarAction.getNode()).instance().props.open).toEqual(false);
-    clickHandler();
-    expect(shallow(addContactToolbarAction.getNode()).instance().props.open).toEqual(true);
+    expect(screen.queryByText('sulu_contact.add_contact_to_organization')).not.toBeInTheDocument();
+    openOverlay(addContactToolbarAction, rerender);
+    expect(screen.getByText('sulu_contact.add_contact_to_organization')).toBeInTheDocument();
 });
 
 test('Pass correct options to components', () => {
     const addContactToolbarAction = createAddContactToolbarAction();
     addContactToolbarAction.listStore.options.accountId = 4;
+    const {rerender} = render(addContactToolbarAction.getNode());
 
-    const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
-    clickHandler();
+    openOverlay(addContactToolbarAction, rerender);
 
-    const node = shallow(addContactToolbarAction.getNode());
-    expect(node.find('ResourceSingleSelect').prop('editable')).toEqual(true);
-    expect(node.find('SingleAutoComplete').prop('options')).toEqual({excludedAccountId: 4, flat: false});
+    expect(screen.getByTestId('position-select')).toHaveAttribute('data-editable', 'true');
+    expect(screen.getByTestId('contact-select'))
+        .toHaveAttribute('data-options', JSON.stringify({excludedAccountId: 4, flat: false}));
 });
 
-test('Reset fields if overlay is just closed', () => {
+test('Reset fields if overlay is just closed', async() => {
+    const user = userEvent.setup();
     const addContactToolbarAction = createAddContactToolbarAction();
-    const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
+    const {rerender} = render(addContactToolbarAction.getNode());
 
-    clickHandler();
-    let addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.instance().props.open).toEqual(true);
+    openOverlay(addContactToolbarAction, rerender);
+    await user.click(screen.getByRole('button', {name: 'select contact'}));
+    await user.click(screen.getByRole('button', {name: 'select position'}));
+    rerender(addContactToolbarAction.getNode());
 
-    addContactOverlay.find('SingleAutoComplete').prop('selectionStore').set({id: 3});
-    addContactOverlay.find('ResourceSingleSelect').prop('onChange')(5);
+    expect(screen.getByTestId('contact-select')).toHaveTextContent('3');
+    expect(screen.getByTestId('position-select')).toHaveTextContent('5');
+    await user.click(screen.getByRole('button', {name: 'su-times'}));
+    rerender(addContactToolbarAction.getNode());
+    finishOverlayCloseTransition();
 
-    addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.find('SingleAutoComplete').prop('selectionStore').item).toEqual({id: 3});
-    expect(addContactOverlay.find('ResourceSingleSelect').prop('value')).toEqual(5);
-    addContactOverlay.instance().props.onClose();
+    expect(screen.queryByText('sulu_contact.add_contact_to_organization')).not.toBeInTheDocument();
 
-    addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.instance().props.open).toEqual(false);
-
-    clickHandler();
-    addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.find('SingleAutoComplete').prop('selectionStore').item).toEqual(undefined);
-    expect(addContactOverlay.find('ResourceSingleSelect').prop('value')).toEqual(undefined);
+    openOverlay(addContactToolbarAction, rerender);
+    expect(screen.getByTestId('contact-select')).toHaveTextContent('none');
+    expect(screen.getByTestId('position-select')).toHaveTextContent('none');
 
     expect(ResourceRequester.put).not.toHaveBeenCalled();
 });
 
-test('Add selected contact to current account', () => {
+test('Add selected contact to current account', async() => {
+    const user = userEvent.setup();
     const addContactToolbarAction = createAddContactToolbarAction();
     addContactToolbarAction.listStore.options.accountId = 4;
-
-    const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
-
-    const putPromise = Promise.resolve();
+    let resolvePut: () => void = () => {};
+    const putPromise = new Promise((resolve) => {
+        resolvePut = resolve;
+    });
     ResourceRequester.put.mockReturnValue(putPromise);
+    const {rerender} = render(addContactToolbarAction.getNode());
 
-    clickHandler();
-    let addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.instance().props.open).toEqual(true);
-    expect(addContactOverlay.instance().props.confirmDisabled).toEqual(true);
-    addContactOverlay.find('SingleAutoComplete').prop('selectionStore').set({id: 3});
+    openOverlay(addContactToolbarAction, rerender);
+    const confirmButton = screen.getByRole('button', {name: 'sulu_admin.add'});
+    expect(confirmButton).toBeDisabled();
+    await user.click(screen.getByRole('button', {name: 'select contact'}));
+    rerender(addContactToolbarAction.getNode());
 
-    addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.instance().props.confirmDisabled).toEqual(false);
+    expect(confirmButton).toBeEnabled();
 
-    addContactOverlay.instance().props.onConfirm();
-
-    addContactOverlay = shallow(addContactToolbarAction.getNode()).instance();
-    expect(addContactOverlay.props).toEqual(expect.objectContaining({
-        confirmLoading: true,
-        open: true,
-    }));
+    await user.click(confirmButton);
+    rerender(addContactToolbarAction.getNode());
+    expect(confirmButton).toBeDisabled();
 
     expect(ResourceRequester.put).toHaveBeenCalledWith('account_contacts', {position: undefined}, {
         accountId: 4,
         id: 3,
     });
 
-    return putPromise.then(() => {
-        addContactOverlay = shallow(addContactToolbarAction.getNode()).instance();
-        expect(addContactOverlay.props).toEqual(expect.objectContaining({
-            confirmLoading: false,
-            open: false,
-        }));
-
-        const resourceStore = addContactToolbarAction.resourceStore;
-        if (!resourceStore) {
-            throw new Error('The resourceStore must be set on the ToolbarAction!');
-        }
-
-        expect(addContactToolbarAction.listStore.reload).toHaveBeenCalledWith();
+    await act(async() => {
+        resolvePut();
+        await putPromise;
     });
+    rerender(addContactToolbarAction.getNode());
+    finishOverlayCloseTransition();
+
+    expect(screen.queryByText('sulu_contact.add_contact_to_organization')).not.toBeInTheDocument();
+    expect(addContactToolbarAction.listStore.reload).toHaveBeenCalledWith();
 });
 
-test('Add selected contact to current account with position', () => {
+test('Add selected contact to current account with position', async() => {
+    const user = userEvent.setup();
     const addContactToolbarAction = createAddContactToolbarAction();
     addContactToolbarAction.listStore.options.accountId = 4;
-
-    const clickHandler = addContactToolbarAction.getToolbarItemConfig().onClick;
-
-    const putPromise = Promise.resolve();
+    let resolvePut: () => void = () => {};
+    const putPromise = new Promise((resolve) => {
+        resolvePut = resolve;
+    });
     ResourceRequester.put.mockReturnValue(putPromise);
+    const {rerender} = render(addContactToolbarAction.getNode());
 
-    clickHandler();
-    let addContactOverlay = shallow(addContactToolbarAction.getNode());
-    expect(addContactOverlay.instance().props.open).toEqual(true);
-    addContactOverlay.find('SingleAutoComplete').prop('selectionStore').set({id: 3});
-    addContactOverlay.find('ResourceSingleSelect').prop('onChange')(5);
-
-    addContactOverlay.instance().props.onConfirm();
-
-    addContactOverlay = shallow(addContactToolbarAction.getNode()).instance();
-    expect(addContactOverlay.props).toEqual(expect.objectContaining({
-        confirmLoading: true,
-        open: true,
-    }));
+    openOverlay(addContactToolbarAction, rerender);
+    await user.click(screen.getByRole('button', {name: 'select contact'}));
+    await user.click(screen.getByRole('button', {name: 'select position'}));
+    rerender(addContactToolbarAction.getNode());
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.add'}));
+    rerender(addContactToolbarAction.getNode());
 
     expect(ResourceRequester.put).toHaveBeenCalledWith('account_contacts', {position: 5}, {accountId: 4, id: 3});
 
-    return putPromise.then(() => {
-        addContactOverlay = shallow(addContactToolbarAction.getNode()).instance();
-        expect(addContactOverlay.props).toEqual(expect.objectContaining({
-            confirmLoading: false,
-            open: false,
-        }));
-
-        const resourceStore = addContactToolbarAction.resourceStore;
-        if (!resourceStore) {
-            throw new Error('The resourceStore must be set on the ToolbarAction!');
-        }
-
-        expect(addContactToolbarAction.listStore.reload).toHaveBeenCalledWith();
+    await act(async() => {
+        resolvePut();
+        await putPromise;
     });
+    rerender(addContactToolbarAction.getNode());
+    finishOverlayCloseTransition();
+
+    expect(screen.queryByText('sulu_contact.add_contact_to_organization')).not.toBeInTheDocument();
+    expect(addContactToolbarAction.listStore.reload).toHaveBeenCalledWith();
 });
