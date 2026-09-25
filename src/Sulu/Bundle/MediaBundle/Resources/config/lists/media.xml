@@ -290,6 +290,29 @@
             </filter>
         </property>
 
+        <!-- when used as column, the property will lead to duplicated rows for entities with multiple media languages -->
+        <property
+            name="mediaLanguage"
+            visibility="never"
+            translation="sulu_media.media_language"
+        >
+            <field-name>language</field-name>
+            <entity-name>Sulu\Bundle\MediaBundle\Entity\FileVersionMediaLanguage</entity-name>
+
+            <joins ref="fileVersion">
+                <join>
+                    <entity-name>Sulu\Bundle\MediaBundle\Entity\FileVersionMediaLanguage</entity-name>
+                    <field-name>Sulu\Bundle\MediaBundle\Entity\FileVersion.mediaLanguages</field-name>
+                </join>
+            </joins>
+
+            <filter type="media_language">
+                <params>
+                    <param name="options" type="expression" value="service('sulu_media.media_language_provider').getFilterOptions(locale)"/>
+                </params>
+            </filter>
+        </property>
+
         <property name="lft" visibility="never">
             <field-name>lft</field-name>
             <entity-name>%sulu.model.collection.class%</entity-name>

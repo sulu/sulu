@@ -224,6 +224,7 @@ class MediaManager implements MediaManagerInterface
         }
 
         $shouldEmitModifiedEvent = true;
+        $fileVersion = null;
 
         /** @var string $locale */
         $locale = $data['locale'] ?? 'en';
@@ -250,7 +251,6 @@ class MediaManager implements MediaManagerInterface
             $data['version'] = $version;
 
             $fileVersion = clone $currentFileVersion;
-            $this->em->persist($fileVersion);
 
             $fileVersion->setChanged(new \DateTimeImmutable());
             $fileVersion->setChanger($user);
@@ -318,6 +318,10 @@ class MediaManager implements MediaManagerInterface
             $user
         );
 
+        // persisted after the data is applied: rows removed from the new version before persisting are never inserted
+        if (null !== $fileVersion) {
+            $this->em->persist($fileVersion);
+        }
         $this->em->persist($media->getEntity());
 
         if ($shouldEmitModifiedEvent) {
@@ -466,6 +470,7 @@ class MediaManager implements MediaManagerInterface
                 || 'aiDisclosureDisabled' === $attribute
                 || 'aiDisclosureText' === $attribute
                 || 'aiDisclosureIconVariant' === $attribute
+                || 'mediaLanguages' === $attribute
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -579,6 +584,9 @@ class MediaManager implements MediaManagerInterface
                         break;
                     case 'aiDisclosureIconVariant':
                         $media->setAiDisclosureIconVariant($value ?? 'auto');
+                        break;
+                    case 'mediaLanguages':
+                        $media->setMediaLanguages(\is_array($value) ? \array_filter($value, 'is_string') : []);
                         break;
                 }
             }

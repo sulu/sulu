@@ -124,6 +124,38 @@
                     "tags": [],
                     "label": "Origin"
                 },
+                "mediaLanguages": {
+                    "disabledCondition": null,
+                    "visibleCondition": "type == 'document' || type == 'video'",
+                    "type": "select",
+                    "colSpan": 12,
+                    "options": {
+                        "values": {
+                            "name": "values",
+                            "type": "expression",
+                            "value": [
+                                {
+                                    "name": "de_at",
+                                    "title": "German (Austria)"
+                                },
+                                {
+                                    "name": "de",
+                                    "title": "German"
+                                }
+                            ]
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Media language"
+                },
                 "aiDisclosure": {
                     "disabledCondition": null,
                     "visibleCondition": "origin == 'ai_generated' || origin == 'ai_modified'",

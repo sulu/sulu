@@ -46,6 +46,7 @@ use Sulu\Bundle\MediaBundle\FileInspector\SvgSanitizerFactory;
 use Sulu\Bundle\MediaBundle\FileInspector\UploadFileSubscriber;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\SmartContent\MediaSmartContentProvider;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\Visitor\MediaSmartContentFiltersVisitor;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\MediaLanguageFilterType;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionIndexListener;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionReindexProvider;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaIndexListener;
@@ -74,6 +75,7 @@ use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\MediaLanguage\MediaLanguageProvider;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\ImagePropertiesProvider;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
@@ -536,4 +538,14 @@ return static function(ContainerConfigurator $container) {
             tagged_iterator('sulu_media.admin_collection_reindex_provider_enhancer'),
         ])
         ->tag('cmsig_seal.reindex_provider');
+
+    $services->set('sulu_media.media_language_provider', MediaLanguageProvider::class)
+        ->public()
+        ->args([
+            '%sulu_media.media_languages%',
+            new Reference('sulu.core.localization_manager'),
+        ]);
+
+    $services->set('sulu_media.media_language_filter_type', MediaLanguageFilterType::class)
+        ->tag('sulu_core.list_builder_filter_type');
 };

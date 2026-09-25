@@ -51,6 +51,9 @@ class FileVersion implements AuditableInterface
     /** @var DoctrineCollection<string, FormatOptions> */
     private DoctrineCollection $formatOptions;
 
+    /** @var DoctrineCollection<int, FileVersionMediaLanguage> */
+    private DoctrineCollection $mediaLanguages;
+
     #[Exclude]
     private ?File $file = null;
 
@@ -81,6 +84,7 @@ class FileVersion implements AuditableInterface
     {
         $this->meta = new ArrayCollection();
         $this->formatOptions = new ArrayCollection();
+        $this->mediaLanguages = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->targetGroups = new ArrayCollection();
@@ -335,6 +339,20 @@ class FileVersion implements AuditableInterface
                 $newFormatOptions->setFileVersion($this);
                 $this->addFormatOptions($newFormatOptions);
             }
+
+            /** @var FileVersionMediaLanguage[] $newMediaLanguages */
+            $newMediaLanguages = [];
+            foreach ($this->mediaLanguages as $mediaLanguage) {
+                /* @var FileVersionMediaLanguage $mediaLanguage */
+                $newMediaLanguages[] = clone $mediaLanguage;
+            }
+
+            // fresh collection, not clear() on the shared one: orphanRemoval would delete the source rows
+            $this->mediaLanguages = new ArrayCollection();
+            foreach ($newMediaLanguages as $newMediaLanguage) {
+                $newMediaLanguage->setFileVersion($this);
+                $this->mediaLanguages->add($newMediaLanguage);
+            }
         }
     }
 
@@ -470,6 +488,42 @@ class FileVersion implements AuditableInterface
     public function setAiDisclosureIconVariant(string $aiDisclosureIconVariant): static
     {
         $this->aiDisclosureIconVariant = $aiDisclosureIconVariant;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getMediaLanguages(): array
+    {
+        return \array_values(
+            $this->mediaLanguages->map(
+                fn (FileVersionMediaLanguage $mediaLanguage) => $mediaLanguage->getLanguage()
+            )->toArray()
+        );
+    }
+
+    /**
+     * @param string[] $languages
+     */
+    public function setMediaLanguages(array $languages): static
+    {
+        $languages = \array_values(\array_unique($languages));
+
+        // keep unchanged rows so orphanRemoval does not delete and re-insert the same unique (fileVersion, language)
+        foreach ($this->mediaLanguages->toArray() as $mediaLanguage) {
+            if (!\in_array($mediaLanguage->getLanguage(), $languages, true)) {
+                $this->mediaLanguages->removeElement($mediaLanguage);
+            }
+        }
+
+        $existingLanguages = $this->getMediaLanguages();
+        foreach ($languages as $language) {
+            if (!\in_array($language, $existingLanguages, true)) {
+                $this->mediaLanguages->add(new FileVersionMediaLanguage($this, $language));
+            }
+        }
 
         return $this;
     }

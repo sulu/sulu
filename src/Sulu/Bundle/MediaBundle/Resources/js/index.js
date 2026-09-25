@@ -3,11 +3,13 @@ import {initializer} from 'sulu-admin-bundle/services';
 import {
     blockPreviewTransformerRegistry,
     listAdapterRegistry,
+    listFieldFilterTypeRegistry,
     fieldRegistry,
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
 import {TeaserSelection} from 'sulu-page-bundle/containers';
 import linkOverlayRegistry from 'sulu-admin-bundle/containers/Link/registries/linkOverlayRegistry';
+import {SelectFieldFilterType} from 'sulu-admin-bundle/containers/List';
 import {MediaCardOverviewAdapter, MediaCardSelectionAdapter} from './containers/List';
 import {MediaSelection, MediaVersionUpload, SingleMediaUpload, SingleMediaSelection, ImageMap} from './containers/Form';
 import {
@@ -43,6 +45,8 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
 
     listAdapterRegistry.add('media_card_overview', MediaCardOverviewAdapter);
     listAdapterRegistry.add('media_card_selection', MediaCardSelectionAdapter);
+
+    listFieldFilterTypeRegistry.add('media_language', SelectFieldFilterType);
 
     fieldRegistry.add(FIELD_TYPE_MEDIA_SELECTION, MediaSelection);
     fieldRegistry.add(FIELD_TYPE_SINGLE_MEDIA_SELECTION, SingleMediaSelection);

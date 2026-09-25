@@ -1,5 +1,7 @@
 {
     "sulu_media.media": "Media",
+    "sulu_media.media_language": "Media language",
+    "sulu_media.media_language_none": "No language set",
     "sulu_media.collection": "Collection",
     "sulu_media.all_media": "All media",
     "sulu_media.audio": "Audio",

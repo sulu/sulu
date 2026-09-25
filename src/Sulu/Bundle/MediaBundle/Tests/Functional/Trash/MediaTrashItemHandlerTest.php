@@ -142,6 +142,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $media1File1Version2->setOrigin('ai_generated');
         $media1File1Version2->setAiDisclosureDisabled(true);
         $media1File1Version2->setAiDisclosureIconVariant('dark');
+        $media1File1Version2->setMediaLanguages(['de', 'fr']);
 
         $media1File1Version2->addTag($tag1);
         $media1File1Version2->addTag($tag2);
@@ -244,6 +245,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertSame('unknown', $restoredFile1Version1->getOrigin());
         static::assertFalse($restoredFile1Version1->getAiDisclosureDisabled());
         static::assertSame('auto', $restoredFile1Version1->getAiDisclosureIconVariant());
+        static::assertSame([], $restoredFile1Version1->getMediaLanguages());
         static::assertSame('de', $restoredFile1Version1->getDefaultMeta()?->getLocale());
         static::assertCount(0, $restoredFile1Version1->getTags());
         static::assertCount(0, $restoredFile1Version1->getCategories());
@@ -270,6 +272,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertSame('ai_generated', $restoredFile1Version2->getOrigin());
         static::assertTrue($restoredFile1Version2->getAiDisclosureDisabled());
         static::assertSame('dark', $restoredFile1Version2->getAiDisclosureIconVariant());
+        static::assertSame(['de', 'fr'], $restoredFile1Version2->getMediaLanguages());
         static::assertCount(2, $restoredFile1Version2->getMeta());
         static::assertSame('de', $restoredFile1Version2->getDefaultMeta()?->getLocale());
         static::assertCount(2, $restoredFile1Version2->getFormatOptions());
