@@ -13,23 +13,16 @@ declare(strict_types=1);
 
 namespace Sulu\Snippet\Tests\Functional\Infrastructure\Sulu\Admin;
 
-use Prophecy\PhpUnit\ProphecyTrait;
-use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewUrlGenerator;
-use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
-use Sulu\Bundle\AdminBundle\Admin\View\ViewUrlGenerator;
+use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewUrlGeneratorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetResourceViewParameterProvider;
 use Sulu\Snippet\Tests\Traits\CreateSnippetTrait;
-use Symfony\Component\DependencyInjection\ServiceLocator;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SnippetResourceViewParameterProviderTest extends SuluTestCase
 {
     use CreateSnippetTrait;
-    use ProphecyTrait;
 
     private SnippetResourceViewParameterProvider $provider;
 
@@ -54,7 +47,7 @@ class SnippetResourceViewParameterProviderTest extends SuluTestCase
 
         $this->assertSame(
             ['group' => 'alternate-group'],
-            $this->provider->getViewParameters(['id' => $snippet->getUuid(), 'locale' => 'en']),
+            $this->provider->getViewParameters('detail', ['id' => $snippet->getUuid(), 'locale' => 'en']),
         );
     }
 
@@ -66,19 +59,52 @@ class SnippetResourceViewParameterProviderTest extends SuluTestCase
 
         $this->assertSame(
             ['group' => GroupProviderInterface::DEFAULT_GROUP],
-            $this->provider->getViewParameters(['id' => $snippet->getUuid(), 'locale' => 'en']),
+            $this->provider->getViewParameters('detail', ['id' => $snippet->getUuid(), 'locale' => 'en']),
         );
     }
 
-    public function testGetViewParametersWithoutLocale(): void
+    public function testGetViewParametersUsesTemplateOfGivenLocale(): void
     {
         $snippet = static::createSnippet([
-            'en' => ['draft' => ['template' => 'snippet-alternate', 'title' => 'Alternate Snippet']],
+            'en' => ['draft' => ['template' => 'snippet', 'title' => 'Snippet']],
+            'de' => ['draft' => ['template' => 'snippet-alternate', 'title' => 'Alternate Snippet']],
+        ]);
+
+        $this->assertSame(
+            ['group' => GroupProviderInterface::DEFAULT_GROUP],
+            $this->provider->getViewParameters('detail', ['id' => $snippet->getUuid(), 'locale' => 'en']),
+        );
+        $this->assertSame(
+            ['group' => 'alternate-group'],
+            $this->provider->getViewParameters('detail', ['id' => $snippet->getUuid(), 'locale' => 'de']),
+        );
+    }
+
+    public function testGetViewParametersUsesDraftTemplate(): void
+    {
+        $snippet = static::createSnippet([
+            'en' => [
+                'live' => ['template' => 'snippet', 'title' => 'Snippet'],
+                'draft' => ['template' => 'snippet-alternate', 'title' => 'Alternate Snippet'],
+            ],
         ]);
 
         $this->assertSame(
             ['group' => 'alternate-group'],
-            $this->provider->getViewParameters(['id' => $snippet->getUuid()]),
+            $this->provider->getViewParameters('detail', ['id' => $snippet->getUuid(), 'locale' => 'en']),
+        );
+    }
+
+    public function testGetViewParametersWithoutLocaleUsesFirstLocale(): void
+    {
+        $snippet = static::createSnippet([
+            'en' => ['draft' => ['template' => 'snippet', 'title' => 'Snippet']],
+            'de' => ['draft' => ['template' => 'snippet-alternate', 'title' => 'Alternate Snippet']],
+        ]);
+
+        $this->assertSame(
+            ['group' => 'alternate-group'],
+            $this->provider->getViewParameters('detail', ['id' => $snippet->getUuid()]),
         );
     }
 
@@ -86,8 +112,17 @@ class SnippetResourceViewParameterProviderTest extends SuluTestCase
     {
         $this->assertSame(
             ['group' => GroupProviderInterface::DEFAULT_GROUP],
-            $this->provider->getViewParameters(['id' => '00000000-0000-0000-0000-000000000000', 'locale' => 'en']),
+            $this->provider->getViewParameters('detail', ['id' => '00000000-0000-0000-0000-000000000000', 'locale' => 'en']),
         );
+    }
+
+    public function testGetViewParametersForOtherView(): void
+    {
+        $snippet = static::createSnippet([
+            'en' => ['draft' => ['template' => 'snippet-alternate', 'title' => 'Alternate Snippet']],
+        ]);
+
+        $this->assertSame([], $this->provider->getViewParameters('list', ['id' => $snippet->getUuid(), 'locale' => 'en']));
     }
 
     public function testResourceViewUrlGeneratorResolvesConfiguredDetailView(): void
@@ -96,18 +131,8 @@ class SnippetResourceViewParameterProviderTest extends SuluTestCase
             'en' => ['draft' => ['template' => 'snippet-alternate', 'title' => 'Grouped Snippet']],
         ]);
 
-        $router = $this->prophesize(UrlGeneratorInterface::class);
-        $router->generate('sulu_admin', [], UrlGeneratorInterface::ABSOLUTE_PATH)->willReturn('/admin/');
-        /** @var ViewRegistry $viewRegistry */
-        $viewRegistry = self::getContainer()->get('sulu_admin.view_registry');
-        $viewUrlGenerator = new ViewUrlGenerator($router->reveal(), $viewRegistry, new RequestStack());
-        /** @var array<string, array{views?: array<string, string>}> $resources */
-        $resources = self::getContainer()->getParameter('sulu_admin.resources');
-        $resourceViewUrlGenerator = new ResourceViewUrlGenerator(
-            $viewUrlGenerator,
-            $resources,
-            new ServiceLocator([SnippetInterface::RESOURCE_KEY => fn () => $this->provider]),
-        );
+        /** @var ResourceViewUrlGeneratorInterface $resourceViewUrlGenerator */
+        $resourceViewUrlGenerator = self::getContainer()->get('test.sulu_admin.resource_view_url_generator');
 
         $this->assertSame(
             '/admin/#/snippets/en/alternate-group/' . $snippet->getUuid(),

@@ -40,8 +40,12 @@ final class SnippetResourceViewParameterProvider implements ResourceViewParamete
         return SnippetInterface::RESOURCE_KEY;
     }
 
-    public function getViewParameters(array $viewParameters): array
+    public function getViewParameters(string $resourceView, array $viewParameters): array
     {
+        if ('detail' !== $resourceView) {
+            return [];
+        }
+
         $templateKey = isset($viewParameters['id'])
             ? $this->findTemplateKey((string) $viewParameters['id'], isset($viewParameters['locale']) ? (string) $viewParameters['locale'] : null)
             : null;
@@ -72,6 +76,8 @@ final class SnippetResourceViewParameterProvider implements ResourceViewParamete
         if (null !== $locale) {
             $queryBuilder->andWhere('dimensionContent.locale = :locale')
                 ->setParameter('locale', $locale);
+        } else {
+            $queryBuilder->orderBy('dimensionContent.locale');
         }
 
         /** @var string|null $templateKey */

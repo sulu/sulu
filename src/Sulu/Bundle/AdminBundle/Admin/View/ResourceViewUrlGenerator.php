@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\View;
 
-use Psr\Container\ContainerInterface;
 use Sulu\Bundle\AdminBundle\Exception\ResourceViewNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\ViewParameterNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -20,12 +19,12 @@ final class ResourceViewUrlGenerator implements ResourceViewUrlGeneratorInterfac
 {
     /**
      * @param array<string, array{views?: array<string, string>}> $resources
-     * @param ContainerInterface|null $viewParameterProviders ResourceViewParameterProviderInterface services by resource key
+     * @param iterable<ResourceViewParameterProviderInterface> $viewParameterProviders sorted by tag priority desc
      */
     public function __construct(
         private ViewUrlGeneratorInterface $viewUrlGenerator,
         private array $resources,
-        private ?ContainerInterface $viewParameterProviders = null,
+        private iterable $viewParameterProviders,
     ) {
     }
 
@@ -41,11 +40,16 @@ final class ResourceViewUrlGenerator implements ResourceViewUrlGeneratorInterfac
             throw new ResourceViewNotFoundException($resourceKey, $resourceView);
         }
 
-        if ($this->viewParameterProviders?->has($resourceKey)) {
-            /** @var ResourceViewParameterProviderInterface $viewParameterProvider */
-            $viewParameterProvider = $this->viewParameterProviders->get($resourceKey);
-            $viewParameters = \array_merge($viewParameterProvider->getViewParameters($viewParameters), $viewParameters);
+        $providedViewParameters = [];
+        foreach ($this->viewParameterProviders as $viewParameterProvider) {
+            if ($viewParameterProvider::getResourceKey() !== $resourceKey) {
+                continue;
+            }
+
+            $providedViewParameters += $viewParameterProvider->getViewParameters($resourceView, $viewParameters);
         }
+
+        $viewParameters = \array_merge($providedViewParameters, $viewParameters);
 
         if (\str_contains($viewName, '{')) {
             $viewName = $this->resolveViewName($viewName, $viewParameters);

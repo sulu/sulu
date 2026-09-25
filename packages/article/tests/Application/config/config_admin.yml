@@ -1,0 +1,5 @@
+services:
+    # keeps the otherwise unused service in the container for the ResourceViewParameterProvider tests
+    test.sulu_admin.resource_view_url_generator:
+        alias: sulu_admin.resource_view_url_generator
+        public: true
