@@ -300,6 +300,36 @@ test('shows one original/result pair per field for a full-content translation, k
     expect(screen.getByText('<p>Hallo Welt</p>')).toBeInTheDocument();
 });
 
+test('shows a segment with an original but no response as an empty result column instead of dropping it', async() => {
+    ResourceRequester.get.mockReturnValue(Promise.resolve({
+        ...detailPayload,
+        chain: [
+            {
+                annotations: [],
+                content: 'Hello',
+                contentType: 'text',
+                segmentKey: 'title',
+                title: 'title',
+                type: 'user',
+            },
+        ],
+        expertKey: null,
+        expertName: null,
+        model: null,
+        provider: 'deepl',
+        requestType: 'translation',
+    }));
+
+    // $FlowFixMe
+    render(<RequestLog router={router} />);
+
+    await userEvent.click(screen.getByText('open-item'));
+
+    expect(await screen.findByText('title')).toBeInTheDocument();
+    expect(screen.getByText('Hello')).toBeInTheDocument();
+    expect(screen.getByText('test_request_log.translation_result')).toBeInTheDocument();
+});
+
 test('merges a writeback step into the preceding response card instead of its own step', async() => {
     ResourceRequester.get.mockReturnValue(Promise.resolve({
         ...detailPayload,

@@ -161,7 +161,7 @@ $chainToolColor: $stormGray;
 
 .translation-columns {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
 }
 
@@ -252,6 +252,10 @@ $chainToolColor: $stormGray;
     line-height: 20px;
     white-space: pre-wrap;
     word-break: break-word;
+
+    :global(.ck-editor__top) {
+        display: none;
+    }
 }
 
 .chain-step-body {
