@@ -122,6 +122,7 @@ final class SnippetController implements SecuredControllerInterface
         if (isset($fieldDescriptors['ghostLocale'])) {
             $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         }
+
         $listBuilder->setParameter('locale', $this->getLocale($request));
 
         $groupsParam = $request->query->getString('groups');
@@ -317,7 +318,9 @@ final class SnippetController implements SecuredControllerInterface
     {
         $this->checkActionPermission($request);
 
-        $message = new ModifySnippetMessage(['uuid' => $id], $this->getData($request));
+        $data = $this->applyShadowTemplateKey($id, $this->getData($request));
+
+        $message = new ModifySnippetMessage(['uuid' => $id], $data);
         /** @see \Sulu\Snippet\Application\MessageHandler\ModifySnippetMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
@@ -377,6 +380,46 @@ final class SnippetController implements SecuredControllerInterface
     public function getLocale(Request $request): string
     {
         return $request->query->getString('locale', $request->getLocale());
+    }
+
+    /**
+     * A shadow saved from the settings tab sends no template key, so it would drop out of the
+     * template-filtered list. Snippets have no default type, so reuse the source locale's key,
+     * read through a list builder like the ghost fallback in getAction to bypass the identity map.
+     *
+     * @param array<string, mixed> $data
+     *
+     * @return array<string, mixed>
+     */
+    private function applyShadowTemplateKey(string $id, array $data): array
+    {
+        if (true !== ($data['shadowOn'] ?? false) || !empty($data['template'])) {
+            return $data;
+        }
+
+        $shadowLocale = $data['shadowLocale'] ?? null;
+        if (!\is_string($shadowLocale) || '' === $shadowLocale) {
+            return $data;
+        }
+
+        /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(SnippetInterface::RESOURCE_KEY);
+        /** @var DoctrineListBuilder $listBuilder */
+        $listBuilder = $this->listBuilderFactory->create(SnippetInterface::class);
+        $listBuilder->setIdField($fieldDescriptors['id']);
+        $listBuilder->addSelectField($fieldDescriptors['templateKey']);
+        $listBuilder->setIds([$id]);
+        $listBuilder->setParameter('locale', $shadowLocale);
+
+        /** @var array{templateKey?: string|null}[] $result */
+        $result = $listBuilder->execute();
+        $sourceTemplateKey = $result[0]['templateKey'] ?? null;
+
+        if (null !== $sourceTemplateKey) {
+            $data['template'] = $sourceTemplateKey;
+        }
+
+        return $data;
     }
 
     /**

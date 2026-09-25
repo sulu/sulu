@@ -16,6 +16,7 @@ namespace Sulu\Snippet\Domain\Model;
 use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentTrait;
+use Sulu\Content\Domain\Model\ShadowTrait;
 use Sulu\Content\Domain\Model\TaxonomyTrait;
 use Sulu\Content\Domain\Model\TemplateTrait;
 use Sulu\Content\Domain\Model\WorkflowTrait;
@@ -23,6 +24,7 @@ use Sulu\Content\Domain\Model\WorkflowTrait;
 class SnippetDimensionContent implements SnippetDimensionContentInterface
 {
     use DimensionContentTrait;
+    use ShadowTrait;
     use TemplateTrait {
         TemplateTrait::setTemplateData as parentSetTemplateData;
     }

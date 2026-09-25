@@ -51,8 +51,22 @@ class TemplateDataMapper implements DataMapperInterface
             throw new \RuntimeException(\sprintf('Could not find metadata "%s" of type "%s".', 'form', $type));
         }
 
-        /** @var string $template */
-        $template = $data['template'] ?? $typedMetadata->getDefaultType();
+        /** @var string|null $template */
+        $template = $data['template'] ?? null;
+
+        if (null === $template) {
+            // No template given (e.g. a shadow saved from the settings tab): keep the existing key,
+            // or fall back to the default type so a new locale stays in template-filtered lists.
+            if (null !== $localizedDimensionContent->getTemplateKey()) {
+                return;
+            }
+
+            $template = $typedMetadata->getDefaultType();
+        }
+
+        if (!$template) {
+            return;
+        }
 
         $metadata = $typedMetadata->getForms()[$template] ?? null;
 
@@ -67,7 +81,7 @@ class TemplateDataMapper implements DataMapperInterface
             $metadata,
         );
 
-        if (!isset($data['template']) && !$hasAnyValue) {
+        if (!\array_key_exists('template', $data) && !$hasAnyValue) {
             // do nothing when no data was given
             return;
         }
