@@ -182,6 +182,14 @@ export default class AbstractFormStore
                             {keyword: error.keyword, parameters: error.params}
                         );
                         break;
+                    case 'not':
+                        // the failing subschema is kept so that the field can tell different "not" constraints apart
+                        jsonpointer.set(
+                            errors,
+                            error.instancePath,
+                            {keyword: error.keyword, parameters: error.params, schema: error.schema}
+                        );
+                        break;
                     default:
                         jsonpointer.set(
                             errors,

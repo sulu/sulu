@@ -4,6 +4,12 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.27
 
+### Mandatory fields reject an empty string
+
+A mandatory field whose type has no dedicated schema mapper, like `text_editor` or `color`, accepted an empty
+string. The generated JSON schema now forbids `""` for these fields. Existing content whose mandatory field still
+holds `""` cannot be saved until the field is filled in.
+
 ### Copying a page or snippet requires the add permission
 
 Copying creates a new page or snippet, but only `edit` was checked so far. For pages the permission is checked
