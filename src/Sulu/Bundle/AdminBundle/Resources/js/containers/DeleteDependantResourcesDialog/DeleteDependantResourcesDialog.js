@@ -9,8 +9,14 @@ import ProgressBar from '../../components/ProgressBar';
 import ResourceRequester from '../../services/ResourceRequester';
 import RequestPromise from '../../services/Requester/RequestPromise';
 import {translate} from '../../utils';
+import {ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../constants';
 import styles from './deleteDependantResourcesDialogStyles.scss';
-import type {Resource, DependantResourcesData, DependantResourceBatches} from '../../types';
+import type {
+    Resource,
+    DependantResourcesData,
+    DependantResourceBatches,
+    ReferencingResourcesData,
+} from '../../types';
 
 type Props = {
     dependantResourcesData: DependantResourcesData,
@@ -28,8 +34,10 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
     @observable error: string | typeof undefined = undefined;
     @observable closed: boolean = false;
     @observable totalDeletedResources: number = 0;
+    @observable referencingResourcesData: Array<ReferencingResourcesData> = [];
 
     promises: Array<RequestPromise<any>> = [];
+    resolveReferencingResources: ?(confirmed: boolean) => void = undefined;
 
     @computed get title(): string {
         return this.props.dependantResourcesData.title;
@@ -56,7 +64,9 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             this.error = undefined;
             this.closed = false;
             this.totalDeletedResources = 0;
+            this.referencingResourcesData = [];
             this.promises = [];
+            this.resolveReferencingResources = undefined;
         }
     }
 
@@ -64,13 +74,50 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
         return !!this.error;
     }
 
+    @computed get awaitsReferencingResourcesConfirmation(): boolean {
+        return this.referencingResourcesData.length > 0;
+    }
+
+    @computed get referencingResources(): Array<Resource> {
+        // a resource referencing multiple of the deleted resources is only listed once
+        const referencingResourceKeys = new Set();
+
+        return this.referencingResourcesData.reduce(
+            (resources, {referencingResources}) => [
+                ...resources,
+                ...referencingResources.filter((referencingResource) => {
+                    const key = referencingResource.resourceKey + '::' + referencingResource.id;
+                    if (referencingResourceKeys.has(key)) {
+                        return false;
+                    }
+
+                    referencingResourceKeys.add(key);
+
+                    return true;
+                }),
+            ],
+            []
+        );
+    }
+
     @action handleConfirm = () => {
         const {onFinish, onError} = this.props;
+
+        if (this.resolveReferencingResources) {
+            this.resolveReferencingResources(true);
+
+            return;
+        }
 
         this.inProgress = true;
 
         this.deleteResourceBatches(this.dependantResourceBatches)
             .then(action(() => {
+                if (!this.inProgress) {
+                    // the user cancelled the dialog before all resources were deleted
+                    return;
+                }
+
                 this.inProgress = false;
                 this.finished = true;
 
@@ -94,18 +141,16 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             });
     };
 
-    deleteResourceBatches = (batchedResources: DependantResourceBatches): Promise<void> => {
+    deleteResources = (resources: Array<Resource>, options: Object = {}): Promise<Array<Resource>> => {
         const {requestOptions} = this.props;
+        const referencedResources = [];
+        const referencingResourcesData = [];
+        const handledPromises = [];
 
-        if (batchedResources.length === 0) {
-            return Promise.resolve();
-        }
-
-        const [currentBatch, ...remainingBatches] = batchedResources;
-
-        currentBatch.forEach((resource: Resource) => {
+        resources.forEach((resource: Resource) => {
             const promise = ResourceRequester.delete(resource.resourceKey, {
                 ...requestOptions,
+                ...options,
                 id: resource.id,
             });
 
@@ -119,12 +164,66 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                 });
 
             this.promises.push(promise);
+            handledPromises.push(promise.catch((errorResponse) => {
+                if (errorResponse.status !== 409) {
+                    return Promise.reject(errorResponse);
+                }
+
+                return errorResponse.clone().json().then((error) => {
+                    if (error.code !== ERROR_CODE_REFERENCING_RESOURCES_FOUND) {
+                        return Promise.reject(errorResponse);
+                    }
+
+                    referencedResources.push(resource);
+                    referencingResourcesData.push(error);
+                });
+            }));
         });
 
-        return Promise.all(this.promises)
+        return Promise.all(handledPromises)
             .then(() => {
                 this.promises.splice(0, this.promises.length);
 
+                if (referencedResources.length === 0 || !this.inProgress) {
+                    return referencedResources;
+                }
+
+                // referenced resources are only deleted after the user has seen the referencing resources
+                return this.confirmReferencingResources(referencingResourcesData)
+                    .then((confirmed) => {
+                        if (!confirmed) {
+                            return referencedResources;
+                        }
+
+                        return this.deleteResources(referencedResources, {force: true});
+                    });
+            });
+    };
+
+    @action confirmReferencingResources = (
+        referencingResourcesData: Array<ReferencingResourcesData>
+    ): Promise<boolean> => {
+        this.referencingResourcesData = referencingResourcesData;
+
+        return new Promise((resolve) => {
+            this.resolveReferencingResources = action((confirmed: boolean) => {
+                this.referencingResourcesData = [];
+                this.resolveReferencingResources = undefined;
+
+                resolve(confirmed);
+            });
+        });
+    };
+
+    deleteResourceBatches = (batchedResources: DependantResourceBatches): Promise<void> => {
+        if (batchedResources.length === 0) {
+            return Promise.resolve();
+        }
+
+        const [currentBatch, ...remainingBatches] = batchedResources;
+
+        return this.deleteResources(currentBatch)
+            .then(() => {
                 if (!this.inProgress) {
                     // do not delete next batch if user cancelled the dialog during the previous batch
                     return;
@@ -139,6 +238,10 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
 
         if (this.inProgress) {
             this.inProgress = false;
+
+            if (this.resolveReferencingResources) {
+                this.resolveReferencingResources(false);
+            }
 
             this.promises.forEach((promise: RequestPromise<any>) => {
                 promise.abort();
@@ -183,7 +286,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                         : translate('sulu_admin.cancel')
                 }
                 confirmDisabled={this.errored || this.finished}
-                confirmLoading={this.inProgress}
+                confirmLoading={this.inProgress && !this.awaitsReferencingResourcesConfirmation}
                 confirmText={translate('sulu_admin.delete')}
                 onCancel={this.handleCancel}
                 onConfirm={this.handleConfirm}
@@ -199,7 +302,17 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                     </p>
                 )}
 
-                {(this.inProgress || this.finished || this.errored) && (
+                {this.awaitsReferencingResourcesConfirmation && (
+                    <React.Fragment>
+                        {translate('sulu_admin.delete_linked_warning_text')}
+
+                        <ul>
+                            {this.referencingResources.map(({title}, index) => title && <li key={index}>{title}</li>)}
+                        </ul>
+                    </React.Fragment>
+                )}
+
+                {(this.inProgress || this.finished || this.errored) && !this.awaitsReferencingResourcesConfirmation && (
                     <React.Fragment>
                         <div className={styles.progressBar}>
                             <ProgressBar

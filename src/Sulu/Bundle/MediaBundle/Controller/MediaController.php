@@ -26,9 +26,11 @@ use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
+use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
+use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
@@ -85,7 +87,8 @@ class MediaController extends AbstractMediaController implements
         private string $mediaClass,
         private string $collectionClass,
         private ?MediaListBuilderFactory $mediaListBuilderFactory = null,
-        private ?MediaListRepresentationFactory $mediaListRepresentationFactory = null
+        private ?MediaListRepresentationFactory $mediaListRepresentationFactory = null,
+        private ?ReferenceRepositoryInterface $referenceRepository = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
@@ -94,6 +97,14 @@ class MediaController extends AbstractMediaController implements
                 'sulu/sulu',
                 '2.3',
                 'Instantiating MediaController without the $mediaListBuilderFactory or $mediaListRepresentationFactory argument is deprecated.'
+            );
+        }
+
+        if (null === $this->referenceRepository) {
+            @trigger_deprecation(
+                'sulu/sulu',
+                '2.6',
+                'Instantiating MediaController without the $referenceRepository argument is deprecated.'
             );
         }
     }
@@ -370,8 +381,20 @@ class MediaController extends AbstractMediaController implements
      *
      * @return Response
      */
-    public function deleteAction($id)
+    public function deleteAction($id, Request $request)
     {
+        if (!$this->getBooleanRequestParameter($request, 'force', false, false)) {
+            $referencingResources = $this->getReferencingResources($id);
+
+            if (\count($referencingResources) > 0) {
+                throw new ReferencingResourcesFoundException(
+                    ['id' => (int) $id, 'resourceKey' => MediaInterface::RESOURCE_KEY],
+                    $referencingResources,
+                    \count($referencingResources)
+                );
+            }
+        }
+
         $delete = function($id) {
             try {
                 $this->mediaManager->delete($id, true);
@@ -383,6 +406,51 @@ class MediaController extends AbstractMediaController implements
         $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Returns the pages, snippets and other resources that reference the given media.
+     *
+     * @param int|string $id
+     *
+     * @return array<array{id: int|string, resourceKey: string, title: string|null}>
+     */
+    private function getReferencingResources($id): array
+    {
+        if (null === $this->referenceRepository) {
+            return [];
+        }
+
+        $referencingResources = [];
+        $references = $this->referenceRepository->findFlatBy(
+            [
+                'resourceKey' => MediaInterface::RESOURCE_KEY,
+                'resourceId' => (string) $id,
+            ],
+            [],
+            ['referenceResourceKey', 'referenceResourceId', 'referenceTitle'],
+            true
+        );
+
+        foreach ($references as $reference) {
+            if (!isset($reference['referenceResourceId'], $reference['referenceResourceKey'], $reference['referenceTitle'])) {
+                continue;
+            }
+
+            // a resource has one reference per locale, but should only be listed once
+            $key = $reference['referenceResourceKey'] . '::' . $reference['referenceResourceId'];
+            if (isset($referencingResources[$key])) {
+                continue;
+            }
+
+            $referencingResources[$key] = [
+                'id' => $reference['referenceResourceId'],
+                'resourceKey' => $reference['referenceResourceKey'],
+                'title' => $reference['referenceTitle'],
+            ];
+        }
+
+        return \array_values($referencingResources);
     }
 
     /**

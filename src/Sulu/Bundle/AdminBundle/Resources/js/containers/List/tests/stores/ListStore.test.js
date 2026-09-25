@@ -2345,6 +2345,40 @@ test('Should crash when deleting all selected items and one request fails with a
     });
 });
 
+test('Should keep failed items selected and resolve with their errors when deleting the selection settled', () => {
+    const page = observable.box(1);
+    const listStore = new ListStore('media', 'media', 'list_test', {page});
+    listStore.schema = {};
+    const structureStrategy = new StructureStrategy();
+    listStore.updateStructureStrategy(structureStrategy);
+
+    const firstError = {status: 409};
+    const secondError = {status: 409};
+    ResourceRequester.delete
+        .mockReturnValueOnce(Promise.reject(firstError))
+        .mockReturnValueOnce(Promise.resolve())
+        .mockReturnValueOnce(Promise.reject(secondError));
+
+    listStore.select({id: 1});
+    listStore.select({id: 2});
+    listStore.select({id: 3});
+
+    const deletePromise = listStore.deleteSelectionSettled({force: true});
+
+    expect(listStore.deletingSelection).toEqual(true);
+
+    return deletePromise.then((errors) => {
+        expect(errors).toEqual([firstError, secondError]);
+        expect(ResourceRequester.delete).toHaveBeenCalledWith('media', {id: 1, force: true});
+        expect(ResourceRequester.delete).toHaveBeenCalledWith('media', {id: 2, force: true});
+        expect(ResourceRequester.delete).toHaveBeenCalledWith('media', {id: 3, force: true});
+        expect(structureStrategy.remove).toHaveBeenCalledTimes(1);
+        expect(structureStrategy.remove).toHaveBeenCalledWith(2);
+        expect(listStore.selectionIds).toEqual([1, 3]);
+        expect(listStore.deletingSelection).toEqual(false);
+    });
+});
+
 test('Should order the item with the given ID and options to the given position', () => {
     const page = observable.box(1);
     const locale = observable.box('en');

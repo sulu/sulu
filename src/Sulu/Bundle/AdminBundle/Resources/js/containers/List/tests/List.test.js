@@ -58,6 +58,7 @@ jest.mock('../stores/ListStore', () => {
         this.deactivate = jest.fn();
         this.delete = jest.fn();
         this.deleteSelection = jest.fn();
+        this.deleteSelectionSettled = jest.fn();
         this.order = jest.fn();
         this.sort = jest.fn();
         this.sortColumn = {
@@ -1153,9 +1154,9 @@ test('ListStore should delete selections when deleting selection was requested a
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     listStore.selections.push({}, {}, {});
-    const deleteSelectionPromise = Promise.resolve();
+    const deleteSelectionPromise = Promise.resolve([]);
     // $FlowFixMe
-    listStore.deleteSelection.mockReturnValue(deleteSelectionPromise);
+    listStore.deleteSelectionSettled.mockReturnValue(deleteSelectionPromise);
     mockStructureStrategyData = [
         {id: 1},
         {id: 2},
@@ -1170,7 +1171,7 @@ test('ListStore should delete selections when deleting selection was requested a
 
     list.find('Dialog').at(0).prop('onConfirm')();
 
-    expect(listStore.deleteSelection).toHaveBeenCalledWith();
+    expect(listStore.deleteSelectionSettled).toHaveBeenCalledWith({});
 
     return deleteSelectionPromise.then(() => {
         list.update();
@@ -1368,15 +1369,15 @@ test('ListStore should delete linked item when called with allowConflictDeletion
         referencingResourcesCount: 2,
     });
 
-    const deletePromise = Promise.reject({
+    const deletePromise = Promise.resolve([{
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
-    });
+    }]);
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     // $FlowFixMe
-    listStore.deleteSelection.mockReturnValueOnce(deletePromise);
+    listStore.deleteSelectionSettled.mockReturnValueOnce(deletePromise);
     listStore.selectionIds.push(5);
     mockStructureStrategyData = [
         {id: 1},
@@ -1397,13 +1398,13 @@ test('ListStore should delete linked item when called with allowConflictDeletion
         expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
         expect(list.contains('DeleteReferencedResourceDialog'));
 
-        const deletePromise = Promise.resolve();
+        const deletePromise = Promise.resolve([]);
         // $FlowFixMe
-        listStore.delete.mockReturnValueOnce(deletePromise);
+        listStore.deleteSelectionSettled.mockReturnValueOnce(deletePromise);
         list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
-            expect(listStore.delete).toHaveBeenCalledWith(5, {force: true});
+            expect(listStore.deleteSelectionSettled).toHaveBeenLastCalledWith({force: true});
             list.update();
             expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
@@ -1427,15 +1428,15 @@ test('ListStore should not delete linked item when called with allowConflictDele
         referencingResourcesCount: 2,
     });
 
-    const deletePromise = Promise.reject({
+    const deletePromise = Promise.resolve([{
         json: jest.fn().mockReturnValue(jsonDeletePromise),
         status: 409,
-    });
+    }]);
 
     listAdapterRegistry.get.mockReturnValue(TableAdapter);
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
     // $FlowFixMe
-    listStore.deleteSelection.mockReturnValueOnce(deletePromise);
+    listStore.deleteSelectionSettled.mockReturnValueOnce(deletePromise);
     listStore.selectionIds.push(5);
     mockStructureStrategyData = [
         {id: 1},
@@ -1459,13 +1460,180 @@ test('ListStore should not delete linked item when called with allowConflictDele
         list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
 
         setTimeout(() => {
-            expect(listStore.delete).not.toHaveBeenCalledWith(5, {force: true});
+            expect(listStore.deleteSelectionSettled).toHaveBeenCalledTimes(1);
             list.update();
             expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
             expect(list.find('Dialog').at(1).prop('open')).toEqual(false);
             expect(list.contains('DeleteReferencedResourceDialog')).toBe(false);
             done();
         });
+    });
+});
+
+test('ListStore should ask once for all referenced items of a selection', (done) => {
+    const firstResponse = {
+        json: jest.fn().mockReturnValue(Promise.resolve({
+            code: 1106,
+            resource: {id: 5, resourceKey: 'media'},
+            referencingResources: [
+                {id: 7, resourceKey: 'pages', title: 'Item 1'},
+                {id: 8, resourceKey: 'pages', title: 'Item 2'},
+            ],
+            referencingResourcesCount: 2,
+        })),
+        status: 409,
+    };
+    const secondResponse = {
+        json: jest.fn().mockReturnValue(Promise.resolve({
+            code: 1106,
+            resource: {id: 6, resourceKey: 'media'},
+            referencingResources: [
+                {id: 9, resourceKey: 'snippets', title: 'Item 3'},
+            ],
+            referencingResourcesCount: 1,
+        })),
+        status: 409,
+    };
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([firstResponse, secondResponse]));
+    listStore.selectionIds.push(5, 6);
+    mockStructureStrategyData = [
+        {id: 5},
+        {id: 6},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    list.instance().requestSelectionDelete(true);
+    list.update();
+    list.find('Dialog').at(0).prop('onConfirm')();
+
+    setTimeout(() => {
+        list.update();
+        expect(list.find('Dialog').at(0).prop('open')).toEqual(false);
+        expect(list.find('DeleteReferencedResourceDialog').prop('referencingResourcesData')).toEqual({
+            resource: {id: 5, resourceKey: 'media'},
+            referencingResources: [
+                {id: 7, resourceKey: 'pages', title: 'Item 1'},
+                {id: 8, resourceKey: 'pages', title: 'Item 2'},
+                {id: 9, resourceKey: 'snippets', title: 'Item 3'},
+            ],
+            referencingResourcesCount: 3,
+        });
+        expect(list.find('DeleteReferencedResourceDialog li')).toHaveLength(3);
+
+        // $FlowFixMe
+        listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([]));
+        list.find('DeleteReferencedResourceDialog Dialog Button[skin="primary"]').simulate('click');
+
+        setTimeout(() => {
+            expect(listStore.deleteSelectionSettled).toHaveBeenCalledTimes(2);
+            expect(listStore.deleteSelectionSettled).toHaveBeenLastCalledWith({force: true});
+            expect(listStore.delete).not.toHaveBeenCalled();
+            list.update();
+            expect(list.find('DeleteReferencedResourceDialog')).toHaveLength(0);
+            done();
+        });
+    });
+});
+
+test('ListStore should list a resource referencing multiple items of a selection only once', (done) => {
+    const firstResponse = {
+        json: jest.fn().mockReturnValue(Promise.resolve({
+            code: 1106,
+            resource: {id: 5, resourceKey: 'media'},
+            referencingResources: [
+                {id: 7, resourceKey: 'pages', title: 'Team'},
+                {id: 8, resourceKey: 'pages', title: 'About us'},
+            ],
+            referencingResourcesCount: 2,
+        })),
+        status: 409,
+    };
+    const secondResponse = {
+        json: jest.fn().mockReturnValue(Promise.resolve({
+            code: 1106,
+            resource: {id: 6, resourceKey: 'media'},
+            referencingResources: [
+                {id: 7, resourceKey: 'pages', title: 'Team'},
+                {id: 8, resourceKey: 'pages', title: 'About us'},
+                {id: 8, resourceKey: 'snippets', title: 'Footer'},
+            ],
+            referencingResourcesCount: 3,
+        })),
+        status: 409,
+    };
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([firstResponse, secondResponse]));
+    listStore.selectionIds.push(5, 6);
+    mockStructureStrategyData = [
+        {id: 5},
+        {id: 6},
+    ];
+    const list = mount(<List adapters={['table']} store={listStore} />);
+
+    list.instance().requestSelectionDelete(true);
+    list.update();
+    list.find('Dialog').at(0).prop('onConfirm')();
+
+    setTimeout(() => {
+        list.update();
+        expect(list.find('DeleteReferencedResourceDialog').prop('referencingResourcesData')).toEqual({
+            resource: {id: 5, resourceKey: 'media'},
+            referencingResources: [
+                {id: 7, resourceKey: 'pages', title: 'Team'},
+                {id: 8, resourceKey: 'pages', title: 'About us'},
+                {id: 8, resourceKey: 'snippets', title: 'Footer'},
+            ],
+            referencingResourcesCount: 3,
+        });
+        expect(list.find('DeleteReferencedResourceDialog li')).toHaveLength(3);
+        done();
+    });
+});
+
+test('ListStore should call onDeleteError if a selection fails for another reason than references', (done) => {
+    const referencedResponse = {
+        json: jest.fn().mockReturnValue(Promise.resolve({
+            code: 1106,
+            resource: {id: 5, resourceKey: 'media'},
+            referencingResources: [{id: 7, resourceKey: 'pages', title: 'Item 1'}],
+            referencingResourcesCount: 1,
+        })),
+        status: 409,
+    };
+    const errorData = {code: 0, message: 'Something went wrong'};
+    const errorResponse = {
+        json: jest.fn().mockReturnValue(Promise.resolve(errorData)),
+        status: 500,
+    };
+    const deleteErrorSpy = jest.fn();
+
+    listAdapterRegistry.get.mockReturnValue(TableAdapter);
+    const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
+    // $FlowFixMe
+    listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([referencedResponse, errorResponse]));
+    listStore.selectionIds.push(5, 6);
+    mockStructureStrategyData = [
+        {id: 5},
+        {id: 6},
+    ];
+    const list = mount(<List adapters={['table']} onDeleteError={deleteErrorSpy} store={listStore} />);
+
+    list.instance().requestSelectionDelete(true);
+    list.update();
+    list.find('Dialog').at(0).prop('onConfirm')();
+
+    setTimeout(() => {
+        list.update();
+        expect(deleteErrorSpy).toHaveBeenCalledWith(errorData);
+        expect(list.find('DeleteReferencedResourceDialog')).toHaveLength(0);
+        done();
     });
 });
 

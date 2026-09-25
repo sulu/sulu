@@ -303,6 +303,95 @@ test('Delete the image when the delete button is clicked and the overlay is conf
     });
 });
 
+test('Ask before deleting a referenced image and delete it with force when confirmed', (done) => {
+    const mediaUploadStore = new MediaUploadStore(
+        {
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+            adminUrl: '',
+        },
+        observable.box('en')
+    );
+    const referencingResourcesData = {
+        resource: {id: 1, resourceKey: 'media'},
+        referencingResources: [{id: 'page-1', resourceKey: 'pages', title: 'Page 1'}],
+        referencingResourcesCount: 1,
+    };
+    mediaUploadStore.delete.mockReturnValueOnce(Promise.reject({
+        json: () => Promise.resolve({code: 1106, ...referencingResourcesData}),
+        status: 409,
+    }));
+
+    const uploadCompleteSpy = jest.fn();
+
+    const singleMediaUpload = shallow(
+        <SingleMediaUpload
+            mediaUploadStore={mediaUploadStore}
+            onUploadComplete={uploadCompleteSpy}
+            uploadText="Upload media"
+        />
+    );
+
+    singleMediaUpload.find('Button[icon="su-trash-alt"]').simulate('click');
+    singleMediaUpload.find('Dialog').prop('onConfirm')();
+    expect(mediaUploadStore.delete).toHaveBeenCalledWith({});
+
+    setTimeout(() => {
+        singleMediaUpload.update();
+        expect(singleMediaUpload.find('Dialog').prop('open')).toEqual(false);
+        expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(false);
+        expect(singleMediaUpload.find('DeleteReferencedResourceDialog').prop('referencingResourcesData'))
+            .toEqual(referencingResourcesData);
+        expect(uploadCompleteSpy).not.toHaveBeenCalled();
+
+        mediaUploadStore.delete.mockReturnValueOnce(Promise.resolve());
+        singleMediaUpload.find('DeleteReferencedResourceDialog').prop('onConfirm')();
+        expect(mediaUploadStore.delete).toHaveBeenLastCalledWith({force: true});
+
+        setTimeout(() => {
+            singleMediaUpload.update();
+            expect(uploadCompleteSpy).toHaveBeenCalled();
+            expect(singleMediaUpload.find('DeleteReferencedResourceDialog')).toHaveLength(0);
+            done();
+        });
+    });
+});
+
+test('Close the dialog if deleting the image fails for another reason than references', (done) => {
+    const mediaUploadStore = new MediaUploadStore(
+        {
+            id: 1,
+            locale: 'en',
+            mimeType: 'image/jpeg',
+            title: 'test',
+            thumbnails: {},
+            url: '',
+            adminUrl: '',
+        },
+        observable.box('en')
+    );
+    mediaUploadStore.delete.mockReturnValueOnce(Promise.reject({status: 500}));
+
+    const singleMediaUpload = shallow(
+        <SingleMediaUpload mediaUploadStore={mediaUploadStore} uploadText="Upload media" />
+    );
+
+    singleMediaUpload.find('Button[icon="su-trash-alt"]').simulate('click');
+    singleMediaUpload.find('Dialog').prop('onConfirm')();
+
+    setTimeout(() => {
+        singleMediaUpload.update();
+        expect(singleMediaUpload.find('Dialog').prop('open')).toEqual(false);
+        expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(false);
+        expect(singleMediaUpload.find('DeleteReferencedResourceDialog')).toHaveLength(0);
+        done();
+    });
+});
+
 test('Throw exception if neither the collectionId nor the media is given', () => {
     const mediaUploadStore = new MediaUploadStore(
         undefined,

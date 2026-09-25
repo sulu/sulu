@@ -82,17 +82,24 @@ export default class MediaUploadStore {
         this.progress = Math.ceil(progress);
     }
 
-    @action delete() {
+    @action delete(options: {force?: boolean} = {}) {
         if (!this.id) {
             throw new Error('The "id" property must be available for deleting a media');
         }
 
-        return ResourceRequester.delete(RESOURCE_KEY, {id: this.id})
+        return ResourceRequester.delete(RESOURCE_KEY, {...options, id: this.id})
             .then(action(() => {
                 this.media = undefined;
                 this.error = undefined;
             }))
-            .catch(this.handleError);
+            .catch((error) => {
+                if (error.status === 409) {
+                    // a conflict is handled by the caller, e.g. by asking to delete a referenced media anyway
+                    throw error;
+                }
+
+                return this.handleError(error);
+            });
     }
 
     update(file: File): Promise<*> {

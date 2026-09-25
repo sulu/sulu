@@ -68,6 +68,12 @@ class MediaCollection extends React.Component<Props> {
         mediaListStore.reload();
     };
 
+    handleDeleteDependantResourcesCancel = () => {
+        const {mediaListStore} = this.props;
+
+        mediaListStore.reload();
+    };
+
     render() {
         const {
             onDeleteError,
@@ -124,6 +130,7 @@ class MediaCollection extends React.Component<Props> {
                     listStore={collectionListStore}
                     locale={locale}
                     onCollectionNavigate={this.handleCollectionNavigate}
+                    onDeleteDependantResourcesCancel={this.handleDeleteDependantResourcesCancel}
                     onDeleteError={onDeleteError}
                     overlayType={overlayType}
                     resourceStore={collectionStore.resourceStore}
