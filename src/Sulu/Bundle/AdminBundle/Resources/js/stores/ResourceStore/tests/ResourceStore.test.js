@@ -2,13 +2,19 @@
 import {observable, toJS, when} from 'mobx';
 import ResourceStore from '../ResourceStore';
 import ResourceRequester from '../../../services/ResourceRequester';
+import resourceRouteRegistry from '../../../services/ResourceRequester/registries/resourceRouteRegistry';
 
 jest.mock('../../../services/ResourceRequester', () => ({
     get: jest.fn(),
+    prefill: jest.fn(),
     put: jest.fn(),
     post: jest.fn(),
     delete: jest.fn(),
 }));
+
+afterEach(() => {
+    resourceRouteRegistry.clear();
+});
 
 test('Should be marked as initialized after loading the data', () => {
     const promise = Promise.resolve({});
@@ -187,6 +193,51 @@ test('Should load with the idQueryParameter and reset after successful load', ()
         expect(resourceStore.id).toEqual(5);
         expect(resourceStore.data).toBe(oldData);
     });
+});
+
+test('Should prefill the data with the ResourceRequester if no resource-id is provided but a prefill route', () => {
+    resourceRouteRegistry.setEndpoints({snippets: {routes: {detail: 'get_snippet', prefill: 'get_snippet_prefill'}}});
+    const promise = Promise.resolve({title: 'Prefilled title', template: 'default'});
+    ResourceRequester.prefill.mockReturnValue(promise);
+
+    const resourceStore = new ResourceStore('snippets', undefined, {locale: observable.box('en')}, {webspace: 'sulu'});
+    expect(resourceStore.loading).toBe(true);
+    expect(resourceStore.initialized).toBe(false);
+    expect(ResourceRequester.get).not.toHaveBeenCalled();
+    expect(ResourceRequester.prefill).toHaveBeenCalledWith('snippets', {webspace: 'sulu', locale: 'en'});
+
+    return promise.then(() => {
+        expect(resourceStore.loading).toBe(false);
+        expect(resourceStore.initialized).toBe(true);
+        expect(resourceStore.dirty).toBe(false);
+        expect(toJS(resourceStore.data)).toEqual({title: 'Prefilled title', template: 'default'});
+    });
+});
+
+test('Should be marked as initialized if prefilling the data failed', (done) => {
+    resourceRouteRegistry.setEndpoints({snippets: {routes: {prefill: 'get_snippet_prefill'}}});
+    const promise = Promise.reject({status: 500});
+    ResourceRequester.prefill.mockReturnValue(promise);
+
+    const resourceStore = new ResourceStore('snippets');
+
+    when(
+        () => resourceStore.initialized,
+        () => {
+            expect(resourceStore.loading).toBe(false);
+            expect(toJS(resourceStore.data)).toEqual({});
+            done();
+        }
+    );
+});
+
+test('Should not prefill the data with the ResourceRequester if a resource-id is provided', () => {
+    resourceRouteRegistry.setEndpoints({snippets: {routes: {detail: 'get_snippet', prefill: 'get_snippet_prefill'}}});
+    ResourceRequester.get.mockReturnValue(Promise.resolve({title: 'Title'}));
+
+    new ResourceStore('snippets', 1);
+    expect(ResourceRequester.prefill).not.toHaveBeenCalled();
+    expect(ResourceRequester.get).toHaveBeenCalledWith('snippets', {id: 1});
 });
 
 test('Should not load the data with the ResourceRequester if no resource-id is provided', () => {

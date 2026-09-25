@@ -190,3 +190,13 @@ test('Should send a post request and return the promise', () => {
     expect(Requester.post).toHaveBeenCalledWith('/snippets', {});
     expect(result).toBe(promise);
 });
+
+test('Should send a get request to the prefill route and return the promise', () => {
+    resourceRouteRegistry.getUrl.mockReturnValue('/snippets/prefill?locale=en');
+    const promise = {};
+    Requester.get.mockReturnValue(promise);
+    const result = ResourceRequester.prefill('snippets', {locale: 'en'});
+    expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('prefill', 'snippets', {locale: 'en'});
+    expect(Requester.get).toHaveBeenCalledWith('/snippets/prefill?locale=en');
+    expect(result).toBe(promise);
+});
