@@ -129,23 +129,6 @@ const blockIdGenerator = {
 
         return clone;
     },
-
-    // Assigns a generated `_id` to every typed item (block, hotspot, nested variant) that lacks one.
-    async ensureBlockIds(value: any, types: Object): Promise<any> {
-        const count = this.countMissingBlockIds(value, types);
-
-        if (count === 0) {
-            return null;
-        }
-
-        const ids = await this.generateBlockIds(count);
-
-        if (!Array.isArray(ids) || ids.length !== count) {
-            return null;
-        }
-
-        return this.applyBlockIds(value, types, ids);
-    },
 };
 
 export default blockIdGenerator;

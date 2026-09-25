@@ -85,4 +85,79 @@ class PreviewDeepLinkExtensionTest extends TestCase
 
         $this->assertSame('', $extension->renderDeepLinkAttribute('abc123'));
     }
+
+    public function testRendersLightColorsDuringPreview(): void
+    {
+        $extension = $this->createExtension(true);
+
+        $this->assertSame(
+            '<style>:root{--sulu-preview-deep-link-border:#ff0000;--sulu-preview-deep-link-icon:#000;}</style>',
+            $extension->renderDeepLinkColors(['border' => '#ff0000', 'icon' => '#000'])
+        );
+    }
+
+    public function testRendersDarkColors(): void
+    {
+        $extension = $this->createExtension(true);
+
+        $this->assertSame(
+            '<style>:root{--sulu-preview-deep-link-border:#ff0000;}'
+            . '@media (prefers-color-scheme: dark){:root{--sulu-preview-deep-link-border:rgb(0, 128, 255);}}</style>',
+            $extension->renderDeepLinkColors(['border' => '#ff0000'], ['border' => 'rgb(0, 128, 255)'])
+        );
+    }
+
+    public function testRendersNoColorsOutsidePreview(): void
+    {
+        $extension = $this->createExtension(false);
+
+        $this->assertSame('', $extension->renderDeepLinkColors(['border' => '#ff0000'], ['border' => '#00ff00']));
+    }
+
+    public function testRendersNoColorsWithoutRequest(): void
+    {
+        $extension = new PreviewDeepLinkExtension(new RequestStack());
+
+        $this->assertSame('', $extension->renderDeepLinkColors(['border' => '#ff0000']));
+    }
+
+    public function testRendersNothingWithoutColors(): void
+    {
+        $extension = $this->createExtension(true);
+
+        $this->assertSame('', $extension->renderDeepLinkColors([], []));
+    }
+
+    public function testThrowsOnUnknownColor(): void
+    {
+        $extension = $this->createExtension(true);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unknown color "background", expected one of "border", "icon".');
+
+        $extension->renderDeepLinkColors(['background' => '#ff0000']);
+    }
+
+    public function testThrowsOnInvalidColorValue(): void
+    {
+        $extension = $this->createExtension(true);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid value for color "border".');
+
+        $extension->renderDeepLinkColors(['border' => 'red;}</style><script>']);
+    }
+
+    private function createExtension(bool $preview): PreviewDeepLinkExtension
+    {
+        $request = new Request();
+        if ($preview) {
+            $request->attributes->set('preview', true);
+        }
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        return new PreviewDeepLinkExtension($requestStack);
+    }
 }
