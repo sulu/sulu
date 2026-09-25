@@ -72,3 +72,15 @@ test('Has view from RouteRegistry should return true if exists', () => {
 test('Has view from RouteRegistry should return false if not exists', () => {
     expect(resourceViewRegistry.has('detail', 'pages')).toBe(false);
 });
+
+test('Has view from RouteRegistry should return false if view name contains a placeholder', () => {
+    resourceViewRegistry.addResourceViews({
+        snippets: {
+            views: {
+                detail: 'sulu_snippet.snippet.edit_tabs_{group}',
+            },
+        },
+    });
+
+    expect(resourceViewRegistry.has('detail', 'snippets')).toBe(false);
+});

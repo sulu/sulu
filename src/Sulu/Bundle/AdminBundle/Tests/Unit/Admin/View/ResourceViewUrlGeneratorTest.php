@@ -20,7 +20,6 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewUrlGeneratorInterface;
 use Sulu\Bundle\AdminBundle\Exception\ResourceViewNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\ViewNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\ViewParameterNotFoundException;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ResourceViewUrlGeneratorTest extends TestCase
@@ -39,18 +38,58 @@ class ResourceViewUrlGeneratorTest extends TestCase
 
     /**
      * @param array<string, array{views?: array<string, string>}> $resources
-     * @param array<string, ResourceViewParameterProviderInterface> $viewParameterProviders
+     * @param ResourceViewParameterProviderInterface[] $viewParameterProviders
      */
     private function createResourceViewUrlGenerator(array $resources, array $viewParameterProviders = []): ResourceViewUrlGenerator
     {
-        return new ResourceViewUrlGenerator(
-            $this->viewUrlGenerator->reveal(),
-            $resources,
-            new ServiceLocator(\array_map(
-                static fn (ResourceViewParameterProviderInterface $provider) => static fn () => $provider,
-                $viewParameterProviders,
-            )),
-        );
+        return new ResourceViewUrlGenerator($this->viewUrlGenerator->reveal(), $resources, $viewParameterProviders);
+    }
+
+    /**
+     * @param 'snippets'|'pages' $resourceKey
+     * @param \Closure(string, array<string, int|string>): array<string, int|string> $getViewParameters
+     */
+    private function createViewParameterProvider(string $resourceKey, \Closure $getViewParameters): ResourceViewParameterProviderInterface
+    {
+        // getResourceKey() is static, so every resource key needs its own class
+        return match ($resourceKey) {
+            'snippets' => new class($getViewParameters) implements ResourceViewParameterProviderInterface {
+                /**
+                 * @param \Closure(string, array<string, int|string>): array<string, int|string> $getViewParameters
+                 */
+                public function __construct(private \Closure $getViewParameters)
+                {
+                }
+
+                public static function getResourceKey(): string
+                {
+                    return 'snippets';
+                }
+
+                public function getViewParameters(string $resourceView, array $viewParameters): array
+                {
+                    return ($this->getViewParameters)($resourceView, $viewParameters);
+                }
+            },
+            'pages' => new class($getViewParameters) implements ResourceViewParameterProviderInterface {
+                /**
+                 * @param \Closure(string, array<string, int|string>): array<string, int|string> $getViewParameters
+                 */
+                public function __construct(private \Closure $getViewParameters)
+                {
+                }
+
+                public static function getResourceKey(): string
+                {
+                    return 'pages';
+                }
+
+                public function getViewParameters(string $resourceView, array $viewParameters): array
+                {
+                    return ($this->getViewParameters)($resourceView, $viewParameters);
+                }
+            },
+        };
     }
 
     public function testGenerate(): void
@@ -178,20 +217,20 @@ class ResourceViewUrlGeneratorTest extends TestCase
             ],
         ];
 
-        $viewParameterProvider = $this->prophesize(ResourceViewParameterProviderInterface::class);
-        $viewParameterProvider->getViewParameters(['id' => 'abc', 'locale' => 'en'])
-            ->willReturn(['group' => 'alternate', 'locale' => 'de']);
-
         $this->viewUrlGenerator->generate(
             'sulu_snippet.snippet.edit_tabs_alternate',
             ['group' => 'alternate', 'locale' => 'en', 'id' => 'abc'],
             UrlGeneratorInterface::ABSOLUTE_PATH
         )->willReturn('/admin/#/snippets/en/alternate/abc');
 
-        $resourceViewUrlGenerator = $this->createResourceViewUrlGenerator(
-            $resources,
-            ['snippets' => $viewParameterProvider->reveal()],
-        );
+        $resourceViewUrlGenerator = $this->createResourceViewUrlGenerator($resources, [
+            $this->createViewParameterProvider('snippets', function(string $resourceView, array $viewParameters) {
+                $this->assertSame('detail', $resourceView);
+                $this->assertSame(['id' => 'abc', 'locale' => 'en'], $viewParameters);
+
+                return ['group' => 'alternate', 'locale' => 'de'];
+            }),
+        ]);
 
         $this->assertSame(
             '/admin/#/snippets/en/alternate/abc',
@@ -209,19 +248,15 @@ class ResourceViewUrlGeneratorTest extends TestCase
             ],
         ];
 
-        $viewParameterProvider = $this->prophesize(ResourceViewParameterProviderInterface::class);
-        $viewParameterProvider->getViewParameters(['id' => '3'])->willReturn(['segment' => 'blog']);
-
         $this->viewUrlGenerator->generate(
             'app.page_edit_form',
             ['segment' => 'blog', 'id' => '3'],
             UrlGeneratorInterface::ABSOLUTE_PATH
         )->willReturn('/admin/#/pages/blog/3');
 
-        $resourceViewUrlGenerator = $this->createResourceViewUrlGenerator(
-            $resources,
-            ['pages' => $viewParameterProvider->reveal()],
-        );
+        $resourceViewUrlGenerator = $this->createResourceViewUrlGenerator($resources, [
+            $this->createViewParameterProvider('pages', fn () => ['segment' => 'blog']),
+        ]);
 
         $this->assertSame(
             '/admin/#/pages/blog/3',
@@ -239,24 +274,47 @@ class ResourceViewUrlGeneratorTest extends TestCase
             ],
         ];
 
-        $viewParameterProvider = $this->prophesize(ResourceViewParameterProviderInterface::class);
-        $viewParameterProvider->getViewParameters(['id' => 'abc', 'group' => 'default'])
-            ->willReturn(['group' => 'alternate']);
-
         $this->viewUrlGenerator->generate(
             'sulu_snippet.snippet.edit_tabs_default',
             ['group' => 'default', 'id' => 'abc'],
             UrlGeneratorInterface::ABSOLUTE_PATH
         )->willReturn('/admin/#/snippets/en/default/abc');
 
-        $resourceViewUrlGenerator = $this->createResourceViewUrlGenerator(
-            $resources,
-            ['snippets' => $viewParameterProvider->reveal()],
-        );
+        $resourceViewUrlGenerator = $this->createResourceViewUrlGenerator($resources, [
+            $this->createViewParameterProvider('snippets', fn () => ['group' => 'alternate']),
+        ]);
 
         $this->assertSame(
             '/admin/#/snippets/en/default/abc',
             $resourceViewUrlGenerator->generate('snippets', 'detail', ['id' => 'abc', 'group' => 'default'])
+        );
+    }
+
+    public function testGenerateMergesParametersOfAllProvidersOfTheResource(): void
+    {
+        $resources = [
+            'snippets' => [
+                'views' => [
+                    'detail' => 'app.snippet_edit_{group}',
+                ],
+            ],
+        ];
+
+        $this->viewUrlGenerator->generate(
+            'app.snippet_edit_alternate',
+            ['group' => 'alternate', 'segment' => 'blog', 'id' => 'abc'],
+            UrlGeneratorInterface::ABSOLUTE_PATH
+        )->willReturn('/admin/#/snippets/blog/alternate/abc');
+
+        $resourceViewUrlGenerator = $this->createResourceViewUrlGenerator($resources, [
+            $this->createViewParameterProvider('snippets', fn () => ['group' => 'alternate']),
+            $this->createViewParameterProvider('snippets', fn () => ['group' => 'default', 'segment' => 'blog']),
+            $this->createViewParameterProvider('pages', fn () => ['segment' => 'news']),
+        ]);
+
+        $this->assertSame(
+            '/admin/#/snippets/blog/alternate/abc',
+            $resourceViewUrlGenerator->generate('snippets', 'detail', ['id' => 'abc'])
         );
     }
 
