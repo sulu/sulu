@@ -79,7 +79,7 @@ class FormatManager implements FormatManagerInterface
                 throw new ImageProxyInvalidUrl(\sprintf('No `extension` was found in the url "%s".', $fileName));
             }
 
-            $imageFormat = $info['extension'];
+            $imageFormat = strtolower($info['extension']);
 
             $media = $this->mediaRepository->findMediaByIdForRendering($id, $formatKey, $version);
 
