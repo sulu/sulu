@@ -37,7 +37,7 @@ class EventNotifierFunctionalTest extends KernelTestCase
 
         self::assertCount(1, $transport->sent);
         self::assertInstanceOf(ChatMessage::class, $transport->sent[0]);
-        self::assertSame('Test created', $transport->sent[0]->getSubject());
+        self::assertSame("Test created\nSomeone created \"A great song will win\"", $transport->sent[0]->getSubject());
     }
 
     public function testUntranslatedKeyIsPassedThroughWhenTranslationMissing(): void
@@ -55,10 +55,9 @@ class EventNotifierFunctionalTest extends KernelTestCase
         self::assertCount(1, $transport->sent);
         $message = $transport->sent[0];
         self::assertInstanceOf(ChatMessage::class, $message);
-        self::assertSame('sulu_notifier.subject.test_resource.unmapped_type', $message->getSubject());
         self::assertSame(
-            'sulu_activity.description.test_resource.unmapped_type',
-            $message->getNotification()?->getContent(),
+            "sulu_notifier.subject.test_resource.unmapped_type\nsulu_activity.description.test_resource.unmapped_type",
+            $message->getSubject(),
         );
     }
 
