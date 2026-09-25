@@ -15,6 +15,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\WebsiteBundle\Controller\ErrorController;
 use Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -175,6 +177,38 @@ class ErrorControllerTest extends TestCase
         $response = $errorController->__invoke($request, $exception);
         $this->assertSame($code, $response->getStatusCode());
         $this->assertSame('Error Fallback Template', $response->getContent());
+    }
+
+    public function testReturningCachedResponse(): void
+    {
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->isHit()->shouldBeCalled()->willReturn(true);
+        $item->get()->shouldBeCalled()->willReturn('Cached content');
+
+        $cachePool = $this->prophesize(CacheItemPoolInterface::class);
+        $cachePool->getItem('webspaceKey-en-html-404')->shouldBeCalled()->willReturn($item);
+
+        $errorController = new ErrorController(
+            $this->symfonyErrorController->reveal(),
+            $this->templateAttributeResolver->reveal(),
+            $this->twig->reveal(),
+            false,
+            $cachePool->reveal(),
+        );
+
+        $code = 404;
+        $exception = new HttpException($code);
+        $webspace = new Webspace();
+        $webspace->setKey('webspaceKey');
+        $webspace->addTemplate('error', 'error/error');
+        $request = $this->createRequest($webspace);
+
+        $this->twig->render(Argument::any(), Argument::any())->shouldNotBeCalled();
+
+        $response = $errorController->__invoke($request, $exception);
+
+        $this->assertSame($code, $response->getStatusCode());
+        $this->assertSame('Cached content', $response->getContent());
     }
 
     private function createErrorController(bool $debug = false): ErrorController
