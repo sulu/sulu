@@ -1304,6 +1304,38 @@ test('Validate should return false if errors occured', (done) => {
     );
 });
 
+test('Validate should keep the failing subschema of a not error', (done) => {
+    const jsonSchemaPromise = Promise.resolve({
+        type: 'object',
+        properties: {
+            description: {
+                not: {const: ''},
+            },
+        },
+        required: ['description'],
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const resourceStore = new ResourceStore('snippets', '3');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'snippets');
+
+    resourceStore.data = observable({description: ''});
+    when(
+        () => !resourceFormStore.schemaLoading,
+        (): void => {
+            expect(resourceFormStore.validate()).toEqual(false);
+            expect(toJS(resourceFormStore.errors)).toEqual({
+                description: {
+                    keyword: 'not',
+                    parameters: {},
+                    schema: {const: ''},
+                },
+            });
+            done();
+        }
+    );
+});
+
 test('Validate should not return incorrect errors', (done) => {
     // This test ensures that https://github.com/sulu/sulu/issues/5709 has been fixed
 

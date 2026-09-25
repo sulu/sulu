@@ -126,6 +126,16 @@ class Field extends React.Component<Props> {
             return;
         }
 
+        if (
+            error.keyword === 'not'
+            && error.schema
+            && typeof error.schema === 'object'
+            && error.schema.const === ''
+        ) {
+            // a mandatory field forbids an empty string with "not", which is the same as a missing value
+            return 'required';
+        }
+
         if (typeof error.keyword === 'string') {
             return error.keyword;
         }
