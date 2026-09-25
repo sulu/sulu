@@ -68,6 +68,7 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\BlockPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\EmailPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\NumberPropertyMetadataMapper;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\NumberRangePropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\SelectionPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\SelectPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\SingleSelectionPropertyMetadataMapper;
@@ -280,6 +281,10 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_admin.property_metadata_mapper.number', NumberPropertyMetadataMapper::class)
         ->tag('sulu_admin.property_metadata_mapper', ['type' => 'number']);
+
+    $services->set('sulu_admin.property_metadata_mapper.number_range', NumberRangePropertyMetadataMapper::class)
+        ->args([new Reference('sulu_admin.property_metadata_mapper.number')])
+        ->tag('sulu_admin.property_metadata_mapper', ['type' => 'number_range']);
 
     $services->set('sulu_admin.property_metadata_mapper.block', BlockPropertyMetadataMapper::class)
         ->args([new Reference('sulu_admin.schema_metadata_provider')])

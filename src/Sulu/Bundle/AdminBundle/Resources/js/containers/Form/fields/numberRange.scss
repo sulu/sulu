@@ -1,0 +1,13 @@
+.range {
+    display: flex;
+    align-items: center;
+
+    > * {
+        flex: 1;
+    }
+}
+
+.separator {
+    flex: 0 0 auto;
+    padding: 0 10px;
+}
