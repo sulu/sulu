@@ -52,6 +52,7 @@ class LinkTagTest extends TestCase
         $providers = $this->providers = [
             'page' => $this->prophesize(LinkProviderInterface::class),
             'article' => $this->prophesize(LinkProviderInterface::class),
+            'external' => $this->prophesize(LinkProviderInterface::class),
         ];
         $this->providerPool = $this->prophesize(LinkProviderPoolInterface::class);
         $this->providerPool->getProvider(Argument::any())->will(
@@ -256,6 +257,126 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [$tag => '<a href="/de/test" title="Test-Title">Page-Title</a>'],
+            $result
+        );
+    }
+
+    public function testParseAllWithEscapedAnchor(): void
+    {
+        // twig's escape('html_attr') filter turns the "#" into "&#x23;", which used to be split
+        // on its own "#", leaving a broken uuid and no usable anchor
+        $href = '123-123-123&#x23;my-anchor';
+        $tag = '<sulu-link href="' . $href . '" title="Test-Title" provider="article">Test-Content</sulu-link>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'title' => 'Test-Title', 'provider' => 'article', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="http://sulu.lo/de/test#my-anchor" title="Test-Title">Test-Content</a>'],
+            $result
+        );
+    }
+
+    public function testParseAllWithEscapedQueryAndAnchor(): void
+    {
+        $href = '123-123-123&#x3F;query=value&#x23;my-anchor';
+        $tag = '<sulu-link href="' . $href . '" provider="article">Test-Content</sulu-link>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'provider' => 'article', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="http://sulu.lo/de/test?query=value#my-anchor">Test-Content</a>'],
+            $result
+        );
+    }
+
+    public function testParseAllKeepsEncodedQuotesEncoded(): void
+    {
+        // the decoded quote must be escaped again when the href is written, or it breaks out of
+        // the attribute and injects one
+        $href = '123-123-123&#x23;a&quot; onmouseover=&quot;alert(1)';
+        $tag = '<sulu-link href="' . $href . '" provider="article">Test-Content</sulu-link>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'provider' => 'article', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="http://sulu.lo/de/test#a&quot; onmouseover=&quot;alert(1)">Test-Content</a>'],
+            $result
+        );
+    }
+
+    public function testParseAllWithEncodedAmpersandInQuery(): void
+    {
+        $href = '123-123-123?first=1&amp;second=2';
+        $tag = '<sulu-link href="' . $href . '" provider="article">Test-Content</sulu-link>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'provider' => 'article', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="http://sulu.lo/de/test?first=1&amp;second=2">Test-Content</a>'],
+            $result
+        );
+    }
+
+    public function testParseAllEscapesDecodedMarkupInAnchor(): void
+    {
+        // HtmlMarkupParser parses its own output again, so decoded markup must not come out raw
+        $href = '123-123-123#&lt;sulu-link&gt;x&lt;/sulu-link&gt;';
+        $tag = '<sulu-link href="' . $href . '" provider="article">Test-Content</sulu-link>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'provider' => 'article', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="http://sulu.lo/de/test#&lt;sulu-link&gt;x&lt;/sulu-link&gt;">Test-Content</a>'],
+            $result
+        );
+    }
+
+    public function testParseAllWithExternalUrl(): void
+    {
+        // the external provider hands back the href as the url, so a full url has to survive untouched
+        $href = 'https://example.com/path?first=1#my-anchor';
+        $tag = '<sulu-link href="' . $href . '" provider="external">Test-Content</sulu-link>';
+
+        $this->providers['external']->preload(['https://example.com/path'], 'de', true)
+            ->willReturn([new LinkItem('https://example.com/path', '', 'https://example.com/path', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'provider' => 'external', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="https://example.com/path?first=1#my-anchor">Test-Content</a>'],
             $result
         );
     }

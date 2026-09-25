@@ -70,7 +70,7 @@ class LinkTag implements TagInterface
                 }
 
                 $title = $item->getTitle();
-                $attributes['href'] = $url;
+                $attributes['href'] = \htmlspecialchars($url, \ENT_QUOTES, 'UTF-8');
             } elseif ($this->isPreview && self::VALIDATE_UNPUBLISHED === $validationState) {
                 // render anchor without href to keep styling even if target is not published in preview
                 $title = $this->getContent($attributes);
@@ -212,7 +212,7 @@ class LinkTag implements TagInterface
      */
     private function getPartsFromHref($href): array
     {
-        $href = (string) $href ?: null;
+        $href = $href ? \html_entity_decode((string) $href, \ENT_QUOTES | \ENT_HTML5, 'UTF-8') : null;
 
         /** @var string[] $hrefParts */
         $hrefParts = $href ? \explode('#', $href, 2) : [];
