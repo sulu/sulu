@@ -15,6 +15,7 @@ use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -25,8 +26,10 @@ class SecuritySubscriber implements EventSubscriberInterface
 {
     public const USER_OPTION = 'user';
 
-    public function __construct(private ?TokenStorageInterface $tokenStorage = null)
-    {
+    public function __construct(
+        private ?TokenStorageInterface $tokenStorage = null,
+        private ?RequestStack $requestStack = null
+    ) {
     }
 
     public static function getSubscribedEvents()
@@ -46,6 +49,11 @@ class SecuritySubscriber implements EventSubscriberInterface
         $optionsResolver->setDefault(static::USER_OPTION, null);
 
         if (null === $this->tokenStorage) {
+            return;
+        }
+
+        $request = $this->requestStack?->getCurrentRequest();
+        if (null === $request || !$request->hasPreviousSession()) {
             return;
         }
 
