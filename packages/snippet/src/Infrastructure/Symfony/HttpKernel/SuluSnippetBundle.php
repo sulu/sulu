@@ -56,6 +56,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\SmartResolver\SnippetAreaSmartResol
 use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\Infrastructure\Sulu\HttpCache\EventSubscriber\SnippetAreaCacheInvalidationSubscriber;
 use Sulu\Snippet\Infrastructure\Sulu\HttpCache\EventSubscriber\SnippetCacheInvalidationSubscriber;
+use Sulu\Snippet\Infrastructure\Sulu\Preview\SnippetPreviewProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Reference\SnippetReferenceRefresher;
 use Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetIndexListener;
 use Sulu\Snippet\Infrastructure\Sulu\Search\AdminSnippetReindexProvider;
@@ -66,6 +67,7 @@ use Sulu\Snippet\Infrastructure\Symfony\Normalizer\SnippetAreaNormalizer;
 use Sulu\Snippet\Infrastructure\Symfony\Twig\SnippetAreaTwigExtension;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetAreaController;
 use Sulu\Snippet\UserInterface\Controller\Admin\SnippetController;
+use Sulu\Snippet\UserInterface\Controller\Website\SnippetPreviewController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -397,6 +399,29 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_admin.metadata_group_provider'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => SnippetInterface::RESOURCE_KEY]);
+
+        // Preview service
+        $services->set('sulu_snippet.snippet_preview_provider')
+            ->class(SnippetPreviewProvider::class)
+            ->args([
+                new Reference('sulu_admin.metadata_provider_registry'),
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_content.content_data_mapper'),
+                '%sulu.model.snippet.class%',
+                SnippetAdmin::SECURITY_CONTEXT,
+            ])
+            ->tag('sulu.context', ['context' => 'admin'])
+            ->tag('sulu_preview.object_provider', ['provider-key' => SnippetInterface::RESOURCE_KEY]);
+
+        // The preview renders through a website kernel, so this one carries no admin context.
+        $services->set('sulu_snippet.snippet_preview_controller')
+            ->class(SnippetPreviewController::class)
+            ->public()
+            ->tag('controller.service_arguments');
+
+        $services->alias(SnippetPreviewController::class, 'sulu_snippet.snippet_preview_controller')
+            ->public();
 
         // Reference services
         $services->set('sulu_snippet.snippet_reference_refresher')
