@@ -1,6 +1,7 @@
 {
     "sulu_notifier.fallback.subject": "%class%",
     "sulu_notifier.fallback.content": "Event %class% occurred",
+    "sulu_notifier.open_link": "Open in Sulu",
     "sulu_notifier.subject.accounts.contact_added": "Contact added",
     "sulu_notifier.subject.accounts.contact_removed": "Contact removed",
     "sulu_notifier.subject.accounts.created": "Account created",
