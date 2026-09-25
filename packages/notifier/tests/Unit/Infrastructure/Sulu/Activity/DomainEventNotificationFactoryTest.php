@@ -26,6 +26,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewUrlGenerator;
 use Sulu\Bundle\AdminBundle\Exception\ViewNotFoundException;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Notifier\Infrastructure\Sulu\Activity\DomainEventNotificationFactory;
+use Sulu\Notifier\Infrastructure\Symfony\Notifier\EventNotification;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Notifier\Recipient\NoRecipient;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -67,6 +68,8 @@ class DomainEventNotificationFactoryTest extends TestCase
         $this->viewRegistry = $this->prophesize(ViewRegistry::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->logger = $this->prophesize(LoggerInterface::class);
+
+        $this->translator->trans('sulu_notifier.open_link', [], 'admin', 'en')->willReturn('Open in Sulu');
     }
 
     /**
@@ -115,6 +118,7 @@ class DomainEventNotificationFactoryTest extends TestCase
         $event->getEventType()->willReturn('workflow_transition.unpublish');
         $event->getResourceTitle()->willReturn('A great song will win');
         $event->getResourceLocale()->willReturn('de');
+        $event->getResourceWebspaceKey()->willReturn(null);
         $event->getEventContext()->willReturn([]);
 
         $user = $this->prophesize(UserInterface::class);
@@ -154,6 +158,7 @@ class DomainEventNotificationFactoryTest extends TestCase
         $event->getEventType()->willReturn('translation_copied');
         $event->getResourceTitle()->willReturn('My page');
         $event->getResourceLocale()->willReturn('de');
+        $event->getResourceWebspaceKey()->willReturn(null);
         $event->getEventContext()->willReturn(['sourceLocale' => 'en']);
 
         $user = $this->prophesize(UserInterface::class);
@@ -188,6 +193,7 @@ class DomainEventNotificationFactoryTest extends TestCase
         $event->getEventType()->willReturn('created');
         $event->getResourceTitle()->willReturn('news');
         $event->getResourceLocale()->willReturn(null);
+        $event->getResourceWebspaceKey()->willReturn(null);
         $event->getEventContext()->willReturn([]);
         $event->getUser()->willReturn(null);
 
@@ -213,6 +219,7 @@ class DomainEventNotificationFactoryTest extends TestCase
         $event->getEventType()->willReturn('cleared');
         $event->getResourceTitle()->willReturn(null);
         $event->getResourceLocale()->willReturn(null);
+        $event->getResourceWebspaceKey()->willReturn(null);
         $event->getEventContext()->willReturn([]);
         $event->getUser()->willReturn(null);
 
@@ -241,6 +248,7 @@ class DomainEventNotificationFactoryTest extends TestCase
         $event->getUser()->willReturn(null);
         $event->getResourceTitle()->willReturn(null);
         $event->getResourceLocale()->willReturn(null);
+        $event->getResourceWebspaceKey()->willReturn(null);
         $event->getEventContext()->willReturn([]);
 
         $this->translator->trans('sulu_activity.someone', [], 'admin', 'en')->willReturn('Someone');
@@ -258,13 +266,15 @@ class DomainEventNotificationFactoryTest extends TestCase
         self::assertSame('sulu_activity.description.unknown.frobnicated', $notification->getContent());
     }
 
-    public function testCreateEscapesChatMarkupInUserControlledValues(): void
+    public function testCreatePassesUserControlledValuesUnescaped(): void
     {
+        // Escaping depends on the transport, so EventNotification applies it when rendering.
         $event = $this->prophesize(DomainEvent::class);
         $event->getResourceKey()->willReturn('pages');
         $event->getEventType()->willReturn('modified');
-        $event->getResourceTitle()->willReturn('<!channel> & <https://evil.example|click>');
+        $event->getResourceTitle()->willReturn('Tom & Jerry');
         $event->getResourceLocale()->willReturn(null);
+        $event->getResourceWebspaceKey()->willReturn(null);
         $event->getEventContext()->willReturn(['note' => '<b>hi</b>']);
         $event->getUser()->willReturn(null);
 
@@ -272,19 +282,19 @@ class DomainEventNotificationFactoryTest extends TestCase
 
         $params = [
             '{userFullName}' => 'Someone',
-            '{resourceTitle}' => '&lt;!channel&gt; &amp; &lt;https://evil.example|click&gt;',
+            '{resourceTitle}' => 'Tom & Jerry',
             '{resourceLocale}' => '',
-            '{context_note}' => '&lt;b&gt;hi&lt;/b&gt;',
+            '{context_note}' => '<b>hi</b>',
         ];
 
         $this->translator->trans('sulu_notifier.subject.pages.modified', $params, 'admin', 'en')
             ->willReturn('Page modified');
         $this->translator->trans('sulu_activity.description.pages.modified', $params, 'admin', 'en')
-            ->willReturn('modified');
+            ->willReturn('Someone modified the page "Tom & Jerry"');
 
         $notification = $this->createFactory()->create($event->reveal(), ['chat/slack']);
 
-        self::assertSame('Page modified', $notification->getSubject());
+        self::assertSame('Someone modified the page "Tom & Jerry"', $notification->getContent());
     }
 
     public function testCreateAppendsDeepLinkWhenResolvable(): void
@@ -321,6 +331,10 @@ class DomainEventNotificationFactoryTest extends TestCase
             'Someone modified the page "My page"' . "\n\n" . 'https://example.org/admin/#/webspaces/sulu/pages/de/3/details',
             $notification->getContent(),
         );
+        self::assertInstanceOf(EventNotification::class, $notification);
+        self::assertSame('Someone modified the page "My page"', $notification->getDescription());
+        self::assertSame('https://example.org/admin/#/webspaces/sulu/pages/de/3/details', $notification->getLink());
+        self::assertSame(['sulu', 'de'], $notification->getContext());
     }
 
     public function testCreateIncludesLinkForSubEntityRemovedEvent(): void
@@ -579,6 +593,7 @@ class DomainEventNotificationFactoryTest extends TestCase
         $event->getEventType()->willReturn('modified');
         $event->getResourceTitle()->willReturn(null);
         $event->getResourceLocale()->willReturn(null);
+        $event->getResourceWebspaceKey()->willReturn(null);
         $event->getEventContext()->willReturn([
             'list' => ['a', 'b'],
             'object' => new \stdClass(),

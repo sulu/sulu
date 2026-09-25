@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\Exception\ResourceViewNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\ViewNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\ViewParameterNotFoundException;
 use Sulu\Notifier\Application\Factory\EventNotificationFactoryInterface;
+use Sulu\Notifier\Infrastructure\Symfony\Notifier\EventNotification;
 use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -69,19 +70,26 @@ final class DomainEventNotificationFactory implements EventNotificationFactoryIn
             ?? $this->translator->trans('sulu_activity.someone', [], 'admin', $this->locale);
 
         $parameters = [
-            '{userFullName}' => $this->escapeForChat($user),
-            '{resourceTitle}' => $this->escapeForChat($event->getResourceTitle() ?? ''),
+            '{userFullName}' => $user,
+            '{resourceTitle}' => $event->getResourceTitle() ?? '',
             '{resourceLocale}' => $event->getResourceLocale() ?? '',
         ];
 
         foreach ($event->getEventContext() as $key => $value) {
-            $parameters['{context_' . $key . '}'] = $this->escapeForChat($this->stringifyContextValue($value));
+            $parameters['{context_' . $key . '}'] = $this->stringifyContextValue($value);
         }
 
-        $subject = $this->translator->trans($subjectKey, $parameters, 'admin', $this->locale);
-        $content = $this->translator->trans($contentKey, $parameters, 'admin', $this->locale);
-
-        return (new Notification($subject, $channels))->content($this->appendLink($content, $link));
+        return new EventNotification(
+            subject: $this->translator->trans($subjectKey, $parameters, 'admin', $this->locale),
+            description: $this->translator->trans($contentKey, $parameters, 'admin', $this->locale),
+            link: $link,
+            linkLabel: $this->translator->trans('sulu_notifier.open_link', [], 'admin', $this->locale),
+            context: \array_values(\array_filter(
+                [$event->getResourceWebspaceKey(), $event->getResourceLocale()],
+                static fn (?string $value): bool => null !== $value && '' !== $value,
+            )),
+            channels: $channels,
+        );
     }
 
     private function resolveLink(DomainEvent $event): ?string
@@ -128,27 +136,6 @@ final class DomainEventNotificationFactory implements EventNotificationFactoryIn
 
             return null;
         }
-    }
-
-    private function appendLink(string $content, ?string $link): string
-    {
-        if (null === $link) {
-            return $content;
-        }
-
-        return $content . "\n\n" . $link;
-    }
-
-    /**
-     * Escapes characters with special meaning in chat markup (e.g. Slack mrkdwn),
-     * so user-controlled content (resource titles, user names, event context)
-     * cannot inject links, mentions or channel pings.
-     *
-     * @see https://api.slack.com/reference/surfaces/formatting#escaping
-     */
-    private function escapeForChat(string $value): string
-    {
-        return \str_replace(['&', '<', '>'], ['&amp;', '&lt;', '&gt;'], $value);
     }
 
     private function stringifyContextValue(mixed $value): string
