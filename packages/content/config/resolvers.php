@@ -37,6 +37,7 @@ use Sulu\Content\Application\PropertyResolver\Resolver\DateTimePropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\LinkPropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\SmartContentPropertyResolver;
+use Sulu\Content\Application\PropertyResolver\Resolver\TablePropertyResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\TeaserSelectionPropertyResolver;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver;
 use Sulu\Content\Application\SmartResolver\SmartResolverProvider;
@@ -157,6 +158,9 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_markup.link_tag.provider_pool'),
         ])
+        ->tag('sulu_content.property_resolver');
+
+    $services->set('sulu_content.table_property_resolver', TablePropertyResolver::class)
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_content.teaser_selection_property_resolver', TeaserSelectionPropertyResolver::class)

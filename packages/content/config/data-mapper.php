@@ -17,6 +17,8 @@ use Sulu\Content\Application\ContentDataMapper\DataMapper\LinkDataMapper;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\RoutableDataMapper;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\SeoDataMapper;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\ShadowDataMapper;
+use Sulu\Content\Application\ContentDataMapper\DataMapper\TableTemplateDataMapper;
+use Sulu\Content\Domain\Table\TableTemplateDataNormalizer;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\TaxonomyDataMapper;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\TemplateDataMapper;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\WebspaceDataMapper;
@@ -30,6 +32,15 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_content.template_data_mapper', TemplateDataMapper::class)
         ->args([new Reference('sulu_admin.metadata_provider_registry')])
         ->tag('sulu_content.data_mapper', ['priority' => 128]);
+
+    $services->set('sulu_content.table_template_data_normalizer', TableTemplateDataNormalizer::class);
+
+    $services->set('sulu_content.table_template_data_mapper', TableTemplateDataMapper::class)
+        ->args([
+            new Reference('sulu_admin.metadata_provider_registry'),
+            new Reference('sulu_content.table_template_data_normalizer'),
+        ])
+        ->tag('sulu_content.data_mapper', ['priority' => 120]);
 
     $services->set('sulu_content.excerpt_data_mapper', ExcerptDataMapper::class)
         ->args([new Reference('sulu_admin.form_metadata_provider')])

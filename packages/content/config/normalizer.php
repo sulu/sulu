@@ -22,6 +22,7 @@ use Sulu\Content\Application\ContentNormalizer\Normalizer\SecuredEntityNormalize
 use Sulu\Content\Application\ContentNormalizer\Normalizer\SeoNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\ShadowNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\TaxonomyNormalizer;
+use Sulu\Content\Application\ContentNormalizer\Normalizer\TableTemplateNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\TemplateNormalizer;
 use Sulu\Content\Application\ContentNormalizer\Normalizer\WorkflowNormalizer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -32,6 +33,13 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_content.dimension_content_normalizer', DimensionContentNormalizer::class)
         ->tag('sulu_content.normalizer', ['priority' => 256]);
+
+    $services->set('sulu_content.table_template_normalizer', TableTemplateNormalizer::class)
+        ->args([
+            new Reference('sulu_admin.metadata_provider_registry'),
+            new Reference('sulu_content.table_template_data_normalizer'),
+        ])
+        ->tag('sulu_content.normalizer', ['priority' => 129]);
 
     $services->set('sulu_content.template_normalizer', TemplateNormalizer::class)
         ->tag('sulu_content.normalizer', ['priority' => 128]);
