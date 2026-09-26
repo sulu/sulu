@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\SecurityBundle\Domain\Event\RoleCreatedEvent;
@@ -21,7 +22,6 @@ use Sulu\Bundle\SecurityBundle\Domain\Event\RoleRemovedEvent;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Exception\RoleKeyAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
-use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
@@ -43,11 +43,16 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @phpstan-import-type Permissions from MaskConverterInterface
  */
-class RoleController extends AbstractRestController implements SecuredControllerInterface
+class RoleController implements SecuredControllerInterface
 {
     /** @var class-string */
     public const ENTITY_NAME_PERMISSION = Permission::class;
 
+    /**
+     * @deprecated Since 3.0, it's not used anywhere
+     *
+     * @var string
+     */
     protected $bundlePrefix = 'security.roles.';
 
     /**
@@ -59,7 +64,7 @@ class RoleController extends AbstractRestController implements SecuredController
      * @param class-string $roleClass
      */
     public function __construct(
-        ViewHandlerInterface $viewHandler,
+        private ViewHandlerInterface $viewHandler,
         private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         private RestHelperInterface $restHelper,
         private DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
@@ -69,7 +74,6 @@ class RoleController extends AbstractRestController implements SecuredController
         private DomainEventCollectorInterface $eventCollector,
         private string $roleClass
     ) {
-        parent::__construct($viewHandler);
     }
 
     protected function getFieldDescriptors()
@@ -125,9 +129,8 @@ class RoleController extends AbstractRestController implements SecuredController
             }
             $list = new CollectionRepresentation($convertedRoles, RoleInterface::RESOURCE_KEY);
         }
-        $view = $this->view($list, 200);
 
-        return $this->handleView($view);
+        return $this->viewHandler->handle(View::create($list, Response::HTTP_OK));
     }
 
     /**
@@ -139,16 +142,18 @@ class RoleController extends AbstractRestController implements SecuredController
      */
     public function getAction($id)
     {
-        $find = function($id) {
-            /** @var RoleInterface $role */
-            $role = $this->roleRepository->findRoleById($id);
+        $role = $this->roleRepository->findRoleById($id);
 
-            return $this->convertRole($role);
-        };
+        if (null === $role) {
+            $exception = new EntityNotFoundException($this->roleRepository->getClassName(), $id);
+            // Return a 404 together with an error message, given by the exception, if the entity is not found
+            $view = View::create($exception->toArray(), 404);
+        } else {
+            $entityData = $this->convertRole($role);
+            $view = View::create($entityData, 200);
+        }
 
-        $view = $this->responseGetById($id, $find);
-
-        return $this->handleView($view);
+        return $this->viewHandler->handle($view);
     }
 
     /**
@@ -193,7 +198,7 @@ class RoleController extends AbstractRestController implements SecuredController
                 $this->eventCollector->collect(new RoleCreatedEvent($role, $request->request->all()));
                 $this->entityManager->flush();
 
-                $view = $this->view($this->convertRole($role), 200);
+                $view = View::create($this->convertRole($role), 200);
             } catch (UniqueConstraintViolationException $e) {
                 if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
                     throw new RoleNameAlreadyExistsException($name, $e);
@@ -203,10 +208,10 @@ class RoleController extends AbstractRestController implements SecuredController
                 }
             }
         } catch (RestException $e) {
-            $view = $this->view($e->toArray(), 400);
+            $view = View::create($e->toArray(), 400);
         }
 
-        return $this->handleView($view);
+        return $this->viewHandler->handle($view);
     }
 
     /**
@@ -246,10 +251,10 @@ class RoleController extends AbstractRestController implements SecuredController
 
                 $this->eventCollector->collect(new RoleModifiedEvent($role, $request->request->all()));
                 $this->entityManager->flush();
-                $view = $this->view($this->convertRole($role), 200);
+                $view = View::create($this->convertRole($role), 200);
             }
         } catch (EntityNotFoundException $enfe) {
-            $view = $this->view($enfe->toArray(), 404);
+            $view = View::create($enfe->toArray(), 404);
         } catch (UniqueConstraintViolationException $e) {
             if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
                 throw new RoleNameAlreadyExistsException($name, $e);
@@ -258,10 +263,10 @@ class RoleController extends AbstractRestController implements SecuredController
                 throw new RoleKeyAlreadyExistsException($key, $e);
             }
         } catch (RestException $re) {
-            $view = $this->view($re->toArray(), 400);
+            $view = View::create($re->toArray(), 400);
         }
 
-        return $this->handleView($view);
+        return $this->viewHandler->handle($view);
     }
 
     /**
@@ -273,26 +278,24 @@ class RoleController extends AbstractRestController implements SecuredController
      */
     public function deleteAction($id)
     {
-        $delete = function($id) {
-            $role = $this->roleRepository->findRoleById($id);
+        $role = $this->roleRepository->findRoleById($id);
 
-            if (!$role) {
-                throw new EntityNotFoundException($this->roleRepository->getClassName(), $id);
-            }
+        if (null === $role) {
+            $exception = new EntityNotFoundException($this->roleRepository->getClassName(), $id);
 
-            $this->eventCollector->collect(new RoleRemovedEvent($id, $role->getName()));
+            return $this->viewHandler->handle(View::create($exception->toArray(), Response::HTTP_NOT_FOUND));
+        }
 
-            foreach ($role->getPermissions() as $permission) {
-                $this->entityManager->detach($permission);
-            }
+        $this->eventCollector->collect(new RoleRemovedEvent($id, $role->getName()));
 
-            $this->entityManager->remove($role);
-            $this->entityManager->flush();
-        };
+        foreach ($role->getPermissions() as $permission) {
+            $this->entityManager->detach($permission);
+        }
 
-        $view = $this->responseDelete($id, $delete);
+        $this->entityManager->remove($role);
+        $this->entityManager->flush();
 
-        return $this->handleView($view);
+        return $this->viewHandler->handle(View::create(null, Response::HTTP_NO_CONTENT));
     }
 
     /**
@@ -400,15 +403,13 @@ class RoleController extends AbstractRestController implements SecuredController
         $roleData['permissions'] = [];
 
         $permissions = $role->getPermissions();
-        if (!empty($permissions)) {
-            foreach ($permissions as $permission) {
-                /* @var Permission $permission */
-                $roleData['permissions'][] = [
-                    'id' => $permission->getId(),
-                    'context' => $permission->getContext(),
-                    'permissions' => $this->maskConverter->convertPermissionsToArray($permission->getPermissions()),
-                ];
-            }
+
+        foreach ($permissions as $permission) {
+            $roleData['permissions'][] = [
+                'id' => $permission->getId(),
+                'context' => $permission->getContext(),
+                'permissions' => $this->maskConverter->convertPermissionsToArray($permission->getPermissions()),
+            ];
         }
 
         return $roleData;
@@ -417,5 +418,10 @@ class RoleController extends AbstractRestController implements SecuredController
     public function getSecurityContext()
     {
         return 'sulu.security.roles';
+    }
+
+    public function getLocale(Request $request)
+    {
+        return $request->query->get('locale', $request->getLocale());
     }
 }
