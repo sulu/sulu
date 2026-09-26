@@ -40,6 +40,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes the roles accessible through a REST-API.
+ *
+ * @phpstan-import-type Permissions from MaskConverterInterface
  */
 class RoleController extends AbstractRestController implements SecuredControllerInterface
 {
@@ -131,6 +133,8 @@ class RoleController extends AbstractRestController implements SecuredController
     /**
      * Returns the role with the given id.
      *
+     * @param string|int $id
+     *
      * @return Response
      */
     public function getAction($id)
@@ -179,6 +183,7 @@ class RoleController extends AbstractRestController implements SecuredController
 
             if (!empty($permissions)) {
                 foreach ($permissions as $permissionData) {
+                    /** @var array{id?: int|string, context: string, permissions: Permissions} $permissionData */
                     $this->addPermission($role, $permissionData);
                 }
             }
@@ -206,6 +211,8 @@ class RoleController extends AbstractRestController implements SecuredController
 
     /**
      * Updates the role with the given id and the data given by the request.
+     *
+     * @param int $id
      *
      * @return Response
      */
@@ -260,6 +267,8 @@ class RoleController extends AbstractRestController implements SecuredController
     /**
      * Deletes the role with the given id.
      *
+     * @param string|int $id
+     *
      * @return Response
      */
     public function deleteAction($id)
@@ -290,6 +299,7 @@ class RoleController extends AbstractRestController implements SecuredController
      * Process all permissions from request.
      *
      * @param RoleInterface $role The contact on which is worked
+     * @param array<mixed> $permissions
      *
      * @return bool True if the processing was successful, otherwise false
      */
@@ -306,10 +316,12 @@ class RoleController extends AbstractRestController implements SecuredController
         };
 
         $update = function($permission, $permissionData) {
+            /** @var array{id?: int|string, context: string, permissions: Permissions} $permissionData */
             return $this->updatePermission($permission, $permissionData);
         };
 
         $add = function($permission) use ($role) {
+            /** @var array{id?: int|string, context: string, permissions: Permissions} $permission */
             return $this->addPermission($role, $permission);
         };
 
@@ -320,6 +332,8 @@ class RoleController extends AbstractRestController implements SecuredController
 
     /**
      * Adds a permission to the given role.
+     *
+     * @param array{id?: int|string, context: string, permissions: Permissions} $permissionData
      *
      * @return bool
      *
@@ -354,6 +368,8 @@ class RoleController extends AbstractRestController implements SecuredController
 
     /**
      * Updates an already existing permission.
+     *
+     * @param array{id?: int|string, context: string, permissions: Permissions} $permissionData
      *
      * @return bool
      */
