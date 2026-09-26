@@ -26245,12 +26245,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
-			message: '#^Cannot access offset ''anonymous'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -26260,36 +26254,6 @@ parameters:
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\RoleController\:\:convertRole\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\RoleController\:\:getFieldDescriptors\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Controller\\RoleController\:\:initFieldDescriptors\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Parameter \#1 \$fieldDescriptor of method Sulu\\Component\\Rest\\ListBuilder\\AbstractListBuilder\:\:where\(\) expects Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Component\\Security\\Authentication\\RoleRepositoryInterface\:\:findRoleById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
@@ -26307,42 +26271,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$permissions of method Sulu\\Component\\Security\\Authentication\\RoleInterface\:\:addPermission\(\) expects Sulu\\Bundle\\SecurityBundle\\Entity\\Permission, object given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Parameter \#1 \$roleId of class Sulu\\Bundle\\SecurityBundle\\Domain\\Event\\RoleRemovedEvent constructor expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Parameter \#2 \$fieldDescriptors of method Sulu\\Component\\Rest\\RestHelperInterface\:\:initializeListBuilder\(\) expects array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Parameter \#2 \$id of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Controller\\RoleController\:\:\$fieldDescriptors \(array\) does not accept array\<Sulu\\Component\\Rest\\ListBuilder\\FieldDescriptorInterface\>\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\SecurityBundle\\Controller\\RoleController\:\:\$fieldDescriptors type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: '#^Variable \$permissions in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
