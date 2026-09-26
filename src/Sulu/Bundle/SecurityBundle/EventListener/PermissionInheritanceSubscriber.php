@@ -42,7 +42,7 @@ class PermissionInheritanceSubscriber
         $this->accessControlManager->setPermissions(
             $entityClass,
             $entity->getId(),
-            $this->accessControlManager->getPermissions($entityClass, $parentId)
+            $this->accessControlManager->getPermissions($entityClass, $parentId) ?? []
         );
     }
 }
