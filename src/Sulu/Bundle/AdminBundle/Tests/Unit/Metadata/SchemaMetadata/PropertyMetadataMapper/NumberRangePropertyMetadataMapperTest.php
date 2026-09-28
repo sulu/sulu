@@ -40,16 +40,15 @@ class NumberRangePropertyMetadataMapperTest extends TestCase
                 [
                     'type' => 'object',
                     'properties' => [
-                        'from' => ['type' => 'number'],
-                        'to' => ['type' => 'number'],
+                        'from' => ['anyOf' => [['type' => 'null'], ['type' => 'number']]],
+                        'to' => ['anyOf' => [['type' => 'null'], ['type' => 'number']]],
                     ],
-                    'required' => ['from', 'to'],
                 ],
             ],
         ], $propertyMetadata->toJsonSchema());
     }
 
-    public function testMapPropertyMetadataRequired(): void
+    public function testMapPropertyMetadataRequiredRangeMayBeOpenOnOneSide(): void
     {
         $fieldMetadata = new FieldMetadata('property-name');
         $fieldMetadata->setRequired(true);
@@ -60,10 +59,9 @@ class NumberRangePropertyMetadataMapperTest extends TestCase
         $this->assertEquals([
             'type' => 'object',
             'properties' => [
-                'from' => ['type' => 'number'],
-                'to' => ['type' => 'number'],
+                'from' => ['anyOf' => [['type' => 'null'], ['type' => 'number']]],
+                'to' => ['anyOf' => [['type' => 'null'], ['type' => 'number']]],
             ],
-            'required' => ['from', 'to'],
         ], $propertyMetadata->toJsonSchema());
     }
 
@@ -80,11 +78,10 @@ class NumberRangePropertyMetadataMapperTest extends TestCase
 
         $jsonSchema = $this->numberRangePropertyMetadataMapper->mapPropertyMetadata($fieldMetadata)->toJsonSchema();
 
-        $bound = ['type' => 'number', 'minimum' => -50, 'maximum' => 150, 'multipleOf' => 0.5];
+        $bound = ['anyOf' => [['type' => 'null'], ['type' => 'number', 'minimum' => -50, 'maximum' => 150, 'multipleOf' => 0.5]]];
         $this->assertEquals([
             'type' => 'object',
             'properties' => ['from' => $bound, 'to' => $bound],
-            'required' => ['from', 'to'],
         ], $jsonSchema);
     }
 
