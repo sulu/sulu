@@ -3,6 +3,7 @@ import React, {Fragment} from 'react';
 import QRCode from 'react-qr-code';
 import {Input} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
+import styles from './twoFactorFields.scss';
 
 type Props = {|
     code: ?string,
@@ -12,7 +13,6 @@ type Props = {|
     qrContent: ?string,
     secret: ?string,
     showSecret: boolean,
-    styles: {[string]: string},
 |};
 
 // shared by the profile field and the forced setup overlay, both of which guide the user
@@ -24,7 +24,7 @@ export default class TwoFactorSetupFields extends React.Component<Props> {
     };
 
     render() {
-        const {code, codeValid, hint, onCodeChange, qrContent, secret, showSecret, styles} = this.props;
+        const {code, codeValid, hint, onCodeChange, qrContent, secret, showSecret} = this.props;
 
         return (
             <div className={styles.setup}>

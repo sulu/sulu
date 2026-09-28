@@ -2,16 +2,16 @@
 import React from 'react';
 import {Button} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
+import styles from './twoFactorFields.scss';
 
 type Props = {|
     backupCodes: ?Array<string>,
     onCopy: () => void,
-    styles: {[string]: string},
 |};
 
 export default class TwoFactorBackupCodesList extends React.Component<Props> {
     render() {
-        const {backupCodes, onCopy, styles} = this.props;
+        const {backupCodes, onCopy} = this.props;
 
         return (
             <div className={styles.setup}>

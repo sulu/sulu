@@ -169,7 +169,6 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
                 onCodeChange={this.handleCodeChange}
                 qrContent={this.qrContent}
                 secret={this.secret}
-                styles={twoFactorStyles}
             />
         );
     }
@@ -183,7 +182,6 @@ class TwoFactor extends React.Component<FieldTypeProps<?string>> {
             <TwoFactorBackupCodesList
                 backupCodes={this.backupCodes}
                 onCopy={this.handleBackupCodesCopy}
-                styles={twoFactorStyles}
             />
         );
     }

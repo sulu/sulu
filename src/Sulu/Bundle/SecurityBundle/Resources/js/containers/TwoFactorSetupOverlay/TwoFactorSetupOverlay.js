@@ -179,7 +179,6 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
                 qrContent={this.qrContent}
                 secret={this.secret}
                 showSecret={!isEmail}
-                styles={twoFactorSetupOverlayStyles}
             />
         );
     }
@@ -199,7 +198,6 @@ class TwoFactorSetupOverlay extends React.Component<{}> {
             <TwoFactorBackupCodesList
                 backupCodes={this.backupCodes}
                 onCopy={this.handleBackupCodesCopy}
-                styles={twoFactorSetupOverlayStyles}
             />
         );
     }
