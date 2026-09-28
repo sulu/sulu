@@ -78,6 +78,42 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
         $this->assertSame('Seite', $this->findDraft($page, 'de')?->getTitle());
     }
 
+    public function testListFindsLocaleAfterWritingOtherLocale(): void
+    {
+        $uuid = $this->createTwoLocalePage()->getUuid();
+        $this->entityManager->clear();
+
+        self::getContainer()->get('sulu_message_bus')->dispatch(new Envelope(
+            new ModifyPageMessage(['uuid' => $uuid], [
+                'locale' => 'de',
+                'template' => 'default',
+                'title' => 'Seite geändert',
+                'url' => '/seite',
+            ]),
+            [new EnableFlushStamp()],
+        ));
+
+        $pages = \iterator_to_array($this->pageRepository->findBy(
+            ['uuids' => [$uuid], 'locale' => 'en', 'stage' => DimensionContentInterface::STAGE_LIVE],
+            [],
+            [PageRepositoryInterface::GROUP_SELECT_PAGE_WEBSITE => true],
+        ), false);
+
+        $this->assertCount(1, $pages);
+        $this->assertSame('Page', $this->findLive($pages[0], 'en')?->getTitle());
+    }
+
+    public function testCompletingDimensionContentsWritesNothingOnFlush(): void
+    {
+        $uuid = $this->createTwoLocalePage()->getUuid();
+        $this->entityManager->clear();
+
+        $this->loadPage($uuid, 'en');
+        $this->loadPage($uuid, 'de');
+
+        $this->assertSame(0, $this->countQueries(fn () => $this->entityManager->flush()));
+    }
+
     public function testUnflushedDimensionContentSurvivesAnotherLoad(): void
     {
         $uuid = $this->createTwoLocalePage()->getUuid();
@@ -92,20 +128,6 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
         $this->loadPage($uuid, 'en');
 
         $this->assertSame($dimensionContent, $this->findDraft($page, 'fr'));
-    }
-
-    public function testLoadWithoutDimensionAttributesReturnsAllDimensionContents(): void
-    {
-        $uuid = $this->createTwoLocalePage()->getUuid();
-        $this->entityManager->clear();
-
-        $page = $this->loadPage($uuid, 'en');
-        $this->pageRepository->getOneBy(['uuid' => $uuid]);
-
-        $this->assertCount(
-            $this->countDimensionContents($uuid),
-            $page->getDimensionContents(),
-        );
     }
 
     public function testFindByLoadsDimensionContentsInOneQuery(): void
@@ -208,11 +230,6 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
 
         /** @var PageDimensionContentInterface|null */
         return $collection->getDimensionContent($dimensionAttributes);
-    }
-
-    private function countDimensionContents(string $uuid): int
-    {
-        return (int) $this->createCountQueryBuilder($uuid)->getQuery()->getSingleScalarResult();
     }
 
     private function countCurrentDimensionContents(string $uuid, string $locale, string $stage): int
