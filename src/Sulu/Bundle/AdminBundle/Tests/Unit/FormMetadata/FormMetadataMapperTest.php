@@ -458,12 +458,17 @@ class FormMetadataMapperTest extends TestCase
 
         $this->assertInstanceOf(SchemaMetadata::class, $schema);
         $this->assertEquals([
+            'type' => 'object',
+            'properties' => [
+                'property1' => ['not' => ['const' => '']],
+                'property2' => ['not' => ['const' => '']],
+                'property3' => ['not' => ['const' => '']],
+            ],
             'required' => [
                 'property1',
                 'property2',
                 'property3',
             ],
-            'type' => 'object',
         ], $schema->toJsonSchema());
     }
 
