@@ -53,6 +53,18 @@ final class WorkflowTransitionRequestSecurityContextResolver implements Workflow
         $securityClass = $this->resources[$resourceKey]['security_class'] ?? null;
 
         if (!\is_string($securityClass) || !\is_subclass_of($securityClass, SecuredEntityInterface::class)) {
+            // Only a secured entity fills a placeholder; the literal context would match no role
+            // today, but deny by accident rather than by design.
+            if (\preg_match('/#\w+#/', $securityContext)) {
+                throw new UnresolvableSecurityContextException(\sprintf(
+                    'The security context "%s" of resource "%s" has a placeholder, which only a "security_class"'
+                    . ' implementing "%s" can fill.',
+                    $securityContext,
+                    $resourceKey,
+                    SecuredEntityInterface::class,
+                ));
+            }
+
             return new SecurityCondition($securityContext, $locale);
         }
 

@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Unit\Content\Infrastructure\Sulu\Security;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Content\Infrastructure\Sulu\Security\WorkflowTransitionRequestSecurityContextResolver;
@@ -84,6 +85,21 @@ class WorkflowTransitionRequestSecurityContextResolverTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('with id "page-id-1": it does not exist');
+
+        $resolver->resolve('pages', 'page-id-1', 'en');
+    }
+
+    public function testResolveThrowsWhenAPlaceholderHasNoSecuredEntityToFillIt(): void
+    {
+        $entityManager = $this->prophesize(EntityManagerInterface::class);
+        $entityManager->find(Argument::cetera())->shouldNotBeCalled();
+
+        $resolver = new WorkflowTransitionRequestSecurityContextResolver($entityManager->reveal(), [
+            'pages' => ['security_context' => 'sulu.webspaces.#webspace#', 'security_class' => \stdClass::class],
+        ]);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('has a placeholder');
 
         $resolver->resolve('pages', 'page-id-1', 'en');
     }
