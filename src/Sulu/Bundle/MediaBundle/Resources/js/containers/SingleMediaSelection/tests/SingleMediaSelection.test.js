@@ -7,11 +7,35 @@ import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore'
 import SingleMediaSelection from '../SingleMediaSelection';
 
 let mockSingleSelectionStoreInstances: Array<Object> = [];
+let mockSingleMediaSelectionOverlayProps: Object = {};
+
+const mockReact = require('react');
 
 jest.mock('sulu-admin-bundle/utils/Translator');
 
-jest.mock('../../SingleMediaSelectionOverlay', () => jest.fn(function() {
-    return 'single media selection overlay';
+jest.mock('../../SingleMediaSelectionOverlay', () => jest.fn((props) => {
+    mockSingleMediaSelectionOverlayProps = props;
+
+    return mockReact.createElement(
+        mockReact.Fragment,
+        null,
+        'single media selection overlay',
+        props.open && mockReact.createElement(
+            'button',
+            {
+                onClick: () => props.onConfirm({
+                    id: 22,
+                    mimeType: 'image/jpeg',
+                    thumbnails: {
+                        'sulu-25x25': '/images/25x25/awesome.png',
+                    },
+                    title: 'test media',
+                }),
+                type: 'button',
+            },
+            'confirm overlay selection'
+        )
+    );
 }));
 
 jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn(function() {
@@ -134,6 +158,53 @@ test('Component should pass className to SingleItemSelection', () => {
     );
 
     expect(screen.getByText('sulu_media.select_media_singular').closest('.singleItemSelection')).toHaveClass('test');
+});
+
+test('Component should pass types to SingleMediaSelectionOverlay', () => {
+    render(
+        <SingleMediaSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            types={['image', 'video']}
+            value={undefined}
+        />
+    );
+
+    expect(mockSingleMediaSelectionOverlayProps.types).toEqual(['image', 'video']);
+});
+
+test('Click on media-button should open an overlay', async() => {
+    const user = userEvent.setup();
+
+    render(<SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />);
+
+    expect(mockSingleMediaSelectionOverlayProps.open).toEqual(false);
+
+    await user.click(screen.getByRole('button', {name: 'su-image'}));
+
+    expect(mockSingleMediaSelectionOverlayProps.open).toEqual(true);
+});
+
+test('Media that is selected in the overlay should be set to the selection store on confirm', async() => {
+    const user = userEvent.setup();
+    // $FlowFixMe
+    mockSingleSelectionStoreOnce(function() {
+        this.set = jest.fn();
+    });
+
+    render(<SingleMediaSelection locale={observable.box('en')} onChange={jest.fn()} value={undefined} />);
+
+    await user.click(screen.getByRole('button', {name: 'su-image'}));
+    await user.click(screen.getByRole('button', {name: 'confirm overlay selection'}));
+
+    expect(getLatestSingleSelectionStore().set).toHaveBeenCalledWith(expect.objectContaining({
+        id: 22,
+        mimeType: 'image/jpeg',
+        thumbnails: {
+            'sulu-25x25': '/images/25x25/awesome.png',
+        },
+        title: 'test media',
+    }));
 });
 
 test('Click on remove-button should clear the selection store', async() => {
