@@ -7,8 +7,27 @@ import MultiSelectionStore from 'sulu-admin-bundle/stores/MultiSelectionStore';
 import MultiMediaSelection from '../MultiMediaSelection';
 
 let mockMultiSelectionStoreInstances: Array<Object> = [];
+let mockMultiItemSelectionProps: Object = {};
+
+const mockReact = require('react');
 
 jest.mock('sulu-admin-bundle/utils/Translator');
+
+jest.mock('sulu-admin-bundle/components', () => {
+    const actual = jest.requireActual('sulu-admin-bundle/components');
+
+    const mockedMultiItemSelection: any = jest.fn((props) => {
+        mockMultiItemSelectionProps = props;
+
+        return mockReact.createElement(actual.MultiItemSelection, props);
+    });
+    mockedMultiItemSelection.Item = actual.MultiItemSelection.Item;
+
+    return {
+        ...actual,
+        MultiItemSelection: mockedMultiItemSelection,
+    };
+});
 
 function mockMultiMediaSelectionOverlay(props) {
     function handleConfirm() {
@@ -244,6 +263,20 @@ test('Should remove media from the selection store', async() => {
     await user.click(screen.getByRole('button', {name: 'su-trash-alt'}));
 
     expect(getLatestMultiSelectionStore().removeById).toHaveBeenCalledWith(1);
+});
+
+test('Should move media inside the selection store', () => {
+    // $FlowFixMe
+    mockMultiSelectionStoreOnce(function() {
+        this.items = [];
+        this.move = jest.fn();
+    });
+
+    render(<MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />);
+
+    mockMultiItemSelectionProps.onItemsSorted(1, 3);
+
+    expect(getLatestMultiSelectionStore().move).toHaveBeenCalledWith(1, 3);
 });
 
 test('Should render media without sortable drag handles if sorting is disabled', () => {
