@@ -753,7 +753,8 @@ test('Click on itemAction should execute its callback', async() => {
     expect(actionClickSpy).toHaveBeenCalledWith(2, 0);
 });
 
-test('Pagination should be passed correct props', () => {
+test('Pagination should be passed correct props', async() => {
+    const user = userEvent.setup();
     const pageChangeSpy = jest.fn();
     const limitChangeSpy = jest.fn();
 
@@ -779,6 +780,13 @@ test('Pagination should be passed correct props', () => {
     expect(screen.getByText(/of/)).toHaveTextContent('of 7');
     expect(getNavigationButtonByIcon('su-angle-left')).toBeEnabled();
     expect(getNavigationButtonByIcon('su-angle-right')).toBeEnabled();
+
+    await user.click(getNavigationButtonByIcon('su-angle-right'));
+    expect(pageChangeSpy).toHaveBeenCalledWith(3);
+
+    await user.click(screen.getByLabelText('su-angle-down'));
+    await user.click(screen.getByRole('button', {name: '20'}));
+    expect(limitChangeSpy).toHaveBeenCalledWith(20);
 });
 
 test('Pagination should not be rendered if API is not paginated', () => {

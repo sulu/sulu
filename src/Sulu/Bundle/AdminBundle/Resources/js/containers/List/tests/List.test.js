@@ -593,7 +593,8 @@ test('Render toolbar with multiple adapters if list is not searchable and adapte
     expect(getToolbar()).toBeInTheDocument();
 });
 
-test('Render TableAdapter with correct values', () => {
+test('Render TableAdapter with correct values', async() => {
+    const user = userEvent.setup();
     mockStructureStrategyData = [
         {
             title: 'value',
@@ -629,6 +630,9 @@ test('Render TableAdapter with correct values', () => {
     }));
     expect(getAdapter()).toHaveAttribute('data-has-selection-callback', 'true');
     expect(getAdapter()).toHaveAttribute('data-has-all-selection-callback', 'true');
+
+    await user.click(screen.getByRole('button', {name: 'click-5'}));
+    expect(editClickSpy).toHaveBeenCalledWith(5);
 });
 
 test('Render TableAdapter with itemActions', () => {
