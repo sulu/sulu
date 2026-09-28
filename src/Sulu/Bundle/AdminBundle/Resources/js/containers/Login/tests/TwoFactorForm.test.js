@@ -1,38 +1,40 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import TwoFactorForm from '../TwoFactorForm';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn(function(key) {
-        return key;
-    }),
-}));
+jest.mock('../../../utils/Translator');
 
 test('Should render the component', () => {
-    expect(render(
+    const {asFragment} = render(
         <TwoFactorForm
             methods={['emails', 'trusted_devices']}
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
-        />)
-    ).toMatchSnapshot();
+        />
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Should render the component error', () => {
-    expect(render(
+    const {asFragment} = render(
         <TwoFactorForm
             error={true}
             methods={['emails', 'trusted_devices']}
             onChangeForm={jest.fn()}
             onSubmit={jest.fn()}
-        />)
-    ).toMatchSnapshot();
+        />
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Should trigger onChangeForm correctly', () => {
+test('Should trigger onChangeForm correctly', async() => {
+    const user = userEvent.setup();
     const onChangeForm = jest.fn();
-    const form = shallow(
+    render(
         <TwoFactorForm
             methods={['emails', 'trusted_devices']}
             onChangeForm={onChangeForm}
@@ -40,14 +42,15 @@ test('Should trigger onChangeForm correctly', () => {
         />
     );
 
-    form.find('Button').at(0).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.back_to_login'}));
 
     expect(onChangeForm).toHaveBeenCalled();
 });
 
-test('Should not trigger onSubmit if autCode is missing', () => {
+test('Should not trigger onSubmit if autCode is missing', async() => {
+    const user = userEvent.setup();
     const onSubmit = jest.fn();
-    const form = shallow(
+    render(
         <TwoFactorForm
             methods={['emails', 'trusted_devices']}
             onChangeForm={jest.fn()}
@@ -55,19 +58,15 @@ test('Should not trigger onSubmit if autCode is missing', () => {
         />
     );
 
-    const event = {
-        preventDefault: jest.fn(),
-    };
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.verify'}));
 
-    form.find('form').prop('onSubmit')(event);
-
-    expect(event.preventDefault).toHaveBeenCalledWith();
     expect(onSubmit).not.toHaveBeenCalled();
 });
 
-test('Should trigger onSubmit correctly', () => {
+test('Should trigger onSubmit correctly', async() => {
+    const user = userEvent.setup();
     const onSubmit = jest.fn();
-    const form = shallow(
+    render(
         <TwoFactorForm
             methods={['emails', 'trusted_devices']}
             onChangeForm={jest.fn()}
@@ -75,20 +74,16 @@ test('Should trigger onSubmit correctly', () => {
         />
     );
 
-    const event = {
-        preventDefault: jest.fn(),
-    };
+    await user.type(screen.getByLabelText('sulu_admin.two_factor_verification_code'), 'authcode');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.verify'}));
 
-    form.find('Input[icon="su-lock"]').at(0).prop('onChange')('authcode');
-    form.find('form').prop('onSubmit')(event);
-
-    expect(event.preventDefault).toHaveBeenCalledWith();
     expect(onSubmit).toHaveBeenCalledWith({_auth_code: 'authcode', _trusted: false});
 });
 
-test('Should trigger onSubmit correctly with trusted device', () => {
+test('Should trigger onSubmit correctly with trusted device', async() => {
+    const user = userEvent.setup();
     const onSubmit = jest.fn();
-    const form = shallow(
+    render(
         <TwoFactorForm
             methods={['emails', 'trusted_devices']}
             onChangeForm={jest.fn()}
@@ -96,14 +91,9 @@ test('Should trigger onSubmit correctly with trusted device', () => {
         />
     );
 
-    const event = {
-        preventDefault: jest.fn(),
-    };
+    await user.type(screen.getByLabelText('sulu_admin.two_factor_verification_code'), 'authcode');
+    await user.click(screen.getByLabelText('sulu_admin.two_factor_trust_device'));
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.verify'}));
 
-    form.find('Input[icon="su-lock"]').at(0).prop('onChange')('authcode');
-    form.find('Checkbox').at(0).prop('onChange')(true);
-    form.find('form').prop('onSubmit')(event);
-
-    expect(event.preventDefault).toHaveBeenCalledWith();
     expect(onSubmit).toHaveBeenCalledWith({_auth_code: 'authcode', _trusted: true});
 });

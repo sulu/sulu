@@ -1,13 +1,36 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
-import {MultiSelect} from 'sulu-admin-bundle/components';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import RoleAssignment from '../RoleAssignment';
 import type {Localization} from 'sulu-admin-bundle/stores';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+function getDisplayButton(container: HTMLElement): HTMLElement {
+    const displayButton = container.querySelector('button.displayValue');
+
+    if (!(displayButton instanceof HTMLElement)) {
+        throw new Error('Expected display value button');
+    }
+
+    return displayButton;
+}
+
+function renderRoleAssignment(props: Object = {}) {
+    const body = document.body;
+    const table = document.createElement('table');
+    const tbody = document.createElement('tbody');
+
+    if (!body) {
+        throw new Error('Expected document body');
+    }
+
+    table.appendChild(tbody);
+    body.appendChild(table);
+
+    return render(<RoleAssignment {...props} />, {container: tbody});
+}
 
 test('Render component', () => {
     const value = {
@@ -41,13 +64,13 @@ test('Render component', () => {
         },
     ];
 
-    expect(render(
-        <RoleAssignment
-            localizations={localizations}
-            onChange={jest.fn()}
-            value={value}
-        />
-    )).toMatchSnapshot();
+    const {container} = renderRoleAssignment({
+        localizations,
+        onChange: jest.fn(),
+        value,
+    });
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render component in disabled state', () => {
@@ -82,17 +105,18 @@ test('Render component in disabled state', () => {
         },
     ];
 
-    expect(render(
-        <RoleAssignment
-            disabled={true}
-            localizations={localizations}
-            onChange={jest.fn()}
-            value={value}
-        />
-    )).toMatchSnapshot();
+    const {container} = renderRoleAssignment({
+        disabled: true,
+        localizations,
+        onChange: jest.fn(),
+        value,
+    });
+
+    expect(container).toMatchSnapshot();
 });
 
-test('The component should trigger the change callback', () => {
+test('The component should trigger the change callback', async() => {
+    const user = userEvent.setup();
     const value = {
         id: 1,
         role: {
@@ -125,15 +149,14 @@ test('The component should trigger the change callback', () => {
     ];
 
     const onChangeSpy = jest.fn();
-    const roleAssignment = shallow(
-        <RoleAssignment
-            localizations={localizations}
-            onChange={onChangeSpy}
-            value={value}
-        />
-    );
+    const {container} = renderRoleAssignment({
+        localizations,
+        onChange: onChangeSpy,
+        value,
+    });
 
-    roleAssignment.find(MultiSelect).props().onChange(['de', 'en']);
+    await user.click(getDisplayButton(container));
+    await user.click(screen.getByRole('button', {name: /en$/}));
 
     const expectedValue = {
         id: 1,

@@ -1,6 +1,14 @@
 // @flow
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import CountryFieldFilterType from '../../fieldFilterTypes/CountryFieldFilterType';
+
+async function typeSearchValue(user, countryFieldFilterType, rerender, value) {
+    for (const character of value) {
+        await user.type(screen.getByRole('textbox'), character);
+        rerender(countryFieldFilterType.getFormNode());
+    }
+}
 
 test('Render with value', () => {
     CountryFieldFilterType.countries = {
@@ -10,10 +18,13 @@ test('Render with value', () => {
     };
 
     const countryFieldFilterType = new CountryFieldFilterType(jest.fn(), {}, undefined);
-    expect(render(countryFieldFilterType.getFormNode())).toMatchSnapshot();
+    const {asFragment} = render(countryFieldFilterType.getFormNode());
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Filter countries using input field', () => {
+test('Filter countries using input field', async() => {
+    const user = userEvent.setup();
+
     CountryFieldFilterType.countries = {
         AT: 'Austria',
         DE: 'Germany',
@@ -21,15 +32,18 @@ test('Filter countries using input field', () => {
     };
 
     const countryFieldFilterType = new CountryFieldFilterType(jest.fn(), {}, undefined);
-    const countryFieldFilterTypeForm1 = mount(countryFieldFilterType.getFormNode());
-    countryFieldFilterTypeForm1.find('Input').prop('onChange')('Aus');
+    const {rerender} = render(countryFieldFilterType.getFormNode());
 
-    const countryFieldFilterTypeForm2 = mount(countryFieldFilterType.getFormNode());
-    expect(countryFieldFilterTypeForm2.find('Checkbox')).toHaveLength(1);
-    expect(countryFieldFilterTypeForm2.find('Checkbox').at(0).prop('value')).toEqual('AT');
+    await typeSearchValue(user, countryFieldFilterType, rerender, 'Aus');
+
+    expect(screen.getAllByRole('checkbox')).toHaveLength(1);
+    expect(screen.getByDisplayValue('AT')).toBeInTheDocument();
+    expect(screen.getByText('Austria')).toBeInTheDocument();
 });
 
-test('Filter countries using input field with lowercase start', () => {
+test('Filter countries using input field with lowercase start', async() => {
+    const user = userEvent.setup();
+
     CountryFieldFilterType.countries = {
         AT: 'Austria',
         DE: 'Germany',
@@ -37,12 +51,13 @@ test('Filter countries using input field with lowercase start', () => {
     };
 
     const countryFieldFilterType = new CountryFieldFilterType(jest.fn(), {}, undefined);
-    const countryFieldFilterTypeForm1 = mount(countryFieldFilterType.getFormNode());
-    countryFieldFilterTypeForm1.find('Input').prop('onChange')('aus');
+    const {rerender} = render(countryFieldFilterType.getFormNode());
 
-    const countryFieldFilterTypeForm2 = mount(countryFieldFilterType.getFormNode());
-    expect(countryFieldFilterTypeForm2.find('Checkbox')).toHaveLength(1);
-    expect(countryFieldFilterTypeForm2.find('Checkbox').at(0).prop('value')).toEqual('AT');
+    await typeSearchValue(user, countryFieldFilterType, rerender, 'aus');
+
+    expect(screen.getAllByRole('checkbox')).toHaveLength(1);
+    expect(screen.getByDisplayValue('AT')).toBeInTheDocument();
+    expect(screen.getByText('Austria')).toBeInTheDocument();
 });
 
 test.each([

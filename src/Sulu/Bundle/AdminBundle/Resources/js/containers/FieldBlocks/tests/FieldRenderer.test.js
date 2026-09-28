@@ -1,20 +1,87 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Router from '../../../services/Router';
 import FieldRenderer from '../FieldRenderer';
-import {FormInspector, ResourceFormStore, Renderer} from '../../Form';
+import {FormInspector, ResourceFormStore} from '../../Form';
 import ResourceStore from '../../../stores/ResourceStore';
+
+let mockRendererProps: Object = {};
+
+const mockReact = require('react');
 
 jest.mock('../../../services/Router/Router', () => jest.fn());
 
 jest.mock('../../Form', () => ({
     FormInspector: jest.fn(),
     ResourceFormStore: jest.fn(),
-    Renderer: jest.fn(),
+    Renderer: jest.fn((props) => {
+        mockRendererProps = props;
+
+        return mockReact.createElement(
+            'div',
+            {'data-testid': 'renderer'},
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'change',
+                    onClick: () => props.onChange('test', 'value'),
+                    type: 'button',
+                },
+                'Change'
+            ),
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'change-with-context',
+                    onClick: () => props.onChange('alignment', 'left', {isDefaultValue: true}),
+                    type: 'button',
+                },
+                'Change with context'
+            ),
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'finish',
+                    onClick: () => props.onFieldFinish && props.onFieldFinish(),
+                    type: 'button',
+                },
+                'Finish'
+            )
+        );
+    }),
 }));
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn());
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockRendererProps = {};
+});
+
+function createFormInspector() {
+    return new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+}
+
+function renderFieldRenderer(props: Object = {}) {
+    return render(
+        <FieldRenderer
+            data={{}}
+            dataPath=""
+            formInspector={createFormInspector()}
+            index={2}
+            onChange={jest.fn()}
+            onFieldFinish={jest.fn()}
+            onSuccess={jest.fn()}
+            router={undefined}
+            schema={{}}
+            schemaPath=""
+            value={{}}
+            {...props}
+        />
+    );
+}
 
 test('Should pass props correctly to Renderer', () => {
     const fieldFinishSpy = jest.fn();
@@ -38,27 +105,24 @@ test('Should pass props correctly to Renderer', () => {
     const schema = {
         text: {label: 'Label', type: 'text_line', visible: true},
     };
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = createFormInspector();
     const router = new Router();
 
-    const formRenderer = shallow(
-        <FieldRenderer
-            data={data}
-            dataPath="/block/0/test"
-            errors={errors}
-            formInspector={formInspector}
-            index={1}
-            onChange={jest.fn()}
-            onFieldFinish={fieldFinishSpy}
-            onSuccess={successSpy}
-            router={router}
-            schema={schema}
-            schemaPath="/test"
-            value={value}
-        />
-    );
+    renderFieldRenderer({
+        data,
+        dataPath: '/block/0/test',
+        errors,
+        formInspector,
+        index: 1,
+        onFieldFinish: fieldFinishSpy,
+        onSuccess: successSpy,
+        router,
+        schema,
+        schemaPath: '/test',
+        value,
+    });
 
-    expect(formRenderer.find(Renderer).props()).toEqual(expect.objectContaining({
+    expect(mockRendererProps).toEqual(expect.objectContaining({
         data,
         dataPath: '/block/0/test',
         errors,
@@ -74,99 +138,37 @@ test('Should pass props correctly to Renderer', () => {
 });
 
 test('Should pass showAllErrors prop to Renderer', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    renderFieldRenderer({showAllErrors: true});
 
-    const formRenderer = shallow(
-        <FieldRenderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            index={2}
-            onChange={jest.fn()}
-            onFieldFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={{}}
-            schemaPath=""
-            showAllErrors={true}
-            value={{}}
-        />
-    );
-
-    expect(formRenderer.find(Renderer).prop('showAllErrors')).toEqual(true);
+    expect(mockRendererProps.showAllErrors).toEqual(true);
 });
 
-test('Should call onChange callback with correct index', () => {
+test('Should call onChange callback with correct index', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    renderFieldRenderer({index: 2, onChange: changeSpy});
 
-    const formRenderer = shallow(
-        <FieldRenderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            index={2}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            onSuccess={jest.fn()}
-            router={undefined}
-            schema={{}}
-            schemaPath=""
-            value={{}}
-        />
-    );
-
-    formRenderer.find(Renderer).prop('onChange')('test', 'value');
+    await user.click(screen.getByLabelText('change'));
 
     expect(changeSpy).toHaveBeenCalledWith(2, 'test', 'value', undefined);
 });
 
-test('Should pass context through onChange callback', () => {
+test('Should pass context through onChange callback', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    renderFieldRenderer({index: 0, onChange: changeSpy});
 
-    const formRenderer = shallow(
-        <FieldRenderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            index={0}
-            onChange={changeSpy}
-            onFieldFinish={jest.fn()}
-            onSuccess={jest.fn()}
-            router={undefined}
-            schema={{}}
-            schemaPath=""
-            value={{}}
-        />
-    );
-
-    formRenderer.find(Renderer).prop('onChange')('alignment', 'left', {isDefaultValue: true});
+    await user.click(screen.getByLabelText('change-with-context'));
 
     expect(changeSpy).toHaveBeenCalledWith(0, 'alignment', 'left', {isDefaultValue: true});
 });
 
-test('Should call onFieldFinish when some subfield finishes editing', () => {
+test('Should call onFieldFinish when some subfield finishes editing', async() => {
+    const user = userEvent.setup();
     const fieldFinishSpy = jest.fn();
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    renderFieldRenderer({onFieldFinish: fieldFinishSpy});
 
-    const formRenderer = shallow(
-        <FieldRenderer
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            index={2}
-            onChange={jest.fn()}
-            onFieldFinish={fieldFinishSpy}
-            onSuccess={jest.fn()}
-            router={undefined}
-            schema={{}}
-            schemaPath=""
-            value={{}}
-        />
-    );
-
-    formRenderer.find(Renderer).prop('onFieldFinish')();
+    await user.click(screen.getByLabelText('finish'));
 
     expect(fieldFinishSpy).toHaveBeenCalledWith();
 });

@@ -1,27 +1,25 @@
 // @flow
 import React from 'react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
-import {mount, shallow} from 'enzyme';
-import Dialog from '../../../components/Dialog';
-import Overlay from '../../../components/Overlay';
-import List from '../../../containers/List';
 import ListStore from '../../../containers/List/stores/ListStore';
 import ListOverlay from '../ListOverlay';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+let mockListProps: Object = {};
 
-const ExampleList = function ExampleList(props) {
-    return <div className={props.adapter ? props.className : null} />;
-};
+const mockReact = require('react');
 
-jest.mock('../../../containers/List', () => jest.fn(function List(props) {
-    return <ExampleList adapter={props.adapter} className="list" />;
+jest.mock('../../../utils/Translator');
+
+jest.mock('../../../containers/List', () => jest.fn((props) => {
+    mockListProps = props;
+
+    return mockReact.createElement('div', {'data-testid': 'list'});
 }));
 
 jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
-    function(resourceKey, observableOptions, options) {
+    function(resourceKey, listKey, userSettingsKey, observableOptions, options) {
         this.options = options;
         this.clearSelection = jest.fn();
         this.observableOptions = observableOptions;
@@ -34,266 +32,196 @@ jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
     }
 ));
 
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockListProps = {};
+});
+
+afterEach(() => {
+    if (document.body) {
+        document.body.innerHTML = '';
+    }
+});
+
+function createListStore() {
+    return new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
+}
+
+function renderListOverlay(props: Object = {}) {
+    const listStore = props.listStore || createListStore();
+
+    return {
+        listStore,
+        ...render(
+            <ListOverlay
+                adapter="table"
+                listStore={listStore}
+                onClose={jest.fn()}
+                onConfirm={jest.fn()}
+                open={false}
+                title="Selection"
+                {...props}
+            />
+        ),
+    };
+}
+
+function getConfirmButton() {
+    return screen.getByRole('button', {name: 'sulu_admin.confirm'});
+}
+
 test('Should use an Overlay by default', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
-    const disabledIds = [1, 2, 5];
+    renderListOverlay({open: true});
 
-    const listOverlay = shallow(
-        <ListOverlay
-            adapter="table"
-            disabledIds={disabledIds}
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            title="Selection"
-        />
-    );
-
-    expect(listOverlay.find(Dialog)).toHaveLength(0);
-    expect(listOverlay.find(Overlay)).toHaveLength(1);
+    expect(screen.getByRole('heading', {name: 'Selection'})).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'sulu_admin.cancel'})).not.toBeInTheDocument();
 });
 
 test('Should use a dialog if overlayType is set to dialog', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
-    const disabledIds = [1, 2, 5];
+    renderListOverlay({
+        open: true,
+        overlayType: 'dialog',
+    });
 
-    const listOverlay = shallow(
-        <ListOverlay
-            adapter="table"
-            disabledIds={disabledIds}
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            overlayType="dialog"
-            title="Selection"
-        />
-    );
-
-    expect(listOverlay.find(Dialog)).toHaveLength(1);
-    expect(listOverlay.find(Overlay)).toHaveLength(0);
+    expect(screen.getByText('Selection')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'sulu_admin.cancel'})).toBeInTheDocument();
 });
 
 test('Should pass disabledIds to the List', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
     const disabledIds = [1, 2, 5];
 
-    const listOverlay = shallow(
-        <ListOverlay
-            adapter="table"
-            disabledIds={disabledIds}
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            title="Selection"
-        />
-    );
+    renderListOverlay({disabledIds, open: true});
 
-    expect(listOverlay.find(List).prop('disabledIds')).toBe(disabledIds);
-    expect(listOverlay.find(List).prop('allowActivateForDisabledItems')).toEqual(true);
+    expect(mockListProps.disabledIds).toBe(disabledIds);
+    expect(mockListProps.allowActivateForDisabledItems).toEqual(true);
 });
 
 test('Should pass allowActivateForDisabledItems to the List', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
     const disabledIds = [1, 2, 5];
 
-    const listOverlay = shallow(
-        <ListOverlay
-            adapter="table"
-            allowActivateForDisabledItems={false}
-            disabledIds={disabledIds}
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            title="Selection"
-        />
-    );
+    renderListOverlay({
+        allowActivateForDisabledItems: false,
+        disabledIds,
+        open: true,
+    });
 
-    expect(listOverlay.find(List).prop('disabledIds')).toBe(disabledIds);
-    expect(listOverlay.find(List).prop('allowActivateForDisabledItems')).toEqual(false);
+    expect(mockListProps.disabledIds).toBe(disabledIds);
+    expect(mockListProps.allowActivateForDisabledItems).toEqual(false);
 });
 
 test('Should pass itemDisabledCondition to the List', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
+    renderListOverlay({itemDisabledCondition: 'status == "inactive"', open: true});
 
-    const listOverlay = shallow(
-        <ListOverlay
-            adapter="table"
-            itemDisabledCondition='status == "inactive"'
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            title="Selection"
-        />
-    );
-
-    expect(listOverlay.find(List).prop('itemDisabledCondition')).toBe('status == "inactive"');
+    expect(mockListProps.itemDisabledCondition).toBe('status == "inactive"');
 });
 
 test('Should pass correct flags to the List', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
-    const disabledIds = [1, 2, 5];
+    renderListOverlay({open: true});
 
-    const listOverlay = shallow(
-        <ListOverlay
-            adapter="table"
-            disabledIds={disabledIds}
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            title="Selection"
-        />
-    );
-
-    expect(listOverlay.find(List).prop('copyable')).toEqual(false);
-    expect(listOverlay.find(List).prop('deletable')).toEqual(false);
-    expect(listOverlay.find(List).prop('movable')).toEqual(false);
-    expect(listOverlay.find(List).prop('orderable')).toEqual(false);
-    expect(listOverlay.find(List).prop('searchable')).toEqual(true);
+    expect(mockListProps.copyable).toEqual(false);
+    expect(mockListProps.deletable).toEqual(false);
+    expect(mockListProps.movable).toEqual(false);
+    expect(mockListProps.orderable).toEqual(false);
+    expect(mockListProps.searchable).toEqual(true);
 });
 
 test('Should pass confirmLoading and confirmDisabled flag to the Overlay', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
+    renderListOverlay({open: true, title: 'Test'});
 
-    const listOverlay = shallow(
-        <ListOverlay
-            adapter="table"
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            title="Test"
-        />
-    );
-
-    expect(listOverlay.find(Overlay).prop('confirmLoading')).toEqual(false);
-    expect(listOverlay.find(Overlay).prop('confirmDisabled')).toEqual(true);
+    expect(getConfirmButton()).toBeDisabled();
+    expect(getConfirmButton().querySelector('.loader')).not.toBeInTheDocument();
 });
 
 test('Should pass confirmLoading and negative confirmDisabled flag to the Overlay', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
+    renderListOverlay({
+        confirmLoading: true,
+        open: true,
+        preSelectedItems: [{}],
+        title: 'Test',
+    });
 
-    const listOverlay = shallow(
-        <ListOverlay
-            adapter="table"
-            confirmLoading={true}
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            preSelectedItems={[{}]}
-            title="Test"
-        />
-    );
-
-    expect(listOverlay.find(Overlay).prop('confirmLoading')).toEqual(true);
-    expect(listOverlay.find(Overlay).prop('confirmDisabled')).toEqual(false);
+    expect(getConfirmButton()).toBeDisabled();
+    expect(getConfirmButton().querySelector('.loader')).toBeInTheDocument();
 });
 
-test('Should call onConfirm when the confirm button is clicked', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
+test('Should call onConfirm when the confirm button is clicked', async() => {
+    const user = userEvent.setup();
     const confirmSpy = jest.fn();
-    mount(
-        <ListOverlay
-            adapter="table"
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={confirmSpy}
-            open={true}
-            preSelectedItems={[{id: 1}, {id: 2}, {id: 3}]}
-            title="Selection"
-        />
-    );
+    const {listStore} = renderListOverlay({
+        onConfirm: confirmSpy,
+        open: true,
+        preSelectedItems: [{id: 1}, {id: 2}, {id: 3}],
+    });
 
-    listStore.selections = [{id: 1}, {id: 2}];
+    (listStore: any).selections = [{id: 1}, {id: 2}];
 
-    const confirmButton = document.querySelector('button.primary');
-    if (confirmButton) {
-        confirmButton.click();
-    }
+    await user.click(getConfirmButton());
 
     expect(confirmSpy).toHaveBeenCalledWith();
 });
 
 test('Should instantiate the list with the passed adapter', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
+    const {unmount} = renderListOverlay({
+        adapter: 'table',
+        open: true,
+        title: 'test',
+    });
 
-    const listOverlay1 = mount(
-        <ListOverlay
-            adapter="table"
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            title="test"
-        />
-    );
-    expect(listOverlay1.find(List).prop('adapters')).toEqual(['table']);
+    expect(mockListProps.adapters).toEqual(['table']);
 
-    const listOverlay2 = mount(
-        <ListOverlay
-            adapter="column_list"
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            title="test"
-        />
-    );
-    expect(listOverlay2.find(List).prop('adapters')).toEqual(['column_list']);
+    unmount();
+
+    renderListOverlay({
+        adapter: 'column_list',
+        open: true,
+        title: 'test',
+    });
+
+    expect(mockListProps.adapters).toEqual(['column_list']);
 });
 
 test('Should reload on open if reloadOnOpen is set to true', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
+    const listStore = createListStore();
+    const {rerender} = renderListOverlay({
+        listStore,
+        open: false,
+        preSelectedItems: [{id: 1}],
+        reloadOnOpen: true,
+        title: 'test',
+    });
 
-    const listOverlay = mount(
+    listStore.reset.mockReset();
+    listStore.reload.mockReset();
+
+    expect(listStore.reset).not.toHaveBeenCalled();
+    expect(listStore.reload).not.toHaveBeenCalled();
+
+    rerender(
         <ListOverlay
             adapter="table"
             listStore={listStore}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
-            open={false}
+            open={true}
             preSelectedItems={[{id: 1}]}
             reloadOnOpen={true}
             title="test"
         />
     );
 
-    listStore.reset.mockReset();
-    listStore.reload.mockReset();
-
-    expect(listStore.reset).not.toHaveBeenCalled();
-    expect(listStore.reload).not.toHaveBeenCalled();
-
-    listOverlay.setProps({
-        open: true,
-    });
-
     expect(listStore.reset).toHaveBeenCalledWith();
     expect(listStore.reload).toHaveBeenCalledWith();
 });
 
 test('Should not reload on open if reloadOnOpen is set to true but listStore is still loading', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
-    // $FlowFixMe
-    listStore.loading = true;
-
-    const listOverlay = mount(
-        <ListOverlay
-            adapter="table"
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            preSelectedItems={[{id: 1}]}
-            title="test"
-        />
-    );
+    const listStore = createListStore();
+    (listStore: any).loading = true;
+    const {rerender} = renderListOverlay({
+        listStore,
+        open: false,
+        preSelectedItems: [{id: 1}],
+        title: 'test',
+    });
 
     listStore.reset.mockReset();
     listStore.reload.mockReset();
@@ -301,28 +229,30 @@ test('Should not reload on open if reloadOnOpen is set to true but listStore is 
     expect(listStore.reset).not.toHaveBeenCalled();
     expect(listStore.reload).not.toHaveBeenCalled();
 
-    listOverlay.setProps({
-        open: true,
-    });
+    rerender(
+        <ListOverlay
+            adapter="table"
+            listStore={listStore}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            preSelectedItems={[{id: 1}]}
+            title="test"
+        />
+    );
 
     expect(listStore.reset).not.toHaveBeenCalled();
     expect(listStore.reload).not.toHaveBeenCalled();
 });
 
 test('Should not reload on open if reloadOnOpen is not set', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
-
-    const listOverlay = mount(
-        <ListOverlay
-            adapter="table"
-            listStore={listStore}
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            open={false}
-            preSelectedItems={[{id: 1}]}
-            title="test"
-        />
-    );
+    const listStore = createListStore();
+    const {rerender} = renderListOverlay({
+        listStore,
+        open: false,
+        preSelectedItems: [{id: 1}],
+        title: 'test',
+    });
 
     listStore.reset.mockReset();
     listStore.reload.mockReset();
@@ -330,29 +260,65 @@ test('Should not reload on open if reloadOnOpen is not set', () => {
     expect(listStore.reset).not.toHaveBeenCalled();
     expect(listStore.reload).not.toHaveBeenCalled();
 
-    listOverlay.setProps({
-        open: true,
-    });
+    rerender(
+        <ListOverlay
+            adapter="table"
+            listStore={listStore}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            preSelectedItems={[{id: 1}]}
+            title="test"
+        />
+    );
 
     expect(listStore.reset).not.toHaveBeenCalled();
     expect(listStore.reload).not.toHaveBeenCalled();
 });
 
 test('Should not clear selection on close if clearSelectionOnClose prop is not set', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
+    const listStore = createListStore();
+    const preSelectedItems = [{id: 1}];
+    const {rerender} = renderListOverlay({
+        clearSelectionOnClose: false,
+        listStore,
+        open: true,
+        preSelectedItems,
+        title: 'test',
+    });
 
-    const listOverlay = mount(
+    listStore.clearSelection.mockReset();
+    listStore.select.mockReset();
+
+    expect(listStore.clearSelection).not.toHaveBeenCalled();
+    expect(listStore.select).not.toHaveBeenCalled();
+
+    rerender(
         <ListOverlay
             adapter="table"
             clearSelectionOnClose={false}
             listStore={listStore}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
-            open={true}
-            preSelectedItems={[{id: 1}]}
+            open={false}
+            preSelectedItems={preSelectedItems}
             title="test"
         />
     );
+
+    expect(listStore.clearSelection).not.toHaveBeenCalled();
+});
+
+test('Should clear selection on close if clearSelectionOnClose prop is set', () => {
+    const listStore = createListStore();
+    const preSelectedItems = [{id: 1}];
+    const {rerender} = renderListOverlay({
+        clearSelectionOnClose: true,
+        listStore,
+        open: true,
+        preSelectedItems,
+        title: 'test',
+    });
 
     listStore.clearSelection.mockReset();
     listStore.select.mockReset();
@@ -360,70 +326,61 @@ test('Should not clear selection on close if clearSelectionOnClose prop is not s
     expect(listStore.clearSelection).not.toHaveBeenCalled();
     expect(listStore.select).not.toHaveBeenCalled();
 
-    listOverlay.setProps({
-        open: false,
-    });
-
-    expect(listStore.clearSelection).not.toHaveBeenCalled();
-});
-
-test('Should clear selection on close if clearSelectionOnClose prop is set', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
-
-    const listOverlay = mount(
+    rerender(
         <ListOverlay
             adapter="table"
             clearSelectionOnClose={true}
             listStore={listStore}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
-            open={true}
-            preSelectedItems={[{id: 1}]}
+            open={false}
+            preSelectedItems={preSelectedItems}
             title="test"
         />
     );
-
-    listStore.clearSelection.mockReset();
-    listStore.select.mockReset();
-
-    expect(listStore.clearSelection).not.toHaveBeenCalled();
-    expect(listStore.select).not.toHaveBeenCalled();
-
-    listOverlay.setProps({
-        open: false,
-    });
 
     expect(listStore.clearSelection).toHaveBeenCalledWith();
 });
 
 test('Should update selection if passed preSelectedItems prop changes', () => {
-    const listStore = new ListStore('snippets', 'snippets', 'list_overlay_test', {page: observable.box(1)});
+    const listStore = createListStore();
+    const preSelectedItems = [{id: 1}];
+    const {rerender} = renderListOverlay({
+        listStore,
+        open: true,
+        preSelectedItems,
+        title: 'test',
+    });
 
-    const listOverlay = mount(
+    listStore.clearSelection.mockReset();
+    listStore.select.mockReset();
+
+    rerender(
         <ListOverlay
             adapter="table"
             listStore={listStore}
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             open={true}
-            preSelectedItems={[{id: 1}]}
-            title="test"
+            preSelectedItems={preSelectedItems}
+            title="bla"
         />
     );
-
-    listStore.clearSelection.mockReset();
-    listStore.select.mockReset();
-
-    listOverlay.setProps({
-        title: 'bla',
-    });
 
     expect(listStore.clearSelection).not.toHaveBeenCalled();
     expect(listStore.select).not.toHaveBeenCalled();
 
-    listOverlay.setProps({
-        preSelectedItems: [{id: 2}],
-    });
+    rerender(
+        <ListOverlay
+            adapter="table"
+            listStore={listStore}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            preSelectedItems={[{id: 2}]}
+            title="bla"
+        />
+    );
 
     expect(listStore.clearSelection).toHaveBeenCalledWith();
     expect(listStore.select).toHaveBeenCalledWith({id: 2});

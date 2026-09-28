@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {webspaceStore} from 'sulu-page-bundle/stores';
+import RolePermissionsContainer from '../../../RolePermissions';
 import RolePermissions from '../../fields/RolePermissions';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
@@ -25,6 +26,10 @@ jest.mock('sulu-page-bundle/stores/webspaceStore/webspaceStore', () => ({
     hasWebspace: jest.fn(),
 }));
 
+jest.mock('../../../RolePermissions', () => jest.fn(() => null));
+
+const RolePermissionsContainerMock = (RolePermissionsContainer: any);
+
 test('Pass props correctly to component', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -34,7 +39,7 @@ test('Pass props correctly to component', () => {
 
     const value = {};
 
-    const rolePermissions = shallow(
+    render(
         <RolePermissions
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -44,21 +49,21 @@ test('Pass props correctly to component', () => {
 
     expect(webspaceStore.getWebspace).not.toHaveBeenCalled();
 
-    expect(rolePermissions.find('RolePermissions').prop('disabled')).toEqual(false);
-    expect(rolePermissions.find('RolePermissions').prop('permissionCheck')).toBe(undefined);
-    expect(rolePermissions.find('RolePermissions').prop('resourceKey')).toEqual('snippets');
-    expect(rolePermissions.find('RolePermissions').prop('system')).toBe(undefined);
-    expect(rolePermissions.find('RolePermissions').prop('value')).toBe(value);
+    expect(RolePermissionsContainerMock.mock.calls[0][0].disabled).toEqual(undefined);
+    expect(RolePermissionsContainerMock.mock.calls[0][0].permissionCheck).toBe(undefined);
+    expect(RolePermissionsContainerMock.mock.calls[0][0].resourceKey).toEqual('snippets');
+    expect(RolePermissionsContainerMock.mock.calls[0][0].system).toBe(undefined);
+    expect(RolePermissionsContainerMock.mock.calls[0][0].value).toBe(value);
 });
 
-test('Pass disabled prop correctly to component', () => {
+test('Pass onChange and onFinish props correctly to component', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test'), 'snippets', {resourceKey: 'snippets'}
         )
     );
 
-    const rolePermissions = shallow(
+    render(
         <RolePermissions
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -66,8 +71,8 @@ test('Pass disabled prop correctly to component', () => {
         />
     );
 
-    expect(rolePermissions.find('RolePermissions').prop('disabled')).toEqual(true);
-    expect(rolePermissions.find('RolePermissions').prop('value')).toEqual({});
+    expect(RolePermissionsContainerMock.mock.calls[0][0].disabled).toEqual(true);
+    expect(RolePermissionsContainerMock.mock.calls[0][0].value).toEqual({});
 });
 
 test('Pass system prop correctly to component', () => {
@@ -95,7 +100,7 @@ test('Pass system prop correctly to component', () => {
         }
     });
 
-    const rolePermissions = shallow(
+    render(
         <RolePermissions
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -103,9 +108,9 @@ test('Pass system prop correctly to component', () => {
         />
     );
 
-    expect(rolePermissions.find('RolePermissions').prop('permissionCheck')).toEqual(true);
-    expect(rolePermissions.find('RolePermissions').prop('system')).toEqual('test_security');
-    expect(rolePermissions.find('RolePermissions').prop('webspaceKey')).toEqual('test');
+    expect(RolePermissionsContainerMock.mock.calls[0][0].permissionCheck).toEqual(true);
+    expect(RolePermissionsContainerMock.mock.calls[0][0].system).toEqual('test_security');
+    expect(RolePermissionsContainerMock.mock.calls[0][0].webspaceKey).toEqual('test');
 });
 
 test('Pass disabled prop correctly to component', () => {
@@ -118,7 +123,7 @@ test('Pass disabled prop correctly to component', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const rolePermissions = shallow(
+    render(
         <RolePermissions
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -128,7 +133,7 @@ test('Pass disabled prop correctly to component', () => {
         />
     );
 
-    rolePermissions.find('RolePermissions').prop('onChange')({});
+    RolePermissionsContainerMock.mock.calls[0][0].onChange({});
 
     expect(changeSpy).toHaveBeenCalledWith({});
     expect(finishSpy).toHaveBeenCalledWith();

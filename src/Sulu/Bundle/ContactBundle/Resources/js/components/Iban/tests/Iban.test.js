@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Iban from '../Iban';
 
@@ -34,30 +35,33 @@ test('Iban should render error', () => {
     expect(asFragment()).toMatchSnapshot();
 });
 
-test('Iban should trigger callbacks correctly', () => {
+test('Iban should trigger callbacks correctly', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     const onBlur = jest.fn();
-    render(<Iban onBlur={onBlur} onChange={onChange} value={null} />);
+    const {rerender} = render(<Iban onBlur={onBlur} onChange={onChange} value={null} />);
+    onChange.mockImplementation((value) => {
+        rerender(<Iban onBlur={onBlur} onChange={onChange} value={value} />);
+    });
     const input = screen.getByRole('textbox');
 
     // provide invalid value
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(input, {target: {value: 'xxx'}});
-    fireEvent.blur(input);
+    await user.type(input, 'xxx');
+    await user.tab();
     expect(onChange).toHaveBeenCalledWith('xxx');
     expect(onBlur).toHaveBeenCalled();
 
     // provide one more invalid value
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(input, {target: {value: 'abc'}});
-    fireEvent.blur(input);
+    await user.clear(input);
+    await user.type(input, 'abc');
+    await user.tab();
     expect(onChange).toHaveBeenCalledWith('abc');
     expect(onBlur).toHaveBeenCalled();
 
     // now add a valid value
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(input, {target: {value: 'AT611904300234573201'}});
-    fireEvent.blur(input);
+    await user.clear(input);
+    await user.type(input, 'AT611904300234573201');
+    await user.tab();
     expect(onChange).toHaveBeenCalledWith('AT611904300234573201');
     expect(onBlur).toHaveBeenCalled();
 

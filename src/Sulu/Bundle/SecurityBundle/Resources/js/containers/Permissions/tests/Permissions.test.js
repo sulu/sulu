@@ -1,11 +1,12 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, screen, within} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import * as mobx from 'mobx';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import {defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
 import Permissions from '../Permissions';
 import securityContextStore from '../../../stores/securityContextStore/securityContextStore';
-import PermissionMatrix from '../PermissionMatrix';
 import type {ContextPermission} from '../types';
 import type {SecurityContextGroups} from '../../../stores/securityContextStore/types';
 
@@ -17,9 +18,34 @@ jest.mock('../../../stores/securityContextStore/securityContextStore', () => ({
     getSecurityContextGroups: jest.fn(() => Promise.resolve()),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+function getWebspaceSelectButton() {
+    const button = document.querySelector('button.displayValue');
+
+    if (!button) {
+        throw new Error('Expected webspace select button');
+    }
+
+    return button;
+}
+
+async function toggleWebspace(user, name: string) {
+    await user.click(getWebspaceSelectButton());
+    await user.click(screen.getByRole('button', {name: new RegExp(name + '$')}));
+    await user.click(screen.getByTestId('backdrop'));
+}
+
+function getPermissionButton(context: string, permission: string) {
+    const contextCell = screen.getByText(context, {selector: 'td'});
+    const row = contextCell.closest('tr');
+
+    if (!row) {
+        throw new Error('Expected permission row for ' + context);
+    }
+
+    return within(row).getByTitle('sulu_security.' + permission);
+}
 
 test('Render with minimal', () => {
     const value: Array<ContextPermission> = [
@@ -53,7 +79,7 @@ test('Render with minimal', () => {
     };
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
-    const permissions = mount(
+    const {container} = render(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
@@ -62,8 +88,7 @@ test('Render with minimal', () => {
     );
 
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
-    permissions.update();
-    expect(permissions.render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Render in disabled state', () => {
@@ -98,7 +123,7 @@ test('Render in disabled state', () => {
     };
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
-    const permissions = mount(
+    const {container} = render(
         <Permissions
             disabled={true}
             onChange={jest.fn()}
@@ -108,11 +133,11 @@ test('Render in disabled state', () => {
     );
 
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
-    permissions.update();
-    expect(permissions.render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
-test('Should trigger onChange correctly', () => {
+test('Should trigger onChange correctly', async() => {
+    const user = userEvent.setup();
     const value: Array<ContextPermission> = [
         {
             id: 1,
@@ -145,7 +170,7 @@ test('Should trigger onChange correctly', () => {
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
     const onChange = jest.fn();
-    const permissions = mount(
+    render(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -175,7 +200,7 @@ test('Should trigger onChange correctly', () => {
             },
         },
     ];
-    permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
+    await user.click(getPermissionButton('organizations', 'edit'));
     expect(onChange).toHaveBeenCalledWith(newContextPermissions);
 });
 
@@ -234,7 +259,7 @@ test('Render with empty webspace section', () => {
         },
     ];
 
-    const permissions = mount(
+    const {container} = render(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
@@ -243,14 +268,7 @@ test('Render with empty webspace section', () => {
     );
 
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
-
-    // Currently we have to load each child separately, because of a bug in enzyme.
-    // TODO: https://github.com/airbnb/enzyme/issues/1213
-    const permissionChildren = permissions.children();
-    expect(permissionChildren.at(0).render()).toMatchSnapshot();
-    expect(permissionChildren.at(1).render()).toMatchSnapshot();
-    expect(permissionChildren.at(2).render()).toMatchSnapshot();
-    expect(permissionChildren.at(3).render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Render with webspace section', () => {
@@ -320,7 +338,7 @@ test('Render with webspace section', () => {
         },
     ];
 
-    const permissions = mount(
+    const {container} = render(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
@@ -329,18 +347,11 @@ test('Render with webspace section', () => {
     );
 
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
-    permissions.update();
-
-    // Currently we have to load each child separately, because of a bug in enzyme.
-    // TODO: https://github.com/airbnb/enzyme/issues/1213
-    const permissionChildren = permissions.children();
-    expect(permissionChildren.at(0).render()).toMatchSnapshot();
-    expect(permissionChildren.at(1).render()).toMatchSnapshot();
-    expect(permissionChildren.at(2).render()).toMatchSnapshot();
-    expect(permissionChildren.at(3).render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
-test('Should trigger onChange correctly when changing something in the webspace section', () => {
+test('Should trigger onChange correctly when changing something in the webspace section', async() => {
+    const user = userEvent.setup();
     const value: Array<ContextPermission> = [
         {
             id: 1,
@@ -408,7 +419,7 @@ test('Should trigger onChange correctly when changing something in the webspace 
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    render(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -449,12 +460,23 @@ test('Should trigger onChange correctly when changing something in the webspace 
                 'security': false,
             },
         },
+        {
+            id: undefined,
+            context: 'sulu.webspaces.example.analytics',
+            permissions: {},
+        },
+        {
+            id: undefined,
+            context: 'sulu.webspaces.example.default-snippets',
+            permissions: {},
+        },
     ];
-    permissions.find(PermissionMatrix).at(0).instance().props.onChange(newContextPermissions);
+    await user.click(getPermissionButton('example', 'add'));
     expect(onChange).toHaveBeenCalledWith(newContextPermissions);
 });
 
-test('Should trigger onChange correctly when a webspace is added', () => {
+test('Should trigger onChange correctly when a webspace is added', async() => {
+    const user = userEvent.setup();
     const value: Array<ContextPermission> = [
         {
             id: 1,
@@ -522,7 +544,7 @@ test('Should trigger onChange correctly when a webspace is added', () => {
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    render(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -530,7 +552,7 @@ test('Should trigger onChange correctly when a webspace is added', () => {
         />
     );
 
-    permissions.find('MultiSelect').prop('onChange')(['example', 'example3']);
+    await toggleWebspace(user, 'Example 3!');
 
     const expectedNewValue: Array<ContextPermission> = [
         {
@@ -602,7 +624,8 @@ test('Should trigger onChange correctly when a webspace is added', () => {
     expect(onChange).toHaveBeenCalledWith(expectedNewValue);
 });
 
-test('Should trigger onChange correctly when a webspace is removed', () => {
+test('Should trigger onChange correctly when a webspace is removed', async() => {
+    const user = userEvent.setup();
     const value: Array<ContextPermission> = [
         {
             id: 1,
@@ -682,7 +705,7 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    render(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -690,7 +713,7 @@ test('Should trigger onChange correctly when a webspace is removed', () => {
         />
     );
 
-    permissions.find('MultiSelect').prop('onChange')(['example3']);
+    await toggleWebspace(user, 'Example');
 
     const expectedNewValue: Array<ContextPermission> = [
         {
@@ -762,7 +785,7 @@ test('Should trigger a mobx autorun if the prop system changes', () => {
     };
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
-    const permissions = mount(
+    const {rerender} = render(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
@@ -772,8 +795,20 @@ test('Should trigger a mobx autorun if the prop system changes', () => {
 
     // update with the same system, nothing should happen
     // update it with a other system it should trigger a reload
-    permissions.setProps({system: 'Sulu'});
-    permissions.setProps({system: 'Other-System'});
+    rerender(
+        <Permissions
+            onChange={jest.fn()}
+            system="Sulu"
+            value={value}
+        />
+    );
+    rerender(
+        <Permissions
+            onChange={jest.fn()}
+            system="Other-System"
+            value={value}
+        />
+    );
 
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Sulu');
     expect(securityContextStore.getSecurityContextGroups).toHaveBeenCalledWith('Other-System');
@@ -788,7 +823,7 @@ test('Pass disabled state to MultiSelect', () => {
     };
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
-    const permissions = mount(
+    render(
         <Permissions
             disabled={true}
             onChange={jest.fn()}
@@ -797,7 +832,7 @@ test('Pass disabled state to MultiSelect', () => {
         />
     );
 
-    expect(permissions.find('MultiSelect').prop('disabled')).toEqual(true);
+    expect(getWebspaceSelectButton()).toBeDisabled();
 });
 
 test('Dispose autorun on unmount', () => {
@@ -832,7 +867,13 @@ test('Dispose autorun on unmount', () => {
     };
     securityContextStore.getSecurityContextGroups.mockReturnValue(securityContextGroups);
 
-    const permissions = mount(
+    const systemDisposerSpy = jest.fn();
+    const autorunSpy = jest.spyOn(mobx, 'autorun').mockImplementation((view: () => void) => {
+        view();
+
+        return systemDisposerSpy;
+    });
+    const {unmount} = render(
         <Permissions
             onChange={jest.fn()}
             system="Sulu"
@@ -840,16 +881,14 @@ test('Dispose autorun on unmount', () => {
         />
     );
 
-    permissions.update();
-
-    const systemDisposerSpy = jest.fn();
-    permissions.instance().systemDisposer = systemDisposerSpy;
-    permissions.unmount();
+    unmount();
 
     expect(systemDisposerSpy).toHaveBeenCalledWith();
+    autorunSpy.mockRestore();
 });
 
-test('Should restore original permission when webspace is removed and re-added without saving', () => {
+test('Should restore original permission when webspace is removed and re-added without saving', async() => {
+    const user = userEvent.setup();
     const value: Array<ContextPermission> = [
         {
             id: 1,
@@ -910,7 +949,7 @@ test('Should restore original permission when webspace is removed and re-added w
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    const {rerender} = render(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -919,7 +958,7 @@ test('Should restore original permission when webspace is removed and re-added w
     );
 
     // First remove the webspace
-    permissions.find('MultiSelect').prop('onChange')([]);
+    await toggleWebspace(user, 'Example');
 
     const expectedAfterRemove: Array<ContextPermission> = [
         {
@@ -937,11 +976,16 @@ test('Should restore original permission when webspace is removed and re-added w
     expect(onChange).toHaveBeenLastCalledWith(expectedAfterRemove);
 
     // Update component props to reflect the removed state
-    permissions.setProps({value: expectedAfterRemove});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={expectedAfterRemove}
+        />
+    );
 
     // Now re-add the same webspace - it should restore the original permissions with their IDs
-    permissions.find('MultiSelect').prop('onChange')(['example']);
+    await toggleWebspace(user, 'Example');
 
     const expectedAfterReAdd: Array<ContextPermission> = [
         {
@@ -983,7 +1027,8 @@ test('Should restore original permission when webspace is removed and re-added w
     expect(onChange).toHaveBeenLastCalledWith(expectedAfterReAdd);
 });
 
-test('Should restore multiple webspaces independently when removed and re-added', () => {
+test('Should restore multiple webspaces independently when removed and re-added', async() => {
+    const user = userEvent.setup();
     const value: Array<ContextPermission> = [
         {
             id: 1,
@@ -1032,7 +1077,7 @@ test('Should restore multiple webspaces independently when removed and re-added'
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    const {rerender} = render(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -1040,16 +1085,31 @@ test('Should restore multiple webspaces independently when removed and re-added'
         />
     );
 
-    // Remove both webspaces
-    permissions.find('MultiSelect').prop('onChange')([]);
+    // Remove both webspaces through the controlled select.
+    await toggleWebspace(user, 'Example');
+    const expectedAfterFirstRemove = [value[1]];
+    expect(onChange).toHaveBeenLastCalledWith(expectedAfterFirstRemove);
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={expectedAfterFirstRemove}
+        />
+    );
+    await toggleWebspace(user, 'Example 2');
     expect(onChange).toHaveBeenLastCalledWith([]);
 
     // Update component props
-    permissions.setProps({value: []});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={[]}
+        />
+    );
 
     // Re-add only example2 - should restore its original permissions
-    permissions.find('MultiSelect').prop('onChange')(['example2']);
+    await toggleWebspace(user, 'Example 2');
 
     const expectedWithExample2: Array<ContextPermission> = [
         {
@@ -1069,11 +1129,16 @@ test('Should restore multiple webspaces independently when removed and re-added'
     expect(onChange).toHaveBeenLastCalledWith(expectedWithExample2);
 
     // Update component props again
-    permissions.setProps({value: expectedWithExample2});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={expectedWithExample2}
+        />
+    );
 
     // Now also add example - should restore its original permissions
-    permissions.find('MultiSelect').prop('onChange')(['example2', 'example']);
+    await toggleWebspace(user, 'Example');
 
     const expectedWithBoth: Array<ContextPermission> = [
         {
@@ -1105,7 +1170,8 @@ test('Should restore multiple webspaces independently when removed and re-added'
     expect(onChange).toHaveBeenLastCalledWith(expectedWithBoth);
 });
 
-test('Should create new permission when adding a webspace that was never selected before', () => {
+test('Should create new permission when adding a webspace that was never selected before', async() => {
+    const user = userEvent.setup();
     const value: Array<ContextPermission> = [
         {
             id: 1,
@@ -1142,7 +1208,7 @@ test('Should create new permission when adding a webspace that was never selecte
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    render(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -1151,7 +1217,7 @@ test('Should create new permission when adding a webspace that was never selecte
     );
 
     // Add example2 which was never selected before - should create new permission with id: undefined
-    permissions.find('MultiSelect').prop('onChange')(['example', 'example2']);
+    await toggleWebspace(user, 'Example 2');
 
     const expected: Array<ContextPermission> = [
         {
@@ -1184,7 +1250,8 @@ test('Should create new permission when adding a webspace that was never selecte
     expect(onChange).toHaveBeenLastCalledWith(expected);
 });
 
-test('Should maintain removed permissions cache when toggling same webspace multiple times', () => {
+test('Should maintain removed permissions cache when toggling same webspace multiple times', async() => {
+    const user = userEvent.setup();
     const value: Array<ContextPermission> = [
         {
             id: 1,
@@ -1216,7 +1283,7 @@ test('Should maintain removed permissions cache when toggling same webspace mult
     ];
 
     const onChange = jest.fn();
-    const permissions = mount(
+    const {rerender} = render(
         <Permissions
             onChange={onChange}
             system="Sulu"
@@ -1225,13 +1292,18 @@ test('Should maintain removed permissions cache when toggling same webspace mult
     );
 
     // Remove the webspace
-    permissions.find('MultiSelect').prop('onChange')([]);
+    await toggleWebspace(user, 'Example');
     expect(onChange).toHaveBeenLastCalledWith([]);
-    permissions.setProps({value: []});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={[]}
+        />
+    );
 
     // Re-add it - should restore original
-    permissions.find('MultiSelect').prop('onChange')(['example']);
+    await toggleWebspace(user, 'Example');
     const firstReAdd = [
         {
             id: 1,
@@ -1247,17 +1319,27 @@ test('Should maintain removed permissions cache when toggling same webspace mult
         },
     ];
     expect(onChange).toHaveBeenLastCalledWith(firstReAdd);
-    permissions.setProps({value: firstReAdd});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={firstReAdd}
+        />
+    );
 
     // Remove it again
-    permissions.find('MultiSelect').prop('onChange')([]);
+    await toggleWebspace(user, 'Example');
     expect(onChange).toHaveBeenLastCalledWith([]);
-    permissions.setProps({value: []});
-    permissions.update();
+    rerender(
+        <Permissions
+            onChange={onChange}
+            system="Sulu"
+            value={[]}
+        />
+    );
 
     // Re-add it again - should still restore the original permission
-    permissions.find('MultiSelect').prop('onChange')(['example']);
+    await toggleWebspace(user, 'Example');
     const secondReAdd = [
         {
             id: 1,

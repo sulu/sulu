@@ -65,6 +65,6 @@ test('Should close dropdown when item is clicked', async() => {
     expect(screen.getByText('Option1')).toBeInTheDocument();
     expect(screen.getByText('Option2')).toBeInTheDocument();
 
-    await user.click(screen.getByText('Option1'));
+    await user.click(screen.getByRole('button', {name: 'Option1'}));
     expect(screen.queryByText('Option1')).not.toBeInTheDocument();
 });

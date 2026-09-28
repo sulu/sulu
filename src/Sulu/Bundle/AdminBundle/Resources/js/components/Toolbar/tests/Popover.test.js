@@ -25,17 +25,19 @@ test('Show a loader if the Popover is loading', () => {
 });
 
 test('Open popover on click', async() => {
+    const user = userEvent.setup();
     render(<Popover label="Set time">{() => <h1>Test</h1>}</Popover>);
 
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
-    await userEvent.click(screen.queryByRole('button'));
+    await user.click(screen.queryByRole('button'));
     expect(screen.getByRole('heading')).toBeInTheDocument();
 });
 
 test('Disabled popover does not open on click', async() => {
+    const user = userEvent.setup();
     render(<Popover disabled={true} label="Set time">{() => <h1>Test</h1>}</Popover>);
 
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
-    await userEvent.click(screen.queryByRole('button'));
+    await user.click(screen.queryByRole('button'));
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
 });

@@ -1,10 +1,9 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {localizationStore} from 'sulu-admin-bundle/stores';
-import {ResourceMultiSelect} from 'sulu-admin-bundle/containers';
 import RoleAssignments from '../RoleAssignments';
-import RoleAssignment from '../RoleAssignment';
 
 jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn().mockImplementation(
     function() {
@@ -35,13 +34,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     },
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
-
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 test('Render component without data', () => {
     localizationStore.localizations = [
@@ -64,14 +57,15 @@ test('Render component without data', () => {
             xDefault: '',
         },
     ];
-    const roleAssignments = mount(
+    render(
         <RoleAssignments
             onChange={jest.fn()}
             value={[]}
         />
     );
 
-    expect(roleAssignments.render()).toMatchSnapshot();
+    expect(screen.getByRole('button', {name: /^sulu_admin\.none_selected/})).toBeEnabled();
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
 });
 
 test('Render component', () => {
@@ -117,14 +111,17 @@ test('Render component', () => {
         },
     ];
 
-    const roleAssignments = mount(
+    render(
         <RoleAssignments
             onChange={jest.fn()}
             value={value}
         />
     );
 
-    expect(roleAssignments.render()).toMatchSnapshot();
+    expect(screen.getByRole('button', {name: /^Role Name 5, Role Name 23/})).toBeEnabled();
+    expect(screen.getByRole('button', {name: /^sulu_admin\.all_selected/})).toBeEnabled();
+    expect(screen.getByRole('button', {name: /^de/})).toBeEnabled();
+    expect(screen.getAllByRole('row')).toHaveLength(2);
 });
 
 test('Render component in disabled state', () => {
@@ -170,7 +167,7 @@ test('Render component in disabled state', () => {
         },
     ];
 
-    const roleAssignments = mount(
+    render(
         <RoleAssignments
             disabled={true}
             onChange={jest.fn()}
@@ -178,10 +175,13 @@ test('Render component in disabled state', () => {
         />
     );
 
-    expect(roleAssignments.render()).toMatchSnapshot();
+    expect(screen.getByRole('button', {name: /^Role Name 5, Role Name 23/})).toBeDisabled();
+    expect(screen.getByRole('button', {name: /^sulu_admin\.all_selected/})).toBeDisabled();
+    expect(screen.getByRole('button', {name: /^de/})).toBeDisabled();
 });
 
-test('Should trigger onChange correctly when MultiSelect for roles changes', () => {
+test('Should trigger onChange correctly when MultiSelect for roles changes', async() => {
+    const user = userEvent.setup();
     const value: Array<Object> = [
         {
             id: 1,
@@ -225,33 +225,15 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
     ];
 
     const onChangeSpy = jest.fn();
-    const roleAssignments = mount(
+    render(
         <RoleAssignments
             onChange={onChangeSpy}
             value={value}
         />
     );
 
-    roleAssignments.find(ResourceMultiSelect).at(0).instance().props.onChange(
-        [2, 5, 23],
-        [
-            {
-                id: 2,
-                name: 'Role Name 2',
-                system: 'Sulu',
-            },
-            {
-                id: 5,
-                name: 'Role Name 5',
-                system: 'Sulu',
-            },
-            {
-                id: 23,
-                name: 'Role Name 23',
-                system: 'Sulu',
-            },
-        ]
-    );
+    await user.click(screen.getByRole('button', {name: /^Role Name 5, Role Name 23/}));
+    await user.click(screen.getByRole('button', {name: /Role Name 2$/}));
 
     const newValue: Array<Object> = [
         {
@@ -285,7 +267,8 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
     expect(onChangeSpy).toHaveBeenCalledWith(newValue);
 });
 
-test('Should trigger onChange correctly when RoleAssignment changes', () => {
+test('Should trigger onChange correctly when RoleAssignment changes', async() => {
+    const user = userEvent.setup();
     const value: Array<Object> = [
         {
             id: 1,
@@ -329,7 +312,7 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
     ];
 
     const onChangeSpy = jest.fn();
-    const roleAssignments = mount(
+    render(
         <RoleAssignments
             onChange={onChangeSpy}
             value={value}
@@ -356,6 +339,8 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
             locales: ['de'],
         },
     ];
-    roleAssignments.find(RoleAssignment).at(1).instance().props.onChange(newValue[0]);
+    await user.click(screen.getByRole('button', {name: /^sulu_admin\.all_selected/}));
+    await user.click(screen.getByRole('button', {name: /en$/}));
+
     expect(onChangeSpy).toHaveBeenCalledWith(newValue);
 });
