@@ -92,8 +92,16 @@ export function registerCKEditor5Plugins(textPartLanguages: Array<string> = []) 
         PRIORITY_CORE
     );
 
+    // Alignment writes text-align onto the paragraph, which a line break config does not keep, so there "style" is
+    // left to the plugins a project registers under it.
     pluginRegistry.add(Alignment, 'style');
-    configRegistry.add((config) => ({toolbar: [...config.toolbar, 'alignment']}), 'style', PRIORITY_CORE);
+    configRegistry.add(
+        (config, {enterMode}) => enterMode === 'br'
+            ? {removePlugins: [...(config.removePlugins || []), Alignment]}
+            : {toolbar: [...config.toolbar, 'alignment']},
+        'style',
+        PRIORITY_CORE
+    );
 
     pluginRegistry.add(TextPartLanguage, 'lang');
     pluginRegistry.add(TextPartLanguageVisibility, 'lang');

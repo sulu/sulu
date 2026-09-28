@@ -20,6 +20,11 @@ test('Test remove p tags from a paragraph carrying attributes', () => {
         .toBe('a <strong>bold</strong> word');
 });
 
+test('Test remove p tags from several paragraphs carrying attributes', () => {
+    expect(removePTags('<p style="color:red">one</p><p class="intro">two</p>'))
+        .toBe('<!--p-->one<!--/p--><br></br><!--p-->two<!--/p-->');
+});
+
 test('Test readd p tags to a paragraph holding a line break', () => {
     expect(addPTags('one<br>two')).toBe('<p>one<br>two</p>');
 });

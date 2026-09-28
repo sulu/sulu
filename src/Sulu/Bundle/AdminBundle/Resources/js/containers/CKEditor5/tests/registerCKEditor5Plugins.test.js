@@ -91,6 +91,14 @@ test('Load the table plugins and the content toolbar for the table tag', () => {
 test('Load the alignment plugin for the style attribute', () => {
     expect(pluginRegistry.getPlugins(['style'])).toEqual([Alignment]);
     expect(buildConfig({enterMode: 'p', attributes: ['style'], tags: []}).toolbar).toEqual(['alignment']);
+    expect(buildConfig({enterMode: 'p', attributes: ['style'], tags: []}).removePlugins).toBeUndefined();
+});
+
+test('Leave the alignment plugin out of a line break config with the style attribute', () => {
+    const config = buildConfig({enterMode: 'br', attributes: ['style'], tags: ['strong']});
+
+    expect(config.toolbar).toEqual(['bold']);
+    expect(config.removePlugins).toEqual([Alignment]);
 });
 
 test('Load all plugins of the default config', () => {
