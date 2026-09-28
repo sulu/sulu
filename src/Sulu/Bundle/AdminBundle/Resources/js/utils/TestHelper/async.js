@@ -6,14 +6,10 @@ type Deferred<T> = {|
 |};
 
 function createDeferred<T>(): Deferred<T> {
-    let resolve;
+    let resolve: (value: T) => void = () => {};
     const promise = new Promise((promiseResolve) => {
         resolve = promiseResolve;
     });
-
-    if (!resolve) {
-        throw new Error('Deferred promise resolver was not initialized');
-    }
 
     return {promise, resolve};
 }
