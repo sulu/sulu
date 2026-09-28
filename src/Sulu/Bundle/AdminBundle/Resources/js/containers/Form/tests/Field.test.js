@@ -396,6 +396,22 @@ test('Call onFinish callback after editing the field has finished', () => {
     expect(finishSpy).toHaveBeenCalledWith('/block/0/test', '/test');
 });
 
+test('Call onFinish callback with subDataPath and subSchemaPath when a nested field has finished being edited', () => {
+    const finishSpy = jest.fn();
+    renderField({
+        dataPath: '/block/0/test',
+        name: 'test',
+        onFinish: finishSpy,
+        schema: {label: 'label', type: 'text'},
+        schemaPath: '/test',
+    });
+
+    getFieldTypeProps().onFinish('/block/0/test/nested', '/test/nested');
+
+    expect(finishSpy).toHaveBeenCalledWith('/block/0/test/nested', '/test/nested');
+    expect(finishSpy).toHaveBeenCalledWith('/block/0/test', '/test');
+});
+
 test('Call onSuccess callback when field calls onSuccess', () => {
     const successSpy = jest.fn();
     renderField({
