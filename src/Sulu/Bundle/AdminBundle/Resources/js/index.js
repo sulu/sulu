@@ -33,6 +33,7 @@ import List, {
 } from './views/List';
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
+import CKEditor5Container from './containers/CKEditor5';
 import {
     ArrayFieldTransformer,
     BooleanFieldFilterType,
@@ -384,6 +385,7 @@ function processConfig(config: Object) {
     smartContentConfigStore.setConfig(config.smartContent);
     CollaborationStore.enabled = config.collaborationEnabled;
     CollaborationStore.interval = config.collaborationInterval;
+    CKEditor5Container.textPartLanguages = config.textPartLanguages;
 }
 
 function startAdmin() {

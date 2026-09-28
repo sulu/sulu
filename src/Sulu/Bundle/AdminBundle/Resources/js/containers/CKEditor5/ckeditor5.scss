@@ -240,6 +240,11 @@ $textEditorUnpublishedLinkColor: $gold;
         /* stylelint-enable */
     }
 
+    .ck-content .sulu-text-part-language {
+        background-color: $textEditorLightAccentColor;
+        border-radius: $textEditorBorderRadius;
+    }
+
     .ck-preview-button {
         .ck-button__label {
             cursor: pointer !important;

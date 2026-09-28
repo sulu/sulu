@@ -39,6 +39,7 @@ import SingleAutoComplete from './SingleAutoComplete';
 import SingleListOverlay from './SingleListOverlay';
 import SingleSelection from './SingleSelection';
 import TextEditor, {textEditorRegistry} from './TextEditor';
+import blockingOverlayRegistry from './Application/registries/blockingOverlayRegistry';
 import {linkTypeRegistry} from './Link';
 import type {FormStoreInterface, Schema, SchemaOption} from './Form/types';
 import type {ViewProps} from './ViewRenderer';
@@ -57,6 +58,7 @@ export type {
 export {
     AbstractAdapter,
     AbstractFieldFilterType,
+    blockingOverlayRegistry,
     blockPreviewTransformerRegistry,
     ckeditorConfigRegistry,
     ckeditorPluginRegistry,
