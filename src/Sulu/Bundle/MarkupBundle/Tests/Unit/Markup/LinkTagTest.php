@@ -381,6 +381,27 @@ class LinkTagTest extends TestCase
         );
     }
 
+    public function testParseAllWithInvalidUtf8InHref(): void
+    {
+        // without ENT_SUBSTITUTE htmlspecialchars() returns an empty string here, and the empty
+        // href is then dropped from the attributes, leaving a link that points nowhere
+        $href = "123-123-123#a\xC3(b";
+        $tag = '<sulu-link href="' . $href . '" provider="article">Test-Content</sulu-link>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'provider' => 'article', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => "<a href=\"http://sulu.lo/de/test#a\u{FFFD}(b\">Test-Content</a>"],
+            $result
+        );
+    }
+
     public function testParseAllMultipleTags(): void
     {
         $this->providers['article']->preload(['123-123-123', '312-312-312'], 'de', true)
