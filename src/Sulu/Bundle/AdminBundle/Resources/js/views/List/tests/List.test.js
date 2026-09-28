@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {act, render, screen, within} from '@testing-library/react';
+import {act, fireEvent, render, screen, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
 import TableAdapter from '../../../containers/List/adapters/TableAdapter';
@@ -2050,7 +2050,8 @@ test('Export method should be called when the export-button is pressed', async()
 
     await user.click(screen.getByRole('button', {name: /Export/}));
 
-    await user.click(screen.getByRole('button', {name: 'Export'}));
+    const confirmButton = screen.getByRole('button', {name: 'Export'});
+    await user.click(confirmButton);
     expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('list', 'test', {
         _format: 'csv',
         locale: undefined,
@@ -2063,4 +2064,7 @@ test('Export method should be called when the export-button is pressed', async()
     expect(window.location.assign).toHaveBeenCalledWith(
         'testfile.csv?locale=en&flat=true&delimiter=%3B&escape=%5C&enclosure=%22&newLine=%5Cn'
     );
+
+    fireEvent.transitionEnd(confirmButton.closest('.container'));
+    expect(screen.queryByRole('button', {name: 'Export'})).not.toBeInTheDocument();
 });
