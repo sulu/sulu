@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event';
 import ResourceTabs from '../ResourceTabs';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
-import {createTestRef, mockResourceStoreImplementation} from '../../../utils/TestHelper';
+import {createTestRef} from '../../../utils/TestHelper';
 
 jest.mock('debounce', () => jest.fn((callback) => callback));
 jest.mock('../../../components/Loader', () => () => 'loader');
@@ -54,7 +54,8 @@ beforeEach(() => {
 });
 
 function mockResourceStore(implementation) {
-    mockResourceStoreImplementation(ResourceStore, function(...args) {
+    ResourceStore.mockImplementation(function(...args) {
+        this.destroy = jest.fn();
         implementation.apply(this, args);
         resourceStoreInstances.push(this);
     });

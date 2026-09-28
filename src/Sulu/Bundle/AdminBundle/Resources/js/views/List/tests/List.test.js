@@ -6,11 +6,7 @@ import {observable} from 'mobx';
 import TableAdapter from '../../../containers/List/adapters/TableAdapter';
 import listFieldTransformRegistry from '../../../containers/List/registries/listFieldTransformerRegistry';
 import StringFieldTransformer from '../../../containers/List/fieldTransformers/StringFieldTransformer';
-import {
-    createDeferred,
-    createListStoreMock as mockCreateListStoreMock,
-    mockResizeObserver,
-} from '../../../utils/TestHelper';
+import {createDeferred, mockResizeObserver} from '../../../utils/TestHelper';
 import ResourceStore from '../../../stores/ResourceStore';
 
 let mockListContainer;
@@ -90,17 +86,81 @@ jest.mock('../../../stores/userStore', () => ({
 jest.mock(
     '../../../containers/List/stores/ListStore',
     () => jest.fn(function(resourceKey, listKey, userSettingsKey, observableOptions, options, metadataOptions) {
-        mockCreateListStoreMock(
-            resourceKey,
-            listKey,
-            userSettingsKey,
-            observableOptions,
-            options,
-            metadataOptions,
-            {},
-            this
-        );
-        this.selectionIds = require('mobx').observable([]);
+        const {extendObservable, observable} = require('mobx');
+
+        this.resourceKey = resourceKey;
+        this.listKey = listKey;
+        this.userSettingsKey = userSettingsKey;
+        this.observableOptions = observableOptions;
+        this.options = options;
+        this.metadataOptions = metadataOptions;
+        this.filterOptions = {
+            get: jest.fn().mockReturnValue({}),
+        };
+        this.loading = false;
+        this.pageCount = 3;
+        this.active = {
+            get: jest.fn(),
+        };
+        this.sortColumn = {
+            get: jest.fn(),
+        };
+        this.sortOrder = {
+            get: jest.fn(),
+        };
+        this.searchTerm = {
+            get: jest.fn(),
+        };
+        this.limit = {
+            get: jest.fn().mockReturnValue(10),
+        };
+        this.setLimit = jest.fn();
+        this.updateLoadingStrategy = jest.fn();
+        this.updateStructureStrategy = jest.fn();
+        this.data = [
+            {
+                id: 1,
+                title: 'Title 1',
+                description: 'Description 1',
+            },
+            {
+                id: 2,
+                title: 'Title 2',
+                description: 'Description 2',
+            },
+        ];
+        this.visibleItems = this.data;
+        this.selections = [];
+        this.selectionIds = observable([]);
+        this.deleteSelection = jest.fn();
+        this.getPage = jest.fn().mockReturnValue(2);
+        this.userSchema = {
+            title: {
+                type: 'string',
+                sortable: true,
+                visibility: 'no',
+                label: 'Title',
+            },
+            description: {
+                type: 'string',
+                sortable: true,
+                visibility: 'yes',
+                label: 'Description',
+            },
+        };
+        this.filterQueryOption = {};
+        this.destroy = jest.fn();
+        this.reset = jest.fn();
+        this.reload = jest.fn();
+        this.clearSelection = jest.fn();
+        this.remove = jest.fn();
+        this.moveSelection = jest.fn();
+
+        extendObservable(this, {
+            moving: false,
+            movingSelection: false,
+        });
+
         mockListStores.push(this);
     })
 );

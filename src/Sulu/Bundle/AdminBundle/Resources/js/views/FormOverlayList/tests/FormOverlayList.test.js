@@ -9,7 +9,7 @@ import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
 import Router, {Route} from '../../../services/Router';
 import FormOverlay from '../../../containers/FormOverlay';
-import {createTestRef, getMockProps} from '../../../utils/TestHelper';
+import {createTestRef} from '../../../utils/TestHelper';
 
 const React = mockReact;
 let mockListReload;
@@ -54,9 +54,8 @@ jest.mock('../../../containers/Form/Form', () => class FormMock extends mockReac
 
 jest.mock('../../../containers/FormOverlay', () => {
     const React = require('react');
-    const {createComponentMock} = require('../../../utils/TestHelper/componentMocks');
 
-    return createComponentMock((props) => (
+    return jest.fn((props) => (
         <div>
             <button onClick={props.onClose} type="button">close-overlay</button>
             <button onClick={props.onConfirm} type="button">confirm-overlay</button>
@@ -84,6 +83,10 @@ jest.mock('../../../containers/Form/stores/ResourceFormStore', () => jest.fn(
         };
     }
 ));
+
+function getFormOverlayProps() {
+    return (FormOverlay: any).mock.lastCall[0];
+}
 
 beforeEach(() => {
     mockListReload = jest.fn();
@@ -122,7 +125,7 @@ test('View should render with opened overlay', async() => {
 
     await user.click(screen.getByRole('button', {name: 'add-item'}));
 
-    expect(getMockProps(FormOverlay).open).toEqual(true);
+    expect(getFormOverlayProps().open).toEqual(true);
 });
 
 test('Should pass correct props to List view', () => {
@@ -289,7 +292,7 @@ test('Should open FormOverlay with correct props when List fires the item-add ca
     render(<FormOverlayList route={route} router={router} />);
     await user.click(screen.getByRole('button', {name: 'add-item'}));
 
-    expect(getMockProps(FormOverlay)).toEqual(expect.objectContaining({
+    expect(getFormOverlayProps()).toEqual(expect.objectContaining({
         confirmText: 'sulu_admin.save',
         open: true,
         router,
@@ -313,7 +316,7 @@ test('Should open FormOverlay with correct props when List fires the item-click 
     render(<FormOverlayList route={route} router={router} />);
     await user.click(screen.getByRole('button', {name: 'click-item'}));
 
-    expect(getMockProps(FormOverlay)).toEqual(expect.objectContaining({
+    expect(getFormOverlayProps()).toEqual(expect.objectContaining({
         confirmText: 'sulu_admin.save',
         formStore: expect.objectContaining({id: 'item-id'}),
         open: true,
