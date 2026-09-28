@@ -25,7 +25,8 @@ use Symfony\Component\Workflow\TransitionBlocker;
 
 /**
  * Every write applies `edit`, so this guard refuses them while an open request covers the content.
- * A preview persists nothing, so it passes.
+ * Registered in the admin context only, so website writes are not held. Publishing, rejecting and
+ * cancelling never apply `edit`, so they pass. A preview persists nothing, so it passes too.
  *
  * @final
  *
