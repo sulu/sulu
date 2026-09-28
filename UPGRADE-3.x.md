@@ -39,6 +39,18 @@ and `extension` are seeded before any resolver runs, so a `[root]` resolver cann
 any priority. Two resolvers returning the same `type` are not rejected; the later one replaces the
 earlier, as before this release.
 
+### Content admin API routes
+
+The review overlay approves, rejects, retries and cancels through routes the content bundle ships.
+Without them the admin sends no request at all and only reports that the request could not be
+updated. Import them in `config/routes/sulu_admin.yaml`:
+
+```yaml
+sulu_content_api:
+    resource: "@SuluContentBundle/config/routing_admin_api.yaml"
+    prefix: /admin/api
+```
+
 ### New workflow transition request tables
 
 The review flow stores its requests in `ct_workflow_transition_requests` and every verdict on them,
