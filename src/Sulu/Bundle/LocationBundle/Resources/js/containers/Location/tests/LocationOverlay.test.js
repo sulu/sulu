@@ -418,3 +418,116 @@ test('Should call onConfirm callback when the Overlay is confirmed after reset',
 
     expect(confirmSpy).toHaveBeenCalledWith(null);
 });
+
+test('Should pass correct props to the map, marker and input fields after input fields are changed', async() => {
+    const user = userEvent.setup();
+    renderLocationOverlay();
+
+    const mockedMap = {setView: jest.fn(), on: jest.fn()};
+    act(() => {
+        getLastMapContainerProps().whenCreated(mockedMap);
+    });
+
+    await user.type(getNumberInputs()[0], '10');
+    await user.type(getNumberInputs()[1], '20');
+    await user.type(getNumberInputs()[2], '2');
+    await user.type(getTextInputs()[0], 'new-title');
+    await user.type(getTextInputs()[1], 'new-street');
+    await user.type(getTextInputs()[2], 'new-number');
+    await user.type(getTextInputs()[3], 'new-code');
+    await user.type(getTextInputs()[4], 'new-town');
+    await user.type(getTextInputs()[5], 'new-country');
+
+    expect(getNumberInputs()[0]).toHaveValue(10);
+    expect(getNumberInputs()[1]).toHaveValue(20);
+    expect(getNumberInputs()[2]).toHaveValue(12);
+    expect(getTextInputs()[0]).toHaveValue('new-title');
+    expect(getTextInputs()[1]).toHaveValue('new-street');
+    expect(getTextInputs()[2]).toHaveValue('new-number');
+    expect(getTextInputs()[3]).toHaveValue('new-code');
+    expect(getTextInputs()[4]).toHaveValue('new-town');
+    expect(getTextInputs()[5]).toHaveValue('new-country');
+
+    expect(mockedMap.setView).toHaveBeenCalledWith([10, 20], 12);
+    expect(getLastMarkerProps().position).toEqual([10, 20]);
+});
+
+test('Should call onConfirm callback when the Overlay is confirmed after input fields are changed', async() => {
+    const user = userEvent.setup();
+    const confirmSpy = jest.fn();
+    renderLocationOverlay({onConfirm: confirmSpy});
+
+    await user.type(getNumberInputs()[0], '10');
+    await user.type(getNumberInputs()[1], '20');
+    await user.type(getNumberInputs()[2], '2');
+    await user.type(getTextInputs()[0], 'new-title');
+    await user.type(getTextInputs()[1], 'new-street');
+    await user.type(getTextInputs()[2], 'new-number');
+    await user.type(getTextInputs()[3], 'new-code');
+    await user.type(getTextInputs()[4], 'new-town');
+    await user.type(getTextInputs()[5], 'new-country');
+    await user.click(screen.getByRole('button', {name: 'confirm overlay'}));
+
+    expect(confirmSpy).toHaveBeenCalledWith(expect.objectContaining({
+        code: 'new-code',
+        country: 'new-country',
+        lat: 10,
+        long: 20,
+        number: 'new-number',
+        street: 'new-street',
+        title: 'new-title',
+        town: 'new-town',
+        zoom: 12,
+    }));
+});
+
+test('Should call given onClose callback when onClose callback of Overlay is fired', () => {
+    const closeSpy = jest.fn();
+    renderLocationOverlay({onClose: closeSpy});
+
+    mockOverlayProps.onClose();
+
+    expect(closeSpy).toHaveBeenCalledWith();
+});
+
+test('Should enable confirm button if longitude and latitude are both not set or both set', async() => {
+    const user = userEvent.setup();
+
+    let view = renderLocationOverlay();
+    expect(mockOverlayProps.confirmDisabled).toEqual(false);
+    view.unmount();
+
+    view = renderLocationOverlay();
+    await user.type(getNumberInputs()[0], '11');
+    expect(mockOverlayProps.confirmDisabled).toEqual(true);
+    view.unmount();
+
+    view = renderLocationOverlay();
+    await user.type(getNumberInputs()[1], '11');
+    expect(mockOverlayProps.confirmDisabled).toEqual(true);
+    view.unmount();
+
+    view = renderLocationOverlay();
+    await user.type(getNumberInputs()[0], '11');
+    await user.type(getNumberInputs()[1], '11');
+    expect(mockOverlayProps.confirmDisabled).toEqual(false);
+    view.unmount();
+
+    view = renderLocationOverlay();
+    await user.type(getNumberInputs()[0], '0');
+    await user.type(getNumberInputs()[1], '11');
+    expect(mockOverlayProps.confirmDisabled).toEqual(false);
+    view.unmount();
+
+    view = renderLocationOverlay();
+    await user.type(getNumberInputs()[0], '11');
+    await user.type(getNumberInputs()[1], '0');
+    expect(mockOverlayProps.confirmDisabled).toEqual(false);
+    view.unmount();
+
+    view = renderLocationOverlay();
+    await user.type(getNumberInputs()[0], '0');
+    await user.type(getNumberInputs()[1], '0');
+    expect(mockOverlayProps.confirmDisabled).toEqual(false);
+    view.unmount();
+});
