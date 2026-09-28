@@ -298,5 +298,6 @@
     "sulu_admin.choose_attributes": "Choose attributes",
     "sulu_admin.attribute_count": "{count} {count, plural, =1 {attribute} other {attributes}}",
     "sulu_admin.filter_attributes": "Filter attributes...",
-    "sulu_admin.hide_empty_attributes": "Hide empty attributes"
+    "sulu_admin.hide_empty_attributes": "Hide empty attributes",
+    "sulu_admin.text_part_language_marker": "Language: {language}"
 }

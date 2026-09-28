@@ -167,6 +167,10 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_admin.collaboration_interval', $config['collaboration']['interval']);
         $container->setParameter('sulu_admin.collaboration_threshold', $config['collaboration']['threshold']);
 
+        /** @var array{text_part_languages: list<string>} $ckeditorConfig */
+        $ckeditorConfig = $config['ckeditor'];
+        $container->setParameter('sulu_admin.ckeditor_text_part_languages', $ckeditorConfig['text_part_languages']);
+
         $container->setParameter('sulu_admin.forms.directories', $config['forms']['directories'] ?? []);
         $container->setParameter('sulu_admin.lists.directories', $config['lists']['directories'] ?? []);
         $container->setParameter('sulu_admin.templates.configuration', $config['templates']);

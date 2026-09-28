@@ -24,6 +24,7 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,6 +44,7 @@ class AdminController
      * @param array<string> $locales
      * @param array<string> $translations
      * @param iterable<SmartContentProviderInterface> $smartContentProviders
+     * @param array<string> $textPartLanguages
      */
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
@@ -72,6 +74,7 @@ class AdminController
         private ?string $passwordPattern = null,
         private ?string $passwordInfoTranslationKey = null,
         private bool $hasSingleSignOnProvider = false,
+        private array $textPartLanguages = [],
     ) {
     }
 
@@ -123,11 +126,13 @@ class AdminController
         $locale = $user->getLocale();
         $contact = $this->contactManager->getById($user->getContact()->getId(), $locale);
 
+        $localizations = $this->localizationManager->getLocalizations();
+
         $config = [
             'sulu_admin' => [
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
-                'localizations' => \array_values($this->localizationManager->getLocalizations()),
+                'localizations' => \array_values($localizations),
                 'navigation' => \array_map(function(NavigationItem $navigationItem) {
                     return $navigationItem->toArray();
                 }, \array_values($this->navigationRegistry->getNavigationItems())),
@@ -140,6 +145,7 @@ class AdminController
                 'contact' => $contact,
                 'collaborationEnabled' => $this->collaborationEnabled,
                 'collaborationInterval' => $this->collaborationInterval * 1000,
+                'textPartLanguages' => $this->getTextPartLanguages($localizations),
             ],
         ];
 
@@ -208,5 +214,22 @@ class AdminController
         }
 
         return $response;
+    }
+
+    /**
+     * @param array<Localization> $localizations
+     *
+     * @return array<string>
+     */
+    private function getTextPartLanguages(array $localizations): array
+    {
+        if ($this->textPartLanguages) {
+            return \array_values($this->textPartLanguages);
+        }
+
+        return \array_values(\array_unique(\array_map(
+            fn (Localization $localization) => \strtolower($localization->getLanguage()),
+            \array_values($localizations)
+        )));
     }
 }

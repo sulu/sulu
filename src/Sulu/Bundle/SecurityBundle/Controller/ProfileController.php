@@ -20,11 +20,13 @@ use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
+use Sulu\Bundle\SecurityBundle\TwoFactor\TwoFactorForceChecker;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Security\Authentication\UserSettingRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -43,6 +45,7 @@ class ProfileController
         private UserManagerInterface $userManager,
         private string $userClass,
         private string $contactClass,
+        private ?TwoFactorForceChecker $twoFactorForceChecker = null,
     ) {
     }
 
@@ -80,16 +83,30 @@ class ProfileController
         $user = $this->tokenStorage->getToken()->getUser();
         $payload = $request->getPayload();
 
+        /** @var array{method?: string|null} $twoFactorData */
+        $twoFactorData = $payload->all('twoFactor');
+        $twoFactorMethod = $twoFactorData['method'] ?? null;
+
+        // the request may change the email the force pattern matches against and may drop the
+        // two factor method, so both are validated against the state before saving: otherwise a
+        // forced user could disable the second factor, or leave the enforced pattern to do so in
+        // a later request, before anything was persisted
+        if ($this->twoFactorForceChecker?->isForced($user)) {
+            if (!$this->twoFactorForceChecker->isForcedForEmail($payload->getString('email'))) {
+                throw new AccessDeniedHttpException('Two factor authentication is forced for this user and the email can not be changed to leave the pattern it is enforced for.');
+            }
+
+            if (!$twoFactorMethod) {
+                throw new AccessDeniedHttpException('Two factor authentication is forced for this user and can not be disabled.');
+            }
+        }
+
         $this->userManager->save($this->getData($request), $payload->getString('locale'), $user->getId(), true);
 
         $user->setFirstName($payload->getString('firstName'));
         $user->setLastName($payload->getString('lastName'));
 
         if ($user instanceof TwoFactorInterface) {
-            /** @var array{method?: string|null} $twoFactorData */
-            $twoFactorData = $payload->all('twoFactor');
-            $twoFactorMethod = $twoFactorData['method'] ?? null;
-
             if ($twoFactorMethod) {
                 $twoFactor = $user->getTwoFactor();
                 if (!$twoFactor) {
