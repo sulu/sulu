@@ -68,6 +68,21 @@ class PreviewAdminTest extends TestCase
         $this->assertFalse($this->getConfigWithBundle()['audienceTargeting']);
     }
 
+    public function testAudienceTargetingWithoutSecurityChecker(): void
+    {
+        $previewAdmin = new PreviewAdmin(
+            $this->urlGenerator->reveal(),
+            200,
+            'auto',
+            ['SuluAudienceTargetingBundle' => 'Sulu\\Bundle\\AudienceTargetingBundle\\SuluAudienceTargetingBundle']
+        );
+
+        $config = $previewAdmin->getConfig();
+        $this->assertIsArray($config);
+
+        $this->assertTrue($config['audienceTargeting']);
+    }
+
     /**
      * @return array<array-key, mixed>
      */
