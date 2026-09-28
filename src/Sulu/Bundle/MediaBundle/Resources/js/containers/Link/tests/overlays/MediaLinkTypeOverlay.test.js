@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import MediaLinkTypeOverlay from '../../overlays/MediaLinkTypeOverlay';
 
 type Props = {|
@@ -10,9 +11,24 @@ type Props = {|
     onTitleChange?: ?(title: ?string) => void,
 |};
 
+const mockReact = require('react');
+
 jest.mock('sulu-admin-bundle/utils/Translator');
 
-jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(() => null));
+jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn((props) => {
+    if (!props.open) {
+        return null;
+    }
+
+    return mockReact.createElement(
+        'button',
+        {
+            onClick: () => props.onConfirm({id: 1, mimeType: 'image/jpeg', thumbnails: {}, title: 'test media'}),
+            type: 'button',
+        },
+        'select media'
+    );
+}));
 
 function renderMediaLinkTypeOverlay(props?: Props) {
     return render(
@@ -71,4 +87,30 @@ test('Render overlay with title enabled', () => {
     expect(screen.getByText(/sulu_admin\.link_url/)).toBeInTheDocument();
     expect(screen.getByText(/sulu_admin\.link_title/)).toBeInTheDocument();
     expect(screen.getByRole('textbox')).toBeInTheDocument();
+});
+
+test('Delegate only id to onHrefChange method', async() => {
+    const user = userEvent.setup();
+    const hrefChangeSpy = jest.fn();
+
+    render(
+        <MediaLinkTypeOverlay
+            href={undefined}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            onHrefChange={hrefChangeSpy}
+            open={true}
+            options={
+                {
+                    resourceKey: 'media',
+                    displayProperties: ['title'],
+                }
+            }
+        />
+    );
+
+    await user.click(screen.getByRole('button', {name: 'su-image'}));
+    await user.click(screen.getByRole('button', {name: 'select media'}));
+
+    expect(hrefChangeSpy).toHaveBeenCalledWith(1, expect.objectContaining({id: 1}));
 });
