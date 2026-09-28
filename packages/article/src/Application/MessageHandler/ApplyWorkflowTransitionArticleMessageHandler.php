@@ -11,7 +11,6 @@
 
 namespace Sulu\Article\Application\MessageHandler;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Article\Application\Message\ApplyWorkflowTransitionArticleMessage;
 use Sulu\Article\Domain\Event\ArticleWorkflowTransitionAppliedEvent;
 use Sulu\Article\Domain\Model\ArticleInterface;
@@ -30,7 +29,6 @@ final class ApplyWorkflowTransitionArticleMessageHandler
     public function __construct(
         private ArticleRepositoryInterface $articleRepository,
         private ContentWorkflowInterface $contentWorkflow,
-        private EntityManagerInterface $entityManager,
         private DomainEventCollectorInterface $domainEventCollector,
     ) {
     }
@@ -44,10 +42,6 @@ final class ApplyWorkflowTransitionArticleMessageHandler
         // The shadow source and dependent locales are only known once this locale is loaded.
         $relatedLocales = $this->resolveRelatedLocales($article, $locale);
         if ([] !== $relatedLocales) {
-            // Drop the identity-map collection (filled by a preceding ModifyArticleMessage) so the
-            // wider query re-hydrates it with all locales.
-            $this->entityManager->refresh($article);
-
             $article = $this->loadArticle($message, [$locale, ...$relatedLocales]);
         }
 
