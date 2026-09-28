@@ -47,7 +47,8 @@ function removePTags(htmlString: string): string {
         return match[1];
     }
 
-    const string = htmlString.replace(/<p>/g, '<!--p-->').replace(/<\/p>/g, '<!--/p--><br></br>');
+    // Paragraph attributes are dropped here as well, because a value without paragraphs has nothing to carry them.
+    const string = htmlString.replace(/<p(?:\s[^>]*)?>/g, '<!--p-->').replace(/<\/p>/g, '<!--/p--><br></br>');
     return replaceLast(string, '<br></br>', '');
 }
 

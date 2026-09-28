@@ -67,7 +67,9 @@ may read more than it writes, Italic also upcasts an existing `<em>`, and it may
 renders a `<figure class="table">` around the table.
 
 A key does not have to be a tag. What a plugin writes onto an existing element is configured under `attributes` and
-registered the same way: `lang` writes a `lang` attribute on a `span`, and `style` carries the alignment plugin's `text-align`:
+registered the same way. An attribute key allows the HTML attribute, and the plugins registered under it decide what
+goes into it: `lang` writes a `lang` attribute on a `span`, and under `style` Sulu registers only the alignment plugin,
+so `text-align` is the one style property the editor keeps:
 
 ```javascript static
 import {ckeditorPluginRegistry, ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
@@ -81,6 +83,22 @@ ckeditorConfigRegistry.add((config) => ({
 
 A project enables it with `attributes: {lang: true}`. Sulu registers this plugin but enables it in no shipped config,
 because marking the language of a text part produces markup the editor could not produce before.
+
+Registering another plugin under a key widens what that key keeps. With CKEditor's `GeneralHtmlSupport` registered under
+`style`, every config enabling `style` keeps all inline styles on the elements it allows, not only `text-align`:
+
+```javascript static
+import {ckeditorPluginRegistry, ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
+import {GeneralHtmlSupport} from '@ckeditor/ckeditor5-html-support';
+
+ckeditorPluginRegistry.add(GeneralHtmlSupport, 'style');
+ckeditorConfigRegistry.add(() => ({
+    htmlSupport: {allow: [{name: /^(p|h[1-6]|li|span)$/, styles: true}]},
+}), 'style');
+```
+
+A config with `enter_mode: br` stores no paragraphs, so styles on a paragraph are dropped there and the alignment plugin
+is not loaded; styles on inline elements such as a `span` are kept.
 
 The tags and attributes themselves are configured in the Symfony configuration, see the `TextEditor` container. A key
 that is enabled there but has neither a plugin nor a config registered for it is reported with a warning in the

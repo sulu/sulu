@@ -33,7 +33,8 @@ concrete editor implementation, so that the same config can drive a different ed
 * `tags`: the HTML tags the editor may produce, e.g. `a`, `strong`, `h2`, `table`. Only tags a plugin can switch
   off appear here; `p` and `br` are always available and are controlled by `enterMode`, not by `tags`.
 * `attributes`: the HTML attributes the editor may write on an element it produced, e.g. `lang`, which marks the
-  language of a text part, or `style`, which the alignment plugin writes a `text-align` into.
+  language of a text part, or `style`. Which properties go into an attribute depends on the plugins registered under
+  it; Sulu registers only the alignment plugin under `style`, see the `CKEditor5` container.
 * `enterMode`: whether the editor produces paragraphs (`p`) or line breaks (`br`).
 
 The configs are defined in the Symfony configuration and delivered to the administration interface with the rest of the

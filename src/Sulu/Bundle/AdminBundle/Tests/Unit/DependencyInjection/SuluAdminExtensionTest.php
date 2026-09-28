@@ -107,11 +107,14 @@ class SuluAdminExtensionTest extends TestCase
         $this->loadTextEditorConfigs(['teaser' => ['enter_mode' => 'br', 'tags' => ['h2' => true]]]);
     }
 
-    public function testBlockAttributeWithLineBreakEnterModeIsRejected(): void
+    public function testStyleAttributeWithLineBreakEnterModeIsAllowed(): void
     {
-        $this->expectException(InvalidConfigurationException::class);
+        // Styles on inline elements survive a line break config; the alignment plugin is left out there instead.
+        $configs = $this->loadTextEditorConfigs([
+            'teaser' => ['enter_mode' => 'br', 'tags' => ['a' => true], 'attributes' => ['style' => true]],
+        ]);
 
-        $this->loadTextEditorConfigs(['teaser' => ['enter_mode' => 'br', 'attributes' => ['style' => true]]]);
+        $this->assertSame(['style'], $configs['teaser']['attributes']);
     }
 
     public function testDisabledBlockKeyWithLineBreakEnterModeIsAllowed(): void
