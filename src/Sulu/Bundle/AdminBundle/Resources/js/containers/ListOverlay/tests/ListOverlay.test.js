@@ -133,7 +133,7 @@ test('Should pass confirmLoading and confirmDisabled flag to the Overlay', () =>
 });
 
 test('Should pass confirmLoading and negative confirmDisabled flag to the Overlay', () => {
-    renderListOverlay({
+    const {rerender} = renderListOverlay({
         confirmLoading: true,
         open: true,
         preSelectedItems: [{}],
@@ -142,6 +142,20 @@ test('Should pass confirmLoading and negative confirmDisabled flag to the Overla
 
     expect(getConfirmButton()).toBeDisabled();
     expect(getConfirmButton().querySelector('.loader')).toBeInTheDocument();
+
+    rerender(
+        <ListOverlay
+            adapter="table"
+            listStore={createListStore()}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            preSelectedItems={[{}]}
+            title="Test"
+        />
+    );
+
+    expect(getConfirmButton()).toBeEnabled();
 });
 
 test('Should call onConfirm when the confirm button is clicked', async() => {
