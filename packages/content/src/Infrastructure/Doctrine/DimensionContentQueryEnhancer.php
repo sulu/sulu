@@ -15,8 +15,11 @@ namespace Sulu\Content\Infrastructure\Doctrine;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\PersistentCollection;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\TaxonomyInterface;
@@ -280,6 +283,7 @@ class DimensionContentQueryEnhancer
         }
 
         $effectiveAttributes = $dimensionContentClassName::getEffectiveDimensionAttributes($dimensionAttributes);
+        $this->completeLoadedDimensionContents($queryBuilder, $dimensionContentClassName, $effectiveAttributes);
         $queryBuilder->addCriteria($this->getAttributesCriteria('dimensionContent', $effectiveAttributes));
         $queryBuilder->addSelect('dimensionContent');
 
@@ -323,6 +327,87 @@ class DimensionContentQueryEnhancer
                     ->addSelect('route');
             }
         }
+    }
+
+    /**
+     * Doctrine never refills an initialized collection, so entities loaded before would miss the rows of this dimension.
+     *
+     * @template T of DimensionContentInterface
+     *
+     * @param class-string<T> $dimensionContentClassName
+     * @param mixed[] $effectiveAttributes
+     */
+    private function completeLoadedDimensionContents(
+        QueryBuilder $queryBuilder,
+        string $dimensionContentClassName,
+        array $effectiveAttributes,
+    ): void {
+        $entityManager = $queryBuilder->getEntityManager();
+        $classMetadata = $entityManager->getClassMetadata($queryBuilder->getRootEntities()[0]);
+
+        $incompleteEntities = \array_filter(
+            $entityManager->getUnitOfWork()->getIdentityMap()[$classMetadata->rootEntityName] ?? [],
+            fn (object $entity): bool => $this->isMissingDimensionContents($entityManager, $entity, $effectiveAttributes),
+        );
+        if ([] === $incompleteEntities) {
+            return;
+        }
+
+        /** @var T[] $dimensionContents */
+        $dimensionContents = $entityManager->createQueryBuilder()
+            ->select('dimensionContent')
+            ->from($dimensionContentClassName, 'dimensionContent')
+            ->where('dimensionContent.' . $classMetadata->getAssociationMappedByTargetField('dimensionContents') . ' IN (:entities)')
+            ->setParameter('entities', \array_values($incompleteEntities))
+            ->addCriteria($this->getAttributesCriteria('dimensionContent', $effectiveAttributes))
+            ->getQuery()
+            ->getResult();
+
+        foreach ($dimensionContents as $dimensionContent) {
+            /** @var PersistentCollection<int, T> $loadedDimensionContents */
+            $loadedDimensionContents = $dimensionContent->getResource()->getDimensionContents();
+            if (!$loadedDimensionContents->contains($dimensionContent)) {
+                // Rows from the database are no change, a dirty collection would make flush open an empty transaction.
+                $isDirty = $loadedDimensionContents->isDirty();
+                $loadedDimensionContents->add($dimensionContent);
+                $loadedDimensionContents->setDirty($isDirty);
+            }
+        }
+    }
+
+    /**
+     * @param mixed[] $effectiveAttributes
+     */
+    private function isMissingDimensionContents(EntityManagerInterface $entityManager, object $entity, array $effectiveAttributes): bool
+    {
+        // Reading an uninitialized proxy would load it.
+        if (!$entity instanceof ContentRichEntityInterface || $entityManager->getUnitOfWork()->isUninitializedObject($entity)) {
+            return false;
+        }
+
+        $dimensionContents = $entity->getDimensionContents();
+        if (!$dimensionContents instanceof PersistentCollection || !$dimensionContents->isInitialized()) {
+            return false;
+        }
+
+        foreach ((array) $effectiveAttributes['locale'] as $locale) {
+            foreach ((array) $effectiveAttributes['stage'] as $stage) {
+                foreach ((array) $effectiveAttributes['version'] as $version) {
+                    $hasDimensionContent = $dimensionContents->exists(
+                        static fn (int|string $key, mixed $dimensionContent): bool => $dimensionContent instanceof DimensionContentInterface
+                            && $locale === $dimensionContent->getLocale()
+                            && $stage === $dimensionContent->getStage()
+                            && $version === $dimensionContent->getVersion(),
+                    );
+
+                    if (!$hasDimensionContent) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
