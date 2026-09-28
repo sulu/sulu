@@ -41,9 +41,7 @@ earlier, as before this release.
 
 ### Content admin API routes
 
-The review overlay approves, rejects, retries and cancels through routes the content bundle ships.
-Without them the admin sends no request at all and only reports that the request could not be
-updated. Import them in `config/routes/sulu_admin.yaml`:
+The review overlay needs them. Add to `config/routes/sulu_admin.yaml`:
 
 ```yaml
 sulu_content_api:
