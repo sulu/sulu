@@ -1,5 +1,5 @@
 // @flow
-/* eslint-disable react/jsx-no-bind, testing-library/prefer-explicit-assert */
+/* eslint-disable react/jsx-no-bind */
 import React from 'react';
 import {act, render, screen, waitFor, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -176,6 +176,7 @@ jest.mock('../stores/ListStore', () => {
                 label: 'Title',
             },
         };
+        // eslint-disable-next-line testing-library/prefer-explicit-assert
         this.findById = jest.fn();
         this.select = jest.fn();
         this.deselect = jest.fn();
