@@ -4,9 +4,12 @@ import {act, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {Router} from 'sulu-admin-bundle/services';
 import {userStore} from 'sulu-admin-bundle/stores';
+import {initializeJexl} from 'sulu-admin-bundle/utils/jexl';
 import {createRoute, mockResizeObserver} from 'sulu-admin-bundle/utils/TestHelper';
 import WebspaceTabs from '../WebspaceTabs';
 import webspaceStore from '../../../stores/webspaceStore';
+
+initializeJexl();
 
 jest.mock('debounce', () => jest.fn((callback) => callback));
 
@@ -103,6 +106,62 @@ test('Should bind router attributes and dispose the updateRouteHook and webspace
     const webspaceKey = router.bind.mock.calls[0][1];
     act(() => webspaceKey.set('sulu_blog'));
     expect(userStore.setPersistentSetting).not.toHaveBeenCalled();
+});
+
+test('Show only the tabs whose webspaceCondition matches the selected webspace', () => {
+    const router = new Router({});
+
+    const pagesRoute = createRoute({tabTitle: 'Pages'}, {}, [], {name: 'pages'});
+    const settingsRoute = createRoute(
+        {
+            tabTitle: 'Settings',
+            webspaceCondition: 'webspaceSettingsForm && settingsPermissions && settingsPermissions.view',
+        },
+        {},
+        [],
+        {name: 'settings'}
+    );
+    const route = createRoute({}, {}, [pagesRoute, settingsRoute], {
+        name: 'webspace_tabs',
+        path: '/webspace_tabs',
+        type: 'webspace_tabs',
+    });
+
+    webspaceStore.getWebspace.mockImplementation((key) => {
+        if (key === 'sulu') {
+            return {key: 'sulu', localizations: [], webspaceSettingsForm: 'footer', settingsPermissions: {view: true}};
+        }
+
+        if (key === 'sulu_blog') {
+            return {key: 'sulu_blog', localizations: [], webspaceSettingsForm: null};
+        }
+
+        if (key === 'sulu_shop') {
+            return {
+                key: 'sulu_shop',
+                localizations: [],
+                webspaceSettingsForm: 'footer',
+                settingsPermissions: {view: false},
+            };
+        }
+    });
+
+    render(<WebspaceTabs isRootView={true} route={route} router={router}>{() => null}</WebspaceTabs>);
+
+    const webspaceKey = router.bind.mock.calls[0][1];
+
+    act(() => webspaceKey.set('sulu'));
+    expect(screen.getByRole('button', {name: 'Pages'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'Settings'})).toBeInTheDocument();
+
+    act(() => webspaceKey.set('sulu_blog'));
+    expect(screen.getByRole('button', {name: 'Pages'})).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'Settings'})).not.toBeInTheDocument();
+
+    // the settings have a permission of their own, so the tab is hidden when it is not granted for this webspace
+    act(() => webspaceKey.set('sulu_shop'));
+    expect(screen.getByRole('button', {name: 'Pages'})).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'Settings'})).not.toBeInTheDocument();
 });
 
 test('Save and update webspace when select value is changed', async() => {

@@ -147,6 +147,15 @@ The `CKEditor5` container component replaced its `formats` and `options` props w
 resolved text editor config. Applications that render the component directly, rather than through the `TextEditor`
 container, have to pass it.
 
+### Webspace settings tables
+
+The webspace settings are stored in the new `pa_webspace_settings` and `pa_webspace_setting_contents` tables.
+Run the new migration to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
 ### Review permission
 
 `PermissionTypes::REVIEW` is new and no existing role carries its bit, so approving and rejecting is
