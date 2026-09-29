@@ -1,54 +1,72 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import CollectionFormOverlay from '../CollectionFormOverlay';
 
+let mockResourceFormStoreInstances = [];
+
 jest.mock('sulu-admin-bundle/services/initializer', () => jest.fn());
 
-jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn());
+jest.mock('sulu-admin-bundle/containers/Form/MissingTypeDialog', () => jest.fn(() => null));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function() {
+    this.data = {};
+    this.destroy = jest.fn();
+    this.schema = {};
+    this.types = {};
+    this.validate = jest.fn(() => true);
+    mockResourceFormStoreInstances.push(this);
 }));
+
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn());
 
-test('Render as overlay', () => {
-    const resourceStore = new ResourceStore('test');
-    const collectionFormOverlay = shallow(
+beforeEach(() => {
+    mockResourceFormStoreInstances = [];
+});
+
+function renderCollectionFormOverlay(props: Object = {}) {
+    return render(
         <CollectionFormOverlay
             onClose={jest.fn()}
             onConfirm={jest.fn()}
             operationType={null}
             overlayType="overlay"
-            resourceStore={resourceStore}
+            resourceStore={new ResourceStore('test')}
+            {...props}
         />
     );
+}
 
-    expect(collectionFormOverlay.find('Overlay')).toHaveLength(1);
-    expect(collectionFormOverlay.find('Dialog')).toHaveLength(0);
+function getLatestResourceFormStore() {
+    const store = mockResourceFormStoreInstances[mockResourceFormStoreInstances.length - 1];
+
+    if (!store) {
+        throw new Error('Expected ResourceFormStore instance');
+    }
+
+    return store;
+}
+
+test('Render as overlay', () => {
+    renderCollectionFormOverlay({operationType: 'create'});
+
+    expect(screen.getByLabelText('su-times')).toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.cancel')).not.toBeInTheDocument();
 });
 
 test('Render as dialog', () => {
-    const resourceStore = new ResourceStore('test');
-    const collectionFormOverlay = shallow(
-        <CollectionFormOverlay
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            operationType={null}
-            overlayType="dialog"
-            resourceStore={resourceStore}
-        />
-    );
+    renderCollectionFormOverlay({operationType: 'create', overlayType: 'dialog'});
 
-    expect(collectionFormOverlay.find('Overlay')).toHaveLength(0);
-    expect(collectionFormOverlay.find('Dialog')).toHaveLength(1);
+    expect(screen.queryByLabelText('su-times')).not.toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.cancel')).toBeInTheDocument();
 });
 
 test('Keep title when closing overlay until new overlay opens', () => {
     const resourceStore = new ResourceStore('test');
-    const collectionFormOverlay = shallow(
+    const {rerender} = render(
         <CollectionFormOverlay
             onClose={jest.fn()}
             onConfirm={jest.fn()}
@@ -58,47 +76,57 @@ test('Keep title when closing overlay until new overlay opens', () => {
         />
     );
 
-    collectionFormOverlay.setProps({resourceStore, operationType: 'create'});
-    expect(collectionFormOverlay.find('Overlay').props()).toEqual(expect.objectContaining({
-        open: true,
-        title: 'sulu_media.add_collection',
-    }));
+    rerender(
+        <CollectionFormOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            operationType="create"
+            overlayType="overlay"
+            resourceStore={resourceStore}
+        />
+    );
+    expect(screen.getByText('sulu_media.add_collection')).toBeInTheDocument();
 
-    collectionFormOverlay.setProps({resourceStore, operationType: null});
-    expect(collectionFormOverlay.find('Overlay').props()).toEqual(expect.objectContaining({
-        open: false,
-        title: 'sulu_media.add_collection',
-    }));
+    rerender(
+        <CollectionFormOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            operationType={null}
+            overlayType="overlay"
+            resourceStore={resourceStore}
+        />
+    );
+    expect(screen.getByText('sulu_media.add_collection')).toBeInTheDocument();
 
-    collectionFormOverlay.setProps({resourceStore, operationType: 'update'});
-    expect(collectionFormOverlay.find('Overlay').props()).toEqual(expect.objectContaining({
-        open: true,
-        title: 'sulu_media.edit_collection',
-    }));
+    rerender(
+        <CollectionFormOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            operationType="update"
+            overlayType="overlay"
+            resourceStore={resourceStore}
+        />
+    );
+    expect(screen.getByText('sulu_media.edit_collection')).toBeInTheDocument();
 
-    collectionFormOverlay.setProps({resourceStore, operationType: null});
-    expect(collectionFormOverlay.find('Overlay').props()).toEqual(expect.objectContaining({
-        open: false,
-        title: 'sulu_media.edit_collection',
-    }));
+    rerender(
+        <CollectionFormOverlay
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            operationType={null}
+            overlayType="overlay"
+            resourceStore={resourceStore}
+        />
+    );
+    expect(screen.getByText('sulu_media.edit_collection')).toBeInTheDocument();
 });
 
 test('Call destroy of ResourceFormStore when unmounted', () => {
-    const resourceStore = new ResourceStore('test');
-    const collectionFormOverlay = mount(
-        <CollectionFormOverlay
-            onClose={jest.fn()}
-            onConfirm={jest.fn()}
-            operationType={null}
-            overlayType="overlay"
-            resourceStore={resourceStore}
-        />
-    );
-
-    const resourceFormStore = collectionFormOverlay.instance().formStore;
+    const {unmount} = renderCollectionFormOverlay();
+    const resourceFormStore = getLatestResourceFormStore();
     resourceFormStore.destroy = jest.fn();
 
-    collectionFormOverlay.unmount();
+    unmount();
 
     expect(resourceFormStore.destroy).toHaveBeenCalledWith();
 });

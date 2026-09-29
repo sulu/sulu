@@ -1,17 +1,14 @@
 // @flow
-import {mount} from 'enzyme';
 import React from 'react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import DeleteReferencedResourceDialog from '../DeleteReferencedResourceDialog';
 import type {ReferencingResourcesData} from '../../../types';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
-test('The component should render', () => {
-    const onConfirm = jest.fn();
-    const onCancel = jest.fn();
-    const referencingResourcesData: ReferencingResourcesData = {
+function createReferencingResourcesData(): ReferencingResourcesData {
+    return {
         referencingResources: [
             {id: 2, resourceKey: 'pages', title: 'Foo'},
             {id: 3, resourceKey: 'pages', title: 'Bar'},
@@ -22,137 +19,101 @@ test('The component should render', () => {
             resourceKey: 'pages',
         },
     };
+}
 
-    const view = mount(
+test('The component should render', () => {
+    const onConfirm = jest.fn();
+    const onCancel = jest.fn();
+
+    const {baseElement} = render(
         <DeleteReferencedResourceDialog
             allowDeletion={true}
             confirmLoading={false}
             onCancel={onCancel}
             onConfirm={onConfirm}
-            referencingResourcesData={referencingResourcesData}
+            referencingResourcesData={createReferencingResourcesData()}
         />
     );
 
-    expect(view.find('Dialog > Portal').at(0).render()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
 test('The component should render with loading state and deletion not allowed', () => {
     const onConfirm = jest.fn();
     const onCancel = jest.fn();
-    const referencingResourcesData: ReferencingResourcesData = {
-        referencingResources: [
-            {id: 2, resourceKey: 'pages', title: 'Foo'},
-            {id: 3, resourceKey: 'pages', title: 'Bar'},
-        ],
-        referencingResourcesCount: 2,
-        resource: {
-            id: 1,
-            resourceKey: 'pages',
-        },
-    };
 
-    const view = mount(
+    const {baseElement} = render(
         <DeleteReferencedResourceDialog
             allowDeletion={false}
             confirmLoading={true}
             onCancel={onCancel}
             onConfirm={onConfirm}
-            referencingResourcesData={referencingResourcesData}
+            referencingResourcesData={createReferencingResourcesData()}
         />
     );
 
-    expect(view.find('Dialog > Portal').at(0).render()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
-test('The component should call the confirm callback when the confirm button is clicked', () => {
+test('The component should call the confirm callback when the confirm button is clicked', async() => {
+    const user = userEvent.setup();
     const onConfirm = jest.fn();
     const onCancel = jest.fn();
-    const referencingResourcesData: ReferencingResourcesData = {
-        referencingResources: [
-            {id: 2, resourceKey: 'pages', title: 'Foo'},
-            {id: 3, resourceKey: 'pages', title: 'Bar'},
-        ],
-        referencingResourcesCount: 2,
-        resource: {
-            id: 1,
-            resourceKey: 'pages',
-        },
-    };
 
-    const view = mount(
+    render(
         <DeleteReferencedResourceDialog
             allowDeletion={true}
             confirmLoading={false}
             onCancel={onCancel}
             onConfirm={onConfirm}
-            referencingResourcesData={referencingResourcesData}
+            referencingResourcesData={createReferencingResourcesData()}
         />
     );
 
     expect(onConfirm).not.toHaveBeenCalled();
-    view.find('Button[skin="primary"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.delete'}));
     expect(onConfirm).toHaveBeenCalled();
 });
 
-test('The component should call the cancel callback when the cancel button is clicked', () => {
+test('The component should call the cancel callback when the cancel button is clicked', async() => {
+    const user = userEvent.setup();
     const onConfirm = jest.fn();
     const onCancel = jest.fn();
-    const referencingResourcesData: ReferencingResourcesData = {
-        referencingResources: [
-            {id: 2, resourceKey: 'pages', title: 'Foo'},
-            {id: 3, resourceKey: 'pages', title: 'Bar'},
-        ],
-        referencingResourcesCount: 2,
-        resource: {
-            id: 1,
-            resourceKey: 'pages',
-        },
-    };
 
-    const view = mount(
+    render(
         <DeleteReferencedResourceDialog
             allowDeletion={true}
             confirmLoading={false}
             onCancel={onCancel}
             onConfirm={onConfirm}
-            referencingResourcesData={referencingResourcesData}
+            referencingResourcesData={createReferencingResourcesData()}
         />
     );
 
     expect(onCancel).not.toHaveBeenCalled();
-    view.find('Button[skin="secondary"]').simulate('click');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.cancel'}));
     expect(onCancel).toHaveBeenCalled();
 });
 
 test(
     'The component should call the cancel callback when the confirm button is clicked while deletion is not allowed',
-    () => {
+    async() => {
+        const user = userEvent.setup();
         const onConfirm = jest.fn();
         const onCancel = jest.fn();
-        const referencingResourcesData: ReferencingResourcesData = {
-            referencingResources: [
-                {id: 2, resourceKey: 'pages', title: 'Foo'},
-                {id: 3, resourceKey: 'pages', title: 'Bar'},
-            ],
-            referencingResourcesCount: 2,
-            resource: {
-                id: 1,
-                resourceKey: 'pages',
-            },
-        };
 
-        const view = mount(
+        render(
             <DeleteReferencedResourceDialog
                 allowDeletion={false}
                 confirmLoading={false}
                 onCancel={onCancel}
                 onConfirm={onConfirm}
-                referencingResourcesData={referencingResourcesData}
+                referencingResourcesData={createReferencingResourcesData()}
             />
         );
 
         expect(onCancel).not.toHaveBeenCalled();
-        view.find('Button[skin="primary"]').simulate('click');
+        await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
         expect(onCancel).toHaveBeenCalled();
     }
 );

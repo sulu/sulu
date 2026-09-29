@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\NotMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
@@ -60,9 +62,14 @@ class SchemaMetadataProvider
                 continue;
             }
 
+            // types without a dedicated mapper produce no schema constraint, so a mandatory field would only be
+            // checked for presence and still accept an empty string; disallow "" explicitly to enforce the constraint
             yield new PropertyMetadata(
                 $itemMetadata->getName(),
+                $itemMetadata->isRequired(),
                 $itemMetadata->isRequired()
+                    ? new NotMetadata(new ConstMetadata(''))
+                    : null
             );
         }
     }

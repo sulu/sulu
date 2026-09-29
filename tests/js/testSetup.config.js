@@ -1,10 +1,6 @@
 // @flow
-import Enzyme from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import {isObservableArray, toJS} from 'mobx';
 import '@testing-library/jest-dom';
-
-Enzyme.configure({adapter: new Adapter()});
 
 function mobxAwareEqualityTester(a, b, customTesters) {
     const isAObservable = isObservableArray(a);

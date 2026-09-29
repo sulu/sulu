@@ -377,6 +377,11 @@
                 "type": "string",
                 "minLength": 1
             },
+            "formOfAddress": {
+                "not": {
+                    "const": ""
+                }
+            },
             "lastName": {
                 "type": "string",
                 "minLength": 1

@@ -29,6 +29,7 @@ export type Types = {[key: string]: Type};
 export type PropertyError = {
     keyword: string,
     parameters: {[key: string]: mixed},
+    schema?: mixed,
 };
 
 export type BlockError = Array<?{[key: string]: Error}>;

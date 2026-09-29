@@ -1,15 +1,44 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import Select from '../../fields/Select';
 
+let mockMultiSelectProps: Object = {};
+let mockOptionProps: Array<Object> = [];
+
+const mockReact = require('react');
+
 jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
+jest.mock('../../../../components/MultiSelect', () => {
+    const MultiSelectMock: any = jest.fn((props) => {
+        mockMultiSelectProps = props;
+
+        return mockReact.createElement(
+            'select',
+            {'aria-label': 'select', disabled: props.disabled, multiple: true},
+            props.children
+        );
+    });
+
+    MultiSelectMock.Option = jest.fn((props) => {
+        mockOptionProps.push(props);
+
+        return mockReact.createElement('option', {value: props.value}, props.children);
+    });
+
+    return MultiSelectMock;
+});
+
+beforeEach(() => {
+    mockMultiSelectProps = {};
+    mockOptionProps = [];
+});
 
 test('Pass props correctly to Select', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
@@ -28,7 +57,8 @@ test('Pass props correctly to Select', () => {
             ],
         },
     };
-    const select = shallow(
+
+    render(
         <Select
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -38,13 +68,13 @@ test('Pass props correctly to Select', () => {
         />
     );
 
-    expect(select.prop('values')).toEqual(['test']);
-    expect(select.prop('disabled')).toBe(true);
-    expect(select.find('Option').at(0).props()).toEqual(expect.objectContaining({
+    expect(mockMultiSelectProps.values).toEqual(['test']);
+    expect(screen.getByLabelText('select')).toBeDisabled();
+    expect(mockOptionProps[0]).toEqual(expect.objectContaining({
         value: 'mr',
         children: 'Mister',
     }));
-    expect(select.find('Option').at(1).props()).toEqual(expect.objectContaining({
+    expect(mockOptionProps[1]).toEqual(expect.objectContaining({
         value: 'ms',
         children: 'Miss',
     }));
@@ -72,13 +102,11 @@ test('Should throw an exception if defaultValue is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={(schemaOptions: any)}
-        />
-    )).toThrow(/"default_values"/);
+    expect(() => new Select(({
+        ...fieldTypeDefaultProps,
+        formInspector,
+        schemaOptions: (schemaOptions: any),
+    }: any))).toThrow(/"default_values"/);
 });
 
 test('Should throw an exception if value is of wrong type', () => {
@@ -99,13 +127,13 @@ test('Should throw an exception if value is of wrong type', () => {
         },
     };
 
-    expect(() => shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={(schemaOptions: any)}
-        />
-    )).toThrow(/"values"/);
+    const select = new Select(({
+        ...fieldTypeDefaultProps,
+        formInspector,
+        schemaOptions: (schemaOptions: any),
+    }: any));
+
+    expect(() => select.render()).toThrow(/"values"/);
 });
 
 test('Should call onChange with undefined if value is changed to an empty array', () => {
@@ -128,7 +156,7 @@ test('Should call onChange with undefined if value is changed to an empty array'
         },
     };
 
-    const select = shallow(
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -138,7 +166,7 @@ test('Should call onChange with undefined if value is changed to an empty array'
         />
     );
 
-    select.simulate('change', []);
+    mockMultiSelectProps.onChange([]);
 
     expect(changeSpy).toHaveBeenCalledWith(undefined);
     expect(finishSpy).toHaveBeenCalledWith();
@@ -164,7 +192,7 @@ test('Should call onChange with allowed values only if value contains old values
         },
     };
 
-    const select = shallow(
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -174,7 +202,7 @@ test('Should call onChange with allowed values only if value contains old values
         />
     );
 
-    select.simulate('change', ['mr', 'removed-value']);
+    mockMultiSelectProps.onChange(['mr', 'removed-value']);
 
     expect(changeSpy).toHaveBeenCalledWith(['mr']);
     expect(finishSpy).toHaveBeenCalledWith();
@@ -199,7 +227,7 @@ test('Should call onFinish callback on every onChange', () => {
         },
     };
 
-    const select = shallow(
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -208,7 +236,7 @@ test('Should call onFinish callback on every onChange', () => {
         />
     );
 
-    select.simulate('change', []);
+    mockMultiSelectProps.onChange([]);
 
     expect(finishSpy).toHaveBeenCalledWith();
 });
@@ -234,7 +262,8 @@ test('Set default value of null should not call onChange', () => {
             ],
         },
     };
-    shallow(
+
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -268,7 +297,8 @@ test('Set default value if no value is passed', () => {
             ],
         },
     };
-    shallow(
+
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -302,7 +332,8 @@ test('Set default value to a number of 0 should work', () => {
             ],
         },
     };
-    shallow(
+
+    render(
         <Select
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -316,21 +347,21 @@ test('Set default value to a number of 0 should work', () => {
 
 test('Throw error if no value option is passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-        />)
-    ).toThrow(/"values"/);
+    const select = new Select(({
+        ...fieldTypeDefaultProps,
+        formInspector,
+    }: any));
+
+    expect(() => select.render()).toThrow(/"values"/);
 });
 
 test('Throw error if value option with wrong is passed', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
-    expect(() => shallow(
-        <Select
-            {...fieldTypeDefaultProps}
-            formInspector={formInspector}
-            schemaOptions={{values: {name: 'values', value: true}}}
-        />)
-    ).toThrow(/"values"/);
+    const select = new Select(({
+        ...fieldTypeDefaultProps,
+        formInspector,
+        schemaOptions: {values: {name: 'values', value: true}},
+    }: any));
+
+    expect(() => select.render()).toThrow(/"values"/);
 });

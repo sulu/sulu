@@ -38,31 +38,34 @@ test('Icon should render with onClick handler, role and tabindex', () => {
 });
 
 test('Icon should call the callback on click', async() => {
+    const user = userEvent.setup();
     const onClick = jest.fn();
     render(<Icon className="test" name="su-pen" onClick={onClick} />);
 
     const icon = screen.queryByLabelText('su-pen');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(onClick).toHaveBeenCalled();
 });
 
 test('Icon should call the callback on when space is pressed', async() => {
+    const user = userEvent.setup();
     const onClick = jest.fn();
     render(<Icon className="test" name="su-pen" onClick={onClick} />);
 
     const icon = screen.queryByLabelText('su-pen');
-    await userEvent.type(icon, '[Space]');
+    await user.type(icon, '[Space]');
 
     expect(onClick).toHaveBeenCalled();
 });
 
 test('Icon should call the callback on when enter is pressed', async() => {
+    const user = userEvent.setup();
     const onClick = jest.fn();
     render(<Icon className="test" name="su-pen" onClick={onClick} />);
 
     const icon = screen.queryByLabelText('su-pen');
-    await userEvent.type(icon, '[Enter]');
+    await user.type(icon, '[Enter]');
 
     expect(onClick).toHaveBeenCalled();
 });

@@ -25,8 +25,9 @@ describe('ActionButton', () => {
     });
 
     it('calls onClick when the button is clicked', async() => {
+        const user = userEvent.setup();
         render(<ActionButton {...defaultProps} />);
-        await userEvent.click(screen.getByRole('button'));
+        await user.click(screen.getByRole('button'));
         expect(defaultProps.onClick).toHaveBeenCalled();
     });
 

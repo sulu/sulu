@@ -1,164 +1,172 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render only with title 1`] = `
-<div
-  class="searchResult"
-  role="button"
->
+<DocumentFragment>
   <div
-    class="imageContainer"
-  />
-  <div
-    class="resultContainer"
+    class="searchResult"
+    role="button"
   >
     <div
-      class="titleContainer"
+      class="imageContainer"
+    />
+    <div
+      class="resultContainer"
     >
       <div
-        class="title"
+        class="titleContainer"
       >
-        Result
+        <div
+          class="title"
+        >
+          Result
+        </div>
       </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with all data 1`] = `
-<div
-  class="searchResult"
-  role="button"
->
+<DocumentFragment>
   <div
-    class="imageContainer"
-  >
-    <img
-      class="image"
-      src="/image.jpg"
-    />
-  </div>
-  <div
-    class="resultContainer"
+    class="searchResult"
+    role="button"
   >
     <div
-      class="resource"
+      class="imageContainer"
     >
-      Page
+      <img
+        class="image"
+        src="/image.jpg"
+      />
     </div>
     <div
-      class="titleContainer"
+      class="resultContainer"
     >
       <div
-        class="title"
+        class="resource"
       >
-        Result
+        Page
       </div>
       <div
-        class="locale"
+        class="titleContainer"
       >
-         (de)
+        <div
+          class="title"
+        >
+          Result
+        </div>
+        <div
+          class="locale"
+        >
+           (de)
+        </div>
       </div>
-    </div>
-    <div
-      class="description"
-    >
-      Description
+      <div
+        class="description"
+      >
+        Description
 
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with html description 1`] = `
-<div
-  class="searchResult"
-  role="button"
->
+<DocumentFragment>
   <div
-    class="imageContainer"
-  >
-    <img
-      class="image"
-      src="/image.jpg"
-    />
-  </div>
-  <div
-    class="resultContainer"
+    class="searchResult"
+    role="button"
   >
     <div
-      class="resource"
+      class="imageContainer"
     >
-      Page
+      <img
+        class="image"
+        src="/image.jpg"
+      />
     </div>
     <div
-      class="titleContainer"
+      class="resultContainer"
     >
       <div
-        class="title"
+        class="resource"
       >
-        Result
+        Page
       </div>
       <div
-        class="locale"
+        class="titleContainer"
       >
-         (de)
+        <div
+          class="title"
+        >
+          Result
+        </div>
+        <div
+          class="locale"
+        >
+           (de)
+        </div>
       </div>
-    </div>
-    <div
-      class="description"
-    >
-      Description
+      <div
+        class="description"
+      >
+        Description
 
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with icon instead of image 1`] = `
-<div
-  class="searchResult"
-  role="button"
->
+<DocumentFragment>
   <div
-    class="imageContainer"
+    class="searchResult"
+    role="button"
   >
     <div
-      class="icon"
-    >
-      <span
-        aria-label="su-test"
-        class="su-test"
-      />
-    </div>
-  </div>
-  <div
-    class="resultContainer"
-  >
-    <div
-      class="resource"
-    >
-      Page
-    </div>
-    <div
-      class="titleContainer"
+      class="imageContainer"
     >
       <div
-        class="title"
+        class="icon"
       >
-        Result
-      </div>
-      <div
-        class="locale"
-      >
-         (de)
+        <span
+          aria-label="su-test"
+          class="su-test"
+        />
       </div>
     </div>
     <div
-      class="description"
+      class="resultContainer"
     >
-      Description
+      <div
+        class="resource"
+      >
+        Page
+      </div>
+      <div
+        class="titleContainer"
+      >
+        <div
+          class="title"
+        >
+          Result
+        </div>
+        <div
+          class="locale"
+        >
+           (de)
+        </div>
+      </div>
+      <div
+        class="description"
+      >
+        Description
 
+      </div>
     </div>
   </div>
-</div>
+</DocumentFragment>
 `;

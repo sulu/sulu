@@ -113,6 +113,16 @@ class TemplateXmlLoaderTest extends TestCase
                     [
                         'type' => 'object',
                         'properties' => [
+                            'title' => [
+                                'not' => [
+                                    'const' => '',
+                                ],
+                            ],
+                            'url' => [
+                                'not' => [
+                                    'const' => '',
+                                ],
+                            ],
                             'blocks' => [
                                 'type' => 'array',
                                 'items' => [
@@ -286,6 +296,16 @@ class TemplateXmlLoaderTest extends TestCase
             'schema' => [
                 'type' => 'object',
                 'properties' => [
+                    'title' => [
+                        'not' => [
+                            'const' => '',
+                        ],
+                    ],
+                    'url' => [
+                        'not' => [
+                            'const' => '',
+                        ],
+                    ],
                     'blocks' => [
                         'type' => 'array',
                         'items' => [
@@ -368,6 +388,13 @@ class TemplateXmlLoaderTest extends TestCase
             'tags' => [],
             'schema' => [
                 'type' => 'object',
+                'properties' => [
+                    'title' => [
+                        'not' => [
+                            'const' => '',
+                        ],
+                    ],
+                ],
                 'required' => [
                     0 => 'title',
                 ],
@@ -393,6 +420,11 @@ class TemplateXmlLoaderTest extends TestCase
             'schema' => [
                 'type' => 'object',
                 'properties' => [
+                    'title' => [
+                        'not' => [
+                            'const' => '',
+                        ],
+                    ],
                     'blocks' => [
                         'type' => 'array',
                         'items' => [

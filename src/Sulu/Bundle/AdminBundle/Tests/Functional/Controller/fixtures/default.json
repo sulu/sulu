@@ -333,6 +333,11 @@
                         "type": "string",
                         "minLength": 1
                     },
+                    "url": {
+                        "not": {
+                            "const": ""
+                        }
+                    },
                     "blog": {
                         "anyOf": [
                             {

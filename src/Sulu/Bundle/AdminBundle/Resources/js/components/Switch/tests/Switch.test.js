@@ -40,27 +40,29 @@ test('The component should render with radio type', () => {
 });
 
 test('A click on the checkbox should trigger the change callback', async() => {
+    const user = userEvent.setup();
     const onChangeSpy = jest.fn();
     const {rerender} = render(<Switch checked={false} onChange={onChangeSpy} />);
 
-    await userEvent.click(screen.queryByRole('checkbox'));
+    await user.click(screen.queryByRole('checkbox'));
     expect(onChangeSpy).toHaveBeenCalledWith(true, undefined);
 
     rerender(<Switch checked={true} onChange={onChangeSpy} />);
 
-    await userEvent.click(screen.queryByRole('checkbox'));
+    await user.click(screen.queryByRole('checkbox'));
     expect(onChangeSpy).toHaveBeenCalledWith(false, undefined);
 });
 
 test('A click on the checkbox should trigger the change callback with the value', async() => {
+    const user = userEvent.setup();
     const onChangeSpy = jest.fn();
     const {rerender} = render(<Switch checked={false} onChange={onChangeSpy} value="my-value" />);
 
-    await userEvent.click(screen.queryByRole('checkbox'));
+    await user.click(screen.queryByRole('checkbox'));
     expect(onChangeSpy).toHaveBeenCalledWith(true, 'my-value');
 
     rerender(<Switch checked={true} onChange={onChangeSpy} value="my-value" />);
 
-    await userEvent.click(screen.queryByRole('checkbox'));
+    await user.click(screen.queryByRole('checkbox'));
     expect(onChangeSpy).toHaveBeenCalledWith(false, 'my-value');
 });

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
@@ -26,11 +26,13 @@ test('Render Toggler component as heading', () => {
         },
     };
 
-    expect(render(
+    const {asFragment} = render(
         <Heading
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
             schemaOptions={schemaOptions}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });

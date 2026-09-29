@@ -1,5 +1,5 @@
 // @flow
-import {render} from '@testing-library/react';
+import {render, waitFor} from '@testing-library/react';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import SingleMediaSelectionBlockPreviewTransformer
     from '../../blockPreviewTransformers/SingleMediaSelectionBlockPreviewTransformer';
@@ -53,9 +53,11 @@ test('Render MimeTypeIndicator if image isn\'t available', async() => {
     ResourceRequester.get.mockResolvedValue({id: 123, mimeType: 'application/vnd.ms-excel'});
 
     const {container, rerender} = render(singleMediaSelectionBlockPreviewTransformer.transform({id: 123}));
-    await new Promise((resolve) => setTimeout(resolve));
-    await new Promise((resolve) => setTimeout(resolve));
-    rerender(singleMediaSelectionBlockPreviewTransformer.transform({id: 123}));
+    await waitFor(() => {
+        rerender(singleMediaSelectionBlockPreviewTransformer.transform({id: 123}));
+        //eslint-disable-next-line testing-library/no-container
+        expect(container.querySelector('.mimeTypeIndicator')).toBeInTheDocument();
+    });
 
     //eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.mimeTypeIndicator')).toMatchSnapshot();
