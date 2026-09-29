@@ -38,6 +38,10 @@ class UrlGeneratorTest extends KernelTestCase
     #[TestWith(['sulu_page.delete_page', ['id' => '019905eb-ae9a-7136-93f2-06557330e3ad'], '/admin/api/pages/019905eb-ae9a-7136-93f2-06557330e3ad'])]
     #[TestWith(['sulu_page.post_page_trigger', ['id' => '019905eb-ae9a-7136-93f2-06557330e3ad'], '/admin/api/pages/019905eb-ae9a-7136-93f2-06557330e3ad'])]
     #[TestWith(['sulu_page.get_page_versions', ['id' => '019905eb-ae9a-7136-93f2-06557330e3ad'], '/admin/api/pages/019905eb-ae9a-7136-93f2-06557330e3ad/versions'])]
+    #[TestWith(['sulu_page.get_webspace_setting', ['id' => 'sulu-io'], '/admin/api/webspace-settings/sulu-io'])]
+    #[TestWith(['sulu_page.put_webspace_setting', ['id' => 'sulu-io'], '/admin/api/webspace-settings/sulu-io'])]
+    #[TestWith(['sulu_page.post_webspace_setting_trigger', ['id' => 'sulu-io'], '/admin/api/webspace-settings/sulu-io'])]
+    #[TestWith(['sulu_page.get_webspace_setting_versions', ['id' => 'sulu-io'], '/admin/api/webspace-settings/sulu-io/versions'])]
     public function testRoutes(string $route, array $params, string $expectedUrl): void
     {
         $urlGenerator = static::getContainer()->get(UrlGeneratorInterface::class);

@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd">
+
+    <key>webspace_settings_sulu_io</key>
+
+    <properties>
+        <property name="companyName" type="text_line">
+            <meta>
+                <title lang="en">Company name</title>
+                <title lang="de">Firmenname</title>
+            </meta>
+        </property>
+
+        <property name="email" type="email">
+            <meta>
+                <title lang="en">Email</title>
+                <title lang="de">E-Mail</title>
+            </meta>
+        </property>
+
+        <property name="privacyPage" type="single_page_selection">
+            <meta>
+                <title lang="en">Privacy page</title>
+                <title lang="de">Datenschutzseite</title>
+            </meta>
+        </property>
+
+        <property name="copyright" type="text_line" multilingual="false">
+            <meta>
+                <title lang="en">Copyright</title>
+                <title lang="de">Copyright</title>
+            </meta>
+        </property>
+    </properties>
+</form>

@@ -80,6 +80,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals(true, $webspace->getLocalizations()[1]->isDefault());
 
         $this->assertEquals(['template1', 'template2'], $webspace->getExcludedTemplates());
+        $this->assertSame('website_settings', $webspace->getWebspaceSettingsForm());
 
         $this->assertEquals('de_at', $webspace->getDefaultLocalization()->getLocale());
 
@@ -291,6 +292,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
         $this->assertEquals('tree_leaf_edit', $webspace->getResourceLocatorStrategy());
+        $this->assertNull($webspace->getWebspaceSettingsForm());
     }
 
     public function testLoadWithoutPortalLocalizations(): void
