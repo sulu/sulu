@@ -87,7 +87,7 @@ export default class MediaUploadStore {
             throw new Error('The "id" property must be available for deleting a media');
         }
 
-        return ResourceRequester.delete(RESOURCE_KEY, {...options, id: this.id})
+        return ResourceRequester.delete(RESOURCE_KEY, {...options, id: this.id, locale: this.locale.get()})
             .then(action(() => {
                 this.media = undefined;
                 this.error = undefined;

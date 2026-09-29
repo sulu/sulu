@@ -388,7 +388,11 @@ class MediaController extends AbstractMediaController implements
 
             if (\count($referencingResources) > 0) {
                 throw new ReferencingResourcesFoundException(
-                    ['id' => (int) $id, 'resourceKey' => MediaInterface::RESOURCE_KEY],
+                    [
+                        'id' => (int) $id,
+                        'resourceKey' => MediaInterface::RESOURCE_KEY,
+                        'title' => $this->getMediaTitle($id, $request),
+                    ],
                     $referencingResources,
                     \count($referencingResources)
                 );
@@ -406,6 +410,28 @@ class MediaController extends AbstractMediaController implements
         $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Returns the title of the media in the requested locale, so the user can tell which media is referenced.
+     *
+     * @param int|string $id
+     */
+    private function getMediaTitle($id, Request $request): ?string
+    {
+        $locale = $this->getRequestParameter($request, 'locale');
+
+        if (!$locale) {
+            return null;
+        }
+
+        try {
+            $media = $this->mediaManager->getById((int) $id, $locale);
+        } catch (MediaNotFoundException) {
+            return null;
+        }
+
+        return $media->getTitle() ?: $media->getName();
     }
 
     /**

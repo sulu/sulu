@@ -1477,6 +1477,39 @@ class MediaControllerTest extends SuluTestCase
         $this->assertFileExists($storagePath . '/1/photo.jpeg');
     }
 
+    public function testDeleteByIdWithReferencesReturnsMediaTitle(): void
+    {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $mediaId = (int) $media->getId();
+        $this->createMediaReference($mediaId, 'Referencing page');
+
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId . '?locale=en-gb');
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        /** @var array{resource: array{id: int, resourceKey: string, title: string|null}} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame($mediaId, $response['resource']['id']);
+        $this->assertSame('photo', $response['resource']['title']);
+    }
+
+    public function testDeleteByIdWithReferencesWithoutLocaleReturnsNoMediaTitle(): void
+    {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $mediaId = (int) $media->getId();
+        $this->createMediaReference($mediaId, 'Referencing page');
+
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId);
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        /** @var array{resource: array{id: int, resourceKey: string, title: string|null}} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertNull($response['resource']['title']);
+    }
+
     public function testDeleteByIdWithReferencesForced(): void
     {
         /** @var Media $media */

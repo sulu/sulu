@@ -10,6 +10,7 @@ import ResourceRequester from '../../services/ResourceRequester';
 import RequestPromise from '../../services/Requester/RequestPromise';
 import {translate} from '../../utils';
 import {ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../constants';
+import ReferencingResources from '../DeleteReferencedResourceDialog/ReferencingResources';
 import styles from './deleteDependantResourcesDialogStyles.scss';
 import type {
     Resource,
@@ -34,7 +35,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
     @observable error: string | typeof undefined = undefined;
     @observable closed: boolean = false;
     @observable totalDeletedResources: number = 0;
-    @observable referencingResourcesData: Array<ReferencingResourcesData> = [];
+    @observable referencingResourcesData: ?ReferencingResourcesData = undefined;
 
     promises: Array<RequestPromise<any>> = [];
     resolveReferencingResources: ?(confirmed: boolean) => void = undefined;
@@ -64,7 +65,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             this.error = undefined;
             this.closed = false;
             this.totalDeletedResources = 0;
-            this.referencingResourcesData = [];
+            this.referencingResourcesData = undefined;
             this.promises = [];
             this.resolveReferencingResources = undefined;
         }
@@ -75,29 +76,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
     }
 
     @computed get awaitsReferencingResourcesConfirmation(): boolean {
-        return this.referencingResourcesData.length > 0;
-    }
-
-    @computed get referencingResources(): Array<Resource> {
-        // a resource referencing multiple of the deleted resources is only listed once
-        const referencingResourceKeys = new Set();
-
-        return this.referencingResourcesData.reduce(
-            (resources, {referencingResources}) => [
-                ...resources,
-                ...referencingResources.filter((referencingResource) => {
-                    const key = referencingResource.resourceKey + '::' + referencingResource.id;
-                    if (referencingResourceKeys.has(key)) {
-                        return false;
-                    }
-
-                    referencingResourceKeys.add(key);
-
-                    return true;
-                }),
-            ],
-            []
-        );
+        return !!this.referencingResourcesData;
     }
 
     @action handleConfirm = () => {
@@ -141,7 +120,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             });
     };
 
-    deleteResources = (resources: Array<Resource>, options: Object = {}): Promise<Array<Resource>> => {
+    deleteResources = (resources: Array<Resource>, options: Object = {}): Promise<void> => {
         const {requestOptions} = this.props;
         const referencedResources = [];
         const referencingResourcesData = [];
@@ -184,30 +163,39 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             .then(() => {
                 this.promises.splice(0, this.promises.length);
 
-                if (referencedResources.length === 0 || !this.inProgress) {
-                    return referencedResources;
-                }
-
-                // referenced resources are only deleted after the user has seen the referencing resources
-                return this.confirmReferencingResources(referencingResourcesData)
-                    .then((confirmed) => {
-                        if (!confirmed) {
-                            return referencedResources;
-                        }
-
-                        return this.deleteResources(referencedResources, {force: true});
-                    });
+                return this.deleteReferencedResources(referencedResources, referencingResourcesData);
             });
     };
 
-    @action confirmReferencingResources = (
+    deleteReferencedResources = (
+        referencedResources: Array<Resource>,
         referencingResourcesData: Array<ReferencingResourcesData>
-    ): Promise<boolean> => {
+    ): Promise<void> => {
+        if (referencedResources.length === 0 || !this.inProgress) {
+            return Promise.resolve();
+        }
+
+        const [resource, ...remainingResources] = referencedResources;
+        const [resourceReferencingResourcesData, ...remainingReferencingResourcesData] = referencingResourcesData;
+
+        // every referenced resource is only deleted after the user has seen what references exactly this resource
+        return this.confirmReferencingResources(resourceReferencingResourcesData)
+            .then((confirmed) => {
+                if (!confirmed) {
+                    return;
+                }
+
+                return this.deleteResources([resource], {force: true})
+                    .then(() => this.deleteReferencedResources(remainingResources, remainingReferencingResourcesData));
+            });
+    };
+
+    @action confirmReferencingResources = (referencingResourcesData: ReferencingResourcesData): Promise<boolean> => {
         this.referencingResourcesData = referencingResourcesData;
 
         return new Promise((resolve) => {
             this.resolveReferencingResources = action((confirmed: boolean) => {
-                this.referencingResourcesData = [];
+                this.referencingResourcesData = undefined;
                 this.resolveReferencingResources = undefined;
 
                 resolve(confirmed);
@@ -294,7 +282,10 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                 open={!this.closed}
                 snackbarMessage={this.snackbarMessage}
                 snackbarType={this.snackbarType}
-                title={this.title}
+                title={this.awaitsReferencingResourcesConfirmation
+                    ? translate('sulu_admin.delete_linked_warning_title')
+                    : this.title
+                }
             >
                 {!this.inProgress && !this.finished && !this.errored && (
                     <p>
@@ -302,14 +293,11 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                     </p>
                 )}
 
-                {this.awaitsReferencingResourcesConfirmation && (
-                    <React.Fragment>
-                        {translate('sulu_admin.delete_linked_warning_text')}
-
-                        <ul>
-                            {this.referencingResources.map(({title}, index) => title && <li key={index}>{title}</li>)}
-                        </ul>
-                    </React.Fragment>
+                {this.referencingResourcesData && (
+                    <ReferencingResources
+                        allowDeletion={true}
+                        referencingResourcesData={this.referencingResourcesData}
+                    />
                 )}
 
                 {(this.inProgress || this.finished || this.errored) && !this.awaitsReferencingResourcesConfirmation && (
