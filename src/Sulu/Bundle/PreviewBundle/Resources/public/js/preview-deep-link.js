@@ -33,18 +33,20 @@
         var root = host.attachShadow({mode: 'closed'});
 
         var style = document.createElement('style');
-        // Colors come from custom properties set by sulu_preview_deep_link_colors(); they inherit into
-        // the shadow tree because `all` does not reset custom properties.
+        // The color comes from the --sulu-preview-deep-link-color custom property a site can set on :root
+        // (also inside a prefers-color-scheme media query). It is resolved on the elements instead of
+        // :host, because a site rule like `div { --color: ... }` would override declarations on the host.
         style.textContent =
-            ':host { all: initial; --border: var(--sulu-preview-deep-link-border, #23a3ec);' +
-            ' --icon: var(--sulu-preview-deep-link-icon, #fff); }' +
+            ':host { all: initial; }' +
+            '.outline, .button { --color: var(--sulu-preview-deep-link-color, #23a3ec); }' +
             '.outline { position: fixed; z-index: 2147483647; pointer-events: none;' +
-            ' outline: 2px solid var(--border); outline-offset: -2px; box-sizing: border-box;' +
-            ' background: color-mix(in srgb, var(--border) 8%, transparent); display: none; }' +
+            ' outline: 2px solid var(--color); outline-offset: -2px; box-sizing: border-box;' +
+            ' background: color-mix(in srgb, var(--color) 8%, transparent); display: none; }' +
             '.button { all: initial; position: fixed; z-index: 2147483647; pointer-events: auto;' +
             ' display: none; align-items: center; justify-content: center;' +
-            ' width: 28px; height: 28px; border-radius: 4px; background: var(--border); cursor: pointer;' +
-            ' color: var(--icon); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }' +
+            ' width: 28px; height: 28px; border-radius: 4px; background: var(--color); cursor: pointer;' +
+            ' color: color-mix(in srgb, var(--color) 10%, white);' +
+            ' box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }' +
             '.button svg { width: 16px; height: 16px; }';
         root.appendChild(style);
 
