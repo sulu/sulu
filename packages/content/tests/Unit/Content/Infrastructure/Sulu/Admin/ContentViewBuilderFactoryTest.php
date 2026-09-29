@@ -713,13 +713,17 @@ class ContentViewBuilderFactoryTest extends TestCase
      */
     public function testPublishWithoutARequestUsesPlainPublish(): void
     {
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
         $factory = $this->createContentViewBuilder(
-            $this->prophesize(ContentMetadataInspectorInterface::class)->reveal(),
+            $contentMetadataInspector->reveal(),
             $this->prophesize(SecurityCheckerInterface::class)->reveal(),
         );
 
         /** @var array<string, mixed> $options */
-        $options = $factory->getWorkflowTransitionRequestToolbarActions('examples', 'example')['save']->getOptions();
+        $options = $factory->getWorkflowTransitionRequestToolbarActions(Example::class)['save']->getOptions();
         /** @var list<\Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction> $children */
         $children = $options['toolbarActions'];
 
