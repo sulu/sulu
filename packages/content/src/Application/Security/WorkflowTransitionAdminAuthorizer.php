@@ -14,11 +14,12 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\Security;
 
 use Sulu\Component\HttpKernel\SuluKernel;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
+use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -42,6 +43,33 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
     ) {
     }
 
+    public function getPermissions(string $resourceKey, string $resourceId, string $locale): array
+    {
+        // Outside the admin this class authorizes nothing, so it refuses nothing either.
+        if (!$this->isAuthorizedAdminCall()) {
+            return ['cancel' => true, 'publish' => true, 'retry' => true, 'review' => true];
+        }
+
+        try {
+            $condition = $this->securityContextResolver->resolve($resourceKey, $resourceId, $locale);
+        } catch (UnresolvableSecurityContextException) {
+            // The buttons are only a view of the rules, so a broken setup hides them instead of
+            // failing the form load; the transitions themselves still report it.
+            return ['cancel' => false, 'publish' => false, 'retry' => false, 'review' => false];
+        }
+
+        $edit = $this->securityChecker->hasPermission($condition, PermissionTypes::EDIT);
+
+        return [
+            // Withdrawing a request frees the content for editing again, so it takes EDIT.
+            'cancel' => $edit,
+            'publish' => $this->isPublishGranted($condition, $resourceKey, $resourceId, $locale),
+            // Re-running a check is part of fixing the content, not a verdict on it.
+            'retry' => $edit,
+            'review' => $this->securityChecker->hasPermission($condition, PermissionTypes::REVIEW),
+        ];
+    }
+
     public function assertCanPublish(string $resourceKey, string $resourceId, string $locale): void
     {
         if (!$this->isAuthorizedAdminCall()) {
@@ -50,15 +78,7 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
 
         $condition = $this->securityContextResolver->resolve($resourceKey, $resourceId, $locale);
 
-        if ($this->securityChecker->hasPermission($condition, PermissionTypes::LIVE)) {
-            return;
-        }
-
-        // An approval delegates the publish right for that one request: EDIT is enough to carry out
-        // what the reviewers signed off, but only while the approved request is still the active one.
-        if ($this->securityChecker->hasPermission($condition, PermissionTypes::EDIT)
-            && $this->hasApprovedRequest($resourceKey, $resourceId, $locale)
-        ) {
+        if ($this->isPublishGranted($condition, $resourceKey, $resourceId, $locale)) {
             return;
         }
 
@@ -111,16 +131,35 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
     }
 
     /**
-     * Permissions belong to a person working in the admin. Anything else, a command, a fixture, a
-     * consumer, carries no user to check and is let through instead.
+     * An approval delegates the publish right for that one request, so EDIT carries it out while the
+     * approved request is the active one.
+     */
+    private function isPublishGranted(
+        SecurityCondition $condition,
+        string $resourceKey,
+        string $resourceId,
+        string $locale,
+    ): bool {
+        // Asked first and alone, so the live permission answers without looking up the request.
+        if ($this->securityChecker->hasPermission($condition, PermissionTypes::LIVE)) {
+            return true;
+        }
+
+        return $this->securityChecker->hasPermission($condition, PermissionTypes::EDIT)
+            && $this->hasApprovedRequest($resourceKey, $resourceId, $locale);
+    }
+
+    /**
+     * A call without a token, a command, a fixture, a consumer, has nobody to check and is let
+     * through. Any token is checked, including one whose user is not Sulu's, which the voters deny.
      *
-     * The context is asked as well as the user, so the class refuses to authorize anywhere its
-     * security contexts are not registered rather than answering from half a container.
+     * The context is asked as well, so the class refuses to authorize anywhere its security contexts
+     * are not registered rather than answering from half a container.
      */
     private function isAuthorizedAdminCall(): bool
     {
         return SuluKernel::CONTEXT_ADMIN === $this->suluContext
-            && $this->tokenStorage->getToken()?->getUser() instanceof UserInterface;
+            && null !== $this->tokenStorage->getToken();
     }
 
     private function hasApprovedRequest(string $resourceKey, string $resourceId, string $locale): bool

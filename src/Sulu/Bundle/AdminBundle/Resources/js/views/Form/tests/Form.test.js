@@ -2410,3 +2410,213 @@ test('Should throw an error if no formKey is passed', () => {
         <Form resourceStore={resourceStore} route={route} router={router} />
     )).toThrow(/"formKey"/);
 });
+
+function renderLockedReviewForm(request, resourceKey = 'pages', workflowPlace = 'review') {
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const ResourceRequester = require('../../../services/ResourceRequester');
+
+    // The form always opens a collaboration; nobody else is editing, so it adds no warning of its own.
+    ResourceRequester.put.mockReturnValue(Promise.resolve({_embedded: {collaborations: []}}));
+
+    const resourceStore = new ResourceStore(resourceKey, 5);
+    resourceStore.data = {
+        _locked: true,
+        activeWorkflowTransitionRequest: request,
+        workflowPlace,
+    };
+    resourceStore.loading = false;
+
+    const route = {options: {formKey: resourceKey, resourceKey, toolbarActions: []}};
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        attributes: {id: 5},
+        route,
+    };
+
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    const {warnings} = getToolbarConfig();
+
+    return warnings[warnings.length - 1];
+}
+
+test('Should cancel a workflow transition request without sending the form', () => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
+
+    const banner = renderLockedReviewForm(
+        {
+            createdBy: {id: 7},
+            permissions: {cancel: true, publish: false, retry: true, review: false},
+            status: 'open',
+        },
+        'snippets',
+        'review_draft'
+    );
+    const save = jest.fn().mockReturnValue(Promise.resolve());
+    mockFormContainerProps.store.save = save;
+
+    act(() => banner.actions[0].onClick());
+
+    // a locked form cannot be corrected, so the cancel must not carry the draft at all
+    expect(save).not.toHaveBeenCalled();
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
+        'snippets',
+        undefined,
+        expect.objectContaining({action: 'cancel_review_draft', id: 5})
+    );
+});
+
+test('Should offer the cancel action to a user the request says may cancel', () => {
+    const banner = renderLockedReviewForm({
+        createdBy: {id: 7},
+        permissions: {cancel: true, publish: false, retry: true, review: false},
+        status: 'open',
+    });
+
+    expect(banner.actions).toEqual([
+        expect.objectContaining({label: 'sulu_content.workflow_transition_request.cancel_request_action'}),
+    ]);
+});
+
+// The request answers for articles and snippets, which carry no permissions of their own.
+test('Should not offer the cancel action while the request carries no permissions', () => {
+    const banner = renderLockedReviewForm({createdBy: {id: 7}, status: 'open'});
+
+    expect(banner.actions).toEqual([]);
+});
+
+test('Should not offer the cancel action without the edit permission, even to a reviewer', () => {
+    const banner = renderLockedReviewForm({
+        createdBy: {id: 7},
+        permissions: {cancel: false, publish: false, retry: false, review: true},
+        status: 'open',
+    });
+
+    expect(banner.actions).toEqual([]);
+});
+
+test('Should title the locked banner so an approved request does not read as a warning', () => {
+    const banner = renderLockedReviewForm({
+        createdBy: {id: 7},
+        permissions: {cancel: true, publish: true, retry: true, review: false},
+        status: 'approved',
+    });
+
+    expect(banner).toEqual(expect.objectContaining({
+        message: 'sulu_content.workflow_transition_request.banner_approved',
+        title: 'sulu_content.workflow_transition_request.banner_title',
+    }));
+});
+
+function renderPreValidationForm(resourceStore, route) {
+    const Form = require('../Form').default;
+    const metadataStore = require('../../../containers/Form/stores/metadataStore');
+
+    const schemaTypesPromise = Promise.resolve(null);
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const jsonSchemaPromise = Promise.resolve();
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+        attributes: {},
+    };
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+    resourceStore.reload = jest.fn();
+
+    return {
+        ready: Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]),
+        router,
+    };
+}
+
+const preValidationError = (extra) => ({
+    json: jest.fn().mockReturnValue(Promise.resolve({
+        code: 1108,
+        preValidationResults: [{key: 'seo_required', passed: false, messages: []}],
+        ...extra,
+    })),
+});
+
+test('Should reload the saved resource when a pre-validation error refuses its transition', async() => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    ResourceRequester.put.mockReturnValue(Promise.reject(preValidationError()));
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const {ready} = renderPreValidationForm(
+        resourceStore,
+        {options: {formKey: 'snippets', locales: [], toolbarActions: []}}
+    );
+    await ready;
+
+    act(() => {
+        mockFormContainer.submit({action: 'request_for_review'});
+    });
+
+    await waitFor(() => expect(resourceStore.reload).toHaveBeenCalled());
+});
+
+// The content is written before the transition is refused, so the author has to land on the form
+// that carries the SEO and excerpt tabs the overlay asks them to fill, but only once they read it.
+test('Should go to the edit view when the pre-validation overlay of a new resource is closed', async() => {
+    const user = userEvent.setup();
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    ResourceRequester.post.mockReturnValue(Promise.reject(preValidationError({id: 'created-id'})));
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', undefined, {locale: observable.box()});
+
+    const {ready, router} = renderPreValidationForm(
+        resourceStore,
+        {options: {editView: 'sulu_snippet.edit_form', formKey: 'snippets', locales: [], toolbarActions: []}}
+    );
+    await ready;
+
+    act(() => {
+        mockFormContainer.submit({action: 'request_for_review'});
+    });
+
+    const confirmButton = await screen.findByText('sulu_admin.ok');
+    expect(router.navigate).not.toHaveBeenCalled();
+
+    await user.click(confirmButton);
+
+    expect(router.navigate).toHaveBeenCalledWith(
+        'sulu_snippet.edit_form',
+        expect.objectContaining({id: 'created-id'})
+    );
+});
+
+test('Should take over the created id when a pre-validation error refuses a new resource', async() => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    ResourceRequester.post.mockReturnValue(Promise.reject(preValidationError({id: 'created-id'})));
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('snippets', undefined, {locale: observable.box()});
+
+    const {ready} = renderPreValidationForm(
+        resourceStore,
+        {options: {formKey: 'snippets', locales: [], toolbarActions: []}}
+    );
+    await ready;
+
+    act(() => {
+        mockFormContainer.submit({action: 'request_for_review'});
+    });
+
+    await waitFor(() => expect(resourceStore.reload).toHaveBeenCalled());
+    expect(resourceStore.id).toEqual('created-id');
+});

@@ -88,37 +88,21 @@ class PageAdmin extends Admin
         $editPagePublishVisibleCondition = '_permissions && _permissions.live';
         $publishVisibleCondition = '(' . $createPagePublishVisibleCondition . ') || (' . $editPagePublishVisibleCondition . ')';
 
-        $saveWithPublishingDropdown = new DropdownToolbarAction(
-            'sulu_admin.save',
-            'su-save',
-            [
-                new ToolbarAction(
-                    'sulu_admin.save',
-                    [
-                        'label' => 'sulu_admin.save_draft',
-                        'options' => ['action' => 'draft'],
-                        'visible_condition' => $saveVisibleCondition,
-                    ]
-                ),
-                new ToolbarAction(
-                    'sulu_admin.save',
-                    [
-                        'label' => 'sulu_admin.save_publish',
-                        'options' => ['action' => 'publish'],
-                        'visible_condition' => '(' . $saveVisibleCondition . ') && (' . $publishVisibleCondition . ')',
-                    ]
-                ),
-                new ToolbarAction(
-                    'sulu_admin.publish',
-                    [
-                        'visible_condition' => $publishVisibleCondition,
-                    ]
-                ),
-            ]
+        // The overlay opens for `edit` and `live` too; the decisions inside are gated on `review`.
+        $createPageReviewVisibleCondition = '!_permissions && (!__webspace || __webspace._permissions.review || __webspace._permissions.edit || __webspace._permissions.live)';
+        $editPageReviewVisibleCondition = '(!_permissions || _permissions.review || _permissions.edit || _permissions.live)';
+        $reviewVisibleCondition = '(' . $createPageReviewVisibleCondition . ') || (' . $editPageReviewVisibleCondition . ')';
+
+        $workflowToolbarActions = $this->contentViewBuilderFactory->getWorkflowTransitionRequestToolbarActions(
+            PageInterface::class,
+            $saveVisibleCondition,
+            $publishVisibleCondition,
+            $reviewVisibleCondition,
         );
 
         $formToolbarActionsWithType = [
-            'save' => $saveWithPublishingDropdown,
+            'save' => $workflowToolbarActions['save'],
+            'approval' => $workflowToolbarActions['approval'],
             'type' => new ToolbarAction(
                 'sulu_admin.type',
                 [
@@ -174,7 +158,7 @@ class PageAdmin extends Admin
         ];
 
         $formToolbarActionsWithoutType = [
-            $saveWithPublishingDropdown,
+            $workflowToolbarActions['save'],
         ];
 
         $routerAttributesToFormRequest = ['parentId', 'webspace'];

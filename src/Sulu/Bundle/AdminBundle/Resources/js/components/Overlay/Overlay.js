@@ -22,6 +22,7 @@ type Props = {
     confirmDisabled: boolean,
     confirmLoading: boolean,
     confirmText?: string,
+    footer?: Node,
     onClose: () => void,
     onConfirm?: () => void,
     onSnackbarClick?: () => void,
@@ -113,6 +114,7 @@ class Overlay extends React.Component<Props> {
             confirmDisabled,
             confirmLoading,
             confirmText,
+            footer,
             onConfirm,
             onSnackbarClick,
             onSnackbarCloseClick,
@@ -122,7 +124,7 @@ class Overlay extends React.Component<Props> {
             title,
         } = this.props;
 
-        const footerVisible = onConfirm !== undefined || actions.length > 0;
+        const footerVisible = footer !== undefined || onConfirm !== undefined || actions.length > 0;
 
         const {open, visible} = this;
 
@@ -164,18 +166,22 @@ class Overlay extends React.Component<Props> {
                                     <article className={overlayStyles.article}>{children}</article>
                                     {footerVisible &&
                                         <footer className={overlayStyles.footer}>
-                                            {actions.length > 0 && (
-                                                <Actions actions={actions} />
-                                            )}
-                                            {onConfirm !== undefined && (
-                                                <Button
-                                                    disabled={confirmDisabled}
-                                                    loading={confirmLoading}
-                                                    onClick={onConfirm}
-                                                    skin="primary"
-                                                >
-                                                    {confirmText}
-                                                </Button>
+                                            {footer !== undefined ? footer : (
+                                                <Fragment>
+                                                    {actions.length > 0 && (
+                                                        <Actions actions={actions} />
+                                                    )}
+                                                    {onConfirm !== undefined && (
+                                                        <Button
+                                                            disabled={confirmDisabled}
+                                                            loading={confirmLoading}
+                                                            onClick={onConfirm}
+                                                            skin="primary"
+                                                        >
+                                                            {confirmText}
+                                                        </Button>
+                                                    )}
+                                                </Fragment>
                                             )}
                                         </footer>
                                     }

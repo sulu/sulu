@@ -60,6 +60,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_preview.preview_object_provider_registry'),
             new Reference('sulu_content.content_metadata_inspector'),
             new Reference('sulu_security.security_checker'),
+            new Reference('sulu_content.request_workflow_resolver'),
             '%sulu_content.content_settings_forms%',
             '%sulu_content.content_excerpt_forms%',
             '%sulu_content.content_seo_forms%',
