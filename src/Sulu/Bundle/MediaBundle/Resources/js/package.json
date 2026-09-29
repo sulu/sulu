@@ -17,7 +17,6 @@
         "url-search-params-polyfill": "^8.0.0"
     },
     "devDependencies": {
-        "enzyme": "^3.3.0",
         "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js",
         "sulu-page-bundle": "file:../../../PageBundle/Resources/js",
         "@testing-library/jest-dom": "^5.17.0",

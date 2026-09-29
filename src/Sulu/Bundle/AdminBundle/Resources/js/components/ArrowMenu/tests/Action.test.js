@@ -27,7 +27,7 @@ test('Clicking the Action should call the right handler', async() => {
     render(<Action onClick={clickHandler}>My Action</Action>);
 
     const user = userEvent.setup();
-    await user.click(screen.getByText('My Action'));
+    await user.click(screen.getByRole('button', {name: 'My Action'}));
 
     expect(clickHandler).toHaveBeenCalledWith(undefined);
 });
@@ -37,7 +37,7 @@ test('Clicking the Action should call the right handler with the passed value', 
     render(<Action onClick={clickHandler} value="test">My Action</Action>);
 
     const user = userEvent.setup();
-    await user.click(screen.getByText('My Action'));
+    await user.click(screen.getByRole('button', {name: 'My Action'}));
 
     expect(clickHandler).toHaveBeenCalledWith('test');
 });
@@ -47,7 +47,7 @@ test('Clicking the disabled Action should not call a handler', async() => {
     render(<Action disabled={true} onClick={clickHandler}>My Action</Action>);
 
     const user = userEvent.setup();
-    await user.click(screen.getByText('My Action'));
+    await user.click(screen.getByRole('button', {name: 'My Action'}));
 
     expect(clickHandler).not.toHaveBeenCalled();
 });

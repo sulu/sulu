@@ -43,21 +43,23 @@ test('Phone should render when disabled', () => {
 });
 
 test('Phone should trigger callbacks correctly', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     const onBlur = jest.fn();
     render(bindValueToOnChange(<Phone onBlur={onBlur} onChange={onChange} value={null} />));
 
     const input = screen.queryByRole('textbox');
 
-    await userEvent.type(input, '+123');
+    await user.type(input, '+123');
     expect(onChange).toHaveBeenLastCalledWith('+123', expect.anything());
 
-    await userEvent.tab();
+    await user.tab();
     expect(onBlur).toHaveBeenCalled();
     expect(onBlur).toHaveBeenCalledTimes(1);
 });
 
 test('Phone should not set onIconClick when value is not set', async() => {
+    const user = userEvent.setup();
     const redirectSpy = jest.fn();
     window.location.assign = redirectSpy;
 
@@ -66,12 +68,13 @@ test('Phone should not set onIconClick when value is not set', async() => {
     render(<Phone onBlur={onBlur} onChange={onChange} value={null} />);
 
     const icon = screen.queryByLabelText('su-phone');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(redirectSpy).not.toHaveBeenCalled();
 });
 
 test('Phone should set onIconClick when value is set', async() => {
+    const user = userEvent.setup();
     const redirectSpy = jest.fn();
     window.location.assign = redirectSpy;
 
@@ -80,12 +83,13 @@ test('Phone should set onIconClick when value is set', async() => {
     render(<Phone onBlur={onBlur} onChange={onChange} value="+123" />);
 
     const icon = screen.queryByLabelText('su-phone');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(redirectSpy).toHaveBeenCalled();
 });
 
 test('Phone should set onIconClick when value is valid and window should be opened', async() => {
+    const user = userEvent.setup();
     const redirectSpy = jest.fn();
     window.location.assign = redirectSpy;
 
@@ -94,7 +98,7 @@ test('Phone should set onIconClick when value is valid and window should be open
     render(<Phone onBlur={onBlur} onChange={onChange} value="+123" />);
 
     const icon = screen.queryByLabelText('su-phone');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(redirectSpy).toHaveBeenLastCalledWith('tel:+123');
 });

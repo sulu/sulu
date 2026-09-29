@@ -1,67 +1,79 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render with a value of "false" 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch toggler"
+<DocumentFragment>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch toggler"
+    >
+      <input
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</DocumentFragment>
 `;
 
 exports[`Render with a value of "true" 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch toggler"
+<DocumentFragment>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      checked=""
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch toggler"
+    >
+      <input
+        checked=""
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</DocumentFragment>
 `;
 
 exports[`Render with a value of "undefined" 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch toggler"
+<DocumentFragment>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch toggler"
+    >
+      <input
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</DocumentFragment>
 `;
 
 exports[`Render with value set by setValue 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch toggler"
+<DocumentFragment>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      checked=""
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch toggler"
+    >
+      <input
+        checked=""
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</DocumentFragment>
 `;

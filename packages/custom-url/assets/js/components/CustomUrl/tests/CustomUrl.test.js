@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import CustomUrl from '../../CustomUrl';
 
@@ -21,7 +22,8 @@ test('Render with completely filled placeholder', () => {
     expect(asFragment()).toMatchSnapshot();
 });
 
-test('Call onBlur for every input field', () => {
+test('Call onBlur for every input field', async() => {
+    const user = userEvent.setup();
     const blurSpy = jest.fn();
 
     render(<CustomUrl baseDomain="*.sulu.io/*" onBlur={blurSpy} onChange={jest.fn()} value={[]} />);
@@ -29,26 +31,31 @@ test('Call onBlur for every input field', () => {
 
     expect(blurSpy).not.toHaveBeenCalled();
 
-    fireEvent.blur(inputs[0]);
+    await user.click(inputs[0]);
+    await user.tab();
     expect(blurSpy).toHaveBeenCalledTimes(1);
 
-    fireEvent.blur(inputs[1]);
+    await user.click(inputs[1]);
+    await user.tab();
     expect(blurSpy).toHaveBeenCalledTimes(2);
 });
 
-test('Call onChange after change of every input field', () => {
+test('Call onChange after change of every input field', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
-    render(<CustomUrl baseDomain="*.sulu.io/*" onChange={changeSpy} value={[]} />);
+    const {rerender} = render(<CustomUrl baseDomain="*.sulu.io/*" onChange={changeSpy} value={[]} />);
+    changeSpy.mockImplementation((value) => {
+        rerender(<CustomUrl baseDomain="*.sulu.io/*" onChange={changeSpy} value={value} />);
+    });
     const inputs = screen.getAllByRole('textbox');
 
     expect(changeSpy).not.toHaveBeenCalled();
 
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(inputs[0], {target: {value: 'test1'}});
+    await user.type(inputs[0], 'test1');
     expect(changeSpy).toHaveBeenLastCalledWith(['test1']);
 
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(inputs[1], {target: {value: 'test2'}});
+    rerender(<CustomUrl baseDomain="*.sulu.io/*" onChange={changeSpy} value={[]} />);
+    await user.type(screen.getAllByRole('textbox')[1], 'test2');
     expect(changeSpy).toHaveBeenLastCalledWith([undefined, 'test2']);
 });

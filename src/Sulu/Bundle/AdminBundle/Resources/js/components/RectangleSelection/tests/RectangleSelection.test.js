@@ -6,9 +6,7 @@ import RectangleSelection from '../RectangleSelection';
 
 const mockModifiableRectangle = jest.fn();
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 jest.mock('../../withContainerSize/withContainerSize');
 jest.mock('../ModifiableRectangle', () => function MockModifiableRectangle(props) {

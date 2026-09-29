@@ -7,7 +7,7 @@
     min-height: 0;
     overflow-y: auto;
     border-radius: 3px;
-    padding: 0 50px 20px;
+    padding: 0 40px 20px;
 }
 
 /* the selected text stays in place so it can be compared with an answer further down the list.
@@ -24,8 +24,8 @@
         content: '';
         position: absolute;
         top: 100%;
-        left: -50px;
-        right: -50px;
+        left: -40px;
+        right: -40px;
         height: 40px;
         background: linear-gradient(to bottom, $concrete 0%, rgb(242 242 242 / 0%) 100%);
         pointer-events: none;

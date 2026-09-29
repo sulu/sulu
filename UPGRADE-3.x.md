@@ -97,6 +97,22 @@ $services->set('acme_product.product_localizations_resolver', ProductLocalizatio
 
 ## 3.0.10
 
+### The target group select of the preview follows the audience targeting permission
+
+The preview offered its target group select as soon as the `SuluAudienceTargetingBundle` was installed, and the
+select loads the target groups through the API. A user without the `view` permission on
+`sulu.settings.target-groups` got a `403` there, which left the preview, and with it the whole page, unusable.
+The select is now offered only to users who have that permission.
+
+If you replaced `sulu_preview.admin`, pass the `sulu_security.security_checker` as the last constructor
+argument. Without it the select is offered to everyone, as before. Leaving it out triggers a deprecation.
+
+### Mandatory fields reject an empty string
+
+A mandatory field whose type has no dedicated schema mapper, like `text_editor` or `color`, accepted an empty
+string. The generated JSON schema now forbids `""` for these fields. Existing content whose mandatory field still
+holds `""` cannot be saved until the field is filled in.
+
 ### Cache tags now match the invalidation
 
 Pages are tagged with the resource key of a resource (`tags-5`, `contacts-3`), while the invalidation used

@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {mount} from 'enzyme';
 import React from 'react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import symfonyRouting from 'fos-jsrouting/router';
 import Requester from '../../../services/Requester';
 import AuthorizationConsent from '../AuthorizationConsent';
@@ -53,8 +54,12 @@ const consentDetails = {
     ],
 };
 
-function flushPromises() {
-    return new Promise((resolve) => setTimeout(resolve, 0));
+function getDenyButton() {
+    return screen.getByRole('button', {name: 'sulu_admin.authorization_consent_deny'});
+}
+
+function getApproveButton() {
+    return screen.getByRole('button', {name: 'sulu_admin.authorization_consent_approve'});
 }
 
 beforeEach(() => {
@@ -70,7 +75,7 @@ beforeEach(() => {
 test('Should load and render authorization consent details', async() => {
     Requester.get.mockReturnValue(Promise.resolve(consentDetails));
 
-    const authorizationConsent = mount(<AuthorizationConsent route={route} router={router} />);
+    render(<AuthorizationConsent route={route} router={router} />);
 
     expect(symfonyRouting.generate).toHaveBeenCalledWith(
         'sulu_mcp_server_oauth_consent_details',
@@ -78,123 +83,100 @@ test('Should load and render authorization consent details', async() => {
     );
     expect(Requester.get).toHaveBeenCalledWith('/sulu_mcp_server_oauth_consent_details/request-1');
 
-    await flushPromises();
-    authorizationConsent.update();
-
-    expect(authorizationConsent.text()).toContain('ChatGPT');
-    expect(authorizationConsent.text()).toContain('Use MCP tools');
-    expect(authorizationConsent.text()).toContain('https://chatgpt.com/oauth/callback');
+    expect(await screen.findByText('ChatGPT')).toBeInTheDocument();
+    expect(screen.getByText('Use MCP tools')).toBeInTheDocument();
+    expect(screen.getByText('https://chatgpt.com/oauth/callback')).toBeInTheDocument();
 });
 
 test('Should approve authorization consent and redirect to continuation URL', async() => {
+    const user = userEvent.setup();
     Requester.get.mockReturnValue(Promise.resolve(consentDetails));
     Requester.post.mockReturnValue(Promise.resolve({redirectUrl: '/admin/mcp/authorize?sulu_mcp_consent=request-1'}));
 
-    const authorizationConsent = mount(<AuthorizationConsent route={route} router={router} />);
+    render(<AuthorizationConsent route={route} router={router} />);
 
-    await flushPromises();
-    authorizationConsent.update();
-
-    authorizationConsent.find('button').at(1).simulate('click');
+    expect(await screen.findByText('ChatGPT')).toBeInTheDocument();
+    await user.click(getApproveButton());
 
     expect(symfonyRouting.generate).toHaveBeenCalledWith(
         'sulu_mcp_server_oauth_consent_decision',
         {requestId: 'request-1'}
     );
     expect(Requester.post).toHaveBeenCalledWith('/sulu_mcp_server_oauth_consent_decision/request-1', {approved: true});
-
-    await flushPromises();
-
     expect(window.location.assign).toHaveBeenCalledWith('/admin/mcp/authorize?sulu_mcp_consent=request-1');
 });
 
 test('Should deny authorization consent and redirect to continuation URL', async() => {
+    const user = userEvent.setup();
     Requester.get.mockReturnValue(Promise.resolve(consentDetails));
     Requester.post.mockReturnValue(Promise.resolve({redirectUrl: '/admin/mcp/authorize?sulu_mcp_consent=request-1'}));
 
-    const authorizationConsent = mount(<AuthorizationConsent route={route} router={router} />);
+    render(<AuthorizationConsent route={route} router={router} />);
 
-    await flushPromises();
-    authorizationConsent.update();
-
-    authorizationConsent.find('button').at(0).simulate('click');
+    expect(await screen.findByText('ChatGPT')).toBeInTheDocument();
+    await user.click(getDenyButton());
 
     expect(Requester.post).toHaveBeenCalledWith('/sulu_mcp_server_oauth_consent_decision/request-1', {approved: false});
-
-    await flushPromises();
-
     expect(window.location.assign).toHaveBeenCalledWith('/admin/mcp/authorize?sulu_mcp_consent=request-1');
 });
 
 test('Should show an error and re-enable the buttons when the decision cannot be submitted', async() => {
+    const user = userEvent.setup();
     Requester.get.mockReturnValue(Promise.resolve(consentDetails));
     Requester.post.mockImplementation(() => Promise.reject(new Error('Server error')));
 
-    const authorizationConsent = mount(<AuthorizationConsent route={route} router={router} />);
+    render(<AuthorizationConsent route={route} router={router} />);
 
-    await flushPromises();
-    authorizationConsent.update();
+    expect(await screen.findByText('ChatGPT')).toBeInTheDocument();
+    await user.click(getApproveButton());
 
-    authorizationConsent.find('button').at(1).simulate('click');
-
-    await flushPromises();
-    authorizationConsent.update();
-
-    expect(authorizationConsent.text()).toContain('sulu_admin.authorization_consent_decision_error');
+    expect(await screen.findByText('sulu_admin.authorization_consent_decision_error')).toBeInTheDocument();
     expect(window.location.assign).not.toHaveBeenCalled();
-    expect(authorizationConsent.find('Button').at(0).prop('disabled')).toBe(false);
-    expect(authorizationConsent.find('Button').at(1).prop('disabled')).toBe(false);
+    expect(getDenyButton()).toBeEnabled();
+    expect(getApproveButton()).toBeEnabled();
 });
 
 test('Should disable both buttons and show a loader while the decision is being submitted', async() => {
+    const user = userEvent.setup();
     Requester.get.mockReturnValue(Promise.resolve(consentDetails));
-    Requester.post.mockReturnValue(new Promise(() => {}));
+    const pendingDecisionRequest = new Promise(() => {});
+    pendingDecisionRequest.abort = jest.fn();
+    Requester.post.mockReturnValue(pendingDecisionRequest);
 
-    const authorizationConsent = mount(<AuthorizationConsent route={route} router={router} />);
+    render(<AuthorizationConsent route={route} router={router} />);
 
-    await flushPromises();
-    authorizationConsent.update();
-
-    authorizationConsent.find('button').at(1).simulate('click');
-    authorizationConsent.update();
+    expect(await screen.findByText('ChatGPT')).toBeInTheDocument();
+    await user.click(getApproveButton());
 
     expect(Requester.post).toHaveBeenCalledTimes(1);
-    expect(authorizationConsent.find('Button').at(0).prop('disabled')).toBe(true);
-    expect(authorizationConsent.find('Button').at(1).prop('disabled')).toBe(true);
-    expect(authorizationConsent.find('Button').at(1).prop('loading')).toBe(true);
+    expect(getDenyButton()).toBeDisabled();
+    expect(getDenyButton()).not.toHaveClass('loading');
+    expect(getApproveButton()).toBeDisabled();
+    expect(getApproveButton()).toHaveClass('loading');
 });
 
 test('Should render an error message when the consent details are malformed', async() => {
     Requester.get.mockReturnValue(Promise.resolve({clientName: 'ChatGPT'}));
 
-    const authorizationConsent = mount(<AuthorizationConsent route={route} router={router} />);
+    render(<AuthorizationConsent route={route} router={router} />);
 
-    await flushPromises();
-    authorizationConsent.update();
-
-    expect(authorizationConsent.text()).toContain('sulu_admin.authorization_consent_error');
+    expect(await screen.findByText('sulu_admin.authorization_consent_error')).toBeInTheDocument();
 });
 
 test('Should render an error message when consent details cannot be loaded', async() => {
     Requester.get.mockReturnValue(Promise.reject(new Error('Not found')));
 
-    const authorizationConsent = mount(<AuthorizationConsent route={route} router={router} />);
+    render(<AuthorizationConsent route={route} router={router} />);
 
-    await flushPromises();
-    authorizationConsent.update();
-
-    expect(authorizationConsent.text()).toContain('sulu_admin.authorization_consent_error');
+    expect(await screen.findByText('sulu_admin.authorization_consent_error')).toBeInTheDocument();
 });
 
 test('Should render without optional redirect URI and without scopes', async() => {
     Requester.get.mockReturnValue(Promise.resolve({clientName: 'ChatGPT', scopes: []}));
 
-    const authorizationConsent = mount(<AuthorizationConsent route={route} router={router} />);
+    render(<AuthorizationConsent route={route} router={router} />);
 
-    await flushPromises();
-    authorizationConsent.update();
-
-    expect(authorizationConsent.text()).toContain('ChatGPT');
-    expect(authorizationConsent.text()).not.toContain('sulu_admin.authorization_consent_redirect_uri');
-    expect(authorizationConsent.text()).not.toContain('sulu_admin.authorization_consent_scopes');
+    expect(await screen.findByText('ChatGPT')).toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.authorization_consent_redirect_uri')).not.toBeInTheDocument();
+    expect(screen.queryByText('sulu_admin.authorization_consent_scopes')).not.toBeInTheDocument();
 });

@@ -1,33 +1,187 @@
 // @flow
 import React from 'react';
+import {act, render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable} from 'mobx';
-import {mount, shallow} from 'enzyme';
 import ResourceListStore from 'sulu-admin-bundle/stores/ResourceListStore';
 import ResourceLocatorHistory from '../ResourceLocatorHistory';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+let mockResourceListStoreInstances: Array<Object> = [];
+let mockTableButtons: Array<Object> = [];
+
+const mockReact = require('react');
+
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/stores/ResourceListStore', () => jest.fn(function() {
     this.deleteList = jest.fn();
 
     mockExtendObservable(this, {
         data: [],
+        deleting: false,
         loading: true,
     });
+
+    mockResourceListStoreInstances.push(this);
 }));
 
-test('Pass props correctly to ResourceListStore', () => {
-    const resourceLocatorHistory = shallow(
-        <ResourceLocatorHistory
-            options={{webspace: 'sulu', resourceKey: 'text', resourceId: 5}}
-            resourceKey="history_routes"
-        />
+jest.mock('sulu-admin-bundle/components/Button', () => jest.fn((props) => (
+    mockReact.createElement(
+        'button',
+        {
+            'data-icon': props.icon,
+            'data-skin': props.skin,
+            disabled: props.disabled,
+            onClick: props.onClick,
+            type: 'button',
+        },
+        props.children || props.icon
+    )
+)));
+
+jest.mock('sulu-admin-bundle/components/Dialog', () => jest.fn((props) => (
+    props.open
+        ? mockReact.createElement(
+            'div',
+            {'data-testid': 'dialog'},
+            mockReact.createElement('span', {}, props.title),
+            mockReact.createElement('div', {}, props.children),
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'dialog-cancel',
+                    onClick: props.onCancel,
+                    type: 'button',
+                },
+                props.cancelText
+            ),
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'dialog-confirm',
+                    onClick: props.onConfirm,
+                    type: 'button',
+                },
+                props.confirmText
+            )
+        )
+        : null
+)));
+
+jest.mock('sulu-admin-bundle/components/Loader', () => jest.fn(() => (
+    mockReact.createElement('div', {'data-testid': 'loader'})
+)));
+
+jest.mock('sulu-admin-bundle/components/Overlay', () => jest.fn((props) => (
+    props.open
+        ? mockReact.createElement(
+            'section',
+            {
+                'aria-label': 'resource locator history',
+                role: 'dialog',
+            },
+            mockReact.createElement('h2', {}, props.title),
+            props.children,
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'overlay-confirm',
+                    onClick: props.onConfirm,
+                    type: 'button',
+                },
+                props.confirmText
+            ),
+            mockReact.createElement(
+                'button',
+                {
+                    'aria-label': 'overlay-close',
+                    onClick: props.onClose,
+                    type: 'button',
+                },
+                'Close'
+            )
+        )
+        : null
+)));
+
+jest.mock('sulu-admin-bundle/components/Table', () => {
+    const TableMock: any = jest.fn((props) => {
+        mockTableButtons = props.buttons || [];
+
+        return mockReact.createElement('table', {}, props.children);
+    });
+
+    TableMock.Header = (props) => mockReact.createElement(
+        'thead',
+        {},
+        mockReact.createElement('tr', {}, props.children)
+    );
+    TableMock.HeaderCell = (props) => mockReact.createElement('th', {}, props.children);
+    TableMock.Body = (props) => mockReact.createElement('tbody', {}, props.children);
+    TableMock.Cell = (props) => mockReact.createElement('td', {}, props.children);
+    TableMock.Row = (props) => mockReact.createElement(
+        'tr',
+        {},
+        props.children,
+        mockTableButtons.map((button) => (
+            mockReact.createElement(
+                'td',
+                {key: button.icon},
+                mockReact.createElement(
+                    'button',
+                    {
+                        'aria-label': button.icon + '-' + props.id,
+                        onClick: () => button.onClick(props.id),
+                        type: 'button',
+                    },
+                    button.icon
+                )
+            )
+        ))
     );
 
+    return TableMock;
+});
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockResourceListStoreInstances = [];
+    mockTableButtons = [];
+});
+
+function renderResourceLocatorHistory(props: Object = {}) {
+    return render(
+        <ResourceLocatorHistory
+            options={{webspace: 'sulu'}}
+            resourceKey="history_routes"
+            {...props}
+        />
+    );
+}
+
+function getResourceListStore() {
+    return mockResourceListStoreInstances[0];
+}
+
+async function openHistoryOverlay() {
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.show_history'}));
+}
+
+function setHistoryData(data) {
+    act(() => {
+        getResourceListStore().loading = false;
+        getResourceListStore().data = data;
+    });
+}
+
+test('Pass props correctly to ResourceListStore', async() => {
+    renderResourceLocatorHistory({options: {webspace: 'sulu', resourceKey: 'text', resourceId: 5}});
+
     expect(ResourceListStore).not.toHaveBeenCalled();
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
+
+    await openHistoryOverlay();
+
     expect(ResourceListStore).toHaveBeenCalledWith(
         'history_routes',
         {webspace: 'sulu', resourceKey: 'text', resourceId: 5}
@@ -35,50 +189,29 @@ test('Pass props correctly to ResourceListStore', () => {
 });
 
 test('Pass correct props to Button', () => {
-    const resourceLocatorHistory = shallow(
-        <ResourceLocatorHistory
-            options={{webspace: 'sulu'}}
-            resourceKey="history_routes"
-        />
-    );
+    renderResourceLocatorHistory();
 
-    expect(resourceLocatorHistory.find('Button[icon="su-process"]').props()).toEqual(expect.objectContaining({
-        disabled: false,
-        icon: 'su-process',
-        skin: 'link',
-    }));
+    const button = screen.getByText('sulu_admin.show_history');
+    expect(button).toBeEnabled();
+    expect(button).toHaveAttribute('data-icon', 'su-process');
+    expect(button).toHaveAttribute('data-skin', 'link');
 });
 
 test('Disable button if disabled isset', () => {
-    const resourceLocatorHistory = shallow(
-        <ResourceLocatorHistory
-            disabled={true}
-            options={{webspace: 'sulu'}}
-            resourceKey="history_routes"
-        />
-    );
+    renderResourceLocatorHistory({disabled: true});
 
-    expect(resourceLocatorHistory.find('Button[icon="su-process"]').props()).toEqual(expect.objectContaining({
-        disabled: true,
-    }));
+    expect(screen.getByText('sulu_admin.show_history')).toBeDisabled();
 });
 
-test('Show history routes in overlay', () => {
-    const resourceLocatorHistory = mount(
-        <ResourceLocatorHistory
-            options={{webspace: 'sulu'}}
-            resourceKey="history_routes"
-        />
-    );
+test('Show history routes in overlay', async() => {
+    renderResourceLocatorHistory();
 
-    expect(resourceLocatorHistory.find('Overlay Loader')).toHaveLength(0);
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
-    expect(resourceLocatorHistory.find('Overlay Loader')).toHaveLength(1);
+    expect(screen.queryByTestId('loader')).not.toBeInTheDocument();
 
-    // $FlowFixMe
-    const resourceListStore = ResourceListStore.mock.instances[0];
-    resourceListStore.loading = false;
-    resourceListStore.data = [
+    await openHistoryOverlay();
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
+
+    setHistoryData([
         {
             id: 3,
             slug: '/test',
@@ -87,117 +220,90 @@ test('Show history routes in overlay', () => {
             id: 6,
             slug: '/testing',
         },
-    ];
+    ]);
 
-    resourceLocatorHistory.update();
-    expect(resourceLocatorHistory.find('Overlay').render()).toMatchSnapshot();
+    expect(await screen.findByText('/test')).toBeInTheDocument();
+    expect(screen.getByText('/testing')).toBeInTheDocument();
 });
 
-test('Reload history routes each time overlay is opened', () => {
-    const resourceLocatorHistory = mount(
-        <ResourceLocatorHistory
-            options={{webspace: 'sulu'}}
-            resourceKey="history_routes"
-        />
-    );
+test('Reload history routes each time overlay is opened', async() => {
+    renderResourceLocatorHistory();
 
     expect(ResourceListStore).toHaveBeenCalledTimes(0);
 
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
+    await openHistoryOverlay();
     expect(ResourceListStore).toHaveBeenCalledTimes(1);
 
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
+    await openHistoryOverlay();
     expect(ResourceListStore).toHaveBeenCalledTimes(2);
 });
 
-test('Close overlay if button is clicked', () => {
-    const resourceLocatorHistory = mount(
-        <ResourceLocatorHistory
-            options={{webspace: 'sulu'}}
-            resourceKey="history_routes"
-        />
-    );
+test('Close overlay if button is clicked', async() => {
+    const user = userEvent.setup();
+    renderResourceLocatorHistory();
 
-    expect(resourceLocatorHistory.find('Overlay').prop('open')).toEqual(false);
+    expect(screen.queryByRole('dialog', {name: 'resource locator history'})).not.toBeInTheDocument();
 
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
-    expect(resourceLocatorHistory.find('Overlay').prop('open')).toEqual(true);
+    await openHistoryOverlay();
+    expect(screen.getByRole('dialog', {name: 'resource locator history'})).toBeInTheDocument();
 
-    resourceLocatorHistory.find('Overlay').prop('onConfirm')();
-    resourceLocatorHistory.update();
-    expect(resourceLocatorHistory.find('Overlay').prop('open')).toEqual(false);
+    await user.click(screen.getByLabelText('overlay-confirm'));
+
+    expect(screen.queryByRole('dialog', {name: 'resource locator history'})).not.toBeInTheDocument();
 });
 
-test('Do not delete if confirmation dialog is cancelled', () => {
-    const resourceLocatorHistory = mount(
-        <ResourceLocatorHistory
-            options={{webspace: 'sulu'}}
-            resourceKey="history_routes"
-        />
-    );
+test('Do not delete if confirmation dialog is cancelled', async() => {
+    const user = userEvent.setup();
+    renderResourceLocatorHistory();
 
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
-
-    // $FlowFixMe
-    const resourceListStore = ResourceListStore.mock.instances[0];
-
-    resourceListStore.loading = false;
-    resourceListStore.data = [
-        {
-            id: 3,
-            slug: '/test',
-        },
-    ];
-
-    resourceLocatorHistory.update();
-    resourceLocatorHistory.find('ButtonCell[icon="su-trash-alt"] button').prop('onClick')();
-    resourceLocatorHistory.update();
-
-    expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(true);
-    resourceLocatorHistory.find('Dialog Button[skin="secondary"]').prop('onClick')();
-    resourceLocatorHistory.update();
-    expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(false);
-
-    expect(resourceListStore.deleteList).not.toHaveBeenCalled();
-});
-
-test('Delete if confirmation dialog is confirmed', () => {
-    const resourceLocatorHistory = mount(
-        <ResourceLocatorHistory
-            options={{webspace: 'sulu'}}
-            resourceKey="history_routes"
-        />
-    );
-
-    resourceLocatorHistory.find('Button[icon="su-process"]').simulate('click');
-
-    // $FlowFixMe
-    const resourceListStore = ResourceListStore.mock.instances[0];
-
-    resourceListStore.loading = false;
-    resourceListStore.data = [
+    await openHistoryOverlay();
+    setHistoryData([
         {
             id: 3,
             slug: 'sulu.io/test',
         },
-    ];
+    ]);
 
-    const deleteListPromise = Promise.resolve();
-    resourceListStore.deleteList.mockReturnValue(deleteListPromise);
+    await user.click(await screen.findByLabelText('su-trash-alt-3'));
 
-    resourceLocatorHistory.update();
-    resourceLocatorHistory.find('ButtonCell[icon="su-trash-alt"] button').prop('onClick')();
-    resourceLocatorHistory.update();
+    expect(screen.getByTestId('dialog')).toBeInTheDocument();
 
-    expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(true);
-    resourceLocatorHistory.find('Dialog Button[skin="primary"]').prop('onClick')();
-    resourceLocatorHistory.update();
-    expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(true);
+    await user.click(screen.getByLabelText('dialog-cancel'));
 
-    expect(resourceListStore.deleteList).toHaveBeenCalledWith([3]);
+    expect(screen.queryByTestId('dialog')).not.toBeInTheDocument();
+    expect(getResourceListStore().deleteList).not.toHaveBeenCalled();
+});
 
-    return deleteListPromise.then(() => {
-        resourceLocatorHistory.update();
-        expect(resourceLocatorHistory.find('Dialog').prop('open')).toEqual(false);
+test('Delete if confirmation dialog is confirmed', async() => {
+    const user = userEvent.setup();
+    renderResourceLocatorHistory();
+
+    await openHistoryOverlay();
+    setHistoryData([
+        {
+            id: 3,
+            slug: 'sulu.io/test',
+        },
+    ]);
+
+    let resolveDeleteList;
+    const deleteListPromise = new Promise((resolve) => {
+        resolveDeleteList = resolve;
     });
+    getResourceListStore().deleteList.mockReturnValue(deleteListPromise);
+
+    await user.click(await screen.findByLabelText('su-trash-alt-3'));
+
+    expect(screen.getByTestId('dialog')).toBeInTheDocument();
+
+    await user.click(screen.getByLabelText('dialog-confirm'));
+
+    expect(screen.getByTestId('dialog')).toBeInTheDocument();
+    expect(getResourceListStore().deleteList).toHaveBeenCalledWith([3]);
+
+    act(() => {
+        resolveDeleteList();
+    });
+
+    await waitFor(() => expect(screen.queryByTestId('dialog')).not.toBeInTheDocument());
 });

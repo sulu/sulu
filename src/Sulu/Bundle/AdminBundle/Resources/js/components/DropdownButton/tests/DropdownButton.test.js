@@ -15,6 +15,7 @@ test('Render dropdown button', () => {
 });
 
 test('Clicking dropdown items should call the corresponding callback', async() => {
+    const user = userEvent.setup();
     const option1ClickSpy = jest.fn();
     const option2ClickSpy = jest.fn();
 
@@ -26,10 +27,10 @@ test('Clicking dropdown items should call the corresponding callback', async() =
     );
 
     const dropdownButton = screen.queryByText('Add');
-    await userEvent.click(dropdownButton);
+    await user.click(dropdownButton);
 
     const option1 = screen.queryByText('Option 1');
-    await userEvent.click(option1);
+    await user.click(option1);
 
     expect(option1ClickSpy).toHaveBeenCalled();
     expect(option2ClickSpy).not.toHaveBeenCalled();
@@ -37,9 +38,9 @@ test('Clicking dropdown items should call the corresponding callback', async() =
     option1ClickSpy.mockReset();
     option2ClickSpy.mockReset();
 
-    await userEvent.click(dropdownButton);
+    await user.click(dropdownButton);
     const option2 = screen.queryByText('Option 2');
-    await userEvent.click(option2);
+    await user.click(option2);
 
     expect(option1ClickSpy).not.toHaveBeenCalled();
     expect(option2ClickSpy).toHaveBeenCalled();

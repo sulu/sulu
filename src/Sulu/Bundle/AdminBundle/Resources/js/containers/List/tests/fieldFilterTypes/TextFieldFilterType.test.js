@@ -1,29 +1,39 @@
 // @flow
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import TextFieldFilterType from '../../fieldFilterTypes/TextFieldFilterType';
 
 test('Render with value of undefined', () => {
     const textFieldFilterType = new TextFieldFilterType(jest.fn(), {}, undefined);
-    expect(render(textFieldFilterType.getFormNode())).toMatchSnapshot();
+    const {asFragment} = render(textFieldFilterType.getFormNode());
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with value', () => {
     const textFieldFilterType = new TextFieldFilterType(jest.fn(), {}, {eq: 'Filter'});
-    expect(render(textFieldFilterType.getFormNode())).toMatchSnapshot();
+    const {asFragment} = render(textFieldFilterType.getFormNode());
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with value set by setValue', () => {
     const textFieldFilterType = new TextFieldFilterType(jest.fn(), {}, undefined);
     textFieldFilterType.setValue({eq: 'New value'});
-    expect(render(textFieldFilterType.getFormNode())).toMatchSnapshot();
+    const {asFragment} = render(textFieldFilterType.getFormNode());
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Call onChange handler with new value', () => {
+test('Call onChange handler with new value', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const textFieldFilterType = new TextFieldFilterType(changeSpy, {}, undefined);
-    const textFieldFilterTypeForm = mount(textFieldFilterType.getFormNode());
 
-    textFieldFilterTypeForm.find('Input').prop('onChange')('value');
+    render(textFieldFilterType.getFormNode());
+
+    await user.click(screen.getByRole('textbox'));
+    await user.paste('value');
 
     expect(changeSpy).toHaveBeenCalledWith({eq: 'value'});
 });

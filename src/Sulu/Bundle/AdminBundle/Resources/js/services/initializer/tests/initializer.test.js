@@ -12,9 +12,7 @@ jest.mock('../../Requester', () => ({
     get: jest.fn(),
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    setTranslations: jest.fn(),
-}));
+jest.mock('../../../utils/Translator');
 
 beforeEach(() => {
     initializer.clear();

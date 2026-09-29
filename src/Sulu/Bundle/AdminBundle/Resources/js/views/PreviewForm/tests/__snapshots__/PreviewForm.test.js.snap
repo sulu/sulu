@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
-
-exports[`Should render Form view 1`] = `
-<div>
-  form view mock
-</div>
-`;

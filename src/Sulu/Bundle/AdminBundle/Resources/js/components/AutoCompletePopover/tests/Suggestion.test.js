@@ -64,7 +64,7 @@ test('Clicking on a suggestion should call the onClick handler', async() => {
     );
 
     const user = userEvent.setup();
-    await user.click(screen.getByText('Suggestion 3'));
+    await user.click(screen.getByRole('button', {name: /Suggestion 3/}));
 
     expect(selectSpy).toHaveBeenCalledTimes(1);
 });

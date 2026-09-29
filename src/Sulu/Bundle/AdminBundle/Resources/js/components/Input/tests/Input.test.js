@@ -5,9 +5,7 @@ import userEvent from '@testing-library/user-event';
 import Input from '../Input';
 import bindValueToOnChange from '../../../utils/TestHelper/bindValueToOnChange';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('Input should render', () => {
     const onChange = jest.fn();
@@ -104,37 +102,41 @@ test('Input should render with a segment counter', () => {
 });
 
 test('Input should call the callback when the input changes', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     render(bindValueToOnChange(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />));
 
     const input = screen.queryByDisplayValue('My value');
-    await userEvent.type(input, ' - changed');
+    await user.type(input, ' - changed');
 
     expect(onChange).toHaveBeenLastCalledWith('My value - changed', expect.anything());
 });
 
 test('Input should call the callback with undefined if the input value is removed', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     render(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />);
 
     const input = screen.queryByDisplayValue('My value');
-    await userEvent.clear(input);
+    await user.clear(input);
 
     expect(onChange).toHaveBeenCalledWith(undefined, expect.anything());
 });
 
 test('Input should call the callback when icon was clicked', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     const handleIconClick = jest.fn();
     render(<Input icon="su-pen" onChange={onChange} onIconClick={handleIconClick} value="My value" />);
 
     const icon = screen.queryByLabelText('su-pen');
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(handleIconClick).toHaveBeenCalled();
 });
 
 test('Input should call the given focus callback', async() => {
+    const user = userEvent.setup();
     const onFocusSpy = jest.fn();
 
     render(<Input icon="su-pen" onChange={jest.fn()} onFocus={onFocusSpy} value="My value" />);
@@ -142,7 +144,7 @@ test('Input should call the given focus callback', async() => {
     const input = screen.queryByDisplayValue('My value');
 
     expect(onFocusSpy).not.toHaveBeenCalled();
-    await userEvent.click(input);
+    await user.click(input);
     expect(onFocusSpy).toHaveBeenCalled();
 });
 
@@ -168,11 +170,12 @@ test('Input should render append container with icon when onClearClick callback 
 });
 
 test('Input should should call the callback when clear icon was clicked', async() => {
+    const user = userEvent.setup();
     const onClearClick = jest.fn();
     render(<Input onChange={jest.fn()} onClearClick={onClearClick} value="My value" />);
 
     const icon = screen.queryByLabelText('su-times');
-    await userEvent.click(icon);
+    await user.click(icon);
     expect(onClearClick).toHaveBeenCalled();
 });
 

@@ -1,20 +1,49 @@
 // @flow
+/* eslint-disable react/jsx-no-bind */
 import mockReact from 'react';
-import {mount} from 'enzyme';
 import {observable} from 'mobx';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import FormOverlayList from '../FormOverlayList';
-import List from '../../List';
 import ResourceStore from '../../../stores/ResourceStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
-import FormOverlay from '../../../containers/FormOverlay';
 import Router, {Route} from '../../../services/Router';
+import FormOverlay from '../../../containers/FormOverlay';
+import {createTestRef} from '../../../utils/TestHelper';
 
 const React = mockReact;
+let mockListReload;
 
-jest.mock('../../List', () => class ListMock extends mockReact.Component<*> {
-    render() {
-        return <div>list view mock</div>;
-    }
+jest.mock('../../List', () => {
+    const React = require('react');
+
+    const ListMock = React.forwardRef((props, ref) => {
+        React.useImperativeHandle(ref, () => ({
+            reload: mockListReload,
+        }));
+
+        return (
+            <div
+                data-has-item-add={props.onItemAdd ? 'true' : 'false'}
+                data-has-item-click={props.onItemClick ? 'true' : 'false'}
+                data-has-locale={props.locale ? 'true' : 'false'}
+                data-testid="list-view"
+            >
+                list view mock
+                {props.onItemAdd &&
+                    <button onClick={props.onItemAdd} type="button">add-item</button>
+                }
+                {props.onItemClick &&
+                    <button onClick={() => props.onItemClick('item-id')} type="button">click-item</button>
+                }
+            </div>
+        );
+    });
+
+    ListMock.displayName = 'ListMock';
+    (ListMock: any).getDerivedRouteAttributes = jest.fn();
+
+    return ListMock;
 });
 
 jest.mock('../../../containers/Form/Form', () => class FormMock extends mockReact.Component<*> {
@@ -23,9 +52,18 @@ jest.mock('../../../containers/Form/Form', () => class FormMock extends mockReac
     }
 });
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../containers/FormOverlay', () => {
+    const React = require('react');
+
+    return jest.fn((props) => (
+        <div>
+            <button onClick={props.onClose} type="button">close-overlay</button>
+            <button onClick={props.onConfirm} type="button">confirm-overlay</button>
+        </div>
+    ));
+});
+
+jest.mock('../../../utils/Translator');
 
 jest.mock('../../../stores/ResourceStore', () => jest.fn(
     (resourceKey, itemId) => {
@@ -34,14 +72,28 @@ jest.mock('../../../stores/ResourceStore', () => jest.fn(
         };
     }
 ));
+
 jest.mock('../../../containers/Form/stores/ResourceFormStore', () => jest.fn(
     (resourceStore, formKey, options, metadataOptions) => {
         return {
+            destroy: jest.fn(),
+            dirty: true,
             id: resourceStore.id,
             metadataOptions,
         };
     }
 ));
+
+function getFormOverlayProps() {
+    return (FormOverlay: any).mock.lastCall[0];
+}
+
+beforeEach(() => {
+    mockListReload = jest.fn();
+    (ResourceStore: any).mockClear();
+    (ResourceFormStore: any).mockClear();
+    (FormOverlay: any).mockClear();
+});
 
 test('View should render with closed overlay', () => {
     const route: Route = ({}: any);
@@ -51,12 +103,14 @@ test('View should render with closed overlay', () => {
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
+    render(<FormOverlayList route={route} router={router} />);
 
-    expect(formOverlayList.render()).toMatchSnapshot();
+    expect(screen.getByTestId('list-view')).toBeInTheDocument();
+    expect(FormOverlay).not.toHaveBeenCalled();
 });
 
-test('View should render with opened overlay', () => {
+test('View should render with opened overlay', async() => {
+    const user = userEvent.setup();
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -67,13 +121,11 @@ test('View should render with opened overlay', () => {
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
+    render(<FormOverlayList route={route} router={router} />);
 
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
+    await user.click(screen.getByRole('button', {name: 'add-item'}));
 
-    expect(formOverlayList.render()).toMatchSnapshot();
+    expect(getFormOverlayProps().open).toEqual(true);
 });
 
 test('Should pass correct props to List view', () => {
@@ -100,16 +152,15 @@ test('Should pass correct props to List view', () => {
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    const list = formOverlayList.find(List);
+    render(<FormOverlayList route={route} router={router} />);
 
-    expect(list.props()).toEqual(expect.objectContaining(formOverlayList.props()));
-    expect(list.props().locale).toBeDefined();
-    expect(list.props().onItemAdd).toBeDefined();
-    expect(list.props().onItemClick).toBeDefined();
+    expect(screen.getByTestId('list-view')).toHaveAttribute('data-has-locale', 'true');
+    expect(screen.getByTestId('list-view')).toHaveAttribute('data-has-item-add', 'true');
+    expect(screen.getByTestId('list-view')).toHaveAttribute('data-has-item-click', 'true');
 });
 
-test('Should construct ResourceStore and ResourceFormStore with correct parameters on item-add callback', () => {
+test('Should construct ResourceStore and ResourceFormStore with correct parameters on item-add callback', async() => {
+    const user = userEvent.setup();
     const route: Route = ({}: any);
     const router: Router = ({
         attributes: {
@@ -132,8 +183,8 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
         dimension: 'test-dimension',
     };
 
-    const formOverlayList = mount(<FormOverlayList resourceStore={testResourceStore} route={route} router={router} />);
-    formOverlayList.find(List).props().onItemAdd();
+    render(<FormOverlayList resourceStore={testResourceStore} route={route} router={router} />);
+    await user.click(screen.getByRole('button', {name: 'add-item'}));
 
     expect(ResourceStore).toHaveBeenCalledWith('test-resource-key', undefined, {}, {
         category: 'category-id',
@@ -149,7 +200,8 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
     }, {});
 });
 
-test('Should construct ResourceStore and ResourceFormStore with correct parameters on item-click callback', () => {
+test('Should construct ResourceStore and ResourceFormStore with correct parameters on item-click callback', async() => {
+    const user = userEvent.setup();
     const route: Route = ({}: any);
     const router: Router = ({
         attributes: {
@@ -171,13 +223,13 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
         webspace: 'test-webspace',
         dimension: 'test-dimension',
     };
-
-    const formOverlayList = mount(<FormOverlayList resourceStore={testResourceStore} route={route} router={router} />);
-
     const locale = observable.box('en');
-    formOverlayList.instance().locale = locale;
+    const ref = createTestRef();
 
-    formOverlayList.find(List).props().onItemClick('item-id');
+    render(<FormOverlayList ref={ref} resourceStore={testResourceStore} route={route} router={router} />);
+    ref.current.locale = locale;
+
+    await user.click(screen.getByRole('button', {name: 'click-item'}));
 
     expect(ResourceStore).toHaveBeenCalledWith('test-resource-key', 'item-id', {locale}, {
         category: 'category-id',
@@ -193,7 +245,8 @@ test('Should construct ResourceStore and ResourceFormStore with correct paramete
     }, {});
 });
 
-test('Should construct ResourceFormStore with correct metadataOptions on item-add callback', () => {
+test('Should construct ResourceFormStore with correct metadataOptions on item-add callback', async() => {
+    const user = userEvent.setup();
     const route: Route = ({}: any);
     const router: Router = ({
         attributes: {
@@ -210,11 +263,11 @@ test('Should construct ResourceFormStore with correct metadataOptions on item-ad
             },
         },
     }: any);
+    const ref = createTestRef();
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-
-    formOverlayList.instance().locale = observable.box('en');
-    formOverlayList.find(List).props().onItemAdd();
+    render(<FormOverlayList ref={ref} route={route} router={router} />);
+    ref.current.locale = observable.box('en');
+    await user.click(screen.getByRole('button', {name: 'add-item'}));
 
     expect(ResourceFormStore).toHaveBeenCalledWith(expect.anything(), 'test-form-key', {}, {
         staticParam: 'staticValue',
@@ -223,7 +276,8 @@ test('Should construct ResourceFormStore with correct metadataOptions on item-ad
     });
 });
 
-test('Should open FormOverlay with correct props when List fires the item-add callback', () => {
+test('Should open FormOverlay with correct props when List fires the item-add callback', async() => {
+    const user = userEvent.setup();
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -235,15 +289,11 @@ test('Should open FormOverlay with correct props when List fires the item-add ca
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    formOverlayList.find(List).props().onItemAdd();
+    render(<FormOverlayList route={route} router={router} />);
+    await user.click(screen.getByRole('button', {name: 'add-item'}));
 
-    formOverlayList.update();
-    const overlay = formOverlayList.find(FormOverlay);
-
-    expect(overlay.props()).toEqual(expect.objectContaining({
+    expect(getFormOverlayProps()).toEqual(expect.objectContaining({
         confirmText: 'sulu_admin.save',
-        formStore: formOverlayList.instance().formStore,
         open: true,
         router,
         size: 'large',
@@ -251,7 +301,8 @@ test('Should open FormOverlay with correct props when List fires the item-add ca
     }));
 });
 
-test('Should open FormOverlay with correct props when List fires the item-click callback', () => {
+test('Should open FormOverlay with correct props when List fires the item-click callback', async() => {
+    const user = userEvent.setup();
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -262,22 +313,20 @@ test('Should open FormOverlay with correct props when List fires the item-click 
         },
     }: any);
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-    formOverlayList.find(List).props().onItemClick('item-id');
+    render(<FormOverlayList route={route} router={router} />);
+    await user.click(screen.getByRole('button', {name: 'click-item'}));
 
-    formOverlayList.update();
-    const overlay = formOverlayList.find(FormOverlay);
-
-    expect(overlay.props()).toEqual(expect.objectContaining({
+    expect(getFormOverlayProps()).toEqual(expect.objectContaining({
         confirmText: 'sulu_admin.save',
-        formStore: formOverlayList.instance().formStore,
+        formStore: expect.objectContaining({id: 'item-id'}),
         open: true,
         size: 'small',
         title: 'app.edit_overlay_title',
     }));
 });
 
-test('Should destroy ResourceFormStore without reloading List when FormOverlay is closed', () => {
+test('Should destroy ResourceFormStore without reloading List when FormOverlay is closed', async() => {
+    const user = userEvent.setup();
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -286,25 +335,21 @@ test('Should destroy ResourceFormStore without reloading List when FormOverlay i
             },
         },
     }: any);
+    const ref = createTestRef();
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
+    render(<FormOverlayList ref={ref} route={route} router={router} />);
+    await user.click(screen.getByRole('button', {name: 'add-item'}));
 
     const destroySpy = jest.fn();
-    formOverlayList.instance().formStore.destroy = destroySpy;
+    ref.current.formStore.destroy = destroySpy;
 
-    const reloadSpy = jest.fn();
-    formOverlayList.find(List).instance().reload = reloadSpy;
-
-    formOverlayList.find(FormOverlay).props().onClose();
+    await user.click(screen.getByRole('button', {name: 'close-overlay'}));
     expect(destroySpy).toHaveBeenCalled();
-    expect(reloadSpy).not.toHaveBeenCalled();
+    expect(mockListReload).not.toHaveBeenCalled();
 });
 
-test('Should destroy ResourceFormStore and reload List view when FormOverlay is confirmed', () => {
+test('Should destroy ResourceFormStore and reload List view when FormOverlay is confirmed', async() => {
+    const user = userEvent.setup();
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -313,25 +358,21 @@ test('Should destroy ResourceFormStore and reload List view when FormOverlay is 
             },
         },
     }: any);
+    const ref = createTestRef();
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
+    render(<FormOverlayList ref={ref} route={route} router={router} />);
+    await user.click(screen.getByRole('button', {name: 'add-item'}));
 
     const destroySpy = jest.fn();
-    formOverlayList.instance().formStore.destroy = destroySpy;
+    ref.current.formStore.destroy = destroySpy;
 
-    const reloadSpy = jest.fn();
-    formOverlayList.find(List).instance().reload = reloadSpy;
-
-    formOverlayList.find(FormOverlay).props().onConfirm();
+    await user.click(screen.getByRole('button', {name: 'confirm-overlay'}));
     expect(destroySpy).toHaveBeenCalled();
-    expect(reloadSpy).toHaveBeenCalled();
+    expect(mockListReload).toHaveBeenCalled();
 });
 
-test('Should destroy ResourceFormStore when component is unmounted', () => {
+test('Should destroy ResourceFormStore when component is unmounted', async() => {
+    const user = userEvent.setup();
     const route: Route = ({}: any);
     const router: Router = ({
         route: {
@@ -340,16 +381,14 @@ test('Should destroy ResourceFormStore when component is unmounted', () => {
             },
         },
     }: any);
+    const ref = createTestRef();
 
-    const formOverlayList = mount(<FormOverlayList route={route} router={router} />);
-
-    // open form overlay for new item
-    formOverlayList.find(List).props().onItemAdd();
-    formOverlayList.update();
+    const {unmount} = render(<FormOverlayList ref={ref} route={route} router={router} />);
+    await user.click(screen.getByRole('button', {name: 'add-item'}));
 
     const destroySpy = jest.fn();
-    formOverlayList.instance().formStore.destroy = destroySpy;
+    ref.current.formStore.destroy = destroySpy;
 
-    formOverlayList.unmount();
+    unmount();
     expect(destroySpy).toHaveBeenCalled();
 });

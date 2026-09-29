@@ -1,18 +1,39 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {observable} from 'mobx';
-import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
+import {
+    fieldTypeDefaultProps,
+    mockResizeObserver,
+} from 'sulu-admin-bundle/utils/TestHelper';
 import {blockIdGenerator} from 'sulu-admin-bundle/services';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 import fieldRegistry from 'sulu-admin-bundle/containers/Form/registries/fieldRegistry';
 import SingleSelect from 'sulu-admin-bundle/containers/Form/fields/SingleSelect';
-import {Renderer} from 'sulu-admin-bundle/containers/Form';
-import Field from 'sulu-admin-bundle/containers/Form/Field';
 import jsonpointer from 'json-pointer';
 import ImageMap from '../../fields/ImageMap';
-import ImageMapContainer from '../../../ImageMap';
+
+let mockSingleSelectionStoreInstances: Array<Object> = [];
+
+function mockFieldType(props) {
+    const dataPointer = props.dataPath.startsWith('/') ? props.dataPath : '/' + props.dataPath;
+    const valueAtPath = props.data && jsonpointer.has(props.data, dataPointer)
+        ? jsonpointer.get(props.data, dataPointer)
+        : undefined;
+
+    return (
+        <div
+            data-data-path={props.dataPath}
+            data-testid="field-type-mock"
+            data-value-at-path={JSON.stringify(valueAtPath)}
+        >
+            {JSON.stringify(props.value)}
+        </div>
+    );
+}
 
 jest.mock('sulu-admin-bundle/services/Router', () => jest.fn(function() {
     this.navigate = jest.fn();
@@ -24,6 +45,8 @@ jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resou
 
 jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn(function() {
     this.loadItem = jest.fn();
+    this.loading = false;
+    mockSingleSelectionStoreInstances.push(this);
 }));
 
 jest.mock('sulu-admin-bundle/containers/Form/stores/ResourceFormStore', () => jest.fn(function(resourceStore) {
@@ -35,9 +58,7 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
     this.isFieldModified = jest.fn();
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'en',
@@ -46,13 +67,15 @@ jest.mock('sulu-admin-bundle/stores/userStore', () => ({
 jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(() => null));
 
 jest.mock('sulu-admin-bundle/containers/Form/registries/fieldRegistry', () => ({
-    get: jest.fn().mockReturnValue(() => <div>field type mock</div>),
+    get: jest.fn().mockReturnValue(mockFieldType),
     getOptions: jest.fn().mockReturnValue({}),
 }));
 
-window.ResizeObserver = jest.fn(function() {
-    this.observe = jest.fn();
-    this.disconnect = jest.fn();
+mockResizeObserver();
+
+beforeEach(() => {
+    fieldRegistry.get.mockReturnValue(mockFieldType);
+    mockSingleSelectionStoreInstances = [];
 });
 
 test('Pass correct props to SingleMediaSelection component', () => {
@@ -75,7 +98,7 @@ test('Pass correct props to SingleMediaSelection component', () => {
         },
     };
 
-    const imageMap = shallow(
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -87,11 +110,16 @@ test('Pass correct props to SingleMediaSelection component', () => {
         />
     );
 
-    expect(imageMap.find(ImageMapContainer).props().disabled).toEqual(true);
-    expect(imageMap.find(ImageMapContainer).props().valid).toEqual(false);
-    expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('en');
-    expect(imageMap.find(ImageMapContainer).props().types).toEqual({'default': 'Default'});
-    expect(imageMap.find(ImageMapContainer).props().value).toEqual({imageId: 33, hotspots: []});
+    const SingleSelectionStoreMock = (SingleSelectionStore: any);
+    const storeCall = SingleSelectionStoreMock.mock.calls[SingleSelectionStoreMock.mock.calls.length - 1];
+    const selectionStore = mockSingleSelectionStoreInstances[mockSingleSelectionStoreInstances.length - 1];
+    expect(storeCall[0]).toEqual('media');
+    expect(storeCall[1]).toBeUndefined();
+    expect(storeCall[2].get()).toEqual('en');
+    expect(selectionStore.loadItem).toHaveBeenCalledWith(33);
+    expect(screen.getByRole('button', {name: 'su-image'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'su-plus-circle'})).toBeDisabled();
+    expect(screen.getByText('sulu_media.select_media_singular').closest('.error')).not.toBeNull();
 });
 
 test('Pass correct default value to ImageMapContainer', () => {
@@ -114,7 +142,7 @@ test('Pass correct default value to ImageMapContainer', () => {
         },
     };
 
-    const imageMap = shallow(
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -124,7 +152,8 @@ test('Pass correct default value to ImageMapContainer', () => {
         />
     );
 
-    expect(imageMap.find(ImageMapContainer).props().value).toEqual({imageId: undefined, hotspots: []});
+    expect(screen.getByText('sulu_media.select_media_singular')).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'su-plus-circle'})).not.toBeInTheDocument();
 });
 
 test('Pass content-locale of user to SingleMediaSelection if locale is not present in form-inspector', () => {
@@ -147,7 +176,7 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
         },
     };
 
-    const imageMap = shallow(
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -157,10 +186,12 @@ test('Pass content-locale of user to SingleMediaSelection if locale is not prese
         />
     );
 
-    expect(imageMap.find(ImageMapContainer).props().locale.get()).toEqual('en');
+    const SingleSelectionStoreMock = (SingleSelectionStore: any);
+    const storeCall = SingleSelectionStoreMock.mock.calls[SingleSelectionStoreMock.mock.calls.length - 1];
+    expect(storeCall[2].get()).toEqual('en');
 });
 
-test('Should call onChange and onFinish if the value changes', () => {
+test('Should pass correct data to Renderer component', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -195,7 +226,7 @@ test('Should call onChange and onFinish if the value changes', () => {
         otherProperty: 'other-value',
     };
 
-    const imageMap = mount(
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             data={data}
@@ -209,17 +240,14 @@ test('Should call onChange and onFinish if the value changes', () => {
         />
     );
 
-    expect(imageMap.find(Field).props().data).toEqual(data);
-    expect(imageMap.find(Field).props().value).toEqual('text-value-123');
-
-    // check if data path that is passed to field leads to correct value for field
-    const fieldData = imageMap.find(Renderer).props().data;
-    const fieldDataPath = imageMap.find(Renderer).props().dataPath;
-    const fieldValue = imageMap.find(Renderer).props().value;
-    expect(jsonpointer.get(fieldData, '/' + fieldDataPath)).toEqual(fieldValue);
+    const field = screen.getByTestId('field-type-mock');
+    expect(field).toHaveAttribute('data-data-path', 'imageMapProperty/hotspots/0/text');
+    expect(field).toHaveAttribute('data-value-at-path', '"text-value-123"');
+    expect(field).toHaveTextContent('"text-value-123"');
 });
 
-test('Should pass correct data to Renderer component', () => {
+test('Should call onChange and onFinish if the value changes', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -242,7 +270,7 @@ test('Should pass correct data to Renderer component', () => {
         },
     };
 
-    const imageMap = shallow(
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -254,14 +282,17 @@ test('Should pass correct data to Renderer component', () => {
         />
     );
 
-    imageMap.find(ImageMapContainer).props().onChange({imageId: 44, hotspots: []});
-    imageMap.find(ImageMapContainer).props().onFinish();
+    await user.click(screen.getByRole('button', {name: 'su-plus-circle'}));
 
-    expect(changeSpy).toHaveBeenCalledWith({imageId: 44, hotspots: []});
+    expect(changeSpy).toHaveBeenCalledWith({
+        imageId: 55,
+        hotspots: [{hotspot: {type: 'point'}, type: 'default'}],
+    });
     expect(finishSpy).toHaveBeenCalled();
 });
 
-test('Should set correct default values for multiple single_select in form', () => {
+test('Should set correct default values for multiple single_select in form', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
 
     const formInspector = new FormInspector(
@@ -363,7 +394,7 @@ test('Should set correct default values for multiple single_select in form', () 
 
     fieldRegistry.get.mockReturnValue(SingleSelect);
 
-    const imageMap = mount(
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -374,7 +405,7 @@ test('Should set correct default values for multiple single_select in form', () 
         />
     );
 
-    imageMap.find('Button').at(1).simulate('click');
+    await user.click(screen.getByRole('button', {name: 'su-plus-circle'}));
 
     expect(changeSpy).toHaveBeenCalledWith(
         {
@@ -416,7 +447,7 @@ test('Should backfill missing hotspot ids on mount when block_id_generator is en
         .mockReturnValue(Promise.resolve(['generated-id']));
     const applySpy = jest.spyOn(blockIdGenerator, 'applyBlockIds').mockReturnValue(enrichedValue);
 
-    shallow(
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
@@ -428,11 +459,9 @@ test('Should backfill missing hotspot ids on mount when block_id_generator is en
         />
     );
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
+    await waitFor(() => expect(changeSpy).toHaveBeenCalledWith(enrichedValue, {isDefaultValue: true}));
     expect(countSpy).toHaveBeenCalledWith(value, types);
     expect(generateSpy).toHaveBeenCalledWith(1);
-    expect(changeSpy).toHaveBeenCalledWith(enrichedValue, {isDefaultValue: true});
 
     countSpy.mockRestore();
     generateSpy.mockRestore();
@@ -462,7 +491,7 @@ test('Should not backfill hotspot ids on mount when block_id_generator is disabl
 
     const countSpy = jest.spyOn(blockIdGenerator, 'countMissingBlockIds');
 
-    shallow(
+    render(
         <ImageMap
             {...fieldTypeDefaultProps}
             defaultType="default"
