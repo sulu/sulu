@@ -126,6 +126,19 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
         $this->assertNotNull($this->findDimensionContent($page, null, DimensionContentInterface::STAGE_LIVE));
     }
 
+    public function testEntityWithoutRequestedRowIsCompletedOnce(): void
+    {
+        $uuid = self::createPage([
+            'en' => ['draft' => ['template' => 'default', 'title' => 'Draft Page', 'url' => '/draft-page']],
+        ])->getUuid();
+        $this->entityManager->clear();
+
+        $this->loadPage($uuid, 'en');
+        $this->loadPage($uuid, 'en');
+
+        $this->assertSame(1, $this->countQueries(fn () => $this->loadPage($uuid, 'en')));
+    }
+
     public function testUnflushedDimensionContentSurvivesAnotherLoad(): void
     {
         $uuid = $this->createTwoLocalePage()->getUuid();
@@ -282,6 +295,10 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
 
     private function countQueries(callable $run): int
     {
+        if (!self::getContainer()->has('doctrine.debug_data_holder')) {
+            $this->markTestSkipped('Counting queries needs the debug data holder of DoctrineBundle 2.7 or later.');
+        }
+
         /** @var DebugDataHolder $debugDataHolder */
         $debugDataHolder = self::getContainer()->get('doctrine.debug_data_holder');
         $debugDataHolder->reset();

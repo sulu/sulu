@@ -70,6 +70,18 @@ class DimensionContentQueryEnhancer
     ];
 
     /**
+     * Attributes each loaded entity was completed for, so an entity without a requested row is queried once.
+     *
+     * @var \WeakMap<object, array<string, true>>
+     */
+    private \WeakMap $completedAttributes;
+
+    public function __construct()
+    {
+        $this->completedAttributes = new \WeakMap();
+    }
+
+    /**
      * TODO it should be possible to add custom filters for all contents here example when the
      *     excerpt tab and entity get extended with an additional field.
      *
@@ -345,9 +357,10 @@ class DimensionContentQueryEnhancer
         $entityManager = $queryBuilder->getEntityManager();
         $classMetadata = $entityManager->getClassMetadata($queryBuilder->getRootEntities()[0]);
 
+        $attributesKey = \serialize($effectiveAttributes);
         $incompleteEntities = \array_filter(
             $entityManager->getUnitOfWork()->getIdentityMap()[$classMetadata->rootEntityName] ?? [],
-            fn (object $entity): bool => $this->isMissingDimensionContents($entityManager, $entity, $effectiveAttributes),
+            fn (object $entity): bool => $this->isMissingDimensionContents($entityManager, $entity, $effectiveAttributes, $attributesKey),
         );
         if ([] === $incompleteEntities) {
             return;
@@ -378,8 +391,12 @@ class DimensionContentQueryEnhancer
     /**
      * @param mixed[] $effectiveAttributes
      */
-    private function isMissingDimensionContents(EntityManagerInterface $entityManager, object $entity, array $effectiveAttributes): bool
-    {
+    private function isMissingDimensionContents(
+        EntityManagerInterface $entityManager,
+        object $entity,
+        array $effectiveAttributes,
+        string $attributesKey,
+    ): bool {
         // Reading an uninitialized proxy would load it.
         if (!$entity instanceof ContentRichEntityInterface || $entityManager->getUnitOfWork()->isUninitializedObject($entity)) {
             return false;
@@ -389,6 +406,12 @@ class DimensionContentQueryEnhancer
         if (!$dimensionContents instanceof PersistentCollection || !$dimensionContents->isInitialized()) {
             return false;
         }
+
+        $completedAttributes = $this->completedAttributes[$entity] ?? [];
+        if (isset($completedAttributes[$attributesKey])) {
+            return false;
+        }
+        $this->completedAttributes[$entity] = [...$completedAttributes, $attributesKey => true];
 
         $locales = null === $effectiveAttributes['locale'] ? [null] : (array) $effectiveAttributes['locale'];
         foreach ($locales as $locale) {
