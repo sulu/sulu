@@ -243,3 +243,10 @@ test('Return item config with disabled button if passed disabled_condition is me
         type: 'button',
     }));
 });
+
+test('Carry an icon, so the button keeps content when a crowded toolbar drops its labels', () => {
+    const toolbarAction = createReviewToolbarAction();
+    toolbarAction.resourceFormStore.resourceStore.data.activeWorkflowTransitionRequest = request;
+
+    expect(toolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({icon: 'su-list-check'}));
+});

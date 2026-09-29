@@ -331,27 +331,17 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
                 )}
                 <WorkflowCheckCard
                     emptyText={translate('sulu_content.workflow_transition_request.no_reviewers')}
-                    headerCount={
-                        <React.Fragment>
-                            {translate(
-                                'sulu_content.workflow_transition_request.n_of_m_approved',
-                                {approved, required}
-                            )}
-                            {rejected > 0 && (
-                                <span className={workflowCheckCardStyles.headerRejected}>
-                                    {translate('sulu_content.workflow_transition_request.n_rejected', {rejected})}
-                                </span>
-                            )}
-                        </React.Fragment>
-                    }
+                    headerAuthor={requestedByName}
+                    headerCount={translate(
+                        'sulu_content.workflow_transition_request.n_of_m_approved',
+                        {approved, required}
+                    )}
                     headerDetail={DATE_FORMATTER.format(new Date(request.requestedAt))}
-                    headerText={
-                        <React.Fragment>
-                            <strong>{requestedByName}</strong>
-                            {' '}
-                            {translate('sulu_content.workflow_transition_request.requested_a_review')}
-                        </React.Fragment>
+                    headerRejected={rejected > 0
+                        ? translate('sulu_content.workflow_transition_request.n_rejected', {rejected})
+                        : undefined
                     }
+                    headerText={translate('sulu_content.workflow_transition_request.requested_a_review')}
                     rows={approvalRows}
                 />
                 {mode === 'review' && !canAct && (

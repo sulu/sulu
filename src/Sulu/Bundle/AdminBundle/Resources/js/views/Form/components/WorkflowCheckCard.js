@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import Button from '../../../components/Button';
 import Icon from '../../../components/Icon';
 import workflowCheckCardStyles from './workflowCheckCard.scss';
-import type {Node} from 'react';
 
 /** `pending` is a check that has not answered yet, `waiting` an approval nobody has given yet. */
 export type RowStatus = 'approved' | 'pending' | 'rejected' | 'waiting';
@@ -143,10 +142,14 @@ class WorkflowCheckRow extends React.Component<RowProps> {
 
 type Props = {|
     emptyText?: string,
-    headerCount?: Node,
+    /** Set in bold before the header text, the person the card is about. */
+    headerAuthor?: string,
+    headerCount?: string,
     /** Second header line, e.g. when the first one names a person and this dates the request. */
-    headerDetail?: Node,
-    headerText: Node,
+    headerDetail?: string,
+    /** Set in red after the count. */
+    headerRejected?: string,
+    headerText: string,
     onAction?: ?(value: ?string) => void,
     rows: Array<CheckRow>,
 |};
@@ -154,18 +157,38 @@ type Props = {|
 /** The rows of checks or reviewers, shared by the review overlay and the pre-validation overlay. */
 export default class WorkflowCheckCard extends React.Component<Props> {
     render() {
-        const {emptyText, headerCount, headerDetail, headerText, onAction, rows} = this.props;
+        const {
+            emptyText,
+            headerAuthor,
+            headerCount,
+            headerDetail,
+            headerRejected,
+            headerText,
+            onAction,
+            rows,
+        } = this.props;
 
         return (
             <ul className={workflowCheckCardStyles.card}>
                 <li className={workflowCheckCardStyles.header}>
                     <div className={workflowCheckCardStyles.headerText}>
-                        <div>{headerText}</div>
+                        <div>
+                            {headerAuthor && <strong>{headerAuthor}</strong>}
+                            {headerAuthor && ' '}
+                            {headerText}
+                        </div>
                         {headerDetail && (
                             <div className={workflowCheckCardStyles.headerDate}>{headerDetail}</div>
                         )}
                     </div>
-                    {headerCount && <div className={workflowCheckCardStyles.headerCount}>{headerCount}</div>}
+                    {headerCount && (
+                        <div className={workflowCheckCardStyles.headerCount}>
+                            {headerCount}
+                            {headerRejected && (
+                                <span className={workflowCheckCardStyles.headerRejected}>{headerRejected}</span>
+                            )}
+                        </div>
+                    )}
                 </li>
                 {rows.length === 0 && emptyText
                     ? <li className={workflowCheckCardStyles.empty}>{emptyText}</li>

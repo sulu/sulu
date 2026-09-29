@@ -157,6 +157,8 @@ export default class ReviewWorkflowTransitionRequestToolbarAction extends Abstra
         const disabled = disabledCondition ? jexl.evalSync(disabledCondition, this.conditionData) : false;
 
         return {
+            // A crowded toolbar drops the labels and keeps only icons, which left this button empty.
+            icon: 'su-list-check',
             label: translate('sulu_content.workflow_transition_request.review_action'),
             disabled,
             onClick: this.handleOpen,
