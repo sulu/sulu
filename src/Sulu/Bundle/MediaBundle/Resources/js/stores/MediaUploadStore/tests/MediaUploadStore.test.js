@@ -219,7 +219,7 @@ test('Calling "delete" method should call the "delete" method of the ResourceReq
     ResourceRequester.delete.mockReturnValue(Promise.resolve());
 
     const deletePromise = mediaUploadStore.delete();
-    expect(ResourceRequester.delete).toHaveBeenCalledWith('media', {id: 2});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('media', {id: 2, locale: 'en'});
 
     return deletePromise.then(() => {
         expect(mediaUploadStore.media).toEqual(undefined);
@@ -243,7 +243,7 @@ test('Calling "delete" method with force should pass it to the ResourceRequester
     ResourceRequester.delete.mockReturnValue(Promise.resolve());
 
     const deletePromise = mediaUploadStore.delete({force: true});
-    expect(ResourceRequester.delete).toHaveBeenCalledWith('media', {force: true, id: 2});
+    expect(ResourceRequester.delete).toHaveBeenCalledWith('media', {force: true, id: 2, locale: 'en'});
 
     return deletePromise.then(() => {
         expect(mediaUploadStore.media).toEqual(undefined);
