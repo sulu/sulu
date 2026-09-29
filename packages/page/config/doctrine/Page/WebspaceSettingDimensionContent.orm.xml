@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <mapped-superclass
+        name="Sulu\Page\Domain\Model\WebspaceSettingDimensionContent"
+        table="pa_webspace_setting_contents"
+    >
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <many-to-one field="webspaceSetting" target-entity="Sulu\Page\Domain\Model\WebspaceSettingInterface" inversed-by="dimensionContents">
+            <join-columns>
+                <join-column name="webspaceKey" referenced-column-name="webspaceKey" on-delete="CASCADE" nullable="false"/>
+            </join-columns>
+        </many-to-one>
+    </mapped-superclass>
+</doctrine-mapping>

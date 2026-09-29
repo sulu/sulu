@@ -39,3 +39,28 @@ sulu_page.get_page_versions:
     methods: GET
     controller: sulu_page.admin_page_controller::getVersionsAction
     format: json
+
+# Webspace settings
+sulu_page.get_webspace_setting:
+    path: /webspace-settings/{id}.{_format}
+    methods: GET
+    controller: sulu_page.admin_webspace_setting_controller::getAction
+    format: json
+
+sulu_page.put_webspace_setting:
+    path: /webspace-settings/{id}.{_format}
+    methods: PUT
+    controller: sulu_page.admin_webspace_setting_controller::putAction
+    format: json
+
+sulu_page.post_webspace_setting_trigger:
+    path: /webspace-settings/{id}.{_format}
+    methods: POST
+    controller: sulu_page.admin_webspace_setting_controller::postTriggerAction
+    format: json
+
+sulu_page.get_webspace_setting_versions:
+    path: /webspace-settings/{id}/versions.{_format}
+    methods: GET
+    controller: sulu_page.admin_webspace_setting_controller::getVersionsAction
+    format: json

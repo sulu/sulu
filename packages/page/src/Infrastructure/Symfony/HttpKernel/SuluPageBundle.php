@@ -19,16 +19,22 @@ use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
 use Sulu\Page\Application\ContentNormalizer\DefaultTemplateNormalizer;
 use Sulu\Page\Application\Mapper\PageContentMapper;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
+use Sulu\Page\Application\Mapper\WebspaceSettingContentMapper;
+use Sulu\Page\Application\Mapper\WebspaceSettingMapperInterface;
 use Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler;
+use Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionWebspaceSettingMessageHandler;
 use Sulu\Page\Application\MessageHandler\CopyLocalePageMessageHandler;
+use Sulu\Page\Application\MessageHandler\CopyLocaleWebspaceSettingMessageHandler;
 use Sulu\Page\Application\MessageHandler\CopyPageMessageHandler;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\ModifyPageMessageHandler;
+use Sulu\Page\Application\MessageHandler\ModifyWebspaceSettingMessageHandler;
 use Sulu\Page\Application\MessageHandler\MovePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\OrderPageMessageHandler;
 use Sulu\Page\Application\MessageHandler\RemovePageMessageHandler;
 use Sulu\Page\Application\MessageHandler\RemovePageTranslationMessageHandler;
 use Sulu\Page\Application\MessageHandler\RestorePageVersionMessageHandler;
+use Sulu\Page\Application\MessageHandler\RestoreWebspaceSettingVersionMessageHandler;
 use Sulu\Page\Domain\Event\PageCreatedEvent;
 use Sulu\Page\Domain\Event\PageModifiedEvent;
 use Sulu\Page\Domain\Event\PageRemovedEvent;
@@ -37,20 +43,31 @@ use Sulu\Page\Domain\Event\PageTranslationAddedEvent;
 use Sulu\Page\Domain\Event\PageTranslationRemovedEvent;
 use Sulu\Page\Domain\Event\PageTranslationRestoredEvent;
 use Sulu\Page\Domain\Event\PageWorkflowTransitionAppliedEvent;
+use Sulu\Page\Domain\Event\WebspaceSettingCreatedEvent;
+use Sulu\Page\Domain\Event\WebspaceSettingModifiedEvent;
+use Sulu\Page\Domain\Event\WebspaceSettingTranslationCopiedEvent;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Domain\Model\WebspaceSetting;
+use Sulu\Page\Domain\Model\WebspaceSettingDimensionContent;
+use Sulu\Page\Domain\Model\WebspaceSettingDimensionContentInterface;
+use Sulu\Page\Domain\Model\WebspaceSettingInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
+use Sulu\Page\Domain\Repository\WebspaceSettingRepositoryInterface;
 use Sulu\Page\Infrastructure\Doctrine\Hydrator\SafeTreeObjectHydrator;
 use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
+use Sulu\Page\Infrastructure\Doctrine\Repository\WebspaceSettingRepository;
 use Sulu\Page\Infrastructure\JMS\Serializer\WebspaceSerializeEventSubscriber;
+use Sulu\Page\Infrastructure\Sulu\Admin\MetadataLoader\WebspaceSettingsFormMetadataLoader;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\BlockSettingsFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceRouteModeTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Sulu\Page\Infrastructure\Sulu\Admin\PropertyMetadataMapper\PageTreeRoutePropertyMetadataMapper;
+use Sulu\Page\Infrastructure\Sulu\Admin\WebspaceSettingAdmin;
 use Sulu\Page\Infrastructure\Sulu\Build\HomepageBuilder;
 use Sulu\Page\Infrastructure\Sulu\Content\ContentResolver\PageLinkDimensionContentEnhancer;
 use Sulu\Page\Infrastructure\Sulu\Content\DataMapper\NavigationContextDataMapper;
@@ -68,11 +85,15 @@ use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\SegmentSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\Content\Visitor\WebspaceSmartContentFiltersVisitor;
 use Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber\PageCacheInvalidationSubscriber;
+use Sulu\Page\Infrastructure\Sulu\HttpCache\EventSubscriber\WebspaceSettingCacheInvalidationSubscriber;
 use Sulu\Page\Infrastructure\Sulu\Reference\PageReferenceRefresher;
+use Sulu\Page\Infrastructure\Sulu\Reference\WebspaceSettingReferenceRefresher;
 use Sulu\Page\Infrastructure\Sulu\Route\PageRouteDefaultsProvider;
 use Sulu\Page\Infrastructure\Sulu\Route\PageWebspaceRouteGenerator;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageIndexListener;
 use Sulu\Page\Infrastructure\Sulu\Search\AdminPageReindexProvider;
+use Sulu\Page\Infrastructure\Sulu\Search\AdminWebspaceSettingIndexListener;
+use Sulu\Page\Infrastructure\Sulu\Search\AdminWebspaceSettingReindexProvider;
 use Sulu\Page\Infrastructure\Sulu\Search\Visitor\AdminPageReindexProviderEnhancerInterface;
 use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexContentEnhancer;
 use Sulu\Page\Infrastructure\Sulu\Search\Visitor\WebsitePageReindexExcerptEnhancer;
@@ -90,8 +111,10 @@ use Sulu\Page\Infrastructure\Symfony\DependencyInjection\Compiler\OverrideTreeLi
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\ContentPathTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\NavigationTwigExtension;
 use Sulu\Page\Infrastructure\Symfony\Twig\Extension\PageTwigExtension;
+use Sulu\Page\Infrastructure\Symfony\Twig\Extension\WebspaceSettingsTwigExtension;
 use Sulu\Page\UserInterface\Command\InitializeHomepageCommand;
 use Sulu\Page\UserInterface\Controller\Admin\PageController;
+use Sulu\Page\UserInterface\Controller\Admin\WebspaceSettingController;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -101,6 +124,9 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
+
+use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
+
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 use Symfony\Component\DependencyInjection\Parameter;
@@ -141,6 +167,18 @@ final class SuluPageBundle extends AbstractBundle
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('model')->defaultValue(PageDimensionContent::class)->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('webspace_setting')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue(WebspaceSetting::class)->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('webspace_setting_content')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue(WebspaceSettingDimensionContent::class)->end()
                             ->end()
                         ->end()
                     ->end()
@@ -713,6 +751,151 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_route.route_generator'),
             ])
             ->tag('kernel.event_subscriber');
+
+        $this->loadWebspaceSettingServices($services, $builder);
+    }
+
+    private function loadWebspaceSettingServices(ServicesConfigurator $services, ContainerBuilder $builder): void
+    {
+        $builder->registerForAutoconfiguration(WebspaceSettingMapperInterface::class)
+            ->addTag('sulu_page.webspace_setting_mapper');
+
+        $services->set('sulu_page.webspace_setting_repository')
+            ->class(WebspaceSettingRepository::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_content.dimension_content_query_enhancer'),
+            ]);
+
+        $services->alias(WebspaceSettingRepositoryInterface::class, 'sulu_page.webspace_setting_repository');
+
+        $services->set('sulu_page.webspace_setting_content_mapper')
+            ->class(WebspaceSettingContentMapper::class)
+            ->args([
+                new Reference('sulu_content.content_persister'),
+            ])
+            ->tag('sulu_page.webspace_setting_mapper');
+
+        $services->set('sulu_page.modify_webspace_setting_handler')
+            ->class(ModifyWebspaceSettingMessageHandler::class)
+            ->args([
+                new Reference('sulu_page.webspace_setting_repository'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+                tagged_iterator('sulu_page.webspace_setting_mapper'),
+                new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_content.content_hash_checker'),
+            ])
+            ->tag('messenger.message_handler');
+
+        $services->set('sulu_page.apply_workflow_transition_webspace_setting_handler')
+            ->class(ApplyWorkflowTransitionWebspaceSettingMessageHandler::class)
+            ->args([
+                new Reference('sulu_page.webspace_setting_repository'),
+                new Reference('sulu_content.content_workflow'),
+                new Reference('sulu_activity.domain_event_collector'),
+            ])
+            ->tag('messenger.message_handler');
+
+        $services->set('sulu_page.copy_locale_webspace_setting_handler')
+            ->class(CopyLocaleWebspaceSettingMessageHandler::class)
+            ->args([
+                new Reference('sulu_page.webspace_setting_repository'),
+                new Reference('sulu_content.content_copier'),
+                new Reference('sulu_activity.domain_event_collector'),
+            ])
+            ->tag('messenger.message_handler');
+
+        $services->set('sulu_page.restore_webspace_setting_version_handler')
+            ->class(RestoreWebspaceSettingVersionMessageHandler::class)
+            ->args([
+                new Reference('sulu_page.webspace_setting_repository'),
+                new Reference('sulu_content.content_copier'),
+                new Reference('sulu_activity.domain_event_collector'),
+            ])
+            ->tag('messenger.message_handler');
+
+        $services->set('sulu_page.webspace_setting_admin')
+            ->class(WebspaceSettingAdmin::class)
+            ->args([
+                new Reference('sulu_admin.view_builder_factory'),
+                new Reference('sulu_content.content_view_builder_factory'),
+                new Reference('sulu_security.security_checker'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_activity.activity_list_view_builder_factory'),
+            ])
+            ->tag('sulu.context', ['context' => 'admin'])
+            ->tag('sulu.admin');
+
+        $services->set('sulu_page.webspace_settings_form_metadata_loader')
+            ->class(WebspaceSettingsFormMetadataLoader::class)
+            ->args([
+                new Reference('sulu_core.webspace.webspace_manager'),
+                new Reference('sulu_admin.xml_form_metadata_loader'),
+            ])
+            ->tag('sulu_admin.form_metadata_loader', ['priority' => 256]);
+
+        $services->set('sulu_page.admin_webspace_setting_controller')
+            ->class(WebspaceSettingController::class)
+            ->public()
+            ->args([
+                new Reference('sulu_page.webspace_setting_repository'),
+                new Reference('sulu_message_bus'),
+                new Reference('serializer'),
+                new Reference('sulu_content.content_manager'),
+                new Reference('sulu_core.list_builder.field_descriptor_factory'),
+                new Reference('sulu_core.doctrine_list_builder_factory'),
+                new Reference('sulu_core.doctrine_rest_helper'),
+                new Reference('sulu_security.security_checker'),
+                new Reference('request_stack'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+            ])
+            ->tag('sulu.context', ['context' => 'admin']);
+
+        $services->set('sulu_page.webspace_settings_twig_extension')
+            ->class(WebspaceSettingsTwigExtension::class)
+            ->args([
+                new Reference('sulu_page.webspace_setting_repository'),
+                new Reference('sulu_content.content_aggregator'),
+                new Reference('sulu_content.content_resolver'),
+                new Reference('sulu_core.webspace.request_analyzer'),
+                new Reference('sulu_http_cache.reference_store'),
+                new Reference('sulu_core.webspace.webspace_manager'),
+            ])
+            ->tag('twig.extension')
+            ->tag('kernel.reset', ['method' => 'reset']);
+
+        $services->set('sulu_page.webspace_setting_cache_invalidation_subscriber')
+            ->class(WebspaceSettingCacheInvalidationSubscriber::class)
+            ->args([
+                new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            ])
+            ->tag('kernel.event_subscriber');
+
+        $services->set('sulu_page.webspace_setting_reference_refresher')
+            ->class(WebspaceSettingReferenceRefresher::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_reference.reference_repository'),
+                new Reference('sulu_content.content_view_resolver'),
+                new Reference('sulu_content.content_merger'),
+            ])
+            ->tag('sulu_reference.refresher');
+
+        $services->set('sulu_page.admin_webspace_setting_index_listener')
+            ->class(AdminWebspaceSettingIndexListener::class)
+            ->args([
+                new Reference('sulu_message_bus'),
+            ])
+            ->tag('kernel.event_listener', ['event' => WebspaceSettingCreatedEvent::class, 'method' => 'onWebspaceSettingChanged'])
+            ->tag('kernel.event_listener', ['event' => WebspaceSettingModifiedEvent::class, 'method' => 'onWebspaceSettingChanged'])
+            ->tag('kernel.event_listener', ['event' => WebspaceSettingTranslationCopiedEvent::class, 'method' => 'onWebspaceSettingChanged']);
+
+        $services->set('sulu_page.admin_webspace_setting_reindex_provider')
+            ->class(AdminWebspaceSettingReindexProvider::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+            ])
+            ->tag('cmsig_seal.reindex_provider');
     }
 
     /**
@@ -755,6 +938,22 @@ final class SuluPageBundle extends AbstractBundle
                             'routes' => [
                                 'list' => 'sulu_page.get_page_versions',
                                 'detail' => 'sulu_page.get_page',
+                            ],
+                        ],
+                        WebspaceSettingInterface::RESOURCE_KEY => [
+                            'routes' => [
+                                'detail' => 'sulu_page.get_webspace_setting',
+                            ],
+                            'views' => [
+                                'detail' => WebspaceSettingAdmin::TABS_VIEW,
+                            ],
+                            'security_class' => WebspaceSetting::class,
+                            'security_context' => 'sulu.webspaces.#webspace#.webspace-settings',
+                        ],
+                        WebspaceSettingInterface::RESOURCE_KEY . '_versions' => [
+                            'routes' => [
+                                'list' => 'sulu_page.get_webspace_setting_versions',
+                                'detail' => 'sulu_page.get_webspace_setting',
                             ],
                         ],
                     ],
@@ -866,6 +1065,19 @@ final class SuluPageBundle extends AbstractBundle
                                 ],
                                 'securityContext' => PageAdmin::SECURITY_CONTEXT_GROUP, // Todo: Add correct permissions for webspaces.
                             ],
+                            WebspaceSettingInterface::RESOURCE_KEY => [
+                                'name' => 'sulu_page.webspace_settings_tab',
+                                'icon' => 'su-cog',
+                                'route' => [
+                                    'name' => WebspaceSettingAdmin::TABS_VIEW,
+                                    'resultToRoute' => [
+                                        'resourceId' => 'id',
+                                        'locale' => 'locale',
+                                        'metadata.webspaceKey' => 'webspace',
+                                    ],
+                                ],
+                                'securityContext' => PageAdmin::SECURITY_CONTEXT_GROUP,
+                            ],
                         ],
                     ],
                 ],
@@ -889,6 +1101,8 @@ final class SuluPageBundle extends AbstractBundle
         $this->buildPersistence([
             PageInterface::class => 'sulu.model.page.class',
             PageDimensionContentInterface::class => 'sulu.model.page_content.class',
+            WebspaceSettingInterface::class => 'sulu.model.webspace_setting.class',
+            WebspaceSettingDimensionContentInterface::class => 'sulu.model.webspace_setting_content.class',
         ], $container);
         $container->addCompilerPass(new OverrideTreeListenerPass());
         // run after Symfony's ResolveNamedArgumentsPass (also an optimization pass) so argument 0 of the

@@ -17,6 +17,7 @@ import webspaceStore from './stores/webspaceStore';
 import PageTabs from './views/PageTabs';
 import PageList from './views/PageList';
 import WebspaceTabs from './views/WebspaceTabs';
+import WebspaceSettingTabs from './views/WebspaceSettingTabs';
 import PageTreeRoute from './containers/Form/fields/PageTreeRoute';
 
 initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boolean) => {
@@ -30,6 +31,7 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
     viewRegistry.add('sulu_page.page_tabs', PageTabs, {disableDefaultSpacing: true});
     viewRegistry.add('sulu_page.page_list', PageList);
     viewRegistry.add('sulu_page.webspace_tabs', WebspaceTabs, {disableDefaultSpacing: true});
+    viewRegistry.add('sulu_page.webspace_setting_tabs', WebspaceSettingTabs, {disableDefaultSpacing: true});
 
     fieldRegistry.add('page_settings_navigation_select', PageSettingsNavigationSelect);
     fieldRegistry.add('page_settings_shadow_locale_select', PageSettingsShadowLocaleSelect);
