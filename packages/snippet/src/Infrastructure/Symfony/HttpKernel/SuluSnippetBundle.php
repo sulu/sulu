@@ -45,6 +45,7 @@ use Sulu\Snippet\Domain\Repository\SnippetAreaRepositoryInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetAreaRepository;
 use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetRepository;
+use Sulu\Snippet\Infrastructure\Sulu\Activity\SnippetWorkflowTransitionRequestSubscriber;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\Provider\SnippetTemplateSelectProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAreaAdmin;
@@ -414,6 +415,15 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_http_cache.cache_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 param(SnippetAreaCompilerPass::SNIPPET_AREA_PARAM),
+            ])
+            ->tag('kernel.event_subscriber');
+
+        // Activity
+        $services->set('sulu_snippet.snippet_workflow_transition_request_subscriber')
+            ->class(SnippetWorkflowTransitionRequestSubscriber::class)
+            ->args([
+                new Reference('sulu_snippet.snippet_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('kernel.event_subscriber');
 
