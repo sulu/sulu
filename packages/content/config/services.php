@@ -62,6 +62,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_content.content_metadata_inspector'),
             new Reference('sulu_security.security_checker'),
             new Reference('sulu_content.request_workflow_resolver'),
+            new Reference('sulu_content.workflow_transition_request_security_context_resolver'),
             '%sulu_content.content_settings_forms%',
             '%sulu_content.content_excerpt_forms%',
             '%sulu_content.content_seo_forms%',

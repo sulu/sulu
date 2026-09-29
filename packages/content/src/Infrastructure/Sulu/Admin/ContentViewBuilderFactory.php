@@ -25,6 +25,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
@@ -60,6 +61,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         private ContentMetadataInspectorInterface $contentMetadataInspector,
         private SecurityCheckerInterface $securityChecker,
         private RequestWorkflowResolverInterface $requestWorkflowResolver,
+        private WorkflowTransitionRequestSecurityContextResolverInterface $securityContextResolver,
         private array $settingsForms,
         private array $excerptForms = [],
         private array $seoForms = [],
@@ -455,7 +457,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
             $versionsListKey = $resourceKey . '_versions';
         }
 
-        return [
+        $views = [
             $this->viewBuilderFactory
                 ->createResourceTabViewBuilder($insightsResourceTabViewName, '/insights')
                 ->setResourceKey($resourceKey)
@@ -486,35 +488,50 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                     new ListItemAction('restore_version', ['success_view' => $parentView]),
                 ])
                 ->setParent($insightsResourceTabViewName),
-
-            $this->viewBuilderFactory
-                ->createListViewBuilder(
-                    $insightsResourceTabViewName . '.workflow_transition_requests',
-                    '/workflow-transition-requests'
-                )
-                ->setTabTitle('sulu_content.workflow_transition_request.requests_for_publishing')
-                // The sibling tabs inherit the insights tab order, so a higher value sorts this one last.
-                ->setTabOrder(6145)
-                ->setResourceKey('workflow_transition_requests')
-                ->setListKey('workflow_transition_requests')
-                ->addListAdapters(['table'])
-                ->addAdapterOptions([
-                    'table' => [
-                        'skin' => 'flat',
-                    ],
-                ])
-                ->disableTabGap()
-                ->disableSearching()
-                ->disableSelection()
-                ->disableColumnOptions()
-                ->disableFiltering()
-                ->addRequestParameters(['resourceKey' => $resourceKey])
-                ->addRouterAttributesToListRequest(['id' => 'resourceId', 'locale'])
-                ->addItemActions([
-                    new ListItemAction('review_workflow_transition_request'),
-                ])
-                ->setParent($insightsResourceTabViewName),
         ];
+
+        // The list endpoint authorizes against the resource's security context, so without one the tab
+        // could only ever answer with an error.
+        if ($this->securityContextResolver->has($resourceKey)) {
+            $views[] = $this->createWorkflowTransitionRequestsView($insightsResourceTabViewName, $resourceKey);
+        }
+
+        return $views;
+    }
+
+    private function createWorkflowTransitionRequestsView(
+        string $insightsResourceTabViewName,
+        string $resourceKey,
+    ): ViewBuilderInterface {
+        return $this->viewBuilderFactory
+            ->createListViewBuilder(
+                $insightsResourceTabViewName . '.workflow_transition_requests',
+                '/workflow-transition-requests'
+            )
+            ->setTabTitle('sulu_content.workflow_transition_request.requests_for_publishing')
+            // The sibling tabs inherit the insights tab order, so a higher value sorts this one last.
+            ->setTabOrder(6145)
+            // Set only while a request workflow covers the content's template.
+            ->setTabCondition('workflowTransitionRequestEnabled')
+            ->setResourceKey('workflow_transition_requests')
+            ->setListKey('workflow_transition_requests')
+            ->addListAdapters(['table'])
+            ->addAdapterOptions([
+                'table' => [
+                    'skin' => 'flat',
+                ],
+            ])
+            ->disableTabGap()
+            ->disableSearching()
+            ->disableSelection()
+            ->disableColumnOptions()
+            ->disableFiltering()
+            ->addRequestParameters(['resourceKey' => $resourceKey])
+            ->addRouterAttributesToListRequest(['id' => 'resourceId', 'locale'])
+            ->addItemActions([
+                new ListItemAction('review_workflow_transition_request'),
+            ])
+            ->setParent($insightsResourceTabViewName);
     }
 
     /**

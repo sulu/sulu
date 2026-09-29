@@ -20,6 +20,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
@@ -34,6 +35,7 @@ use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -64,7 +66,8 @@ class ContentViewBuilderFactoryTest extends TestCase
         ContentMetadataInspectorInterface $contentMetadataInspector,
         SecurityCheckerInterface $securityChecker,
         ?PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry = null,
-        array $settingsForms = []
+        array $settingsForms = [],
+        bool $hasSecurityContext = true,
     ): ContentViewBuilderFactoryInterface {
         if (null === $previewObjectProviderRegistry) {
             $previewObjectProviderRegistry = $this->createPreviewObjectProviderRegistry([]);
@@ -73,12 +76,16 @@ class ContentViewBuilderFactoryTest extends TestCase
         $requestWorkflowResolver = $this->prophesize(RequestWorkflowResolverInterface::class);
         $requestWorkflowResolver->resolveTemplateKeysWithWorkflow(Argument::cetera())->willReturn([]);
 
+        $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
+        $securityContextResolver->has(Argument::any())->willReturn($hasSecurityContext);
+
         return new ContentViewBuilderFactory(
             new ViewBuilderFactory(),
             $previewObjectProviderRegistry,
             $contentMetadataInspector,
             $securityChecker,
             $requestWorkflowResolver->reveal(),
+            $securityContextResolver->reveal(),
             $settingsForms
         );
     }
@@ -175,6 +182,70 @@ class ContentViewBuilderFactoryTest extends TestCase
         $this->assertSame('edit_parent_key.settings', $views[4]->getName());
         $this->assertSame('content_settings', $views[4]->getView()->getOption('formKey'));
         $this->assertNull($views[4]->getView()->getOption('tabCondition'));
+    }
+
+    public function testCreateViewsListsTheRequestsForPublishingUnderInsights(): void
+    {
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $views = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
+        )->createViews(Example::class, 'edit_parent_key');
+
+        $view = $this->findView($views, 'edit_parent_key.insights.workflow_transition_requests')->getView();
+
+        $this->assertSame('workflow_transition_requests', $view->getOption('resourceKey'));
+        $this->assertSame('workflow_transition_requests', $view->getOption('listKey'));
+        $this->assertSame(['resourceKey' => ExampleDimensionContent::getResourceKey()], $view->getOption('requestParameters'));
+        $this->assertSame(['id' => 'resourceId', 'locale'], $view->getOption('routerAttributesToListRequest'));
+        $this->assertSame('workflowTransitionRequestEnabled', $view->getOption('tabCondition'));
+        $this->assertSame(6145, $view->getOption('tabOrder'));
+
+        /** @var ListItemAction[] $itemActions */
+        $itemActions = $view->getOption('itemActions');
+        $this->assertSame(
+            ['review_workflow_transition_request'],
+            \array_map(static fn (ListItemAction $itemAction) => $itemAction->getType(), $itemActions),
+        );
+    }
+
+    /**
+     * The list endpoint authorizes against the resource's security context, so a resource declaring
+     * none gets no tab rather than one that only errors.
+     */
+    public function testCreateViewsOmitsTheRequestsForPublishingWithoutASecurityContext(): void
+    {
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $views = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
+            hasSecurityContext: false,
+        )->createViews(Example::class, 'edit_parent_key');
+
+        $names = \array_map(static fn (ViewBuilderInterface $view) => $view->getName(), $views);
+
+        $this->assertNotContains('edit_parent_key.insights.workflow_transition_requests', $names);
+        $this->assertContains('edit_parent_key.insights.versions', $names);
+    }
+
+    /**
+     * @param ViewBuilderInterface[] $views
+     */
+    private function findView(array $views, string $name): ViewBuilderInterface
+    {
+        foreach ($views as $view) {
+            if ($name === $view->getName()) {
+                return $view;
+            }
+        }
+
+        $this->fail(\sprintf('No view named "%s".', $name));
     }
 
     public function testCreateViewsWithPreview(): void
@@ -705,57 +776,5 @@ class ContentViewBuilderFactoryTest extends TestCase
 
             $this->assertSame($expectedToolbarActions[$index], $toolbarActionTypes);
         }
-    }
-
-    /**
-     * With no request open the guard has nothing to hold, so workflow and non-workflow content share
-     * one plain `publish` route and who may take it is the authorizer's answer, not the toolbar's.
-     */
-    public function testPublishWithoutARequestUsesPlainPublish(): void
-    {
-        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
-        $contentMetadataInspector->getDimensionContentClass(Example::class)
-            ->willReturn(ExampleDimensionContent::class);
-
-        $factory = $this->createContentViewBuilder(
-            $contentMetadataInspector->reveal(),
-            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
-        );
-
-        /** @var array<string, mixed> $options */
-        $options = $factory->getWorkflowTransitionRequestToolbarActions(Example::class)['save']->getOptions();
-        /** @var list<\Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction> $children */
-        $children = $options['toolbarActions'];
-
-        $publishActions = [];
-        foreach ($children as $child) {
-            if ('sulu_admin.publish' !== $child->getType()) {
-                continue;
-            }
-
-            $childOptions = $child->getOptions();
-            $actionOptions = $childOptions['options'] ?? [];
-            $this->assertIsArray($actionOptions);
-
-            $action = $actionOptions['action'] ?? 'publish';
-            $this->assertIsString($action);
-
-            $visibleCondition = $childOptions['visible_condition'];
-            $this->assertIsString($visibleCondition);
-
-            $publishActions[] = [$action, $visibleCondition];
-        }
-
-        $this->assertCount(1, $publishActions, 'One publish route, whether or not a workflow applies.');
-
-        [$action, $condition] = $publishActions[0];
-        $this->assertSame('publish', $action);
-        $this->assertStringContainsString('_permissions.live', $condition);
-        $this->assertStringContainsString('!activeWorkflowTransitionRequest', $condition);
-        $this->assertStringNotContainsString(
-            'workflowTransitionRequestEnabled',
-            $condition,
-            'The publish route no longer branches on whether a workflow applies.',
-        );
     }
 }
