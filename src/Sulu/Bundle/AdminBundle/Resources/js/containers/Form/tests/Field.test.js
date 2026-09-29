@@ -386,33 +386,16 @@ test('Call onChange callback when value of Field changes', () => {
 });
 
 test('Disable the FieldType and ignore its changes while the form is locked', () => {
-    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+    const formInspector = createFormInspector();
     // $FlowFixMe
     formInspector.locked = true;
 
-    fieldRegistry.get.mockReturnValue(function Text() {
-        return <input type="text" />;
-    });
-
     const changeSpy = jest.fn();
-    const field = shallow(
-        <Field
-            data={{}}
-            dataPath=""
-            formInspector={formInspector}
-            name="test"
-            onChange={changeSpy}
-            onFinish={jest.fn()}
-            onSuccess={undefined}
-            router={undefined}
-            schema={{label: 'label', type: 'text'}}
-            schemaPath=""
-        />
-    );
+    renderField({formInspector, onChange: changeSpy});
 
-    expect(field.find('Text').prop('disabled')).toEqual(true);
+    expect(screen.getByTestId('field-type')).toBeDisabled();
 
-    field.find('Text').props().onChange('test value');
+    getFieldTypeProps().onChange('test value');
 
     expect(changeSpy).not.toHaveBeenCalled();
 });

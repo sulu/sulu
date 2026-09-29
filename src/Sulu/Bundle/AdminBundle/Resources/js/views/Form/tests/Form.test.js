@@ -2411,122 +2411,106 @@ test('Should throw an error if no formKey is passed', () => {
     )).toThrow(/"formKey"/);
 });
 
-test('Should cancel a workflow transition request without sending the form', () => {
+function renderLockedReviewForm(request, resourceKey = 'pages', workflowPlace = 'review') {
     const Form = require('../Form').default;
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const ResourceRequester = require('../../../services/ResourceRequester');
-    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
-    const resourceStore = new ResourceStore('snippet', 1, {locale: observable.box('de')});
-    resourceStore.data = {workflowPlace: 'review_draft'};
-
-    const route = {
-        options: {
-            formKey: 'snippets',
-            locales: [],
-            toolbarActions: [],
-        },
-    };
-    const router = {
-        addUpdateRouteHook: jest.fn(),
-        restore: jest.fn(),
-        bind: jest.fn(),
-        route,
-        attributes: {},
-    };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
-    const resourceFormStore = form.instance().resourceFormStore;
-    resourceFormStore.save = jest.fn().mockReturnValue(Promise.resolve());
-
-    form.instance().handleWorkflowTransitionRequestCancel();
-
-    // a locked form cannot be corrected, so the cancel must not carry the draft at all
-    expect(resourceFormStore.save).not.toHaveBeenCalled();
-    expect(ResourceRequester.post).toHaveBeenCalledWith(
-        'snippet',
-        undefined,
-        expect.objectContaining({action: 'cancel_review_draft', id: 1})
-    );
-});
-
-function mountLockedReviewForm(request) {
-    const Form = require('../Form').default;
-    const ResourceStore = require('../../../stores/ResourceStore').default;
-    const ResourceRequester = require('../../../services/ResourceRequester');
-    const withToolbar = require('../../../containers/Toolbar/withToolbar');
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, Form);
 
     // The form always opens a collaboration; nobody else is editing, so it adds no warning of its own.
     ResourceRequester.put.mockReturnValue(Promise.resolve({_embedded: {collaborations: []}}));
 
-    const resourceStore = new ResourceStore('pages', 5);
+    const resourceStore = new ResourceStore(resourceKey, 5);
     resourceStore.data = {
         _locked: true,
         activeWorkflowTransitionRequest: request,
-        workflowPlace: 'review',
+        workflowPlace,
     };
     resourceStore.loading = false;
 
-    const route = {
-        options: {
-            formKey: 'pages',
-            resourceKey: 'pages',
-            toolbarActions: [],
-        },
-    };
+    const route = {options: {formKey: resourceKey, resourceKey, toolbarActions: []}};
     const router = {
         addUpdateRouteHook: jest.fn(),
         attributes: {id: 5},
         route,
     };
 
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
-    return toolbarFunction.call(form.instance()).warnings;
+    const {warnings} = getToolbarConfig();
+
+    return warnings[warnings.length - 1];
 }
 
+test('Should cancel a workflow transition request without sending the form', () => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    ResourceRequester.post.mockReturnValue(Promise.resolve({}));
+
+    const banner = renderLockedReviewForm(
+        {
+            createdBy: {id: 7},
+            permissions: {cancel: true, publish: false, retry: true, review: false},
+            status: 'open',
+        },
+        'snippets',
+        'review_draft'
+    );
+    const save = jest.fn().mockReturnValue(Promise.resolve());
+    mockFormContainerProps.store.save = save;
+
+    act(() => banner.actions[0].onClick());
+
+    // a locked form cannot be corrected, so the cancel must not carry the draft at all
+    expect(save).not.toHaveBeenCalled();
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
+        'snippets',
+        undefined,
+        expect.objectContaining({action: 'cancel_review_draft', id: 5})
+    );
+});
+
 test('Should offer the cancel action to a user the request says may cancel', () => {
-    const warnings = mountLockedReviewForm({
+    const banner = renderLockedReviewForm({
         createdBy: {id: 7},
         permissions: {cancel: true, publish: false, retry: true, review: false},
         status: 'open',
     });
 
-    expect(warnings[warnings.length - 1].actions).toEqual([
+    expect(banner.actions).toEqual([
         expect.objectContaining({label: 'sulu_content.workflow_transition_request.cancel_request_action'}),
     ]);
 });
 
 // The request answers for articles and snippets, which carry no permissions of their own.
 test('Should not offer the cancel action while the request carries no permissions', () => {
-    const warnings = mountLockedReviewForm({createdBy: {id: 7}, status: 'open'});
+    const banner = renderLockedReviewForm({createdBy: {id: 7}, status: 'open'});
 
-    expect(warnings[warnings.length - 1].actions).toEqual([]);
+    expect(banner.actions).toEqual([]);
 });
 
 test('Should not offer the cancel action without the edit permission, even to a reviewer', () => {
-    const warnings = mountLockedReviewForm({
+    const banner = renderLockedReviewForm({
         createdBy: {id: 7},
         permissions: {cancel: false, publish: false, retry: false, review: true},
         status: 'open',
     });
 
-    expect(warnings[warnings.length - 1].actions).toEqual([]);
+    expect(banner.actions).toEqual([]);
 });
 
 test('Should title the locked banner so an approved request does not read as a warning', () => {
-    const warnings = mountLockedReviewForm({
+    const banner = renderLockedReviewForm({
         createdBy: {id: 7},
         permissions: {cancel: true, publish: true, retry: true, review: false},
         status: 'approved',
     });
 
-    expect(warnings[warnings.length - 1]).toEqual(expect.objectContaining({
+    expect(banner).toEqual(expect.objectContaining({
         message: 'sulu_content.workflow_transition_request.banner_approved',
         title: 'sulu_content.workflow_transition_request.banner_title',
     }));
 });
 
-function mountPreValidationForm(resourceStore, route) {
+function renderPreValidationForm(resourceStore, route) {
     const Form = require('../Form').default;
     const metadataStore = require('../../../containers/Form/stores/metadataStore');
 
@@ -2546,15 +2530,15 @@ function mountPreValidationForm(resourceStore, route) {
         route,
         attributes: {},
     };
-    const form = mount(<Form resourceStore={resourceStore} route={route} router={router} />);
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
 
     resourceStore.locale.set('en');
     resourceStore.data = {value: 'Value'};
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
+    resourceStore.reload = jest.fn();
 
     return {
-        form,
         ready: Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]),
         router,
     };
@@ -2568,84 +2552,71 @@ const preValidationError = (extra) => ({
     })),
 });
 
-test('Should reload the saved resource when a pre-validation error refuses its transition', (done) => {
+test('Should reload the saved resource when a pre-validation error refuses its transition', async() => {
     const ResourceRequester = require('../../../services/ResourceRequester');
-    const putPromise = Promise.reject(preValidationError());
-    ResourceRequester.put.mockReturnValue(putPromise);
+    ResourceRequester.put.mockReturnValue(Promise.reject(preValidationError()));
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
 
-    const route = {options: {formKey: 'snippets', locales: [], toolbarActions: []}};
-    const {form, ready} = mountPreValidationForm(resourceStore, route);
-    resourceStore.reload = jest.fn();
+    const {ready} = renderPreValidationForm(
+        resourceStore,
+        {options: {formKey: 'snippets', locales: [], toolbarActions: []}}
+    );
+    await ready;
 
-    ready.then(() => {
-        form.find('Form').at(1).instance().submit({action: 'request_for_review'});
-
-        return putPromise.catch(() => {
-            setTimeout(() => {
-                expect(resourceStore.reload).toHaveBeenCalled();
-                done();
-            });
-        });
+    act(() => {
+        mockFormContainer.submit({action: 'request_for_review'});
     });
+
+    await waitFor(() => expect(resourceStore.reload).toHaveBeenCalled());
 });
 
 // The content is written before the transition is refused, so the author has to land on the form
 // that carries the SEO and excerpt tabs the overlay asks them to fill, but only once they read it.
-test('Should go to the edit view when the pre-validation overlay of a new resource is closed', (done) => {
+test('Should go to the edit view when the pre-validation overlay of a new resource is closed', async() => {
+    const user = userEvent.setup();
     const ResourceRequester = require('../../../services/ResourceRequester');
-    const postPromise = Promise.reject(preValidationError({id: 'created-id'}));
-    ResourceRequester.post.mockReturnValue(postPromise);
+    ResourceRequester.post.mockReturnValue(Promise.reject(preValidationError({id: 'created-id'})));
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', undefined, {locale: observable.box()});
 
-    const route = {
-        options: {editView: 'sulu_snippet.edit_form', formKey: 'snippets', locales: [], toolbarActions: []},
-    };
-    const {form, ready, router} = mountPreValidationForm(resourceStore, route);
-    resourceStore.reload = jest.fn();
+    const {ready, router} = renderPreValidationForm(
+        resourceStore,
+        {options: {editView: 'sulu_snippet.edit_form', formKey: 'snippets', locales: [], toolbarActions: []}}
+    );
+    await ready;
 
-    ready.then(() => {
-        form.find('Form').at(1).instance().submit({action: 'request_for_review'});
-
-        return postPromise.catch(() => {
-            setTimeout(() => {
-                expect(router.navigate).not.toHaveBeenCalled();
-
-                form.update();
-                form.find('PreValidationOverlay').prop('onClose')();
-
-                expect(router.navigate).toHaveBeenCalledWith(
-                    'sulu_snippet.edit_form',
-                    expect.objectContaining({id: 'created-id'})
-                );
-                done();
-            });
-        });
+    act(() => {
+        mockFormContainer.submit({action: 'request_for_review'});
     });
+
+    const confirmButton = await screen.findByText('sulu_admin.ok');
+    expect(router.navigate).not.toHaveBeenCalled();
+
+    await user.click(confirmButton);
+
+    expect(router.navigate).toHaveBeenCalledWith(
+        'sulu_snippet.edit_form',
+        expect.objectContaining({id: 'created-id'})
+    );
 });
 
-test('Should take over the created id when a pre-validation error refuses the transition of a new resource', (done) => {
+test('Should take over the created id when a pre-validation error refuses a new resource', async() => {
     const ResourceRequester = require('../../../services/ResourceRequester');
-    const postPromise = Promise.reject(preValidationError({id: 'created-id'}));
-    ResourceRequester.post.mockReturnValue(postPromise);
+    ResourceRequester.post.mockReturnValue(Promise.reject(preValidationError({id: 'created-id'})));
     const ResourceStore = require('../../../stores/ResourceStore').default;
     const resourceStore = new ResourceStore('snippets', undefined, {locale: observable.box()});
 
-    const route = {options: {formKey: 'snippets', locales: [], toolbarActions: []}};
-    const {form, ready} = mountPreValidationForm(resourceStore, route);
-    resourceStore.reload = jest.fn();
+    const {ready} = renderPreValidationForm(
+        resourceStore,
+        {options: {formKey: 'snippets', locales: [], toolbarActions: []}}
+    );
+    await ready;
 
-    ready.then(() => {
-        form.find('Form').at(1).instance().submit({action: 'request_for_review'});
-
-        return postPromise.catch(() => {
-            setTimeout(() => {
-                expect(resourceStore.id).toEqual('created-id');
-                expect(resourceStore.reload).toHaveBeenCalled();
-                done();
-            });
-        });
+    act(() => {
+        mockFormContainer.submit({action: 'request_for_review'});
     });
+
+    await waitFor(() => expect(resourceStore.reload).toHaveBeenCalled());
+    expect(resourceStore.id).toEqual('created-id');
 });
