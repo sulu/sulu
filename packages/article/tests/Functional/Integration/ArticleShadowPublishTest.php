@@ -15,14 +15,55 @@ namespace Sulu\Article\Tests\Functional\Integration;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use Sulu\Article\Application\Message\ApplyWorkflowTransitionArticleMessage;
+use Sulu\Article\Application\Message\ModifyArticleMessage;
 use Sulu\Article\Domain\Model\ArticleDimensionContent;
+use Sulu\Article\Tests\Traits\CreateArticleTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\Messenger\Envelope;
 
 #[CoversNothing]
 class ArticleShadowPublishTest extends SuluTestCase
 {
+    use CreateArticleTrait;
+
+    public function testPublishShadowLocaleAfterModifyingItInTheSameProcess(): void
+    {
+        self::purgeDatabase();
+        $uuid = self::createArticle([
+            'en' => ['live' => ['template' => 'article', 'title' => 'Source EN', 'url' => '/source-en']],
+        ])->getUuid();
+        self::getEntityManager()->clear();
+
+        $messageBus = self::getContainer()->get('sulu_message_bus');
+        $messageBus->dispatch(new Envelope(
+            new ModifyArticleMessage(['uuid' => $uuid], [
+                'locale' => 'de',
+                'template' => 'article',
+                'title' => 'Source EN',
+                'url' => '/quelle-de',
+                'shadowOn' => true,
+                'shadowLocale' => 'en',
+            ]),
+            [new EnableFlushStamp()],
+        ));
+        $messageBus->dispatch(new Envelope(
+            new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], 'de', WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH),
+            [new EnableFlushStamp()],
+        ));
+
+        $liveDe = $this->getLiveDimensionContent($uuid, 'de');
+        self::assertNotNull($liveDe);
+        self::assertSame('en', $liveDe['shadowLocale']);
+        /** @var array<string, mixed> $templateData */
+        $templateData = $liveDe['templateData'];
+        self::assertSame('Source EN', $templateData['title'] ?? null);
+    }
+
     /**
      * @var KernelBrowser
      */
