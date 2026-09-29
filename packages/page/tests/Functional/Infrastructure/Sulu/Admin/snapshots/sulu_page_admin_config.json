@@ -48,6 +48,7 @@
                     "default": false
                 }
             ],
+            "webspaceSettingsForm": null,
             "theme": "default",
             "security": {
                 "system": "Blog",
@@ -129,6 +130,7 @@
                     "default": false
                 }
             ],
+            "webspaceSettingsForm": "webspace_settings_sulu_io",
             "theme": "default",
             "security": {
                 "system": "Website",
@@ -176,6 +178,16 @@
                 "review": false,
                 "security": false
             },
+            "settingsPermissions": {
+                "view": false,
+                "add": false,
+                "edit": false,
+                "delete": false,
+                "archive": false,
+                "live": false,
+                "review": false,
+                "security": false
+            },
             "allLocalizations": [
                 {
                     "localization": "de",
@@ -201,6 +213,7 @@
                     "default": true
                 }
             ],
+            "webspaceSettingsForm": null,
             "theme": null,
             "security": null,
             "defaultTemplates": {
@@ -285,6 +298,7 @@
                     "default": false
                 }
             ],
+            "webspaceSettingsForm": null,
             "theme": "default",
             "security": {
                 "system": "sulu-test-secure",
@@ -357,6 +371,7 @@
                     "default": true
                 }
             ],
+            "webspaceSettingsForm": null,
             "theme": "default",
             "security": {
                 "system": "Website",
