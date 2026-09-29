@@ -2,9 +2,9 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import fieldTypeDefaultProps from 'sulu-admin-bundle/utils/TestHelper/fieldTypeDefaultProps';
-import QRCode from 'react-qr-code';
-import {Button, Dialog, Input, Overlay, SingleSelect} from 'sulu-admin-bundle/components';
+import {Button, Dialog, Overlay, SingleSelect} from 'sulu-admin-bundle/components';
 import {Requester} from 'sulu-admin-bundle/services';
+import {TwoFactorBackupCodesList, TwoFactorSetupFields} from '../../../TwoFactorFields';
 import TwoFactor from '../../fields/TwoFactor';
 
 jest.mock('sulu-admin-bundle/utils/Translator', () => ({
@@ -103,7 +103,7 @@ test.each(['totp', 'google'])('Start the setup flow when the %s method is select
     return setupPromise.then(() => {
         twoFactor.update();
         expect(twoFactor.find(Overlay).at(0).prop('open')).toEqual(true);
-        expect(twoFactor.find(QRCode).prop('value')).toEqual('otpauth://totp/test');
+        expect(twoFactor.find(TwoFactorSetupFields).prop('qrContent')).toEqual('otpauth://totp/test');
     });
 });
 
@@ -138,7 +138,7 @@ test('Ignore stale setup responses when another method was selected in the meant
         return firstSetupPromise.then(() => {
             twoFactor.update();
 
-            expect(twoFactor.find(QRCode).prop('value')).toEqual('otpauth://totp/google');
+            expect(twoFactor.find(TwoFactorSetupFields).prop('qrContent')).toEqual('otpauth://totp/google');
         });
     });
 });
@@ -194,7 +194,7 @@ test('Activate the method and close the overlay when the code is confirmed', () 
     return setupPromise.then(() => {
         twoFactor.update();
 
-        twoFactor.find(Input).prop('onChange')('123456');
+        twoFactor.find(TwoFactorSetupFields).prop('onCodeChange')('123456');
         twoFactor.update();
 
         const confirmPromise = Promise.resolve({});
@@ -305,7 +305,7 @@ test('Generate backup codes after the dialog was confirmed when backup codes alr
 
         expect(twoFactor.find(Dialog).prop('open')).toEqual(false);
         expect(twoFactor.find(Overlay).at(1).prop('open')).toEqual(true);
-        expect(twoFactor.find('li').map((element) => element.text())).toEqual(['11111111', '22222222']);
+        expect(twoFactor.find(TwoFactorBackupCodesList).prop('backupCodes')).toEqual(['11111111', '22222222']);
     });
 });
 
