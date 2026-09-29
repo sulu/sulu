@@ -33,9 +33,8 @@
         var root = host.attachShadow({mode: 'closed'});
 
         var style = document.createElement('style');
-        // The color comes from the --sulu-preview-deep-link-color custom property a site can set on :root
-        // (also inside a prefers-color-scheme media query). It is resolved on the elements instead of
-        // :host, because a site rule like `div { --color: ... }` would override declarations on the host.
+        // --color is set on the elements, not :host, so a site rule like `div { --color: ... }` cannot override it.
+        // The icon is black or white by lightness; the plain `white` is the fallback without relative colors.
         style.textContent =
             ':host { all: initial; }' +
             '.outline, .button { --color: var(--sulu-preview-deep-link-color, #23a3ec); }' +
@@ -45,7 +44,7 @@
             '.button { all: initial; position: fixed; z-index: 2147483647; pointer-events: auto;' +
             ' display: none; align-items: center; justify-content: center;' +
             ' width: 28px; height: 28px; border-radius: 4px; background: var(--color); cursor: pointer;' +
-            ' color: color-mix(in srgb, var(--color) 10%, white);' +
+            ' color: white; color: oklch(from var(--color) clamp(0, (0.6 - l) * 1000, 1) 0 0);' +
             ' box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }' +
             '.button svg { width: 16px; height: 16px; }';
         root.appendChild(style);
