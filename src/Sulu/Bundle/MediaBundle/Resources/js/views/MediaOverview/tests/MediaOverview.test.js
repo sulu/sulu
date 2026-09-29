@@ -216,6 +216,16 @@ test('Render a simple MediaOverview', () => {
 
     expect(screen.getByRole('button', {name: 'Open collection'})).toBeInTheDocument();
     expect(screen.getByRole('button', {name: 'Open media'})).toBeInTheDocument();
+
+    const MediaCollection = require('../../../containers/MediaCollection');
+    const {collectionListStore, mediaListStore} = getListStores();
+    expect(MediaCollection.mock.calls[0][0]).toEqual(expect.objectContaining({
+        collectionListStore,
+        hideUploadAction: true,
+        mediaListAdapters: ['media_card_overview', 'table'],
+        mediaListStore,
+        uploadOverlayOpen: false,
+    }));
 });
 
 test('Destroy all stores on unmount', () => {
@@ -478,6 +488,16 @@ test('Move overlay should disappear when overlay is closed', async() => {
 
     await user.click(screen.getByRole('button', {name: /sulu_admin\.move_selected/}));
     expect(screen.getByRole('dialog', {name: 'sulu_media.move_media'})).toBeInTheDocument();
+
+    const SingleListOverlay = require('sulu-admin-bundle/containers/SingleListOverlay/SingleListOverlay');
+    const overlayProps = SingleListOverlay.mock.calls[SingleListOverlay.mock.calls.length - 1][0];
+    expect(overlayProps).toEqual(expect.objectContaining({
+        adapter: 'column_list',
+        disabledIds: [1],
+        itemDisabledCondition: '!!locked',
+        listKey: 'collections',
+        resourceKey: 'collections',
+    }));
 
     await user.click(screen.getByRole('button', {name: 'Close'}));
     expect(screen.queryByRole('dialog', {name: 'sulu_media.move_media'})).not.toBeInTheDocument();

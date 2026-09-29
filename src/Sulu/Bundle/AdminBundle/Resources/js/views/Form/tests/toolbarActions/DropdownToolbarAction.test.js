@@ -359,9 +359,7 @@ test('Return JSX for all child ToolbarActions', () => {
 
     render(dropdownToolbarAction.getNode());
 
-    expect(screen.getByTestId('delete-node')).toBeInTheDocument();
-    expect(screen.getByTestId('copy-node')).toBeInTheDocument();
-    expect(screen.queryByTestId('nothing-node')).not.toBeInTheDocument();
+    expect(screen.getAllByTestId(/-node$/).map((node) => node.dataset.testid)).toEqual(['delete-node', 'copy-node']);
 });
 
 test('Throw error if toolbarActions are neither an object nor an array', () => {

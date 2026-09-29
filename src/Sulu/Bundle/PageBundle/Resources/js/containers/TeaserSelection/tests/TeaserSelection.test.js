@@ -838,8 +838,12 @@ test('Call not onItemClick when an item is clicked in edit mode', async() => {
     await user.click(screen.getByRole('button', {name: 'edit-pages;2'}));
 
     expect(screen.getByDisplayValue('Title')).toBeInTheDocument();
-    expect(screen.getByTestId('item-content-pages;2')).toHaveAttribute('data-clickable', 'false');
-    expect(itemClickSpy).toHaveBeenCalledTimes(0);
+    await user.click(screen.getByTestId('item-content-pages;2'));
+    expect(itemClickSpy).not.toHaveBeenCalled();
+
+    await user.click(screen.getByTestId('item-content-pages;6'));
+    expect(itemClickSpy).toHaveBeenCalledTimes(1);
+    expect(itemClickSpy).toHaveBeenLastCalledWith('pages;6', item2);
 });
 
 test('Call destroy of TeaserStore when unmounted', () => {

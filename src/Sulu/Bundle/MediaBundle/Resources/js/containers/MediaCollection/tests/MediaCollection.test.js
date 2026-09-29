@@ -468,6 +468,7 @@ test('Render the MediaCollection', () => {
 
 test('Render the MediaCollection without dropdown button when collection is a system collection', () => {
     renderMediaCollection({
+        collectionId: 1,
         collectionData: {
             title: 'Title',
             locked: true,
@@ -491,6 +492,28 @@ test('Render the MediaCollection without dropdown button when permissions are mi
     expect(screen.queryByRole('button', {name: /su-plus/})).not.toBeInTheDocument();
     expect(screen.queryByRole('button', {name: /su-cog/})).not.toBeInTheDocument();
     expect(screen.queryByRole('button', {name: /sulu_media.upload_file/})).not.toBeInTheDocument();
+});
+
+test.each([
+    ['editable', ['sulu_admin.edit', 'sulu_admin.move']],
+    ['deletable', ['sulu_admin.delete']],
+    ['securable', ['sulu_security.permissions']],
+])('Pass the static "%s" permission of the MediaCollection on to the collection actions', async(flag, hidden) => {
+    const user = userEvent.setup();
+    const actions = ['sulu_admin.edit', 'sulu_admin.delete', 'sulu_admin.move', 'sulu_security.permissions'];
+    MediaCollection[flag] = false;
+
+    renderMediaCollection({collectionId: 1});
+
+    await user.click(screen.getByRole('button', {name: /su-cog/}));
+
+    actions.forEach((action) => {
+        if (hidden.includes(action)) {
+            expect(screen.queryByRole('button', {name: action})).not.toBeInTheDocument();
+        } else {
+            expect(screen.getByRole('button', {name: action})).toBeInTheDocument();
+        }
+    });
 });
 
 test('Render the MediaCollection without add button when permission is missing', async() => {

@@ -334,10 +334,10 @@ test('Turn a temporary messageKey into a warning whose action retries the reques
 
     // $FlowFixMe
     warning.actions[0].onClick();
-    await waitFor(() => expect(Requester.post).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(action.form.warnings.filter((newWarning) => newWarning !== warning)).toHaveLength(1));
 
+    expect(Requester.post).toHaveBeenCalledTimes(2);
     expect(action.form.warnings).toHaveLength(1);
-    expect(action.form.warnings[0]).not.toBe(warning);
 });
 
 test('Turn an account limit messageKey into a titled error with a contact action', async() => {

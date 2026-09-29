@@ -290,9 +290,19 @@ test('Should render media without sortable drag handles if sorting is disabled',
                 thumbnails: {},
             },
         ];
+        this.loadItems = jest.fn();
     });
 
-    render(
+    const {rerender} = render(
+        <MultiMediaSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+        />
+    );
+
+    expect(screen.getByLabelText('su-more')).toBeInTheDocument();
+
+    rerender(
         <MultiMediaSelection
             locale={observable.box('en')}
             onChange={jest.fn()}

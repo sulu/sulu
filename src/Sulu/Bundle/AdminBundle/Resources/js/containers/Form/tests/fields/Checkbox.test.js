@@ -56,6 +56,8 @@ test('Pass the label correctly to Checkbox component', () => {
     );
 
     expect(screen.getByRole('checkbox', {name: 'Checkbox Title'})).toBeInTheDocument();
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox.closest('.toggler')).toBeNull();
 });
 
 test('Pass disabled correctly to Checkbox component', () => {
@@ -223,6 +225,7 @@ test('Pass the label correctly to Toggler component', () => {
     );
 
     expect(screen.getByRole('checkbox', {name: 'Toggler Title'})).toBeInTheDocument();
+    expect(screen.getByRole('checkbox').closest('.toggler')).not.toBeNull();
 });
 
 test('Pass disabled correctly to Toggler component', () => {

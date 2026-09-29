@@ -206,6 +206,21 @@ test('Should render navigation without appVersion', () => {
     expect(mockNavigationProps.appVersion).toBeNull();
 });
 
+test('Should pass logout and profile callbacks to the Navigation component', () => {
+    const handleLogout = jest.fn();
+    const handleProfileClick = jest.fn();
+
+    renderNavigation({onLogout: handleLogout, onProfileClick: handleProfileClick});
+
+    expect(handleLogout).not.toHaveBeenCalled();
+    mockNavigationProps.onLogoutClick();
+    expect(handleLogout).toHaveBeenCalledWith();
+
+    expect(handleProfileClick).not.toHaveBeenCalled();
+    mockNavigationProps.onProfileClick();
+    expect(handleProfileClick).toHaveBeenCalledWith();
+});
+
 test('Should call the navigation callback, pin callback and router navigate', async() => {
     const user = userEvent.setup();
     const router = createRouter();

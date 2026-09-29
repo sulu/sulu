@@ -3,6 +3,7 @@ import {observable} from 'mobx';
 import React from 'react';
 import {render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import ResourceRequester from 'sulu-admin-bundle/services/ResourceRequester';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import MediaVersionUpload from '../MediaVersionUpload';
 
@@ -239,6 +240,11 @@ test('Should close focus point overlay and call onSuccess when confirmed', async
     await user.click(screen.getByRole('button', {name: 'sulu_admin.save'}));
 
     await waitFor(() => expectOverlayClosed('sulu_media.set_focus_point'));
+    expect(ResourceRequester.put).toHaveBeenCalledWith(
+        'media',
+        expect.objectContaining({adminUrl: 'image.jpg', focusPointX: 1, focusPointY: 1, url: 'image.jpg'}),
+        {id: 4, locale: 'de'}
+    );
     expect(successSpy).toHaveBeenCalledWith();
 });
 

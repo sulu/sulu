@@ -36,7 +36,7 @@ function submitForm() {
         throw new Error('Expected reset password form');
     }
 
-    fireEvent.submit(form);
+    return fireEvent.submit(form);
 }
 
 test('Should trigger onChangeForm correctly', async() => {
@@ -100,4 +100,15 @@ test('Should not trigger onSubmit if one password is missing', async() => {
 
     expect(screen.getByText('sulu_admin.reset_password_error')).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
+});
+
+test('Should prevent the native form submission', () => {
+    render(
+        <ResetPasswordForm
+            onChangeForm={jest.fn()}
+            onSubmit={jest.fn()}
+        />
+    );
+
+    expect(submitForm()).toBe(false);
 });

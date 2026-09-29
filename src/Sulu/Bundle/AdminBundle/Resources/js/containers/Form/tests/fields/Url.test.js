@@ -15,16 +15,13 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn());
 jest.mock('../../stores/ResourceFormStore', () => jest.fn());
 jest.mock('../../FormInspector', () => jest.fn());
 jest.mock('../../../../components/Url', () => {
-    const UrlMock = jest.fn((props) => {
-        mockUrlProps = {
-            ...props,
-            disabled: props.disabled === undefined ? false : props.disabled,
-            protocols: props.protocols || ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:', 'tel:'],
-            valid: props.valid === undefined ? true : props.valid,
-        };
+    const UrlMock: any = jest.fn((props) => {
+        mockUrlProps = props;
 
         return mockReact.createElement('input', {'aria-label': 'url', disabled: props.disabled, type: 'url'});
     });
+
+    UrlMock.defaultProps = jest.requireActual('../../../../components/Url').default.defaultProps;
 
     return UrlMock;
 });

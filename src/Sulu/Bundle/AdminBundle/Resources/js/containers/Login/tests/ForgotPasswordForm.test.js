@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ForgotPasswordForm from '../ForgotPasswordForm';
 
@@ -84,4 +84,21 @@ test('Should trigger onSubmit correctly', async() => {
     await user.click(screen.getByRole('button', {name: 'sulu_admin.reset'}));
 
     expect(onSubmit).toHaveBeenCalledWith({user: 'testusername'});
+});
+
+test('Should prevent the native form submission', () => {
+    render(
+        <ForgotPasswordForm
+            onChangeForm={jest.fn()}
+            onSubmit={jest.fn()}
+        />
+    );
+
+    const form = screen.getByRole('button', {name: 'sulu_admin.reset'}).closest('form');
+
+    if (!form) {
+        throw new Error('Expected form');
+    }
+
+    expect(fireEvent.submit(form)).toBe(false);
 });

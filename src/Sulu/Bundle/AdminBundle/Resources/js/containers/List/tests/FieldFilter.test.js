@@ -80,6 +80,9 @@ test('Render empty FieldFilter', () => {
 });
 
 test('Render FieldFilter with schema and value', () => {
+    const filterType = createFilterType();
+    listFieldFilterTypeRegistry.get.mockReturnValue(filterType);
+
     render(
         <FieldFilter
             fields={SCHEMA}
@@ -90,6 +93,8 @@ test('Render FieldFilter with schema and value', () => {
 
     expect(screen.getByRole('button', {name: /First name:/})).toBeInTheDocument();
     expect(screen.getByRole('button', {name: /Last name:/})).toBeInTheDocument();
+    expect(filterType).toHaveBeenCalledWith(expect.any(Function), {test: 'value'}, undefined, {});
+    expect(filterType).toHaveBeenCalledWith(expect.any(Function), null, undefined, {});
 });
 
 test('Show filter options in disabled state if a filter for them was already added', async() => {

@@ -369,6 +369,7 @@ test('Render with all fields', () => {
 test('Render with no fields', () => {
     renderFilterOverlay();
 
+    expect(screen.getByRole('dialog', {name: 'filter overlay'})).toBeInTheDocument();
     expect(screen.getByRole('heading', {name: 'Test'})).toBeInTheDocument();
     expect(screen.queryByRole('heading', {name: 'sulu_admin.data_source'})).not.toBeInTheDocument();
     expect(screen.queryByRole('heading', {name: 'sulu_admin.filter_by_categories'})).not.toBeInTheDocument();

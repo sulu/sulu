@@ -175,7 +175,14 @@ test('Render different kind of data with edit button', () => {
     expect(screen.getAllByLabelText('su-link')).toHaveLength(2);
     expect(screen.getAllByText('has-children-indicator')).toHaveLength(1);
     expect(screen.getAllByLabelText('su-shadow-page')).toHaveLength(2);
-    expect(document.querySelector('.publishIndicator')).toBeInTheDocument();
+
+    expect(getItemByTitle('Page 1').querySelector('.publishIndicator .published')).toBeNull();
+    expect(getItemByTitle('Page 1').querySelector('.publishIndicator .draft')).not.toBeNull();
+    expect(getItemByTitle('Page 2').querySelector('.publishIndicator .published')).not.toBeNull();
+    expect(getItemByTitle('Page 2').querySelector('.publishIndicator .draft')).not.toBeNull();
+    expect(getItemByTitle('Page 4').querySelector('.publishIndicator')).toBeNull();
+    expect(getItemByTitle('Page 2.2').querySelector('.ghostIndicator')).toHaveTextContent('nl');
+    expect(getItemByTitle('Page 2.2').querySelector('.publishIndicator')).toBeNull();
 });
 
 test('Render correct icon in edit button based on permissions', () => {

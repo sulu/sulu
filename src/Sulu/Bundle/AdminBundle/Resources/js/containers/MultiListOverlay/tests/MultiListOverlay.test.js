@@ -224,6 +224,17 @@ test('Should not clear ListStore if new value of excludedIds prop is equal to ol
     expect(getListStore().clear).not.toHaveBeenCalled();
 });
 
+test('Should destroy the ListStore when unmounted', () => {
+    const {unmount} = renderMultiListOverlay({open: true});
+
+    const listStore = getListStore();
+    expect(listStore.destroy).not.toHaveBeenCalled();
+
+    unmount();
+
+    expect(listStore.destroy).toHaveBeenCalledWith();
+});
+
 test('Should instantiate the ListStore without locale, excluded-ids and options', () => {
     renderMultiListOverlay();
 

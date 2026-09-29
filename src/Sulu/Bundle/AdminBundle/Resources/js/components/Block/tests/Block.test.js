@@ -100,6 +100,26 @@ test('Do not show settings icon if no onSettingsClick prop has been passed', () 
     expect(screen.queryByLabelText('su-cog')).not.toBeInTheDocument();
 });
 
+test('Show settings icon and call onSettingsClick if the prop has been passed', async() => {
+    const user = userEvent.setup();
+    const settingsClickSpy = jest.fn();
+    render(
+        <Block
+            expanded={true}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            onSettingsClick={settingsClickSpy}
+            types={{'type': 'Type'}}
+        >
+            Some block content
+        </Block>
+    );
+
+    await user.click(screen.getByLabelText('su-cog'));
+
+    expect(settingsClickSpy).toHaveBeenCalledTimes(1);
+});
+
 test('Clicking on a collapsed block should call the onExpand callback', async() => {
     const user = userEvent.setup();
     const expandSpy = jest.fn();

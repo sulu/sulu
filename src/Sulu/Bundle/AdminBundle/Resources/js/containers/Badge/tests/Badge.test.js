@@ -25,7 +25,7 @@ jest.mock('../../../services/Router', () => jest.fn(function() {
     };
 }));
 
-test('Should create new BadgeStore', () => {
+test('Should create new BadgeStore', async() => {
     const router = new Router({});
 
     const promise = Promise.resolve({data: 'foo'});
@@ -57,6 +57,7 @@ test('Should create new BadgeStore', () => {
     });
     expect(Requester.get).toHaveBeenCalledWith('badge-url');
     expect(Requester.handleResponseHooks).toHaveLength(1);
+    expect(await screen.findByText('foo')).toBeInTheDocument();
 
     unmount();
 

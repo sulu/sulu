@@ -134,7 +134,7 @@ test('Pass correct props and SingleSelectionStore to SingleAutoComplete containe
         displayProperty: 'name',
         options: {},
         searchProperties: ['name', 'number'],
-        selectionStore: expect.anything(),
+        selectionStore: expect.any(SingleSelectionStore),
     }));
 
     expect(SingleSelectionStore).toHaveBeenCalledWith('accounts', 'entity-id', locale);
@@ -239,7 +239,7 @@ test('Use locale from userStore and pass correct props with schema-options type 
         displayProperty: 'name',
         options: {},
         searchProperties: ['name', 'number'],
-        selectionStore: expect.anything(),
+        selectionStore: expect.any(SingleSelectionStore),
     }));
 
     expect(mockSingleAutoCompleteProps.selectionStore.resourceKey).toEqual('accounts');
@@ -1085,7 +1085,7 @@ test('Call onChange and onFinish when SingleSelection changes', () => {
     expect(finishSpy).toHaveBeenCalledWith();
 });
 
-test('Should not fail when SingleItemSelection item is clicked without configured view', () => {
+test('Should not pass an onItemClick callback to SingleSelection without configured view', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const router = new Router();
     const fieldTypeOptions = {
@@ -1113,7 +1113,6 @@ test('Should not fail when SingleItemSelection item is clicked without configure
     );
 
     expect(mockSingleSelectionProps.onItemClick).toEqual(undefined);
-    expect(router.navigate).not.toHaveBeenCalled();
 });
 
 test('Navigate when SingleItemSelection item is clicked with configured view', () => {

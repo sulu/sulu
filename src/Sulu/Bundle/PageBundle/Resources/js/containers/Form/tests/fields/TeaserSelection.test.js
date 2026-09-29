@@ -63,6 +63,21 @@ jest.mock('../../../../containers/TeaserSelection', () => {
                     type: 'button',
                 },
                 'open-teaser'
+            ),
+            mockReact.createElement(
+                'button',
+                {
+                    onClick: () => props.onItemClick('pages;2', {
+                        attributes: {
+                            webspaceKey: 'sulu_blog',
+                        },
+                        id: 2,
+                        title: 'Test 2',
+                        type: 'pages',
+                    }),
+                    type: 'button',
+                },
+                'open-blog-teaser'
             )
         );
     });
@@ -203,6 +218,10 @@ test('Navigate to item when item is clicked', async() => {
     await user.click(screen.getByRole('button', {name: 'open-teaser'}));
 
     expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {id: 5, webspace: 'sulu_io'});
+
+    await user.click(screen.getByRole('button', {name: 'open-blog-teaser'}));
+
+    expect(router.navigate).toHaveBeenLastCalledWith('sulu_page.page_edit_form', {id: 2, webspace: 'sulu_blog'});
 });
 
 test('Throw error if present_as schemaOption is from wrong type', () => {

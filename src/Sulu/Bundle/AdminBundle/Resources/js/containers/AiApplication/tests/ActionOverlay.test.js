@@ -86,10 +86,11 @@ describe('ActionOverlay', () => {
         const user = userEvent.setup();
         render(<ActionOverlay {...defaultProps} />);
         await user.click(screen.getByRole('button'));
+        const container = screen.getByText('sulu_admin.send_feedback').closest('.container');
+        await waitFor(() => expect(container).toHaveClass('isDown'));
+
         await user.click(screen.getAllByRole('button', {name: /su-times/i})[0]);
 
-        await waitFor(() => {
-            expect(screen.queryByText('Form Title')).not.toBeInTheDocument();
-        });
+        await waitFor(() => expect(container).not.toHaveClass('isDown'));
     });
 });

@@ -760,6 +760,9 @@ test('Render the adapter with filters', () => {
     render(<List adapters={['test']} disabled={true} header={<h1>Title</h1>} store={listStore} />);
 
     expect(getButtonsByIcon('su-filter')).toHaveLength(1);
+    expect(screen.getByRole('button', {name: /Title:/})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /Created at:/})).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: /Changed at:/})).not.toBeInTheDocument();
 });
 
 test('Render the adapter with filters but filterable disabled', () => {
@@ -1353,7 +1356,9 @@ test(
 
         await clickOpenDialogButton('sulu_admin.delete_warning_title', 'sulu_admin.cancel');
 
-        await waitFor(() => expect(listStore.delete).not.toHaveBeenCalled());
+        await waitFor(() => expect(screen.queryByRole('dialog', {name: 'sulu_admin.delete_warning_title'}))
+            .not.toBeInTheDocument());
+        expect(listStore.delete).not.toHaveBeenCalled();
     }
 );
 
@@ -1369,7 +1374,8 @@ test('ListStore should delete item when onRequestItemDelete callback is called a
     await clickOpenDialogButton('sulu_admin.delete_warning_title', 'sulu_admin.ok');
 
     await waitFor(() => expect(listStore.delete).toHaveBeenCalledWith(5));
-    await waitFor(() => expect(screen.queryByTestId('delete-referenced-dialog')).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByRole('dialog', {name: 'sulu_admin.delete_warning_title'}))
+        .not.toBeInTheDocument());
 });
 
 test('ListStore should delete linked item when onRequestItemDelete callback is is confirmed twice', async() => {
@@ -1511,6 +1517,8 @@ test(
 
         await clickOpenDialogButton('sulu_admin.order_warning_title', 'sulu_admin.cancel');
 
+        await waitFor(() => expect(screen.queryByRole('dialog', {name: 'sulu_admin.order_warning_title'}))
+            .not.toBeInTheDocument());
         expect(listStore.order).not.toHaveBeenCalled();
     }
 );

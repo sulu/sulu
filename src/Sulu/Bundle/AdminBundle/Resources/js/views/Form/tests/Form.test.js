@@ -509,7 +509,7 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
 
     expect(SaveToolbarAction).toHaveBeenCalledWith(
         resourceFormStore,
-        expect.any(Object),
+        expect.objectContaining({showSuccessSnackbar: expect.any(Function), submit: expect.any(Function)}),
         router,
         undefined,
         {test1: 'value1'},
@@ -518,7 +518,7 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
 
     expect(DeleteToolbarAction).toHaveBeenCalledWith(
         resourceFormStore,
-        expect.any(Object),
+        expect.objectContaining({showSuccessSnackbar: expect.any(Function), submit: expect.any(Function)}),
         router,
         undefined,
         {test2: 'value2'},
@@ -527,7 +527,7 @@ test('Should add items defined in ToolbarActions to Toolbar with options', () =>
 
     expect(EditToolbarAction).toHaveBeenCalledWith(
         resourceFormStore,
-        expect.any(Object),
+        expect.objectContaining({showSuccessSnackbar: expect.any(Function), submit: expect.any(Function)}),
         router,
         undefined,
         {},
@@ -1788,7 +1788,7 @@ test('Should clear errors if form has been saved', () => {
 
     return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         return jsonSchemaPromise.then(() => {
-            mockFormContainer.submit().then(() => {
+            return mockFormContainer.submit().then(() => {
                 expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {}, {
                     action: undefined,
                     id: 8,

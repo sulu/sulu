@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, screen, waitFor} from '@testing-library/react';
+import {act, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
@@ -826,7 +826,9 @@ test('Should not enable refresh button when value of part field changes on add f
 
     await waitFor(() => expect(screen.getByRole('button')).toBeDisabled());
 
-    resourceStore.data['/title'] = 'new-title-value';
+    act(() => {
+        resourceStore.data['/title'] = 'new-title-value';
+    });
 
     expect(screen.getByRole('button')).toBeDisabled();
 });
@@ -902,8 +904,10 @@ test('Should not enable refresh button when value of part field changes if all p
 
     await waitFor(() => expect(screen.getByRole('button')).toBeDisabled());
 
-    resourceStore.data['/title'] = '';
-    resourceStore.data['/subtitle'] = undefined;
+    act(() => {
+        resourceStore.data['/title'] = '';
+        resourceStore.data['/subtitle'] = undefined;
+    });
 
     expect(screen.getByRole('button')).toBeDisabled();
 

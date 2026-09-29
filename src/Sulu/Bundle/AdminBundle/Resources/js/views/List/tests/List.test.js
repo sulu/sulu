@@ -1097,10 +1097,13 @@ test('Should show the error of a failed copy in the toolbar', async() => {
 
     expect(screen.getByRole('button', {name: /Copying is not allowed/})).toBeInTheDocument();
 
-    await user.click(screen.getByLabelText('su-times'));
     act(() => mockListContainerProps.onCopyError({}));
 
     expect(screen.getByRole('button', {name: /An unexpected error occurred while copying/})).toBeInTheDocument();
+
+    await user.click(screen.getByLabelText('su-times'));
+
+    expect(screen.getByRole('button', {name: /Copying is not allowed/})).toBeInTheDocument();
 });
 
 test('Should navigate to defined route on back button click without locale', async() => {
@@ -1833,6 +1836,8 @@ test('Should delete selected items when delete button is clicked', async() => {
     await user.click(screen.getByRole('button', {name: /Delete/}));
 
     expect(requestSelectionDelete).toHaveBeenCalledWith(true);
+    expect(mockListContainer.showDeleteSelectionDialog).toEqual(true);
+    expect(mockListContainer.allowConflictDeletion).toEqual(true);
 });
 
 test('Should pass allowConflictDeletion correctly to List component', async() => {
@@ -1864,6 +1869,8 @@ test('Should pass allowConflictDeletion correctly to List component', async() =>
     await user.click(screen.getByRole('button', {name: /Delete/}));
 
     expect(requestSelectionDelete).toHaveBeenCalledWith(false);
+    expect(mockListContainer.showDeleteSelectionDialog).toEqual(true);
+    expect(mockListContainer.allowConflictDeletion).toEqual(false);
 });
 
 test('Should make move overlay disappear if cancel is clicked', async() => {

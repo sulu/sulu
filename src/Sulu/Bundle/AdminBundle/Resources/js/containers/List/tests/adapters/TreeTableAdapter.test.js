@@ -275,12 +275,24 @@ test('Render data with schema', () => {
     expect(screen.getByText('Page 8')).toBeInTheDocument();
     expect(screen.getAllByText('de')).toHaveLength(4);
     expect(screen.getAllByLabelText('su-angle-right')).toHaveLength(8);
-    expect(document.querySelector('.publishIndicator')).toBeInTheDocument();
+
+    expect(getRowByText('Page 1').querySelector('.publishIndicator')).toBeNull();
+    expect(getRowByText('Page 2').querySelector('.publishIndicator')).toBeNull();
+    expect(getRowByText('Page 3').querySelector('.publishIndicator .published')).not.toBeNull();
+    expect(getRowByText('Page 3').querySelector('.publishIndicator .draft')).not.toBeNull();
+    expect(getRowByText('Page 4').querySelector('.publishIndicator .published')).toBeNull();
+    expect(getRowByText('Page 4').querySelector('.publishIndicator .draft')).not.toBeNull();
+    [5, 6, 7, 8].forEach((number) => {
+        const row = getRowByText('Page ' + number);
+
+        expect(row.querySelector('.ghostIndicator')).toHaveTextContent('de');
+        expect(row.querySelector('.publishIndicator')).toBeNull();
+    });
 });
 
 test('Render data without header using the configured skin', () => {
     renderTreeTableAdapter({
-        adapterOptions: {show_header: false},
+        adapterOptions: {show_header: false, skin: 'light'},
         data: TREE_DATA,
         page: 1,
         pageCount: 2,
@@ -288,6 +300,7 @@ test('Render data without header using the configured skin', () => {
         schema: TITLE_SCHEMA,
     });
 
+    expect(screen.getByRole('table').closest('.tableContainer')).toHaveClass('light');
     expect(screen.queryByRole('columnheader')).not.toBeInTheDocument();
     expect(screen.getByText('Test1')).toBeInTheDocument();
     expect(screen.getByText('Test4')).toBeInTheDocument();

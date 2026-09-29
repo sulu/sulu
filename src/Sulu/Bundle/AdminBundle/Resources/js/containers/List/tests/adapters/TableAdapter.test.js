@@ -132,7 +132,15 @@ test('Render data with schema', () => {
     expect(screen.getByText('Page 1')).toBeInTheDocument();
     expect(screen.getByText('Page 5')).toBeInTheDocument();
     expect(screen.getByText('de')).toBeInTheDocument();
-    expect(document.querySelector('.publishIndicator')).toBeInTheDocument();
+
+    expect(getRowByText('Page 1').querySelector('.publishIndicator')).toBeNull();
+    expect(getRowByText('Page 2').querySelector('.publishIndicator')).toBeNull();
+    expect(getRowByText('Page 3').querySelector('.publishIndicator .published')).not.toBeNull();
+    expect(getRowByText('Page 3').querySelector('.publishIndicator .draft')).not.toBeNull();
+    expect(getRowByText('Page 4').querySelector('.publishIndicator .published')).toBeNull();
+    expect(getRowByText('Page 4').querySelector('.publishIndicator .draft')).not.toBeNull();
+    expect(getRowByText('Page 5').querySelector('.ghostIndicator')).toHaveTextContent('de');
+    expect(getRowByText('Page 5').querySelector('.publishIndicator')).toBeNull();
     expect(screen.getByDisplayValue('2')).toBeInTheDocument();
     expect(screen.getByText(/of/)).toHaveTextContent('of 5');
 });
@@ -380,12 +388,12 @@ test('Render data with schema not containing all fields', () => {
                 label: 'Title',
                 sortable: true,
                 type: 'string',
-                visibility: 'no',
+                visibility: 'yes',
             },
         },
     });
 
-    expect(screen.queryByText('Title 1')).not.toBeInTheDocument();
+    expect(screen.getByText('Title 1')).toBeInTheDocument();
     expect(screen.queryByText('Description 1')).not.toBeInTheDocument();
 });
 
@@ -613,6 +621,7 @@ test('Pagination should be passed correct props', async() => {
         schema: TITLE_DESCRIPTION_SCHEMA,
     });
 
+    expect(screen.getByText(/Page/)).toBeInTheDocument();
     expect(screen.getByDisplayValue('2')).toBeInTheDocument();
     expect(screen.getByText(/of/)).toHaveTextContent('of 7');
 

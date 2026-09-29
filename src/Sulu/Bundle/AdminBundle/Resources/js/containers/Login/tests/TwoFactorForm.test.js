@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TwoFactorForm from '../TwoFactorForm';
 
@@ -96,4 +96,22 @@ test('Should trigger onSubmit correctly with trusted device', async() => {
     await user.click(screen.getByRole('button', {name: 'sulu_admin.verify'}));
 
     expect(onSubmit).toHaveBeenCalledWith({_auth_code: 'authcode', _trusted: true});
+});
+
+test('Should prevent the native form submission', () => {
+    render(
+        <TwoFactorForm
+            methods={['emails', 'trusted_devices']}
+            onChangeForm={jest.fn()}
+            onSubmit={jest.fn()}
+        />
+    );
+
+    const form = screen.getByRole('button', {name: 'sulu_admin.verify'}).closest('form');
+
+    if (!form) {
+        throw new Error('Expected form');
+    }
+
+    expect(fireEvent.submit(form)).toBe(false);
 });

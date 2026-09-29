@@ -216,6 +216,7 @@ test('Render login when user is not logged in', () => {
     renderApplication();
 
     expect(screen.getByText('sulu_admin.welcome')).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.back_to_website')).toBeInTheDocument();
     expect(screen.getByLabelText('sulu_admin.username_or_email')).toBeInTheDocument();
     expect(screen.getByLabelText('sulu_admin.password')).toBeInTheDocument();
     expect(screen.getByRole('button', {name: 'sulu_admin.login'})).toBeDisabled();

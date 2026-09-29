@@ -172,6 +172,12 @@ test('Do not open the overlay when a method without setup was selected in the me
 
     await act(async() => setupRequest.resolve({secret: 'SECRET', qrContent: 'otpauth://totp/test'}));
     expect(screen.queryByText('sulu_security.two_factor_setup_title')).not.toBeInTheDocument();
+
+    const secondSetupRequest = createDeferred<Object>();
+    Requester.post.mockReturnValue(secondSetupRequest.promise);
+    await selectMethod(user, 'Google Authenticator');
+
+    expect(screen.queryByTestId('qr-code')).not.toBeInTheDocument();
 });
 
 test('Activate the method and close the overlay when the code is confirmed', async() => {

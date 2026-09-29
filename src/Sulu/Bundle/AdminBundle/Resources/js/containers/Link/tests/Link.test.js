@@ -60,14 +60,27 @@ function createOverlay(provider, hrefValue = '10') {
         };
 
         render() {
-            const {onCancel, onConfirm, open} = this.props;
+            const {anchor, href, onCancel, onConfirm, open, rel, target, title} = this.props;
 
             if (!open) {
                 return null;
             }
 
+            const enabledFields = ['anchor', 'query', 'rel', 'target', 'title']
+                .filter((field) => this.props['on' + field.charAt(0).toUpperCase() + field.slice(1) + 'Change'])
+                .join(',');
+
             return (
-                <div aria-label={provider + ' link'} role="dialog">
+                <div
+                    aria-label={provider + ' link'}
+                    data-anchor={anchor}
+                    data-enabled-fields={enabledFields}
+                    data-href={href}
+                    data-rel={rel}
+                    data-target={target}
+                    data-title={title}
+                    role="dialog"
+                >
                     <button
                         aria-label={provider + '-set-href'}
                         onClick={this.handleHrefClick}
@@ -226,6 +239,13 @@ test('Open overlay on input click', async() => {
     await user.click(await screen.findByRole('button', {name: /Page 1/}));
 
     expect(screen.getByRole('dialog', {name: 'page link'})).toBeInTheDocument();
+    expect(screen.getByRole('dialog', {name: 'page link'})).toHaveAttribute('data-href', '123-asdf-123');
+    expect(screen.getByRole('dialog', {name: 'page link'})).toHaveAttribute('data-anchor', 'TestAnchor');
+    expect(screen.getByRole('dialog', {name: 'page link'})).toHaveAttribute('data-target', 'TestTarget');
+    expect(screen.getByRole('dialog', {name: 'page link'})).toHaveAttribute('data-rel', 'TestRel');
+    expect(screen.getByRole('dialog', {name: 'page link'})).toHaveAttribute('data-title', 'TestLink');
+    expect(screen.getByRole('dialog', {name: 'page link'}))
+        .toHaveAttribute('data-enabled-fields', 'anchor,rel,target,title');
 });
 
 test('Open overlay on provider change', async() => {

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, screen, waitFor} from '@testing-library/react';
+import {act, render, screen, waitFor} from '@testing-library/react';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {ResourceStore, SingleSelectionStore} from 'sulu-admin-bundle/stores';
@@ -125,6 +125,16 @@ test('Render a PageTreeRoute', async() => {
     expect(container).toMatchSnapshot();
     expect(screen.getByText('sulu_page.no_page_selected')).toBeInTheDocument();
     expect(screen.getByDisplayValue('hello')).toBeInTheDocument();
+
+    act(() => {
+        (SingleSelectionStore: any).mock.instances[0].item = {
+            id: 'uuid-uuid-uuid-uuid',
+            url: '/test/uuid-uuid-uuid-uuid',
+        };
+    });
+
+    expect(screen.getByText('/test/uuid-uuid-uuid-uuid')).toBeInTheDocument();
+    expect(screen.queryByText('sulu_page.no_page_selected')).not.toBeInTheDocument();
 });
 
 test('Render a PageTreeRoute without value', async() => {

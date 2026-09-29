@@ -131,7 +131,7 @@ test('Should render the tab badges', async() => {
 
     await promise;
 
-    expect(await screen.findByText('2')).toBeInTheDocument();
+    expect(await screen.findByRole('button', {name: /^tabTitle1\s*2$/})).toBeInTheDocument();
 });
 
 test('Should render the header between children and tabs', () => {
@@ -280,7 +280,7 @@ test('Should render the active child with disabledTabGap option', () => {
     const router = new Router({});
 
     const Child = () => (<h1>Child</h1>);
-    render(
+    const {container} = render(
         <Tabs
             route={route}
             router={router}
@@ -293,6 +293,8 @@ test('Should render the active child with disabledTabGap option', () => {
     expect(screen.getByRole('button', {name: 'tabTitle1'})).toBeDisabled();
     expect(screen.getByRole('button', {name: 'tabTitle2'})).toBeInTheDocument();
     expect(screen.getByRole('heading', {name: 'Child'})).toBeInTheDocument();
+    // eslint-disable-next-line testing-library/no-container
+    expect(container.querySelector('.tabsContainer')).toHaveClass('disableGap');
 });
 
 test('Should consider the tabOrder when rendering the tabs', () => {
@@ -360,7 +362,7 @@ test('Should consider the tabOrder when rendering the tabs', () => {
     ]);
 });
 
-test('Should mark currently active tab as selected according to prop', async() => {
+test('Should mark currently active tab as selected according to prop', () => {
     const childRoute1 = new Route({
         name: 'route1',
         options: {
@@ -410,12 +412,12 @@ test('Should mark currently active tab as selected according to prop', async() =
         <Tabs route={route} router={router} selectedIndex={0}>{() => (<Child route={activeRoute} />)}</Tabs>
     );
 
-    await waitFor(() => expect(router.redirect).not.toHaveBeenCalled());
+    expect(router.redirect).not.toHaveBeenCalled();
     expect(screen.getByRole('button', {name: 'tabTitle1'})).toBeDisabled();
     expect(screen.getByRole('button', {name: 'tabTitle2'})).toBeEnabled();
 });
 
-test('Should mark currently active tab as selected', async() => {
+test('Should mark currently active tab as selected', () => {
     const childRoute1 = new Route({
         name: 'route1',
         options: {
@@ -465,7 +467,7 @@ test('Should mark currently active tab as selected', async() => {
         <Tabs route={route} router={router}>{() => (<Child route={activeRoute} />)}</Tabs>
     );
 
-    await waitFor(() => expect(router.redirect).not.toHaveBeenCalled());
+    expect(router.redirect).not.toHaveBeenCalled();
     expect(screen.getByRole('button', {name: 'tabTitle1'})).toBeEnabled();
     expect(screen.getByRole('button', {name: 'tabTitle2'})).toBeDisabled();
 });

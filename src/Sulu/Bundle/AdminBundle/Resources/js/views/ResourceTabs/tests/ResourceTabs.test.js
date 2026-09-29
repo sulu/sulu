@@ -701,7 +701,7 @@ test('Should redirect to highest prioritized tab if no tab is active', async() =
     await waitFor(() => expect(router.redirect).toHaveBeenCalledWith('route2', attributes));
 });
 
-test('Should not redirect to first child route if resourceStore is not initialized', async() => {
+test('Should not redirect to first child route if resourceStore is not initialized', () => {
     mockResourceStore(function() {
         extendObservable(this, {data: {}});
     });
@@ -740,11 +740,14 @@ test('Should not redirect to first child route if resourceStore is not initializ
     const Child = () => (<h1>Child</h1>);
     render(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    await waitFor(() => expect(router.redirect).not.toHaveBeenCalledWith('route1', attributes));
+    expect(screen.getByText('loader')).toBeInTheDocument();
+    expect(router.redirect).not.toHaveBeenCalled();
 });
 
-test('Should not redirect to first child route if resourceStore is currently loading', async() => {
+test('Should not redirect to first child route if resourceStore is currently loading', () => {
     mockResourceStore(function() {
+        this.initialized = false;
+        this.loading = true;
         extendObservable(this, {data: {}});
     });
 
@@ -782,7 +785,8 @@ test('Should not redirect to first child route if resourceStore is currently loa
     const Child = () => (<h1>Child</h1>);
     render(<ResourceTabs route={route} router={router}>{() => (<Child />)}</ResourceTabs>);
 
-    await waitFor(() => expect(router.redirect).not.toHaveBeenCalledWith('route1', attributes));
+    expect(screen.getByText('loader')).toBeInTheDocument();
+    expect(router.redirect).not.toHaveBeenCalled();
 });
 
 test('Should not redirect if a tab is already active', () => {

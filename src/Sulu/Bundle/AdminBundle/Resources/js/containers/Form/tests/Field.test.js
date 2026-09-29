@@ -116,7 +116,7 @@ test('Render a required field with correct field type', () => {
 test('Render a field without a label', () => {
     renderField({schema: {type: 'text'}});
 
-    expect(screen.queryByText('label1')).not.toBeInTheDocument();
+    expect(screen.queryByText(/./, {selector: 'label'})).not.toBeInTheDocument();
     expect(screen.getByTestId('field-type')).toBeInTheDocument();
 });
 
@@ -432,14 +432,14 @@ test('Do not render anything if field does not exist and onInvalid is set to ign
         throw new Error();
     });
 
-    renderField({
+    const {container} = renderField({
         dataPath: '/test',
         name: 'test',
         schema: {label: 'label', type: 'not-existing', onInvalid: 'ignore'},
         schemaPath: '/test',
     });
 
-    expect(screen.queryByTestId('field-type')).not.toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
 });
 
 test('Call onFocus callback when Field gets focus', () => {

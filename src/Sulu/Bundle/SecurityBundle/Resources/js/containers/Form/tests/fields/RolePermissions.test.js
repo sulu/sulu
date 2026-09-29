@@ -56,7 +56,7 @@ test('Pass props correctly to component', () => {
     expect(RolePermissionsContainerMock.mock.calls[0][0].value).toBe(value);
 });
 
-test('Pass onChange and onFinish props correctly to component', () => {
+test('Pass disabled prop correctly to component', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test'), 'snippets', {resourceKey: 'snippets'}
@@ -113,7 +113,7 @@ test('Pass system prop correctly to component', () => {
     expect(RolePermissionsContainerMock.mock.calls[0][0].webspaceKey).toEqual('test');
 });
 
-test('Pass disabled prop correctly to component', () => {
+test('Pass onChange and onFinish props correctly to component', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test'), 'snippets', {resourceKey: 'snippets'}

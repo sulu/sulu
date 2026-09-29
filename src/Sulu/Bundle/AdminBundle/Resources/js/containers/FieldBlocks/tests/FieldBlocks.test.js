@@ -8,13 +8,12 @@ import Router from '../../../services/Router';
 import fieldTypeDefaultProps from '../../../utils/TestHelper/fieldTypeDefaultProps';
 import FieldBlocks from '../FieldBlocks';
 import FormInspector from '../../Form/FormInspector';
+import FormOverlay from '../../FormOverlay';
 import {memoryFormStoreFactory} from '../../Form';
 import metadataStore from '../../Form/stores/metadataStore';
 import ResourceFormStore from '../../Form/stores/ResourceFormStore';
 import ResourceStore from '../../../stores/ResourceStore';
 import blockPreviewTransformerRegistry from '../registries/blockPreviewTransformerRegistry';
-import fieldRegistry from '../../Form/registries/fieldRegistry';
-import SingleSelect from '../../Form/fields/SingleSelect';
 import conditionDataProviderRegistry from '../../Form/registries/conditionDataProviderRegistry';
 
 jest.mock('../../../components/BlockCollection', () => {
@@ -103,6 +102,7 @@ jest.mock('../FieldRenderer', () => {
                 data-has-router={props.router ? 'true' : 'false'}
                 data-index={String(props.index)}
                 data-schema-path={props.schemaPath}
+                data-show-all-errors={String(props.showAllErrors)}
                 data-testid={'field-renderer-' + props.index}
                 data-value={JSON.stringify(toJS(props.value))}
             >
@@ -521,7 +521,7 @@ test('Call onChange on componentDidUpdate when type not longer exist', () => {
     ]);
 });
 
-test('Render block with schema and error when showing all errors', async() => {
+test('Render block with schema and error on fields already being modified', async() => {
     const user = userEvent.setup();
     const formInspector = createFormInspector();
     const types = getDefaultTypes({text: {label: 'Text', type: 'text_line'}});
@@ -551,7 +551,7 @@ test('Render block with schema and error when showing all errors', async() => {
     expect(screen.getByLabelText('field-2-text')).toHaveClass('minLength');
 });
 
-test('Render block with schema and error on fields already being modified', async() => {
+test('Render block with schema and error when showing all errors', async() => {
     const user = userEvent.setup();
     const formInspector = createFormInspector();
     const types = getDefaultTypes({text: {label: 'Text', type: 'text_line'}});
@@ -575,6 +575,7 @@ test('Render block with schema and error on fields already being modified', asyn
 
     expect(screen.getByLabelText('field-1-text')).toHaveClass('minLength');
     expect(screen.getByLabelText('field-2-text')).toHaveClass('minLength');
+    expect(screen.getByTestId('field-renderer-2')).toHaveAttribute('data-show-all-errors', 'true');
 });
 
 test('Should correctly pass props to the BlockCollection', () => {
@@ -881,12 +882,18 @@ test('Should destroy create new formstore when block settings overlay is opened 
         value: [{type: 'default'}, {type: 'default'}],
     });
 
+    const getLastFormStore = () => {
+        const {calls} = (FormOverlay: any).mock;
+
+        return calls[calls.length - 1][0].formStore;
+    };
+
     await user.click(screen.getByRole('button', {name: 'settings-0'}));
-    const firstOverlay = screen.getByTestId('form-overlay');
+    const firstFormStore = getLastFormStore();
     await user.click(screen.getByRole('button', {name: 'close-settings'}));
     await user.click(screen.getByRole('button', {name: 'settings-1'}));
 
-    expect(screen.getByTestId('form-overlay')).not.toBe(firstOverlay);
+    expect(getLastFormStore()).not.toBe(firstFormStore);
 });
 
 test('Should not close block settings overlay when confirm button is clicked with invalid data', async() => {
@@ -1090,7 +1097,7 @@ test('Should show correct value in type select after type is changed', async() =
     expect(screen.getByTestId('block-type-0')).toHaveTextContent('other');
 });
 
-test('Should set correct default values for multiple single_select in blocks', async() => {
+test('Should merge default values reported by multiple fields into one block change', async() => {
     const user = userEvent.setup();
     const formInspector = createFormInspector();
     const types = getDefaultTypes({
@@ -1106,7 +1113,6 @@ test('Should set correct default values for multiple single_select in blocks', a
             options: {default_value: {name: 'default_value', type: 'string', value: 'right'}},
         },
     });
-    fieldRegistry.get.mockReturnValue(SingleSelect);
     const changeSpy = jest.fn();
 
     renderFieldBlocks({

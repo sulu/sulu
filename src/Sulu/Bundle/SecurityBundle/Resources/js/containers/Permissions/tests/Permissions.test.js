@@ -881,9 +881,12 @@ test('Dispose autorun on unmount', () => {
         />
     );
 
+    expect(autorunSpy).toHaveBeenCalledTimes(1);
+    expect(systemDisposerSpy).not.toHaveBeenCalled();
+
     unmount();
 
-    expect(systemDisposerSpy).toHaveBeenCalledWith();
+    expect(systemDisposerSpy).toHaveBeenCalledTimes(1);
     autorunSpy.mockRestore();
 });
 

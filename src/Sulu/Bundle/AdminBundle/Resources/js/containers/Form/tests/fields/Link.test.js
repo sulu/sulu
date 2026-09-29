@@ -28,16 +28,7 @@ jest.mock('../../../Link/Link', () => {
         return mockReact.createElement('div');
     });
 
-    LinkMock.defaultProps = {
-        disabled: false,
-        enableAnchor: false,
-        enableQuery: false,
-        enableRel: false,
-        enableTarget: false,
-        enableTitle: false,
-        excludedTypes: [],
-        types: [],
-    };
+    LinkMock.defaultProps = jest.requireActual('../../../Link/Link').default.defaultProps;
 
     return LinkMock;
 });

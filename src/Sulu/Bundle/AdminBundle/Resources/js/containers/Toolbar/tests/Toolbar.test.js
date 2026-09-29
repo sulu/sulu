@@ -7,6 +7,8 @@ import toolbarStorePool from '../stores/toolbarStorePool';
 
 let toolbarStoreMock: any = {};
 let mockToolbarButtonProps: Array<Object> = [];
+let mockToolbarDropdownProps: Array<Object> = [];
+let mockToolbarTogglerProps: Array<Object> = [];
 
 const mockReact = require('react');
 
@@ -66,8 +68,16 @@ jest.mock('../../../components/Toolbar', () => {
         );
     };
 
-    ToolbarMock.Dropdown = (props) => mockReact.createElement('button', {type: 'button'}, props.label);
-    ToolbarMock.Toggler = (props) => mockReact.createElement('button', {type: 'button'}, props.label);
+    ToolbarMock.Dropdown = (props) => {
+        mockToolbarDropdownProps.push(props);
+
+        return mockReact.createElement('button', {type: 'button'}, props.label);
+    };
+    ToolbarMock.Toggler = (props) => {
+        mockToolbarTogglerProps.push(props);
+
+        return mockReact.createElement('button', {type: 'button'}, props.label);
+    };
     ToolbarMock.Select = (props) => mockReact.createElement('button', {type: 'button'}, props.label || 'Select');
     ToolbarMock.Items = (props) => mockReact.createElement('div', {'data-testid': 'items'}, props.children);
     ToolbarMock.Icons = (props) => mockReact.createElement('div', {'data-testid': 'icons'}, props.children);
@@ -77,6 +87,8 @@ jest.mock('../../../components/Toolbar', () => {
 
 beforeEach(() => {
     mockToolbarButtonProps = [];
+    mockToolbarDropdownProps = [];
+    mockToolbarTogglerProps = [];
     window.ResizeObserver = jest.fn(function() {
         this.observe = jest.fn();
         this.disconnect = jest.fn();
@@ -151,6 +163,14 @@ test('Render the items and icons from the ToolbarStore', () => {
     expect(screen.getByText('Test1')).toBeInTheDocument();
     expect(screen.getByText('Test2')).toBeInTheDocument();
     expect(toolbarStorePool.createStore).toHaveBeenCalledWith('testStore');
+    expect(mockToolbarButtonProps.find((props) => props.label === 'Delete')).toEqual(
+        expect.objectContaining({disabled: true, icon: 'fa-trash-o'})
+    );
+    expect(mockToolbarDropdownProps).toHaveLength(1);
+    expect(mockToolbarDropdownProps[0].options.map((option) => option.label))
+        .toEqual(['Save as draft', 'Publish', 'Save and publish']);
+    expect(mockToolbarTogglerProps).toHaveLength(1);
+    expect(mockToolbarTogglerProps[0]).toEqual(expect.objectContaining({value: true}));
 });
 
 test('Render the error from the ToolbarStore', () => {
@@ -216,12 +236,12 @@ test('Show success message on back button for some time', () => {
 
     renderToolbar();
 
-    expect(mockToolbarButtonProps).toEqual(expect.arrayContaining([
+    expect(mockToolbarButtonProps).toEqual([
         expect.objectContaining({
             icon: 'su-check',
             success: true,
         }),
-    ]));
+    ]);
 });
 
 test('Show success message on navigation button for some time', () => {
@@ -234,6 +254,10 @@ test('Show success message on navigation button for some time', () => {
     expect(mockToolbarButtonProps[0]).toEqual(expect.objectContaining({
         icon: 'su-check',
         success: true,
+    }));
+    expect(mockToolbarButtonProps[1]).toEqual(expect.objectContaining({
+        icon: 'su-angle-left',
+        success: false,
     }));
 });
 

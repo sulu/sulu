@@ -373,7 +373,7 @@ test('Should change data on store when changed', async() => {
     expect(store.change).toHaveBeenCalledWith('field', 'value', {isDefaultValue: true});
 });
 
-test('Should change data on store without sections', () => {
+test('Should change data on store without a change context', () => {
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     renderForm({}, store);
 
@@ -426,7 +426,7 @@ test('Should not show a GhostDialog if the entity does not exist yet', () => {
     const formStore = new ResourceFormStore(resourceStore, 'snippet');
     renderForm({}, formStore);
 
-    expect(screen.queryByTestId('ghost-dialog')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog', {name: 'ghost content'})).not.toBeInTheDocument();
 });
 
 test('Should not show a GhostDialog if the entity is not translatable', () => {
@@ -434,7 +434,7 @@ test('Should not show a GhostDialog if the entity is not translatable', () => {
     const formStore = new ResourceFormStore(resourceStore, 'snippet');
     renderForm({}, formStore);
 
-    expect(screen.queryByTestId('ghost-dialog')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog', {name: 'ghost content'})).not.toBeInTheDocument();
 });
 
 test('Should show a GhostDialog and copy the content if the confirm button is clicked', async() => {

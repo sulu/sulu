@@ -495,7 +495,7 @@ test('Should call onChange and onFinish callback when MultiSelection component f
     expect(finishSpy).toHaveBeenCalledWith();
 });
 
-test('Should not fail when MultiSelection item is clicked without configured view', () => {
+test('Should not pass an onItemClick callback to MultiSelection without configured view', () => {
     const fieldOptions = {
         default_type: 'list_overlay',
         resource_key: 'pages',
@@ -520,7 +520,6 @@ test('Should not fail when MultiSelection item is clicked without configured vie
     );
 
     expect(mockMultiSelectionProps.onItemClick).toEqual(undefined);
-    expect(router.navigate).not.toHaveBeenCalled();
 });
 
 test('Should navigate to view when MultiSelection item is clicked with configured view', () => {
@@ -1059,7 +1058,7 @@ test('Should pass props correctly to MultiAutoComplete component', () => {
         displayProperty: 'name',
         idProperty: 'uuid',
         searchProperties: ['name'],
-        selectionStore: expect.anything(),
+        selectionStore: expect.any(MultiSelectionStore),
     }));
 
     expect(MultiSelectionStore).toHaveBeenCalledWith('snippets', value, locale, 'names');
@@ -1157,7 +1156,7 @@ test('Should pass props with schema-options type correctly to MultiAutoComplete 
         displayProperty: 'name',
         idProperty: 'uuid',
         searchProperties: ['name'],
-        selectionStore: expect.anything(),
+        selectionStore: expect.any(MultiSelectionStore),
         options: {
             staticKey: 'some-static-value',
             dynamicKey: 'value-returned-by-form-inspector',

@@ -397,6 +397,7 @@ test('Dont react or update preview when data is changed during formstore is load
 
     const previewStore = getPreviewStore();
     previewStore.update.mockReturnValue(updatePromise);
+    previewStore.token = '123-123-123';
 
     await startPreview(user);
     act(() => {
@@ -425,6 +426,7 @@ test('Dont react or update preview when data is changed during preview-store is 
     const previewStore = getPreviewStore();
     previewStore.update.mockReturnValue(updatePromise);
     previewStore.starting = true;
+    previewStore.token = '123-123-123';
 
     await startPreview(user);
     act(() => {

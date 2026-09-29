@@ -183,9 +183,16 @@ describe('PromptInput Component', () => {
     });
 
     test('does not render content context checkbox when canIncludeContentContext is false', () => {
-        render(<PromptInput {...defaultProps} canIncludeContentContext={false} />);
+        render(
+            <PromptInput
+                {...defaultProps}
+                canIncludeContentContext={false}
+                includeContentContextLabel="Add whole content as context"
+            />
+        );
 
-        expect(screen.queryByText('Add content context')).not.toBeInTheDocument();
+        expect(screen.queryByText('Add whole content as context')).not.toBeInTheDocument();
+        expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
     });
 
     test('does not render content context checkbox when canIncludeContentContext is undefined', () => {

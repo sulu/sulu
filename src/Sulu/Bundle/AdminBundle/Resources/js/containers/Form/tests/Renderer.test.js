@@ -324,7 +324,9 @@ test('Should pass formInspector, onSuccess, router and onChange to fields', asyn
     });
 
     expect(mockFieldTypeProps[0].formInspector).toBe(formInspector);
+    expect(mockFieldTypeProps[0].onSuccess).toBe(successSpy);
     expect(mockFieldTypeProps[0].router).toBe(router);
+    expect(mockFieldTypeProps[1].formInspector).toBe(formInspector);
     expect(mockFieldTypeProps[1].onSuccess).toBe(successSpy);
     expect(mockFieldTypeProps[1].router).toBe(router);
 
