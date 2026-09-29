@@ -665,7 +665,7 @@ class SnippetControllerTest extends SuluTestCase
 
     public function testPutShadowLocaleWithoutTemplateKeepsSnippetInList(): void
     {
-        // The settings tab enables a shadow with template: null; it must still keep a template key.
+        // The settings tab enables a shadow with template: null and no title.
         self::purgeDatabase();
 
         $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
@@ -679,7 +679,6 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=de', [], [], [], \json_encode([
             'template' => null,
-            'title' => 'Source EN',
             'shadowOn' => true,
             'shadowLocale' => 'en',
         ]) ?: null);
@@ -687,15 +686,42 @@ class SnippetControllerTest extends SuluTestCase
 
         /** @var array{template: ?string} $shadow */
         $shadow = \json_decode((string) $this->client->getResponse()->getContent(), true);
-        $templateKey = $shadow['template'] ?? null;
-        $this->assertNotNull($templateKey, 'The shadow draft must keep a template key.');
+        $this->assertSame('snippet', $shadow['template']);
 
-        $this->client->request('GET', '/admin/api/snippets?locale=de&templateKeys=' . $templateKey);
+        $this->client->request('GET', '/admin/api/snippets?locale=de&templateKeys=snippet');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        /** @var array{_embedded: array{snippets: array<array{id: string}>}} $list */
+        /** @var array{_embedded: array{snippets: array<array{id: string, title: ?string}>}} $list */
         $list = \json_decode((string) $this->client->getResponse()->getContent(), true);
-        $ids = \array_column($list['_embedded']['snippets'], 'id');
-        $this->assertContains($id, $ids, 'The shadow snippet must stay in the template-filtered list.');
+        $this->assertSame(
+            [['id' => $id, 'title' => 'Source EN']],
+            \array_map(
+                static fn (array $snippet) => ['id' => $snippet['id'], 'title' => $snippet['title']],
+                $list['_embedded']['snippets'],
+            ),
+        );
+    }
+
+    public function testPutWithoutTemplateKeepsTemplateAndMapsData(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Old Title',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        $this->client->request('PUT', '/admin/api/snippets/' . $content['id'] . '?locale=en', [], [], [], \json_encode([
+            'title' => 'New Title',
+        ]) ?: null);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array{template: ?string, title: ?string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('snippet', $content['template']);
+        $this->assertSame('New Title', $content['title']);
     }
 
     protected function getSnapshotFolder(): string

@@ -39,6 +39,7 @@ use Sulu\Content\Infrastructure\Doctrine\CategoryFactory;
 use Sulu\Content\Infrastructure\Doctrine\ContactFactory;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Content\Infrastructure\Doctrine\MetadataLoader;
+use Sulu\Content\Infrastructure\Doctrine\Repository\DimensionContentRepository;
 use Sulu\Content\Infrastructure\Doctrine\TagFactory;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactory;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
@@ -92,6 +93,9 @@ return static function(ContainerConfigurator $container) {
         ->args([new Reference('doctrine.orm.entity_manager')]);
 
     $services->set('sulu_content.contact_factory', ContactFactory::class)
+        ->args([new Reference('doctrine.orm.entity_manager')]);
+
+    $services->set('sulu_content.dimension_content_repository', DimensionContentRepository::class)
         ->args([new Reference('doctrine.orm.entity_manager')]);
 
     $services->set('sulu_content.dimension_content_collection_factory', DimensionContentCollectionFactory::class)

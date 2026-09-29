@@ -18,13 +18,19 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
+use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 
 class TemplateDataMapper implements DataMapperInterface
 {
     public const SKIP_TAG = 'sulu_content.skip_template_data_mapper';
 
-    public function __construct(private MetadataProviderRegistry $metadataProviderRegistry)
-    {
+    public function __construct(
+        private MetadataProviderRegistry $metadataProviderRegistry,
+        private ?DimensionContentRepositoryInterface $dimensionContentRepository = null,
+    ) {
+        if (null === $this->dimensionContentRepository) {
+            @trigger_deprecation('sulu/sulu', '3.1', 'Instantiating TemplateDataMapper without the $dimensionContentRepository argument is deprecated.');
+        }
     }
 
     public function map(
@@ -52,17 +58,16 @@ class TemplateDataMapper implements DataMapperInterface
         }
 
         /** @var string|null $template */
-        $template = $data['template'] ?? null;
+        $template = $data['template'] ?? $localizedDimensionContent->getTemplateKey();
 
+        $shadowSourceDimensionContent = null;
         if (null === $template) {
-            // No template given (e.g. a shadow saved from the settings tab): keep the existing key,
-            // or fall back to the default type so a new locale stays in template-filtered lists.
-            if (null !== $localizedDimensionContent->getTemplateKey()) {
-                return;
-            }
-
-            $template = $typedMetadata->getDefaultType();
+            // A new shadow saved from the settings tab sends no template, and not every type has a default.
+            $shadowSourceDimensionContent = $this->findShadowSourceDimensionContent($localizedDimensionContent, $data);
+            $template = $shadowSourceDimensionContent?->getTemplateKey();
         }
+
+        $template ??= $typedMetadata->getDefaultType();
 
         if (!$template) {
             return;
@@ -77,11 +82,11 @@ class TemplateDataMapper implements DataMapperInterface
         [$unlocalizedData, $localizedData, $hasAnyValue] = $this->getTemplateData(
             $data,
             $unlocalizedDimensionContent->getTemplateData(),
-            $localizedDimensionContent->getTemplateData(),
+            ($shadowSourceDimensionContent ?? $localizedDimensionContent)->getTemplateData(),
             $metadata,
         );
 
-        if (!\array_key_exists('template', $data) && !$hasAnyValue) {
+        if (!\array_key_exists('template', $data) && !$hasAnyValue && !$shadowSourceDimensionContent) {
             // do nothing when no data was given
             return;
         }
@@ -89,6 +94,36 @@ class TemplateDataMapper implements DataMapperInterface
         $unlocalizedDimensionContent->setTemplateData($unlocalizedData);
         $localizedDimensionContent->setTemplateKey($template);
         $localizedDimensionContent->setTemplateData($localizedData);
+    }
+
+    /**
+     * @template T of DimensionContentInterface
+     *
+     * @param T $localizedDimensionContent
+     * @param array<string, mixed> $data
+     */
+    private function findShadowSourceDimensionContent(
+        DimensionContentInterface $localizedDimensionContent,
+        array $data,
+    ): ?TemplateInterface {
+        $shadowLocale = $data['shadowLocale'] ?? null;
+        if (!$this->dimensionContentRepository
+            || true !== ($data['shadowOn'] ?? false)
+            || !\is_string($shadowLocale)
+            || '' === $shadowLocale
+        ) {
+            return null;
+        }
+
+        $sourceDimensionContent = $this->dimensionContentRepository->findOneBy(
+            $localizedDimensionContent->getResource(),
+            [
+                'locale' => $shadowLocale,
+                'stage' => $localizedDimensionContent->getStage(),
+            ],
+        );
+
+        return $sourceDimensionContent instanceof TemplateInterface ? $sourceDimensionContent : null;
     }
 
     /**

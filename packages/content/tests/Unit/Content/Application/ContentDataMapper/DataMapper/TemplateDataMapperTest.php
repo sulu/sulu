@@ -23,7 +23,9 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\TemplateDataMapper;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Symfony\Component\DependencyInjection\Container;
@@ -38,7 +40,30 @@ class TemplateDataMapperTest extends TestCase
     protected function createTemplateDataMapperInstance(
         array $properties = [],
         ?string $defaultTemplateKey = null,
+        ?ExampleDimensionContent $shadowSourceDimensionContent = null,
     ): TemplateDataMapper {
+        return new TemplateDataMapper(
+            $this->createMetadataProviderRegistry($properties, $defaultTemplateKey),
+            new class($shadowSourceDimensionContent) implements DimensionContentRepositoryInterface {
+                public function __construct(private readonly ?ExampleDimensionContent $dimensionContent)
+                {
+                }
+
+                public function findOneBy(ContentRichEntityInterface $contentRichEntity, array $dimensionAttributes): ?DimensionContentInterface
+                {
+                    return $this->dimensionContent; // @phpstan-ignore return.type
+                }
+            },
+        );
+    }
+
+    /**
+     * @param ItemMetadata[] $properties
+     */
+    private function createMetadataProviderRegistry(
+        array $properties = [],
+        ?string $defaultTemplateKey = null,
+    ): MetadataProviderRegistry {
         $container = new Container();
         $container->set('form', new class($this->createTypedFormMetadata($properties, $defaultTemplateKey)) implements MetadataProviderInterface {
             public function __construct(private readonly TypedFormMetadata $typedFormMetadata)
@@ -50,9 +75,8 @@ class TemplateDataMapperTest extends TestCase
                 return $this->typedFormMetadata;
             }
         });
-        $metadataProviderRegistry = new MetadataProviderRegistry($container);
 
-        return new TemplateDataMapper($metadataProviderRegistry);
+        return new MetadataProviderRegistry($container);
     }
 
     public function testMapNoTemplateInstance(): void
@@ -137,12 +161,12 @@ class TemplateDataMapperTest extends TestCase
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setLocale('en');
-        $localizedDimensionContent->setTemplateKey('some-existing-template');
+        $localizedDimensionContent->setTemplateKey('template-key');
 
-        $templateMapper = $this->createTemplateDataMapperInstance([], 'template-key');
+        $templateMapper = $this->createTemplateDataMapperInstance([], 'other-template-key');
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
-        $this->assertSame('some-existing-template', $localizedDimensionContent->getTemplateKey());
+        $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
     }
 
     public function testMapNoTemplateKeyInDataAndNoDefault(): void
@@ -153,13 +177,12 @@ class TemplateDataMapperTest extends TestCase
         $unlocalizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent = new ExampleDimensionContent($example);
         $localizedDimensionContent->setLocale('en');
-        $localizedDimensionContent->setTemplateKey('some-existing-template');
+        $localizedDimensionContent->setTemplateKey('template-key');
 
-        // no defaultTemplateKey configured — simulates shadow locale save where template is not sent
         $templateMapper = $this->createTemplateDataMapperInstance([]);
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
-        $this->assertSame('some-existing-template', $localizedDimensionContent->getTemplateKey());
+        $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
     }
 
     public function testMapNullTemplateNewShadowFallsBackToDefault(): void
@@ -180,6 +203,72 @@ class TemplateDataMapperTest extends TestCase
         $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
         $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
+    }
+
+    public function testMapWithoutTemplateKeepsExistingTemplateAndMapsData(): void
+    {
+        $data = [
+            'title' => 'New Title',
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+        $localizedDimensionContent->setTemplateKey('template-key');
+        $localizedDimensionContent->setTemplateData(['title' => 'Old Title']);
+
+        $templateMapper = $this->createTemplateDataMapperInstance();
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
+        $this->assertSame(['title' => 'New Title'], $localizedDimensionContent->getTemplateData());
+    }
+
+    public function testMapNewShadowTakesTemplateAndDataFromSource(): void
+    {
+        $data = [
+            'template' => null,
+            'shadowOn' => true,
+            'shadowLocale' => 'en',
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('de');
+
+        $sourceDimensionContent = new ExampleDimensionContent($example);
+        $sourceDimensionContent->setLocale('en');
+        $sourceDimensionContent->setTemplateKey('template-key');
+        $sourceDimensionContent->setTemplateData(['title' => 'Source Title']);
+
+        $templateMapper = $this->createTemplateDataMapperInstance([], null, $sourceDimensionContent);
+        $templateMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame('template-key', $localizedDimensionContent->getTemplateKey());
+        $this->assertSame(['title' => 'Source Title'], $localizedDimensionContent->getTemplateData());
+    }
+
+    public function testInstantiateWithoutDimensionContentRepository(): void
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new TemplateDataMapper($this->createMetadataProviderRegistry());
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(
+            ['Since sulu/sulu 3.1: Instantiating TemplateDataMapper without the $dimensionContentRepository argument is deprecated.'],
+            $deprecations,
+        );
     }
 
     public function testMapData(): void
