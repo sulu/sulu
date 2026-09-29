@@ -72,6 +72,8 @@ class {{ cache_class }} extends {{ base_class }}
 {% endfor %}
 {% for template in webspace.excludedTemplates %}        $webspace->addExcludedTemplate('{{ template }}');
 {% endfor %}
+{% if webspace.webspaceSettingsForm %}        $webspace->setWebspaceSettingsForm('{{ webspace.webspaceSettingsForm }}');
+{% endif %}
 
         // add navigation
         $navigation = new Navigation();

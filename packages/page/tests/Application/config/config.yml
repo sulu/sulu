@@ -11,10 +11,19 @@ twig:
     paths:
         - '%kernel.project_dir%/templates'
 
+sulu_admin:
+    forms:
+        directories:
+            - '%kernel.project_dir%/config/forms'
+
 # Three named workflows, opted into by the `review`, `review-seo` and `review-validated` templates:
 # every other template publishes directly.
 sulu_content:
     request_workflows:
+        # The webspace settings are published through a review, like the review templates of the pages.
+        default:
+            resources: ['webspace_settings']
+            required_user_approvals: 1
         review:
             required_user_approvals: 1
         review_seo:
