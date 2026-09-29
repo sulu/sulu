@@ -23,6 +23,7 @@ test('Render a Breadcrumb', () => {
 });
 
 test('Clicking on a clickable breadcrumb part should call a handler', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     const testValue = 2;
     render(
@@ -40,7 +41,7 @@ test('Clicking on a clickable breadcrumb part should call a handler', async() =>
     );
 
     const item = screen.queryByText('Crumb 2');
-    await userEvent.click(item);
+    await user.click(item);
 
     expect(clickSpy).toHaveBeenCalledWith(testValue);
 });

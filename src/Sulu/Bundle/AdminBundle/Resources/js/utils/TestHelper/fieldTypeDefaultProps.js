@@ -7,6 +7,7 @@ const fieldTypeDefaultProps = {
     disabled: undefined,
     error: undefined,
     fieldTypeOptions: {},
+    formInspector: (undefined: any),
     label: '',
     maxOccurs: undefined,
     minOccurs: undefined,

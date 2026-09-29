@@ -1,23 +1,45 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import MediaLinkTypeOverlay from '../../overlays/MediaLinkTypeOverlay';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
+type Props = {|
+    href?: ?string | number,
+    onAnchorChange?: ?(anchor: ?string) => void,
+    onTargetChange?: ?(target: string) => void,
+    onTitleChange?: ?(title: ?string) => void,
+|};
+
+const mockReact = require('react');
+
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn((props) => {
+    if (!props.open) {
+        return null;
+    }
+
+    return mockReact.createElement(
+        'button',
+        {
+            onClick: () => props.onConfirm({id: 1, mimeType: 'image/jpeg', thumbnails: {}, title: 'test media'}),
+            type: 'button',
+        },
+        'select media'
+    );
 }));
 
-jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(function() {
-    return <div>single media selection overlay</div>;
-}));
-
-test('Render overlay with minimal config', () => {
-    const mediaLinkTypeOverlay = mount(
+function renderMediaLinkTypeOverlay(props?: Props) {
+    return render(
         <MediaLinkTypeOverlay
-            href={undefined}
+            href={props ? props.href : undefined}
+            onAnchorChange={props ? props.onAnchorChange : undefined}
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={jest.fn()}
+            onTargetChange={props ? props.onTargetChange : undefined}
+            onTitleChange={props ? props.onTitleChange : undefined}
             open={true}
             options={
                 {
@@ -27,101 +49,56 @@ test('Render overlay with minimal config', () => {
             }
         />
     );
+}
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+test('Render overlay with minimal config', () => {
+    renderMediaLinkTypeOverlay();
+
+    expect(screen.getByText('sulu_admin.link')).toBeInTheDocument();
+    expect(screen.getByText(/sulu_admin\.link_url/)).toBeInTheDocument();
+    expect(screen.queryByText(/sulu_admin\.link_anchor/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/sulu_admin\.link_target/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/sulu_admin\.link_title/)).not.toBeInTheDocument();
 });
 
 test('Render overlay with invalid href type', () => {
-    expect(() => shallow(
-        <MediaLinkTypeOverlay
-            href="1234"
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    resourceKey: 'media',
-                    displayProperties: ['title'],
-                }
-            }
-        />
-    )).toThrow('The id of a media should always be a number!');
+    expect(() => renderMediaLinkTypeOverlay({href: '1234'}))
+        .toThrow('The id of a media should always be a number!');
 });
 
 test('Render overlay with anchor enabled', () => {
-    const mediaLinkTypeOverlay = mount(
-        <MediaLinkTypeOverlay
-            href={undefined}
-            onAnchorChange={jest.fn()}
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    resourceKey: 'media',
-                    displayProperties: ['title'],
-                }
-            }
-        />
-    );
+    renderMediaLinkTypeOverlay({onAnchorChange: jest.fn()});
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+    expect(screen.getByText(/sulu_admin\.link_url/)).toBeInTheDocument();
+    expect(screen.getByText(/sulu_admin\.link_anchor/)).toBeInTheDocument();
 });
 
 test('Render overlay with target enabled', () => {
-    const mediaLinkTypeOverlay = mount(
-        <MediaLinkTypeOverlay
-            href={undefined}
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={jest.fn()}
-            onTargetChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    resourceKey: 'media',
-                    displayProperties: ['title'],
-                }
-            }
-        />
-    );
+    renderMediaLinkTypeOverlay({onTargetChange: jest.fn()});
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+    expect(screen.getByText(/sulu_admin\.link_url/)).toBeInTheDocument();
+    expect(screen.getByText(/sulu_admin\.link_target/)).toBeInTheDocument();
+    expect(screen.getByText('sulu_admin.please_choose')).toBeInTheDocument();
 });
 
 test('Render overlay with title enabled', () => {
-    const mediaLinkTypeOverlay = mount(
-        <MediaLinkTypeOverlay
-            href={undefined}
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            onHrefChange={jest.fn()}
-            onTitleChange={jest.fn()}
-            open={true}
-            options={
-                {
-                    resourceKey: 'media',
-                    displayProperties: ['title'],
-                }
-            }
-        />
-    );
+    renderMediaLinkTypeOverlay({onTitleChange: jest.fn()});
 
-    expect(mediaLinkTypeOverlay.find('Form').render()).toMatchSnapshot();
+    expect(screen.getByText(/sulu_admin\.link_url/)).toBeInTheDocument();
+    expect(screen.getByText(/sulu_admin\.link_title/)).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
 });
 
-test('Delegate only id to onHrefChange method', () => {
+test('Delegate only id to onHrefChange method', async() => {
+    const user = userEvent.setup();
     const hrefChangeSpy = jest.fn();
 
-    const mediaLinkTypeOverlay = mount(
+    render(
         <MediaLinkTypeOverlay
             href={undefined}
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={hrefChangeSpy}
-            onTitleChange={jest.fn()}
             open={true}
             options={
                 {
@@ -132,6 +109,8 @@ test('Delegate only id to onHrefChange method', () => {
         />
     );
 
-    mediaLinkTypeOverlay.find('SingleMediaSelection').get(0).props.onChange({id: 1}, undefined);
-    expect(hrefChangeSpy).toHaveBeenCalledWith(1, undefined);
+    await user.click(screen.getByRole('button', {name: 'su-image'}));
+    await user.click(screen.getByRole('button', {name: 'select media'}));
+
+    expect(hrefChangeSpy).toHaveBeenCalledWith(1, expect.objectContaining({id: 1}));
 });

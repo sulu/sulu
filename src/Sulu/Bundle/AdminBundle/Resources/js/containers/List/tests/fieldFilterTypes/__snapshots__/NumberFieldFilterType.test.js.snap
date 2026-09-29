@@ -1,211 +1,219 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render with value of "{ eq: 6 }" 1`] = `
-<div
-  class="numberFieldFilterType"
->
+<DocumentFragment>
   <div
-    class="select"
-    role="none"
+    class="numberFieldFilterType"
   >
-    <button
-      class="displayValue default"
-      type="button"
+    <div
+      class="select"
+      role="none"
     >
-      <div
-        aria-label="="
-        class="croppedText"
-        title="="
+      <button
+        class="displayValue default"
+        type="button"
       >
         <div
-          aria-hidden="true"
-          class="front"
+          aria-label="="
+          class="croppedText"
+          title="="
         >
-          =
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            =
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span />
+          </div>
+          <div
+            class="whole"
+          >
+            =
+          </div>
         </div>
-        <div
-          aria-hidden="true"
-          class="back"
-        >
-          <span />
-        </div>
-        <div
-          class="whole"
-        >
-          =
-        </div>
-      </div>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down toggle"
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down toggle"
+        />
+      </button>
+    </div>
+    <div
+      class="input default left"
+    >
+      <input
+        type="number"
+        value="6"
       />
-    </button>
+    </div>
   </div>
-  <div
-    class="input default left"
-  >
-    <input
-      type="number"
-      value="6"
-    />
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with value of "{ gt: 7 }" 1`] = `
-<div
-  class="numberFieldFilterType"
->
+<DocumentFragment>
   <div
-    class="select"
-    role="none"
+    class="numberFieldFilterType"
   >
-    <button
-      class="displayValue default"
-      type="button"
+    <div
+      class="select"
+      role="none"
     >
-      <div
-        aria-label=">"
-        class="croppedText"
-        title=">"
+      <button
+        class="displayValue default"
+        type="button"
       >
         <div
-          aria-hidden="true"
-          class="front"
+          aria-label=">"
+          class="croppedText"
+          title=">"
         >
-          &gt;
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            &gt;
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span />
+          </div>
+          <div
+            class="whole"
+          >
+            &gt;
+          </div>
         </div>
-        <div
-          aria-hidden="true"
-          class="back"
-        >
-          <span />
-        </div>
-        <div
-          class="whole"
-        >
-          &gt;
-        </div>
-      </div>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down toggle"
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down toggle"
+        />
+      </button>
+    </div>
+    <div
+      class="input default left"
+    >
+      <input
+        type="number"
+        value="7"
       />
-    </button>
+    </div>
   </div>
-  <div
-    class="input default left"
-  >
-    <input
-      type="number"
-      value="7"
-    />
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with value of "{ lt: 2 }" 1`] = `
-<div
-  class="numberFieldFilterType"
->
+<DocumentFragment>
   <div
-    class="select"
-    role="none"
+    class="numberFieldFilterType"
   >
-    <button
-      class="displayValue default"
-      type="button"
+    <div
+      class="select"
+      role="none"
     >
-      <div
-        aria-label="<"
-        class="croppedText"
-        title="<"
+      <button
+        class="displayValue default"
+        type="button"
       >
         <div
-          aria-hidden="true"
-          class="front"
+          aria-label="<"
+          class="croppedText"
+          title="<"
         >
-          &lt;
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            &lt;
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span />
+          </div>
+          <div
+            class="whole"
+          >
+            &lt;
+          </div>
         </div>
-        <div
-          aria-hidden="true"
-          class="back"
-        >
-          <span />
-        </div>
-        <div
-          class="whole"
-        >
-          &lt;
-        </div>
-      </div>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down toggle"
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down toggle"
+        />
+      </button>
+    </div>
+    <div
+      class="input default left"
+    >
+      <input
+        type="number"
+        value="2"
       />
-    </button>
+    </div>
   </div>
-  <div
-    class="input default left"
-  >
-    <input
-      type="number"
-      value="2"
-    />
-  </div>
-</div>
+</DocumentFragment>
 `;
 
 exports[`Render with value of "undefined" 1`] = `
-<div
-  class="numberFieldFilterType"
->
+<DocumentFragment>
   <div
-    class="select"
-    role="none"
+    class="numberFieldFilterType"
   >
-    <button
-      class="displayValue default"
-      type="button"
+    <div
+      class="select"
+      role="none"
     >
-      <div
-        aria-label="sulu_admin.please_choose"
-        class="croppedText"
-        title="sulu_admin.please_choose"
+      <button
+        class="displayValue default"
+        type="button"
       >
         <div
-          aria-hidden="true"
-          class="front"
+          aria-label="sulu_admin.please_choose"
+          class="croppedText"
+          title="sulu_admin.please_choose"
         >
-          sulu_admin.p
+          <div
+            aria-hidden="true"
+            class="front"
+          >
+            sulu_admin.p
+          </div>
+          <div
+            aria-hidden="true"
+            class="back"
+          >
+            <span>
+              lease_choose
+            </span>
+          </div>
+          <div
+            class="whole"
+          >
+            sulu_admin.please_choose
+          </div>
         </div>
-        <div
-          aria-hidden="true"
-          class="back"
-        >
-          <span>
-            lease_choose
-          </span>
-        </div>
-        <div
-          class="whole"
-        >
-          sulu_admin.please_choose
-        </div>
-      </div>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down toggle"
+        <span
+          aria-label="su-angle-down"
+          class="su-angle-down toggle"
+        />
+      </button>
+    </div>
+    <div
+      class="input default left"
+    >
+      <input
+        type="number"
+        value=""
       />
-    </button>
+    </div>
   </div>
-  <div
-    class="input default left"
-  >
-    <input
-      type="number"
-      value=""
-    />
-  </div>
-</div>
+</DocumentFragment>
 `;

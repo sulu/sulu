@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Bic from '../Bic';
 
@@ -34,37 +35,40 @@ test('Bic should render error', () => {
     expect(asFragment()).toMatchSnapshot();
 });
 
-test('Bic should trigger callbacks correctly', () => {
+test('Bic should trigger callbacks correctly', async() => {
+    const user = userEvent.setup();
     const onChange = jest.fn();
     const onBlur = jest.fn();
-    render(<Bic onBlur={onBlur} onChange={onChange} value={null} />);
+    const {rerender} = render(<Bic onBlur={onBlur} onChange={onChange} value={null} />);
+    onChange.mockImplementation((value) => {
+        rerender(<Bic onBlur={onBlur} onChange={onChange} value={value} />);
+    });
     const input = screen.getByRole('textbox');
 
     // provide invalid value
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(input, {target: {value: 'xxx'}});
-    fireEvent.blur(input);
+    await user.type(input, 'xxx');
+    await user.tab();
     expect(onChange).toHaveBeenLastCalledWith('xxx');
     expect(onBlur).toHaveBeenCalled();
 
     // provide one more invalid value
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(input, {target: {value: 'BBBBCCLLX'}});
-    fireEvent.blur(input);
+    await user.clear(input);
+    await user.type(input, 'BBBBCCLLX');
+    await user.tab();
     expect(onChange).toHaveBeenLastCalledWith('BBBBCCLLX');
     expect(onBlur).toHaveBeenCalled();
 
     // now add a valid value
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(input, {target: {value: 'BBBBCCLLXXX'}});
-    fireEvent.blur(input);
+    await user.clear(input);
+    await user.type(input, 'BBBBCCLLXXX');
+    await user.tab();
     expect(onChange).toHaveBeenLastCalledWith('BBBBCCLLXXX');
     expect(onBlur).toHaveBeenCalled();
 
     // provide one more valid value
-    // eslint-disable-next-line testing-library/prefer-user-event
-    fireEvent.change(input, {target: {value: 'BBBBCCLL'}});
-    fireEvent.blur(input);
+    await user.clear(input);
+    await user.type(input, 'BBBBCCLL');
+    await user.tab();
     expect(onChange).toHaveBeenLastCalledWith('BBBBCCLL');
     expect(onBlur).toHaveBeenCalled();
 

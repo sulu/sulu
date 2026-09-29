@@ -1,5 +1,5 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Tooltip from '../Tooltip';
@@ -19,7 +19,8 @@ test('The component should render in unfocused state', () => {
     expect(asFragment()).toMatchSnapshot();
 });
 
-test('The component should render in focused state', () => {
+test('The component should render in focused state', async() => {
+    const user = userEvent.setup();
     const {asFragment} = render(
         <Tooltip label="Copy">
             <button aria-label="Copy" type="button">
@@ -28,7 +29,7 @@ test('The component should render in focused state', () => {
         </Tooltip>
     );
 
-    fireEvent.focus(screen.getByRole('button'));
+    await user.click(screen.getByRole('button'));
 
     expect(screen.getByText('Copy')).toBeInTheDocument();
     expect(asFragment()).toMatchSnapshot();

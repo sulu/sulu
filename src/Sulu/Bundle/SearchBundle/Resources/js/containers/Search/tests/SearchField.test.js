@@ -1,14 +1,39 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import SearchField from '../SearchField';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+const noop = jest.fn();
+
+class SearchFieldHarness extends React.Component<Object, {query: string}> {
+    state = {
+        query: '',
+    };
+
+    handleQueryChange = (query: ?string) => {
+        this.setState({query: query || ''});
+        this.props.onQueryChange(query);
+    };
+
+    render() {
+        return (
+            <SearchField
+                indexes={undefined}
+                indexName={undefined}
+                onIndexChange={noop}
+                onQueryChange={this.handleQueryChange}
+                onSearch={noop}
+                query={this.state.query}
+            />
+        );
+    }
+}
 
 test('Render without selected index', () => {
-    expect(render(
+    const {asFragment} = render(
         <SearchField
             indexes={undefined}
             indexName={undefined}
@@ -16,7 +41,9 @@ test('Render without selected index', () => {
             onQueryChange={jest.fn()}
             onSearch={jest.fn()}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test('Render with selected and query', () => {
@@ -41,7 +68,7 @@ test('Render with selected and query', () => {
         },
     };
 
-    expect(render(
+    const {asFragment} = render(
         <SearchField
             indexes={indexes}
             indexName="page"
@@ -50,11 +77,15 @@ test('Render with selected and query', () => {
             onSearch={jest.fn()}
             query="Test"
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
-test('Call callback when index changes', () => {
+test('Call callback when index changes', async() => {
+    const user = userEvent.setup();
     const indexChangeSpy = jest.fn();
+    const searchSpy = jest.fn();
 
     const indexes = {
         contact: {
@@ -77,47 +108,41 @@ test('Call callback when index changes', () => {
         },
     };
 
-    const searchField = mount(
+    render(
         <SearchField
             indexes={indexes}
             indexName="page"
             onIndexChange={indexChangeSpy}
             onQueryChange={jest.fn()}
-            onSearch={jest.fn()}
+            onSearch={searchSpy}
         />
     );
 
-    expect(searchField.find('ArrowMenu').prop('open')).toEqual(false);
-    searchField.find('button.indexButton').simulate('click');
-    expect(searchField.find('ArrowMenu').prop('open')).toEqual(true);
-    searchField.find('Item[value="contact"] button').simulate('click');
-    expect(searchField.find('ArrowMenu').prop('open')).toEqual(false);
+    expect(screen.queryByRole('button', {name: 'Contact'})).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', {name: /Page/}));
+    await user.click(screen.getByRole('button', {name: 'Contact'}));
 
     expect(indexChangeSpy).toHaveBeenCalledWith('contact');
+    expect(searchSpy).toHaveBeenCalledWith();
 });
 
-test('Call callback when query changes', () => {
+test('Call callback when query changes', async() => {
+    const user = userEvent.setup();
     const queryChangeSpy = jest.fn();
 
-    const searchField = mount(
-        <SearchField
-            indexes={undefined}
-            indexName={undefined}
-            onIndexChange={jest.fn()}
-            onQueryChange={queryChangeSpy}
-            onSearch={jest.fn()}
-        />
-    );
+    render(<SearchFieldHarness onQueryChange={queryChangeSpy} />);
 
-    searchField.find('input.input').prop('onChange')({currentTarget: {value: 'test'}});
+    await user.type(screen.getByRole('textbox'), 'test');
 
-    expect(queryChangeSpy).toHaveBeenCalledWith('test');
+    expect(queryChangeSpy).toHaveBeenLastCalledWith('test');
 });
 
-test('Call search with query when enter is pressed', () => {
+test('Call search with query when enter is pressed', async() => {
+    const user = userEvent.setup();
     const searchSpy = jest.fn();
 
-    const searchField = mount(
+    render(
         <SearchField
             indexes={undefined}
             indexName={undefined}
@@ -128,15 +153,16 @@ test('Call search with query when enter is pressed', () => {
         />
     );
 
-    searchField.find('input.input').prop('onKeyPress')({key: 'Enter'});
+    await user.type(screen.getByRole('textbox'), '{enter}');
 
     expect(searchSpy).toHaveBeenCalledWith();
 });
 
-test('Do not call search when other key than enter is pressed', () => {
+test('Do not call search when other key than enter is pressed', async() => {
+    const user = userEvent.setup();
     const searchSpy = jest.fn();
 
-    const searchField = mount(
+    render(
         <SearchField
             indexes={undefined}
             indexName={undefined}
@@ -147,15 +173,16 @@ test('Do not call search when other key than enter is pressed', () => {
         />
     );
 
-    searchField.find('input.input').prop('onKeyPress')({key: 'a'});
+    await user.type(screen.getByRole('textbox'), 'a');
 
     expect(searchSpy).not.toHaveBeenCalledWith();
 });
 
-test('Call search with query when search icon is clicked', () => {
+test('Call search with query when search icon is clicked', async() => {
+    const user = userEvent.setup();
     const searchSpy = jest.fn();
 
-    const searchField = mount(
+    render(
         <SearchField
             indexes={undefined}
             indexName={undefined}
@@ -166,16 +193,17 @@ test('Call search with query when search icon is clicked', () => {
         />
     );
 
-    searchField.find('Icon[name="su-search"]').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: 'su-search'}));
 
     expect(searchSpy).toHaveBeenCalledWith();
 });
 
-test('Remove query when clear icon is clicked', () => {
+test('Remove query when clear icon is clicked', async() => {
+    const user = userEvent.setup();
     const searchSpy = jest.fn();
     const queryChangeSpy = jest.fn();
 
-    const searchField = mount(
+    render(
         <SearchField
             indexes={undefined}
             indexName={undefined}
@@ -186,7 +214,7 @@ test('Remove query when clear icon is clicked', () => {
         />
     );
 
-    searchField.find('Icon[name="su-times"]').prop('onClick')();
+    await user.click(screen.getByRole('button', {name: 'su-times'}));
 
     expect(searchSpy).toHaveBeenCalledWith();
     expect(queryChangeSpy).toHaveBeenCalledWith(undefined);

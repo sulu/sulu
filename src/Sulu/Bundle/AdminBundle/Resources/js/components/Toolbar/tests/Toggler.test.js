@@ -33,19 +33,21 @@ test('Render with active toggler', () => {
 });
 
 test('Call onClick handler when item was clicked', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     render(<Toggler label="Click Toggler" onClick={clickSpy} value={false} />);
 
-    await userEvent.click(screen.queryByRole('button'));
+    await user.click(screen.queryByRole('button'));
 
     expect(clickSpy).toHaveBeenCalled();
 });
 
 test('Call onClick handler when toggler was changed', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     render(<Toggler label="Click Toggler" onClick={clickSpy} value={false} />);
 
-    await userEvent.click(screen.queryByRole('checkbox'));
+    await user.click(screen.queryByRole('checkbox'));
 
     expect(clickSpy).toHaveBeenCalled();
 });

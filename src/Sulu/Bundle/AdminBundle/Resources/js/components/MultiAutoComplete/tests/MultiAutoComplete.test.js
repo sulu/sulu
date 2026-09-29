@@ -41,7 +41,8 @@ function changeInputValue(value: string) {
     fireEvent.change(getInput(), {currentTarget: {value}, target: {value}});
 }
 
-test('Render the MultiAutoComplete with open suggestions list', () => {
+test('Render the MultiAutoComplete with open suggestions list', async() => {
+    const user = userEvent.setup();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
         {id: 2, name: 'Suggestion 2'},
@@ -53,7 +54,7 @@ test('Render the MultiAutoComplete with open suggestions list', () => {
         value: [{id: 4, name: 'Test'}],
     });
 
-    fireEvent.focus(getInput());
+    await user.click(getInput());
 
     expect(asFragment()).toMatchSnapshot();
     expect(screen.getByRole('list')).toMatchSnapshot();
@@ -110,7 +111,7 @@ test('Clicking a suggestion should call onChange with value of the Suggestion an
         value,
     });
 
-    fireEvent.focus(getInput());
+    await user.click(getInput());
     await user.click(screen.getByRole('button', {name: 'Suggestion 1'}));
 
     expect(changeSpy).toHaveBeenCalledWith([...value, suggestions[0]]);
@@ -150,7 +151,7 @@ test('Should call the onFinish callback when an item is added', async() => {
         value: [],
     });
 
-    fireEvent.focus(getInput());
+    await user.click(getInput());
     await user.click(screen.getByRole('button', {name: 'Suggestion 1'}));
 
     expect(finishSpy).toHaveBeenCalledWith();
@@ -194,7 +195,7 @@ test('Should trigger callbacks when input matches a suggestion and input is focu
     });
 
     changeInputValue('Suggestion 1');
-    fireEvent.focus(getInput());
+    getInput().focus();
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
@@ -218,7 +219,7 @@ test('Should not trigger callbacks when input does not match a suggestion and in
     });
 
     changeInputValue('Suggestion');
-    fireEvent.focus(getInput());
+    getInput().focus();
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
@@ -242,8 +243,8 @@ test('Should not trigger callbacks when input matches a suggestion and input has
     });
 
     changeInputValue('Suggestion 1');
-    fireEvent.focus(getInput());
-    fireEvent.blur(getInput());
+    getInput().focus();
+    getInput().blur();
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
@@ -269,7 +270,7 @@ test('Should trigger callbacks when input does not match a suggestion and allowA
     });
 
     changeInputValue('Suggestion');
-    fireEvent.focus(getInput());
+    getInput().focus();
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
@@ -295,7 +296,7 @@ test('Should not trigger callbacks when input does not match a suggestion but an
     });
 
     changeInputValue('Suggestion');
-    fireEvent.focus(getInput());
+    getInput().focus();
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
@@ -322,7 +323,7 @@ test('Should not trigger callbacks when input does not match case-insensitive an
     });
 
     changeInputValue('suggestion');
-    fireEvent.focus(getInput());
+    getInput().focus();
 
     Mousetrap.trigger('enter');
     Mousetrap.trigger(',');
@@ -347,7 +348,7 @@ test('Should delete last value item if backspace is pressed in empty focused inp
         value: [{name: 'Tag1'}, {name: 'Tag2'}],
     });
 
-    fireEvent.focus(getInput());
+    getInput().focus();
     expect(searchSpy).toHaveBeenCalledTimes(1);
     expect(searchSpy).toHaveBeenNthCalledWith(1, '');
 
@@ -373,7 +374,7 @@ test('Should not delete last value item if backspace is pressed in filled focuse
     });
 
     changeInputValue('Suggestion');
-    fireEvent.focus(getInput());
+    getInput().focus();
 
     Mousetrap.trigger('backspace');
 
@@ -400,7 +401,8 @@ test('Should not delete last value item if backspace is pressed in empty non-foc
     expect(finishSpy).not.toHaveBeenCalled();
 });
 
-test('Should fire onSearch callback and open popover when input field is focused', () => {
+test('Should fire onSearch callback and open popover when input field is focused', async() => {
+    const user = userEvent.setup();
     const searchSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
@@ -416,7 +418,7 @@ test('Should fire onSearch callback and open popover when input field is focused
     expect(searchSpy).not.toHaveBeenCalled();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
 
-    fireEvent.focus(getInput());
+    await user.click(getInput());
     expect(searchSpy).toHaveBeenCalledWith('');
     expect(screen.getByRole('list')).toBeInTheDocument();
 });
@@ -435,7 +437,7 @@ test('Should close popover when requested and reopen popover when input field is
         value: [{name: 'Tag1'}, {name: 'Tag2'}],
     });
 
-    fireEvent.focus(getInput());
+    await user.click(getInput());
     expect(searchSpy).toHaveBeenNthCalledWith(1, '');
     expect(screen.getByRole('list')).toBeInTheDocument();
 

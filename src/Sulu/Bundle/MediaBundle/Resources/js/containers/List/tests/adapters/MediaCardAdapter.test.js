@@ -1,6 +1,7 @@
 // @flow
-import {shallow, render} from 'enzyme';
 import React from 'react';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {listAdapterDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import MediaCardAdapter from '../../adapters/MediaCardAdapter';
 
@@ -11,9 +12,33 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
                 return 'Copy URL';
             case 'sulu_media.download_masterfile':
                 return 'Download master file';
+            case 'sulu_media.copy_masterfile_url':
+                return 'Copy master file URL';
+            case 'sulu_media.copy_masterfile_url_website':
+                return 'Copy master file URL for website';
         }
     },
 }));
+
+function getRequiredElement(container, selector) {
+    const element = container.querySelector(selector);
+
+    if (!element) {
+        throw new Error(`Expected element for selector "${selector}"`);
+    }
+
+    return element;
+}
+
+function getButtonByText(text) {
+    const button = screen.getByText(text).closest('button');
+
+    if (!button) {
+        throw new Error(`Expected button for text "${text}"`);
+    }
+
+    return button;
+}
 
 test('Render a basic Masonry view with MediaCards', () => {
     const thumbnails = {
@@ -39,7 +64,7 @@ test('Render a basic Masonry view with MediaCards', () => {
             thumbnails,
         },
     ];
-    const mediaCardAdapter = render(
+    const {container} = render(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -50,10 +75,11 @@ test('Render a basic Masonry view with MediaCards', () => {
         />
     );
 
-    expect(mediaCardAdapter).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
-test('AdminUrl should fallback to url on undefined', () => {
+test('AdminUrl should be used for generated download URLs', async() => {
+    const user = userEvent.setup();
     const data = [
         {
             id: 1,
@@ -63,6 +89,28 @@ test('AdminUrl should fallback to url on undefined', () => {
             url: '/media/1/download/test1.svg',
             adminUrl: '/admin/media/1/download/test1.svg',
         },
+    ];
+
+    render(
+        <MediaCardAdapter
+            {...listAdapterDefaultProps}
+            data={data}
+            icon="su-pen"
+            onItemSelectionChange={jest.fn()}
+            page={1}
+            pageCount={7}
+        />
+    );
+
+    await user.click(screen.getByRole('button', {name: 'su-download'}));
+
+    expect(getButtonByText('Copy master file URL'))
+        .toHaveAttribute('data-clipboard-text', 'http://localhost/admin/media/1/download/test1.svg');
+});
+
+test('AdminUrl should fallback to url on undefined', async() => {
+    const user = userEvent.setup();
+    const data = [
         {
             ghostLocale: 'en',
             id: 2,
@@ -73,7 +121,7 @@ test('AdminUrl should fallback to url on undefined', () => {
         },
     ];
 
-    const mediaCardAdapter = shallow(
+    render(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             data={data}
@@ -84,14 +132,16 @@ test('AdminUrl should fallback to url on undefined', () => {
         />
     );
 
-    expect(mediaCardAdapter.find('MediaCard').get(0).props.downloadUrl)
-        .toBe('http://localhost/admin/media/1/download/test1.svg');
-    expect(mediaCardAdapter.find('MediaCard').get(1).props.downloadUrl)
-        .toBe('http://localhost/media/2/download/test2.svg');
+    await user.click(screen.getByRole('button', {name: 'su-download'}));
+
+    expect(getButtonByText('Copy master file URL'))
+        .toHaveAttribute('data-clipboard-text', 'http://localhost/media/2/download/test2.svg');
 });
 
-test('MediaCard should call the the appropriate handler', () => {
-    const mediaCardSelectionChangeSpy = jest.fn();
+test('MediaCard should call the the appropriate handler', async() => {
+    const user = userEvent.setup();
+    const itemClickSpy = jest.fn();
+    const itemSelectionChangeSpy = jest.fn();
     const thumbnails = {
         'sulu-240x': 'http://lorempixel.com/240/100',
         'sulu-100x100': 'http://lorempixel.com/100/100',
@@ -114,25 +164,28 @@ test('MediaCard should call the the appropriate handler', () => {
             thumbnails,
         },
     ];
-    const mediaCardAdapter = shallow(
+    const {container} = render(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             data={data}
             icon="su-pen"
-            onItemClick={mediaCardSelectionChangeSpy}
-            onItemSelectionChange={mediaCardSelectionChangeSpy}
+            onItemClick={itemClickSpy}
+            onItemSelectionChange={itemSelectionChangeSpy}
             page={3}
             pageCount={9}
         />
     );
 
-    expect(mediaCardAdapter.find('MediaCard').get(0).props.onClick).toBe(mediaCardSelectionChangeSpy);
-    expect(mediaCardAdapter.find('MediaCard').get(0).props.onSelectionChange).toBe(mediaCardSelectionChangeSpy);
+    await user.click(getRequiredElement(container, '.media'));
+    expect(itemClickSpy).toHaveBeenCalledWith(1, true);
+
+    await user.click(getRequiredElement(container, '.description'));
+    expect(itemSelectionChangeSpy).toHaveBeenCalledWith(1, true);
 });
 
-test('InfiniteScroller should be passed correct props', () => {
+test('InfiniteScroller should call page-change callback when the next page should be loaded', async() => {
     const pageChangeSpy = jest.fn();
-    const tableAdapter = shallow(
+    render(
         <MediaCardAdapter
             {...listAdapterDefaultProps}
             icon="su-pen"
@@ -142,11 +195,8 @@ test('InfiniteScroller should be passed correct props', () => {
             pageCount={7}
         />
     );
-    expect(tableAdapter.find('InfiniteScroller').get(0).props).toEqual({
-        totalPages: 7,
-        currentPage: 2,
-        loading: false,
-        onPageChange: pageChangeSpy,
-        children: expect.anything(),
-    });
+
+    fireEvent.scroll(document.body);
+
+    await waitFor(() => expect(pageChangeSpy).toHaveBeenCalledWith(3));
 });

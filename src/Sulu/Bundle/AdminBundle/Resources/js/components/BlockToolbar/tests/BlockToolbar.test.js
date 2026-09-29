@@ -65,7 +65,7 @@ test('Click cancel button', async() => {
         />
     );
 
-    await user.click(screen.getByText('Cancel'));
+    await user.click(screen.getByRole('button', {name: /Cancel/}));
 
     expect(clickSpy).toHaveBeenCalled();
 });

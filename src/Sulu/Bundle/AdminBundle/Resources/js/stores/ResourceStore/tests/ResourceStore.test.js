@@ -488,7 +488,7 @@ test('Calling the move method should send a POST request with locale', () => {
     );
 });
 
-test('Saving flag should be set to true when saving', () => {
+test('Saving flag should be set to true when updating', () => {
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
     const resourceStore = new ResourceStore('snippets', '1', {locale: observable.box()});
     resourceStore.saving = false;

@@ -4,9 +4,7 @@ import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CardCollection from '../CardCollection';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('Render empty CardCollection', () => {
     const {container} = render(<CardCollection />);
@@ -28,18 +26,20 @@ test('Render passed card components', () => {
 });
 
 test('Call onAdd callback when add button is clicked', async() => {
+    const user = userEvent.setup();
     const addSpy = jest.fn();
 
     render(<CardCollection onAdd={addSpy} />);
 
     const icon = screen.queryByLabelText('su-plus');
 
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(addSpy).toHaveBeenCalled();
 });
 
 test('Call onEdit callback when edit icon is clicked', async() => {
+    const user = userEvent.setup();
     const editSpy = jest.fn();
 
     render(
@@ -55,12 +55,13 @@ test('Call onEdit callback when edit icon is clicked', async() => {
 
     const icon = screen.queryAllByLabelText('su-pen')[1];
 
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(editSpy).toHaveBeenCalledWith(1);
 });
 
 test('Call onRemove callback when remove icon is clicked', async() => {
+    const user = userEvent.setup();
     const removeSpy = jest.fn();
 
     render(
@@ -76,7 +77,7 @@ test('Call onRemove callback when remove icon is clicked', async() => {
 
     const icon = screen.queryAllByLabelText('su-trash-alt')[1];
 
-    await userEvent.click(icon);
+    await user.click(icon);
 
     expect(removeSpy).toHaveBeenCalledWith(1);
 });

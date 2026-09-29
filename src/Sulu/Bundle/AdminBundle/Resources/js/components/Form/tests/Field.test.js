@@ -74,6 +74,7 @@ test('Display a field with an error', () => {
 });
 
 test('Change type of field', async() => {
+    const user = userEvent.setup();
     const typeChangeSpy = jest.fn();
 
     const types = [
@@ -89,11 +90,11 @@ test('Change type of field', async() => {
 
     const field = screen.queryByText('Work');
     expect(screen.queryByTestId('backdrop')).not.toBeInTheDocument();
-    await userEvent.click(field);
+    await user.click(field);
     expect(screen.getByTestId('backdrop')).toBeInTheDocument();
 
     const changeItem = screen.queryByText('Private');
-    await userEvent.click(changeItem);
+    await user.click(changeItem);
     expect(typeChangeSpy).toHaveBeenCalledWith(2);
     expect(screen.queryByTestId('backdrop')).not.toBeInTheDocument();
 });

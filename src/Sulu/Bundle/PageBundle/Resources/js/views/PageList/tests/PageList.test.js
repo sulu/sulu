@@ -1,63 +1,82 @@
 // @flow
 import React from 'react';
-import {extendObservable as mockExtendObservable, observable} from 'mobx';
-import {mount} from 'enzyme';
-import {Router} from 'sulu-admin-bundle/services';
-import {findWithHighOrderFunction, defaultWebspace} from 'sulu-admin-bundle/utils/TestHelper';
+import {act, render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import {observable} from 'mobx';
+import {
+    createDeferred,
+    createRoute,
+    createRouterMock,
+    defaultWebspace,
+    mockResizeObserver,
+} from 'sulu-admin-bundle/utils/TestHelper';
 
-jest.mock('sulu-admin-bundle/containers', () => ({
-    FlatStructureStrategy: require(
-        'sulu-admin-bundle/containers/List/structureStrategies/FlatStructureStrategy'
-    ).default,
-    DefaultLoadingStrategy: require(
-        'sulu-admin-bundle/containers/List/loadingStrategies/DefaultLoadingStrategy'
-    ).default,
-    List: require('sulu-admin-bundle/containers/List/List').default,
-    ListStore: class {
-        static getActiveSetting = jest.fn();
+const mockListStoreInstances = [];
+let mockListProps;
 
-        constructor(resourceKey, listKey, userSettingsKey, observableOptions) {
-            this.resourceKey = resourceKey;
-            this.observableOptions = observableOptions;
+mockResizeObserver();
 
-            mockExtendObservable(this, {
-                data: [],
-            });
-        }
-
-        resourceKey;
-        observableOptions;
-        activeItems = [];
-        filterOptions = {
+jest.mock('sulu-admin-bundle/containers', () => {
+    const React = require('react');
+    const {extendObservable} = require('mobx');
+    const List = require('sulu-admin-bundle/containers/List/List').default;
+    const ListStore = jest.fn(function(resourceKey, listKey, userSettingsKey, observableOptions) {
+        this.resourceKey = resourceKey;
+        this.observableOptions = observableOptions;
+        this.activeItems = [];
+        this.filterOptions = {
             get: jest.fn().mockReturnValue({}),
         };
-        active = {
+        this.active = {
             get: jest.fn(),
             set: jest.fn(),
         };
-        sortColumn = {
+        this.sortColumn = {
             get: jest.fn(),
         };
-        sortOrder = {
+        this.sortOrder = {
             get: jest.fn(),
         };
-        limit = {
+        this.limit = {
             get: jest.fn().mockReturnValue(10),
         };
-        setLimit = jest.fn();
-        selections = [];
-        selectionIds = [];
-        getPage = jest.fn().mockReturnValue(1);
-        destroy = jest.fn();
-        sendRequest = jest.fn();
-        updateLoadingStrategy = jest.fn();
-        updateStructureStrategy = jest.fn();
-        clear = jest.fn();
-    },
-    formMetadataStore: {
-        getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({types: {}})),
-    },
-    withToolbar: jest.fn((Component) => Component),
+        this.setLimit = jest.fn();
+        this.selections = [];
+        this.selectionIds = [];
+        this.getPage = jest.fn().mockReturnValue(1);
+        this.clear = jest.fn();
+        this.destroy = jest.fn();
+        this.sendRequest = jest.fn();
+        this.updateLoadingStrategy = jest.fn();
+        this.updateStructureStrategy = jest.fn();
+
+        extendObservable(this, {data: []});
+        mockListStoreInstances.push(this);
+    });
+
+    (ListStore: any).getActiveSetting = jest.fn();
+
+    return {
+        formMetadataStore: {
+            getSchemaTypes: jest.fn().mockReturnValue(Promise.resolve({types: {}})),
+        },
+        FlatStructureStrategy: require(
+            'sulu-admin-bundle/containers/List/structureStrategies/FlatStructureStrategy'
+        ).default,
+        DefaultLoadingStrategy: require(
+            'sulu-admin-bundle/containers/List/loadingStrategies/DefaultLoadingStrategy'
+        ).default,
+        List: jest.fn((props) => {
+            mockListProps = props;
+            return <List {...props} />;
+        }),
+        ListStore,
+        withToolbar: require('sulu-admin-bundle/containers/Toolbar/withToolbar').default,
+    };
+});
+
+jest.mock('sulu-admin-bundle/stores/userStore', () => ({
+    getPersistentSetting: jest.fn(),
 }));
 
 jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', () => ({
@@ -67,55 +86,58 @@ jest.mock('sulu-admin-bundle/containers/List/registries/listAdapterRegistry', ()
 }));
 
 jest.mock('sulu-admin-bundle/containers/SingleListOverlay', () => jest.fn(() => null));
-
-jest.mock('sulu-admin-bundle/stores/userStore', () => ({
-    getPersistentSetting: jest.fn(),
-}));
-
-jest.mock('sulu-admin-bundle/services/Requester', () => ({
-    delete: jest.fn(),
-}));
-
-jest.mock('sulu-admin-bundle/services/Router/Router', () => jest.fn(function() {
-    this.bind = jest.fn();
-}));
-
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('sulu-admin-bundle/containers/ListOverlay', () => jest.fn(() => null));
 
 jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function() {
     this.selections = [];
 }));
-jest.mock('sulu-admin-bundle/containers/ListOverlay', () => jest.fn().mockReturnValue(null));
+
+jest.mock('sulu-admin-bundle/utils/Translator');
+
+const mockGetCacheClearNode = jest.fn();
+const mockGetCacheClearToolbarItemConfig = jest.fn().mockReturnValue({label: 'clear-cache'});
 
 jest.mock('sulu-website-bundle/containers/CacheClearToolbarAction', () => jest.fn(function() {
-    this.getNode = jest.fn();
-    this.getToolbarItemConfig = jest.fn();
+    this.getNode = mockGetCacheClearNode;
+    this.getToolbarItemConfig = mockGetCacheClearToolbarItemConfig;
 }));
 
 beforeEach(() => {
+    jest.clearAllMocks();
     jest.resetModules();
+    mockListStoreInstances.length = 0;
+    mockListProps = undefined;
 });
 
-test('Render PageList', () => {
-    const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
-    const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
-    formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
+function createPageRouter(attributes: Object = {webspace: 'sulu'}) {
+    const router = createRouterMock({
+        attributes,
+        route: createRoute({}, attributes, [], {name: 'sulu_page.page_list'}),
+    });
+    router.addUpdateRouteHook.mockReturnValue(jest.fn());
 
-    const webspaceKey = observable.box('sulu');
-    const webspace = {
-        ...defaultWebspace,
-        localizations: undefined,
-    };
+    return router;
+}
 
+function getBoundValue(router, attributeName) {
+    return router.bind.mock.calls.find(([name]) => name === attributeName)[1];
+}
+
+function getListProps(): Object {
+    if (!mockListProps) {
+        throw new Error('Expected list props');
+    }
+
+    return mockListProps;
+}
+
+function renderPageList(webspace: Object = {...defaultWebspace, localizations: undefined}) {
     const PageList = require('../PageList').default;
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
-
-    const webspaceOverview = mount(
+    const Toolbar = require('sulu-admin-bundle/containers/Toolbar').default;
+    const router = createPageRouter();
+    const webspaceKey = observable.box('sulu');
+    render(<Toolbar />);
+    const view = render(
         <PageList
             route={router.route}
             router={router}
@@ -125,358 +147,199 @@ test('Render PageList', () => {
         />
     );
 
-    webspaceOverview.instance().listStore.data.push(
-        [
-            {id: 1, title: 'Homepage', template: 'homepage'},
-        ]
-    );
-    webspaceOverview.instance().listStore.data.push(
-        [
+    return {...view, router, webspaceKey};
+}
+
+test('Render PageList', async() => {
+    const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
+    const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
+    formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
+
+    const {container} = renderPageList();
+    const listStore = mockListStoreInstances[0];
+
+    act(() => {
+        listStore.data.push([{id: 1, title: 'Homepage', template: 'homepage'}]);
+        listStore.data.push([
             {id: 2, title: 'Page 1', template: 'example'},
             {id: 3, title: 'Page 2', template: 'not-existing'},
-        ]
-    );
-
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        expect(webspaceOverview.render()).toMatchSnapshot();
+        ]);
     });
+
+    await metadataPromise;
+    expect(await screen.findByLabelText('Homepage')).toBeInTheDocument();
+    expect(screen.getByLabelText('Page 2')).toBeInTheDocument();
+    expect(screen.getByLabelText('su-exclamation-circle')).toBeInTheDocument();
+    expect(container).toMatchSnapshot();
 });
 
-test('Should show loader if available page types have not been loaded yet', () => {
+test('Should show loader if available page types have not been loaded yet', async() => {
+    const metadataRequest = createDeferred<Object>();
+    const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
+    formMetadataStore.getSchemaTypes.mockReturnValue(metadataRequest.promise);
+
+    const {container} = renderPageList();
+
+    expect(container.querySelector('.spinner')).toBeInTheDocument();
+
+    await act(async() => metadataRequest.resolve({types: {homepage: {}, example: {}}}));
+    await waitFor(() => expect(container.querySelector('.spinner')).not.toBeInTheDocument());
+    expect(container.querySelector('.listContainer')).toBeInTheDocument();
+});
+
+test('Should allow adding and copying pages when the webspace grants the add permission', async() => {
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
     formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
-
-    const webspaceKey = observable.box('sulu');
-    const webspace = {
-        ...defaultWebspace,
-        localizations: undefined,
-    };
-
-    const PageList = require('../PageList').default;
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
-
-    const webspaceOverview = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            // $FlowFixMe
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
-
-    expect(webspaceOverview.find('Loader')).toHaveLength(1);
-
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        expect(webspaceOverview.find('Loader')).toHaveLength(0);
-    });
-});
-
-test('Should allow adding and copying pages when the webspace grants the add permission', () => {
-    const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
-    const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
-    formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
-
-    const PageList = require('../PageList').default;
-
-    const webspaceKey = observable.box('sulu');
     const webspace = {
         ...defaultWebspace,
         localizations: undefined,
         _permissions: {add: true},
     };
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    renderPageList(webspace);
+    await metadataPromise;
+    await waitFor(() => expect(mockListProps).toBeDefined());
+    const listProps = getListProps();
 
-    const webspaceOverview = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            // $FlowFixMe
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
-
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        expect(webspaceOverview.find('List').prop('onItemAdd')).toBeInstanceOf(Function);
-        expect(webspaceOverview.find('List').prop('copyable')).toEqual(true);
-    });
+    expect(listProps.onItemAdd).toBeInstanceOf(Function);
+    expect(listProps.copyable).toEqual(true);
 });
 
-test('Should not allow adding and copying pages without the add permission on the webspace', () => {
+test('Should not allow adding and copying pages without the add permission on the webspace', async() => {
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
     formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
-
-    const PageList = require('../PageList').default;
-
-    const webspaceKey = observable.box('sulu');
     const webspace = {
         ...defaultWebspace,
         localizations: undefined,
         _permissions: {add: false},
     };
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    renderPageList(webspace);
+    await metadataPromise;
+    await waitFor(() => expect(mockListProps).toBeDefined());
+    const listProps = getListProps();
 
-    const webspaceOverview = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            // $FlowFixMe
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
-
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        expect(webspaceOverview.find('List').prop('onItemAdd')).toBeUndefined();
-        expect(webspaceOverview.find('List').prop('copyable')).toEqual(false);
-    });
+    expect(listProps.onItemAdd).toBeUndefined();
+    expect(listProps.copyable).toEqual(false);
 });
 
-test('Should show the error of a failed copy in the toolbar', () => {
+test('Should show the error of a failed copy in the toolbar', async() => {
+    const user = userEvent.setup();
     const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
     const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
     formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
-
-    const PageList = require('../PageList').default;
-
-    const webspaceKey = observable.box('sulu');
     const webspace = {
         ...defaultWebspace,
         localizations: undefined,
         _permissions: {add: true},
     };
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    renderPageList(webspace);
+    await metadataPromise;
+    await waitFor(() => expect(mockListProps).toBeDefined());
+    const listProps = getListProps();
 
-    const webspaceOverview = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            // $FlowFixMe
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
+    act(() => listProps.onCopyError({detail: 'Copying is not allowed'}));
 
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        webspaceOverview.find('List').prop('onCopyError')({detail: 'Copying is not allowed'});
-        webspaceOverview.find('List').prop('onCopyError')({});
+    expect(screen.getByRole('button', {name: /Copying is not allowed/})).toBeInTheDocument();
 
-        expect(webspaceOverview.instance().errors).toEqual([
-            'Copying is not allowed',
-            'sulu_admin.unexpected_copy_server_error',
-        ]);
-    });
+    await user.click(screen.getByLabelText('su-times'));
+    act(() => listProps.onCopyError({}));
+
+    expect(screen.getByRole('button', {name: /sulu_admin.unexpected_copy_server_error/})).toBeInTheDocument();
 });
 
-test('Should show the locales from the webspace configuration for the toolbar', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const PageList = require('../PageList').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
-
-    const webspaceKey = observable.box('sulu');
-
+test('Should show the locales from the webspace configuration for the toolbar', async() => {
+    const user = userEvent.setup();
     const webspace = {
         ...defaultWebspace,
         localizations: undefined,
         key: 'sulu',
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
+    const {router} = renderPageList(webspace);
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
+    act(() => getBoundValue(router, 'locale').set('en'));
 
-    const webspaceOverview = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            // $FlowFixMe
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
+    const localeSelect = screen.getByRole('button', {name: /^en/});
+    expect(localeSelect).toBeInTheDocument();
 
-    webspaceOverview.instance().locale.set('en');
-    expect(webspaceOverview.instance().locale.get()).toBe('en');
+    await user.click(localeSelect);
 
-    const toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
-    expect(toolbarConfig.locale.value).toBe('en');
-    expect(toolbarConfig.locale.options).toEqual(
-        expect.arrayContaining(
-            [
-                expect.objectContaining({label: 'en', value: 'en'}),
-                expect.objectContaining({label: 'de', value: 'de'}),
-            ]
-        )
-    );
+    expect(screen.getByRole('button', {name: /^su-check en/})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'de'})).toBeInTheDocument();
 });
 
-test('Should change excludeGhostsAndShadows when value of toggler is changed', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const PageList = require('../PageList').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
-
-    const webspaceKey = observable.box('sulu');
-
+test('Should change excludeGhostsAndShadows when value of toggler is changed', async() => {
+    const user = userEvent.setup();
     const webspace = {
         ...defaultWebspace,
         localizations: undefined,
-        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
         key: 'sulu',
+        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     };
+    const {router} = renderPageList(webspace);
+    const listStore = mockListStoreInstances[0];
+    const excludeGhostsAndShadows = getBoundValue(router, 'excludeGhostsAndShadows');
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
-
-    const webspaceOverview = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            // $FlowFixMe
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
-
-    webspaceOverview.update();
-
-    const excludeGhostsAndShadows = webspaceOverview.instance().excludeGhostsAndShadows;
-    expect(excludeGhostsAndShadows.get()).toEqual(false);
-    expect(webspaceOverview.instance().listStore.observableOptions).toEqual(expect.objectContaining({
+    expect(excludeGhostsAndShadows.get()).toBe(false);
+    expect(listStore.observableOptions).toEqual(expect.objectContaining({
         'exclude-ghosts': excludeGhostsAndShadows,
         'exclude-shadows': excludeGhostsAndShadows,
     }));
+    const toggler = screen.getByRole('checkbox', {name: 'sulu_page.show_ghost_and_shadow'});
+    expect(toggler).toBeChecked();
 
-    let toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
-    expect(toolbarConfig.items[0].value).toEqual(true);
+    await user.click(toggler);
 
-    toolbarConfig.items[0].onClick();
-    toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
-    expect(toolbarConfig.items[0].value).toEqual(false);
-    expect(webspaceOverview.instance().listStore.clear).toHaveBeenCalledWith();
-    expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(true);
+    expect(toggler).not.toBeChecked();
+    expect(listStore.clear).toHaveBeenCalledWith();
+    expect(excludeGhostsAndShadows.get()).toBe(true);
 
-    toolbarConfig.items[0].onClick();
-    toolbarConfig = toolbarFunction.call(webspaceOverview.instance());
-    expect(toolbarConfig.items[0].value).toEqual(true);
-    expect(webspaceOverview.instance().excludeGhostsAndShadows.get()).toEqual(false);
+    await user.click(toggler);
+
+    expect(toggler).toBeChecked();
+    expect(excludeGhostsAndShadows.get()).toBe(false);
 });
 
-test('Should set webspace if copied page is in different webspace than the source', () => {
-    const formMetadataStore = require('sulu-admin-bundle/containers').formMetadataStore;
-    const metadataPromise = Promise.resolve({types: {homepage: {}, example: {}}});
-    formMetadataStore.getSchemaTypes.mockReturnValue(metadataPromise);
-
-    const PageList = require('../PageList').default;
-
-    const webspaceKey = observable.box('sulu');
-
-    const webspace = {
+test('Should set webspace if copied page is in different webspace than the source', async() => {
+    const {webspaceKey} = renderPageList({
         ...defaultWebspace,
         localizations: undefined,
-        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
         key: 'sulu',
-    };
-
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
-
-    const webspaceOverview = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            // $FlowFixMe
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
-
-    return metadataPromise.then(() => {
-        webspaceOverview.update();
-        webspaceOverview.find('List').prop('onCopyFinished')({webspace: 'test'});
-        expect(webspaceKey.get()).toEqual('test');
+        allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
     });
+
+    await waitFor(() => expect(mockListProps).toBeDefined());
+    const listProps = getListProps();
+    act(() => listProps.onCopyFinished({webspace: 'test'}));
+
+    expect(webspaceKey.get()).toBe('test');
 });
 
 test('Should use CacheClearToolbarAction for cache clearing', () => {
-    const withToolbar = require('sulu-admin-bundle/containers').withToolbar;
-    const PageList = require('../PageList').default;
-    const toolbarFunction = findWithHighOrderFunction(withToolbar, PageList);
-    const CacheClearToolbarAction = require('sulu-website-bundle/containers').CacheClearToolbarAction;
+    const CacheClearToolbarAction: any = require(
+        'sulu-website-bundle/containers'
+    ).CacheClearToolbarAction;
 
-    const webspaceKey = observable.box('sulu');
-
-    const webspace = {
+    renderPageList({
         ...defaultWebspace,
         localizations: undefined,
         key: 'sulu',
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
-    };
-
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
-
-    const pageList = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            // $FlowFixMe
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
-
-    const cacheClearToolbarAction: CacheClearToolbarAction = (CacheClearToolbarAction: any).mock.instances[0];
-
-    expect(CacheClearToolbarAction).toHaveBeenCalledWith('sulu');
-    expect(cacheClearToolbarAction.getNode).toHaveBeenCalledWith();
-
-    expect(cacheClearToolbarAction.getToolbarItemConfig).not.toHaveBeenCalled();
-    toolbarFunction.call(pageList.instance());
-    expect(cacheClearToolbarAction.getToolbarItemConfig).toHaveBeenCalled();
-});
-
-test('Should load webspace and active route attribute from listStore and userStore', () => {
-    const PageList = require('../PageList').default;
-    const ListStore = require('sulu-admin-bundle/containers').ListStore;
-    const userStore = require('sulu-admin-bundle/stores').userStore;
-
-    userStore.getPersistentSetting.mockImplementation((key) => {
-        if (key === 'sulu_page.webspace_overview.webspace') {
-            return 'sulu';
-        }
     });
 
+    expect(CacheClearToolbarAction).toHaveBeenCalledWith('sulu');
+    expect(mockGetCacheClearNode).toHaveBeenCalledWith();
+    expect(mockGetCacheClearToolbarItemConfig).toHaveBeenCalledWith();
+    expect(screen.getByRole('button', {name: 'clear-cache'})).toBeInTheDocument();
+});
+
+test('Should load active route attribute from ListStore', () => {
+    const PageList = require('../PageList').default;
+    const ListStore = require('sulu-admin-bundle/containers').ListStore;
     ListStore.getActiveSetting.mockReturnValueOnce('some-uuid');
 
     // $FlowFixMe
@@ -486,102 +349,40 @@ test('Should load webspace and active route attribute from listStore and userSto
     expect(ListStore.getActiveSetting).toHaveBeenCalledWith('pages', 'page_list_abc');
 });
 
-test('Destroy ListStore to avoid many requests and reset active to be set on webspace change', () => {
-    const PageList = require('../PageList').default;
-
-    const webspaceKey = observable.box('sulu');
-
-    const webspace = {
+test('Destroy ListStore and reset active on webspace change', () => {
+    const {webspaceKey} = renderPageList({
         ...defaultWebspace,
         localizations: undefined,
         key: 'sulu',
         allLocalizations: [{localization: 'en', name: 'en'}, {localization: 'de', name: 'de'}],
-    };
+    });
+    const listStore = mockListStoreInstances[0];
 
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
-
-    const webspaceOverview = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            // $FlowFixMe
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
-
-    webspaceKey.set('sulu_blog');
-
-    expect(webspaceOverview.instance().listStore.destroy).toHaveBeenCalledWith();
-    expect(webspaceOverview.instance().listStore.active.set).toHaveBeenCalledWith(undefined);
-});
-
-test('Should bind router', () => {
-    const PageList = require('../PageList').default;
-
-    const webspaceKey = observable.box('sulu');
-    const webspace = {
-        ...defaultWebspace,
-        localizations: undefined,
-    };
-
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
-
-    const webspaceOverview = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            // $FlowFixMe
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
-    const page = webspaceOverview.instance().page;
-    const locale = webspaceOverview.instance().locale;
-    const excludeGhostsAndShadows = webspaceOverview.instance().excludeGhostsAndShadows;
-
-    expect(router.bind).toHaveBeenCalledWith('page', page, 1);
-    expect(router.bind).toHaveBeenCalledWith('excludeGhostsAndShadows', excludeGhostsAndShadows, false);
-    expect(router.bind).toHaveBeenCalledWith('locale', locale);
-    expect(router.bind).toHaveBeenCalledWith('active', webspaceOverview.instance().listStore.active);
-});
-
-test('Should call disposers on unmount', () => {
-    const PageList = require('../PageList').default;
-
-    const webspaceKey = observable.box('sulu');
-    const webspace = {
-        ...defaultWebspace,
-        localizations: undefined,
-    };
-
-    const router = new Router({});
-    router.attributes = {
-        webspace: 'sulu',
-    };
-
-    const webspaceOverview = mount(
-        <PageList
-            route={router.route}
-            router={router}
-            // $FlowFixMe
-            webspace={webspace}
-            webspaceKey={webspaceKey}
-        />
-    );
-
-    const listStore = webspaceOverview.instance().listStore;
-
-    const excludeGhostsAndShadowsDisposerSpy = jest.fn();
-    webspaceOverview.instance().excludeGhostsAndShadowsDisposer = excludeGhostsAndShadowsDisposerSpy;
-    webspaceOverview.unmount();
+    act(() => webspaceKey.set('sulu_blog'));
 
     expect(listStore.destroy).toHaveBeenCalledWith();
-    expect(excludeGhostsAndShadowsDisposerSpy).toHaveBeenCalledWith();
+    expect(listStore.active.set).toHaveBeenCalledWith(undefined);
+});
+
+test('Should bind router attributes', () => {
+    const {router} = renderPageList();
+    const listStore = mockListStoreInstances[0];
+
+    expect(router.bind).toHaveBeenCalledWith('page', expect.any(Object), 1);
+    expect(router.bind).toHaveBeenCalledWith('excludeGhostsAndShadows', expect.any(Object), false);
+    expect(router.bind).toHaveBeenCalledWith('locale', expect.any(Object));
+    expect(router.bind).toHaveBeenCalledWith('active', listStore.active);
+});
+
+test('Should destroy ListStore and stop reacting on unmount', () => {
+    const {router, unmount} = renderPageList();
+    const listStore = mockListStoreInstances[0];
+    const excludeGhostsAndShadows = getBoundValue(router, 'excludeGhostsAndShadows');
+
+    unmount();
+
+    expect(listStore.destroy).toHaveBeenCalledWith();
+    listStore.clear.mockClear();
+    act(() => excludeGhostsAndShadows.set(true));
+    expect(listStore.clear).not.toHaveBeenCalled();
 });

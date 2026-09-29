@@ -6,9 +6,7 @@ import {observable} from 'mobx';
 import BlockCollection from '../BlockCollection';
 import clipboard from '../../../utils/clipboard/clipboard';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 type RenderBlockCollectionResult = {
     container: HTMLElement,
@@ -662,7 +660,7 @@ test('Should not pass cut action to Block component if minOccurs limit is reache
     expect(queryButtonByName('sulu_admin.cut')).not.toBeInTheDocument();
 });
 
-test('Should throw an exception if a block is removed and minOccurs limit is reached', () => {
+test('Should throw an exception if a block is cut and minOccurs limit is reached', () => {
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
 

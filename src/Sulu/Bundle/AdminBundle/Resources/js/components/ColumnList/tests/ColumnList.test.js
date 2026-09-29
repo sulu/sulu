@@ -1,4 +1,4 @@
-/* eslint-disable testing-library/no-container, testing-library/prefer-user-event, jest-dom/prefer-to-have-style */
+/* eslint-disable testing-library/no-container, jest-dom/prefer-to-have-style */
 // @flow
 import {fireEvent, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -137,7 +137,8 @@ test('The ColumnList component should render without ', () => {
     expect(asFragment()).toMatchSnapshot();
 });
 
-test('The ColumnList component should render in a scrolling container', () => {
+test('The ColumnList component should render in a scrolling container', async() => {
+    const user = userEvent.setup();
     const onItemClick = jest.fn();
     const toolbarItemsProvider = jest.fn(() => [
         {
@@ -162,7 +163,7 @@ test('The ColumnList component should render in a scrolling container', () => {
     Object.defineProperty(columnListContainer, 'scrollLeft', {configurable: true, value: 20, writable: true});
 
     const columns = container.querySelectorAll('.column');
-    fireEvent.mouseEnter(columns[2]);
+    await user.hover(columns[2]);
     fireEvent.scroll(columnListContainer);
 
     expect(asFragment()).toMatchSnapshot();
@@ -267,18 +268,19 @@ test('The ColumnList component should handle which toolbar is active on mouse en
     await user.click(screen.getByLabelText('fa-plus').closest('button'));
     expect(buttonClickSpy).toHaveBeenCalledWith();
 
-    fireEvent.mouseEnter(columns[1]);
+    await user.hover(columns[1]);
     expect(toolbarItemsProvider).toHaveBeenLastCalledWith(1);
     await user.click(screen.getByLabelText('fa-plus').closest('button'));
     expect(buttonClickSpy).toHaveBeenLastCalledWith();
 
-    fireEvent.mouseEnter(columns[2]);
+    await user.hover(columns[2]);
     expect(toolbarItemsProvider).toHaveBeenLastCalledWith(2);
     await user.click(screen.getByLabelText('fa-plus').closest('button'));
     expect(buttonClickSpy).toHaveBeenLastCalledWith();
 });
 
-test('Should move the toolbar container to the beginning if active column does not exist anymore', () => {
+test('Should move the toolbar container to the beginning if active column does not exist anymore', async() => {
+    const user = userEvent.setup();
     const toolbarItemsProvider = jest.fn(() => [
         {
             icon: 'fa-plus',
@@ -296,7 +298,7 @@ test('Should move the toolbar container to the beginning if active column does n
     );
 
     const columns = container.querySelectorAll('.column');
-    fireEvent.mouseEnter(columns[2]);
+    await user.hover(columns[2]);
 
     rerender(
         <ColumnList onItemClick={jest.fn()} toolbarItemsProvider={toolbarItemsProvider}>
@@ -308,7 +310,8 @@ test('Should move the toolbar container to the beginning if active column does n
     expect(getRequiredElement(container, '.toolbarContainer').style.marginLeft).toEqual('0px');
 });
 
-test('Should move the toolbar container to the correct position', () => {
+test('Should move the toolbar container to the correct position', async() => {
+    const user = userEvent.setup();
     const toolbarItemsProvider = jest.fn(() => [
         {
             icon: 'fa-plus',
@@ -331,13 +334,14 @@ test('Should move the toolbar container to the correct position', () => {
 
     Object.defineProperty(columnListContainer, 'scrollLeft', {configurable: true, value: 35, writable: true});
     const columns = container.querySelectorAll('.column');
-    fireEvent.mouseEnter(columns[2]);
+    await user.hover(columns[2]);
     fireEvent.scroll(columnListContainer);
 
     expect(toolbarContainer.style.marginLeft).toEqual('505px');
 });
 
-test('Should set classes if the toolbar is active on the first or last visible column', () => {
+test('Should set classes if the toolbar is active on the first or last visible column', async() => {
+    const user = userEvent.setup();
     const {container} = render(
         <ColumnList onItemClick={jest.fn()} toolbarItemsProvider={jest.fn(() => [])}>
             <Column />
@@ -352,13 +356,13 @@ test('Should set classes if the toolbar is active on the first or last visible c
 
     Object.defineProperty(columnListContainer, 'clientWidth', {configurable: true, value: 500});
     Object.defineProperty(columnListContainer, 'scrollLeft', {configurable: true, value: 20, writable: true});
-    fireEvent.mouseEnter(container.querySelectorAll('.column')[0]);
+    await user.hover(container.querySelectorAll('.column')[0]);
     fireEvent.scroll(columnListContainer);
 
     expect(columnListContainer.className).toEqual(expect.stringContaining('firstVisibleColumnActive'));
     expect(columnListContainer.className).not.toEqual(expect.stringContaining('lastVisibleColumnActive'));
 
-    fireEvent.mouseEnter(container.querySelectorAll('.column')[2]);
+    await user.hover(container.querySelectorAll('.column')[2]);
     fireEvent.scroll(columnListContainer);
 
     expect(columnListContainer.className).not.toEqual(expect.stringContaining('firstVisibleColumnActive'));
