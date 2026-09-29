@@ -15,18 +15,25 @@ namespace Sulu\Page\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\PreviewBundle\Preview\PreviewContext;
+use Sulu\Bundle\PreviewBundle\Preview\Provider\CachablePreviewDefaultsProviderInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
+use Sulu\Content\Domain\Exception\ContentInReviewException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Page\Domain\Model\Page;
+use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * The admin submits every toolbar action as one request carrying the whole form plus an action, and
@@ -299,6 +306,100 @@ class PageInReviewTest extends SuluTestCase
         $this->assertSame('Draft Awaiting Review', $content['title']);
         $this->assertTrue($content['_locked']);
         $this->assertNotNull($content['activeWorkflowTransitionRequest']);
+    }
+
+    public function testPreviewShowsContentInReview(): void
+    {
+        $id = $this->createPageInReview();
+
+        $this->assertSame('Page In Review', $this->previewTitle($id, []));
+        $this->assertSame('Typed While In Review', $this->previewTitle($id, $this->previewData('Typed While In Review')));
+    }
+
+    public function testPreviewShowsDraftInReview(): void
+    {
+        $id = $this->createPageInReview();
+
+        $this->trigger($id, 'publish');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->put($id, ['action' => 'draft'], 'Draft Awaiting Review');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->client->request('POST', \sprintf('/admin/api/pages/%s?locale=en&action=request_for_review_draft', $id));
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->assertSame('Typed While In Review', $this->previewTitle($id, $this->previewData('Typed While In Review')));
+    }
+
+    public function testPreviewLeavesTheReviewLockInPlace(): void
+    {
+        $id = $this->createPageInReview();
+
+        $this->previewTitle($id, $this->previewData('Typed While In Review'));
+        self::getEntityManager()->clear();
+
+        $this->put($id, ['action' => 'draft'], 'Typed While In Review');
+
+        $response = $this->client->getResponse();
+        $this->assertSame(409, $response->getStatusCode(), (string) $response->getContent());
+
+        $this->client->request('GET', \sprintf('/admin/api/pages/%s?locale=en&webspace=sulu-io', $id));
+
+        /** @var array{title: string, workflowPlace: string, _locked: bool} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('Page In Review', $content['title']);
+        $this->assertSame('review', $content['workflowPlace']);
+        $this->assertTrue($content['_locked']);
+    }
+
+    public function testMappingOutsideThePreviewIsStillLocked(): void
+    {
+        $id = $this->createPageInReview();
+
+        $this->expectException(ContentInReviewException::class);
+
+        $this->previewTitle($id, $this->previewData('Typed While In Review'), false);
+    }
+
+    /**
+     * Runs the preview provider like the preview controller does, in a preview request.
+     *
+     * @param array<string, mixed> $data
+     */
+    private function previewTitle(string $id, array $data, bool $preview = true): mixed
+    {
+        /** @var CachablePreviewDefaultsProviderInterface $previewProvider */
+        $previewProvider = self::getContainer()->get('sulu_page.page_preview_provider');
+        $previewContext = new PreviewContext($id, 'en');
+
+        $requestStack = self::getContainer()->get('request_stack');
+        $request = new Request(attributes: ['preview' => $preview]);
+        $request->setSession(new Session(new MockArraySessionStorage()));
+        $requestStack->push($request);
+
+        try {
+            $defaults = $previewProvider->getDefaults($previewContext);
+            $defaults = $previewProvider->deserialize($previewContext, $previewProvider->serialize($previewContext, $defaults));
+            if ([] !== $data) {
+                $defaults = $previewProvider->updateValues($previewContext, $defaults, $data);
+            }
+        } finally {
+            $requestStack->pop();
+        }
+
+        /** @var PageDimensionContentInterface $object */
+        $object = $defaults['object'];
+
+        return $object->getTemplateData()['title'] ?? null;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function previewData(string $title): array
+    {
+        return ['template' => 'review', 'title' => $title, 'url' => '/page-in-review'];
     }
 
     private function latestVersion(string $id): int
