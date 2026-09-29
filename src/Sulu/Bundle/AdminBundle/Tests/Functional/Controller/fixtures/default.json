@@ -352,6 +352,11 @@
                         "type": "string",
                         "minLength": 1
                     },
+                    "url": {
+                        "not": {
+                            "const": ""
+                        }
+                    },
                     "animals": {
                         "anyOf": [
                             {

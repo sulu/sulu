@@ -41,6 +41,7 @@ return static function(ContainerConfigurator $container) {
             '%sulu_preview.delay%',
             '%sulu_preview.mode%',
             '%kernel.bundles%',
+            new Reference('sulu_security.security_checker'),
         ])
         ->tag('sulu.admin')
         ->tag('sulu.context', ['context' => 'admin']);

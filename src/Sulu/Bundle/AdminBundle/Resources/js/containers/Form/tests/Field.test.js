@@ -152,6 +152,58 @@ test('Render a field without a const error', () => {
     expect(screen.queryByText('sulu_admin.error_const')).not.toBeInTheDocument();
 });
 
+test('Show the required error message for a not error forbidding an empty string', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+
+    const field = shallow(
+        <Field
+            data={{}}
+            dataPath=""
+            error={{keyword: 'not', parameters: {}, schema: {const: ''}}}
+            formInspector={formInspector}
+            name="test"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSuccess={undefined}
+            router={undefined}
+            schema={{label: 'label1', type: 'text'}}
+            schemaPath=""
+        />
+    );
+
+    expect(field.find('Field').prop('error')).toEqual('sulu_admin.error_required');
+});
+
+test('Show the not error message for other not errors', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'snippets'));
+
+    fieldRegistry.get.mockReturnValue(function Text() {
+        return <input type="text" />;
+    });
+
+    const field = shallow(
+        <Field
+            data={{}}
+            dataPath=""
+            error={{keyword: 'not', parameters: {}, schema: {const: 'foo'}}}
+            formInspector={formInspector}
+            name="test"
+            onChange={jest.fn()}
+            onFinish={jest.fn()}
+            onSuccess={undefined}
+            router={undefined}
+            schema={{label: 'label1', type: 'text'}}
+            schemaPath=""
+        />
+    );
+
+    expect(field.find('Field').prop('error')).toEqual('sulu_admin.error_not');
+});
+
 test('Render a field with a error collection', () => {
     const error = {
         ids: {
