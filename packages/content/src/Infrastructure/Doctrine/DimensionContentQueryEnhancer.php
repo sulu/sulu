@@ -390,7 +390,8 @@ class DimensionContentQueryEnhancer
             return false;
         }
 
-        foreach ((array) $effectiveAttributes['locale'] as $locale) {
+        $locales = null === $effectiveAttributes['locale'] ? [null] : (array) $effectiveAttributes['locale'];
+        foreach ($locales as $locale) {
             foreach ((array) $effectiveAttributes['stage'] as $stage) {
                 foreach ((array) $effectiveAttributes['version'] as $version) {
                     $hasDimensionContent = $dimensionContents->exists(

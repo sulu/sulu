@@ -26,6 +26,7 @@ use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Tests\Traits\CreatePageTrait;
+use Symfony\Bridge\Doctrine\Middleware\Debug\DebugDataHolder;
 use Symfony\Component\Messenger\Envelope;
 
 class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
@@ -114,6 +115,17 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
         $this->assertSame(0, $this->countQueries(fn () => $this->entityManager->flush()));
     }
 
+    public function testUnlocalizedLoadFindsStageLoadedLater(): void
+    {
+        $uuid = $this->createTwoLocalePage()->getUuid();
+        $this->entityManager->clear();
+
+        $page = $this->loadPage($uuid, 'en', [DimensionContentInterface::STAGE_DRAFT]);
+        $this->loadPage($uuid, null, [DimensionContentInterface::STAGE_LIVE]);
+
+        $this->assertNotNull($this->findDimensionContent($page, null, DimensionContentInterface::STAGE_LIVE));
+    }
+
     public function testUnflushedDimensionContentSurvivesAnotherLoad(): void
     {
         $uuid = $this->createTwoLocalePage()->getUuid();
@@ -197,17 +209,20 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
         ]);
     }
 
-    private function loadPage(string $uuid, string $locale): PageInterface
-    {
+    /**
+     * @param string[] $stages
+     */
+    private function loadPage(
+        string $uuid,
+        ?string $locale,
+        array $stages = [DimensionContentInterface::STAGE_DRAFT, DimensionContentInterface::STAGE_LIVE],
+    ): PageInterface {
         return $this->pageRepository->getOneBy(
-            ['uuid' => $uuid, 'locale' => $locale],
+            ['uuid' => $uuid],
             [
                 PageRepositoryInterface::SELECT_PAGE_CONTENT => [
                     'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
-                    'dimensionAttributes' => [
-                        'locale' => $locale,
-                        'stage' => [DimensionContentInterface::STAGE_DRAFT, DimensionContentInterface::STAGE_LIVE],
-                    ],
+                    'dimensionAttributes' => ['locale' => $locale, 'stage' => $stages],
                 ],
             ],
         );
@@ -223,7 +238,7 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
         return $this->findDimensionContent($page, $locale, DimensionContentInterface::STAGE_LIVE);
     }
 
-    private function findDimensionContent(PageInterface $page, string $locale, string $stage): ?PageDimensionContentInterface
+    private function findDimensionContent(PageInterface $page, ?string $locale, string $stage): ?PageDimensionContentInterface
     {
         $dimensionAttributes = ['locale' => $locale, 'stage' => $stage];
         $collection = new DimensionContentCollection($page->getDimensionContents(), $dimensionAttributes, PageDimensionContent::class);
@@ -267,17 +282,15 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
 
     private function countQueries(callable $run): int
     {
-        $connection = $this->entityManager->getConnection();
-        $questions = static function() use ($connection): int {
-            /** @var array{Value: string} $status */
-            $status = $connection->fetchAssociative("SHOW SESSION STATUS LIKE 'Questions'");
+        /** @var DebugDataHolder $debugDataHolder */
+        $debugDataHolder = self::getContainer()->get('doctrine.debug_data_holder');
+        $debugDataHolder->reset();
 
-            return (int) $status['Value'];
-        };
-
-        $before = $questions();
         $run();
 
-        return $questions() - $before - 1;
+        /** @var array<string, list<mixed>> $queries */
+        $queries = $debugDataHolder->getData();
+
+        return \count($queries['default'] ?? []);
     }
 }
