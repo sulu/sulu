@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
-import {action, computed, intercept, observable} from 'mobx';
+import {action, computed, intercept, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
+import jexl from 'jexl';
 import {userStore} from 'sulu-admin-bundle/stores';
 import {Tabs} from 'sulu-admin-bundle/views';
 import {Route} from 'sulu-admin-bundle/services';
@@ -32,6 +33,15 @@ class WebspaceTabs extends React.Component<ViewProps> {
 
     @computed get webspace() {
         return webspaceStore.getWebspace(this.webspaceKey.get());
+    }
+
+    @computed get visibleTabRoutes(): Array<Route> {
+        const {route} = this.props;
+        const webspace = toJS(this.webspace);
+
+        return route.children.filter(({options: {webspaceCondition}}) => {
+            return !webspaceCondition || (!!webspace && jexl.evalSync(webspaceCondition, webspace));
+        });
     }
 
     constructor(props: ViewProps) {
@@ -85,6 +95,7 @@ class WebspaceTabs extends React.Component<ViewProps> {
                         </WebspaceSelect>
                     </div>
                 }
+                routeChildren={this.visibleTabRoutes}
             />
         );
     }
