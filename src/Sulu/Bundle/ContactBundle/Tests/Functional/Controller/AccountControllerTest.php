@@ -1420,6 +1420,8 @@ class AccountControllerTest extends SuluTestCase
         $collectionType = $this->createCollectionType('My collection type');
         /** @var Collection $collection */
         $collection = $this->createCollection($collectionType);
+        $this->em->flush();
+
         /** @var Media $removedMedia1 */
         $removedMedia1 = $this->createMedia('media1.jpeg', 'image/jpeg', $mediaType, $collection);
         /** @var Media $removedMedia2 */
