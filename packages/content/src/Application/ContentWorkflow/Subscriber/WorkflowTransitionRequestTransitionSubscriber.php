@@ -24,6 +24,7 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
+use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -91,10 +92,12 @@ class WorkflowTransitionRequestTransitionSubscriber implements EventSubscriberIn
         $this->workflowTransitionRequestRepository->add($workflowTransitionRequest);
 
         // No flush: the row and the workflow marking must land in one transaction, and Symfony
-        // writes the marking only after these events return.
+        // writes the marking only after these events return. The flush stamp makes the validation
+        // run flush after it, because its verdicts bypass the unit of work and the activity it
+        // collects is only stored on a flush.
         $this->messageBus->dispatch(new Envelope(
             new ValidateWorkflowTransitionRequestMessage($workflowTransitionRequest->getId()),
-            [new DispatchAfterCurrentBusStamp()],
+            [new DispatchAfterCurrentBusStamp(), new EnableFlushStamp()],
         ));
     }
 

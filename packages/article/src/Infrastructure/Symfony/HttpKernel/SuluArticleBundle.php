@@ -40,6 +40,7 @@ use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Article\Infrastructure\Doctrine\Repository\ArticleRepository;
+use Sulu\Article\Infrastructure\Sulu\Activity\ArticleWorkflowTransitionRequestSubscriber;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleResourceViewParameterProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
@@ -421,6 +422,15 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_route.route_generator'),
                 new Reference('sulu_core.webspace.webspace_manager'),
+            ])
+            ->tag('kernel.event_subscriber');
+
+        // Activity
+        $services->set('sulu_article.article_workflow_transition_request_subscriber')
+            ->class(ArticleWorkflowTransitionRequestSubscriber::class)
+            ->args([
+                new Reference('sulu_article.article_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('kernel.event_subscriber');
 

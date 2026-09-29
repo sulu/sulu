@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\MessageHandler\ValidateWorkflowTransitionRequestMessageHandler;
@@ -25,10 +26,12 @@ use Sulu\Content\Application\RequestWorkflow\RequestWorkflow;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowRegistryInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\RequestWorkflowValidatorInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
+use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[CoversClass(ValidateWorkflowTransitionRequestMessageHandler::class)]
 final class ValidateWorkflowTransitionRequestMessageHandlerTest extends TestCase
@@ -46,7 +49,7 @@ final class ValidateWorkflowTransitionRequestMessageHandlerTest extends TestCase
             $request->getValidatorDecision('exploding'),
             WorkflowTransitionRequestDecisionStatusEnum::REJECTED,
             [WorkflowTransitionRequestDecisionMessage::translated('sulu_content.workflow_transition_request.check_errored')],
-        )->shouldBeCalledOnce();
+        )->shouldBeCalledOnce()->willReturn(true);
 
         $exploding = $this->prophesize(RequestWorkflowValidatorInterface::class);
         $exploding->check(Argument::any())->willThrow(new \RuntimeException('remote service down'));
@@ -65,6 +68,7 @@ final class ValidateWorkflowTransitionRequestMessageHandlerTest extends TestCase
             $registry->reveal(),
             $logger->reveal(),
             new WorkerState(),
+            $this->expectValidatedEvent($request, 0, 1)->reveal(),
         );
 
         $handler(new ValidateWorkflowTransitionRequestMessage('request-1'));
@@ -91,6 +95,7 @@ final class ValidateWorkflowTransitionRequestMessageHandlerTest extends TestCase
             $registry->reveal(),
             $logger->reveal(),
             new WorkerState(),
+            $this->expectNoEvent()->reveal(),
         );
 
         $handler(new ValidateWorkflowTransitionRequestMessage('request-1'));
@@ -123,7 +128,7 @@ final class ValidateWorkflowTransitionRequestMessageHandlerTest extends TestCase
             $request->getValidatorDecision('healthy'),
             WorkflowTransitionRequestDecisionStatusEnum::APPROVED,
             [],
-        )->shouldBeCalledOnce();
+        )->shouldBeCalledOnce()->willReturn(true);
 
         $exploding = $this->prophesize(RequestWorkflowValidatorInterface::class);
         $exploding->check(Argument::any())->willThrow(new \RuntimeException('remote service down'));
@@ -149,6 +154,7 @@ final class ValidateWorkflowTransitionRequestMessageHandlerTest extends TestCase
             $registry->reveal(),
             $logger->reveal(),
             $workerState,
+            $this->expectNoEvent()->reveal(),
         );
 
         try {
@@ -157,6 +163,108 @@ final class ValidateWorkflowTransitionRequestMessageHandlerTest extends TestCase
         } catch (\RuntimeException $exception) {
             $this->assertSame('remote service down', $exception->getMessage());
         }
+    }
+
+    public function testDispatchesOnceWithTheCountsOfTheDecisionsSettledInThisRun(): void
+    {
+        $request = $this->createRequest();
+        $request->addValidatorDecision('passing');
+        $request->addValidatorDecision('failing');
+        $request->addValidatorDecision('claimed_elsewhere');
+        $message = WorkflowTransitionRequestDecisionMessage::text('Not good enough');
+
+        $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
+        $repository->findOneBy(['id' => 'request-1'])->willReturn($request);
+        $repository->settleDecision($request->getValidatorDecision('passing'), WorkflowTransitionRequestDecisionStatusEnum::APPROVED, [])
+            ->willReturn(true);
+        $repository->settleDecision($request->getValidatorDecision('failing'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, [$message])
+            ->willReturn(true);
+        $repository->settleDecision($request->getValidatorDecision('claimed_elsewhere'), WorkflowTransitionRequestDecisionStatusEnum::APPROVED, [])
+            ->willReturn(false);
+
+        $approving = $this->prophesize(RequestWorkflowValidatorInterface::class);
+        $approving->check(Argument::any())->willReturn(ValidationResult::approve());
+        $rejecting = $this->prophesize(RequestWorkflowValidatorInterface::class);
+        $rejecting->check(Argument::any())->willReturn(ValidationResult::reject($message));
+
+        $handler = new ValidateWorkflowTransitionRequestMessageHandler(
+            $repository->reveal(),
+            $this->createRegistry([
+                'passing' => $approving->reveal(),
+                'failing' => $rejecting->reveal(),
+                'claimed_elsewhere' => $approving->reveal(),
+            ]),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+            new WorkerState(),
+            $this->expectValidatedEvent($request, 1, 1)->reveal(),
+        );
+
+        $handler(new ValidateWorkflowTransitionRequestMessage('request-1'));
+    }
+
+    public function testDoesNotDispatchWhenNoDecisionIsPending(): void
+    {
+        $request = $this->createRequest();
+        $request->addValidatorDecision('passing');
+        $request->getValidatorDecision('passing')?->settle(WorkflowTransitionRequestDecisionStatusEnum::APPROVED, [], new \DateTimeImmutable());
+
+        $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
+        $repository->findOneBy(['id' => 'request-1'])->willReturn($request);
+        $repository->settleDecision(Argument::cetera())->shouldNotBeCalled();
+
+        $handler = new ValidateWorkflowTransitionRequestMessageHandler(
+            $repository->reveal(),
+            $this->createRegistry(['passing' => $this->prophesize(RequestWorkflowValidatorInterface::class)->reveal()]),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+            new WorkerState(),
+            $this->expectNoEvent()->reveal(),
+        );
+
+        $handler(new ValidateWorkflowTransitionRequestMessage('request-1'));
+    }
+
+    /**
+     * @param array<string, RequestWorkflowValidatorInterface> $validators
+     */
+    private function createRegistry(array $validators): RequestWorkflowRegistryInterface
+    {
+        $entries = [];
+        foreach ($validators as $key => $validator) {
+            $entries[$key] = ['validator' => $validator, 'config' => [], 'required' => false];
+        }
+
+        $registry = $this->prophesize(RequestWorkflowRegistryInterface::class);
+        $registry->has('default')->willReturn(true);
+        $registry->get('default')->willReturn(new RequestWorkflow('default', $entries, 1));
+
+        return $registry->reveal();
+    }
+
+    /**
+     * @return ObjectProphecy<EventDispatcherInterface>
+     */
+    private function expectValidatedEvent(WorkflowTransitionRequest $request, int $approved, int $rejected): ObjectProphecy
+    {
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::that(
+            static fn (object $event) => $event instanceof WorkflowTransitionRequestActionEvent
+                && $event->getWorkflowTransitionRequest() === $request
+                && WorkflowTransitionRequestActionEvent::VALIDATED === $event->getAction()
+                && ['approved' => $approved, 'rejected' => $rejected] === $event->getContext(),
+        ))->shouldBeCalledOnce()->willReturnArgument(0);
+
+        return $eventDispatcher;
+    }
+
+    /**
+     * @return ObjectProphecy<EventDispatcherInterface>
+     */
+    private function expectNoEvent(): ObjectProphecy
+    {
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
+
+        return $eventDispatcher;
     }
 
     private function createRequest(): WorkflowTransitionRequest

@@ -133,7 +133,7 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
         WorkflowTransitionRequestDecision $decision,
         WorkflowTransitionRequestDecisionStatusEnum $status,
         array $messages,
-    ): void {
+    ): bool {
         $decidedAt = new \DateTimeImmutable();
         $tableName = $this->entityManager->getClassMetadata(WorkflowTransitionRequestDecision::class)->getTableName();
 
@@ -157,12 +157,14 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
         );
 
         if (1 !== $claimed) {
-            return;
+            return false;
         }
 
         // The statement bypasses the unit of work, so the hydrated row would otherwise stay `pending`
         // for the rest of an inline run and the response would contradict the database.
         $decision->settle($status, $messages, $decidedAt);
+
+        return true;
     }
 
     /**

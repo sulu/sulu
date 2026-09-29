@@ -16,11 +16,13 @@ namespace Sulu\Content\Application\MessageHandler;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\Message\RejectWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Exception\MissingAuthenticatedUserException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @internal
@@ -30,6 +32,7 @@ final class RejectWorkflowTransitionRequestMessageHandler
     public function __construct(
         private readonly WorkflowTransitionRequestRepositoryInterface $workflowTransitionRequestRepository,
         private readonly WorkflowTransitionAdminAuthorizerInterface $workflowTransitionAdminAuthorizer,
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly ?TokenStorageInterface $tokenStorage = null,
     ) {
     }
@@ -55,6 +58,12 @@ final class RejectWorkflowTransitionRequestMessageHandler
         );
 
         $workflowTransitionRequest->addRejection($user, WorkflowTransitionRequestDecisionMessage::text($message->getComment()));
+
+        $this->eventDispatcher->dispatch(new WorkflowTransitionRequestActionEvent(
+            $workflowTransitionRequest,
+            WorkflowTransitionRequestActionEvent::REJECTED,
+            ['comment' => $message->getComment()],
+        ));
 
         return $workflowTransitionRequest;
     }

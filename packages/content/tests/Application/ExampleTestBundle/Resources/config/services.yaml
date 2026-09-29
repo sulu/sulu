@@ -138,3 +138,10 @@ services:
     example_test.request_workflow_validator.configured_result:
         class: Sulu\Content\Tests\Application\ExampleTestBundle\RequestWorkflow\ConfiguredResultValidator
         autoconfigure: true
+
+    example_test.workflow_transition_request_subscriber:
+        class: Sulu\Content\Tests\Application\ExampleTestBundle\Activity\ExampleWorkflowTransitionRequestSubscriber
+        arguments:
+            - '@sulu_activity.domain_event_collector'
+        tags:
+            - { name: 'kernel.event_subscriber' }
