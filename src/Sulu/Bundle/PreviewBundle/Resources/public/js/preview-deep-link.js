@@ -33,16 +33,21 @@
         var root = host.attachShadow({mode: 'closed'});
 
         var style = document.createElement('style');
+        // --color is set on the elements, not :host, so a site rule like `div { --color: ... }` cannot override it.
+        // The icon is black or white by lightness; the plain `white` stays without relative colors.
         style.textContent =
             ':host { all: initial; }' +
+            '.outline, .button { --color: var(--sulu-preview-deep-link-color, #23a3ec); }' +
             '.outline { position: fixed; z-index: 2147483647; pointer-events: none;' +
-            ' outline: 2px solid #23a3ec; outline-offset: -2px; box-sizing: border-box;' +
-            ' background: rgba(35, 163, 236, 0.08); display: none; }' +
+            ' outline: 2px solid var(--color); outline-offset: -2px; box-sizing: border-box;' +
+            ' background: color-mix(in srgb, var(--color) 8%, transparent); display: none; }' +
             '.button { all: initial; position: fixed; z-index: 2147483647; pointer-events: auto;' +
             ' display: none; align-items: center; justify-content: center;' +
-            ' width: 28px; height: 28px; border-radius: 4px; background: #23a3ec; cursor: pointer;' +
-            ' box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }' +
-            '.button svg { width: 16px; height: 16px; fill: #fff; }';
+            ' width: 28px; height: 28px; border-radius: 4px; background: var(--color); cursor: pointer;' +
+            ' color: white; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }' +
+            '@supports (color: oklch(from red l c h)) {' +
+            ' .button { color: oklch(from var(--color) clamp(0, (0.6 - l) * 1000, 1) 0 0); } }' +
+            '.button svg { width: 16px; height: 16px; }';
         root.appendChild(style);
 
         var outline = document.createElement('div');
@@ -51,14 +56,14 @@
 
         var button = document.createElement('div');
         button.className = 'button';
-        button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" ' +
+        button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
             'stroke-linecap="round">' +
             '<circle cx="12" cy="12" r="7" fill="none"/>' +
             '<path d="M12 0v4"/>' +
             '<path d="M12 20v4"/>' +
             '<path d="M0 12h4"/>' +
             '<path d="M20 12h4"/>' +
-            '<circle cx="12" cy="12" r="1.3" fill="#fff" stroke="none"/>' +
+            '<circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>' +
             '</svg>';
         root.appendChild(button);
 
