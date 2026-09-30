@@ -11,11 +11,22 @@
 
 namespace Sulu\Bundle\CoreBundle\Build;
 
+use CmsIg\Seal\EngineInterface;
+use CmsIg\Seal\Schema\Schema;
+
 /**
  * Builder for initializing the search indexes.
+ *
+ * @internal no backward compatibility promise is given for this class
  */
 class SearchBuilder extends SuluBuilder
 {
+    public function __construct(
+        private readonly EngineInterface $engine,
+        private readonly Schema $schema,
+    ) {
+    }
+
     public function getName()
     {
         return 'search';
@@ -28,10 +39,24 @@ class SearchBuilder extends SuluBuilder
 
     public function build()
     {
-        if ($this->input->getOption('destroy')) {
-            $this->execCommand('Dropping the search indexes', 'cmsig:seal:index-drop', ['--force' => true]);
-        }
+        $destroy = $this->input->getOption('destroy');
 
-        $this->execCommand('Creating the search indexes', 'cmsig:seal:index-create');
+        foreach (\array_keys($this->schema->indexes) as $index) {
+            if ($this->engine->existIndex($index)) {
+                if (!$destroy) {
+                    $this->output->writeln('Found existing search index ' . $index . ', skipping');
+
+                    continue;
+                }
+
+                $this->execCommand('Dropping the search index', 'cmsig:seal:index-drop', [
+                    'engine' => 'default',
+                    'index' => $index,
+                    '--force' => true,
+                ]);
+            }
+
+            $this->execCommand('Creating the search index', 'cmsig:seal:index-create', ['--index' => $index]);
+        }
     }
 }
