@@ -180,6 +180,13 @@ with the old aliases need to switch to the resource key:
 $cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->getId());
 ```
 
+### New constructor arguments for the teaser providers, the snippet area resolver and the link resolver
+
+`PageTeaserProvider`, `ArticleTeaserProvider` and `SnippetAreaSmartResolver` take the `sulu_http_cache.reference_store`
+as their last argument, `LinkPropertyResolver` takes the `sulu_markup.link_tag.provider_pool`. Projects that extend one
+of these classes or define their own service for it need to pass it, otherwise the container throws an
+`ArgumentCountError`. Clear the HTTP cache once, pages cached before lack the new tags.
+
 ### Add and live permissions are enforced for pages, snippets and articles
 
 The admin API now checks these permissions:
@@ -222,6 +229,23 @@ rows on its next save, so refresh existing content once after upgrading:
 
 ```bash
 bin/console sulu:reference:refresh
+```
+
+### Forced two factor authentication without the email method
+
+With `sulu_security.two_factor.force` enabled and `scheb/2fa-email` not installed, the users matching the pattern
+have to set up a method after the login. Until then the admin API answers every other route with a `403` and the
+`two_factor_setup_required` error, technical API users included. Disabling the method is rejected for these users.
+
+`trusted_devices` does not count as a method a user can activate anymore. A project that enables nothing else
+can not force two factor authentication anymore.
+
+### Index for the reference table
+
+The `re_references` table has a new index. Update your database schema, or add it by hand:
+
+```sql
+CREATE INDEX reference_resource_idx ON re_references (referenceResourceKey, referenceResourceId, referenceLocale, referenceContext);
 ```
 
 ## 3.0.9
