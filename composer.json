@@ -321,6 +321,11 @@
             "composer/package-versions-deprecated": true,
             "symfony/runtime": true,
             "php-http/discovery": true
+        },
+        "audit": {
+            "ignore": {
+                "PKSA-w9tt-7782-78jx": "league/flysystem is a require-dev and suggested dependency, and the fix is only released for 3.x"
+            }
         }
     }
 }
