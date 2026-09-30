@@ -49,6 +49,23 @@ sulu_content_api:
     prefix: /admin/api
 ```
 
+### Snippets support shadow locales
+
+Snippet dimension contents can now shadow another locale, like pages and articles. Two columns,
+`shadowLocale` and `shadowLocales`, back the feature on `sn_snippet_dimension_contents`; run the
+migration to add them:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
+### Additional Optional Parameter dimensionContentRepository for TemplateDataMapper
+
+The `TemplateDataMapper` gained an optional `$dimensionContentRepository` argument, which it uses to give
+a new shadow locale the template and content of its source locale. Omitting it is deprecated, so
+integrators registering their own mapper service should pass the `sulu_content.dimension_content_repository`
+service now to remain compatible with a future version where it is required.
+
 ### New workflow transition request tables
 
 The review flow stores its requests in `ct_workflow_transition_requests` and every verdict on them,
@@ -90,6 +107,16 @@ $services->set('acme_product.product_localizations_resolver', ProductLocalizatio
 
 ### BC breaks
 
+- `SnippetDimensionContentInterface` now also extends `Sulu\Content\Domain\Model\ShadowInterface`. A
+  project with its own implementation of the interface (rather than extending the shipped
+  `SnippetDimensionContent`) must implement the `ShadowInterface` methods, most simply by applying
+  `Sulu\Content\Domain\Model\ShadowTrait`.
+- `TypedFormMetadata::getDefaultType()` now returns `?string` instead of `string` and no longer throws
+  when no default type is set. Callers relying on a non-null return have to handle `null`.
+- The translation keys `sulu_content.shadow_page`, `sulu_content.enable_shadow_page` and
+  `sulu_content.enable_shadow_page_info_text` are renamed to `sulu_content.shadow`,
+  `sulu_content.enable_shadow` and `sulu_content.enable_shadow_info_text`. A project overriding the
+  old keys in its own translations has to rename them, otherwise the override is silently ignored.
 - The permission mask meaning "everything" is 255, not 127: `PermissionTypes::REVIEW` occupies bit
   128. Code comparing a mask against 127 to mean full access has to be updated.
 - Publishing through the API takes `live`, or `edit` together with an approved active request, for

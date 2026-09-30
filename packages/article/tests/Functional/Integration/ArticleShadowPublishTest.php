@@ -141,6 +141,36 @@ class ArticleShadowPublishTest extends SuluTestCase
         self::assertSame('Source EN', $templateData['title'] ?? null);
     }
 
+    public function testEnableShadowWithoutTemplateTakesSourceTemplate(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->request(
+            'POST',
+            '/admin/api/articles?locale=en',
+            [], [], [],
+            \json_encode(['template' => 'article', 'title' => 'Source EN', 'url' => '/source-en', 'mainWebspace' => 'sulu-io']) ?: null,
+        );
+        self::assertSame(201, $this->client->getResponse()->getStatusCode(), (string) $this->client->getResponse()->getContent());
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $id = $content['id'];
+
+        // The settings tab enables a shadow on a new locale with template: null and no title.
+        $this->client->request(
+            'PUT',
+            '/admin/api/articles/' . $id . '?locale=de',
+            [], [], [],
+            \json_encode(['template' => null, 'shadowOn' => true, 'shadowLocale' => 'en']) ?: null,
+        );
+        self::assertSame(200, $this->client->getResponse()->getStatusCode(), (string) $this->client->getResponse()->getContent());
+
+        /** @var array{template: ?string, title: ?string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        self::assertSame('article', $content['template']);
+        self::assertSame('Source EN', $content['title']);
+    }
+
     public function testRepublishingSourceUpdatesLiveShadowDependent(): void
     {
         self::purgeDatabase();

@@ -93,6 +93,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
 
         $snippet = new Snippet('test-snippet-uuid');
         $snippetDimensionContent = new SnippetDimensionContent($snippet);
+        $snippetDimensionContent->setLocale($locale);
         $snippetDimensionContent->setTemplateData(['title' => 'Test Snippet']);
 
         $snippetArea = new SnippetArea($areaKey, $webspaceKey);
@@ -161,6 +162,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
 
         $snippet = new Snippet('footer-snippet-uuid');
         $snippetDimensionContent = new SnippetDimensionContent($snippet);
+        $snippetDimensionContent->setLocale($locale);
         $snippetDimensionContent->setTemplateData(['title' => 'Footer Snippet']);
 
         $snippetArea = new SnippetArea($areaKey, $webspaceKey);
@@ -297,6 +299,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
 
         $snippet = new Snippet('test-snippet-uuid');
         $snippetDimensionContent = new SnippetDimensionContent($snippet);
+        $snippetDimensionContent->setLocale($locale);
         $snippetDimensionContent->setTemplateData(['title' => 'Test Snippet', 'description' => 'Test Description']);
 
         $snippetArea = new SnippetArea($areaKey, $webspaceKey);
@@ -346,6 +349,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
 
         $snippet = new Snippet('test-snippet-uuid');
         $snippetDimensionContent = new SnippetDimensionContent($snippet);
+        $snippetDimensionContent->setLocale($locale);
         $snippetDimensionContent->setTemplateData(['title' => 'Test Snippet', 'description' => 'Test Description']);
 
         $snippetArea = new SnippetArea($areaKey, $webspaceKey);
@@ -385,5 +389,49 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $result = $this->extension->loadSnippetByArea($areaKey, webspaceKey: $webspaceKey, locale: $locale);
 
         $this->assertSame($resolvedContent, $result);
+    }
+
+    public function testLoadSnippetByAreaWithGhostLocale(): void
+    {
+        $areaKey = 'header';
+        $webspaceKey = 'example';
+        $locale = 'de';
+
+        $snippet = new Snippet('test-snippet-uuid');
+        $snippetDimensionContent = new SnippetDimensionContent($snippet);
+        // locale intentionally not set — simulates ghost locale
+
+        $snippetArea = new SnippetArea($areaKey, $webspaceKey);
+        $snippetArea->setSnippet($snippet);
+
+        $this->snippetAreaRepository->findOneBy([
+            'webspaceKey' => $webspaceKey,
+            'areaKey' => $areaKey,
+        ])->willReturn($snippetArea);
+
+        $this->snippetRepository->findOneBy(
+            [
+                'uuid' => 'test-snippet-uuid',
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ],
+            Argument::any()
+        )->willReturn($snippet);
+
+        $this->contentAggregator->aggregate(
+            $snippet,
+            [
+                'locale' => $locale,
+                'stage' => DimensionContentInterface::STAGE_LIVE,
+                'version' => DimensionContentInterface::CURRENT_VERSION,
+            ]
+        )->willReturn($snippetDimensionContent);
+
+        $this->contentResolver->resolve(Argument::any(), Argument::any())->shouldNotBeCalled();
+
+        $result = $this->extension->loadSnippetByArea($areaKey, [], $webspaceKey, $locale);
+
+        $this->assertNull($result);
     }
 }

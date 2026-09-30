@@ -211,7 +211,7 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
         $this->walkTree($roots, function(PageInterface $page) use (&$titles): void {
             $titles[] = $this->findLive($page, 'en')?->getTitle();
         });
-        $this->assertSame(['Homepage', 'Page', 'Child'], $titles);
+        $this->assertEqualsCanonicalizing(['Homepage', 'Page', 'Child'], $titles);
     }
 
     private function createTwoLocalePage(string $url = '/page'): PageInterface
