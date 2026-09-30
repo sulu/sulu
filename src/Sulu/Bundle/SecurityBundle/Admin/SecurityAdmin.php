@@ -206,14 +206,19 @@ class SecurityAdmin extends Admin
 
     public function getConfig(): ?array
     {
-        return [
-            'endpoints' => [
-                'contexts' => $this->urlGenerator->generate('sulu_security.cget_security-contexts'),
+        $endpoints = ['contexts' => $this->urlGenerator->generate('sulu_security.cget_security-contexts')];
+
+        if ([] !== $this->twoFactorMethods) {
+            $endpoints += [
                 'twoFactorSetup' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_setup'),
                 'twoFactorConfirm' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_confirm'),
                 'twoFactorBackupCodes' => $this->urlGenerator->generate('sulu_security.post_profile_two-factor_backup-codes'),
                 'twoFactorDelete' => $this->urlGenerator->generate('sulu_security.delete_profile_two-factor'),
-            ],
+            ];
+        }
+
+        return [
+            'endpoints' => $endpoints,
             'twoFactorBackupCodesEnabled' => $this->twoFactorBackupCodesEnabled,
             'twoFactorMethods' => $this->twoFactorMethods,
             'twoFactorSetupRequired' => $this->isTwoFactorSetupRequired(),
