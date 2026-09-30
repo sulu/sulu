@@ -665,7 +665,7 @@ class SnippetControllerTest extends SuluTestCase
 
     public function testPutShadowLocaleWithoutTemplateKeepsSnippetInList(): void
     {
-        // The settings tab enables a shadow with template: null and no title.
+        // The settings tab enables a shadow with template: null and title: null.
         self::purgeDatabase();
 
         $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
@@ -679,6 +679,7 @@ class SnippetControllerTest extends SuluTestCase
 
         $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=de', [], [], [], \json_encode([
             'template' => null,
+            'title' => null,
             'shadowOn' => true,
             'shadowLocale' => 'en',
         ]) ?: null);

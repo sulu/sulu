@@ -80,7 +80,8 @@ class TemplateDataMapper implements DataMapperInterface
         }
 
         [$unlocalizedData, $localizedData, $hasAnyValue] = $this->getTemplateData(
-            $data,
+            // the settings tab sends null for fields it does not show, which must not wipe the seeded source data
+            $shadowSourceDimensionContent ? \array_filter($data, static fn ($value) => null !== $value) : $data,
             $unlocalizedDimensionContent->getTemplateData(),
             ($shadowSourceDimensionContent ?? $localizedDimensionContent)->getTemplateData(),
             $metadata,

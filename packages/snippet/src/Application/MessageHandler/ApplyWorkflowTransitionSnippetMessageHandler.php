@@ -11,7 +11,6 @@
 
 namespace Sulu\Snippet\Application\MessageHandler;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -30,7 +29,6 @@ final class ApplyWorkflowTransitionSnippetMessageHandler
     public function __construct(
         private SnippetRepositoryInterface $snippetRepository,
         private ContentWorkflowInterface $contentWorkflow,
-        private EntityManagerInterface $entityManager,
         private DomainEventCollectorInterface $domainEventCollector
     ) {
     }
@@ -44,10 +42,6 @@ final class ApplyWorkflowTransitionSnippetMessageHandler
         // The shadow source and dependent locales are only known once this locale is loaded.
         $relatedLocales = $this->resolveRelatedLocales($snippet, $locale);
         if ([] !== $relatedLocales) {
-            // Drop the identity-map collection (filled by a preceding ModifySnippetMessage) so the
-            // wider query re-hydrates it with all locales.
-            $this->entityManager->refresh($snippet);
-
             $snippet = $this->loadSnippet($message, [$locale, ...$relatedLocales]);
         }
 

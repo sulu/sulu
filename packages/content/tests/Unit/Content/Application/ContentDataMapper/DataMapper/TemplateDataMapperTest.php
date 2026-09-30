@@ -229,6 +229,7 @@ class TemplateDataMapperTest extends TestCase
     {
         $data = [
             'template' => null,
+            'title' => null,
             'shadowOn' => true,
             'shadowLocale' => 'en',
         ];

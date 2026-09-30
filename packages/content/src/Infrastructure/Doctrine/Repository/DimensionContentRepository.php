@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Infrastructure\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
@@ -23,8 +24,10 @@ use Sulu\Content\Domain\Repository\DimensionContentRepositoryInterface;
  */
 final class DimensionContentRepository implements DimensionContentRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ContentMetadataInspectorInterface $contentMetadataInspector,
+    ) {
     }
 
     /**
@@ -41,13 +44,8 @@ final class DimensionContentRepository implements DimensionContentRepositoryInte
             return null;
         }
 
-        $mapping = $this->entityManager->getClassMetadata($contentRichEntity::class)->getAssociationMapping('dimensionContents');
-
-        /** @var string $mappedBy */
-        $mappedBy = $mapping['mappedBy'];
-
-        /** @var class-string<T> $dimensionContentClass */
-        $dimensionContentClass = $mapping['targetEntity'];
+        $mappedBy = $this->contentMetadataInspector->getDimensionContentPropertyName($contentRichEntity::class);
+        $dimensionContentClass = $this->contentMetadataInspector->getDimensionContentClass($contentRichEntity::class);
 
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('dimensionContent')

@@ -96,7 +96,10 @@ return static function(ContainerConfigurator $container) {
         ->args([new Reference('doctrine.orm.entity_manager')]);
 
     $services->set('sulu_content.dimension_content_repository', DimensionContentRepository::class)
-        ->args([new Reference('doctrine.orm.entity_manager')]);
+        ->args([
+            new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu_content.content_metadata_inspector'),
+        ]);
 
     $services->set('sulu_content.dimension_content_collection_factory', DimensionContentCollectionFactory::class)
         ->args([
