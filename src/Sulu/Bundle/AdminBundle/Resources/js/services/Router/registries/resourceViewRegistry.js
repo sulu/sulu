@@ -27,7 +27,10 @@ class ResourceViewRegistry {
             return false;
         }
 
-        return this.resourceViews?.[resourceKey]?.views?.[view] !== undefined;
+        const viewName = this.resourceViews?.[resourceKey]?.views?.[view];
+
+        // placeholders like "{group}" are resolved by the ResourceViewUrlGenerator on the server only
+        return viewName !== undefined && !viewName.includes('{');
     }
 
     get(view: string, resourceKey: string): string {

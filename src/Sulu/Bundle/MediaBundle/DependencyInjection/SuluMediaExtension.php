@@ -154,6 +154,9 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                                 'list' => 'sulu_media.cget_media',
                                 'detail' => 'sulu_media.get_media',
                             ],
+                            'views' => [
+                                'detail' => MediaAdmin::EDIT_FORM_VIEW,
+                            ],
                             'security_context' => 'sulu.media.collections',
                             'security_class' => Collection::class,
                         ],
