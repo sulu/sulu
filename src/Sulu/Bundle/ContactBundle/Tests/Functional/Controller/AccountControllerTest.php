@@ -1408,6 +1408,10 @@ class AccountControllerTest extends SuluTestCase
         $this->em->flush();
         $this->em->clear();
 
+        if (!$this->client->getContainer()->has('doctrine.debug_data_holder')) {
+            $this->markTestSkipped('Collecting queries needs the debug data holder of DoctrineBundle 2.7 or later.');
+        }
+
         /** @var DebugDataHolder $debugDataHolder */
         $debugDataHolder = $this->client->getContainer()->get('doctrine.debug_data_holder');
         $debugDataHolder->reset();
