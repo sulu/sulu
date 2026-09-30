@@ -364,7 +364,8 @@ test('Delete the image when the delete button is clicked and the overlay is conf
     await waitFor(() => expectDeleteDialogClosed());
 });
 
-test('Ask before deleting a referenced image and delete it with force when confirmed', (done) => {
+test('Ask before deleting a referenced image and delete it with force when confirmed', async() => {
+    const user = userEvent.setup();
     const mediaUploadStore = new MediaUploadStore(
         {
             id: 1,
@@ -382,14 +383,14 @@ test('Ask before deleting a referenced image and delete it with force when confi
         referencingResources: [{id: 'page-1', resourceKey: 'pages', title: 'Page 1'}],
         referencingResourcesCount: 1,
     };
-    mediaUploadStore.delete.mockReturnValueOnce(Promise.reject({
+    mediaUploadStore.delete.mockImplementationOnce(() => Promise.reject({
         json: () => Promise.resolve({code: 1106, ...referencingResourcesData}),
         status: 409,
     }));
 
     const uploadCompleteSpy = jest.fn();
 
-    const singleMediaUpload = shallow(
+    render(
         <SingleMediaUpload
             mediaUploadStore={mediaUploadStore}
             onUploadComplete={uploadCompleteSpy}
@@ -397,32 +398,25 @@ test('Ask before deleting a referenced image and delete it with force when confi
         />
     );
 
-    singleMediaUpload.find('Button[icon="su-trash-alt"]').simulate('click');
-    singleMediaUpload.find('Dialog').prop('onConfirm')();
+    await user.click(screen.getByRole('button', {name: /sulu_media.delete_media/}));
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
     expect(mediaUploadStore.delete).toHaveBeenCalledWith({});
 
-    setTimeout(() => {
-        singleMediaUpload.update();
-        expect(singleMediaUpload.find('Dialog').prop('open')).toEqual(false);
-        expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(false);
-        expect(singleMediaUpload.find('DeleteReferencedResourceDialog').prop('referencingResourcesData'))
-            .toEqual(referencingResourcesData);
-        expect(uploadCompleteSpy).not.toHaveBeenCalled();
+    expect(await screen.findByText('sulu_admin.delete_linked_warning_title')).toBeInTheDocument();
+    expect(screen.getByText('Page 1')).toBeInTheDocument();
+    expectDeleteDialogClosed();
+    expect(uploadCompleteSpy).not.toHaveBeenCalled();
 
-        mediaUploadStore.delete.mockReturnValueOnce(Promise.resolve());
-        singleMediaUpload.find('DeleteReferencedResourceDialog').prop('onConfirm')();
-        expect(mediaUploadStore.delete).toHaveBeenLastCalledWith({force: true});
+    mediaUploadStore.delete.mockReturnValueOnce(Promise.resolve());
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.delete'}));
 
-        setTimeout(() => {
-            singleMediaUpload.update();
-            expect(uploadCompleteSpy).toHaveBeenCalled();
-            expect(singleMediaUpload.find('DeleteReferencedResourceDialog')).toHaveLength(0);
-            done();
-        });
-    });
+    expect(mediaUploadStore.delete).toHaveBeenLastCalledWith({force: true});
+    await waitFor(() => expect(uploadCompleteSpy).toHaveBeenCalled());
+    await waitFor(() => expect(screen.queryByText('Page 1')).not.toBeInTheDocument());
 });
 
-test('Close the dialog if deleting the image fails for another reason than references', (done) => {
+test('Close the dialog if deleting the image fails for another reason than references', async() => {
+    const user = userEvent.setup();
     const mediaUploadStore = new MediaUploadStore(
         {
             id: 1,
@@ -435,22 +429,16 @@ test('Close the dialog if deleting the image fails for another reason than refer
         },
         observable.box('en')
     );
-    mediaUploadStore.delete.mockReturnValueOnce(Promise.reject({status: 500}));
+    mediaUploadStore.delete.mockImplementationOnce(() => Promise.reject({status: 500}));
 
-    const singleMediaUpload = shallow(
-        <SingleMediaUpload mediaUploadStore={mediaUploadStore} uploadText="Upload media" />
-    );
+    render(<SingleMediaUpload mediaUploadStore={mediaUploadStore} uploadText="Upload media" />);
 
-    singleMediaUpload.find('Button[icon="su-trash-alt"]').simulate('click');
-    singleMediaUpload.find('Dialog').prop('onConfirm')();
+    await user.click(screen.getByRole('button', {name: /sulu_media.delete_media/}));
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
 
-    setTimeout(() => {
-        singleMediaUpload.update();
-        expect(singleMediaUpload.find('Dialog').prop('open')).toEqual(false);
-        expect(singleMediaUpload.find('Dialog').prop('confirmLoading')).toEqual(false);
-        expect(singleMediaUpload.find('DeleteReferencedResourceDialog')).toHaveLength(0);
-        done();
-    });
+    await waitFor(() => expectDeleteDialogClosed());
+    expect(mediaUploadStore.delete).toHaveBeenCalledWith({});
+    expect(screen.queryByText('sulu_admin.delete_linked_warning_title')).not.toBeInTheDocument();
 });
 
 test('Throw exception if neither the collectionId nor the media is given', () => {

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
+import {act, fireEvent, render, screen, waitFor, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import MediaCardOverviewAdapter from '../../List/adapters/MediaCardOverviewAdapter';
@@ -850,6 +850,45 @@ test('Confirming the delete dialog should delete the item and navigate to its pa
 
     await promise;
     expect(collectionNavigateSpy).toHaveBeenCalledWith(3);
+});
+
+test('Cancelling the delete dependant resources dialog should reload the collections and media', async() => {
+    const user = userEvent.setup();
+    const {collectionListStore, collectionStore, mediaListStore} = renderMediaCollection({
+        collectionData: {
+            id: 1,
+            _permissions: {},
+        },
+        collectionId: 1,
+    });
+    collectionStore.resourceStore.delete.mockReturnValue(Promise.reject({
+        json: jest.fn().mockReturnValue(Promise.resolve({
+            code: 1105,
+            dependantResourceBatches: [[{id: 1, resourceKey: 'media'}]],
+            dependantResourcesCount: 1,
+            detail: 'Detail',
+            title: 'Title',
+        })),
+        status: 409,
+    }));
+
+    await clickDropdownItem(user, 'sulu_admin.delete');
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
+
+    const dialog = (await screen.findByText('Detail')).closest('section');
+    if (!dialog) {
+        throw new Error('Delete dependant resources dialog was not rendered.');
+    }
+
+    expect(screen.getByText('Title')).toBeInTheDocument();
+    expect(collectionListStore.reload).not.toHaveBeenCalled();
+    expect(mediaListStore.reload).not.toHaveBeenCalled();
+
+    await user.click(within(dialog).getByRole('button', {name: 'sulu_admin.cancel'}));
+
+    expect(collectionListStore.reload).toHaveBeenCalledTimes(1);
+    expect(mediaListStore.reload).toHaveBeenCalledTimes(1);
+    expect(screen.queryByText('Detail')).not.toBeInTheDocument();
 });
 
 test('Confirming the move dialog should move the item', async() => {
