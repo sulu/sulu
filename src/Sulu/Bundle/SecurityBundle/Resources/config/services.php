@@ -36,6 +36,7 @@ use Sulu\Bundle\SecurityBundle\EventListener\SystemListener;
 use Sulu\Bundle\SecurityBundle\EventListener\UserLocaleListener;
 use Sulu\Bundle\SecurityBundle\Metadata\PasswordPolicyFormMetadataVisitor;
 use Sulu\Bundle\SecurityBundle\Metadata\TwoFactorFormMetadataVisitor;
+use Sulu\Bundle\SecurityBundle\Routing\Loader\TwoFactorRouteLoader;
 use Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint;
 use Sulu\Bundle\SecurityBundle\Security\AuthenticationHandler;
 use Sulu\Bundle\SecurityBundle\System\SystemStore;
@@ -233,6 +234,10 @@ return static function(ContainerConfigurator $container) {
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
+    $services->set('sulu_security.routing.two_factor_loader', TwoFactorRouteLoader::class)
+        ->args(['%sulu_security.two_factor_setup_methods%'])
+        ->tag('routing.loader');
+
     $services->set('sulu_security.role_controller', RoleController::class)
         ->public()
         ->args([
@@ -373,7 +378,7 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_security.two_factor_form_metadata_visitor', TwoFactorFormMetadataVisitor::class)
         ->args([
-            '%sulu_security.two_factor_methods%',
+            '%sulu_security.two_factor_setup_methods%',
             '%sulu_security.two_factor_force_pattern%',
             new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
