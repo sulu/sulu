@@ -253,11 +253,9 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      */
     public function setMedias(Account $account, $mediaIds)
     {
-        $foundMedias = [];
-        if (\count($mediaIds) > 0) {
-            /** @var MediaInterface[] $foundMedias */
-            $foundMedias = $this->mediaRepository->findById($mediaIds);
-        }
+        // findMedia() fetch-joins the current file version, which the domain events below read
+        /** @var MediaInterface[] $foundMedias */
+        $foundMedias = $this->mediaRepository->findMedia(['ids' => \array_values($mediaIds)]);
         $foundMediaIds = \array_map(
             fn (MediaInterface $mediaEntity) => $mediaEntity->getId(),
             $foundMedias
@@ -266,14 +264,24 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
             throw new EntityNotFoundException($this->mediaRepository->getClassName(), \reset($missingMediaIds));
         }
 
+        $removedMedias = [];
         foreach ($account->getMedias() as $media) {
             if (!\in_array($media->getId(), $foundMediaIds)) {
-                $account->removeMedia($media);
-
-                $this->domainEventCollector->collect(
-                    new AccountMediaRemovedEvent($account, $media)
-                );
+                $removedMedias[] = $media;
             }
+        }
+
+        // the removed medias come from the account itself, so their file version is loaded here too
+        $this->mediaRepository->findMedia([
+            'ids' => \array_map(fn (MediaInterface $mediaEntity) => $mediaEntity->getId(), $removedMedias),
+        ]);
+
+        foreach ($removedMedias as $media) {
+            $account->removeMedia($media);
+
+            $this->domainEventCollector->collect(
+                new AccountMediaRemovedEvent($account, $media)
+            );
         }
 
         foreach ($foundMedias as $media) {

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
+use Doctrine\DBAL\Logging\DebugStack;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -2241,6 +2242,52 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, \count($response->medias));
     }
 
+    public function testPatchAssignedMediasDoesNotLoadFileVersionsPerMedia(): void
+    {
+        /** @var CollectionType $collectionType */
+        $collectionType = $this->createCollectionType('My collection type');
+        /** @var Collection $collection */
+        $collection = $this->createCollection($collectionType);
+        /** @var MediaType $mediaType */
+        $mediaType = $this->createMediaType('image', 'This is an image');
+        /** @var Media $removedMedia1 */
+        $removedMedia1 = $this->createMedia('media1.jpeg', 'image/jpeg', $mediaType, $collection);
+        /** @var Media $removedMedia2 */
+        $removedMedia2 = $this->createMedia('media2.jpeg', 'image/jpeg', $mediaType, $collection);
+        /** @var Media $addedMedia1 */
+        $addedMedia1 = $this->createMedia('media3.jpeg', 'image/jpeg', $mediaType, $collection);
+        /** @var Media $addedMedia2 */
+        $addedMedia2 = $this->createMedia('media4.jpeg', 'image/jpeg', $mediaType, $collection);
+        /** @var Contact $contact */
+        $contact = $this->createContact('Max', 'Mustermann');
+        $contact->addMedia($removedMedia1);
+        $contact->addMedia($removedMedia2);
+        $this->em->flush();
+        $this->em->clear();
+
+        $queryLogger = new DebugStack();
+        $this->em->getConnection()->getConfiguration()->setSQLLogger($queryLogger);
+
+        $this->client->jsonRequest(
+            'PATCH',
+            '/api/contacts/' . $contact->getId(),
+            [
+                'medias' => [
+                    $addedMedia1->getId(),
+                    $addedMedia2->getId(),
+                ],
+            ]
+        );
+
+        $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        /** @var array{medias: list<int>} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame([$addedMedia1->getId(), $addedMedia2->getId()], $response['medias']);
+        $this->assertSame([], $this->findQueriesFromTable($queryLogger, 'me_file_versions'));
+    }
+
     public function testPrimaryAddressHandlingPost(): void
     {
         $position = $this->createPosition('Manager');
@@ -2812,6 +2859,21 @@ class ContactControllerTest extends SuluTestCase
         $this->em->persist($file);
 
         return $media;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function findQueriesFromTable(DebugStack $queryLogger, string $table): array
+    {
+        $queries = [];
+        foreach ($queryLogger->queries as $query) {
+            if (\is_string($query['sql']) && 1 === \preg_match('/\bFROM ' . $table . '\b/', $query['sql'])) {
+                $queries[] = $query['sql'];
+            }
+        }
+
+        return $queries;
     }
 
     private function createNote(string $value)
