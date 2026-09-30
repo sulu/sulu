@@ -40,17 +40,11 @@ class PreviewDeepLinkExtension extends AbstractExtension
             return '';
         }
 
-        if (!$this->isPreview()) {
+        $request = $this->requestStack->getCurrentRequest();
+        if (!$request || true !== $request->attributes->get('preview', false)) {
             return '';
         }
 
         return \sprintf('data-sulu-preview-id="%s"', \htmlspecialchars($id, \ENT_QUOTES, 'UTF-8'));
-    }
-
-    private function isPreview(): bool
-    {
-        $request = $this->requestStack->getCurrentRequest();
-
-        return $request && true === $request->attributes->get('preview', false);
     }
 }
