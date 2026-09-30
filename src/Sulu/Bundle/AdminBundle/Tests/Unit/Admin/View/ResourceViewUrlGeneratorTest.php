@@ -116,6 +116,25 @@ class ResourceViewUrlGeneratorTest extends TestCase
         );
     }
 
+    public function testGenerateWithoutViewParameterProviders(): void
+    {
+        $this->viewUrlGenerator->generate(
+            'sulu_contact.contact_edit_form.details',
+            ['id' => 1],
+            UrlGeneratorInterface::ABSOLUTE_PATH
+        )->willReturn('/admin/#/contacts/1/details');
+
+        $resourceViewUrlGenerator = new ResourceViewUrlGenerator(
+            $this->viewUrlGenerator->reveal(),
+            ['contacts' => ['views' => ['detail' => 'sulu_contact.contact_edit_form.details']]],
+        );
+
+        $this->assertSame(
+            '/admin/#/contacts/1/details',
+            $resourceViewUrlGenerator->generate('contacts', 'detail', ['id' => 1])
+        );
+    }
+
     public function testGenerateWithReferenceType(): void
     {
         $resources = [

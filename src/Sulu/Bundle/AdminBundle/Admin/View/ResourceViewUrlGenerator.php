@@ -24,7 +24,7 @@ final class ResourceViewUrlGenerator implements ResourceViewUrlGeneratorInterfac
     public function __construct(
         private ViewUrlGeneratorInterface $viewUrlGenerator,
         private array $resources,
-        private iterable $viewParameterProviders,
+        private iterable $viewParameterProviders = [],
     ) {
     }
 
