@@ -21,7 +21,7 @@ interface AccessControlQueryEnhancerInterface
     /**
      * @param class-string $entityClass
      */
-    public function enhance(QueryBuilder $queryBuilder, ?UserInterface $user, int $permission, string $entityClass, string $entityAlias): void;
+    public function enhance(QueryBuilder $queryBuilder, ?UserInterface $user, int $permission, string $entityClass, string $entityAlias, string $entityIdField = 'id'): void;
 
     /**
      * @param class-string $entityClass

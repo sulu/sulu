@@ -24,7 +24,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaResourceLoader;
-use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -91,7 +91,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         private TranslatorInterface $translator,
         private WebspaceManagerInterface $webspaceManager,
-        private AccessControlQueryEnhancer $accessControlQueryEnhancer,
+        private AccessControlQueryEnhancerInterface $accessControlQueryEnhancer,
         private ?Security $security,
         private bool $hasAudienceTargeting = false,
         private ?array $permissions = null,
