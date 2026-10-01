@@ -35,7 +35,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
     @observable error: string | typeof undefined = undefined;
     @observable closed: boolean = false;
     @observable totalDeletedResources: number = 0;
-    @observable referencingResourcesData: ?ReferencingResourcesData = undefined;
+    @observable.ref referencingResourcesData: ?Array<ReferencingResourcesData> = undefined;
 
     promises: Array<RequestPromise<any>> = [];
     resolveReferencingResources: ?(confirmed: boolean) => void = undefined;
@@ -175,22 +175,20 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             return Promise.resolve();
         }
 
-        const [resource, ...remainingResources] = referencedResources;
-        const [resourceReferencingResourcesData, ...remainingReferencingResourcesData] = referencingResourcesData;
-
-        // every referenced resource is only deleted after the user has seen what references exactly this resource
-        return this.confirmReferencingResources(resourceReferencingResourcesData)
+        // cancelling stops the whole run, so one prompt covers every referenced resource of the batch
+        return this.confirmReferencingResources(referencingResourcesData)
             .then((confirmed) => {
                 if (!confirmed) {
                     return;
                 }
 
-                return this.deleteResources([resource], {force: true})
-                    .then(() => this.deleteReferencedResources(remainingResources, remainingReferencingResourcesData));
+                return this.deleteResources(referencedResources, {force: true});
             });
     };
 
-    @action confirmReferencingResources = (referencingResourcesData: ReferencingResourcesData): Promise<boolean> => {
+    @action confirmReferencingResources = (
+        referencingResourcesData: Array<ReferencingResourcesData>
+    ): Promise<boolean> => {
         this.referencingResourcesData = referencingResourcesData;
 
         return new Promise((resolve) => {
