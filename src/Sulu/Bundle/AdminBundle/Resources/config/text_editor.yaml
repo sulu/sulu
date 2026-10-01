@@ -21,6 +21,7 @@ text_editor:
                 code: true
             attributes:
                 style: true
+                lang: true
         mini:
             enter_mode: br
             tags:
