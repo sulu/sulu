@@ -12,7 +12,9 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\FormMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TemplateMetadata;
 
@@ -124,5 +126,108 @@ class FormMetadataTest extends TestCase
         $originalForm->setGroup(null);
         $overrideForm->setGroup(null);
         $this->assertNull($originalForm->merge($overrideForm)->getGroup());
+    }
+
+    public function testMergeWithGlobalBlocks(): void
+    {
+        $globalBlock1 = new FormMetadata();
+        $globalBlock1->setKey('global_block1');
+
+        $globalBlock2 = new FormMetadata();
+        $globalBlock2->setKey('global_block2');
+
+        $globalBlock3 = new FormMetadata();
+        $globalBlock3->setKey('global_block3');
+
+        $formMetaData1 = new FieldMetadata('field1');
+        $formMetaData1->setType('type1');
+        $formMetaData1->setMultilingual(false);
+        $formMetaData1->setTypes([$globalBlock1, $globalBlock2]);
+
+        $formMetaData2 = new FieldMetadata('field1');
+        $formMetaData2->setType('type2');
+        $formMetaData2->setMultilingual(true);
+        $formMetaData2->setTypes([$globalBlock2, $globalBlock3]);
+
+        $sectionMetaData1 = new SectionMetadata('section_field1');
+        $sectionMetaData2 = new SectionMetadata('section_field2');
+
+        $formMetaData3 = new FieldMetadata('field2');
+        $formMetaData3->setType('type3');
+        $formMetaData3->setMultilingual(true);
+        $formMetaData3->setTypes([$globalBlock2, $globalBlock3]);
+
+        $form1 = new FormMetadata();
+        $form1->setKey('key1');
+        $form1->setItems(['field1' => $formMetaData1, 'field2' => $formMetaData3, 'section_field1' => $sectionMetaData1]);
+
+        $form2 = new FormMetadata();
+        $form2->setKey('key1');
+        $form2->setItems(['field1' => $formMetaData2, 'section_field1' => $sectionMetaData1, 'section_field2' => $sectionMetaData2]);
+
+        $merged = $form1->merge($form2);
+
+        $this->assertCount(4, $merged->getItems());
+        $item = $merged->getItems()['field1'];
+        $this->assertInstanceOf(FieldMetadata::class, $item);
+        $this->assertEquals([
+            'global_block1' => $globalBlock1,
+            'global_block2' => $globalBlock2,
+            'global_block3' => $globalBlock3,
+        ], $item->getTypes());
+
+        $this->assertSame($formMetaData3, $merged->getItems()['field2']);
+        $this->assertSame($sectionMetaData1, $merged->getItems()['section_field1']);
+        $this->assertSame($sectionMetaData2, $merged->getItems()['section_field2']);
+    }
+
+    public function testMergeDoesNotMergeSectionsWithSameName(): void
+    {
+        $sectionMetaData1 = new SectionMetadata('section_field');
+        $sectionMetaData2 = new SectionMetadata('section_field');
+
+        $form1 = new FormMetadata();
+        $form1->setKey('key1');
+        $form1->setItems([
+            'section_field' => $sectionMetaData1,
+        ]);
+
+        $form2 = new FormMetadata();
+        $form2->setKey('key1');
+        $form2->setItems([
+            'section_field' => $sectionMetaData2,
+        ]);
+
+        $merged = $form1->merge($form2);
+
+        $this->assertCount(1, $merged->getItems());
+        $this->assertSame(
+            $sectionMetaData1,
+            $merged->getItems()['section_field']
+        );
+    }
+
+    public function testMergeAddsSectionsFromOtherForm(): void
+    {
+        $sectionMetaData1 = new SectionMetadata('section_field1');
+        $sectionMetaData2 = new SectionMetadata('section_field2');
+
+        $form1 = new FormMetadata();
+        $form1->setKey('key1');
+        $form1->setItems([
+            'section_field1' => $sectionMetaData1,
+        ]);
+
+        $form2 = new FormMetadata();
+        $form2->setKey('key1');
+        $form2->setItems([
+            'section_field2' => $sectionMetaData2,
+        ]);
+
+        $merged = $form1->merge($form2);
+
+        $this->assertCount(2, $merged->getItems());
+        $this->assertSame($sectionMetaData1, $merged->getItems()['section_field1']);
+        $this->assertSame($sectionMetaData2, $merged->getItems()['section_field2']);
     }
 }
