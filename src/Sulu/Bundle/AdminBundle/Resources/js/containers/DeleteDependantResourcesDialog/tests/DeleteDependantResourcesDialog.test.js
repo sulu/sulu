@@ -375,7 +375,7 @@ test('The component should abort requests on cancel', async() => {
     expect(props.onFinish).not.toHaveBeenCalled();
 });
 
-test('The component should ask for every referenced resource and delete only the confirmed one with force', async() => {
+test('The component should ask once for all referenced resources of a batch and delete them with force', async() => {
     const user = userEvent.setup();
     const props = createProps();
     const requestOptions = props.requestOptions;
@@ -395,28 +395,21 @@ test('The component should ask for every referenced resource and delete only the
     await clickButton(user, 'sulu_admin.delete');
     expect(await screen.findByText('Page 1')).toBeInTheDocument();
 
-    // the run pauses and only shows the references of the first referenced media
+    // the run pauses and shows the references of every referenced media of the batch
     expect(ResourceRequester.delete).toHaveBeenCalledTimes(4);
     expect(screen.getByText('sulu_admin.delete_linked_warning_title')).toBeInTheDocument();
-    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_warning_text_with_title', {title: 'Media 2'});
-    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Page 1']);
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 2'});
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 3'});
+    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Page 1', 'Page 2']);
     expect(screen.getByRole('button', {name: 'sulu_admin.delete'})).toBeEnabled();
-    expect(props.onError).not.toHaveBeenCalled();
-
-    await clickButton(user, 'sulu_admin.delete');
-    expect(await screen.findByText('Page 2')).toBeInTheDocument();
-
-    // the second media is only deleted after the user has seen its own references
-    expect(ResourceRequester.delete).toHaveBeenCalledTimes(5);
-    expect(ResourceRequester.delete).toHaveBeenNthCalledWith(5, 'media', {...requestOptions, force: true, id: 2});
-    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_warning_text_with_title', {title: 'Media 3'});
-    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Page 2']);
     expect(props.onFinish).not.toHaveBeenCalled();
+    expect(props.onError).not.toHaveBeenCalled();
 
     await clickButton(user, 'sulu_admin.delete');
     await waitFor(() => expect(props.onFinish).toHaveBeenCalled());
 
     expect(ResourceRequester.delete).toHaveBeenCalledTimes(8);
+    expect(ResourceRequester.delete).toHaveBeenNthCalledWith(5, 'media', {...requestOptions, force: true, id: 2});
     expect(ResourceRequester.delete).toHaveBeenNthCalledWith(6, 'media', {...requestOptions, force: true, id: 3});
     expect(ResourceRequester.delete).toHaveBeenNthCalledWith(7, 'collections', {...requestOptions, id: 2});
     expect(ResourceRequester.delete).toHaveBeenNthCalledWith(8, 'media', {...requestOptions, id: 1});
@@ -438,18 +431,11 @@ test('The component should list a resource referencing multiple resources for ea
     render(<DeleteDependantResourcesDialog {...createProps()} />);
 
     await clickButton(user, 'sulu_admin.delete');
-    expect(await screen.findByText('Team')).toBeInTheDocument();
+    expect(await screen.findAllByText('Team')).toHaveLength(2);
 
-    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Team']);
-    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_warning_text_with_title', {title: 'Media 2'});
-
-    await clickButton(user, 'sulu_admin.delete');
-    await waitFor(() => expect(translate).toHaveBeenCalledWith(
-        'sulu_admin.delete_linked_warning_text_with_title',
-        {title: 'Media 3'}
-    ));
-
-    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Team']);
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 2'});
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 3'});
+    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Team', 'Team']);
 });
 
 test('The component should ask without a title if the referenced resource has none', async() => {
@@ -471,7 +457,7 @@ test('The component should ask without a title if the referenced resource has no
     expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Page 1']);
 });
 
-test('The component should not ask for the following referenced resources when cancelled in between', async() => {
+test('The component should not delete any referenced resource of the batch when cancelled', async() => {
     const user = userEvent.setup();
     const props = createProps();
 
@@ -486,14 +472,12 @@ test('The component should not ask for the following referenced resources when c
 
     await clickButton(user, 'sulu_admin.delete');
     expect(await screen.findByText('Page 1')).toBeInTheDocument();
-
-    await clickButton(user, 'sulu_admin.delete');
-    expect(await screen.findByText('Page 2')).toBeInTheDocument();
+    expect(screen.getByText('Page 2')).toBeInTheDocument();
 
     await clickButton(user, 'sulu_admin.cancel');
     await flushPromises();
 
-    expect(ResourceRequester.delete).toHaveBeenCalledTimes(5);
+    expect(ResourceRequester.delete).toHaveBeenCalledTimes(4);
     expect(props.onCancel).toHaveBeenCalled();
     expect(props.onFinish).not.toHaveBeenCalled();
     expect(props.onError).not.toHaveBeenCalled();
