@@ -62,12 +62,19 @@ class AdminControllerTest extends SuluTestCase
         $this->assertIsArray($suluAdmin);
         $textEditorConfigs = $suluAdmin['textEditorConfigs'];
         $this->assertIsArray($textEditorConfigs);
-        /** @var array<string, array{enterMode: string, tags: string[]}> $textEditorConfigs */
         $this->assertSame(['default', 'mini'], \array_keys($textEditorConfigs));
-        $this->assertSame('p', $textEditorConfigs['default']['enterMode']);
-        $this->assertSame('br', $textEditorConfigs['mini']['enterMode']);
-        $this->assertContains('table', $textEditorConfigs['default']['tags']);
-        $this->assertNotContains('table', $textEditorConfigs['mini']['tags']);
+        $this->assertSame([
+            'enterMode' => 'p',
+            'tags' => [
+                'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'i', 'u', 's', 'sub', 'sup', 'ul', 'ol', 'a', 'table', 'code',
+            ],
+            'attributes' => ['style', 'lang'],
+        ], $textEditorConfigs['default']);
+        $this->assertSame([
+            'enterMode' => 'br',
+            'tags' => ['a', 'strong', 'i'],
+            'attributes' => [],
+        ], $textEditorConfigs['mini']);
 
         /** @var array<object{locale: string}> $localizations */
         $localizations = $response->sulu_admin->localizations;
