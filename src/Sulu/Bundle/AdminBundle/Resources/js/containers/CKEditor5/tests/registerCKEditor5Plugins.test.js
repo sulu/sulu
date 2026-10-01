@@ -9,6 +9,7 @@ import {ContextualBalloon} from '@ckeditor/ckeditor5-ui';
 import {registerCKEditor5Plugins} from '../index';
 import ExternalLinkPlugin from '../plugins/ExternalLinkPlugin';
 import InternalLinkPlugin from '../plugins/InternalLinkPlugin';
+import TextPartLanguageVisibility from '../plugins/TextPartLanguageVisibility';
 import configRegistry from '../registries/configRegistry';
 import pluginRegistry from '../registries/pluginRegistry';
 
@@ -19,7 +20,7 @@ jest.mock('../../../utils/Translator', () => ({
 // The tags and attributes the "default" config Sulu ships enables.
 const DEFAULT_CONFIG = {
     enterMode: 'p',
-    attributes: ['style'],
+    attributes: ['style', 'lang'],
     tags: [
         'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'i', 'u', 's',
         'sub', 'sup', 'ul', 'ol', 'a', 'table', 'code',
@@ -45,7 +46,7 @@ function buildConfig(textEditorConfig): Object {
 beforeEach(() => {
     pluginRegistry.clear();
     configRegistry.clear();
-    registerCKEditor5Plugins();
+    registerCKEditor5Plugins(['en', 'de']);
 });
 
 test('Load no plugin and build an empty toolbar for a config without tags', () => {
@@ -116,6 +117,8 @@ test('Load all plugins of the default config', () => {
         ExternalLinkPlugin,
         InternalLinkPlugin,
         Alignment,
+        TextPartLanguage,
+        TextPartLanguageVisibility,
         Table,
         TableToolbar,
         Code,
@@ -136,6 +139,7 @@ test('Build the toolbar of the default config in the order Sulu shipped before',
         'externalLink',
         'internalLink',
         'alignment',
+        'textPartLanguage',
         'insertTable',
         'code',
     ]);
@@ -157,7 +161,7 @@ test('Append toolbar items of a config registered without a key after the core o
     // Registered before the core ones, the way a third party does it at import time, so only the priority orders them.
     configRegistry.clear();
     configRegistry.add((config) => ({toolbar: [...config.toolbar, 'fontSize']}));
-    registerCKEditor5Plugins();
+    registerCKEditor5Plugins(['en', 'de']);
 
     expect(buildConfig({enterMode: 'p', attributes: [], tags: ['strong', 'i']}).toolbar)
         .toEqual(['bold', 'italic', 'fontSize']);
@@ -187,19 +191,27 @@ test('Every tag and attribute the shipped configs enable is claimed by a plugin 
     }
 });
 
-test('Load the text part language plugin only for the lang attribute', () => {
-    expect(pluginRegistry.getPlugins(['lang'])).toEqual([TextPartLanguage]);
+test('Load the text part language plugins only for the lang attribute', () => {
+    expect(pluginRegistry.getPlugins(['lang'])).toEqual([TextPartLanguage, TextPartLanguageVisibility]);
     expect(buildConfig({enterMode: 'p', attributes: ['lang'], tags: []}).toolbar).toEqual(['textPartLanguage']);
+    expect(pluginRegistry.getPlugins(['strong'])).not.toContain(TextPartLanguage);
 });
 
-test('Do not enable the lang attribute in any shipped config', () => {
-    // It writes a lang attribute the previous editor could not produce, so enabling it by default would change
-    // the markup of every existing field.
-    for (const {attributes} of [DEFAULT_CONFIG, MINI_CONFIG]) {
-        expect(attributes).not.toContain('lang');
-    }
+test('Offer the configured text part languages, titled in the language of the administration interface', () => {
+    const {language} = buildConfig({enterMode: 'p', attributes: ['lang'], tags: []});
 
-    expect(pluginRegistry.getPlugins(DEFAULT_CONFIG.tags)).not.toContain(TextPartLanguage);
+    expect(language.textPartLanguage).toEqual([
+        {languageCode: 'en', title: expect.any(String)},
+        {languageCode: 'de', title: expect.any(String)},
+    ]);
+});
+
+test('Enable the lang attribute in the default config but not in the mini config', () => {
+    // The text part language button is part of every editor since 3.1, so "default" keeps it.
+    expect(DEFAULT_CONFIG.attributes).toContain('lang');
+    expect(MINI_CONFIG.attributes).not.toContain('lang');
+    expect(buildConfig(DEFAULT_CONFIG).toolbar).toContain('textPartLanguage');
+    expect(buildConfig(MINI_CONFIG).toolbar).not.toContain('textPartLanguage');
 });
 
 test('Load a plugin registered under two enabled keys only once', () => {

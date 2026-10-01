@@ -69,20 +69,8 @@ renders a `<figure class="table">` around the table.
 A key does not have to be a tag. What a plugin writes onto an existing element is configured under `attributes` and
 registered the same way. An attribute key allows the HTML attribute, and the plugins registered under it decide what
 goes into it: `lang` writes a `lang` attribute on a `span`, and under `style` Sulu registers only the alignment plugin,
-so `text-align` is the one style property the editor keeps:
-
-```javascript static
-import {ckeditorPluginRegistry, ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
-import {TextPartLanguage} from '@ckeditor/ckeditor5-language';
-
-ckeditorPluginRegistry.add(TextPartLanguage, 'lang');
-ckeditorConfigRegistry.add((config) => ({
-    toolbar: [...config.toolbar, 'textPartLanguage'],
-}), 'lang');
-```
-
-A project enables it with `attributes: {lang: true}`. Sulu registers this plugin but enables it in no shipped config,
-because marking the language of a text part produces markup the editor could not produce before.
+so `text-align` is the one style property the editor keeps. Sulu registers the `TextPartLanguage` plugin under `lang`
+this way. The shipped `default` config enables it, the `mini` config does not.
 
 Registering another plugin under a key widens what that key keeps. With CKEditor's `GeneralHtmlSupport` registered under
 `style`, every config enabling `style` keeps all inline styles on the elements it allows, not only `text-align`:
@@ -109,3 +97,22 @@ since a config usually appends to `config.toolbar`, a higher priority places the
 default priority is `0`, so anything a project registers ends up behind the items Sulu ships. The config function also
 receives the resolved text editor config as its second argument, which is how the heading options are built from the
 enabled `h*` tags.
+
+#### Text part language
+
+The `lang` attribute adds the [`TextPartLanguage`](https://ckeditor.com/docs/ckeditor5/latest/features/language.html)
+feature, which lets an editor mark a selection with a language (`<span lang="…" dir="…">`) to satisfy the WCAG
+"language of parts" requirement. Marked text is highlighted in the editor and shows a tooltip with the language name;
+the saved content only contains the `lang` and `dir` attributes.
+
+The offered languages default to the languages of all webspace localizations, without their country variants. Their
+titles are localised to the administration interface language via `Intl.DisplayNames`. Configure a different list in
+`config/packages/sulu_admin.yaml`:
+
+```yaml
+sulu_admin:
+    ckeditor:
+        text_part_languages: ['en', 'de', 'ar']
+```
+
+Only language codes without a country (`de`, not `de_at`) are accepted.

@@ -62,7 +62,7 @@ class SuluAdminExtensionTest extends TestCase
             $configs['default']['tags'],
             'the default config reproduces the toolbar Sulu shipped before the text editor configs'
         );
-        $this->assertSame(['style'], $configs['default']['attributes']);
+        $this->assertSame(['style', 'lang'], $configs['default']['attributes']);
 
         $this->assertSame('br', $configs['mini']['enterMode']);
         $this->assertSame(['a', 'strong', 'i'], $configs['mini']['tags']);
