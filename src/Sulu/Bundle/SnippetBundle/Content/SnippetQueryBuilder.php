@@ -27,7 +27,7 @@ class SnippetQueryBuilder extends QueryBuilder
     {
         $sql2Where = [];
         foreach ($types as $type) {
-            $sql2Where[] = 'page.template = ' . $type;
+            $sql2Where[] = 'page.template = ' . $this->quoteLiteral($type);
         }
 
         if (\count($sql2Where) > 0) {

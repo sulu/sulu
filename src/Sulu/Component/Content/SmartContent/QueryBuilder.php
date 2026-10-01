@@ -73,8 +73,13 @@ class QueryBuilder extends ContentQueryBuilder
         parent::__construct($structureManager, $extensionManager, $languageNamespace);
     }
 
+    /**
+     * @return string
+     */
     protected function buildWhere($webspaceKey, $locale)
     {
+        $locale = $this->validateIdentifier($locale, 'locale');
+
         $sql2Where = [];
         // build where clause for datasource
         if ($this->hasConfig('dataSource')) {
@@ -82,7 +87,7 @@ class QueryBuilder extends ContentQueryBuilder
         } elseif (0 === \count($this->ids)) {
             $sql2Where[] = \sprintf(
                 'ISDESCENDANTNODE(page, "/cmf/%s/contents")',
-                $webspaceKey
+                $this->validateIdentifier($webspaceKey, 'webspace')
             );
         }
 
@@ -174,15 +179,20 @@ class QueryBuilder extends ContentQueryBuilder
         return \implode(', ', $select);
     }
 
+    /**
+     * @return string
+     */
     protected function buildOrder($webspaceKey, $locale)
     {
         $sortOrder = (isset($this->config['sortMethod']) && 'desc' === \strtolower($this->config['sortMethod']))
             ? 'DESC' : 'ASC';
 
+        $locale = $this->validateIdentifier($locale, 'locale');
+
         $sql2Order = [];
         $sortBy = $this->getConfig('sortBy');
 
-        if ($sortBy) {
+        if (\is_string($sortBy) && $this->isValidPropertyToken($sortBy)) {
             $order = 'page.[i18n:' . $locale . '-' . $sortBy . '] ';
             if (!\in_array($sortBy, ['published', 'created', 'changed', 'authored'])) {
                 $order = \sprintf('lower(%s)', $order);
@@ -295,11 +305,16 @@ class QueryBuilder extends ContentQueryBuilder
         return 'page.[' . $property->getName() . '] = ' . (int) $targetGroupId;
     }
 
-    private function buildSegmentKey($webspaceKey, $segmentKey, $locale)
+    /**
+     * @return string|null
+     */
+    protected function buildSegmentKey($webspaceKey, $segmentKey, $locale)
     {
-        if (!$segmentKey) {
-            return;
+        if (!\is_string($segmentKey) || '' === $segmentKey) {
+            return null;
         }
+
+        $webspaceKey = $this->validateIdentifier($webspaceKey, 'webspace');
 
         $structure = $this->structureManager->getStructure('excerpt');
 
@@ -313,7 +328,7 @@ class QueryBuilder extends ContentQueryBuilder
         $webspaceSegmentPropertyName = $property->getName() . SegmentSelect::SEPARATOR . $webspaceKey;
         $column = 'page.[' . $webspaceSegmentPropertyName . ']';
 
-        return '(' . $column . ' = "' . $segmentKey . '" OR ' . $column . ' IS NULL)';
+        return '(' . $column . ' = ' . $this->quoteLiteral($segmentKey) . ' OR ' . $column . ' IS NULL)';
     }
 
     /**
@@ -339,7 +354,7 @@ class QueryBuilder extends ContentQueryBuilder
             }
 
             if (\count($sql2Where) > 0) {
-                return '(' . \implode(' ' . \strtoupper($operator) . ' ', $sql2Where) . ')';
+                return '(' . \implode(' ' . $this->normalizeOperator($operator) . ' ', $sql2Where) . ')';
             }
         }
 
@@ -355,7 +370,7 @@ class QueryBuilder extends ContentQueryBuilder
     {
         $sql2Where = [];
         foreach ($types as $type) {
-            $sql2Where[] = \sprintf('page.[i18n:%s-template] = \'%s\'', $languageCode, $type);
+            $sql2Where[] = \sprintf('page.[i18n:%s-template] = %s', $languageCode, $this->quoteLiteral($type));
         }
 
         if (\count($sql2Where) > 0) {
@@ -363,6 +378,40 @@ class QueryBuilder extends ContentQueryBuilder
         }
 
         return '';
+    }
+
+    private function normalizeOperator(mixed $operator): string
+    {
+        return \is_string($operator) && 'AND' === \strtoupper($operator) ? 'AND' : 'OR';
+    }
+
+    /**
+     * Same escaping as phpcr-utils' Sql2Generator.
+     */
+    protected function quoteLiteral(string $value): string
+    {
+        return "'" . \str_replace("'", "''", $value) . "'";
+    }
+
+    /**
+     * Property names cannot be quoted in JCR-SQL2, so only their shape is checked.
+     */
+    private function isValidPropertyToken(string $token): bool
+    {
+        return 1 === \preg_match('/^[A-Za-z0-9_-]+$/', $token);
+    }
+
+    private function validateIdentifier(mixed $value, string $parameter): string
+    {
+        if (!\is_string($value) || !$this->isValidPropertyToken($value)) {
+            throw new \InvalidArgumentException(\sprintf(
+                'Invalid %s "%s" for the smart content query.',
+                $parameter,
+                \is_string($value) ? $value : \get_debug_type($value)
+            ));
+        }
+
+        return $value;
     }
 
     /**
@@ -387,7 +436,7 @@ class QueryBuilder extends ContentQueryBuilder
             }
 
             if (\count($sql2Where) > 0) {
-                return '(' . \implode(' ' . \strtoupper($operator) . ' ', $sql2Where) . ')';
+                return '(' . \implode(' ' . $this->normalizeOperator($operator) . ' ', $sql2Where) . ')';
             }
         }
 

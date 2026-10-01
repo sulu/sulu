@@ -94,6 +94,15 @@ class SnippetQueryBuilderTest extends TestCase
         $this->assertStringContainsString('(ISDESCENDANTNODE(page, \'/cmf/snippets/default\')', $sql2);
     }
 
+    public function testBuildQuotesTheTypes(): void
+    {
+        $this->snippetQueryBuilder->init(['config' => ['types' => ['default', "x'y"]]]);
+
+        list($sql2) = $this->snippetQueryBuilder->build('sulu_io', ['de']);
+
+        $this->assertStringContainsString("(page.template = 'default' or page.template = 'x''y')", $sql2);
+    }
+
     public function testBuildWithProperties(): void
     {
         $this->structureManager->getStructures(Structure::TYPE_SNIPPET)->shouldBeCalled()->willReturn([]);
