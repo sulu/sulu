@@ -13,13 +13,15 @@ namespace Sulu\Component\Security\Authorization;
 
 /**
  * The interface for mask converters.
+ *
+ * @phpstan-type Permissions array<PermissionTypes::*, bool>
  */
 interface MaskConverterInterface
 {
     /**
      * Converts a permissions array to a bit field.
      *
-     * @param array $permissionsData
+     * @param Permissions $permissionsData
      *
      * @return int
      */
@@ -30,7 +32,7 @@ interface MaskConverterInterface
      *
      * @param int $permissions
      *
-     * @return array
+     * @return Permissions
      */
     public function convertPermissionsToArray($permissions);
 }
