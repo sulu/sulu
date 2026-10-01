@@ -101,10 +101,13 @@ class SuluAdminExtensionTest extends TestCase
     public function testBlockKeyWithLineBreakEnterModeIsRejected(): void
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessageMatches('/enter_mode: br/');
+        $this->expectExceptionMessageMatches('/enter_mode: br.*"h2", "table"/');
 
         // "h2" needs a paragraph to carry it, which removePTags() strips out of the stored value.
-        $this->loadTextEditorConfigs(['teaser' => ['enter_mode' => 'br', 'tags' => ['h2' => true]]]);
+        $this->loadTextEditorConfigs(['teaser' => [
+            'enter_mode' => 'br',
+            'tags' => ['h2' => true, 'strong' => true, 'table' => true],
+        ]]);
     }
 
     public function testStyleAttributeWithLineBreakEnterModeIsAllowed(): void

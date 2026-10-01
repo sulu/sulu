@@ -152,11 +152,14 @@ final class Configuration implements ConfigurationInterface
                                 ->end()
                                 ->validate()
                                     ->ifTrue(fn ($config) => [] !== self::enabledBlockKeys($config))
-                                    ->thenInvalid(
-                                        'A text editor config with "enter_mode: br" cannot enable a key that needs a '
-                                        . 'block element, because the paragraphs carrying it are stripped from the '
-                                        . 'stored value. Remove the block key or use "enter_mode: p". Got %s'
-                                    )
+                                    ->then(function($config) {
+                                        throw new \InvalidArgumentException(\sprintf(
+                                            'A text editor config with "enter_mode: br" cannot enable the block keys '
+                                            . '"%s", because the paragraphs carrying them are stripped from the stored '
+                                            . 'value. Remove them or use "enter_mode: p".',
+                                            \implode('", "', self::enabledBlockKeys($config))
+                                        ));
+                                    })
                                 ->end()
                             ->end()
                         ->end()
