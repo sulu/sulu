@@ -76,6 +76,7 @@ import FieldBlocks, {
     TimeBlockPreviewTransformer,
 } from './containers/FieldBlocks';
 import {
+    blockConditionDataProvider,
     bundlesConditionDataProvider,
     Checkbox,
     ColorPicker,
@@ -188,6 +189,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerListToolbarActions();
         registerViews();
 
+        conditionDataProviderRegistry.add(blockConditionDataProvider);
         conditionDataProviderRegistry.add(bundlesConditionDataProvider);
         conditionDataProviderRegistry.add(localeConditionDataProvider);
         conditionDataProviderRegistry.add(parentConditionDataProvider);
