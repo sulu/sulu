@@ -15,10 +15,12 @@ regardless of its references:
 DELETE /admin/api/media/{id}?force=true
 ```
 
-### Deprecated instantiating `MediaController` without `$referenceRepository`
+### Deprecated instantiating `MediaController` without `$referenceRepository` and `$requestStack`
 
-Instantiating the `MediaController` without the `$referenceRepository` argument is deprecated. The
-argument is used to look up the resources that reference a media before deleting it.
+Instantiating the `MediaController` without the `$referenceRepository` or `$requestStack` argument is
+deprecated. The `$referenceRepository` is used to look up the resources that reference a media before deleting
+it, the `$requestStack` to read the `force` parameter of the request. Without one of them a media is deleted
+without the warning, as before.
 
 ## 2.6.27
 

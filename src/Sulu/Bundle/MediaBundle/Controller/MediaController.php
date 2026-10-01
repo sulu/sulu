@@ -47,6 +47,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Webmozart\Assert\Assert;
@@ -88,7 +89,8 @@ class MediaController extends AbstractMediaController implements
         private string $collectionClass,
         private ?MediaListBuilderFactory $mediaListBuilderFactory = null,
         private ?MediaListRepresentationFactory $mediaListRepresentationFactory = null,
-        private ?ReferenceRepositoryInterface $referenceRepository = null
+        private ?ReferenceRepositoryInterface $referenceRepository = null,
+        private ?RequestStack $requestStack = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
@@ -103,8 +105,16 @@ class MediaController extends AbstractMediaController implements
         if (null === $this->referenceRepository) {
             @trigger_deprecation(
                 'sulu/sulu',
-                '2.6',
+                '2.6.28',
                 'Instantiating MediaController without the $referenceRepository argument is deprecated.'
+            );
+        }
+
+        if (null === $this->requestStack) {
+            @trigger_deprecation(
+                'sulu/sulu',
+                '2.6.28',
+                'Instantiating MediaController without the $requestStack argument is deprecated, deleting a referenced media is not checked without it.'
             );
         }
     }
@@ -381,9 +391,11 @@ class MediaController extends AbstractMediaController implements
      *
      * @return Response
      */
-    public function deleteAction($id, Request $request)
+    public function deleteAction($id)
     {
-        if (!$this->getBooleanRequestParameter($request, 'force', false, false)) {
+        $request = $this->requestStack?->getCurrentRequest();
+
+        if (null !== $request && !$this->getBooleanRequestParameter($request, 'force', false, false)) {
             $referencingResources = $this->getReferencingResources($id);
 
             if (\count($referencingResources) > 0) {
