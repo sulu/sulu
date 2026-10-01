@@ -58,6 +58,11 @@ sulu_admin:
 A project block for a config Sulu ships (`default`, `mini`) is merged into it, so a single tag can be switched off
 without restating the whole list. Any other name defines a new config from scratch.
 
+A config with `enter_mode: br` cannot enable a tag that needs a block element (`h1` to `h6`, `ul`, `ol`, `table`),
+because the paragraphs carrying it are stripped from the stored value, and the error names the keys that break the
+rule. That guard only knows the keys Sulu ships: a key a project registers itself is not checked, so whether it works
+without paragraphs is up to the plugin registered for it.
+
 A property picks its config with the `config` param, and falls back to `default`:
 
 ```xml
