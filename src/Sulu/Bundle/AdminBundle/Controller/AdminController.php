@@ -45,6 +45,7 @@ class AdminController
      * @param array<string> $translations
      * @param iterable<SmartContentProviderInterface> $smartContentProviders
      * @param array<string> $textPartLanguages
+     * @param array<string, array{enterMode: string, tags: string[], attributes: string[]}> $textEditorConfigs
      */
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
@@ -75,6 +76,7 @@ class AdminController
         private ?string $passwordInfoTranslationKey = null,
         private bool $hasSingleSignOnProvider = false,
         private array $textPartLanguages = [],
+        private array $textEditorConfigs = [],
     ) {
     }
 
@@ -132,6 +134,7 @@ class AdminController
             'sulu_admin' => [
                 'fieldTypeOptions' => $this->fieldTypeOptionRegistry->toArray(),
                 'internalLinkTypes' => $this->linkProviderPool->getConfiguration(),
+                'textEditorConfigs' => $this->textEditorConfigs,
                 'localizations' => \array_values($localizations),
                 'navigation' => \array_map(function(NavigationItem $navigationItem) {
                     return $navigationItem->toArray();

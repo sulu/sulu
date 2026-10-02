@@ -1,15 +1,24 @@
 This component uses the [CKEditor 5](https://ckeditor.com/ckeditor-5/) to display a text editor. Our component offers a
 `value` prop to set the value. There is also an `onChange` callback called when a value changes and a `onBlur` callback
-which is called when the editor loses the focus.
+which is called when the editor loses the focus. The `config` prop holds the resolved text editor config, which decides
+which plugins are loaded.
 
 ```javascript
+const {registerCKEditor5Plugins} = require('./index');
+registerCKEditor5Plugins();
+
 const [value, setValue] = React.useState('');
 
 const handleChange = (newValue) => setValue(newValue);
 const handleBlur = () => alert('Text editing finished!');
 
 <div>
-    <CKEditor5 onBlur={this.handleBlur} onChange={handleChange} value={value} />
+    <CKEditor5
+        config={{enterMode: 'p', attributes: [], tags: ['strong', 'i']}}
+        onBlur={handleBlur}
+        onChange={handleChange}
+        value={value}
+    />
 
     Output: <pre>{value}</pre>
 </div>
@@ -35,15 +44,69 @@ The `ConfigRegistry` takes a function, which receives the config which is alread
 function will be shallow merged with the previously existing config. You can reuse the old values from the config, 
 as seen e.g. in the above code snippet.
 
-## Text part language
+## Binding a plugin to a tag or attribute
 
-The editor ships the [`TextPartLanguage`](https://ckeditor.com/docs/ckeditor5/latest/features/language.html) feature,
-which lets an editor mark a selection with a language (`<span lang="…" dir="…">`) to satisfy the WCAG "language of
-parts" requirement. Marked text is highlighted in the editor and shows a tooltip with the language name; the saved
-content only contains the `lang` and `dir` attributes.
+Both registries take an optional second argument: the tag or attribute the registration belongs to. Sulu then only loads
+that plugin and applies that config if the text editor config of the edited property enables the given key. A single
+registration can be bound to several keys, and is loaded as soon as one of them is enabled. A registration without a
+key is applied to every text editor config, which is why the example above keeps working unchanged.
 
-The offered languages default to the languages of all webspace localizations, without their country variants. Their titles are localised to the
-administration interface language via `Intl.DisplayNames`. Configure a different list in
+```javascript static
+import {ckeditorPluginRegistry, ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
+import {Table, TableToolbar} from '@ckeditor/ckeditor5-table';
+
+ckeditorPluginRegistry.add(Table, 'table');
+ckeditorPluginRegistry.add(TableToolbar, 'table');
+ckeditorConfigRegistry.add((config) => ({
+    toolbar: [...config.toolbar, 'insertTable'],
+}), 'table');
+```
+
+A tag key names the element the editor produces, so register Italic under `i` and not under `italic` or `em`. A plugin
+may read more than it writes, Italic also upcasts an existing `<em>`, and it may add markup around the element, `table`
+renders a `<figure class="table">` around the table.
+
+A key does not have to be a tag. What a plugin writes onto an existing element is configured under `attributes` and
+registered the same way. An attribute key allows the HTML attribute, and the plugins registered under it decide what
+goes into it: `lang` writes a `lang` attribute on a `span`, and under `style` Sulu registers only the alignment plugin,
+so `text-align` is the one style property the editor keeps. Sulu registers the `TextPartLanguage` plugin under `lang`
+this way. The shipped `default` config enables it, the `mini` config does not.
+
+Registering another plugin under a key widens what that key keeps. With CKEditor's `GeneralHtmlSupport` registered under
+`style`, every config enabling `style` keeps all inline styles on the elements it allows, not only `text-align`:
+
+```javascript static
+import {ckeditorPluginRegistry, ckeditorConfigRegistry} from 'sulu-admin-bundle/containers';
+import {GeneralHtmlSupport} from '@ckeditor/ckeditor5-html-support';
+
+ckeditorPluginRegistry.add(GeneralHtmlSupport, 'style');
+ckeditorConfigRegistry.add(() => ({
+    htmlSupport: {allow: [{name: /^(p|h[1-6]|li|span)$/, styles: true}]},
+}), 'style');
+```
+
+A config with `enter_mode: br` stores no paragraphs, so styles on a paragraph are dropped there and the alignment plugin
+is not loaded; styles on inline elements such as a `span` are kept.
+
+The tags and attributes themselves are configured in the Symfony configuration, see the `TextEditor` container. A key
+that is enabled there but has neither a plugin nor a config registered for it is reported with a warning in the
+browser console.
+
+The `ConfigRegistry` takes a priority as its third argument. Configs with a higher priority are applied first, and
+since a config usually appends to `config.toolbar`, a higher priority places the toolbar item further to the left. The
+default priority is `0`, so anything a project registers ends up behind the items Sulu ships. The config function also
+receives the resolved text editor config as its second argument, which is how the heading options are built from the
+enabled `h*` tags.
+
+#### Text part language
+
+The `lang` attribute adds the [`TextPartLanguage`](https://ckeditor.com/docs/ckeditor5/latest/features/language.html)
+feature, which lets an editor mark a selection with a language (`<span lang="…" dir="…">`) to satisfy the WCAG
+"language of parts" requirement. Marked text is highlighted in the editor and shows a tooltip with the language name;
+the saved content only contains the `lang` and `dir` attributes.
+
+The offered languages default to the languages of all webspace localizations, without their country variants. Their
+titles are localised to the administration interface language via `Intl.DisplayNames`. Configure a different list in
 `config/packages/sulu_admin.yaml`:
 
 ```yaml
