@@ -51,6 +51,13 @@ class InstanceOfFormMetadataVisitor implements FormMetadataVisitorInterface
 
         $forms = $this->getMatchingForms($instanceOf);
 
+        // Store original items (custom fields from the project) to append them at the end
+        $originalItems = $formMetadata->getItems();
+        $originalSchema = $formMetadata->getSchema();
+
+        // Reset items to collect sub-form items first
+        $formMetadata->setItems([]);
+
         foreach ($forms as $form) {
             $subFormMetadata = $this->xmlFormMetadataLoader->getMetadata($form, $locale, $metadataOptions);
 
@@ -61,6 +68,10 @@ class InstanceOfFormMetadataVisitor implements FormMetadataVisitorInterface
             $formMetadata->setItems(\array_merge($formMetadata->getItems(), $subFormMetadata->getItems()));
             $formMetadata->setSchema($formMetadata->getSchema()->merge($subFormMetadata->getSchema()));
         }
+
+        // Append original items (custom fields) at the end
+        $formMetadata->setItems(\array_merge($formMetadata->getItems(), $originalItems));
+        $formMetadata->setSchema($formMetadata->getSchema()->merge($originalSchema));
     }
 
     /**
