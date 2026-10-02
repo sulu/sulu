@@ -2379,6 +2379,35 @@ test('Should keep failed items selected and resolve with their errors when delet
     });
 });
 
+test('Should resolve with the errors in the order of the selection when deleting the selection settled', async() => {
+    const page = observable.box(1);
+    const listStore = new ListStore('media', 'media', 'list_test', {page});
+    listStore.schema = {};
+    listStore.updateStructureStrategy(new StructureStrategy());
+
+    const firstError = {status: 409, id: 1};
+    const secondError = {status: 409, id: 2};
+    let rejectFirst = () => undefined;
+    let rejectSecond = () => undefined;
+    ResourceRequester.delete
+        .mockReturnValueOnce(new Promise((resolve, reject) => {
+            rejectFirst = () => reject(firstError);
+        }))
+        .mockReturnValueOnce(new Promise((resolve, reject) => {
+            rejectSecond = () => reject(secondError);
+        }));
+
+    listStore.select({id: 1});
+    listStore.select({id: 2});
+
+    const deletePromise = listStore.deleteSelectionSettled();
+
+    rejectSecond();
+    rejectFirst();
+
+    expect(await deletePromise).toEqual([firstError, secondError]);
+});
+
 test('Should order the item with the given ID and options to the given position', () => {
     const page = observable.box(1);
     const locale = observable.box('en');

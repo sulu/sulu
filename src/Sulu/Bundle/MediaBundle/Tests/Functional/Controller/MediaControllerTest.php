@@ -1468,7 +1468,6 @@ class MediaControllerTest extends SuluTestCase
         $this->assertSame('pages', $response['referencingResources'][0]['resourceKey']);
         $this->assertSame('Referencing page', $response['referencingResources'][0]['title']);
 
-        // the media must still exist because the delete was refused
         $this->client->jsonRequest('GET', '/api/media/' . $mediaId . '?locale=en-gb');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 

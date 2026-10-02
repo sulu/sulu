@@ -425,8 +425,6 @@ class MediaController extends AbstractMediaController implements
     }
 
     /**
-     * Returns the title of the media in the requested locale, so the user can tell which media is referenced.
-     *
      * @param int|string $id
      */
     private function getMediaTitle($id, Request $request): ?string
@@ -447,8 +445,6 @@ class MediaController extends AbstractMediaController implements
     }
 
     /**
-     * Returns the pages, snippets and other resources that reference the given media.
-     *
      * @param int|string $id
      *
      * @return array<array{id: int|string, resourceKey: string, title: string|null}>
@@ -475,7 +471,7 @@ class MediaController extends AbstractMediaController implements
                 continue;
             }
 
-            // a resource has one reference per locale, but should only be listed once
+            // one reference per locale
             $key = $reference['referenceResourceKey'] . '::' . $reference['referenceResourceId'];
             if (isset($referencingResources[$key])) {
                 continue;

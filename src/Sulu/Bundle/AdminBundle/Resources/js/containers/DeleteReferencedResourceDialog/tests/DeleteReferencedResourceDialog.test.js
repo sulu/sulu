@@ -157,9 +157,80 @@ test('The component should name the referenced resource and show the type of the
     );
 
     expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_warning_text_with_title', {title: 'Photo'});
-    // a resource without a translated type is listed with its title only
     expect(screen.getAllByRole('listitem').map((item) => item.textContent))
         .toEqual(['Team (Page)', 'Footer (Snippet)', 'News']);
+});
+
+test('The component should truncate long titles of the referenced resources', () => {
+    const longTitle = '127.0.0.1_8000_admin_preview_render_webspaceKey=website&provider=pages&id=011f-77bb-a918-9f00';
+    const truncatedTitle = longTitle.slice(0, 59) + '…';
+
+    const createData = (id: number): ReferencingResourcesData => ({
+        referencingResources: [{id: 2, resourceKey: 'pages', title: 'Team'}],
+        referencingResourcesCount: 1,
+        resource: {id, resourceKey: 'media', title: longTitle},
+    });
+
+    const {rerender} = render(
+        <DeleteReferencedResourceDialog
+            allowDeletion={true}
+            confirmLoading={false}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            referencingResourcesData={createData(1)}
+        />
+    );
+
+    expect(translate)
+        .toHaveBeenCalledWith('sulu_admin.delete_linked_warning_text_with_title', {title: truncatedTitle});
+
+    rerender(
+        <DeleteReferencedResourceDialog
+            allowDeletion={true}
+            confirmLoading={false}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            referencingResourcesData={[createData(1), createData(2)]}
+        />
+    );
+
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: truncatedTitle});
+    expect(translate).not.toHaveBeenCalledWith(
+        'sulu_admin.delete_linked_resource_text',
+        {title: longTitle}
+    );
+});
+
+test('The component should keep the title together and wrap the rest of the heading as a whole', () => {
+    (translate: any).mockImplementation((key, parameters) => {
+        return key === 'sulu_admin.delete_linked_resource_text' && parameters
+            ? `"${parameters.title}" is referenced by:`
+            : key;
+    });
+
+    const createData = (id: number, title: string): ReferencingResourcesData => ({
+        referencingResources: [
+            {id: 2, resourceKey: 'pages', title: 'Team'},
+            {id: 3, resourceKey: 'pages', title: 'About us'},
+        ],
+        referencingResourcesCount: 2,
+        resource: {id, resourceKey: 'media', title},
+    });
+
+    render(
+        <DeleteReferencedResourceDialog
+            allowDeletion={true}
+            confirmLoading={false}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            referencingResourcesData={[createData(1, 'Photo'), createData(2, 'Logo')]}
+        />
+    );
+
+    expect(screen.getByText('"Photo"').tagName).toBe('SPAN');
+    expect(screen.getByText('"Logo"').tagName).toBe('SPAN');
+    expect(screen.getAllByText('is referenced by:')).toHaveLength(2);
+    expect(screen.getAllByText('is referenced by:')[0].tagName).toBe('SPAN');
 });
 
 test('The component should use the generic text if the referenced resource has no title', () => {
@@ -191,7 +262,7 @@ test('The component should use the generic text if the referenced resource has n
     );
 });
 
-test('The component should list the referencing resources for each referenced resource', () => {
+test('The component should list several referencing resources and name a single one inline', () => {
     const referencingResourcesData: Array<ReferencingResourcesData> = [
         {
             referencingResources: [
@@ -225,9 +296,9 @@ test('The component should list the referencing resources for each referenced re
     expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Logo'});
 
     const lists = screen.getAllByRole('list');
-    expect(lists).toHaveLength(2);
+    expect(lists).toHaveLength(1);
     expect(within(lists[0]).getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Team', 'About us']);
-    expect(within(lists[1]).getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Team']);
+    expect(screen.getAllByText('Team').map((element) => element.tagName)).toEqual(['LI', 'SPAN']);
 });
 
 test('The component should show the abort text for multiple referenced resources if deletion is not allowed', () => {

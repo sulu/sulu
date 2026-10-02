@@ -94,7 +94,7 @@ export default class MediaUploadStore {
             }))
             .catch((error) => {
                 if (error.status === 409) {
-                    // a conflict is handled by the caller, e.g. by asking to delete a referenced media anyway
+                    // handled by the caller
                     throw error;
                 }
 

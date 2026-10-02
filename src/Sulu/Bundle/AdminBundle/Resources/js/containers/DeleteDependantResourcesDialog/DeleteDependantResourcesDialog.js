@@ -93,7 +93,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
         this.deleteResourceBatches(this.dependantResourceBatches)
             .then(action(() => {
                 if (!this.inProgress) {
-                    // the user cancelled the dialog before all resources were deleted
+                    // cancelled
                     return;
                 }
 
@@ -122,8 +122,6 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
 
     deleteResources = (resources: Array<Resource>, options: Object = {}): Promise<void> => {
         const {requestOptions} = this.props;
-        const referencedResources = [];
-        const referencingResourcesData = [];
         const handledPromises = [];
 
         resources.forEach((resource: Resource) => {
@@ -143,7 +141,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                 });
 
             this.promises.push(promise);
-            handledPromises.push(promise.catch((errorResponse) => {
+            handledPromises.push(promise.then(() => undefined, (errorResponse) => {
                 if (errorResponse.status !== 409) {
                     return Promise.reject(errorResponse);
                 }
@@ -153,17 +151,21 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                         return Promise.reject(errorResponse);
                     }
 
-                    referencedResources.push(resource);
-                    referencingResourcesData.push(error);
+                    return {resource, error};
                 });
             }));
         });
 
         return Promise.all(handledPromises)
-            .then(() => {
+            .then((results) => {
                 this.promises.splice(0, this.promises.length);
 
-                return this.deleteReferencedResources(referencedResources, referencingResourcesData);
+                const referenced = results.filter(Boolean);
+
+                return this.deleteReferencedResources(
+                    referenced.map(({resource}) => resource),
+                    referenced.map(({error}) => error)
+                );
             });
     };
 
@@ -175,7 +177,6 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             return Promise.resolve();
         }
 
-        // cancelling stops the whole run, so one prompt covers every referenced resource of the batch
         return this.confirmReferencingResources(referencingResourcesData)
             .then((confirmed) => {
                 if (!confirmed) {

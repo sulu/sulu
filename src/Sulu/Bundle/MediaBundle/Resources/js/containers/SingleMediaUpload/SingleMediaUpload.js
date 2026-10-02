@@ -115,7 +115,7 @@ class SingleMediaUpload extends React.Component<Props> {
                 this.referencingResourcesData = undefined;
 
                 if (error.status !== 409) {
-                    // the error is shown by the dropzone using the error of the store
+                    // shown by the dropzone
                     return;
                 }
 

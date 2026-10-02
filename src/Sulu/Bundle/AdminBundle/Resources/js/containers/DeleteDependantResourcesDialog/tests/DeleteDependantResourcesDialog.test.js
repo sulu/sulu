@@ -395,12 +395,12 @@ test('The component should ask once for all referenced resources of a batch and 
     await clickButton(user, 'sulu_admin.delete');
     expect(await screen.findByText('Page 1')).toBeInTheDocument();
 
-    // the run pauses and shows the references of every referenced media of the batch
     expect(ResourceRequester.delete).toHaveBeenCalledTimes(4);
     expect(screen.getByText('sulu_admin.delete_linked_warning_title')).toBeInTheDocument();
     expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 2'});
     expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 3'});
-    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Page 1', 'Page 2']);
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+    expect(screen.getAllByText(/^Page \d$/).map((item) => item.textContent.trim())).toEqual(['Page 1', 'Page 2']);
     expect(screen.getByRole('button', {name: 'sulu_admin.delete'})).toBeEnabled();
     expect(props.onFinish).not.toHaveBeenCalled();
     expect(props.onError).not.toHaveBeenCalled();
@@ -435,7 +435,31 @@ test('The component should list a resource referencing multiple resources for ea
 
     expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 2'});
     expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 3'});
-    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Team', 'Team']);
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+});
+
+test('The component should list the referenced resources in the order of the batch', async() => {
+    const user = userEvent.setup();
+    const firstRequest = createDeferredRequestPromise();
+    const secondRequest = createDeferredRequestPromise();
+
+    getDeleteMock()
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(firstRequest.promise)
+        .mockReturnValueOnce(secondRequest.promise);
+
+    render(<DeleteDependantResourcesDialog {...createProps()} />);
+
+    await clickButton(user, 'sulu_admin.delete');
+
+    // the second media answers before the first one
+    await rejectRequest(secondRequest, createReferencingResourcesResponse(3, 'Page 2'));
+    await rejectRequest(firstRequest, createReferencingResourcesResponse(2, 'Page 1'));
+
+    expect(await screen.findByText('Page 1')).toBeInTheDocument();
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+    expect(screen.getAllByText(/^Page \d$/).map((item) => item.textContent.trim())).toEqual(['Page 1', 'Page 2']);
 });
 
 test('The component should ask without a title if the referenced resource has none', async() => {
