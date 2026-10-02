@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\TagBundle\Admin\TagAdmin;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Symfony\Component\Config\FileLocator;
@@ -66,6 +67,9 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
                             'routes' => [
                                 'list' => 'sulu_tag.get_tags',
                                 'detail' => 'sulu_tag.get_tag',
+                            ],
+                            'views' => [
+                                'detail' => TagAdmin::EDIT_FORM_VIEW,
                             ],
                         ],
                     ],

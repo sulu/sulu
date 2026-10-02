@@ -109,6 +109,7 @@ final class MediaTrashItemHandler implements
                     'origin' => $fileVersion->getOrigin(),
                     'aiDisclosureDisabled' => $fileVersion->getAiDisclosureDisabled(),
                     'aiDisclosureIconVariant' => $fileVersion->getAiDisclosureIconVariant(),
+                    'mediaLanguages' => $fileVersion->getMediaLanguages(),
                     'created' => $file->getCreated()->format('c'),
                     'creatorId' => $creator ? $creator->getId() : null,
                     'meta' => [],
@@ -238,6 +239,8 @@ final class MediaTrashItemHandler implements
                 $fileVersion->setOrigin($fileVersionData['origin'] ?? 'unknown');
                 $fileVersion->setAiDisclosureDisabled($fileVersionData['aiDisclosureDisabled'] ?? false);
                 $fileVersion->setAiDisclosureIconVariant($fileVersionData['aiDisclosureIconVariant'] ?? 'auto');
+                $mediaLanguages = $fileVersionData['mediaLanguages'] ?? [];
+                $fileVersion->setMediaLanguages(\is_array($mediaLanguages) ? \array_filter($mediaLanguages, 'is_string') : []);
                 $fileVersion->setCreator($this->findEntity(UserInterface::class, $fileVersionData['creatorId']));
 
                 foreach ($fileVersionData['meta'] as $metaData) {

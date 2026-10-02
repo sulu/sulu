@@ -619,6 +619,112 @@ class SnippetControllerTest extends SuluTestCase
         }
     }
 
+    public function testPutShadowLocale(): string
+    {
+        // Uses its own snippet instead of the one from testPost, because that fixture is shared
+        // and mutated by many other dependent tests (including one that purges the database).
+        self::purgeDatabase();
+
+        $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Test Snippet',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $id = $content['id'];
+
+        $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Test Snippet (DE)',
+            'shadowOn' => true,
+            'shadowLocale' => 'en',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        return $id;
+    }
+
+    #[Depends('testPutShadowLocale')]
+    public function testGetShadowLocale(string $id): void
+    {
+        $this->client->request('GET', '/admin/api/snippets/' . $id . '?locale=de');
+        $response = $this->client->getResponse();
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertTrue($content['shadowOn']);
+        $this->assertSame('en', $content['shadowLocale']);
+        $this->assertSame(['en', 'de'], $content['availableLocales']);
+        $this->assertSame(['en', 'de'], $content['contentLocales']);
+
+        $this->assertResponseSnapshot('snippet_get_shadow_locale.json', $response, 200);
+    }
+
+    public function testPutShadowLocaleWithoutTemplateKeepsSnippetInList(): void
+    {
+        // The settings tab enables a shadow with template: null and title: null.
+        self::purgeDatabase();
+
+        $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Source EN',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $id = $content['id'];
+
+        $this->client->request('PUT', '/admin/api/snippets/' . $id . '?locale=de', [], [], [], \json_encode([
+            'template' => null,
+            'title' => null,
+            'shadowOn' => true,
+            'shadowLocale' => 'en',
+        ]) ?: null);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array{template: ?string} $shadow */
+        $shadow = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('snippet', $shadow['template']);
+
+        $this->client->request('GET', '/admin/api/snippets?locale=de&templateKeys=snippet');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        /** @var array{_embedded: array{snippets: array<array{id: string, title: ?string}>}} $list */
+        $list = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame(
+            [['id' => $id, 'title' => 'Source EN']],
+            \array_map(
+                static fn (array $snippet) => ['id' => $snippet['id'], 'title' => $snippet['title']],
+                $list['_embedded']['snippets'],
+            ),
+        );
+    }
+
+    public function testPutWithoutTemplateKeepsTemplateAndMapsData(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Old Title',
+        ]) ?: null);
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        $this->client->request('PUT', '/admin/api/snippets/' . $content['id'] . '?locale=en', [], [], [], \json_encode([
+            'title' => 'New Title',
+        ]) ?: null);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array{template: ?string, title: ?string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('snippet', $content['template']);
+        $this->assertSame('New Title', $content['title']);
+    }
+
     protected function getSnapshotFolder(): string
     {
         return 'responses';

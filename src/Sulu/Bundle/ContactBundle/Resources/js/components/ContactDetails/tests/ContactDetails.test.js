@@ -1,6 +1,5 @@
-/* eslint-disable testing-library/prefer-user-event */
 // @flow
-import {fireEvent, render, screen, within} from '@testing-library/react';
+import {render, screen, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import ContactDetails from '../ContactDetails';
@@ -10,9 +9,7 @@ import Phone from '../../ContactDetails/Phone';
 import SocialMedia from '../../ContactDetails/SocialMedia';
 import Website from '../../ContactDetails/Website';
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 beforeEach(() => {
     jest.clearAllMocks();
@@ -79,6 +76,23 @@ async function clickTypeOption(user, fieldLabel, optionLabel) {
 
     await user.click(typeButton);
     await user.click(within(getOpenArrowMenu()).getByRole('button', {name: optionLabel}));
+}
+
+function ControlledContactDetails({onChange, value, ...props}: Object) {
+    const [currentValue, setCurrentValue] = React.useState(value);
+    function handleChange(nextValue: Object) {
+        setCurrentValue({...nextValue});
+        onChange(nextValue);
+    }
+
+    return (
+        <ContactDetails
+            {...props}
+            // eslint-disable-next-line react/jsx-no-bind
+            onChange={handleChange}
+            value={currentValue}
+        />
+    );
 }
 
 test('Render empty ContactDetails', () => {
@@ -170,16 +184,15 @@ test('Add data should call onChange and onBlur callbacks', async() => {
     expect(blurSpy).toHaveBeenCalledTimes(5);
 });
 
-test('Add data should also work with predefined email and phone fields', () => {
+test('Add data should also work with predefined email and phone fields', async() => {
+    const user = userEvent.setup();
     const blurSpy = jest.fn();
     const changeSpy = jest.fn();
 
-    render(<ContactDetails onBlur={blurSpy} onChange={changeSpy} />);
+    render(<ControlledContactDetails onBlur={blurSpy} onChange={changeSpy} />);
     const textboxes = screen.getAllByRole('textbox');
 
-    fireEvent.change(textboxes[0], {
-        target: {value: 'test@example.org'},
-    });
+    await user.type(textboxes[0], 'test@example.org');
     expect(changeSpy).toHaveBeenCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [],
@@ -188,9 +201,7 @@ test('Add data should also work with predefined email and phone fields', () => {
         websites: [],
     });
 
-    fireEvent.change(textboxes[1], {
-        target: {value: '1098509'},
-    });
+    await user.type(textboxes[1], '1098509');
     expect(changeSpy).toHaveBeenCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [],
@@ -200,7 +211,7 @@ test('Add data should also work with predefined email and phone fields', () => {
     });
 });
 
-test('Remove data should call the onChange and onBlur callbacks', () => {
+test('Remove data should call the onChange and onBlur callbacks', async() => {
     const value = {
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -211,10 +222,11 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
 
     const blurSpy = jest.fn();
     const changeSpy = jest.fn();
+    const user = userEvent.setup();
 
     render(<ContactDetails onBlur={blurSpy} onChange={changeSpy} value={value} />);
 
-    fireEvent.click(within(getField('sulu_contact.email')).getByRole('button', {name: 'su-trash-alt'}));
+    await user.click(within(getField('sulu_contact.email')).getByRole('button', {name: 'su-trash-alt'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -223,7 +235,7 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    fireEvent.click(within(getField('sulu_contact.fax')).getByRole('button', {name: 'su-trash-alt'}));
+    await user.click(within(getField('sulu_contact.fax')).getByRole('button', {name: 'su-trash-alt'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [],
@@ -232,7 +244,7 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    fireEvent.click(within(getField('sulu_contact.phone')).getByRole('button', {name: 'su-trash-alt'}));
+    await user.click(within(getField('sulu_contact.phone')).getByRole('button', {name: 'su-trash-alt'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -241,7 +253,7 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    fireEvent.click(within(getField('sulu_contact.social_media')).getByRole('button', {name: 'su-trash-alt'}));
+    await user.click(within(getField('sulu_contact.social_media')).getByRole('button', {name: 'su-trash-alt'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -250,7 +262,7 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
         websites: [{website: 'http://www.example.org', websiteType: 1}],
     });
 
-    fireEvent.click(within(getField('sulu_contact.website')).getByRole('button', {name: 'su-trash-alt'}));
+    await user.click(within(getField('sulu_contact.website')).getByRole('button', {name: 'su-trash-alt'}));
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -262,7 +274,8 @@ test('Remove data should call the onChange and onBlur callbacks', () => {
     expect(blurSpy).toHaveBeenCalledTimes(5);
 });
 
-test('Edit data should call the onChange and onBlur callbacks', () => {
+test('Edit data should call the onChange and onBlur callbacks', async() => {
+    const user = userEvent.setup();
     const value = {
         emails: [{email: 'test@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -274,12 +287,13 @@ test('Edit data should call the onChange and onBlur callbacks', () => {
     const blurSpy = jest.fn();
     const changeSpy = jest.fn();
 
-    render(<ContactDetails onBlur={blurSpy} onChange={changeSpy} value={value} />);
+    render(<ControlledContactDetails onBlur={blurSpy} onChange={changeSpy} value={value} />);
     const textboxes = screen.getAllByRole('textbox');
 
     const emailInput = textboxes[0];
-    fireEvent.change(emailInput, {target: {value: 'bla@example.org'}});
-    fireEvent.blur(emailInput);
+    await user.clear(emailInput);
+    await user.type(emailInput, 'bla@example.org');
+    await user.tab();
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'bla@example.org', emailType: 1}],
         faxes: [{fax: '20937439', faxType: 1}],
@@ -289,8 +303,9 @@ test('Edit data should call the onChange and onBlur callbacks', () => {
     });
 
     const faxInput = textboxes[2];
-    fireEvent.change(faxInput, {target: {value: '0923850'}});
-    fireEvent.blur(faxInput);
+    await user.clear(faxInput);
+    await user.type(faxInput, '0923850');
+    await user.tab();
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'bla@example.org', emailType: 1}],
         faxes: [{fax: '0923850', faxType: 1}],
@@ -300,8 +315,9 @@ test('Edit data should call the onChange and onBlur callbacks', () => {
     });
 
     const phoneInput = textboxes[1];
-    fireEvent.change(phoneInput, {target: {value: '123590'}});
-    fireEvent.blur(phoneInput);
+    await user.clear(phoneInput);
+    await user.type(phoneInput, '123590');
+    await user.tab();
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'bla@example.org', emailType: 1}],
         faxes: [{fax: '0923850', faxType: 1}],
@@ -311,8 +327,9 @@ test('Edit data should call the onChange and onBlur callbacks', () => {
     });
 
     const socialMediaInput = textboxes[4];
-    fireEvent.change(socialMediaInput, {target: {value: 'bla'}});
-    fireEvent.blur(socialMediaInput);
+    await user.clear(socialMediaInput);
+    await user.type(socialMediaInput, 'bla');
+    await user.tab();
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'bla@example.org', emailType: 1}],
         faxes: [{fax: '0923850', faxType: 1}],
@@ -322,8 +339,9 @@ test('Edit data should call the onChange and onBlur callbacks', () => {
     });
 
     const websiteInput = textboxes[3];
-    fireEvent.change(websiteInput, {target: {value: 'http://example.org'}});
-    fireEvent.blur(websiteInput);
+    await user.clear(websiteInput);
+    await user.type(websiteInput, 'http://example.org');
+    await user.tab();
     expect(changeSpy).toHaveBeenLastCalledWith({
         emails: [{email: 'bla@example.org', emailType: 1}],
         faxes: [{fax: '0923850', faxType: 1}],

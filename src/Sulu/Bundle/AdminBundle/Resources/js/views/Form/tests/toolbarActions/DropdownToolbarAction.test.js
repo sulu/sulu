@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
@@ -25,6 +25,10 @@ jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
 
         get data() {
             return this.resourceStore.data;
+        }
+
+        get locked() {
+            return !!this.resourceStore.data._locked;
         }
     }
 ));
@@ -172,6 +176,56 @@ test('Return item config with options passed to child ToolbarActions', () => {
             expect.objectContaining({
                 label: 'Copy',
             }),
+        ],
+        type: 'dropdown',
+    });
+});
+
+test('Disable the child options of a locked form, but not the dropdown itself', () => {
+    formToolbarActionRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'sulu_admin.delete':
+                return class {
+                    getToolbarItemConfig() {
+                        return {
+                            label: 'Delete',
+                            onClick: jest.fn(),
+                        };
+                    }
+                };
+            case 'sulu_admin.publish':
+                return class {
+                    get enabledWhileLocked() {
+                        return true;
+                    }
+
+                    getToolbarItemConfig() {
+                        return {
+                            label: 'Publish',
+                            onClick: jest.fn(),
+                        };
+                    }
+                };
+        }
+    });
+
+    const dropdownToolbarAction = createDropdownToolbarAction({
+        icon: 'su-save',
+        label: 'save',
+        toolbarActions: [
+            {type: 'sulu_admin.delete', options: {}},
+            {type: 'sulu_admin.publish', options: {}},
+        ],
+    });
+    dropdownToolbarAction.resourceFormStore.resourceStore.data = {_locked: true};
+
+    expect(dropdownToolbarAction.getLockAwareToolbarItemConfig()).toEqual({
+        icon: 'su-save',
+        label: 'save',
+        loading: false,
+        options: [
+            {disabled: true, label: 'Delete', onClick: expect.any(Function)},
+            {disabled: undefined, label: 'Publish', onClick: expect.any(Function)},
         ],
         type: 'dropdown',
     });
@@ -331,13 +385,13 @@ test('Return JSX for all child ToolbarActions', () => {
             case 'sulu_admin.delete':
                 return class {
                     getNode() {
-                        return <div className="delete" key="delete" />;
+                        return <div className="delete" data-testid="delete-node" key="delete" />;
                     }
                 };
             case 'sulu_admin.copy':
                 return class {
                     getNode() {
-                        return <div className="copy" key="copy" />;
+                        return <div className="copy" data-testid="copy-node" key="copy" />;
                     }
                 };
             case 'sulu_admin.nothing':
@@ -357,7 +411,9 @@ test('Return JSX for all child ToolbarActions', () => {
         ],
     });
 
-    expect(render(dropdownToolbarAction.getNode())).toMatchSnapshot();
+    render(dropdownToolbarAction.getNode());
+
+    expect(screen.getAllByTestId(/-node$/).map((node) => node.dataset.testid)).toEqual(['delete-node', 'copy-node']);
 });
 
 test('Throw error if toolbarActions are neither an object nor an array', () => {

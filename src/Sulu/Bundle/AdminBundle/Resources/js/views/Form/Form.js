@@ -5,16 +5,22 @@ import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import log from 'loglevel';
 import Dialog from '../../components/Dialog';
+import {ERROR_CODE_PRE_VALIDATION_FAILED} from '../../constants';
 import PublishIndicator from '../../components/PublishIndicator';
 import {default as FormContainer, ResourceFormStore, resourceFormStoreFactory} from '../../containers/Form';
 import {withToolbar} from '../../containers/Toolbar';
 import ResourceStore from '../../stores/ResourceStore';
 import CollaborationStore from '../../stores/CollaborationStore';
+import getWorkflowDots from '../../utils/getWorkflowDots';
 import {translate} from '../../utils/Translator';
 import {Route} from '../../services/Router';
+import ResourceRequester from '../../services/ResourceRequester';
+import PreValidationOverlay from './components/PreValidationOverlay';
+import WorkflowTransitionRequestTimeline from './components/WorkflowTransitionRequestTimeline';
 import formToolbarActionRegistry from './registries/formToolbarActionRegistry';
 import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarAction';
 import formStyles from './form.scss';
+import type {PreValidationResult} from './components/types';
 import type {ToolbarErrorType} from '../../containers/Toolbar/types';
 import type {AttributeMap, UpdateRouteMethod} from '../../services/Router/types';
 import type {ViewProps} from '../../containers/ViewRenderer';
@@ -40,11 +46,13 @@ class Form extends React.Component<Props> {
     form: ?ElementRef<typeof FormContainer>;
     @observable errors: Array<ToolbarErrorType> = [];
     @observable warnings: Array<ToolbarErrorType> = [];
+    @observable preValidationResults: Array<PreValidationResult> = [];
     showSuccess: IObservableValue<boolean> = observable.box(false);
     @observable toolbarActions: Array<AbstractFormToolbarAction> = [];
     @observable showDirtyWarning: boolean = false;
     @observable showHasChangedWarning: boolean = false;
     postponedSaveOptions: Object;
+    navigateAfterPreValidation: ?() => void;
     postponedUpdateRouteMethod: ?UpdateRouteMethod;
     postponedRoute: ?Route;
     postponedRouteAttributes: ?AttributeMap;
@@ -423,9 +431,67 @@ class Form extends React.Component<Props> {
                     return;
                 }
 
-                this.errors.push(error.detail || error.title || translate('sulu_admin.form_save_server_error'));
+                this.handleTransitionError(error);
+
+                // A refused request turned the create into an edit, so the view follows once the
+                // overlay is closed: the tabs it asks to fill are on the edit form.
+                if (editView && resourceStore.id && error.code === ERROR_CODE_PRE_VALIDATION_FAILED) {
+                    this.navigateAfterPreValidation = () => router.navigate(
+                        editView,
+                        {
+                            id: resourceStore.id,
+                            locale: resourceStore.locale,
+                            ...editViewParameters,
+                        }
+                    );
+                }
             }));
     };
+
+    // A transition on locked content carries no form: the workflow refuses a write while a review
+    // is open, so what goes live is what the reviewers saw.
+    trigger = (transition: string) => {
+        const {id, locale, options, resourceKey} = this.resourceFormStore;
+
+        return ResourceRequester.post(resourceKey, undefined, {...options, action: transition, id, locale})
+            .then(action((response) => {
+                this.resourceFormStore.changeMultiple(response, {isServerValue: true});
+                this.resourceFormStore.dirty = false;
+                this.showSuccessSnackbar();
+                this.clearErrors();
+
+                return response;
+            }))
+            .catch(this.handleTransitionError);
+    };
+
+    handleTransitionError = action((error: Object) => {
+        const {resourceStore} = this.props;
+
+        // Every pre-validator travels as its own row, so the overlay lists them instead of one
+        // snackbar line.
+        if (error.code === ERROR_CODE_PRE_VALIDATION_FAILED && error.preValidationResults) {
+            this.preValidationResults = error.preValidationResults;
+
+            // A create has to take over the id the error carries, or the retry posts the
+            // same content again and creates a second resource.
+            if (!resourceStore.id && error.id) {
+                resourceStore.set('id', error.id);
+            }
+
+            // The content is written before the transition is applied, so the store has to catch
+            // up: a stale `_hash` trips the has-changed dialog on the next save. A no-op without an id.
+            resourceStore.reload();
+
+            // What the author typed is on the server, so leaving the form dirty would ask them to
+            // discard stored changes.
+            this.resourceFormStore.dirty = false;
+
+            return;
+        }
+
+        this.errors.push(error.detail || error.title || translate('sulu_admin.form_save_server_error'));
+    });
 
     navigateBack = () => {
         const {router} = this.props;
@@ -463,6 +529,14 @@ class Form extends React.Component<Props> {
 
     handleError = () => {
         this.errors.push(translate('sulu_admin.form_contains_invalid_values'));
+    };
+
+    @action handlePreValidationClose = () => {
+        this.preValidationResults = [];
+
+        const navigate = this.navigateAfterPreValidation;
+        this.navigateAfterPreValidation = undefined;
+        navigate?.();
     };
 
     @action clearErrors = () => {
@@ -505,6 +579,14 @@ class Form extends React.Component<Props> {
 
     setFormRef = (form: ?ElementRef<typeof FormContainer>) => {
         this.form = form;
+    };
+
+    handleWorkflowTransitionRequestCancel = () => {
+        const cancelTransition = this.resourceFormStore.data.workflowPlace === 'review_draft'
+            ? 'cancel_review_draft'
+            : 'cancel_review';
+
+        this.trigger(cancelTransition);
     };
 
     render() {
@@ -551,6 +633,11 @@ class Form extends React.Component<Props> {
                 >
                     {translate('sulu_admin.has_changed_warning_dialog_text')}
                 </Dialog>
+                <PreValidationOverlay
+                    onClose={this.handlePreValidationClose}
+                    open={this.preValidationResults.length > 0}
+                    results={this.preValidationResults}
+                />
             </div>
         );
     }
@@ -586,20 +673,39 @@ export default withToolbar(Form, function() {
         : undefined;
 
     const items = this.toolbarActions
-        .map((toolbarAction) => toolbarAction.getToolbarItemConfig())
+        .map((toolbarAction) => toolbarAction.getLockAwareToolbarItemConfig())
         .filter((item) => item != null);
 
     const icons = [];
     const formData = this.resourceFormStore.data;
 
-    if (formData.hasOwnProperty('publishedState') || formData.hasOwnProperty('published')) {
-        const {publishedState, published} = formData;
-        icons.push(
+    if (formData.hasOwnProperty('publishedState') || formData.hasOwnProperty('published')
+        || formData.hasOwnProperty('workflowPlace')
+    ) {
+        const {publishedState, published, workflowPlace} = formData;
+        const activeWorkflowTransitionRequest = formData.activeWorkflowTransitionRequest;
+
+        const indicator = (
             <PublishIndicator
-                draft={publishedState === undefined ? false : !publishedState}
-                key="publish"
-                published={published === undefined ? false : !!published}
+                {...getWorkflowDots(
+                    workflowPlace,
+                    publishedState === undefined ? false : !publishedState,
+                    published === undefined ? false : !!published
+                )}
             />
+        );
+
+        icons.push(
+            activeWorkflowTransitionRequest
+                ? (
+                    <WorkflowTransitionRequestTimeline
+                        key="publish"
+                        request={activeWorkflowTransitionRequest}
+                    >
+                        {indicator}
+                    </WorkflowTransitionRequestTimeline>
+                )
+                : React.cloneElement(indicator, {key: 'publish'})
         );
     }
 
@@ -612,6 +718,35 @@ export default withToolbar(Form, function() {
     }
     warnings.push(...this.warnings);
 
+    if (this.resourceFormStore.locked) {
+        const activeWorkflowTransitionRequest = formData.activeWorkflowTransitionRequest;
+        const status = activeWorkflowTransitionRequest && activeWorkflowTransitionRequest.status;
+
+        const message = status === 'approved'
+            ? translate('sulu_content.workflow_transition_request.banner_approved')
+            : translate('sulu_content.workflow_transition_request.banner_pending');
+
+        // Cancelling takes the edit permission, which the request answers for content without
+        // object security.
+        const canCancel = !!activeWorkflowTransitionRequest?.permissions?.cancel;
+
+        warnings.push({
+            actions: canCancel
+                ? [{
+                    label: translate('sulu_content.workflow_transition_request.cancel_request_action'),
+                    onClick: this.handleWorkflowTransitionRequestCancel,
+                }]
+                : [],
+            message,
+            title: translate('sulu_content.workflow_transition_request.banner_title'),
+        });
+    }
+
+    // Only the last warning renders and closing pops from this.warnings, so the close action goes
+    // once another source appended one.
+    const displayedWarningClosable = this.warnings.length > 0
+        && warnings[warnings.length - 1] === this.warnings[this.warnings.length - 1];
+
     return {
         backButton,
         errors,
@@ -620,6 +755,6 @@ export default withToolbar(Form, function() {
         icons,
         showSuccess,
         warnings,
-        onWarningCloseClick: this.warnings.length > 0 ? this.handleWarningCloseClick : undefined,
+        onWarningCloseClick: displayedWarningClosable ? this.handleWarningCloseClick : undefined,
     };
 });

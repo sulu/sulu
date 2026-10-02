@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import {observable} from 'mobx';
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
@@ -36,16 +36,16 @@ test('Pass correct fields to SearchResult component', () => {
         }
     });
 
-    const searchResult = shallow(
+    render(
         <SearchResult
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
         />
     );
 
-    expect(searchResult.prop('description')).toEqual('SEO description');
-    expect(searchResult.prop('title')).toEqual('SEO title');
-    expect(searchResult.prop('url')).toEqual('www.example.org/url');
+    expect(screen.getByText('SEO description')).toBeInTheDocument();
+    expect(screen.getByText('SEO title')).toBeInTheDocument();
+    expect(screen.getByText('www.example.org/url')).toBeInTheDocument();
 });
 
 test('Pass correct fields to SearchResult component with PageTreeRoute', () => {
@@ -67,19 +67,19 @@ test('Pass correct fields to SearchResult component with PageTreeRoute', () => {
         }
     });
 
-    const searchResult = shallow(
+    render(
         <SearchResult
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
         />
     );
 
-    expect(searchResult.prop('description')).toEqual('SEO description');
-    expect(searchResult.prop('title')).toEqual('SEO title');
-    expect(searchResult.prop('url')).toEqual('www.example.org/page/article');
+    expect(screen.getByText('SEO description')).toBeInTheDocument();
+    expect(screen.getByText('SEO title')).toBeInTheDocument();
+    expect(screen.getByText('www.example.org/page/article')).toBeInTheDocument();
 });
 
-test('Pass correct fields to SearchResult component', () => {
+test('Pass correct localized fields to SearchResult component', () => {
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
@@ -97,14 +97,14 @@ test('Pass correct fields to SearchResult component', () => {
         }
     });
 
-    const searchResult = shallow(
+    render(
         <SearchResult
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
         />
     );
 
-    expect(searchResult.prop('description')).toEqual('SEO description');
-    expect(searchResult.prop('title')).toEqual('SEO title');
-    expect(searchResult.prop('url')).toEqual('www.example.org/en/url');
+    expect(screen.getByText('SEO description')).toBeInTheDocument();
+    expect(screen.getByText('SEO title')).toBeInTheDocument();
+    expect(screen.getByText('www.example.org/en/url')).toBeInTheDocument();
 });

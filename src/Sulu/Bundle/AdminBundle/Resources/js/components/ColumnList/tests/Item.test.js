@@ -1,5 +1,5 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Item from '../Item';
@@ -46,20 +46,22 @@ test('Should render item with order input', () => {
     expect(asFragment()).toMatchSnapshot();
 });
 
-test('Should call onDoubleClick', () => {
+test('Should call onDoubleClick', async() => {
+    const user = userEvent.setup();
     const doubleClickSpy = jest.fn();
 
     render(<Item id={2} onDoubleClick={doubleClickSpy}>Test with indicators</Item>);
-    fireEvent.doubleClick(screen.getByRole('button'));
+    await user.dblClick(screen.getByRole('button'));
 
     expect(doubleClickSpy).toHaveBeenCalled();
 });
 
-test('Should not call onDoubleClick if order field is shown', () => {
+test('Should not call onDoubleClick if order field is shown', async() => {
+    const user = userEvent.setup();
     const doubleClickSpy = jest.fn();
 
     render(<Item id={2} onDoubleClick={doubleClickSpy} showOrderField={true}>Test with indicators</Item>);
-    fireEvent.doubleClick(screen.getByRole('button'));
+    await user.dblClick(screen.getByRole('button'));
 
     expect(doubleClickSpy).not.toHaveBeenCalled();
 });
@@ -76,7 +78,7 @@ test('Should call onOrderChange callback when order has changed', async() => {
 
     await user.clear(input);
     await user.type(input, '5');
-    fireEvent.blur(input);
+    input.blur();
     expect(orderChangeSpy).toHaveBeenCalledWith(2, 5);
 
     expect(input).toHaveValue('5');
@@ -97,7 +99,7 @@ test('Should call onOrderChange callback when order has changed and reset order 
 
     await user.clear(input);
     await user.type(input, '5');
-    fireEvent.blur(input);
+    input.blur();
     expect(orderChangeSpy).toHaveBeenCalledWith(2, 5);
 
     expect(input).toHaveValue('5');

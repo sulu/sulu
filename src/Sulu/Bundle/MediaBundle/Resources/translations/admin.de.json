@@ -1,5 +1,7 @@
 {
     "sulu_media.media": "Medien",
+    "sulu_media.media_language": "Mediensprache",
+    "sulu_media.media_language_none": "Keine Sprache gesetzt",
     "sulu_media.collection": "Ordner",
     "sulu_media.all_media": "Alle Medien",
     "sulu_media.audio": "Audio",

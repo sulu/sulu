@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>workflow_transition_requests</key>
+
+    <properties>
+        <property name="id" translation="sulu_admin.id" visibility="never" sortable="false"/>
+
+        <property
+            name="requester"
+            translation="sulu_content.workflow_transition_request.requester"
+            visibility="always"
+            searchability="no"
+            sortable="false"
+        />
+
+        <property
+            name="status"
+            translation="sulu_content.workflow_transition_request.status"
+            visibility="always"
+            searchability="no"
+            sortable="false"
+        >
+            <transformer type="translation">
+                <params>
+                    <param name="prefix" value="sulu_content.workflow_transition_request.status."/>
+                </params>
+            </transformer>
+        </property>
+    </properties>
+</list>

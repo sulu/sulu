@@ -6,9 +6,7 @@ import {observable} from 'mobx';
 import BlockCollection from '../BlockCollection';
 import clipboard from '../../../utils/clipboard/clipboard';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 type RenderBlockCollectionResult = {
     container: HTMLElement,
@@ -702,7 +700,7 @@ test('Should not pass cut action to Block component if minOccurs limit is reache
     expect(queryButtonByName('sulu_admin.cut')).not.toBeInTheDocument();
 });
 
-test('Should throw an exception if a block is removed and minOccurs limit is reached', () => {
+test('Should throw an exception if a block is cut and minOccurs limit is reached', () => {
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
 
@@ -1694,152 +1692,4 @@ test('Should remove ID from clipboard when cutting blocks', async() => {
     expect(clipboardSpy).toHaveBeenCalledWith([
         {content: 'Test 1', type: 'editor'}, // _id should be removed for cut blocks too
     ]);
-});
-
-test('Should pre-generate IDs for blocks without IDs when loaded from server', async() => {
-    const mockId1 = '12345678';
-    const mockId2 = '87654321';
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([mockId1, mockId2]));
-    const changeSpy = jest.fn();
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Block 1',
-        },
-        {
-            type: 'type2',
-            content: 'Block 2',
-        },
-    ];
-
-    renderBlockCollection({
-        generateBlockIds: generateBlockIdsSpy,
-        onChange: changeSpy,
-        value,
-    });
-
-    // Wait for async ID generation
-    await act(async() => {
-        await new Promise((resolve) => setTimeout(resolve, 0));
-    });
-
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(2);
-    expect(changeSpy).toHaveBeenCalledWith([
-        {
-            type: 'type1',
-            content: 'Block 1',
-            _id: mockId1,
-        },
-        {
-            type: 'type2',
-            content: 'Block 2',
-            _id: mockId2,
-        },
-    ]);
-});
-
-test('Should not pre-generate IDs for blocks that already have IDs', async() => {
-    const existingId1 = 'existing1';
-    const existingId2 = 'existing2';
-    const generateBlockIdsSpy = jest.fn();
-    const changeSpy = jest.fn();
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Block 1',
-            _id: existingId1,
-        },
-        {
-            type: 'type2',
-            content: 'Block 2',
-            _id: existingId2,
-        },
-    ];
-
-    renderBlockCollection({
-        generateBlockIds: generateBlockIdsSpy,
-        onChange: changeSpy,
-        value,
-    });
-
-    // Wait for potential async operations
-    await act(async() => {
-        await new Promise((resolve) => setTimeout(resolve, 0));
-    });
-
-    // Should not generate IDs since all blocks already have them
-    expect(generateBlockIdsSpy).not.toHaveBeenCalled();
-    expect(changeSpy).not.toHaveBeenCalled();
-});
-
-test('Should pre-generate IDs only for blocks without IDs (mixed case)', async() => {
-    const existingId = 'existing1';
-    const newId = '12345678';
-    const generateBlockIdsSpy = jest.fn().mockReturnValue(Promise.resolve([newId]));
-    const changeSpy = jest.fn();
-
-    const value = [
-        {
-            type: 'type1',
-            content: 'Block 1',
-            _id: existingId,
-        },
-        {
-            type: 'type2',
-            content: 'Block 2',
-        },
-    ];
-
-    renderBlockCollection({
-        generateBlockIds: generateBlockIdsSpy,
-        onChange: changeSpy,
-        value,
-    });
-
-    // Wait for async ID generation
-    await act(async() => {
-        await new Promise((resolve) => setTimeout(resolve, 0));
-    });
-
-    expect(generateBlockIdsSpy).toHaveBeenCalledWith(1);
-    expect(changeSpy).toHaveBeenCalledWith([
-        {
-            type: 'type1',
-            content: 'Block 1',
-            _id: existingId,
-        },
-        {
-            type: 'type2',
-            content: 'Block 2',
-            _id: newId,
-        },
-    ]);
-});
-
-test('Should not generate IDs when generateBlockIds is not provided', async() => {
-    const changeSpy = jest.fn();
-
-    renderBlockCollection({
-        onChange: changeSpy,
-        value: [
-            {
-                type: 'type1',
-                content: 'Block 1',
-            },
-            {
-                type: 'type2',
-                content: 'Block 2',
-            },
-        ],
-    });
-
-    // Wait for potential async operations
-    await act(async() => {
-        await new Promise((resolve) => setTimeout(resolve, 0));
-    });
-
-    // Should not try to generate IDs or call onChange since generateBlockIds is not provided
-    expect(changeSpy).not.toHaveBeenCalled();
 });

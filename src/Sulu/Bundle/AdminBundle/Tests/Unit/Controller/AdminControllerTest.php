@@ -35,6 +35,7 @@ use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -300,6 +301,86 @@ class AdminControllerTest extends TestCase
         )->shouldBeCalled()->willReturn(new Response());
 
         $this->adminController->configAction();
+    }
+
+    public function testConfigActionTextPartLanguagesDefaultToLocalizationLanguages(): void
+    {
+        $this->localizationManager->getLocalizations()->willReturn([
+            'de' => new Localization('de'),
+            'de_at' => new Localization('de', 'at'),
+            'en' => new Localization('en'),
+        ]);
+
+        $this->assertSame(['de', 'en'], $this->getConfiguredTextPartLanguages([]));
+    }
+
+    public function testConfigActionWithConfiguredTextPartLanguages(): void
+    {
+        $this->localizationManager->getLocalizations()->willReturn(['de' => new Localization('de')]);
+
+        $this->assertSame(['en', 'ar'], $this->getConfiguredTextPartLanguages(['en', 'ar']));
+    }
+
+    /**
+     * @param array<string> $textPartLanguages
+     *
+     * @return array<string>
+     */
+    private function getConfiguredTextPartLanguages(array $textPartLanguages): array
+    {
+        $adminController = new AdminController(
+            $this->urlGenerator->reveal(),
+            $this->tokenStorage->reveal(),
+            $this->adminPool->reveal(),
+            $this->serializer->reveal(),
+            $this->viewHandler->reveal(),
+            $this->engine->reveal(),
+            $this->translatorBag->reveal(),
+            new MetadataProviderRegistry($this->metadataProviderContainer),
+            $this->viewRegistry->reveal(),
+            $this->navigationRegistry->reveal(),
+            $this->fieldTypeOptionRegistry->reveal(),
+            $this->contactManager->reveal(),
+            $this->smartContentProviders,
+            $this->linkProviderPool,
+            $this->localizationManager->reveal(),
+            'prod',
+            '3.0',
+            null,
+            [],
+            [],
+            [],
+            'en',
+            10,
+            true,
+            null,
+            null,
+            false,
+            $textPartLanguages,
+        );
+
+        $this->fieldTypeOptionRegistry->toArray()->willReturn([]);
+        $this->viewRegistry->getViews()->willReturn([]);
+        $this->navigationRegistry->getNavigationItems()->willReturn([]);
+        $this->adminPool->getAdmins()->willReturn([]);
+
+        $contact = $this->prophesize(ContactInterface::class);
+        $contact->getId()->willReturn(5);
+        $this->user->getContact()->willReturn($contact->reveal());
+        $this->user->getLocale()->willReturn('en');
+
+        $result = [];
+        $this->viewHandler->handle(Argument::that(function(View $view) use (&$result) {
+            /** @var array{sulu_admin: array{textPartLanguages: array<string>}} $data */
+            $data = $view->getData();
+            $result = $data['sulu_admin']['textPartLanguages'];
+
+            return true;
+        }))->shouldBeCalled()->willReturn(new Response());
+
+        $adminController->configAction();
+
+        return $result;
     }
 
     public function testMetadataAction(): void

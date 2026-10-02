@@ -1,0 +1,37 @@
+{
+    "_hash": "@string@",
+    "_group": "default",
+    "availableLocales": [
+        "en",
+        "de"
+    ],
+    "changed": "@datetime@",
+    "changer": "@integer@",
+    "contentLocales": [
+        "en",
+        "de"
+    ],
+    "created": "@datetime@",
+    "creator": "@integer@",
+    "description": null,
+    "excerptAudienceTargetGroups": [],
+    "excerptCategories": [],
+    "excerptSegment": null,
+    "excerptTags": [],
+    "ghostLocale": "en",
+    "id": "@string@",
+    "image": null,
+    "locale": "de",
+    "published": null,
+    "publishedState": false,
+    "shadowLocale": "en",
+    "shadowLocales": {
+        "de": "en"
+    },
+    "shadowOn": true,
+    "stage": "draft",
+    "template": "snippet",
+    "title": "Test Snippet (DE)",
+    "version": 0,
+    "workflowPlace": "unpublished"
+}

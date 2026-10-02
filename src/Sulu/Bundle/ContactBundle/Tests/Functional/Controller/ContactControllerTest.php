@@ -44,6 +44,7 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
+use Symfony\Bridge\Doctrine\Middleware\Debug\DebugDataHolder;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class ContactControllerTest extends SuluTestCase
@@ -2169,6 +2170,47 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, \count($response->medias));
     }
 
+    public function testPatchAssignedMediasDoesNotLoadFileVersionsPerMedia(): void
+    {
+        $collectionType = $this->createCollectionType('My collection type');
+        $collection = $this->createCollection($collectionType);
+        $removedMedia1 = $this->createMedia('media1.jpeg', $collection);
+        $removedMedia2 = $this->createMedia('media2.jpeg', $collection);
+        $addedMedia1 = $this->createMedia('media3.jpeg', $collection);
+        $addedMedia2 = $this->createMedia('media4.jpeg', $collection);
+        /** @var Contact $contact */
+        $contact = $this->createContact('Max', 'Mustermann');
+        $contact->addMedia($removedMedia1);
+        $contact->addMedia($removedMedia2);
+        $this->em->flush();
+        $this->em->clear();
+
+        if (!$this->client->getContainer()->has('doctrine.debug_data_holder')) {
+            $this->markTestSkipped('Collecting queries needs the debug data holder of DoctrineBundle 2.7 or later.');
+        }
+
+        /** @var DebugDataHolder $debugDataHolder */
+        $debugDataHolder = $this->client->getContainer()->get('doctrine.debug_data_holder');
+        $debugDataHolder->reset();
+
+        $this->client->jsonRequest(
+            'PATCH',
+            '/api/contacts/' . $contact->getId(),
+            [
+                'medias' => [
+                    $addedMedia1->getId(),
+                    $addedMedia2->getId(),
+                ],
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        /** @var array{medias: list<int>} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame([$addedMedia1->getId(), $addedMedia2->getId()], $response['medias']);
+        $this->assertSame([], $this->findQueriesFromTable($debugDataHolder, 'me_file_versions'));
+    }
+
     public function testPrimaryAddressHandlingPost(): void
     {
         $position = $this->createPosition('Manager');
@@ -2724,6 +2766,24 @@ class ContactControllerTest extends SuluTestCase
         $this->em->persist($file);
 
         return $media;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function findQueriesFromTable(DebugDataHolder $debugDataHolder, string $table): array
+    {
+        /** @var array<string, list<array{sql: mixed}>> $data */
+        $data = $debugDataHolder->getData();
+
+        $queries = [];
+        foreach ($data['default'] ?? [] as $query) {
+            if (\is_string($query['sql']) && 1 === \preg_match('/\bFROM ' . $table . '\b/', $query['sql'])) {
+                $queries[] = $query['sql'];
+            }
+        }
+
+        return $queries;
     }
 
     private function createNote(string $value)

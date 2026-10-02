@@ -5,9 +5,7 @@ import Mousetrap from 'mousetrap';
 import React from 'react';
 import Overlay from '../Overlay';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 afterEach(() => {
     if (Mousetrap.reset) {
@@ -81,6 +79,22 @@ test('The component should request to be closed when the close icon is clicked',
     expect(closeSpy).not.toHaveBeenCalled();
     await user.click(screen.getByRole('button', {name: 'su-times'}));
     expect(closeSpy).toHaveBeenCalled();
+});
+
+test('The component should not render a close icon when it is not closable', () => {
+    renderOverlay({closable: false});
+
+    expect(screen.getByText('My overlay title')).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'su-times'})).not.toBeInTheDocument();
+});
+
+test('The component should not close on the esc key when it is not closable', () => {
+    const closeSpy = jest.fn();
+
+    renderOverlay({closable: false, onClose: closeSpy});
+
+    Mousetrap.trigger('esc');
+    expect(closeSpy).not.toHaveBeenCalled();
 });
 
 test('The component should request to be closed when the esc key is pressed', () => {

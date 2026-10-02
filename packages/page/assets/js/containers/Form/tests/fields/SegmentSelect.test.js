@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
@@ -22,9 +23,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('../../../../stores/webspaceStore', () => ({
     getWebspace: jest.fn(),
@@ -73,7 +72,7 @@ test('Pass correct props to SegmentSelect', () => {
     };
     webspaceStore.getWebspace.mockReturnValue(webspace);
 
-    const segmentSelect = shallow(
+    render(
         <SegmentSelect
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -82,12 +81,13 @@ test('Pass correct props to SegmentSelect', () => {
         />
     );
 
-    expect(segmentSelect.find('SegmentSelect').prop('disabled')).toEqual(true);
-    expect(segmentSelect.find('SegmentSelect').prop('value')).toEqual({});
-    expect(segmentSelect.find('SegmentSelect').prop('webspace')).toEqual('sulu_io');
+    expect(webspaceStore.getWebspace).toHaveBeenCalledWith('sulu_io');
+    expect(screen.getByText('sulu_admin.segment')).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /sulu_admin.none_selected/})).toBeDisabled();
 });
 
-test('Call onChange and onBlur if the value is changed', () => {
+test('Call onChange and onBlur if the value is changed', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
@@ -98,10 +98,10 @@ test('Call onChange and onBlur if the value is changed', () => {
         )
     );
 
-    const segmentSelect = shallow(
+    render(
         <SegmentSelect
             {...fieldTypeDefaultProps}
-            disabled={true}
+            disabled={false}
             formInspector={formInspector}
             onChange={changeSpy}
             onFinish={finishSpy}
@@ -111,10 +111,9 @@ test('Call onChange and onBlur if the value is changed', () => {
         />
     );
 
-    segmentSelect.find('SegmentSelect').prop('onChange')({
-        'webspace-1': 's',
-        'webspace-3': 'a',
-    });
+    await user.click(screen.getAllByLabelText('su-angle-down')[1]);
+    await user.click(screen.getByRole('button', {name: 'Autumn'}));
+
     expect(changeSpy).toHaveBeenCalledWith({
         'webspace-1': 's',
         'webspace-3': 'a',

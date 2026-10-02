@@ -17215,6 +17215,12 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Build/SearchBuilder.php
 
 		-
+			message: '#^Cannot call method writeln\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Sulu/Bundle/CoreBundle/Build/SearchBuilder.php
+
+		-
 			message: '#^Cannot access offset ''command'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -24880,6 +24886,12 @@ parameters:
 			message: '#^Cannot access offset ''locale'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
+			message: '#^Cannot access offset ''mediaLanguages'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-

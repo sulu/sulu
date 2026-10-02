@@ -39,11 +39,47 @@ and `extension` are seeded before any resolver runs, so a `[root]` resolver cann
 any priority. Two resolvers returning the same `type` are not rejected; the later one replaces the
 earlier, as before this release.
 
+### Content admin API routes
+
+The review overlay needs them. Add to `config/routes/sulu_admin.yaml`:
+
+```yaml
+sulu_content_api:
+    resource: "@SuluContentBundle/config/routing_admin_api.yaml"
+    prefix: /admin/api
+```
+
+### Snippets support shadow locales
+
+Snippet dimension contents can now shadow another locale, like pages and articles. Two columns,
+`shadowLocale` and `shadowLocales`, back the feature on `sn_snippet_dimension_contents`; run the
+migration to add them:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
+### Additional Optional Parameter dimensionContentRepository for TemplateDataMapper
+
+The `TemplateDataMapper` gained an optional `$dimensionContentRepository` argument, which it uses to give
+a new shadow locale the template and content of its source locale. Omitting it is deprecated, so
+integrators registering their own mapper service should pass the `sulu_content.dimension_content_repository`
+service now to remain compatible with a future version where it is required.
+
 ### New workflow transition request tables
 
 The review flow stores its requests in `ct_workflow_transition_requests` and every verdict on them,
 by a reviewer or by an automated validator, in `ct_workflow_transition_request_decisions`. Run the new
 migration to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
+### Media language table
+
+Documents and videos can record the language(s) they are in, which are stored in the new
+`me_file_version_media_languages` table. Run the new migration to apply the schema change:
 
 ```bash
 bin/console doctrine:migrations:migrate
@@ -55,8 +91,32 @@ bin/console doctrine:migrations:migrate
 refused everywhere until roles are granted it in **Settings** -> **User Roles**. Approving is `review`
 alone: `live` does not imply it.
 
+### Website localizations come from a service
+
+`ContentController` built the `localizations` of a page in a private method. They now come from
+`ContentLocalizationsResolverInterface`, service `sulu_content.content_localizations_resolver`.
+
+A resource whose pages link other URLs than their own registers a resolver for its resource key.
+Content without one keeps the route-based default:
+
+```php
+$services->set('acme_product.product_localizations_resolver', ProductLocalizationsResolver::class)
+    ->args([new Reference('sulu_content.route_localizations_resolver')])
+    ->tag('sulu_content.content_localizations_resolver', ['resource_key' => 'products']);
+```
+
 ### BC breaks
 
+- `SnippetDimensionContentInterface` now also extends `Sulu\Content\Domain\Model\ShadowInterface`. A
+  project with its own implementation of the interface (rather than extending the shipped
+  `SnippetDimensionContent`) must implement the `ShadowInterface` methods, most simply by applying
+  `Sulu\Content\Domain\Model\ShadowTrait`.
+- `TypedFormMetadata::getDefaultType()` now returns `?string` instead of `string` and no longer throws
+  when no default type is set. Callers relying on a non-null return have to handle `null`.
+- The translation keys `sulu_content.shadow_page`, `sulu_content.enable_shadow_page` and
+  `sulu_content.enable_shadow_page_info_text` are renamed to `sulu_content.shadow`,
+  `sulu_content.enable_shadow` and `sulu_content.enable_shadow_info_text`. A project overriding the
+  old keys in its own translations has to rename them, otherwise the override is silently ignored.
 - The permission mask meaning "everything" is 255, not 127: `PermissionTypes::REVIEW` occupies bit
   128. Code comparing a mask against 127 to mean full access has to be updated.
 - Publishing through the API takes `live`, or `edit` together with an approved active request, for
@@ -65,18 +125,49 @@ alone: `live` does not imply it.
   the system's behalf and passes through.
 - A write to content covered by an open request answers 409. Publishing, rejecting and cancelling must
   be sent as a payload-less `POST ?action=...`; a `PUT` carrying the form is a write and is refused.
-- Every resource key whose content can be published needs a service tagged
-  `sulu_content.workflow_transition_request_security_context_provider` with that `resource-key`.
-  Pages, articles and snippets ship one; a custom content type without one answers 500 on publish.
-- The first argument of the `IconController` is now the Symfony normalizer 
-- A resource key needs a service tagged `sulu_content.workflow_transition_request_security_context_provider`
-  with that `resource-key` once a request workflow covers its content; without one, publishing that
-  content answers 500. Pages, articles and snippets ship one. A resource key without one whose content
-  no request workflow covers publishes as before.
+- A resource key needs a `security_context` under `sulu_admin.resources` once a request workflow
+  covers its content; without one, publishing that content answers 500. Pages, articles and snippets
+  declare one. A resource key without one whose content no request workflow covers publishes as before.
+  A resource whose `security_class` implements `SecuredEntityInterface`, as pages do, takes its
+  context off the entity, which is what fills the `#webspace#` placeholder.
+- `ContentViewBuilderFactoryInterface::getDefaultToolbarActions()` returns a `save` dropdown and an
+  `approval` action for content implementing `WorkflowInterface`, instead of the deprecated
+  `sulu_admin.save_with_publishing`. An admin reading the default toolbar gets the review flow with it.
+- `Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface` gained
+  `getWorkflowTransitionRequestToolbarActions()`, taking the content-rich entity class, for an admin
+  passing visible conditions of its own.
+- The `sulu_content.request_for_publish` toolbar action carries the template keys a review workflow
+  covers in its `templates` option, which the create form matches its picked template against. The
+  factory resolves them from the entity class, so no admin declares anything for it.
+- Admin JS form toolbar actions must extend `AbstractFormToolbarAction`: the form now calls
+  `getLockAwareToolbarItemConfig()` on each.
 - The `draft` dot of the `PublishIndicator` is grey instead of yellow, yellow now means "in review".
   This changes the list and form indicators of every project.
+- `ContentViewBuilderFactoryInterface::getWorkflowTransitionRequestToolbarActions()` returns a plain
+  `ToolbarAction` for `approval` instead of a `DropdownToolbarAction`.
+- The `sulu_content.bypass_review_and_publish` form toolbar action was removed.
+- An active workflow transition request carries a `permissions` object (`cancel`, `publish`, `retry`,
+  `review`) saying what the current user may do with it. The admin renders the review overlay and the
+  banner's cancel action from it, because content without object security, an article or a snippet,
+  delivers no `_permissions` of its own.
 
 ## 3.0.10
+
+### The target group select of the preview follows the audience targeting permission
+
+The preview offered its target group select as soon as the `SuluAudienceTargetingBundle` was installed, and the
+select loads the target groups through the API. A user without the `view` permission on
+`sulu.settings.target-groups` got a `403` there, which left the preview, and with it the whole page, unusable.
+The select is now offered only to users who have that permission.
+
+If you replaced `sulu_preview.admin`, pass the `sulu_security.security_checker` as the last constructor
+argument. Without it the select is offered to everyone, as before. Leaving it out triggers a deprecation.
+
+### Mandatory fields reject an empty string
+
+A mandatory field whose type has no dedicated schema mapper, like `text_editor` or `color`, accepted an empty
+string. The generated JSON schema now forbids `""` for these fields. Existing content whose mandatory field still
+holds `""` cannot be saved until the field is filled in.
 
 ### Cache tags now match the invalidation
 
@@ -88,6 +179,13 @@ with the old aliases need to switch to the resource key:
 ```php
 $cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->getId());
 ```
+
+### New constructor arguments for the teaser providers, the snippet area resolver and the link resolver
+
+`PageTeaserProvider`, `ArticleTeaserProvider` and `SnippetAreaSmartResolver` take the `sulu_http_cache.reference_store`
+as their last argument, `LinkPropertyResolver` takes the `sulu_markup.link_tag.provider_pool`. Projects that extend one
+of these classes or define their own service for it need to pass it, otherwise the container throws an
+`ArgumentCountError`. Clear the HTTP cache once, pages cached before lack the new tags.
 
 ### Add and live permissions are enforced for pages, snippets and articles
 
@@ -131,6 +229,23 @@ rows on its next save, so refresh existing content once after upgrading:
 
 ```bash
 bin/console sulu:reference:refresh
+```
+
+### Forced two factor authentication without the email method
+
+With `sulu_security.two_factor.force` enabled and `scheb/2fa-email` not installed, the users matching the pattern
+have to set up a method after the login. Until then the admin API answers every other route with a `403` and the
+`two_factor_setup_required` error, technical API users included. Disabling the method is rejected for these users.
+
+`trusted_devices` does not count as a method a user can activate anymore. A project that enables nothing else
+can not force two factor authentication anymore.
+
+### Index for the reference table
+
+The `re_references` table has a new index. Update your database schema, or add it by hand:
+
+```sql
+CREATE INDEX reference_resource_idx ON re_references (referenceResourceKey, referenceResourceId, referenceLocale, referenceContext);
 ```
 
 ## 3.0.9

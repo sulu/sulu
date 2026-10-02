@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\DependencyInjection;
 
+use Sulu\Bundle\AudienceTargetingBundle\Admin\AudienceTargetingAdmin;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupConditionRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepositoryInterface;
@@ -112,6 +113,9 @@ class SuluAudienceTargetingExtension extends Extension implements PrependExtensi
                             'routes' => [
                                 'list' => 'sulu_audience_targeting.get_target-groups',
                                 'detail' => 'sulu_audience_targeting.get_target-group',
+                            ],
+                            'views' => [
+                                'detail' => AudienceTargetingAdmin::EDIT_FORM_VIEW,
                             ],
                         ],
                     ],

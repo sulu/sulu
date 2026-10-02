@@ -110,6 +110,12 @@ class SnippetAreaTwigExtension extends AbstractExtension
             ]
         );
 
+        // A ghost locale aggregates to unlocalized content with no locale, nothing to render.
+        if (null === $dimensionContent->getLocale()) {
+            return null;
+        }
+
+        // A published shadow carries the source content in its own live row, so resolve it directly.
         $resolvedContent = $this->contentResolver->resolve($dimensionContent, $properties);
 
         $this->referenceStore->add($snippet->getUuid(), SnippetInterface::RESOURCE_KEY);

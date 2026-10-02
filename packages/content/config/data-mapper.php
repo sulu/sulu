@@ -28,7 +28,10 @@ return static function(ContainerConfigurator $container) {
     $services = $container->services();
 
     $services->set('sulu_content.template_data_mapper', TemplateDataMapper::class)
-        ->args([new Reference('sulu_admin.metadata_provider_registry')])
+        ->args([
+            new Reference('sulu_admin.metadata_provider_registry'),
+            new Reference('sulu_content.dimension_content_repository'),
+        ])
         ->tag('sulu_content.data_mapper', ['priority' => 128]);
 
     $services->set('sulu_content.excerpt_data_mapper', ExcerptDataMapper::class)

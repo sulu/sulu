@@ -26,6 +26,7 @@ use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusReso
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizer;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
+use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
@@ -34,6 +35,7 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 #[CoversClass(WorkflowTransitionAdminAuthorizer::class)]
 class WorkflowTransitionAdminAuthorizerTest extends TestCase
@@ -101,6 +103,61 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
         $this->expectException(AccessDeniedException::class);
 
         $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en');
+    }
+
+    /**
+     * The admin renders its buttons from this, so it has to answer with the same rules the
+     * assertions enforce.
+     */
+    public function testPermissionsFollowTheSameRulesAsTheAssertions(): void
+    {
+        $securityChecker = $this->securityChecker(live: false, edit: true);
+        $securityChecker->hasPermission(Argument::any(), PermissionTypes::REVIEW)->willReturn(false);
+
+        $permissions = $this->createAuthorizer($securityChecker, $this->activeRequest($this->approvedRequest()))
+            ->getPermissions(Example::RESOURCE_KEY, '1', 'en');
+
+        $this->assertSame(
+            ['cancel' => true, 'publish' => true, 'retry' => true, 'review' => false],
+            $permissions,
+            'The edit permission carries out an approved request, but decides nothing.',
+        );
+    }
+
+    public function testPermissionsRefusePublishingPastAnOpenRequestWithoutLive(): void
+    {
+        $securityChecker = $this->securityChecker(live: false, edit: true);
+        $securityChecker->hasPermission(Argument::any(), PermissionTypes::REVIEW)->willReturn(true);
+
+        $permissions = $this->createAuthorizer($securityChecker, $this->activeRequest($this->openRequest()))
+            ->getPermissions(Example::RESOURCE_KEY, '1', 'en');
+
+        $this->assertFalse($permissions['publish'], 'Bypassing an unfinished review takes the live permission.');
+    }
+
+    public function testPermissionsDenyEverythingWhenTheSecurityContextCannotBeResolved(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(Argument::cetera())->shouldNotBeCalled();
+
+        $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
+        $securityContextResolver->resolve(Argument::cetera())
+            ->willThrow(new UnresolvableSecurityContextException('No security context.'));
+
+        $authorizer = new WorkflowTransitionAdminAuthorizer(
+            $securityContextResolver->reveal(),
+            $securityChecker->reveal(),
+            $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class)->reveal(),
+            $this->authenticatedTokenStorage(),
+            $this->statusResolver(),
+            SuluKernel::CONTEXT_ADMIN,
+        );
+
+        $this->assertSame(
+            ['cancel' => false, 'publish' => false, 'retry' => false, 'review' => false],
+            $authorizer->getPermissions(Example::RESOURCE_KEY, '1', 'en'),
+            'A broken setup hides the buttons instead of failing the form load.',
+        );
     }
 
     public function testCanRejectWithTheReviewPermission(): void
@@ -193,6 +250,37 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
             $this->statusResolver(),
             SuluKernel::CONTEXT_ADMIN,
         );
+
+        $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en');
+    }
+
+    /**
+     * A token whose user is not Sulu's, an API token or an SSO login, is still somebody acting in
+     * the admin, so the voters answer instead of the authorizer stepping aside.
+     */
+    public function testATokenWithAForeignUserIsChecked(): void
+    {
+        $securityChecker = $this->securityChecker(live: false, edit: false);
+
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($this->prophesize(SymfonyUserInterface::class)->reveal());
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $tokenStorage->getToken()->willReturn($token->reveal());
+
+        $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
+        $securityContextResolver->resolve(Example::RESOURCE_KEY, '1', 'en')
+            ->willReturn(new SecurityCondition('sulu.example', 'en'));
+
+        $authorizer = new WorkflowTransitionAdminAuthorizer(
+            $securityContextResolver->reveal(),
+            $securityChecker->reveal(),
+            $this->activeRequest(null)->reveal(),
+            $tokenStorage->reveal(),
+            $this->statusResolver(),
+            SuluKernel::CONTEXT_ADMIN,
+        );
+
+        $this->expectException(AccessDeniedException::class);
 
         $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en');
     }

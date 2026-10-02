@@ -1,12 +1,12 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
 import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {render, screen, waitFor} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {observable} from 'mobx';
 import SingleMediaUpload from '../../fields/SingleMediaUpload';
-import SingleMediaUploadComponent from '../../../SingleMediaUpload';
 import MediaUploadStore from '../../../../stores/MediaUploadStore';
 
 jest.mock('sulu-admin-bundle/stores/ResourceStore', () => jest.fn(function(resourceKey, id, observableOptions) {
@@ -24,6 +24,40 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'userContentLocale',
 }));
+
+afterEach(() => {
+    jest.restoreAllMocks();
+});
+
+function getFileInput(container): HTMLInputElement {
+    const input = container.querySelector('input[type="file"]');
+
+    if (!(input instanceof HTMLInputElement)) {
+        throw new Error('Expected file input');
+    }
+
+    return input;
+}
+
+function getMediaContainer(container) {
+    const mediaContainer = container.querySelector('.mediaContainer');
+
+    if (!mediaContainer) {
+        throw new Error('Expected media container');
+    }
+
+    return mediaContainer;
+}
+
+function getImage(container): HTMLImageElement {
+    const image = container.querySelector('img');
+
+    if (!(image instanceof HTMLImageElement)) {
+        throw new Error('Expected image');
+    }
+
+    return image;
+}
 
 test('Pass correct props', () => {
     const formInspector = new FormInspector(
@@ -51,7 +85,7 @@ test('Pass correct props', () => {
         },
     };
 
-    const singleMediaUpload = shallow(
+    const {container} = render(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -60,11 +94,9 @@ test('Pass correct props', () => {
         />
     );
 
-    expect(singleMediaUpload.prop('collectionId')).toEqual(3);
-    expect(singleMediaUpload.prop('emptyIcon')).toEqual('su-icon');
-    expect(singleMediaUpload.prop('imageSize')).toEqual('sulu-400x400-inset');
-    expect(singleMediaUpload.prop('uploadText')).toEqual('Drag and drop');
-    expect(singleMediaUpload.prop('disabled')).toEqual(true);
+    expect(screen.getByLabelText('su-icon')).toBeInTheDocument();
+    expect(screen.getByText('Drag and drop')).toBeInTheDocument();
+    expect(getMediaContainer(container)).toHaveClass('disabled');
 });
 
 test('Pass correct skin to props', () => {
@@ -85,7 +117,7 @@ test('Pass correct skin to props', () => {
         },
     };
 
-    const singleMediaUpload = shallow(
+    const {container} = render(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -93,7 +125,7 @@ test('Pass correct skin to props', () => {
         />
     );
 
-    expect(singleMediaUpload.prop('skin')).toEqual('round');
+    expect(getMediaContainer(container)).toHaveClass('round');
 });
 
 test('Throw if emptyIcon is set but not a valid value', () => {
@@ -115,7 +147,7 @@ test('Throw if emptyIcon is set but not a valid value', () => {
     };
 
     expect(
-        () => shallow(
+        () => render(
             <SingleMediaUpload
                 {...fieldTypeDefaultProps}
                 formInspector={formInspector}
@@ -144,7 +176,7 @@ test('Throw if skin is set but not a valid value', () => {
     };
 
     expect(
-        () => shallow(
+        () => render(
             <SingleMediaUpload
                 {...fieldTypeDefaultProps}
                 formInspector={formInspector}
@@ -173,7 +205,7 @@ test('Throw if image_size is set but not a valid value', () => {
     };
 
     expect(
-        () => shallow(
+        () => render(
             <SingleMediaUpload
                 {...fieldTypeDefaultProps}
                 formInspector={formInspector}
@@ -193,7 +225,7 @@ test('Throw if collectionId is not set', () => {
     const schemaOptions = {};
 
     expect(
-        () => shallow(
+        () => render(
             <SingleMediaUpload
                 {...fieldTypeDefaultProps}
                 formInspector={formInspector}
@@ -203,7 +235,8 @@ test('Throw if collectionId is not set', () => {
     ).toThrow('"collection_id"');
 });
 
-test('Call onChange and onFinish when upload has completed', () => {
+test('Call onChange and onFinish when upload has completed', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
@@ -213,14 +246,20 @@ test('Call onChange and onFinish when upload has completed', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
     const media = {name: 'test.jpg'};
+    let uploadLocale;
     const schemaOptions = {
         collection_id: {
             name: 'collection_id',
             value: 2,
         },
     };
+    const createSpy = jest.spyOn(MediaUploadStore.prototype, 'create').mockImplementation(function() {
+        uploadLocale = this.locale.get();
 
-    const singleMediaUpload = shallow(
+        return Promise.resolve(media);
+    });
+
+    const {container} = render(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -230,13 +269,17 @@ test('Call onChange and onFinish when upload has completed', () => {
         />
     );
 
-    singleMediaUpload.find(SingleMediaUploadComponent).simulate('uploadComplete', media);
+    const file = new File(['test'], 'test.jpg', {type: 'image/jpeg'});
+    await user.upload(getFileInput(container), file);
 
-    expect(changeSpy).toHaveBeenCalledWith(media);
+    expect(createSpy).toHaveBeenCalledWith(2, file);
+    expect(uploadLocale).toEqual('en');
+    await waitFor(() => expect(changeSpy).toHaveBeenCalledWith(media));
     expect(finishSpy).toHaveBeenCalledWith();
 });
 
-test('Create a MediaUploadStore when constructed', () => {
+test('Create a MediaUploadStore with form locale when constructed', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test', undefined, {locale: observable.box('en')}),
@@ -249,7 +292,14 @@ test('Create a MediaUploadStore when constructed', () => {
             value: 2,
         },
     };
-    const singleMediaUpload = shallow(
+    let uploadLocale;
+    jest.spyOn(MediaUploadStore.prototype, 'create').mockImplementation(function() {
+        uploadLocale = this.locale.get();
+
+        return Promise.resolve({});
+    });
+
+    const {container} = render(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -257,12 +307,14 @@ test('Create a MediaUploadStore when constructed', () => {
         />
     );
 
-    expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
-    expect(singleMediaUpload.instance().mediaUploadStore.locale.get()).toEqual('en');
-    expect(singleMediaUpload.instance().mediaUploadStore.media).toEqual(undefined);
+    const file = new File(['test'], 'test.jpg', {type: 'image/jpeg'});
+    await user.upload(getFileInput(container), file);
+
+    expect(uploadLocale).toEqual('en');
 });
 
-test('Create MediaUploadStore with content-locale of user if locale is not present in form-inspector', () => {
+test('Create MediaUploadStore with content-locale of user if locale is not present in form-inspector', async() => {
+    const user = userEvent.setup();
     const formInspector = new FormInspector(
         new ResourceFormStore(
             new ResourceStore('test', undefined, {}),
@@ -275,7 +327,14 @@ test('Create MediaUploadStore with content-locale of user if locale is not prese
             value: 2,
         },
     };
-    const singleMediaUpload = shallow(
+    let uploadLocale;
+    jest.spyOn(MediaUploadStore.prototype, 'create').mockImplementation(function() {
+        uploadLocale = this.locale.get();
+
+        return Promise.resolve({});
+    });
+
+    const {container} = render(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -283,8 +342,10 @@ test('Create MediaUploadStore with content-locale of user if locale is not prese
         />
     );
 
-    expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
-    expect(singleMediaUpload.instance().mediaUploadStore.locale.get()).toEqual('userContentLocale');
+    const file = new File(['test'], 'test.jpg', {type: 'image/jpeg'});
+    await user.upload(getFileInput(container), file);
+
+    expect(uploadLocale).toEqual('userContentLocale');
 });
 
 test('Create a MediaUploadStore when constructed with data', () => {
@@ -300,7 +361,9 @@ test('Create a MediaUploadStore when constructed with data', () => {
         locale: 'en',
         mimeType: 'image/jpeg',
         title: 'test',
-        thumbnails: {},
+        thumbnails: {
+            'sulu-400x400-inset': 'test-400.jpg',
+        },
         url: '',
     };
     const schemaOptions = {
@@ -308,8 +371,12 @@ test('Create a MediaUploadStore when constructed with data', () => {
             name: 'collection_id',
             value: 2,
         },
+        image_size: {
+            name: 'image_size',
+            value: 'sulu-400x400-inset',
+        },
     };
-    const singleMediaUpload = shallow(
+    const {container} = render(
         <SingleMediaUpload
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -318,6 +385,5 @@ test('Create a MediaUploadStore when constructed with data', () => {
         />
     );
 
-    expect(singleMediaUpload.instance().mediaUploadStore).toBeInstanceOf(MediaUploadStore);
-    expect(singleMediaUpload.instance().mediaUploadStore.media).toEqual(data);
+    expect(getImage(container)).toHaveAttribute('src', 'test-400.jpg');
 });

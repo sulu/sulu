@@ -7,10 +7,10 @@ exports[`Return JSX for simple string 1`] = `
 </p>
 `;
 
-exports[`Return JSX for simple string 2`] = `
+exports[`Return null for everything expect a string 1`] = `null`;
+
+exports[`Return truncated JSX for long string 1`] = `
 <p>
   cccccccccccccccccccccccccccccccccccccccccccccccccc...
 </p>
 `;
-
-exports[`Return null for everything expect a string 1`] = `null`;

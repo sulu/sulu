@@ -34,6 +34,7 @@ import List, {
 } from './views/List';
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
+import CKEditor5Container from './containers/CKEditor5';
 import {
     ArrayFieldTransformer,
     BooleanFieldFilterType,
@@ -41,7 +42,9 @@ import {
     ColorFieldTransformer,
     HtmlFieldTransformer,
     IconFieldTransformer,
+    BadgeFieldTransformer,
     BytesFieldTransformer,
+    DurationFieldTransformer,
     ColumnListAdapter,
     listAdapterRegistry,
     listFieldTransformerRegistry,
@@ -114,6 +117,8 @@ import Form, {
     DropdownToolbarAction as FormDropdownToolbarAction,
     SaveToolbarAction as FormSaveToolbarAction,
     PublishToolbarAction as FormPublishToolbarAction,
+    RequestForPublishToolbarAction as FormRequestForPublishToolbarAction,
+    ReviewWorkflowTransitionRequestToolbarAction as FormReviewWorkflowTransitionRequestToolbarAction,
     SaveWithFormDialogToolbarAction as FormSaveWithFormDialogToolbarAction,
     SaveWithPublishingToolbarAction as FormSaveWithPublishingToolbarAction,
     SetUnpublishedToolbarAction as FormSetUnpublishedToolbarAction,
@@ -129,11 +134,14 @@ import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 import Subscription from './views/Subscription';
 import {setSubscriptionConfig} from './views/Subscription/subscriptionConfig';
+import RequestLog from './views/RequestLog';
 import {initializeJexl} from './utils/jexl';
 import {ExternalLinkTypeOverlay, linkOverlayRegistry, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 import AiApplication from './containers/AiApplication';
 import RestoreVersionItemAction from './views/List/itemActions/RestoreVersionItemAction';
+import ReviewWorkflowTransitionRequestItemAction
+    from './views/List/itemActions/ReviewWorkflowTransitionRequestItemAction';
 import {setAccountLimitContactEmail} from './containers/AiApplication/accountLimits';
 
 configure({enforceActions: 'observed'});
@@ -215,6 +223,7 @@ function registerViews() {
         {disableDefaultSpacing: true, fullscreen: true}
     );
     viewRegistry.add('sulu_ai_platform.subscription', Subscription);
+    viewRegistry.add('sulu_ai_platform.request_log', RequestLog);
 }
 
 function registerListAdapters() {
@@ -241,7 +250,9 @@ function registerListFieldFilterTypes() {
 
 function registerListFieldTransformers() {
     listFieldTransformerRegistry.add('array', new ArrayFieldTransformer());
+    listFieldTransformerRegistry.add('badge', new BadgeFieldTransformer());
     listFieldTransformerRegistry.add('bytes', new BytesFieldTransformer());
+    listFieldTransformerRegistry.add('duration', new DurationFieldTransformer());
     listFieldTransformerRegistry.add('date', new DateFieldTransformer());
     listFieldTransformerRegistry.add('time', new TimeFieldTransformer());
     listFieldTransformerRegistry.add('datetime', new DateTimeFieldTransformer());
@@ -262,6 +273,7 @@ function registerListItemActions() {
     listItemActionRegistry.add('link', ListLinkItemAction);
     listItemActionRegistry.add('detail_link', ListDetailLinkItemAction);
     listItemActionRegistry.add('restore_version', RestoreVersionItemAction);
+    listItemActionRegistry.add('review_workflow_transition_request', ReviewWorkflowTransitionRequestItemAction);
 }
 
 function registerFieldTypes(fieldTypeOptions) {
@@ -366,6 +378,14 @@ function registerFormToolbarActions() {
     formToolbarActionRegistry.add('sulu_admin.update_form_store', FormUpdateFormStoreToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.suggest_form_store', FormSuggestFormStoreToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.reload_form_store', FormReloadFormStoreToolbarAction);
+    formToolbarActionRegistry.add(
+        'sulu_content.request_for_publish',
+        FormRequestForPublishToolbarAction
+    );
+    formToolbarActionRegistry.add(
+        'sulu_content.review_workflow_transition_request',
+        FormReviewWorkflowTransitionRequestToolbarAction
+    );
 }
 
 function registerListToolbarActions() {
@@ -392,6 +412,7 @@ function processConfig(config: Object) {
     smartContentConfigStore.setConfig(config.smartContent);
     CollaborationStore.enabled = config.collaborationEnabled;
     CollaborationStore.interval = config.collaborationInterval;
+    CKEditor5Container.textPartLanguages = config.textPartLanguages;
 }
 
 function startAdmin() {

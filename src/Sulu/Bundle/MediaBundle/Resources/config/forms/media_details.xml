@@ -64,6 +64,16 @@
                     </params>
                 </property>
 
+                <property name="mediaLanguages" type="select" visibleCondition="type == 'document' || type == 'video'">
+                    <meta>
+                        <title>sulu_media.media_language</title>
+                    </meta>
+
+                    <params>
+                        <param name="values" type="expression" value="service('sulu_media.media_language_provider').getValues(locale)"/>
+                    </params>
+                </property>
+
                 <section name="aiDisclosure" visibleCondition="origin == 'ai_generated' || origin == 'ai_modified'">
                     <meta>
                         <title>sulu_media.ai_disclosure</title>

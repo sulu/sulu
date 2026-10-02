@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\DependencyInjection;
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin;
 use Sulu\Bundle\SecurityBundle\Exception\RoleKeyAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
@@ -54,14 +55,16 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
 
         $container->setParameter('sulu_security.two_factor_email_template', $config['two_factor']['email']['template']);
 
-        /** @var array{enabled: bool, pattern: string} $twoFactorForceConfig */
+        /** @var array{enabled: bool, pattern: string, setup: bool} $twoFactorForceConfig */
         $twoFactorForceConfig = $config['two_factor']['force'];
         $twoFactorForcePattern = null;
         $twoFactorForceEnabled = $twoFactorForceConfig['enabled'];
         if ($twoFactorForceEnabled) {
             $twoFactorForcePattern = $twoFactorForceConfig['pattern'];
         }
+        $twoFactorForceSetup = $twoFactorForceEnabled && $twoFactorForceConfig['setup'];
         $container->setParameter('sulu_security.two_factor_force_pattern', $twoFactorForcePattern);
+        $container->setParameter('sulu_security.two_factor_force_setup', $twoFactorForceSetup);
 
         foreach ($config['reset_password']['mail'] as $option => $value) {
             $container->setParameter('sulu_security.reset_password.mail.' . $option, $value);
@@ -89,7 +92,7 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
             $loader->load('checker.php');
         }
 
-        if ($twoFactorForcePattern) {
+        if ($twoFactorForcePattern && !$twoFactorForceSetup) {
             $loader->load('2fa_force.php');
         }
 
@@ -219,6 +222,9 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                             'routes' => [
                                 'list' => 'sulu_security.get_roles',
                                 'detail' => 'sulu_security.get_role',
+                            ],
+                            'views' => [
+                                'detail' => SecurityAdmin::EDIT_FORM_VIEW,
                             ],
                         ],
                         'users' => [

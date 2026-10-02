@@ -1,11 +1,10 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import ModifiableCircle from '../ModifiableCircle';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 function dispatchMouseDown(element: HTMLElement, pageX: number, pageY: number) {
     const mouseDownEvent = new MouseEvent('mousedown', {
@@ -27,12 +26,13 @@ test('The component should render', () => {
     expect(asFragment()).toMatchSnapshot();
 });
 
-test('The component should call the double click callback', () => {
+test('The component should call the double click callback', async() => {
     const clickSpy = jest.fn();
+    const user = userEvent.setup();
 
     render(<ModifiableCircle label="" onDoubleClick={clickSpy} radius={100} />);
 
-    fireEvent.doubleClick(screen.getByRole('button'));
+    await user.dblClick(screen.getByRole('button'));
 
     expect(clickSpy).toHaveBeenCalledTimes(1);
 });

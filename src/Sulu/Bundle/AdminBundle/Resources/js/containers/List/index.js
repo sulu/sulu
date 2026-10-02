@@ -13,7 +13,9 @@ import BooleanFieldFilterType from './fieldFilterTypes/BooleanFieldFilterType';
 import BoolFieldTransformer from './fieldTransformers/BoolFieldTransformer';
 import ColorFieldTransformer from './fieldTransformers/ColorFieldTransformer';
 import IconFieldTransformer from './fieldTransformers/IconFieldTransformer';
+import BadgeFieldTransformer from './fieldTransformers/BadgeFieldTransformer';
 import BytesFieldTransformer from './fieldTransformers/BytesFieldTransformer';
+import DurationFieldTransformer from './fieldTransformers/DurationFieldTransformer';
 import DateFieldTransformer from './fieldTransformers/DateFieldTransformer';
 import DateFieldFilterType from './fieldFilterTypes/DateFieldFilterType';
 import DateTimeFieldTransformer from './fieldTransformers/DateTimeFieldTransformer';
@@ -59,7 +61,9 @@ export {
     DefaultLoadingStrategy,
     InfiniteLoadingStrategy,
     ArrayFieldTransformer,
+    BadgeFieldTransformer,
     BytesFieldTransformer,
+    DurationFieldTransformer,
     DateFieldTransformer,
     DateFieldFilterType,
     SelectFieldFilterType,

@@ -12,7 +12,7 @@ import FormOverlay from '../FormOverlay';
 import snackbarStore from '../../stores/snackbarStore';
 import conditionDataProviderRegistry from '../Form/registries/conditionDataProviderRegistry';
 import {getDifference} from '../../utils/DifferenceCalculator';
-import blockIdGenerator from '../../services/blockIdGenerator';
+import blockIdGenerator, {createBlockIdBackfiller, readBlockIdGeneratorOption} from '../../services/blockIdGenerator';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
 import type {BlockError, ChangeContext, FieldTypeProps, FormStoreInterface} from '../Form/types';
@@ -33,6 +33,12 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     oldIconValue: ?Object;
     computedIcons: Array<Array<string>> = [];
 
+    // Shared with the image_map field: fills missing block ids without dirtying the form.
+    backfillBlockIds = createBlockIdBackfiller((value) => {
+        this.setValue(value);
+        this.props.onChange(value, {isDefaultValue: true});
+    });
+
     constructor(props: FieldTypeProps<Array<BlockEntry>>) {
         super(props);
 
@@ -40,6 +46,9 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     }
 
     @action componentDidMount() {
+        // Fill missing block ids on open, written with the isDefaultValue context so the form stays pristine.
+        this.generateMissingBlockIds();
+
         if (this.settingsFormKey) {
             // initialize empty blockSettingsFormStore because schema of the store is used for determining iconsMapping
             this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
@@ -63,6 +72,9 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             if (!this.value || equals(toJS(this.value), toJS(prevProps.value))) {
                 this.setValue(value);
             }
+
+            // Retry once reloaded data still lacks ids; a no-op when nothing is missing.
+            this.generateMissingBlockIds();
         }
 
         if (!types || !oldTypes) {
@@ -180,19 +192,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     }
 
     @computed get generateBlockIds() {
-        const {
-            schemaOptions: {
-                block_id_generator: {
-                    value: blockIdGenerator,
-                } = {},
-            },
-        } = this.props;
-
-        if (blockIdGenerator !== undefined && typeof blockIdGenerator !== 'boolean') {
-            throw new Error('The "block" field types only accepts booleans as "block_id_generator" schema option!');
-        }
-
-        return blockIdGenerator;
+        return readBlockIdGeneratorOption(this.props.schemaOptions, 'block');
     }
 
     @computed get iconsMapping() {
@@ -303,6 +303,15 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.setValue(newValues);
 
         onChange(newValues, context);
+    };
+
+    generateMissingBlockIds = () => {
+        if (!this.generateBlockIds) {
+            return;
+        }
+
+        // Getter so the backfiller merges the ids into the current value, not a stale snapshot.
+        this.backfillBlockIds(() => this.value, this.props.types);
     };
 
     handleBlocksChange = (value: Object) => {

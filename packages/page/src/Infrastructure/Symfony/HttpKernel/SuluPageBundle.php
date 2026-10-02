@@ -16,7 +16,6 @@ namespace Sulu\Page\Infrastructure\Symfony\HttpKernel;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
-use Sulu\Content\Infrastructure\Sulu\Security\ResourceSecurityContextProvider;
 use Sulu\Page\Application\ContentNormalizer\DefaultTemplateNormalizer;
 use Sulu\Page\Application\Mapper\PageContentMapper;
 use Sulu\Page\Application\Mapper\PageMapperInterface;
@@ -208,7 +207,6 @@ final class SuluPageBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_content.content_workflow'),
-                new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
@@ -260,16 +258,6 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
-
-        $services->set('sulu_page.workflow_transition_request_security_context_provider')
-            ->class(ResourceSecurityContextProvider::class)
-            ->args([
-                new Reference('doctrine.orm.entity_manager'),
-                '%sulu.model.page.class%',
-                null, // pages resolve their webspace context via SecuredEntityInterface
-            ])
-            ->tag('sulu_content.workflow_transition_request_security_context_provider', ['resource-key' => PageInterface::RESOURCE_KEY])
-            ->tag('sulu.context', ['context' => 'admin']);
 
         // Mapper service
         $services->set('sulu_page.page_content_mapper')
@@ -758,6 +746,9 @@ final class SuluPageBundle extends AbstractBundle
                             'routes' => [
                                 'list' => 'sulu_page.get_pages',
                                 'detail' => 'sulu_page.get_page',
+                            ],
+                            'views' => [
+                                'detail' => PageAdmin::EDIT_FORM_VIEW,
                             ],
                             'security_class' => Page::class,
                             'security_context' => 'sulu.webspaces.#webspace#',

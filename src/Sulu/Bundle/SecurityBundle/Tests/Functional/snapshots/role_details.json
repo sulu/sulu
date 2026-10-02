@@ -111,6 +111,11 @@
                 "type": "string",
                 "minLength": 1
             },
+            "system": {
+                "not": {
+                    "const": ""
+                }
+            },
             "key": {
                 "anyOf": [
                     {

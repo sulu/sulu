@@ -39,6 +39,7 @@ use Sulu\Content\Infrastructure\Doctrine\CategoryFactory;
 use Sulu\Content\Infrastructure\Doctrine\ContactFactory;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Content\Infrastructure\Doctrine\MetadataLoader;
+use Sulu\Content\Infrastructure\Doctrine\Repository\DimensionContentRepository;
 use Sulu\Content\Infrastructure\Doctrine\TagFactory;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactory;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
@@ -60,6 +61,8 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_preview.preview_object_provider_registry'),
             new Reference('sulu_content.content_metadata_inspector'),
             new Reference('sulu_security.security_checker'),
+            new Reference('sulu_content.request_workflow_resolver'),
+            new Reference('sulu_content.workflow_transition_request_security_context_resolver'),
             '%sulu_content.content_settings_forms%',
             '%sulu_content.content_excerpt_forms%',
             '%sulu_content.content_seo_forms%',
@@ -92,6 +95,12 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_content.contact_factory', ContactFactory::class)
         ->args([new Reference('doctrine.orm.entity_manager')]);
+
+    $services->set('sulu_content.dimension_content_repository', DimensionContentRepository::class)
+        ->args([
+            new Reference('doctrine.orm.entity_manager'),
+            new Reference('sulu_content.content_metadata_inspector'),
+        ]);
 
     $services->set('sulu_content.dimension_content_collection_factory', DimensionContentCollectionFactory::class)
         ->args([

@@ -264,6 +264,11 @@
                     }
                 ]
             },
+            "url": {
+                "not": {
+                    "const": ""
+                }
+            },
             "article": {
                 "anyOf": [
                     {

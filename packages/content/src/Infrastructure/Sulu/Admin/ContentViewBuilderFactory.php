@@ -24,6 +24,10 @@ use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterf
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
+use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
@@ -56,10 +60,98 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         private PreviewObjectProviderRegistryInterface $objectProviderRegistry,
         private ContentMetadataInspectorInterface $contentMetadataInspector,
         private SecurityCheckerInterface $securityChecker,
+        private RequestWorkflowResolverInterface $requestWorkflowResolver,
+        private WorkflowTransitionRequestSecurityContextResolverInterface $securityContextResolver,
         private array $settingsForms,
         private array $excerptForms = [],
-        private array $seoForms = []
+        private array $seoForms = [],
     ) {
+    }
+
+    /**
+     * The `save` dropdown shows while no request is active, the `approval` button once one is open.
+     *
+     * @template T of DimensionContentInterface
+     *
+     * @param class-string<ContentRichEntityInterface<T>> $contentRichEntityClass
+     *
+     * @return array{save: DropdownToolbarAction, approval: ToolbarAction}
+     */
+    public function getWorkflowTransitionRequestToolbarActions(
+        string $contentRichEntityClass,
+        string $saveVisibleCondition = '(!_permissions || _permissions.edit)',
+        string $publishVisibleCondition = '(!_permissions || _permissions.live)',
+        // Opening the overlay takes `edit` or `live` too; the decisions inside are gated on `review`.
+        string $reviewVisibleCondition = '(!_permissions || _permissions.review || _permissions.edit || _permissions.live)',
+    ): array {
+        $noActiveRequest = '!activeWorkflowTransitionRequest';
+        $hasActiveRequest = '!!activeWorkflowTransitionRequest';
+
+        return [
+            'save' => new DropdownToolbarAction(
+                'sulu_admin.save',
+                'su-save',
+                [
+                    new ToolbarAction(
+                        'sulu_admin.save',
+                        [
+                            'label' => 'sulu_admin.save_draft',
+                            'options' => ['action' => 'draft'],
+                            'visible_condition' => '(' . $saveVisibleCondition . ') && ' . $noActiveRequest,
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_content.request_for_publish',
+                        [
+                            'visible_condition' => '(' . $saveVisibleCondition . ') && ' . $noActiveRequest,
+                            // The create form has nothing saved to ask, so it matches its picked template.
+                            'templates' => $this->resolveTemplateKeysWithWorkflow($contentRichEntityClass),
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_admin.save',
+                        [
+                            'label' => 'sulu_admin.save_publish',
+                            'options' => ['action' => 'publish'],
+                            'visible_condition' => '(' . $saveVisibleCondition . ') && (' . $publishVisibleCondition . ') && ' . $noActiveRequest,
+                        ]
+                    ),
+                    new ToolbarAction(
+                        'sulu_admin.publish',
+                        [
+                            'visible_condition' => '(' . $publishVisibleCondition . ') && ' . $noActiveRequest,
+                        ]
+                    ),
+                ]
+            ),
+            'approval' => new ToolbarAction(
+                'sulu_content.review_workflow_transition_request',
+                [
+                    'visible_condition' => '(' . $reviewVisibleCondition . ') && ' . $hasActiveRequest,
+                ]
+            ),
+        ];
+    }
+
+    /**
+     * @template T of DimensionContentInterface
+     *
+     * @param class-string<ContentRichEntityInterface<T>> $contentRichEntityClass
+     *
+     * @return list<string>
+     */
+    private function resolveTemplateKeysWithWorkflow(string $contentRichEntityClass): array
+    {
+        $dimensionContentClass = $this->contentMetadataInspector->getDimensionContentClass($contentRichEntityClass);
+
+        if (!\is_subclass_of($dimensionContentClass, TemplateInterface::class)) {
+            return [];
+        }
+
+        return $this->requestWorkflowResolver->resolveTemplateKeysWithWorkflow(
+            $dimensionContentClass::getResourceKey(),
+            $dimensionContentClass::getTemplateType(),
+        );
     }
 
     public function getDefaultToolbarActions(
@@ -70,13 +162,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         $toolbarActions = [];
 
         if (\is_subclass_of($dimensionContentClass, WorkflowInterface::class)) {
-            $toolbarActions['save'] = new ToolbarAction(
-                'sulu_admin.save_with_publishing',
-                [
-                    'publish_visible_condition' => '(!_permissions || _permissions.live)',
-                    'save_visible_condition' => '(!_permissions || _permissions.edit)',
-                ]
-            );
+            $toolbarActions = $this->getWorkflowTransitionRequestToolbarActions($contentRichEntityClass);
         } else {
             $toolbarActions['save'] = new ToolbarAction(
                 'sulu_admin.save'
@@ -371,7 +457,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
             $versionsListKey = $resourceKey . '_versions';
         }
 
-        return [
+        $views = [
             $this->viewBuilderFactory
                 ->createResourceTabViewBuilder($insightsResourceTabViewName, '/insights')
                 ->setResourceKey($resourceKey)
@@ -403,6 +489,49 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                 ])
                 ->setParent($insightsResourceTabViewName),
         ];
+
+        // The list endpoint authorizes against the resource's security context, so without one the tab
+        // could only ever answer with an error.
+        if ($this->securityContextResolver->has($resourceKey)) {
+            $views[] = $this->createWorkflowTransitionRequestsView($insightsResourceTabViewName, $resourceKey);
+        }
+
+        return $views;
+    }
+
+    private function createWorkflowTransitionRequestsView(
+        string $insightsResourceTabViewName,
+        string $resourceKey,
+    ): ViewBuilderInterface {
+        return $this->viewBuilderFactory
+            ->createListViewBuilder(
+                $insightsResourceTabViewName . '.workflow_transition_requests',
+                '/workflow-transition-requests'
+            )
+            ->setTabTitle('sulu_content.workflow_transition_request.requests_for_publishing')
+            // The versions tab sets no order, so ResourceTabs treats it as 0 and any higher value sorts this one after it.
+            ->setTabOrder(6145)
+            // Set only while a request workflow covers the content's template.
+            ->setTabCondition('workflowTransitionRequestEnabled')
+            ->setResourceKey('workflow_transition_requests')
+            ->setListKey('workflow_transition_requests')
+            ->addListAdapters(['table'])
+            ->addAdapterOptions([
+                'table' => [
+                    'skin' => 'flat',
+                ],
+            ])
+            ->disableTabGap()
+            ->disableSearching()
+            ->disableSelection()
+            ->disableColumnOptions()
+            ->disableFiltering()
+            ->addRequestParameters(['resourceKey' => $resourceKey])
+            ->addRouterAttributesToListRequest(['id' => 'resourceId', 'locale'])
+            ->addItemActions([
+                new ListItemAction('review_workflow_transition_request'),
+            ])
+            ->setParent($insightsResourceTabViewName);
     }
 
     /**
@@ -484,15 +613,49 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
     {
         $saveAction = $toolbarActions['save'] ?? null;
 
-        if (!$saveAction instanceof ToolbarAction || 'sulu_admin.save_with_publishing' !== $saveAction->getType()) {
+        if (!$saveAction instanceof ToolbarAction) {
             return $toolbarActions;
         }
 
-        $toolbarActions['save'] = new ToolbarAction(
-            $saveAction->getType(),
-            \array_merge($saveAction->getOptions(), ['publish_visible_condition' => 'false']),
-        );
+        if ('sulu_admin.save_with_publishing' === $saveAction->getType()) {
+            $toolbarActions['save'] = new ToolbarAction(
+                $saveAction->getType(),
+                \array_merge($saveAction->getOptions(), ['publish_visible_condition' => 'false']),
+            );
+
+            return $toolbarActions;
+        }
+
+        // The request workflow replaces that action with a dropdown, whose publish entries carry the
+        // same condition and so need the same removal.
+        if ($saveAction instanceof DropdownToolbarAction) {
+            $toolbarActions['save'] = $this->withoutPublishingEntries($saveAction);
+        }
 
         return $toolbarActions;
+    }
+
+    private function withoutPublishingEntries(DropdownToolbarAction $saveAction): DropdownToolbarAction
+    {
+        $options = $saveAction->getOptions();
+        $label = $options['label'] ?? null;
+        $icon = $options['icon'] ?? null;
+
+        /** @var ToolbarAction[] $entries */
+        $entries = $options['toolbarActions'] ?? [];
+
+        return new DropdownToolbarAction(
+            \is_string($label) ? $label : 'sulu_admin.save',
+            \is_string($icon) ? $icon : 'su-save',
+            \array_values(\array_filter($entries, static function(ToolbarAction $entry) {
+                if ('sulu_admin.publish' === $entry->getType()) {
+                    return false;
+                }
+
+                $entryOptions = $entry->getOptions()['options'] ?? null;
+
+                return !\is_array($entryOptions) || 'publish' !== ($entryOptions['action'] ?? null);
+            })),
+        );
     }
 }

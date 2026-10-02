@@ -100,3 +100,132 @@ test('Should handle API errors gracefully', () => {
         expect(error).toBe(mockError);
     });
 });
+
+test('countMissingBlockIds returns 0 for an empty value', () => {
+    expect(blockIdGenerator.countMissingBlockIds(undefined, {})).toEqual(0);
+    expect(blockIdGenerator.countMissingBlockIds(null, {})).toEqual(0);
+    expect(blockIdGenerator.countMissingBlockIds([], {})).toEqual(0);
+});
+
+test('countMissingBlockIds and applyBlockIds handle blocks nested inside another block', () => {
+    const types = {
+        container: {
+            title: 'Container',
+            form: {
+                children: {
+                    type: 'block',
+                    types: {
+                        editor: {form: {}, title: 'Editor'},
+                    },
+                },
+            },
+        },
+    };
+    const value = [
+        {
+            type: 'container',
+            children: [
+                {type: 'editor'},
+                {_id: 'nested-existing', type: 'editor'},
+            ],
+        },
+    ];
+
+    expect(blockIdGenerator.countMissingBlockIds(value, types)).toEqual(2);
+
+    const result = blockIdGenerator.applyBlockIds(value, types, ['id-1', 'id-2']);
+
+    expect(result[0]._id).toEqual('id-1');
+    expect(result[0].children[0]._id).toEqual('id-2');
+    expect(result[0].children[1]._id).toEqual('nested-existing');
+});
+
+test('countMissingBlockIds and applyBlockIds handle image_map hotspots wrapped under a hotspots key', () => {
+    const types = {default: {form: {}, title: 'Default'}};
+    const value = {
+        imageId: 5,
+        hotspots: [
+            {type: 'default', hotspot: {type: 'circle'}},
+            {_id: 'hotspot-existing', type: 'default', hotspot: {type: 'circle'}},
+        ],
+    };
+
+    expect(blockIdGenerator.countMissingBlockIds(value, types)).toEqual(1);
+
+    const result = blockIdGenerator.applyBlockIds(value, types, ['id-1']);
+
+    expect(result.imageId).toEqual(5);
+    expect(result.hotspots[0]._id).toEqual('id-1');
+    expect(result.hotspots[1]._id).toEqual('hotspot-existing');
+});
+
+test('countMissingBlockIds and applyBlockIds descend into fields nested in sections', () => {
+    const types = {
+        container: {
+            title: 'Container',
+            form: {
+                section: {
+                    type: 'section',
+                    items: {
+                        children: {
+                            type: 'block',
+                            types: {editor: {form: {}, title: 'Editor'}},
+                        },
+                    },
+                },
+            },
+        },
+    };
+    const value = [
+        {type: 'container', children: [{type: 'editor'}]},
+    ];
+
+    expect(blockIdGenerator.countMissingBlockIds(value, types)).toEqual(2);
+
+    const result = blockIdGenerator.applyBlockIds(value, types, ['id-1', 'id-2']);
+
+    expect(result[0].children[0]._id).toEqual('id-2');
+});
+
+test('countMissingBlockIds counts only the items without an id', () => {
+    const types = {editor: {form: {}, title: 'Editor'}};
+
+    expect(blockIdGenerator.countMissingBlockIds(undefined, types)).toEqual(0);
+    expect(blockIdGenerator.countMissingBlockIds([{_id: 'a', type: 'editor'}], types)).toEqual(0);
+    expect(blockIdGenerator.countMissingBlockIds(
+        [{type: 'editor'}, {_id: '', type: 'editor'}, {_id: 'a', type: 'editor'}],
+        types
+    )).toEqual(2);
+});
+
+test('applyBlockIds fills the still-missing items and does not mutate the passed value', () => {
+    const types = {editor: {form: {}, title: 'Editor'}};
+    const value = [{type: 'editor'}, {_id: 'kept', type: 'editor'}, {type: 'editor'}];
+
+    const result = blockIdGenerator.applyBlockIds(value, types, ['id-1', 'id-2']);
+
+    expect(result).toEqual([
+        {_id: 'id-1', type: 'editor'},
+        {_id: 'kept', type: 'editor'},
+        {_id: 'id-2', type: 'editor'},
+    ]);
+    expect(value).toEqual([{type: 'editor'}, {_id: 'kept', type: 'editor'}, {type: 'editor'}]);
+});
+
+test('applyBlockIds fills only as many items as it has ids when more went missing meanwhile', () => {
+    const types = {editor: {form: {}, title: 'Editor'}};
+    const value = [{type: 'editor'}, {type: 'editor'}];
+
+    const result = blockIdGenerator.applyBlockIds(value, types, ['id-1']);
+
+    expect(result[0]._id).toEqual('id-1');
+    expect(result[1]._id).toBeUndefined();
+});
+
+test('applyBlockIds returns null when there is nothing to fill', () => {
+    const types = {editor: {form: {}, title: 'Editor'}};
+
+    expect(blockIdGenerator.applyBlockIds([{_id: 'a', type: 'editor'}], types, ['id-1'])).toEqual(null);
+    expect(blockIdGenerator.applyBlockIds([{type: 'editor'}], types, [])).toEqual(null);
+    expect(blockIdGenerator.applyBlockIds(null, types, ['id-1'])).toEqual(null);
+});

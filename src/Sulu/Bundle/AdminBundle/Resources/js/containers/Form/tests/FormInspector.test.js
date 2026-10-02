@@ -50,6 +50,18 @@ test('Should return the locale from the ResourceFormStore', () => {
     expect(formInspector.locale.get()).toEqual('de');
 });
 
+test('Should return the locked flag from the ResourceFormStore', () => {
+    const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
+    const formInspector = new FormInspector(formStore);
+
+    expect(formInspector.locked).toEqual(false);
+
+    // $FlowFixMe
+    formStore.locked = true;
+
+    expect(formInspector.locked).toEqual(true);
+});
+
 test('Should return the id from the ResourceFormStore', () => {
     const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
     const formInspector = new FormInspector(formStore);

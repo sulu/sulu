@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Should render the component 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="header"
   >
     sulu_admin.two_factor_authentication
-  </div>,
+  </div>
   <form
     class="form"
   >
@@ -46,6 +46,7 @@ Array [
         >
           <input
             type="checkbox"
+            value=""
           />
           <span />
         </span>
@@ -79,17 +80,17 @@ Array [
         </button>
       </div>
     </fieldset>
-  </form>,
-]
+  </form>
+</DocumentFragment>
 `;
 
 exports[`Should render the component error 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="header small"
   >
     sulu_admin.two_factor_authentication_failed
-  </div>,
+  </div>
   <form
     class="form"
   >
@@ -129,6 +130,7 @@ Array [
         >
           <input
             type="checkbox"
+            value=""
           />
           <span />
         </span>
@@ -162,6 +164,6 @@ Array [
         </button>
       </div>
     </fieldset>
-  </form>,
-]
+  </form>
+</DocumentFragment>
 `;

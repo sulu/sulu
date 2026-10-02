@@ -47,7 +47,11 @@ class Field extends React.Component<Props> {
     }
 
     @computed get disabled() {
-        const {schema} = this.props;
+        const {formInspector, schema} = this.props;
+
+        if (formInspector.locked) {
+            return true;
+        }
 
         if (!schema.disabledCondition) {
             return false;
@@ -124,6 +128,16 @@ class Field extends React.Component<Props> {
             // not make sense to have a field with a single value with no possibility to change it
             // therefore we are only showing the other errors, since the const error would just confuse users
             return;
+        }
+
+        if (
+            error.keyword === 'not'
+            && error.schema
+            && typeof error.schema === 'object'
+            && error.schema.const === ''
+        ) {
+            // a mandatory field forbids an empty string with "not", which is the same as a missing value
+            return 'required';
         }
 
         if (typeof error.keyword === 'string') {

@@ -188,6 +188,7 @@
     "sulu_admin.show_history": "Verlauf anzeigen",
     "sulu_admin.history": "Verlauf",
     "sulu_admin.resource_locator_history_delete_warning": "Die URL wird für alle Entwurfs- und Live-Versionen gelöscht, und kann nicht wieder hergestellt werden. Wollen Sie wirklich fortfahren?",
+    "sulu_admin.resource_list_load_error": "Beim Laden der Liste ist ein Fehler aufgetreten.",
     "sulu_admin.has_changed_warning_dialog_title": "Inhalte werden überschrieben!",
     "sulu_admin.has_changed_warning_dialog_text": "Dieser Inhalt wurde zwischenzeitlich von einem anderen Benutzer geändert. Wenn der Inhalt gespeichert wird, gehen diese Daten verloren.",
     "sulu_admin.edit_profile": "Profil bearbeiten",
@@ -240,6 +241,7 @@
     "sulu_admin.insufficient_descendant_permissions": "Nicht ausreichende Berechtigungen für {count} untergeordnete Elemente.",
     "sulu_admin.unexpected_copy_server_error": "Beim Kopieren ist ein unerwarteter Fehler aufgetreten.",
     "sulu_admin.unexpected_delete_server_error": "Beim Löschen ist ein unerwarteter Fehler aufgetreten.",
+    "sulu_admin.unknown_user": "Unbekannter Benutzer",
     "sulu_admin.two_factor_authentication": "Zwei-Faktor Authentifizierung",
     "sulu_admin.two_factor_authentication_failed": "Verifizierungscode ist ungültig. Bitte versuchen Sie es erneut.",
     "sulu_admin.two_factor_verification_code": "Verifizierungscode",
@@ -298,5 +300,6 @@
     "sulu_admin.choose_attributes": "Attribute auswählen",
     "sulu_admin.attribute_count": "{count} {count, plural, =1 {Attribut} other {Attribute}}",
     "sulu_admin.filter_attributes": "Attribute filtern...",
-    "sulu_admin.hide_empty_attributes": "Leere Attribute ausblenden"
+    "sulu_admin.hide_empty_attributes": "Leere Attribute ausblenden",
+    "sulu_admin.text_part_language_marker": "Sprache: {language}"
 }

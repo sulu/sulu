@@ -5,6 +5,7 @@ import {observer} from 'mobx-react';
 import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
 import {userStore} from 'sulu-admin-bundle/stores';
+import {createBlockIdBackfiller, readBlockIdGeneratorOption} from 'sulu-admin-bundle/services';
 import ImageMapContainer from '../../../ImageMap';
 import FieldRenderer from './FieldRenderer';
 import type {FieldTypeProps, BlockError} from 'sulu-admin-bundle/types';
@@ -16,19 +17,44 @@ const MISSING_TYPE_ERROR_MESSAGE = 'The "image_map" field type needs at least on
 class ImageMap extends React.Component<FieldTypeProps<Value>> {
     @observable value: Value;
 
+    // Shared with FieldBlocks: fills missing hotspot ids without dirtying the form.
+    backfillBlockIds = createBlockIdBackfiller((value) => {
+        this.setValue(value);
+        this.props.onChange(value, {isDefaultValue: true});
+    });
+
     constructor(props: FieldTypeProps<Value>) {
         super(props);
 
         this.setValue(this.props.value);
     }
 
+    componentDidMount() {
+        this.generateMissingBlockIds();
+    }
+
     componentDidUpdate(prevProps: FieldTypeProps<Value>) {
         const {value} = this.props;
 
-        if (!equals(prevProps.value, value)){
+        if (!equals(prevProps.value, value)) {
             this.setValue(value);
+
+            this.generateMissingBlockIds();
         }
     }
+
+    get generateBlockIds(): ?boolean {
+        return readBlockIdGeneratorOption(this.props.schemaOptions, 'image_map');
+    }
+
+    generateMissingBlockIds = () => {
+        if (!this.generateBlockIds) {
+            return;
+        }
+
+        // Getter so the backfiller merges the ids into the current value, not a stale snapshot.
+        this.backfillBlockIds(() => this.value, this.props.types);
+    };
 
     @action setValue = (value: Object) => {
         this.value = value;

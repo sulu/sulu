@@ -5,9 +5,7 @@ import userEvent from '@testing-library/user-event';
 import TextArea from '../TextArea';
 import bindValueToOnChange from '../../../utils/TestHelper/bindValueToOnChange';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 test('TextArea should render', () => {
     const {container} = render(<TextArea onChange={jest.fn()} value="My value" />);
@@ -45,34 +43,37 @@ test('TextArea should render with value and character counter', () => {
 });
 
 test('TextArea should call onBlur when it loses focus', async() => {
+    const user = userEvent.setup();
     const blurSpy = jest.fn();
     render(<TextArea onBlur={blurSpy} onChange={jest.fn()} value="" />);
 
     const textarea = screen.queryByRole('textbox');
 
-    await userEvent.click(textarea);
+    await user.click(textarea);
     expect(blurSpy).not.toHaveBeenCalledWith();
 
-    await userEvent.tab();
+    await user.tab();
     expect(blurSpy).toHaveBeenCalledWith();
 });
 
 test('TextArea should call onChange when the TextArea changes', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     render(bindValueToOnChange(<TextArea onChange={changeSpy} value="My value" />));
 
     const textarea = screen.queryByDisplayValue('My value');
-    await userEvent.type(textarea, ' - changed');
+    await user.type(textarea, ' - changed');
 
     expect(changeSpy).toHaveBeenLastCalledWith('My value - changed');
 });
 
 test('TextArea should call onChange with undefined when the TextArea changes to empty', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     render(<TextArea onChange={changeSpy} value="My value" />);
 
     const textarea = screen.queryByDisplayValue('My value');
-    await userEvent.clear(textarea);
+    await user.clear(textarea);
 
     expect(changeSpy).toHaveBeenCalledWith(undefined);
 });

@@ -188,6 +188,7 @@
     "sulu_admin.show_history": "Show history",
     "sulu_admin.history": "History",
     "sulu_admin.resource_locator_history_delete_warning": "The URL will be deleted for all draft and live versions. This cannot be undone. Do you wish to proceed?",
+    "sulu_admin.resource_list_load_error": "An error occurred while loading the list.",
     "sulu_admin.has_changed_warning_dialog_title": "Content will be overwritten!",
     "sulu_admin.has_changed_warning_dialog_text": "This content has been edited by another user. When you save the content this data will get lost.",
     "sulu_admin.edit_profile": "Edit profile",
@@ -240,6 +241,7 @@
     "sulu_admin.insufficient_descendant_permissions": "Insufficient permissions for {count} descendant elements.",
     "sulu_admin.unexpected_copy_server_error": "An unexpected error occurred while copying.",
     "sulu_admin.unexpected_delete_server_error": "An unexpected error occurred while deleting.",
+    "sulu_admin.unknown_user": "Unknown user",
     "sulu_admin.two_factor_authentication": "Two-Factor authentication",
     "sulu_admin.two_factor_authentication_failed": "Verification code is invalid. Please try again.",
     "sulu_admin.two_factor_verification_code": "Verification code",
@@ -298,5 +300,6 @@
     "sulu_admin.choose_attributes": "Choose attributes",
     "sulu_admin.attribute_count": "{count} {count, plural, =1 {attribute} other {attributes}}",
     "sulu_admin.filter_attributes": "Filter attributes...",
-    "sulu_admin.hide_empty_attributes": "Hide empty attributes"
+    "sulu_admin.hide_empty_attributes": "Hide empty attributes",
+    "sulu_admin.text_part_language_marker": "Language: {language}"
 }

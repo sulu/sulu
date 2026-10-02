@@ -29,6 +29,7 @@ export type Types = {[key: string]: Type};
 export type PropertyError = {
     keyword: string,
     parameters: {[key: string]: mixed},
+    schema?: mixed,
 };
 
 export type BlockError = Array<?{[key: string]: Error}>;
@@ -105,6 +106,7 @@ export interface FormStoreInterface {
     +isFieldModified: (dataPath: string) => boolean,
     +loading: boolean,
     +locale: ?IObservableValue<string>,
+    +locked?: boolean,
     +metadataOptions: ?{[string]: any},
     +notFound: boolean,
     +options: SchemaOptions,

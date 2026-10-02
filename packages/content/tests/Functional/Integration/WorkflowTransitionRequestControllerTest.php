@@ -70,6 +70,21 @@ class WorkflowTransitionRequestControllerTest extends SuluTestCase
         $this->assertSame(1, $content['pages']);
     }
 
+    public function testCgetReturnsNullRequesterWithoutCreator(): void
+    {
+        $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+
+        $this->client->request('GET', '/admin/api/workflow-transition-requests.json?resourceKey=examples&resourceId=1&locale=en');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{_embedded: array{workflow_transition_requests: array<int, array<string, mixed>>}} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+
+        $this->assertSame([null], \array_column($content['_embedded']['workflow_transition_requests'], 'requester'));
+    }
+
     public function testCgetPaginates(): void
     {
         $first = $this->persistWorkflowTransitionRequest('examples', '1', 'en');

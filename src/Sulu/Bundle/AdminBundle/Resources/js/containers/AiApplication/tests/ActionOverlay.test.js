@@ -45,9 +45,7 @@ jest.mock('../../Form/stores/memoryFormStoreFactory', () => ({
     })),
 }));
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: (key) => key,
-}));
+jest.mock('../../../utils/Translator');
 
 jest.mock('../../Form/registries/fieldRegistry', () => ({
     get: jest.fn((type) => {
@@ -77,19 +75,22 @@ describe('ActionOverlay', () => {
     });
 
     it('opens the form overlay when the button is clicked', async() => {
+        const user = userEvent.setup();
         render(<ActionOverlay {...defaultProps} />);
-        await userEvent.click(screen.getByRole('button'));
+        await user.click(screen.getByRole('button'));
         expect(MemoryFormStoreFactory.createFromFormKey).toHaveBeenCalledWith('testFormKey');
         expect(screen.getByText('sulu_admin.send_feedback')).toBeInTheDocument();
     });
 
     it('handles form close', async() => {
+        const user = userEvent.setup();
         render(<ActionOverlay {...defaultProps} />);
-        await userEvent.click(screen.getByRole('button'));
-        await userEvent.click(screen.getAllByRole('button', {name: /su-times/i})[0]);
+        await user.click(screen.getByRole('button'));
+        const container = screen.getByText('sulu_admin.send_feedback').closest('.container');
+        await waitFor(() => expect(container).toHaveClass('isDown'));
 
-        await waitFor(() => {
-            expect(screen.queryByText('Form Title')).not.toBeInTheDocument();
-        });
+        await user.click(screen.getAllByRole('button', {name: /su-times/i})[0]);
+
+        await waitFor(() => expect(container).not.toHaveClass('isDown'));
     });
 });

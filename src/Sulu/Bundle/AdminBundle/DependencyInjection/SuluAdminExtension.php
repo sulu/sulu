@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\DependencyInjection;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewParameterProviderInterface;
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataVisitorInterface;
@@ -167,6 +168,10 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_admin.collaboration_interval', $config['collaboration']['interval']);
         $container->setParameter('sulu_admin.collaboration_threshold', $config['collaboration']['threshold']);
 
+        /** @var array{text_part_languages: list<string>} $ckeditorConfig */
+        $ckeditorConfig = $config['ckeditor'];
+        $container->setParameter('sulu_admin.ckeditor_text_part_languages', $ckeditorConfig['text_part_languages']);
+
         $container->setParameter('sulu_admin.forms.directories', $config['forms']['directories'] ?? []);
         $container->setParameter('sulu_admin.lists.directories', $config['lists']['directories'] ?? []);
         $container->setParameter('sulu_admin.templates.configuration', $config['templates']);
@@ -191,6 +196,9 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
 
         $container->registerForAutoconfiguration(TypedFormMetadataVisitorInterface::class)
             ->addTag('sulu_admin.typed_form_metadata_visitor');
+
+        $container->registerForAutoconfiguration(ResourceViewParameterProviderInterface::class)
+            ->addTag('sulu_admin.resource_view_parameter_provider');
 
         $this->loadFieldTypeOptions(
             $config['field_type_options'] ?? [],

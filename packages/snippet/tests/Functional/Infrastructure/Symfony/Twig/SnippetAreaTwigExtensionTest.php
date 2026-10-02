@@ -107,6 +107,23 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
         $this->assertArrayNotHasKey('image', $result);
     }
 
+    public function testLoadSnippetByAreaInTwoLocales(): void
+    {
+        $snippet = static::createSnippet([
+            'en' => ['live' => ['template' => 'snippet', 'title' => 'English Snippet']],
+            'de' => ['live' => ['template' => 'snippet', 'title' => 'Deutsches Snippet']],
+        ]);
+        static::createSnippetArea('hotel', 'sulu-io', $snippet);
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+
+        $english = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', ['title' => 'title'], 'sulu-io', 'en');
+        $german = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', ['title' => 'title'], 'sulu-io', 'de');
+
+        $this->assertSame('English Snippet', $english['title'] ?? null);
+        $this->assertSame('Deutsches Snippet', $german['title'] ?? null);
+    }
+
     public function testLoadSnippetByAreaReturnsNullWhenAreaNotFound(): void
     {
         $result = $this->snippetAreaTwigExtension->loadSnippetByArea('nonexistent', [], 'sulu-io', 'en');
@@ -148,5 +165,36 @@ class SnippetAreaTwigExtensionTest extends SuluTestCase
 
         $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', [], 'sulu-io', 'de');
         $this->assertNull($result);
+    }
+
+    public function testLoadSnippetByAreaWithShadowLocale(): void
+    {
+        // Publishing a shadow copies the source content into the shadow's own live row (see
+        // SnippetShadowPublishTest); the extension resolves that row directly.
+        $snippet = static::createSnippet([
+            'en' => [
+                'live' => [
+                    'template' => 'snippet',
+                    'title' => 'English Snippet',
+                ],
+            ],
+            'de' => [
+                'live' => [
+                    'template' => 'snippet',
+                    'title' => 'English Snippet',
+                    'shadowOn' => true,
+                    'shadowLocale' => 'en',
+                ],
+            ],
+        ]);
+        static::createSnippetArea('hotel', 'sulu-io', $snippet);
+        self::getEntityManager()->flush();
+        self::getEntityManager()->clear();
+
+        $result = $this->snippetAreaTwigExtension->loadSnippetByArea('hotel', ['title' => 'title'], 'sulu-io', 'de');
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('title', $result);
+        $this->assertSame('English Snippet', $result['title']);
     }
 }

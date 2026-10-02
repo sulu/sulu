@@ -202,7 +202,6 @@ type DomTestingLibraryType = {
 
 interface JestExpectType {
   not: JestExpectType &
-    EnzymeMatchersType &
     DomTestingLibraryType &
     JestJQueryMatchersType &
     JestStyledComponentsMatchersType &
@@ -815,7 +814,6 @@ declare var expect: {
     value: any
   ): JestExpectType &
     JestPromiseType &
-    EnzymeMatchersType &
     DomTestingLibraryType &
     JestJQueryMatchersType &
     JestStyledComponentsMatchersType &

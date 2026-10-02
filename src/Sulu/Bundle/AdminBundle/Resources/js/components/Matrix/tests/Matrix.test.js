@@ -120,6 +120,7 @@ test('Render the Matrix component with values in disabled state', () => {
 });
 
 test('Changing a value should call onChange ', async() => {
+    const user = userEvent.setup();
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -169,11 +170,12 @@ test('Changing a value should call onChange ', async() => {
     };
 
     const item = screen.queryAllByLabelText('su-pen')[1].parentElement;
-    await userEvent.click(item);
+    await user.click(item);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });
 
 test('Deactivate all button should call onChange', async() => {
+    const user = userEvent.setup();
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -223,11 +225,12 @@ test('Deactivate all button should call onChange', async() => {
     };
 
     const disableRowButton = screen.queryAllByText('Deactivate all')[0];
-    await userEvent.click(disableRowButton);
+    await user.click(disableRowButton);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });
 
 test('Activate all button should call onChange', async() => {
+    const user = userEvent.setup();
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -277,11 +280,12 @@ test('Activate all button should call onChange', async() => {
     };
 
     const activateRowButton = screen.queryAllByText('Activate all')[0];
-    await userEvent.click(activateRowButton);
+    await user.click(activateRowButton);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });
 
 test('Activate all button should call onChange with all values, even when the value does not exists', async() => {
+    const user = userEvent.setup();
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -327,6 +331,6 @@ test('Activate all button should call onChange with all values, even when the va
     };
 
     const activateRowButton = screen.queryAllByText('Activate all')[1];
-    await userEvent.click(activateRowButton);
+    await user.click(activateRowButton);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });

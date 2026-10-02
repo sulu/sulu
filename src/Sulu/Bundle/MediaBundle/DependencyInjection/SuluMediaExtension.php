@@ -154,6 +154,9 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                                 'list' => 'sulu_media.cget_media',
                                 'detail' => 'sulu_media.get_media',
                             ],
+                            'views' => [
+                                'detail' => MediaAdmin::EDIT_FORM_VIEW,
+                            ],
                             'security_context' => 'sulu.media.collections',
                             'security_class' => Collection::class,
                         ],
@@ -271,6 +274,11 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
         // collection-class
         $container->setParameter('sulu.model.collection.class', Collection::class);
+
+        // media languages (empty falls back to the content locales)
+        /** @var string[] $mediaLanguages */
+        $mediaLanguages = $config['media_languages'];
+        $container->setParameter('sulu_media.media_languages', $mediaLanguages);
 
         // image-formats
         $container->setParameter('sulu_media.image_format_files', $config['image_format_files']);

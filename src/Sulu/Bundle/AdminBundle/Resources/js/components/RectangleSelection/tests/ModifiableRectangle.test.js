@@ -1,11 +1,10 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import ModifiableRectangle from '../ModifiableRectangle';
 
-jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../utils/Translator');
 
 function dispatchMouseDown(element, pageX, pageY) {
     const mouseDownEvent = new MouseEvent('mousedown', {
@@ -39,12 +38,13 @@ test('The component should render with correct positions', () => {
     expect(asFragment()).toMatchSnapshot();
 });
 
-test('The component should call the double click callback', () => {
+test('The component should call the double click callback', async() => {
     const clickSpy = jest.fn();
+    const user = userEvent.setup();
 
     render(<ModifiableRectangle height={100} onDoubleClick={clickSpy} width={200} />);
 
-    fireEvent.doubleClick(screen.getByRole('button'));
+    await user.dblClick(screen.getByRole('button'));
 
     expect(clickSpy).toHaveBeenCalledTimes(1);
 });

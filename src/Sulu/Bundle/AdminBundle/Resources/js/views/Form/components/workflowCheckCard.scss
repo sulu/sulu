@@ -1,0 +1,219 @@
+@import '../../../containers/Application/colors.scss';
+
+$overlayWidth: 660px;
+$overlayContentHeight: 436px;
+
+.body {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: $overlayContentHeight;
+    overflow: auto;
+    padding: 24px;
+    width: $overlayWidth;
+}
+
+.card {
+    background: $white;
+    border: 1px solid $mercury;
+    border-radius: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    align-items: flex-start;
+    border-bottom: 1px solid $mercury;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 20px;
+}
+
+.header-text {
+    color: $mineShaft;
+    font-size: 14px;
+    line-height: 1.4;
+
+    strong {
+        font-weight: 600;
+    }
+}
+
+.header-date {
+    color: $doveGray;
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+.header-count {
+    color: $mineShaft;
+    flex: 0 0 auto;
+    font-size: 13px;
+    font-weight: 600;
+    margin-left: 10px;
+    white-space: nowrap;
+}
+
+.header-rejected {
+    color: $persianRed;
+    margin-left: 10px;
+}
+
+.row {
+    border-bottom: 1px solid $mercury;
+    padding: 12px 20px;
+}
+
+.row-main {
+    align-items: flex-start;
+    display: flex;
+    gap: 14px;
+}
+
+.row-icon {
+    align-items: center;
+    border-radius: 50%;
+    box-sizing: border-box;
+    display: inline-flex;
+    flex: 0 0 24px;
+    height: 24px;
+    justify-content: center;
+    width: 24px;
+}
+
+.row-glyph {
+    color: $white;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.row-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    padding-top: 2px;
+}
+
+.row-heading {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.row-title {
+    color: $mineShaft;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.row-caption {
+    color: $doveGray;
+    font-size: 13px;
+}
+
+.row-comment {
+    background-color: $alabaster;
+    border: 1px solid $silver;
+    border-radius: 6px;
+    color: $mineShaft;
+    display: block;
+    font-size: 13px;
+    line-height: 20px;
+    margin-top: 12px;
+    padding: 12px 14px;
+    position: relative;
+
+    &::before,
+    &::after {
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        content: '';
+        height: 0;
+        position: absolute;
+        width: 0;
+    }
+
+    &::before {
+        border-bottom: 10px solid $silver;
+        left: 12px;
+        top: -10px;
+    }
+
+    &::after {
+        border-bottom: 9px solid $alabaster;
+        left: 13px;
+        top: -9px;
+    }
+}
+
+.row-comment-expandable {
+    cursor: pointer;
+}
+
+.row-comment-text {
+    display: block;
+    white-space: pre-line;
+}
+
+.row-comment-clamped {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    overflow: hidden;
+}
+
+.row-retry {
+    color: $blueZodiac;
+    flex: 0 0 auto;
+    font-size: 13px;
+}
+
+.approved {
+    background-color: $mantis;
+}
+
+.rejected {
+    background-color: $persianRed;
+}
+
+.pending {
+    background-color: $mercury;
+
+    .row-glyph {
+        color: $doveGray;
+        font-size: 8px;
+    }
+}
+
+.waiting {
+    background-color: $gold;
+
+    .row-glyph {
+        color: $blueZodiac;
+        font-size: 8px;
+    }
+}
+
+.empty {
+    color: $doveGray;
+    font-size: 13px;
+    margin: 0;
+    padding: 12px 20px;
+}
+
+.footer-actions {
+    display: flex;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.confirm-button {
+    font-size: 14px;
+    line-height: 34px;
+    min-width: 120px;
+    padding: 0 16px;
+}

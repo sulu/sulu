@@ -256,7 +256,7 @@ test('Throw exception if no schema for given resourceKey are available', () => {
     });
 });
 
-test('Throw exception if no form fields for given resourceKey and type are available', () => {
+test('Throw exception if no json schema for given resourceKey and type is available', () => {
     const snippetMetadata = {
         types: {
             default: {},

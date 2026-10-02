@@ -53,6 +53,14 @@ readonly class ExcerptTaxonomyResolver implements ResolverInterface
 
         $formMetadataItems = $formMetadata->getFlatFieldMetadata();
         $data = $this->getExcerptTaxonomyData($dimensionContent);
+        // Excerpt data is always flat ("excerpt/title"), so fill in the missing keys to keep the
+        // MetadataResolver from nesting the properties when no excerpt value is saved yet.
+        foreach (\array_keys($formMetadataItems) as $name) {
+            if (\str_starts_with((string) $name, 'excerpt/') && !\array_key_exists($name, $data)) {
+                $data[$name] = null;
+            }
+        }
+
         $nullProperties = [];
         if (null !== $properties) {
             $filteredFormMetadataItems = [];

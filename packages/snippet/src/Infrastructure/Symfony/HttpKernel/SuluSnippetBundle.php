@@ -16,7 +16,6 @@ namespace Sulu\Snippet\Infrastructure\Symfony\HttpKernel;
 use Sulu\Bundle\HttpCacheBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
-use Sulu\Content\Infrastructure\Sulu\Security\ResourceSecurityContextProvider;
 use Sulu\Snippet\Application\Mapper\SnippetContentMapper;
 use Sulu\Snippet\Application\Mapper\SnippetMapperInterface;
 use Sulu\Snippet\Application\MessageHandler\ApplyWorkflowTransitionSnippetMessageHandler;
@@ -49,6 +48,7 @@ use Sulu\Snippet\Infrastructure\Doctrine\Repository\SnippetRepository;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\Provider\SnippetTemplateSelectProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAreaAdmin;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetResourceViewParameterProvider;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SingleSnippetSelectionPropertyResolver;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPropertyResolver;
 use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoader;
@@ -226,16 +226,6 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_activity.domain_event_collector'),
             ])
             ->tag('messenger.message_handler');
-
-        $services->set('sulu_snippet.workflow_transition_request_security_context_provider')
-            ->class(ResourceSecurityContextProvider::class)
-            ->args([
-                new Reference('doctrine.orm.entity_manager'),
-                '%sulu.model.snippet.class%',
-                SnippetAdmin::SECURITY_CONTEXT,
-            ])
-            ->tag('sulu_content.workflow_transition_request_security_context_provider', ['resource-key' => SnippetInterface::RESOURCE_KEY])
-            ->tag('sulu.context', ['context' => 'admin']);
 
         // Mapper service
         $services->set('sulu_snippet.snippet_content_mapper')
@@ -471,6 +461,14 @@ final class SuluSnippetBundle extends AbstractBundle
                 tagged_iterator('sulu_snippet.admin_snippet_reindex_provider_enhancer'),
             ])
             ->tag('cmsig_seal.reindex_provider');
+
+        $services->set('sulu_snippet.resource_view_parameter_provider')
+            ->class(SnippetResourceViewParameterProvider::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_admin.metadata_group_provider'),
+            ])
+            ->tag('sulu_admin.resource_view_parameter_provider');
     }
 
     /**
@@ -505,6 +503,10 @@ final class SuluSnippetBundle extends AbstractBundle
                             'routes' => [
                                 'list' => 'sulu_snippet.get_snippets',
                                 'detail' => 'sulu_snippet.get_snippet',
+                            ],
+                            'security_context' => SnippetAdmin::SECURITY_CONTEXT,
+                            'views' => [
+                                'detail' => SnippetAdmin::EDIT_TABS_VIEW . '_{group}',
                             ],
                         ],
                         'snippets_versions' => [

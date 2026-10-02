@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\Resolver;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -23,6 +24,8 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Content\Application\ContentResolver\Resolver\ExcerptTaxonomyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
+use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
+use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
@@ -202,5 +205,48 @@ class ExcerptTaxonomyResolverTest extends TestCase
         self::assertIsArray($content);
         self::assertArrayHasKey('excerpt', $content);
         self::assertArrayNotHasKey('', $content);
+    }
+
+    public function testResolveWithEmptyExcerptDataKeepsPropertiesFlat(): void
+    {
+        $example = new Example();
+        $dimensionContent = new ExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setLocale('en');
+
+        $titleMetadata = new FieldMetadata('excerpt/title');
+        $titleMetadata->setType('text_line');
+        $descriptionMetadata = new FieldMetadata('excerpt/description');
+        $descriptionMetadata->setType('text_line');
+
+        $formMetadata = $this->prophesize(FormMetadata::class);
+        $formMetadata->getFlatFieldMetadata()
+            ->willReturn([
+                'excerpt/title' => $titleMetadata,
+                'excerpt/description' => $descriptionMetadata,
+            ]);
+        $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $formMetadataProvider->getMetadata('content_excerpt', 'en', ['instanceOf' => ExampleDimensionContent::class])
+            ->willReturn($formMetadata->reveal());
+
+        $resolver = new ExcerptTaxonomyResolver(
+            $formMetadataProvider->reveal(),
+            new MetadataResolver(new PropertyResolverProvider(
+                new \ArrayIterator(['default' => new DefaultPropertyResolver()])
+            )),
+        );
+
+        $contentView = $resolver->resolve($dimensionContent);
+        self::assertInstanceOf(ContentView::class, $contentView);
+
+        $content = $contentView->getContent();
+        self::assertIsArray($content);
+        self::assertArrayNotHasKey('excerpt', $content);
+        self::assertArrayHasKey('title', $content);
+        self::assertArrayHasKey('description', $content);
+        self::assertInstanceOf(ContentView::class, $content['title']);
+        self::assertNull($content['title']->getContent());
+        self::assertInstanceOf(ContentView::class, $content['description']);
+        self::assertNull($content['description']->getContent());
     }
 }

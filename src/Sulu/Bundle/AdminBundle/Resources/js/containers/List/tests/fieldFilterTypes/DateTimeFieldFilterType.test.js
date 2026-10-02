@@ -1,15 +1,15 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render} from '@testing-library/react';
 import DateFieldFilterType from '../../fieldFilterTypes/DateFieldFilterType';
 
-jest.mock('../../../../utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('../../../../utils/Translator');
 
 test('Render with value of undefined', () => {
     const dateFieldFilterType = new DateFieldFilterType(jest.fn(), {}, undefined, {timeFormat: true});
-    expect(mount(<div>{dateFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
+    const {asFragment} = render(<div>{dateFieldFilterType.getFormNode()}</div>);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test.each([
@@ -24,7 +24,9 @@ test.each([
         {from, to},
         {timeFormat: timeFormatEnabled}
     );
-    expect(mount(<div>{dateFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
+    const {asFragment} = render(<div>{dateFieldFilterType.getFormNode()}</div>);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test.each([
@@ -40,7 +42,9 @@ test.each([
 
     dateFieldFilterType.setValue({from: new Date(from), to: new Date(to)});
 
-    expect(mount(<div>{dateFieldFilterType.getFormNode()}</div>).render()).toMatchSnapshot();
+    const {asFragment} = render(<div>{dateFieldFilterType.getFormNode()}</div>);
+
+    expect(asFragment()).toMatchSnapshot();
 });
 
 test.each([
@@ -49,9 +53,8 @@ test.each([
 ])('Call onChange handler with only from value', (from, timeFormatEnabled) => {
     const changeSpy = jest.fn();
     const dateFieldFilterType = new DateFieldFilterType(changeSpy, {}, undefined, {timeFormat: timeFormatEnabled});
-    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
 
-    dateFieldFilterTypeForm.find('DatePicker').at(0).prop('onChange')(new Date(from));
+    dateFieldFilterType.handleFromChange(new Date(from));
 
     expect(changeSpy).toHaveBeenCalledWith({from: new Date(from)});
 });
@@ -62,9 +65,8 @@ test.each([
 ])('Call onChange handler with only to value', (to, timeFormatEnabled) => {
     const changeSpy = jest.fn();
     const dateFieldFilterType = new DateFieldFilterType(changeSpy, {}, undefined, {timeFormat: timeFormatEnabled});
-    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
 
-    dateFieldFilterTypeForm.find('DatePicker').at(1).prop('onChange')(new Date(to));
+    dateFieldFilterType.handleToChange(new Date(to));
 
     expect(changeSpy).toHaveBeenCalledWith({to: new Date(to)});
 });
@@ -85,9 +87,8 @@ test.each([
         {from: new Date(fromActual), to: new Date(to)},
         {timeFormat: timeFormatEnabled}
     );
-    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
 
-    dateFieldFilterTypeForm.find('DatePicker').at(0).prop('onChange')(new Date(fromExpected));
+    dateFieldFilterType.handleFromChange(new Date(fromExpected));
 
     expect(changeSpy).toHaveBeenCalledWith({from: new Date(fromExpected), to: new Date(to)});
 });
@@ -108,9 +109,8 @@ test.each([
         {from: new Date(from), to: new Date(toActual)},
         {timeFormat: timeFormatEnabled}
     );
-    const dateFieldFilterTypeForm = mount(dateFieldFilterType.getFormNode());
 
-    dateFieldFilterTypeForm.find('DatePicker').at(1).prop('onChange')(new Date(toExpected));
+    dateFieldFilterType.handleToChange(new Date(toExpected));
 
     expect(changeSpy).toHaveBeenCalledWith({from: new Date(from), to: new Date(toExpected)});
 });
