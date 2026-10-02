@@ -509,7 +509,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                 '/workflow-transition-requests'
             )
             ->setTabTitle('sulu_content.workflow_transition_request.requests_for_publishing')
-            // The sibling tabs inherit the insights tab order, so a higher value sorts this one last.
+            // The versions tab sets no order, so ResourceTabs treats it as 0 and any higher value sorts this one after it.
             ->setTabOrder(6145)
             // Set only while a request workflow covers the content's template.
             ->setTabCondition('workflowTransitionRequestEnabled')
