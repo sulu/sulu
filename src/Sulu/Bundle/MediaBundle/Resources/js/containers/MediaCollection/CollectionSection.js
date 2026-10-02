@@ -25,6 +25,7 @@ type Props = {
     listStore: ListStore,
     locale: IObservableValue<string>,
     onCollectionNavigate: (collectionId: ?string | number) => void,
+    onDeleteDependantResourcesCancel?: () => void,
     onDeleteError?: (error?: Object) => void,
     overlayType: OverlayType,
     resourceStore: ResourceStore,
@@ -228,7 +229,16 @@ class CollectionSection extends React.Component<Props> {
     };
 
     handleDeleteDependantResourcesDialogCancel = () => {
+        const {listStore, onDeleteDependantResourcesCancel} = this.props;
+
         this.closeDeleteDependantResourcesDialog();
+
+        // dependant resources might be deleted already
+        listStore.reload();
+
+        if (onDeleteDependantResourcesCancel) {
+            onDeleteDependantResourcesCancel();
+        }
     };
 
     @action closeDeleteDependantResourcesDialog = () => {

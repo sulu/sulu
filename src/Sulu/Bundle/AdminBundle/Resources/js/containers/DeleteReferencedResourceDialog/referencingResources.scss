@@ -1,0 +1,29 @@
+.multiple {
+    text-align: left;
+
+    p {
+        font-weight: bold;
+        margin: 15px 0 0;
+    }
+
+    ul {
+        margin: 0;
+    }
+
+    .title {
+        overflow-wrap: anywhere;
+    }
+
+    .rest {
+        white-space: nowrap;
+    }
+
+    .inline {
+        font-weight: normal;
+    }
+}
+
+.items {
+    max-height: 40vh;
+    overflow-y: auto;
+}
