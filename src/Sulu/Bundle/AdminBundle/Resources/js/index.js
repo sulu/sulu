@@ -69,6 +69,7 @@ import {
 import FieldBlocks, {
     blockPreviewTransformerRegistry,
     DateTimeBlockPreviewTransformer,
+    NumberRangeBlockPreviewTransformer,
     SelectBlockPreviewTransformer,
     SingleSelectBlockPreviewTransformer,
     SmartContentBlockPreviewTransformer,
@@ -90,6 +91,7 @@ import {
     localeConditionDataProvider,
     Select,
     Number,
+    NumberRange,
     parentConditionDataProvider,
     userConditionDataProvider,
     PasswordConfirmation,
@@ -166,6 +168,7 @@ const FIELD_TYPE_DATE_TIME = 'datetime';
 const FIELD_TYPE_EMAIL = 'email';
 const FIELD_TYPE_HEADING = 'heading';
 const FIELD_TYPE_NUMBER = 'number';
+const FIELD_TYPE_NUMBER_RANGE = 'number_range';
 const FIELD_TYPE_PASSWORD_CONFIRMATION = 'password_confirmation';
 const FIELD_TYPE_PHONE = 'phone';
 const FIELD_TYPE_PRODUCT_ATTRIBUTES = 'product_attributes';
@@ -287,6 +290,7 @@ function registerFieldTypes(fieldTypeOptions) {
     fieldRegistry.add(FIELD_TYPE_HEADING, Heading);
     fieldRegistry.add(FIELD_TYPE_SELECT, Select);
     fieldRegistry.add(FIELD_TYPE_NUMBER, Number);
+    fieldRegistry.add(FIELD_TYPE_NUMBER_RANGE, NumberRange);
     fieldRegistry.add(FIELD_TYPE_PASSWORD_CONFIRMATION, PasswordConfirmation);
     fieldRegistry.add(FIELD_TYPE_PHONE, Phone);
     fieldRegistry.add(FIELD_TYPE_PRODUCT_ATTRIBUTES, ProductAttributesField);
@@ -320,6 +324,7 @@ function registerBlockPreviewTransformers() {
     blockPreviewTransformerRegistry.add(FIELD_TYPE_DATE_TIME, new DateTimeBlockPreviewTransformer());
     blockPreviewTransformerRegistry.add(FIELD_TYPE_EMAIL, new StringBlockPreviewTransformer());
     blockPreviewTransformerRegistry.add(FIELD_TYPE_NUMBER, new StringBlockPreviewTransformer());
+    blockPreviewTransformerRegistry.add(FIELD_TYPE_NUMBER_RANGE, new NumberRangeBlockPreviewTransformer());
     blockPreviewTransformerRegistry.add(FIELD_TYPE_PHONE, new StringBlockPreviewTransformer());
     blockPreviewTransformerRegistry.add(FIELD_TYPE_SELECT, new SelectBlockPreviewTransformer());
     blockPreviewTransformerRegistry.add(FIELD_TYPE_SINGLE_SELECT, new SingleSelectBlockPreviewTransformer());
