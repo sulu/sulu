@@ -1,6 +1,7 @@
 // @flow
 import {render} from '@testing-library/react';
 import {observable} from 'mobx';
+import snackbarStore from '../../../../stores/snackbarStore';
 import ListStore from '../../../../containers/List/stores/ListStore';
 import Router from '../../../../services/Router';
 import List from '../../../../views/List';
@@ -16,6 +17,10 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
     get: jest.fn(),
+}));
+
+jest.mock('sulu-admin-bundle/stores/snackbarStore', () => ({
+    add: jest.fn(),
 }));
 
 jest.mock('sulu-admin-bundle/containers/List/stores/ListStore', () => jest.fn(function(resourceKey) {
@@ -64,6 +69,7 @@ function createItemAction() {
 
 beforeEach(() => {
     overlayMock.mockClear();
+    snackbarStore.add.mockClear();
 });
 
 test('Return a disabled item action config without callback if the row has no id', () => {
@@ -166,5 +172,38 @@ test('Do not reopen the overlay when a request resolves after it was closed', ()
 
     return pendingPromise.then(() => {
         expect(itemAction.getNode()).toEqual(null);
+    });
+});
+
+test('Show the error in a snackbar when the request cannot be loaded', () => {
+    const failedPromise = Promise.reject({detail: 'The request was not found.'});
+    ResourceRequester.get.mockReturnValue(failedPromise);
+
+    const itemAction = createItemAction();
+    itemAction.handleClick('request-1');
+
+    return failedPromise.catch(() => {}).then(() => {
+        expect(snackbarStore.add).toHaveBeenCalledWith(
+            {text: 'The request was not found.', type: 'error'},
+            4000
+        );
+        expect(itemAction.getNode()).toEqual(null);
+    });
+});
+
+test('Show no error when a request fails after the overlay was closed', () => {
+    let rejectRequest = () => {};
+    const pendingPromise = new Promise((resolve, reject) => {
+        rejectRequest = () => reject({detail: 'The request was not found.'});
+    });
+    ResourceRequester.get.mockReturnValue(pendingPromise);
+
+    const itemAction = createItemAction();
+    itemAction.handleClick('request-1');
+    itemAction.handleClose();
+    rejectRequest();
+
+    return pendingPromise.catch(() => {}).then(() => {
+        expect(snackbarStore.add).not.toHaveBeenCalled();
     });
 });
