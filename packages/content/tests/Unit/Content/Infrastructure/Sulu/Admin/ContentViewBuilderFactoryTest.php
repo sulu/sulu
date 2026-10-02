@@ -20,6 +20,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
@@ -34,6 +35,7 @@ use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentDataMapper\ContentDataMapperInterface;
 use Sulu\Content\Application\ContentMetadataInspector\ContentMetadataInspectorInterface;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
 use Sulu\Content\Domain\Model\AuthorInterface;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -64,7 +66,8 @@ class ContentViewBuilderFactoryTest extends TestCase
         ContentMetadataInspectorInterface $contentMetadataInspector,
         SecurityCheckerInterface $securityChecker,
         ?PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry = null,
-        array $settingsForms = []
+        array $settingsForms = [],
+        bool $hasSecurityContext = true,
     ): ContentViewBuilderFactoryInterface {
         if (null === $previewObjectProviderRegistry) {
             $previewObjectProviderRegistry = $this->createPreviewObjectProviderRegistry([]);
@@ -73,12 +76,16 @@ class ContentViewBuilderFactoryTest extends TestCase
         $requestWorkflowResolver = $this->prophesize(RequestWorkflowResolverInterface::class);
         $requestWorkflowResolver->resolveTemplateKeysWithWorkflow(Argument::cetera())->willReturn([]);
 
+        $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
+        $securityContextResolver->has(Argument::any())->willReturn($hasSecurityContext);
+
         return new ContentViewBuilderFactory(
             new ViewBuilderFactory(),
             $previewObjectProviderRegistry,
             $contentMetadataInspector,
             $securityChecker,
             $requestWorkflowResolver->reveal(),
+            $securityContextResolver->reveal(),
             $settingsForms
         );
     }
@@ -133,7 +140,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         $views = $contentViewBuilder->createViews(Example::class, 'edit_parent_key');
 
-        $this->assertCount(6, $views);
+        $this->assertCount(7, $views);
 
         $this->assertInstanceOf(FormViewBuilderInterface::class, $views[0]);
         $this->assertSame('edit_parent_key.content', $views[0]->getName());
@@ -149,7 +156,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         $views = $contentViewBuilder->createViews(Example::class, 'edit_parent_key', 'add_parent_key');
 
-        $this->assertCount(7, $views);
+        $this->assertCount(8, $views);
 
         $this->assertInstanceOf(FormViewBuilderInterface::class, $views[0]);
         $this->assertSame('add_parent_key.content', $views[0]->getName());
@@ -175,6 +182,70 @@ class ContentViewBuilderFactoryTest extends TestCase
         $this->assertSame('edit_parent_key.settings', $views[4]->getName());
         $this->assertSame('content_settings', $views[4]->getView()->getOption('formKey'));
         $this->assertNull($views[4]->getView()->getOption('tabCondition'));
+    }
+
+    public function testCreateViewsListsTheRequestsForPublishingUnderInsights(): void
+    {
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $views = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
+        )->createViews(Example::class, 'edit_parent_key');
+
+        $view = $this->findView($views, 'edit_parent_key.insights.workflow_transition_requests')->getView();
+
+        $this->assertSame('workflow_transition_requests', $view->getOption('resourceKey'));
+        $this->assertSame('workflow_transition_requests', $view->getOption('listKey'));
+        $this->assertSame(['resourceKey' => ExampleDimensionContent::getResourceKey()], $view->getOption('requestParameters'));
+        $this->assertSame(['id' => 'resourceId', 'locale'], $view->getOption('routerAttributesToListRequest'));
+        $this->assertSame('workflowTransitionRequestEnabled', $view->getOption('tabCondition'));
+        $this->assertSame(6145, $view->getOption('tabOrder'));
+
+        /** @var ListItemAction[] $itemActions */
+        $itemActions = $view->getOption('itemActions');
+        $this->assertSame(
+            ['review_workflow_transition_request'],
+            \array_map(static fn (ListItemAction $itemAction) => $itemAction->getType(), $itemActions),
+        );
+    }
+
+    /**
+     * The list endpoint authorizes against the resource's security context, so a resource declaring
+     * none gets no tab rather than one that only errors.
+     */
+    public function testCreateViewsOmitsTheRequestsForPublishingWithoutASecurityContext(): void
+    {
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $views = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
+            hasSecurityContext: false,
+        )->createViews(Example::class, 'edit_parent_key');
+
+        $names = \array_map(static fn (ViewBuilderInterface $view) => $view->getName(), $views);
+
+        $this->assertNotContains('edit_parent_key.insights.workflow_transition_requests', $names);
+        $this->assertContains('edit_parent_key.insights.versions', $names);
+    }
+
+    /**
+     * @param ViewBuilderInterface[] $views
+     */
+    private function findView(array $views, string $name): ViewBuilderInterface
+    {
+        foreach ($views as $view) {
+            if ($name === $view->getName()) {
+                return $view;
+            }
+        }
+
+        $this->fail(\sprintf('No view named "%s".', $name));
     }
 
     public function testCreateViewsWithPreview(): void
@@ -207,7 +278,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         $views = $contentViewBuilder->createViews(Example::class, 'edit_parent_key');
 
-        $this->assertCount(6, $views);
+        $this->assertCount(7, $views);
         $this->assertInstanceOf(PreviewFormViewBuilderInterface::class, $views[0]);
         $this->assertInstanceOf(PreviewFormViewBuilderInterface::class, $views[1]);
         $this->assertInstanceOf(PreviewFormViewBuilderInterface::class, $views[2]);
@@ -235,6 +306,7 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
                     [],
                     [],
+                    [],
                 ],
             ],
             [
@@ -251,6 +323,7 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
                     [],
                     [],
+                    [],
                 ],
             ],
             [
@@ -265,6 +338,7 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.dropdown'],
                     ['sulu_admin.dropdown'],
                     ['sulu_admin.dropdown'],
+                    [],
                     [],
                     [],
                 ],
@@ -295,6 +369,7 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.dropdown'],
                     [],
                     [],
+                    [],
                 ],
             ],
             [
@@ -310,6 +385,7 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
                     ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
                     ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
+                    [],
                     [],
                     [],
                 ],
@@ -587,6 +663,7 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.save'],
                     [],
                     [],
+                    [],
                 ],
             ],
             [
@@ -620,6 +697,7 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.save'],
                     ['sulu_admin.save'],
                     ['sulu_admin.save'],
+                    [],
                     [],
                     [],
                 ],
@@ -656,6 +734,7 @@ class ContentViewBuilderFactoryTest extends TestCase
                     ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
                     ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
                     ['sulu_admin.dropdown', 'sulu_admin.dropdown'],
+                    [],
                     [],
                     [],
                 ],

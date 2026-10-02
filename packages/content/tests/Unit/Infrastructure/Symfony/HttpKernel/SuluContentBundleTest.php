@@ -232,6 +232,11 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
                         \dirname(__DIR__, 5) . '/config/forms',
                     ],
                 ],
+                'lists' => [
+                    'directories' => [
+                        \dirname(__DIR__, 5) . '/config/lists',
+                    ],
+                ],
                 'resources' => [
                     'workflow_transition_requests' => [
                         'routes' => [

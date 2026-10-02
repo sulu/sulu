@@ -140,6 +140,8 @@ import {ExternalLinkTypeOverlay, linkOverlayRegistry, LinkTypeOverlay} from './c
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 import AiApplication from './containers/AiApplication';
 import RestoreVersionItemAction from './views/List/itemActions/RestoreVersionItemAction';
+import ReviewWorkflowTransitionRequestItemAction
+    from './views/List/itemActions/ReviewWorkflowTransitionRequestItemAction';
 import {setAccountLimitContactEmail} from './containers/AiApplication/accountLimits';
 
 configure({enforceActions: 'observed'});
@@ -271,6 +273,7 @@ function registerListItemActions() {
     listItemActionRegistry.add('link', ListLinkItemAction);
     listItemActionRegistry.add('detail_link', ListDetailLinkItemAction);
     listItemActionRegistry.add('restore_version', RestoreVersionItemAction);
+    listItemActionRegistry.add('review_workflow_transition_request', ReviewWorkflowTransitionRequestItemAction);
 }
 
 function registerFieldTypes(fieldTypeOptions) {
