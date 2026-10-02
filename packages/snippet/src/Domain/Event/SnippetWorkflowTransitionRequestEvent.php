@@ -1,0 +1,90 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Snippet\Domain\Event;
+
+use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
+use Sulu\Content\Domain\Model\DimensionContentCollection;
+use Sulu\Snippet\Domain\Model\SnippetDimensionContent;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
+
+class SnippetWorkflowTransitionRequestEvent extends DomainEvent
+{
+    /**
+     * @param array<string, scalar|null> $context
+     */
+    public function __construct(
+        private SnippetInterface $snippet,
+        private string $action,
+        private string $locale,
+        private array $context,
+    ) {
+        parent::__construct();
+    }
+
+    public function getSnippet(): SnippetInterface
+    {
+        return $this->snippet;
+    }
+
+    public function getAction(): string
+    {
+        return $this->action;
+    }
+
+    public function getEventType(): string
+    {
+        return 'workflow_transition_request.' . $this->action;
+    }
+
+    /**
+     * @return array<string, scalar|null>
+     */
+    public function getEventContext(): array
+    {
+        return $this->context;
+    }
+
+    public function getResourceKey(): string
+    {
+        return SnippetInterface::RESOURCE_KEY;
+    }
+
+    public function getResourceId(): string
+    {
+        return (string) $this->snippet->getUuid();
+    }
+
+    public function getResourceLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function getResourceTitle(): ?string
+    {
+        $dimensionContentCollection = new DimensionContentCollection($this->snippet->getDimensionContents(), [], SnippetDimensionContent::class);
+
+        return $dimensionContentCollection->getDimensionContent(['locale' => $this->locale])?->getTitle();
+    }
+
+    public function getResourceTitleLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function getResourceSecurityContext(): ?string
+    {
+        return SnippetAdmin::SECURITY_CONTEXT;
+    }
+}

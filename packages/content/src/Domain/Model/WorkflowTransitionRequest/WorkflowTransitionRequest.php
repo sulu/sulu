@@ -162,6 +162,30 @@ class WorkflowTransitionRequest implements AuditableInterface
         return $rejections;
     }
 
+    public function countValidatorApprovals(): int
+    {
+        $approvals = 0;
+        foreach ($this->decisions as $decision) {
+            if ($decision->isValidatorDecision() && $decision->isApproved()) {
+                ++$approvals;
+            }
+        }
+
+        return $approvals;
+    }
+
+    public function countValidatorRejections(): int
+    {
+        $rejections = 0;
+        foreach ($this->decisions as $decision) {
+            if ($decision->isValidatorDecision() && $decision->isRejected()) {
+                ++$rejections;
+            }
+        }
+
+        return $rejections;
+    }
+
     public function getActiveKey(): ?string
     {
         return $this->activeKey;

@@ -141,6 +141,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_content.workflow_transition_request_repository'),
             new Reference('sulu_content.workflow_transition_admin_authorizer'),
+            new Reference('event_dispatcher'),
             new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('messenger.message_handler')
@@ -150,6 +151,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_content.workflow_transition_request_repository'),
             new Reference('sulu_content.workflow_transition_admin_authorizer'),
+            new Reference('event_dispatcher'),
             new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('messenger.message_handler')
@@ -159,6 +161,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_content.workflow_transition_request_repository'),
             new Reference('sulu_message_bus'),
+            new Reference('event_dispatcher'),
         ])
         ->tag('messenger.message_handler')
         ->tag('sulu.context', ['context' => 'admin']);
@@ -169,6 +172,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_content.request_workflow_registry'),
             new Reference('logger'),
             new Reference('sulu_content.worker_state'),
+            new Reference('event_dispatcher'),
         ])
         ->tag('messenger.message_handler')
         ->tag('sulu.context', ['context' => 'admin']);
@@ -179,7 +183,10 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_content.validate_workflow_transition_request_failure_listener', ValidateWorkflowTransitionRequestFailureListener::class)
-        ->args([new Reference('sulu_content.workflow_transition_request_repository')])
+        ->args([
+            new Reference('sulu_content.workflow_transition_request_repository'),
+            new Reference('event_dispatcher'),
+        ])
         ->tag('kernel.event_listener', ['event' => WorkerMessageFailedEvent::class])
         ->tag('sulu.context', ['context' => 'admin']);
 
