@@ -24,7 +24,6 @@ use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionR
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
-use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
@@ -35,7 +34,7 @@ class RetryWorkflowTransitionRequestValidationMessageHandlerTest extends TestCas
 {
     use ProphecyTrait;
 
-    public function testInvokeDispatchesTheRetriedEventAndAFlushedValidation(): void
+    public function testInvokeDispatchesTheRetriedEventAndTheValidation(): void
     {
         $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
         $request->addValidatorDecision('seo_required');
@@ -46,8 +45,7 @@ class RetryWorkflowTransitionRequestValidationMessageHandlerTest extends TestCas
         $messageBus = $this->prophesize(MessageBusInterface::class);
         $messageBus->dispatch(Argument::that(
             static fn (Envelope $envelope) => $envelope->getMessage() instanceof ValidateWorkflowTransitionRequestMessage
-                && [] !== $envelope->all(DispatchAfterCurrentBusStamp::class)
-                && [] !== $envelope->all(EnableFlushStamp::class),
+                && [] !== $envelope->all(DispatchAfterCurrentBusStamp::class),
         ))->shouldBeCalledOnce()->willReturn(new Envelope(new \stdClass()));
 
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);

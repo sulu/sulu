@@ -431,6 +431,7 @@ final class SuluArticleBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_article.article_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_activity.domain_event_dispatcher'),
             ])
             ->tag('kernel.event_subscriber');
 

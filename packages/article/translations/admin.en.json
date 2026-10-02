@@ -30,7 +30,7 @@
     "sulu_activity.description.articles.workflow_transition.request_for_review_draft": "{userFullName} has requested a review for the draft of the article \"{resourceTitle}\"",
     "sulu_activity.description.articles.workflow_transition.cancel_review": "{userFullName} has cancelled the review of the article \"{resourceTitle}\"",
     "sulu_activity.description.articles.workflow_transition.cancel_review_draft": "{userFullName} has cancelled the review of the draft of the article \"{resourceTitle}\"",
-    "sulu_activity.description.articles.workflow_transition.reject": "{userFullName} has rejected the changes to the article \"{resourceTitle}\"",
+    "sulu_activity.description.articles.workflow_transition.reject": "{userFullName} has rejected the review of the article \"{resourceTitle}\"",
     "sulu_activity.description.articles.workflow_transition.reject_draft": "{userFullName} has rejected the review of the draft of the article \"{resourceTitle}\"",
     "sulu_activity.description.articles.workflow_transition_request.approved": "{userFullName} has approved the changes to the article \"{resourceTitle}\"",
     "sulu_activity.description.articles.workflow_transition_request.rejected": "{userFullName} has rejected the changes to the article \"{resourceTitle}\": \"{context_comment}\"",

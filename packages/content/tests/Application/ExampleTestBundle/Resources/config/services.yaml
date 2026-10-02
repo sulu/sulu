@@ -143,5 +143,6 @@ services:
         class: Sulu\Content\Tests\Application\ExampleTestBundle\Activity\ExampleWorkflowTransitionRequestSubscriber
         arguments:
             - '@sulu_activity.domain_event_collector'
+            - '@sulu_activity.domain_event_dispatcher'
         tags:
             - { name: 'kernel.event_subscriber' }

@@ -19,6 +19,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Page\Domain\Event\PageWorkflowTransitionRequestEvent;
@@ -41,16 +42,23 @@ class PageWorkflowTransitionRequestSubscriberTest extends TestCase
      */
     private ObjectProphecy $domainEventCollector;
 
+    /**
+     * @var ObjectProphecy<DomainEventDispatcherInterface>
+     */
+    private ObjectProphecy $domainEventDispatcher;
+
     private PageWorkflowTransitionRequestSubscriber $subscriber;
 
     protected function setUp(): void
     {
         $this->pageRepository = $this->prophesize(PageRepositoryInterface::class);
         $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
+        $this->domainEventDispatcher = $this->prophesize(DomainEventDispatcherInterface::class);
 
         $this->subscriber = new PageWorkflowTransitionRequestSubscriber(
             $this->pageRepository->reveal(),
             $this->domainEventCollector->reveal(),
+            $this->domainEventDispatcher->reveal(),
         );
     }
 
@@ -76,6 +84,25 @@ class PageWorkflowTransitionRequestSubscriberTest extends TestCase
             new WorkflowTransitionRequest(PageInterface::RESOURCE_KEY, 'resource-1', 'de', 'default'),
             WorkflowTransitionRequestActionEvent::APPROVED,
             ['comment' => 'Fine'],
+        ));
+    }
+
+    public function testDispatchesValidatedRightAwayInsteadOfCollectingIt(): void
+    {
+        $page = $this->prophesize(PageInterface::class)->reveal();
+        $this->pageRepository->findOneBy(['uuid' => 'resource-1'], Argument::type('array'))->willReturn($page);
+
+        $this->domainEventDispatcher->dispatch(Argument::that(
+            static fn (object $event) => $event instanceof PageWorkflowTransitionRequestEvent
+                && 'workflow_transition_request.validated' === $event->getEventType()
+                && ['approved' => 1, 'rejected' => 2] === $event->getEventContext(),
+        ))->shouldBeCalledOnce();
+        $this->domainEventCollector->collect(Argument::any())->shouldNotBeCalled();
+
+        $this->subscriber->onWorkflowTransitionRequestAction(new WorkflowTransitionRequestActionEvent(
+            new WorkflowTransitionRequest(PageInterface::RESOURCE_KEY, 'resource-1', 'de', 'default'),
+            WorkflowTransitionRequestActionEvent::VALIDATED,
+            ['approved' => 1, 'rejected' => 2],
         ));
     }
 

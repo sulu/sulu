@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Snippet\Infrastructure\Sulu\Activity;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
@@ -31,6 +32,7 @@ class SnippetWorkflowTransitionRequestSubscriber implements EventSubscriberInter
     public function __construct(
         private SnippetRepositoryInterface $snippetRepository,
         private DomainEventCollectorInterface $domainEventCollector,
+        private DomainEventDispatcherInterface $domainEventDispatcher,
     ) {
     }
 
@@ -43,17 +45,15 @@ class SnippetWorkflowTransitionRequestSubscriber implements EventSubscriberInter
 
     public function onWorkflowTransitionRequestAction(WorkflowTransitionRequestActionEvent $event): void
     {
-        $request = $event->getWorkflowTransitionRequest();
-
-        if (SnippetInterface::RESOURCE_KEY !== $request->getResourceKey()) {
+        if (SnippetInterface::RESOURCE_KEY !== $event->getResourceKey()) {
             return;
         }
 
-        $locale = $request->getLocale();
+        $locale = $event->getLocale();
 
         // The content of the request's locale is loaded, so the event can resolve the title.
         $snippet = $this->snippetRepository->findOneBy(
-            ['uuid' => $request->getResourceId()],
+            ['uuid' => $event->getResourceId()],
             [
                 SnippetRepositoryInterface::SELECT_SNIPPET_CONTENT => [
                     'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
@@ -69,8 +69,16 @@ class SnippetWorkflowTransitionRequestSubscriber implements EventSubscriberInter
             return;
         }
 
-        $this->domainEventCollector->collect(
-            new SnippetWorkflowTransitionRequestEvent($snippet, $event->getAction(), $locale, $event->getContext()),
-        );
+        $domainEvent = new SnippetWorkflowTransitionRequestEvent($snippet, $event->getAction(), $locale, $event->getContext());
+
+        // The verdicts were written outside the unit of work, so no flush follows that would store a
+        // collected activity.
+        if ($event->isWrittenWithoutFlush()) {
+            $this->domainEventDispatcher->dispatch($domainEvent);
+
+            return;
+        }
+
+        $this->domainEventCollector->collect($domainEvent);
     }
 }

@@ -17,6 +17,7 @@ use Sulu\Article\Domain\Event\ArticleWorkflowTransitionRequestEvent;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
@@ -31,6 +32,7 @@ class ArticleWorkflowTransitionRequestSubscriber implements EventSubscriberInter
     public function __construct(
         private ArticleRepositoryInterface $articleRepository,
         private DomainEventCollectorInterface $domainEventCollector,
+        private DomainEventDispatcherInterface $domainEventDispatcher,
     ) {
     }
 
@@ -43,17 +45,15 @@ class ArticleWorkflowTransitionRequestSubscriber implements EventSubscriberInter
 
     public function onWorkflowTransitionRequestAction(WorkflowTransitionRequestActionEvent $event): void
     {
-        $request = $event->getWorkflowTransitionRequest();
-
-        if (ArticleInterface::RESOURCE_KEY !== $request->getResourceKey()) {
+        if (ArticleInterface::RESOURCE_KEY !== $event->getResourceKey()) {
             return;
         }
 
-        $locale = $request->getLocale();
+        $locale = $event->getLocale();
 
         // The content of the request's locale is loaded, so the event can resolve the title.
         $article = $this->articleRepository->findOneBy(
-            ['uuid' => $request->getResourceId()],
+            ['uuid' => $event->getResourceId()],
             [
                 ArticleRepositoryInterface::SELECT_ARTICLE_CONTENT => [
                     'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
@@ -69,8 +69,16 @@ class ArticleWorkflowTransitionRequestSubscriber implements EventSubscriberInter
             return;
         }
 
-        $this->domainEventCollector->collect(
-            new ArticleWorkflowTransitionRequestEvent($article, $event->getAction(), $locale, $event->getContext()),
-        );
+        $domainEvent = new ArticleWorkflowTransitionRequestEvent($article, $event->getAction(), $locale, $event->getContext());
+
+        // The verdicts were written outside the unit of work, so no flush follows that would store a
+        // collected activity.
+        if ($event->isWrittenWithoutFlush()) {
+            $this->domainEventDispatcher->dispatch($domainEvent);
+
+            return;
+        }
+
+        $this->domainEventCollector->collect($domainEvent);
     }
 }

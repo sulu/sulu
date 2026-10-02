@@ -424,6 +424,7 @@ final class SuluSnippetBundle extends AbstractBundle
             ->args([
                 new Reference('sulu_snippet.snippet_repository'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_activity.domain_event_dispatcher'),
             ])
             ->tag('kernel.event_subscriber');
 
