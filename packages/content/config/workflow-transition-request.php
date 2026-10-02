@@ -186,7 +186,6 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_content.workflow_transition_request_repository'),
             new Reference('event_dispatcher'),
-            new Reference('doctrine.orm.entity_manager'),
         ])
         ->tag('kernel.event_listener', ['event' => WorkerMessageFailedEvent::class])
         ->tag('sulu.context', ['context' => 'admin']);

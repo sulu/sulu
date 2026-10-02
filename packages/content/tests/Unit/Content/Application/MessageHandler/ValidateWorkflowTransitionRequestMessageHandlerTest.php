@@ -28,6 +28,7 @@ use Sulu\Content\Application\RequestWorkflow\Validator\RequestWorkflowValidatorI
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecision;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
@@ -49,7 +50,7 @@ final class ValidateWorkflowTransitionRequestMessageHandlerTest extends TestCase
             $request->getValidatorDecision('exploding'),
             WorkflowTransitionRequestDecisionStatusEnum::REJECTED,
             [WorkflowTransitionRequestDecisionMessage::translated('sulu_content.workflow_transition_request.check_errored')],
-        )->shouldBeCalledOnce()->willReturn(true);
+        )->shouldBeCalledOnce()->will($this->settleAs(WorkflowTransitionRequestDecisionStatusEnum::REJECTED));
 
         $exploding = $this->prophesize(RequestWorkflowValidatorInterface::class);
         $exploding->check(Argument::any())->willThrow(new \RuntimeException('remote service down'));
@@ -165,20 +166,22 @@ final class ValidateWorkflowTransitionRequestMessageHandlerTest extends TestCase
         }
     }
 
-    public function testDispatchesOnceWithTheCountsOfTheDecisionsSettledInThisRun(): void
+    public function testDispatchesOnceWithTheCountsOverAllChecks(): void
     {
         $request = $this->createRequest();
+        $request->addValidatorDecision('answered_before');
         $request->addValidatorDecision('passing');
         $request->addValidatorDecision('failing');
         $request->addValidatorDecision('claimed_elsewhere');
+        $request->getValidatorDecision('answered_before')?->settle(WorkflowTransitionRequestDecisionStatusEnum::REJECTED, [], new \DateTimeImmutable());
         $message = WorkflowTransitionRequestDecisionMessage::text('Not good enough');
 
         $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
         $repository->findOneBy(['id' => 'request-1'])->willReturn($request);
         $repository->settleDecision($request->getValidatorDecision('passing'), WorkflowTransitionRequestDecisionStatusEnum::APPROVED, [])
-            ->willReturn(true);
+            ->will($this->settleAs(WorkflowTransitionRequestDecisionStatusEnum::APPROVED));
         $repository->settleDecision($request->getValidatorDecision('failing'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, [$message])
-            ->willReturn(true);
+            ->will($this->settleAs(WorkflowTransitionRequestDecisionStatusEnum::REJECTED));
         $repository->settleDecision($request->getValidatorDecision('claimed_elsewhere'), WorkflowTransitionRequestDecisionStatusEnum::APPROVED, [])
             ->willReturn(false);
 
@@ -196,7 +199,7 @@ final class ValidateWorkflowTransitionRequestMessageHandlerTest extends TestCase
             ]),
             $this->prophesize(LoggerInterface::class)->reveal(),
             new WorkerState(),
-            $this->expectValidatedEvent($request, 1, 1)->reveal(),
+            $this->expectValidatedEvent($request, 1, 2)->reveal(),
         );
 
         $handler(new ValidateWorkflowTransitionRequestMessage('request-1'));
@@ -221,6 +224,19 @@ final class ValidateWorkflowTransitionRequestMessageHandlerTest extends TestCase
         );
 
         $handler(new ValidateWorkflowTransitionRequestMessage('request-1'));
+    }
+
+    private function settleAs(WorkflowTransitionRequestDecisionStatusEnum $status): callable
+    {
+        return static function(array $arguments) use ($status): bool {
+            /** @var WorkflowTransitionRequestDecision $decision */
+            $decision = $arguments[0];
+            /** @var list<WorkflowTransitionRequestDecisionMessage> $messages */
+            $messages = $arguments[2];
+            $decision->settle($status, $messages, new \DateTimeImmutable());
+
+            return true;
+        };
     }
 
     /**

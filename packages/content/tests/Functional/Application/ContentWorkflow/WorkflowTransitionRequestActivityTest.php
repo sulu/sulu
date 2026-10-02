@@ -19,10 +19,10 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\Kernel;
 use Sulu\Content\Tests\Traits\WorkflowTransitionRequestTrait;
-use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -30,8 +30,8 @@ use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 use Symfony\Component\Messenger\Worker;
 
 /**
- * The validation run happens on a worker, where nothing but the flush middleware stores what the
- * run collected, and where nobody is signed in to be named as the actor.
+ * The validation run happens on a worker, where nothing flushes after it, so its activity is stored
+ * right away, and where nobody is signed in to be named as the actor.
  */
 #[CoversNothing]
 class WorkflowTransitionRequestActivityTest extends SuluTestCase
@@ -52,17 +52,30 @@ class WorkflowTransitionRequestActivityTest extends SuluTestCase
     {
         $this->sendForReview('example-configured-workflow');
 
-        $this->assertNotEmpty(
-            $this->transport()->getSent()[0]->all(EnableFlushStamp::class),
-            'The flush stamp has to travel with the message, or the worker never flushes after the run.',
-        );
-
         $this->runWorker();
 
         $activity = $this->findActivity('workflow_transition_request.validated');
         $this->assertSame(Example::RESOURCE_KEY, $activity->getResourceKey());
         $this->assertSame(['approved' => 0, 'rejected' => 1], $activity->getContext());
         $this->assertNull($activity->getUser(), 'Nobody is signed in on a worker.');
+    }
+
+    public function testSendingForReviewCommitsNothingBeforeTheCallersFlush(): void
+    {
+        $example = $this->createExampleAtDraft('example-configured-workflow');
+
+        $this->contentManager->applyTransition(
+            $example,
+            ['stage' => DimensionContentInterface::STAGE_DRAFT, 'locale' => 'en'],
+            WorkflowInterface::WORKFLOW_TRANSITION_REQUEST_FOR_REVIEW_DRAFT,
+        );
+
+        $tableName = static::getEntityManager()->getClassMetadata(WorkflowTransitionRequest::class)->getTableName();
+        $this->assertEquals(
+            0,
+            static::getEntityManager()->getConnection()->fetchOne(\sprintf('SELECT COUNT(*) FROM %s', $tableName)),
+            'The request row has to land with the caller\'s flush, in one transaction with the workflow marking.',
+        );
     }
 
     public function testFinallyFailedRunStoresAValidatedActivityOnce(): void

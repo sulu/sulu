@@ -73,8 +73,7 @@ final class ValidateWorkflowTransitionRequestMessageHandler
 
         $entriesByKey = $this->requestWorkflowRegistry->get($workflowName)->validators;
         $firstThrowable = null;
-        $approved = 0;
-        $rejected = 0;
+        $settled = 0;
 
         foreach ($request->getDecisions() as $decision) {
             $validatorKey = $decision->getValidatorKey();
@@ -123,11 +122,7 @@ final class ValidateWorkflowTransitionRequestMessageHandler
                 continue;
             }
 
-            if ($result->approved) {
-                ++$approved;
-            } else {
-                ++$rejected;
-            }
+            ++$settled;
         }
 
         // Hands the message back to the retry strategy. A bus running this handler inside
@@ -137,11 +132,16 @@ final class ValidateWorkflowTransitionRequestMessageHandler
             throw $firstThrowable;
         }
 
-        if (0 < $approved + $rejected) {
+        // The counts cover every check, not only this run's, so a retry of one check and a run that
+        // follows a crashed one both report the state the request is in.
+        if (0 < $settled) {
             $this->eventDispatcher->dispatch(new WorkflowTransitionRequestActionEvent(
                 $request,
                 WorkflowTransitionRequestActionEvent::VALIDATED,
-                ['approved' => $approved, 'rejected' => $rejected],
+                [
+                    'approved' => $request->countValidatorApprovals(),
+                    'rejected' => $request->countValidatorRejections(),
+                ],
             ));
         }
     }

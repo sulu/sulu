@@ -19,7 +19,6 @@ use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionR
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
-use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
@@ -52,12 +51,10 @@ final class RetryWorkflowTransitionRequestValidationMessageHandler
         $workflowTransitionRequest->getValidatorDecision($message->getValidatorKey())?->resetToPending();
 
         // Held back until the reset row is flushed, so the validation run reads a pending row and
-        // can claim it. A double dispatch is harmless, the first answer wins. The flush stamp makes
-        // the run flush after it, because its verdicts bypass the unit of work and the activity it
-        // collects is only stored on a flush.
+        // can claim it. A double dispatch is harmless, the first answer wins.
         $this->messageBus->dispatch(new Envelope(
             new ValidateWorkflowTransitionRequestMessage($workflowTransitionRequest->getId()),
-            [new DispatchAfterCurrentBusStamp(), new EnableFlushStamp()],
+            [new DispatchAfterCurrentBusStamp()],
         ));
 
         $this->eventDispatcher->dispatch(new WorkflowTransitionRequestActionEvent(

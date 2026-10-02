@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\MessageHandler;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
@@ -33,7 +32,6 @@ final class ValidateWorkflowTransitionRequestFailureListener
     public function __construct(
         private readonly WorkflowTransitionRequestRepositoryInterface $workflowTransitionRequestRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -53,37 +51,34 @@ final class ValidateWorkflowTransitionRequestFailureListener
             return;
         }
 
-        $rejected = 0;
+        $settled = 0;
         foreach ($request->getDecisions() as $decision) {
             if (null === $decision->getValidatorKey() || !$decision->isPending()) {
                 continue;
             }
 
-            $settled = $this->workflowTransitionRequestRepository->settleDecision(
+            $isSettled = $this->workflowTransitionRequestRepository->settleDecision(
                 $decision,
                 WorkflowTransitionRequestDecisionStatusEnum::REJECTED,
                 [WorkflowTransitionRequestDecisionMessage::translated('sulu_content.workflow_transition_request.check_errored')],
             );
 
-            if ($settled) {
-                ++$rejected;
+            if ($isSettled) {
+                ++$settled;
             }
         }
 
-        if (0 === $rejected) {
+        if (0 === $settled) {
             return;
         }
 
         $this->eventDispatcher->dispatch(new WorkflowTransitionRequestActionEvent(
             $request,
             WorkflowTransitionRequestActionEvent::VALIDATED,
-            ['approved' => 0, 'rejected' => $rejected],
+            [
+                'approved' => $request->countValidatorApprovals(),
+                'rejected' => $request->countValidatorRejections(),
+            ],
         ));
-
-        // No bus and so no flush middleware runs here, and the activity collected for this event is
-        // only stored on a flush. A failed handler can leave the manager closed.
-        if ($this->entityManager->isOpen()) {
-            $this->entityManager->flush();
-        }
     }
 }

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Page\Infrastructure\Sulu\Activity;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
@@ -31,6 +32,7 @@ class PageWorkflowTransitionRequestSubscriber implements EventSubscriberInterfac
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private DomainEventCollectorInterface $domainEventCollector,
+        private DomainEventDispatcherInterface $domainEventDispatcher,
     ) {
     }
 
@@ -43,17 +45,15 @@ class PageWorkflowTransitionRequestSubscriber implements EventSubscriberInterfac
 
     public function onWorkflowTransitionRequestAction(WorkflowTransitionRequestActionEvent $event): void
     {
-        $request = $event->getWorkflowTransitionRequest();
-
-        if (PageInterface::RESOURCE_KEY !== $request->getResourceKey()) {
+        if (PageInterface::RESOURCE_KEY !== $event->getResourceKey()) {
             return;
         }
 
-        $locale = $request->getLocale();
+        $locale = $event->getLocale();
 
         // The content of the request's locale is loaded, so the event can resolve the title.
         $page = $this->pageRepository->findOneBy(
-            ['uuid' => $request->getResourceId()],
+            ['uuid' => $event->getResourceId()],
             [
                 PageRepositoryInterface::SELECT_PAGE_CONTENT => [
                     'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_ADMIN => true],
@@ -69,8 +69,16 @@ class PageWorkflowTransitionRequestSubscriber implements EventSubscriberInterfac
             return;
         }
 
-        $this->domainEventCollector->collect(
-            new PageWorkflowTransitionRequestEvent($page, $event->getAction(), $locale, $event->getContext()),
-        );
+        $domainEvent = new PageWorkflowTransitionRequestEvent($page, $event->getAction(), $locale, $event->getContext());
+
+        // The verdicts were written outside the unit of work, so no flush follows that would store a
+        // collected activity.
+        if ($event->isWrittenWithoutFlush()) {
+            $this->domainEventDispatcher->dispatch($domainEvent);
+
+            return;
+        }
+
+        $this->domainEventCollector->collect($domainEvent);
     }
 }

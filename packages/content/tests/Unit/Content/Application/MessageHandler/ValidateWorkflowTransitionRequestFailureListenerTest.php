@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Application\MessageHandler;
 
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -22,6 +21,8 @@ use Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\MessageHandler\ValidateWorkflowTransitionRequestFailureListener;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecision;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
 use Symfony\Component\Messenger\Envelope;
@@ -33,17 +34,19 @@ class ValidateWorkflowTransitionRequestFailureListenerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testDispatchesValidatedOnceAndFlushesWhenErroredDecisionsAreSettled(): void
+    public function testDispatchesValidatedOnceWithTheCountsOverAllChecks(): void
     {
         $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
+        $request->addValidatorDecision('answered');
         $request->addValidatorDecision('first');
         $request->addValidatorDecision('second');
         $request->addValidatorDecision('claimed_elsewhere');
+        $request->getValidatorDecision('answered')?->settle(WorkflowTransitionRequestDecisionStatusEnum::APPROVED, [], new \DateTimeImmutable());
 
         $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
         $repository->findOneBy(['id' => $request->getId()])->willReturn($request);
-        $repository->settleDecision($request->getValidatorDecision('first'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, Argument::type('array'))->willReturn(true);
-        $repository->settleDecision($request->getValidatorDecision('second'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, Argument::type('array'))->willReturn(true);
+        $repository->settleDecision($request->getValidatorDecision('first'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, Argument::type('array'))->will($this->settleAs(WorkflowTransitionRequestDecisionStatusEnum::REJECTED));
+        $repository->settleDecision($request->getValidatorDecision('second'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, Argument::type('array'))->will($this->settleAs(WorkflowTransitionRequestDecisionStatusEnum::REJECTED));
         $repository->settleDecision($request->getValidatorDecision('claimed_elsewhere'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, Argument::type('array'))->willReturn(false);
 
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
@@ -51,42 +54,12 @@ class ValidateWorkflowTransitionRequestFailureListenerTest extends TestCase
             static fn (object $event) => $event instanceof WorkflowTransitionRequestActionEvent
                 && $event->getWorkflowTransitionRequest() === $request
                 && WorkflowTransitionRequestActionEvent::VALIDATED === $event->getAction()
-                && ['approved' => 0, 'rejected' => 2] === $event->getContext(),
+                && ['approved' => 1, 'rejected' => 2] === $event->getContext(),
         ))->shouldBeCalledOnce()->willReturnArgument(0);
 
-        $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $entityManager->isOpen()->willReturn(true);
-        $entityManager->flush()->shouldBeCalledOnce();
-
         $listener = new ValidateWorkflowTransitionRequestFailureListener(
             $repository->reveal(),
             $eventDispatcher->reveal(),
-            $entityManager->reveal(),
-        );
-
-        $listener($this->createFailedEvent($request, false));
-    }
-
-    public function testDoesNotFlushAClosedEntityManager(): void
-    {
-        $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
-        $request->addValidatorDecision('first');
-
-        $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
-        $repository->findOneBy(['id' => $request->getId()])->willReturn($request);
-        $repository->settleDecision(Argument::cetera())->willReturn(true);
-
-        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
-        $eventDispatcher->dispatch(Argument::type(WorkflowTransitionRequestActionEvent::class))->shouldBeCalledOnce()->willReturnArgument(0);
-
-        $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $entityManager->isOpen()->willReturn(false);
-        $entityManager->flush()->shouldNotBeCalled();
-
-        $listener = new ValidateWorkflowTransitionRequestFailureListener(
-            $repository->reveal(),
-            $eventDispatcher->reveal(),
-            $entityManager->reveal(),
         );
 
         $listener($this->createFailedEvent($request, false));
@@ -103,13 +76,9 @@ class ValidateWorkflowTransitionRequestFailureListenerTest extends TestCase
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
 
-        $entityManager = $this->prophesize(EntityManagerInterface::class);
-        $entityManager->flush()->shouldNotBeCalled();
-
         $listener = new ValidateWorkflowTransitionRequestFailureListener(
             $repository->reveal(),
             $eventDispatcher->reveal(),
-            $entityManager->reveal(),
         );
 
         $listener($this->createFailedEvent($request, false));
@@ -129,10 +98,22 @@ class ValidateWorkflowTransitionRequestFailureListenerTest extends TestCase
         $listener = new ValidateWorkflowTransitionRequestFailureListener(
             $repository->reveal(),
             $eventDispatcher->reveal(),
-            $this->prophesize(EntityManagerInterface::class)->reveal(),
         );
 
         $listener($this->createFailedEvent($request, true));
+    }
+
+    private function settleAs(WorkflowTransitionRequestDecisionStatusEnum $status): callable
+    {
+        return static function(array $arguments) use ($status): bool {
+            /** @var WorkflowTransitionRequestDecision $decision */
+            $decision = $arguments[0];
+            /** @var list<WorkflowTransitionRequestDecisionMessage> $messages */
+            $messages = $arguments[2];
+            $decision->settle($status, $messages, new \DateTimeImmutable());
+
+            return true;
+        };
     }
 
     private function createFailedEvent(WorkflowTransitionRequest $request, bool $willRetry): WorkerMessageFailedEvent

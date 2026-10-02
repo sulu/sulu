@@ -23,6 +23,7 @@ use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Article\Infrastructure\Sulu\Activity\ArticleWorkflowTransitionRequestSubscriber;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 
@@ -41,16 +42,23 @@ class ArticleWorkflowTransitionRequestSubscriberTest extends TestCase
      */
     private ObjectProphecy $domainEventCollector;
 
+    /**
+     * @var ObjectProphecy<DomainEventDispatcherInterface>
+     */
+    private ObjectProphecy $domainEventDispatcher;
+
     private ArticleWorkflowTransitionRequestSubscriber $subscriber;
 
     protected function setUp(): void
     {
         $this->articleRepository = $this->prophesize(ArticleRepositoryInterface::class);
         $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
+        $this->domainEventDispatcher = $this->prophesize(DomainEventDispatcherInterface::class);
 
         $this->subscriber = new ArticleWorkflowTransitionRequestSubscriber(
             $this->articleRepository->reveal(),
             $this->domainEventCollector->reveal(),
+            $this->domainEventDispatcher->reveal(),
         );
     }
 
@@ -76,6 +84,25 @@ class ArticleWorkflowTransitionRequestSubscriberTest extends TestCase
             new WorkflowTransitionRequest(ArticleInterface::RESOURCE_KEY, 'resource-1', 'de', 'default'),
             WorkflowTransitionRequestActionEvent::APPROVED,
             ['comment' => 'Fine'],
+        ));
+    }
+
+    public function testDispatchesValidatedRightAwayInsteadOfCollectingIt(): void
+    {
+        $article = $this->prophesize(ArticleInterface::class)->reveal();
+        $this->articleRepository->findOneBy(['uuid' => 'resource-1'], Argument::type('array'))->willReturn($article);
+
+        $this->domainEventDispatcher->dispatch(Argument::that(
+            static fn (object $event) => $event instanceof ArticleWorkflowTransitionRequestEvent
+                && 'workflow_transition_request.validated' === $event->getEventType()
+                && ['approved' => 1, 'rejected' => 2] === $event->getEventContext(),
+        ))->shouldBeCalledOnce();
+        $this->domainEventCollector->collect(Argument::any())->shouldNotBeCalled();
+
+        $this->subscriber->onWorkflowTransitionRequestAction(new WorkflowTransitionRequestActionEvent(
+            new WorkflowTransitionRequest(ArticleInterface::RESOURCE_KEY, 'resource-1', 'de', 'default'),
+            WorkflowTransitionRequestActionEvent::VALIDATED,
+            ['approved' => 1, 'rejected' => 2],
         ));
     }
 
