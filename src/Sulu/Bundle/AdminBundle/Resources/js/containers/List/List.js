@@ -240,7 +240,6 @@ class List extends React.Component<Props> {
                         return;
                     }
 
-                    // all failed items are referenced, therefore the user is asked once for all of them
                     this.showReferencingResourcesDialog(
                         errors.map(({data}) => ({
                             resource: data.resource,

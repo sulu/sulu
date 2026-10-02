@@ -538,36 +538,32 @@ export default class ListStore {
     };
 
     /**
-     * Waits for all deletions and resolves with the error responses of the failed ones.
-     * Deleted items are removed from the list, the failed ones stay selected.
+     * Resolves with the error responses of the failed deletions, their items stay selected.
      */
     @action deleteSelectionSettled = (options: Object = {}): Promise<Array<Object>> => {
-        const deletedIds = [];
-        const errors = [];
         this.deletingSelection = true;
 
         const deletePromises = this.selectionIds.map((id) =>
             ResourceRequester.delete(this.resourceKey, {...this.queryOptions, ...options, id})
-                .then(() => {
-                    deletedIds.push(id);
-                })
-                .catch((error) => {
-                    if (error.status === 404) {
-                        deletedIds.push(id);
+                .then(() => ({id}))
+                .catch((error) => ({id, error}))
+        );
+
+        return Promise.all(deletePromises)
+            .then(action((results) => {
+                const errors = [];
+
+                results.forEach(({id, error}) => {
+                    if (error && error.status !== 404) {
+                        errors.push(error);
 
                         return;
                     }
 
-                    errors.push(error);
-                })
-        );
-
-        return Promise.all(deletePromises)
-            .then(action(() => {
-                deletedIds.forEach((id) => {
                     this.remove(id);
                     this.deselectById(id);
                 });
+
                 this.reload();
                 this.deletingSelection = false;
 

@@ -233,7 +233,7 @@ class CollectionSection extends React.Component<Props> {
 
         this.closeDeleteDependantResourcesDialog();
 
-        // some of the dependant resources might have been deleted before the dialog was cancelled
+        // dependant resources might be deleted already
         listStore.reload();
 
         if (onDeleteDependantResourcesCancel) {
