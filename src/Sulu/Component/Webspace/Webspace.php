@@ -110,6 +110,8 @@ class Webspace implements ArrayableInterface
      */
     private $excludedTemplates = [];
 
+    private ?string $webspaceSettingsForm = null;
+
     /**
      * The url generation strategy for this portal.
      *
@@ -577,6 +579,19 @@ class Webspace implements ArrayableInterface
         return $this->excludedTemplates;
     }
 
+    public function setWebspaceSettingsForm(?string $webspaceSettingsForm): void
+    {
+        $this->webspaceSettingsForm = $webspaceSettingsForm;
+    }
+
+    /**
+     * Returns the key of the form in which the settings of this webspace are edited.
+     */
+    public function getWebspaceSettingsForm(): ?string
+    {
+        return $this->webspaceSettingsForm;
+    }
+
     /**
      * Set resource-locator strategy.
      *
@@ -607,6 +622,7 @@ class Webspace implements ArrayableInterface
      *  templates: array<string>,
      *  defaultTemplates: array<string>,
      *  excludedTemplates: array<string>,
+     *  webspaceSettingsForm: ?string,
      *  segments: array<array>,
      *  theme: ?string,
      *  portals: array<int, mixed>,
@@ -624,6 +640,7 @@ class Webspace implements ArrayableInterface
         $res['templates'] = $this->getTemplates();
         $res['defaultTemplates'] = $this->getDefaultTemplates();
         $res['excludedTemplates'] = $this->getExcludedTemplates();
+        $res['webspaceSettingsForm'] = $this->getWebspaceSettingsForm();
         $res['resourceLocator']['strategy'] = $this->getResourceLocatorStrategy();
 
         foreach ($this->getLocalizations() as $localization) {
