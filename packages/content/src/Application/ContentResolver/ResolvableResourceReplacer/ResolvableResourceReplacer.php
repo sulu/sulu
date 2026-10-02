@@ -119,7 +119,17 @@ class ResolvableResourceReplacer implements ResolvableResourceReplacerInterface
 
                 $content[$key] = $resolved;
 
-                if (\is_array($content[$key])) {
+                if ($content[$key] instanceof ResolvableInterface) {
+                    // a resource callback can return a resolvable of its own, e.g. the image of another resource
+                    $content[$key] = $this->replaceRecursively(
+                        [$key => $content[$key]],
+                        $resolvedResources,
+                        $depth + 1,
+                        $maxDepth,
+                        $path,
+                        $viewEnhancements
+                    )[$key] ?? null;
+                } elseif (\is_array($content[$key])) {
                     $content[$key] = $this->replaceRecursively(
                         $content[$key],
                         $resolvedResources,
