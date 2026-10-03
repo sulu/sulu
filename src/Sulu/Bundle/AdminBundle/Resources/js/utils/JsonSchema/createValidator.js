@@ -11,6 +11,8 @@ Object.keys(customFormats).forEach((name) => {
 // emits one error per applicator (e.g. "properties", "items") in addition to
 // the underlying assertion error. Ajv, which this replaces, only reported the
 // leaf assertion errors and the form stores rely on that, so we drop them.
+// "not" is not part of the list: when it fails, its subschema has matched, so
+// there is no underlying error and the "not" error itself is the leaf.
 const APPLICATOR_KEYWORDS = new Set([
     'properties',
     'patternProperties',
@@ -25,7 +27,6 @@ const APPLICATOR_KEYWORDS = new Set([
     'if',
     'then',
     'else',
-    'not',
     'allOf',
     'anyOf',
     'oneOf',
@@ -53,14 +54,22 @@ const LIMIT_KEYWORDS = new Set([
     'exclusiveMaximum',
 ]);
 
-type CfworkerError = {error: string, instanceLocation: string, keyword: string};
-type ValidationError = {instancePath: string, keyword: string, params: Object};
+type CfworkerError = {error: string, instanceLocation: string, keyword: string, keywordLocation: string};
+type ValidationError = {instancePath: string, keyword: string, params: Object, schema?: mixed};
 
 // cfworker does not expose error parameters as structured data the way Ajv did,
 // they are only available within the rendered message. We restore the ones the
 // admin actually relies on ("missingProperty" to build the error path and the
-// "limit" of length/range constraints); the remaining parameters are unused by
+// "limit" of length/range constraints, with the "comparison" of range ones); the remaining parameters are unused by
 // the form rendering, which only reads the "keyword".
+// The comparison Ajv reported along with the limit of range constraints.
+const COMPARISONS = {
+    minimum: '>=',
+    maximum: '<=',
+    exclusiveMinimum: '>',
+    exclusiveMaximum: '<',
+};
+
 const extractParams = (error: CfworkerError): Object => {
     if (error.keyword === 'required') {
         const match = REQUIRED_PROPERTY_REGEX.exec(error.error);
@@ -71,19 +80,61 @@ const extractParams = (error: CfworkerError): Object => {
     if (LIMIT_KEYWORDS.has(error.keyword)) {
         const numbers = error.error.match(NUMBER_REGEX);
 
-        return numbers ? {limit: Number(numbers[numbers.length - 1])} : {};
+        if (!numbers) {
+            return {};
+        }
+
+        const limit = Number(numbers[numbers.length - 1]);
+
+        return error.keyword in COMPARISONS ? {comparison: COMPARISONS[error.keyword], limit} : {limit};
     }
 
     return {};
 };
 
+const unescapePointerSegment = (segment: string): string => {
+    return decodeURIComponent(segment).replace(/~1/g, '/').replace(/~0/g, '~');
+};
+
+// Returns the value of the failing keyword in the schema, like Ajv did with its
+// "verbose" option. cfworker gives the keyword location as a JSON pointer into
+// the root schema, in which a local "$ref" is a segment of its own.
+const resolveKeywordValue = (rootSchema: Object, keywordLocation: string): mixed => {
+    let value = rootSchema;
+
+    for (const segment of keywordLocation.replace(/^#\/?/, '').split('/').filter(Boolean)) {
+        if (value === null || typeof value !== 'object') {
+            return undefined;
+        }
+
+        value = value[unescapePointerSegment(segment)];
+
+        if (segment === '$ref') {
+            if (typeof value !== 'string' || !value.startsWith('#')) {
+                return undefined;
+            }
+
+            value = resolveKeywordValue(rootSchema, value);
+        }
+    }
+
+    return value;
+};
+
 // Maps a cfworker error to the Ajv error shape consumed by AbstractFormStore.
-const mapError = (error: CfworkerError): ValidationError => {
-    return {
+const mapError = (error: CfworkerError, rootSchema: Object): ValidationError => {
+    const mappedError: ValidationError = {
         instancePath: error.instanceLocation.replace(/^#/, ''),
         keyword: error.keyword,
         params: extractParams(error),
     };
+
+    if (error.keyword === 'not') {
+        // the form tells "not" constraints apart by their subschema
+        mappedError.schema = resolveKeywordValue(rootSchema, error.keywordLocation);
+    }
+
+    return mappedError;
 };
 
 // The cfworker validator throws when it encounters an `undefined` instance,
@@ -100,6 +151,9 @@ const normalizeData = (data: mixed): mixed => {
 const createValidator = () => {
     return {
         compile(schema: Object) {
+            // cfworker annotates the schema it is given (e.g. "__absolute_uri__"), so the
+            // subschemas reported with the errors are read from an untouched copy
+            const originalSchema = JSON.parse(JSON.stringify(schema));
             const validator = new Validator(schema, '7', false);
 
             const validate = (data: mixed): boolean => {
@@ -109,7 +163,7 @@ const createValidator = () => {
                     ? null
                     : errors
                         .filter((error) => !APPLICATOR_KEYWORDS.has(error.keyword))
-                        .map(mapError);
+                        .map((error) => mapError(error, originalSchema));
 
                 return valid;
             };
