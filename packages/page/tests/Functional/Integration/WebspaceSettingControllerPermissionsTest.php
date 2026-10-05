@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Page\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -35,6 +36,7 @@ class WebspaceSettingControllerPermissionsTest extends SuluTestCase
     private const VIEW = 64;
     private const VIEW_EDIT = 80;
     private const VIEW_EDIT_LIVE = 82;
+    private const VIEW_EDIT_REVIEW = 208;
 
     public function testTheAdminConfigCarriesThePermissionsOfTheSettingsForTheTab(): void
     {
@@ -85,6 +87,30 @@ class WebspaceSettingControllerPermissionsTest extends SuluTestCase
         $this->assertHttpStatusCode(403, $client->getResponse());
     }
 
+    #[DataProvider('provideRequestsOfAnotherWebspace')]
+    public function testRequestIsGuardedByTheWebspaceOfTheSettings(string $method, string $query): void
+    {
+        self::purgeDatabase();
+        self::createWebspaceSetting('sulu-io', ['en' => ['live' => ['companyName' => 'Sulu GmbH']]]);
+        $this->createUserWithPermissions('bloguser', [WebspaceSettingAdmin::getSecurityContext('blog') => self::VIEW_EDIT_LIVE]);
+        self::ensureKernelShutdown();
+
+        $client = $this->createClientForUser('bloguser');
+        $client->request($method, '/admin/api/webspace-settings/sulu-io' . $query);
+
+        $this->assertHttpStatusCode(403, $client->getResponse());
+    }
+
+    /**
+     * @return iterable<string, array{string, string}>
+     */
+    public static function provideRequestsOfAnotherWebspace(): iterable
+    {
+        yield 'versions' => ['GET', '/versions?locale=en'];
+        yield 'restore' => ['PUT', '?locale=en&action=restore&version=1'];
+        yield 'copy_locale' => ['POST', '?locale=en&action=copy_locale&src=en&dest=de'];
+    }
+
     public function testPutWithoutEditPermissionIsForbidden(): void
     {
         self::purgeDatabase();
@@ -126,6 +152,66 @@ class WebspaceSettingControllerPermissionsTest extends SuluTestCase
         $this->assertHttpStatusCode(403, $client->getResponse());
     }
 
+    public function testRemoveDraftWithoutLivePermissionIsForbidden(): void
+    {
+        self::purgeDatabase();
+        self::createWebspaceSetting('sulu-io', ['en' => [
+            'live' => ['companyName' => 'Sulu GmbH'],
+            'draft' => ['companyName' => 'Sulu AG'],
+        ]]);
+        $this->createUserWithPermissions('editor', [WebspaceSettingAdmin::getSecurityContext('sulu-io') => self::VIEW_EDIT]);
+        self::ensureKernelShutdown();
+
+        $client = $this->createClientForUser('editor');
+        $client->request('POST', '/admin/api/webspace-settings/sulu-io?locale=en&action=remove_draft');
+
+        $this->assertHttpStatusCode(403, $client->getResponse());
+    }
+
+    public function testRequestForReviewWithoutEditPermissionIsForbidden(): void
+    {
+        self::purgeDatabase();
+        self::createWebspaceSetting('sulu-io', ['en' => ['draft' => ['companyName' => 'Sulu GmbH']]]);
+        $this->createUserWithPermissions('viewer', [WebspaceSettingAdmin::getSecurityContext('sulu-io') => self::VIEW]);
+        self::ensureKernelShutdown();
+
+        $client = $this->createClientForUser('viewer');
+        $client->request('POST', '/admin/api/webspace-settings/sulu-io?locale=en&action=request_for_review');
+
+        $this->assertHttpStatusCode(403, $client->getResponse());
+    }
+
+    public function testRejectWithoutReviewPermissionIsForbidden(): void
+    {
+        self::purgeDatabase();
+        self::createWebspaceSetting('sulu-io', ['en' => ['draft' => ['companyName' => 'Sulu GmbH']]]);
+        $this->createUserWithPermissions('editor', [WebspaceSettingAdmin::getSecurityContext('sulu-io') => self::VIEW_EDIT_LIVE]);
+        self::ensureKernelShutdown();
+
+        $client = $this->createClientForUser('editor');
+        $this->requestReview($client);
+        $client->request('POST', '/admin/api/webspace-settings/sulu-io?locale=en&action=reject');
+
+        $this->assertHttpStatusCode(403, $client->getResponse());
+    }
+
+    public function testRejectWithReviewPermissionIsAllowed(): void
+    {
+        self::purgeDatabase();
+        self::createWebspaceSetting('sulu-io', ['en' => ['draft' => ['companyName' => 'Sulu GmbH']]]);
+        $this->createUserWithPermissions('reviewer', [WebspaceSettingAdmin::getSecurityContext('sulu-io') => self::VIEW_EDIT_REVIEW]);
+        self::ensureKernelShutdown();
+
+        $client = $this->createClientForUser('reviewer');
+        $this->requestReview($client);
+        $client->request('POST', '/admin/api/webspace-settings/sulu-io?locale=en&action=reject');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        /** @var array{workflowPlace: string} $content */
+        $content = \json_decode((string) $client->getResponse()->getContent(), true);
+        $this->assertSame('unpublished', $content['workflowPlace']);
+    }
+
     public function testPublishWithLivePermissionIsAllowed(): void
     {
         self::purgeDatabase();
@@ -140,6 +226,13 @@ class WebspaceSettingControllerPermissionsTest extends SuluTestCase
         /** @var array{workflowPlace: string} $content */
         $content = \json_decode((string) $client->getResponse()->getContent(), true);
         $this->assertSame('published', $content['workflowPlace']);
+    }
+
+    private function requestReview(KernelBrowser $client): void
+    {
+        $client->request('POST', '/admin/api/webspace-settings/sulu-io?locale=en&action=request_for_review');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
     }
 
     /**
