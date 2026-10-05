@@ -14,6 +14,7 @@
     <meta>
         <title lang="de">Tiers</title>
         <title lang="en">Animals</title>
+        <priority>10</priority>
     </meta>
 
     <tag name="test" value="test-value"/>

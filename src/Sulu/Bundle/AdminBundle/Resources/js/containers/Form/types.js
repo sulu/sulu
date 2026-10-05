@@ -6,6 +6,7 @@ import type {ColSpan} from '../../components/Grid';
 
 export type SchemaType = {
     key: string,
+    priority: number,
     title: string,
 };
 

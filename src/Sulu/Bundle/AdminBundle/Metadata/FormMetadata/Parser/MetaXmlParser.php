@@ -41,6 +41,7 @@ class MetaXmlParser
      *     title?: array<string, string>,
      *     info_text?: array<string, string>,
      *     placeholder?: array<string, string>,
+     *     priority?: int,
      * }
      */
     public function load(\DOMXPath $xpath, \DOMNode $context): array
@@ -55,6 +56,11 @@ class MetaXmlParser
         $result['title'] = $this->loadMetaTag('x:title', $xpath, $metaNode);
         $result['info_text'] = $this->loadMetaTag('x:info_text', $xpath, $metaNode);
         $result['placeholder'] = $this->loadMetaTag('x:placeholder', $xpath, $metaNode);
+
+        $priority = $this->getValueFromXPath('x:priority', $xpath, $metaNode);
+        if (null !== $priority) {
+            $result['priority'] = (int) $priority;
+        }
 
         return $result;
     }
