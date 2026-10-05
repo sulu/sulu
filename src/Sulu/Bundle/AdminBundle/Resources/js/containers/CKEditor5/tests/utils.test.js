@@ -7,6 +7,28 @@ test('Test remove p tags', () => {
     expect(removePTags(html)).toBe(expected);
 });
 
+test('Test remove p tags from a paragraph holding a line break', () => {
+    expect(removePTags('<p>one<br>two</p>')).toBe('one<br>two');
+});
+
+test('Test remove p tags from a paragraph holding inline markup', () => {
+    expect(removePTags('<p>a <strong>bold</strong> word</p>')).toBe('a <strong>bold</strong> word');
+});
+
+test('Test remove p tags from a paragraph carrying attributes', () => {
+    expect(removePTags('<p dir="rtl" class="intro">a <strong>bold</strong> word</p>'))
+        .toBe('a <strong>bold</strong> word');
+});
+
+test('Test remove p tags from several paragraphs carrying attributes', () => {
+    expect(removePTags('<p style="color:red">one</p><p class="intro">two</p>'))
+        .toBe('<!--p-->one<!--/p--><br></br><!--p-->two<!--/p-->');
+});
+
+test('Test readd p tags to a paragraph holding a line break', () => {
+    expect(addPTags('one<br>two')).toBe('<p>one<br>two</p>');
+});
+
 test('Test remove p tags complex', () => {
     const html = [
         '<h2>Headline</h2>',

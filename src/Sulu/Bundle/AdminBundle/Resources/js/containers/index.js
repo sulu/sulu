@@ -38,9 +38,10 @@ import MultiSelection from './MultiSelection';
 import SingleAutoComplete from './SingleAutoComplete';
 import SingleListOverlay from './SingleListOverlay';
 import SingleSelection from './SingleSelection';
-import TextEditor, {textEditorRegistry} from './TextEditor';
+import TextEditor, {textEditorConfigRegistry, textEditorRegistry} from './TextEditor';
 import blockingOverlayRegistry from './Application/registries/blockingOverlayRegistry';
 import {linkTypeRegistry} from './Link';
+import type {TextEditorAdapterProps, TextEditorConfig, TextEditorProps} from './TextEditor';
 import type {FormStoreInterface, Schema, SchemaOption} from './Form/types';
 import type {ViewProps} from './ViewRenderer';
 import type {ListAdapterProps, LoadingStrategyInterface, StructureStrategyInterface} from './List';
@@ -52,6 +53,9 @@ export type {
     Schema,
     SchemaOption,
     StructureStrategyInterface,
+    TextEditorAdapterProps,
+    TextEditorConfig,
+    TextEditorProps,
     ViewProps,
 };
 
@@ -95,6 +99,7 @@ export {
     sidebarStore,
     sidebarRegistry,
     TextEditor,
+    textEditorConfigRegistry,
     textEditorRegistry,
     viewRegistry,
     withToolbar,

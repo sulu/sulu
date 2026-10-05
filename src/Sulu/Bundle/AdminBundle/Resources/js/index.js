@@ -34,7 +34,7 @@ import List, {
 } from './views/List';
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
-import CKEditor5Container from './containers/CKEditor5';
+import {registerCKEditor5Plugins} from './containers/CKEditor5';
 import {
     ArrayFieldTransformer,
     BooleanFieldFilterType,
@@ -107,7 +107,7 @@ import {
     Link,
     SingleIconSelection,
 } from './containers/Form';
-import {textEditorRegistry} from './containers/TextEditor';
+import {textEditorConfigRegistry, textEditorRegistry} from './containers/TextEditor';
 import Form, {
     formToolbarActionRegistry,
     CopyToolbarAction as FormCopyToolbarAction,
@@ -191,6 +191,8 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerListItemActions();
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
+        registerCKEditor5Plugins(config.textPartLanguages);
+        registerTextEditorConfigs(config.textEditorConfigs);
         registerLinkOverlays();
         registerInternalLinkTypes(config.internalLinkTypes);
         registerFormToolbarActions();
@@ -335,6 +337,12 @@ function registerTextEditors() {
     textEditorRegistry.add('ckeditor5', CKEditor5);
 }
 
+function registerTextEditorConfigs(configs) {
+    for (const configKey in configs) {
+        textEditorConfigRegistry.add(configKey, configs[configKey]);
+    }
+}
+
 function registerLinkOverlays() {
     linkOverlayRegistry.setDefaultOverlay(LinkTypeOverlay);
     linkOverlayRegistry.add('external', ExternalLinkTypeOverlay);
@@ -412,7 +420,6 @@ function processConfig(config: Object) {
     smartContentConfigStore.setConfig(config.smartContent);
     CollaborationStore.enabled = config.collaborationEnabled;
     CollaborationStore.interval = config.collaborationInterval;
-    CKEditor5Container.textPartLanguages = config.textPartLanguages;
 }
 
 function startAdmin() {
