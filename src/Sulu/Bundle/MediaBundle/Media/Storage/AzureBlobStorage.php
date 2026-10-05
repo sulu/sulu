@@ -14,22 +14,31 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
 use League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemOperator;
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 
 class AzureBlobStorage extends FlysystemStorage
 {
+    private FilesystemInterface|FilesystemOperator $filesystem;
+
     /**
      * @var AzureBlobStorageAdapter
      */
     private $adapter;
 
     public function __construct(
-        FilesystemInterface $filesystem,
+        FilesystemInterface|FilesystemOperator $filesystem,
         private BlobRestProxy $client,
         private string $container,
         int $segments
     ) {
         parent::__construct($filesystem, $segments);
+
+        $this->filesystem = $filesystem;
+
+        if (FlysystemVersion::isV3()) {
+            return;
+        }
 
         if (!$filesystem instanceof Filesystem || !$filesystem->getAdapter() instanceof AzureBlobStorageAdapter) {
             throw new \RuntimeException();
@@ -40,6 +49,11 @@ class AzureBlobStorage extends FlysystemStorage
     public function getPath(array $storageOptions): string
     {
         $filePath = $this->getFilePath($storageOptions);
+
+        if (FlysystemVersion::isV3()) {
+            return $this->filesystem->publicUrl($filePath);
+        }
+
         $blob = $this->adapter->applyPathPrefix($filePath);
 
         return $this->client->getBlobUrl($this->container, $blob);

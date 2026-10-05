@@ -14,9 +14,12 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemOperator;
 
 class S3Storage extends FlysystemStorage
 {
+    private FilesystemInterface|FilesystemOperator $filesystem;
+
     /**
      * @var AwsS3Adapter
      */
@@ -37,9 +40,23 @@ class S3Storage extends FlysystemStorage
      */
     private $publicUrl;
 
-    public function __construct(FilesystemInterface $filesystem, int $segments, ?string $publicUrl = null)
-    {
+    /**
+     * @param string|null $pathPrefix Prefix of the adapter, only used with flysystem 3.x to build the url of the $publicUrl
+     */
+    public function __construct(
+        FilesystemInterface|FilesystemOperator $filesystem,
+        int $segments,
+        ?string $publicUrl = null,
+        private ?string $pathPrefix = null,
+    ) {
         parent::__construct($filesystem, $segments);
+
+        $this->filesystem = $filesystem;
+        $this->publicUrl = $publicUrl;
+
+        if (FlysystemVersion::isV3()) {
+            return;
+        }
 
         if (!$filesystem instanceof Filesystem || !$filesystem->getAdapter() instanceof AwsS3Adapter) {
             throw new \RuntimeException('This storage can only handle filesystems with "AwsS3Adapter".');
@@ -56,6 +73,11 @@ class S3Storage extends FlysystemStorage
     public function getPath(array $storageOptions): string
     {
         $filePath = $this->getFilePath($storageOptions);
+
+        if (FlysystemVersion::isV3()) {
+            return $this->getPathV3($filePath);
+        }
+
         $path = $this->adapter->applyPathPrefix($filePath);
 
         return $this->publicUrl . '/' . \ltrim($path, '/');
@@ -64,5 +86,17 @@ class S3Storage extends FlysystemStorage
     public function getType(array $storageOptions): string
     {
         return StorageInterface::TYPE_REMOTE;
+    }
+
+    private function getPathV3(string $filePath): string
+    {
+        if (null === $this->publicUrl) {
+            return $this->filesystem->publicUrl($filePath);
+        }
+
+        $prefix = \trim((string) $this->pathPrefix, '/');
+        $path = '' === $prefix ? $filePath : $prefix . '/' . $filePath;
+
+        return \rtrim($this->publicUrl, '/') . '/' . \ltrim($path, '/');
     }
 }

@@ -17,6 +17,7 @@ use League\Flysystem\Filesystem;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\MediaBundle\Media\Storage\FlysystemVersion;
 use Sulu\Bundle\MediaBundle\Media\Storage\GoogleCloudStorage;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
@@ -25,6 +26,13 @@ use Symfony\Component\Filesystem\Exception\IOException;
 class GoogleCloudStorageTest extends TestCase
 {
     use ProphecyTrait;
+
+    protected function setUp(): void
+    {
+        if (FlysystemVersion::isV3()) {
+            $this->markTestSkipped('Requires league/flysystem 1.x.');
+        }
+    }
 
     public function testConstruct(): void
     {

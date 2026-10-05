@@ -26,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheClearerInterface;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
+use Sulu\Bundle\MediaBundle\Media\Storage\FlysystemVersion;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\SearchBundle\SuluSearchBundle;
@@ -440,6 +441,11 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         foreach ($config['storages'] as $storageKey => $storageConfig) {
             foreach ($storageConfig as $key => $value) {
                 if ($storageKey === $storage) {
+                    if ('path_prefix' === $key && null === $value && FlysystemVersion::isV3()) {
+                        // the adapters of flysystem 3.x expect a string as prefix
+                        $value = '';
+                    }
+
                     $container->setParameter('sulu_media.media.storage.' . $storageKey . '.' . $key, $value);
                 } else {
                     // Resolve unused ENV Variables of other Adapter

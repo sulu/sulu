@@ -14,6 +14,8 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Google\Cloud\Storage\Bucket;
 use Google\Cloud\Storage\StorageClient;
 use League\Flysystem\Filesystem;
+use League\Flysystem\GoogleCloudStorage\GoogleCloudStorageAdapter;
+use Sulu\Bundle\MediaBundle\Media\Storage\FlysystemVersion;
 use Sulu\Bundle\MediaBundle\Media\Storage\GoogleCloudStorage;
 use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 use Symfony\Component\DependencyInjection\Reference;
@@ -28,12 +30,20 @@ return static function(ContainerConfigurator $container) {
         ->args(['%sulu_media.media.storage.google_cloud.bucket_name%'])
         ->factory([new Reference('sulu_media.storage.google_cloud.client'), 'bucket']);
 
-    $services->set('sulu_media.storage.google_cloud.adapter', GoogleStorageAdapter::class)
-        ->args([
-            new Reference('sulu_media.storage.google_cloud.client'),
-            new Reference('sulu_media.storage.google_cloud.bucket'),
-            '%sulu_media.media.storage.google_cloud.path_prefix%',
-        ]);
+    if (FlysystemVersion::isV3()) {
+        $services->set('sulu_media.storage.google_cloud.adapter', GoogleCloudStorageAdapter::class)
+            ->args([
+                new Reference('sulu_media.storage.google_cloud.bucket'),
+                '%sulu_media.media.storage.google_cloud.path_prefix%',
+            ]);
+    } else {
+        $services->set('sulu_media.storage.google_cloud.adapter', GoogleStorageAdapter::class)
+            ->args([
+                new Reference('sulu_media.storage.google_cloud.client'),
+                new Reference('sulu_media.storage.google_cloud.bucket'),
+                '%sulu_media.media.storage.google_cloud.path_prefix%',
+            ]);
+    }
 
     $services->set('sulu_media.storage.google_cloud.filesystem', Filesystem::class)
         ->args([new Reference('sulu_media.storage.google_cloud.adapter')]);
