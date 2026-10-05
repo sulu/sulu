@@ -14,13 +14,11 @@ namespace Sulu\Component\Security\Authorization;
 /**
  * A helper class to convert the mask between the numerical and array representation.
  * Also offered as a service by this bundle.
- *
- * @phpstan-import-type Permissions from MaskConverterInterface
  */
 class MaskConverter implements MaskConverterInterface
 {
     /**
-     * @param Permissions $permissions the permissions available, defined by config
+     * @param array<PermissionTypes::*, int> $permissions the permissions available, defined by config
      */
     public function __construct(
         protected $permissions

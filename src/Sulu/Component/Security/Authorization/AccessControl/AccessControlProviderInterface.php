@@ -27,7 +27,7 @@ interface AccessControlProviderInterface
      *
      * @param string $type The type of the protected object
      * @param string $identifier The identifier of the protected object
-     * @param string|null $system The system of the protected object
+     * @param string|null $system The security system for filtering the permissions
      *
      * @return array<int, array<string, bool>> Key: RoleId, Value: Permission mask
      */

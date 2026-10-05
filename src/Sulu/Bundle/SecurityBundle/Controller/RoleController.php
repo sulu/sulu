@@ -333,7 +333,7 @@ class RoleController extends AbstractRestController implements SecuredController
     /**
      * Adds a permission to the given role.
      *
-     * @param array{id?: int|string, context: string, permissions: Permissions} $permissionData
+     * @param array{id: int|string}|array{context: string, permissions: Permissions} $permissionData
      *
      * @return bool
      *
@@ -391,6 +391,7 @@ class RoleController extends AbstractRestController implements SecuredController
      */
     protected function convertRole(RoleInterface $role)
     {
+        $roleData = [];
         $roleData['id'] = $role->getId();
         $roleData['name'] = $role->getName();
         $roleData['key'] = $role->getKey();
