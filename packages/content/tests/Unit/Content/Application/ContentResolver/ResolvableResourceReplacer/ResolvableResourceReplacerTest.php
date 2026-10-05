@@ -223,6 +223,38 @@ class ResolvableResourceReplacerTest extends TestCase
         self::assertContains('media-456', $tags);
     }
 
+    public function testReplaceWithUnresolvedResolvableResourceReturnedByCallback(): void
+    {
+        $nestedResource = new ResolvableResource('456', 'media', 1, null, null, 'media');
+        $firstResource = new ResolvableResource(
+            '123',
+            'page',
+            1,
+            function(array $resource) {
+                return $resource['image'];
+            },
+            null,
+            'pages'
+        );
+
+        $resolvedResources = [
+            'page' => [
+                '123' => [
+                    $firstResource->getMetadataIdentifier() => $this->createResolvedEntry(['image' => $nestedResource]),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            ['title' => 'Test', 'image' => $firstResource],
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertSame(['title' => 'Test', 'image' => null], $result['content']);
+    }
+
     public function testReplaceWithMaxDepthExceeded(): void
     {
         $resolvableResource = new ResolvableResource(
