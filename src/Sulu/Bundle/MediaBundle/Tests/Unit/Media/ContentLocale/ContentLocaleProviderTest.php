@@ -11,16 +11,16 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\MediaLanguage;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ContentLocale;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\MediaLanguageFilterType;
-use Sulu\Bundle\MediaBundle\Media\MediaLanguage\MediaLanguageProvider;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\ContentLocaleFilterType;
+use Sulu\Bundle\MediaBundle\Media\ContentLocale\ContentLocaleProvider;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 
-class MediaLanguageProviderTest extends TestCase
+class ContentLocaleProviderTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -34,10 +34,10 @@ class MediaLanguageProviderTest extends TestCase
         $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
     }
 
-    public function testGetValuesUsesConfiguredLanguages(): void
+    public function testGetValuesUsesConfiguredLocales(): void
     {
         $this->localizationManager->getLocales()->shouldNotBeCalled();
-        $provider = new MediaLanguageProvider(['fr', 'de', 'fr'], $this->localizationManager->reveal());
+        $provider = new ContentLocaleProvider(['fr', 'de', 'fr'], $this->localizationManager->reveal());
 
         self::assertSame(
             [['name' => 'fr', 'title' => 'French'], ['name' => 'de', 'title' => 'German']],
@@ -48,7 +48,7 @@ class MediaLanguageProviderTest extends TestCase
     public function testGetValuesFallsBackToContentLocales(): void
     {
         $this->localizationManager->getLocales()->willReturn(['en', 'de']);
-        $provider = new MediaLanguageProvider([], $this->localizationManager->reveal());
+        $provider = new ContentLocaleProvider([], $this->localizationManager->reveal());
 
         self::assertSame(
             [['name' => 'en', 'title' => 'Englisch'], ['name' => 'de', 'title' => 'Deutsch']],
@@ -58,7 +58,7 @@ class MediaLanguageProviderTest extends TestCase
 
     public function testGetValuesKeepsRegionLocalesApart(): void
     {
-        $provider = new MediaLanguageProvider(['de_at', 'de', 'en-US'], $this->localizationManager->reveal());
+        $provider = new ContentLocaleProvider(['de_at', 'de', 'en-US'], $this->localizationManager->reveal());
 
         self::assertSame(
             [
@@ -72,17 +72,17 @@ class MediaLanguageProviderTest extends TestCase
 
     public function testGetValuesReturnsTheCodeWhenUnknown(): void
     {
-        $provider = new MediaLanguageProvider(['zz'], $this->localizationManager->reveal());
+        $provider = new ContentLocaleProvider(['zz'], $this->localizationManager->reveal());
 
         self::assertSame([['name' => 'zz', 'title' => 'zz']], $provider->getValues('en'));
     }
 
     public function testGetFilterOptionsAddsTheNoneOption(): void
     {
-        $provider = new MediaLanguageProvider(['de'], $this->localizationManager->reveal());
+        $provider = new ContentLocaleProvider(['de'], $this->localizationManager->reveal());
 
         self::assertSame(
-            ['de' => 'German', MediaLanguageFilterType::NONE_VALUE => 'sulu_media.media_language_none'],
+            ['de' => 'German', ContentLocaleFilterType::NONE_VALUE => 'sulu_media.content_locale_none'],
             $provider->getFilterOptions('en')
         );
     }

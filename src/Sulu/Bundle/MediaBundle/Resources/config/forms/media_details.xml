@@ -64,13 +64,13 @@
                     </params>
                 </property>
 
-                <property name="mediaLanguages" type="select" visibleCondition="type == 'document' || type == 'video'">
+                <property name="contentLocales" type="select">
                     <meta>
-                        <title>sulu_media.media_language</title>
+                        <title>sulu_media.content_locale</title>
                     </meta>
 
                     <params>
-                        <param name="values" type="expression" value="service('sulu_media.media_language_provider').getValues(locale)"/>
+                        <param name="values" type="expression" value="service('sulu_media.content_locale_provider').getValues(locale)"/>
                     </params>
                 </property>
 

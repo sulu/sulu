@@ -24889,7 +24889,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
-			message: '#^Cannot access offset ''mediaLanguages'' on mixed\.$#'
+			message: '#^Cannot access offset ''contentLocales'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php

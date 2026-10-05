@@ -65,7 +65,7 @@
                 <cascade-persist />
             </cascade>
         </one-to-many>
-        <one-to-many field="mediaLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMediaLanguage" mapped-by="fileVersion" orphan-removal="true">
+        <one-to-many field="contentLocales" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage" mapped-by="fileVersion" orphan-removal="true">
             <cascade>
                 <cascade-persist />
                 <cascade-remove />

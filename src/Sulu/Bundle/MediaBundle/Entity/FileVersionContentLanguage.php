@@ -14,21 +14,21 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
- * Content language of a file version, independent of the content locale.
+ * Content locale of a file version, independent of the locale the media is edited in.
  */
-class FileVersionMediaLanguage
+class FileVersionContentLanguage
 {
     private int $id;
 
-    private string $language;
+    private string $locale;
 
     #[Exclude]
-    private FileVersion $fileVersion;
+    private ?FileVersion $fileVersion;
 
-    public function __construct(FileVersion $fileVersion, string $language)
+    public function __construct(FileVersion $fileVersion, string $locale)
     {
         $this->fileVersion = $fileVersion;
-        $this->language = $language;
+        $this->locale = $locale;
     }
 
     public function getId(): int
@@ -36,19 +36,19 @@ class FileVersionMediaLanguage
         return $this->id;
     }
 
-    public function getLanguage(): string
+    public function getLocale(): string
     {
-        return $this->language;
+        return $this->locale;
     }
 
-    public function setLanguage(string $language): static
+    public function setLocale(string $locale): static
     {
-        $this->language = $language;
+        $this->locale = $locale;
 
         return $this;
     }
 
-    public function getFileVersion(): FileVersion
+    public function getFileVersion(): ?FileVersion
     {
         return $this->fileVersion;
     }

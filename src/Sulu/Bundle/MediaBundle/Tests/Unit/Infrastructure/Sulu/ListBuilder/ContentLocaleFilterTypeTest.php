@@ -17,16 +17,16 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\MediaLanguageFilterType;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\ContentLocaleFilterType;
 use Sulu\Component\Rest\ListBuilder\Expression\ExpressionInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
-class MediaLanguageFilterTypeTest extends TestCase
+class ContentLocaleFilterTypeTest extends TestCase
 {
     use ProphecyTrait;
 
-    private MediaLanguageFilterType $filterType;
+    private ContentLocaleFilterType $filterType;
 
     /**
      * @var ObjectProphecy<ListBuilderInterface>
@@ -40,12 +40,12 @@ class MediaLanguageFilterTypeTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->filterType = new MediaLanguageFilterType();
+        $this->filterType = new ContentLocaleFilterType();
         $this->listBuilder = $this->prophesize(ListBuilderInterface::class);
         $this->fieldDescriptor = $this->prophesize(FieldDescriptorInterface::class);
     }
 
-    public function testFilterByLanguages(): void
+    public function testFilterByLocales(): void
     {
         $inExpression = $this->prophesize(ExpressionInterface::class)->reveal();
         $this->listBuilder->createInExpression($this->fieldDescriptor->reveal(), ['de', 'fr'])
@@ -66,10 +66,10 @@ class MediaLanguageFilterTypeTest extends TestCase
         $this->listBuilder->createOrExpression(Argument::cetera())->shouldNotBeCalled();
         $this->listBuilder->addExpression($isNullExpression)->shouldBeCalledOnce();
 
-        $this->filterType->filter($this->listBuilder->reveal(), $this->fieldDescriptor->reveal(), MediaLanguageFilterType::NONE_VALUE);
+        $this->filterType->filter($this->listBuilder->reveal(), $this->fieldDescriptor->reveal(), ContentLocaleFilterType::NONE_VALUE);
     }
 
-    public function testFilterByLanguagesAndNoneCombinesWithOr(): void
+    public function testFilterByLocalesAndNoneCombinesWithOr(): void
     {
         $inExpression = $this->prophesize(ExpressionInterface::class)->reveal();
         $isNullExpression = $this->prophesize(ExpressionInterface::class)->reveal();
@@ -83,7 +83,7 @@ class MediaLanguageFilterTypeTest extends TestCase
             ->willReturn($orExpression);
         $this->listBuilder->addExpression($orExpression)->shouldBeCalledOnce();
 
-        $this->filterType->filter($this->listBuilder->reveal(), $this->fieldDescriptor->reveal(), 'de,' . MediaLanguageFilterType::NONE_VALUE);
+        $this->filterType->filter($this->listBuilder->reveal(), $this->fieldDescriptor->reveal(), 'de,' . ContentLocaleFilterType::NONE_VALUE);
     }
 
     public function testFilterWithEmptyOptionsDoesNothing(): void

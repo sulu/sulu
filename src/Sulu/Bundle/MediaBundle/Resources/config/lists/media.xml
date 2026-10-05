@@ -290,25 +290,25 @@
             </filter>
         </property>
 
-        <!-- when used as column, the property will lead to duplicated rows for entities with multiple media languages -->
+        <!-- when used as column, the property will lead to duplicated rows for entities with multiple content locales -->
         <property
-            name="mediaLanguage"
+            name="contentLocale"
             visibility="never"
-            translation="sulu_media.media_language"
+            translation="sulu_media.content_locale"
         >
-            <field-name>language</field-name>
-            <entity-name>Sulu\Bundle\MediaBundle\Entity\FileVersionMediaLanguage</entity-name>
+            <field-name>locale</field-name>
+            <entity-name>Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage</entity-name>
 
             <joins ref="fileVersion">
                 <join>
-                    <entity-name>Sulu\Bundle\MediaBundle\Entity\FileVersionMediaLanguage</entity-name>
-                    <field-name>Sulu\Bundle\MediaBundle\Entity\FileVersion.mediaLanguages</field-name>
+                    <entity-name>Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage</entity-name>
+                    <field-name>Sulu\Bundle\MediaBundle\Entity\FileVersion.contentLocales</field-name>
                 </join>
             </joins>
 
-            <filter type="media_language">
+            <filter type="content_locale">
                 <params>
-                    <param name="options" type="expression" value="service('sulu_media.media_language_provider').getFilterOptions(locale)"/>
+                    <param name="options" type="expression" value="service('sulu_media.content_locale_provider').getFilterOptions(locale)"/>
                 </params>
             </filter>
         </property>

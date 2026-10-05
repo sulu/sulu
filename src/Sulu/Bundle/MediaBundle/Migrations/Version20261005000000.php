@@ -17,15 +17,15 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Migrations\AbstractMigration;
 
-final class Version20260923000000 extends AbstractMigration
+final class Version20261005000000 extends AbstractMigration
 {
-    private const TABLE = 'me_file_version_media_languages';
+    private const TABLE = 'me_file_version_content_languages';
 
     private const FILE_VERSIONS_TABLE = 'me_file_versions';
 
     public function getDescription(): string
     {
-        return 'Add me_file_version_media_languages table storing the content language(s) of a file version';
+        return 'Add me_file_version_content_languages table storing the content locales of a file version, kept as is when it exists since 2.x';
     }
 
     public function up(Schema $schema): void
@@ -36,11 +36,9 @@ final class Version20260923000000 extends AbstractMigration
 
         $table = $schema->createTable(self::TABLE);
         $table->addColumn('id', Types::INTEGER, ['autoincrement' => true]);
-        $table->addColumn('language', Types::STRING, ['length' => 15]);
-        $table->addColumn('idFileVersions', Types::INTEGER, ['notnull' => true]);
+        $table->addColumn('locale', Types::STRING, ['length' => 15]);
+        $table->addColumn('idFileVersions', Types::INTEGER, ['notnull' => false]);
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['language']);
-        $table->addUniqueIndex(['idFileVersions', 'language']);
         $table->addForeignKeyConstraint(
             self::FILE_VERSIONS_TABLE,
             ['idFileVersions'],
@@ -51,8 +49,6 @@ final class Version20260923000000 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        if ($schema->hasTable(self::TABLE)) {
-            $schema->dropTable(self::TABLE);
-        }
+        // the table may predate this migration (2.x), so dropping it would delete data this migration never created
     }
 }

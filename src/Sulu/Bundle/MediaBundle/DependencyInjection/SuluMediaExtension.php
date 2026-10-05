@@ -275,10 +275,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         // collection-class
         $container->setParameter('sulu.model.collection.class', Collection::class);
 
-        // media languages (empty falls back to the content locales)
-        /** @var string[] $mediaLanguages */
-        $mediaLanguages = $config['media_languages'];
-        $container->setParameter('sulu_media.media_languages', $mediaLanguages);
+        // content locales of media files (empty falls back to the configured content locales)
+        /** @var string[] $contentLocales */
+        $contentLocales = $config['content_locales'];
+        $container->setParameter('sulu_media.content_locales', $contentLocales);
 
         // image-formats
         $container->setParameter('sulu_media.image_format_files', $config['image_format_files']);

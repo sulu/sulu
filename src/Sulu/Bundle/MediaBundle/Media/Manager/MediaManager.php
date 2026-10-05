@@ -470,7 +470,7 @@ class MediaManager implements MediaManagerInterface
                 || 'aiDisclosureDisabled' === $attribute
                 || 'aiDisclosureText' === $attribute
                 || 'aiDisclosureIconVariant' === $attribute
-                || 'mediaLanguages' === $attribute
+                || 'contentLocales' === $attribute
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -585,8 +585,8 @@ class MediaManager implements MediaManagerInterface
                     case 'aiDisclosureIconVariant':
                         $media->setAiDisclosureIconVariant($value ?? 'auto');
                         break;
-                    case 'mediaLanguages':
-                        $media->setMediaLanguages(\is_array($value) ? \array_filter($value, 'is_string') : []);
+                    case 'contentLocales':
+                        $media->setContentLocales(\is_array($value) ? \array_filter($value, 'is_string') : []);
                         break;
                 }
             }
