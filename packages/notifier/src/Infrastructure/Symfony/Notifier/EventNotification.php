@@ -72,28 +72,28 @@ final class EventNotification extends Notification implements ChatNotificationIn
             return $this->asSlackMessage();
         }
 
-        $text = $this->getSubject() . "\n" . $this->getContent();
+        // The transport name is the project's choice and does not tell which service is behind it,
+        // so the text is escaped for every transport, because Slack parses plain text as markup too.
+        $text = self::escapeForChat($this->getSubject()) . "\n" . self::escapeForChat($this->description);
 
-        // Without a transport name the message goes to every chat transport, Slack included,
-        // where plain text is still parsed as markup.
-        return new ChatMessage(null === $transport ? self::escapeForSlack($text) : $text);
+        return new ChatMessage(null !== $this->link ? $text . "\n\n" . $this->link : $text);
     }
 
     private function asSlackMessage(): ChatMessage
     {
         $options = (new SlackOptions())
             ->block(new SlackHeaderBlock(self::truncate($this->getSubject(), self::SLACK_HEADER_LIMIT)))
-            ->block((new SlackSectionBlock())->text(self::escapeForSlack($this->description)));
+            ->block((new SlackSectionBlock())->text(self::escapeForChat($this->description)));
 
         if ([] !== $this->context) {
-            $options->block((new SlackContextBlock())->text(self::escapeForSlack(\implode(' · ', $this->context))));
+            $options->block((new SlackContextBlock())->text(self::escapeForChat(\implode(' · ', $this->context))));
         }
 
         if (null !== $this->link) {
             $options->block((new SlackActionsBlock())->button($this->linkLabel, $this->link, 'primary'));
         }
 
-        return new ChatMessage(self::escapeForSlack($this->getSubject()), $options);
+        return new ChatMessage(self::escapeForChat($this->getSubject()), $options);
     }
 
     /**
@@ -102,11 +102,15 @@ final class EventNotification extends Notification implements ChatNotificationIn
      *
      * @see https://api.slack.com/reference/surfaces/formatting#escaping
      */
-    private static function escapeForSlack(string $value): string
+    private static function escapeForChat(string $value): string
     {
         return \str_replace(['&', '<', '>'], ['&amp;', '&lt;', '&gt;'], $value);
     }
 
+    /**
+     * SlackHeaderBlock measures its limit with strlen() and throws above it, so this cuts by bytes
+     * (at a character boundary) although Slack itself counts characters.
+     */
     private static function truncate(string $value, int $bytes): string
     {
         if (\strlen($value) <= $bytes) {

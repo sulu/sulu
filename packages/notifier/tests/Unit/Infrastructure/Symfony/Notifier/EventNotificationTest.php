@@ -107,15 +107,53 @@ class EventNotificationTest extends TestCase
         ], $this->getSlackBlocks($message));
     }
 
-    public function testOtherTransportGetsPlainText(): void
+    public function testSlackHeaderStaysWithinTheByteLimitOfTheBridge(): void
+    {
+        // SlackHeaderBlock throws above 150 bytes, so 100 characters of 2 bytes each must be cut although
+        // they are below Slack's own limit of 150 characters.
+        $message = (new EventNotification(\str_repeat('ä', 100), 'description'))
+            ->asChatMessage(new NoRecipient(), 'slack');
+
+        /** @var list<array{text: array{text: string}}> $blocks */
+        $blocks = $this->getSlackBlocks($message);
+        $header = $blocks[0]['text']['text'];
+
+        self::assertLessThanOrEqual(150, \strlen($header));
+        self::assertGreaterThan(\strlen($header), \strlen(\str_repeat('ä', 100)));
+    }
+
+    public function testSlackHeaderIsNotCutInsideAMultibyteCharacter(): void
+    {
+        $message = (new EventNotification(\str_repeat('a', 146) . '😀😀', 'description'))
+            ->asChatMessage(new NoRecipient(), 'slack');
+
+        /** @var list<array{text: array{text: string}}> $blocks */
+        $blocks = $this->getSlackBlocks($message);
+        $header = $blocks[0]['text']['text'];
+
+        self::assertSame(\str_repeat('a', 146) . '…', $header);
+        self::assertTrue(\mb_check_encoding($header, 'UTF-8'));
+    }
+
+    public function testOtherTransportGetsEscapedPlainText(): void
     {
         $message = $this->createNotification()->asChatMessage(new NoRecipient(), 'discord');
 
         self::assertNull($message->getOptions());
         self::assertSame(
-            'Page modified' . "\n" . 'Adam modified the page "Tom & Jerry"' . "\n\n" . 'https://example.org/admin/#/webspaces/sulu/pages/de/3/details',
+            'Page modified' . "\n" . 'Adam modified the page "Tom &amp; Jerry"' . "\n\n" . 'https://example.org/admin/#/webspaces/sulu/pages/de/3/details',
             $message->getSubject(),
         );
+    }
+
+    public function testRenamedSlackTransportDoesNotPingTheChannel(): void
+    {
+        $notification = new EventNotification('<!channel> Page modified', 'Adam modified the page "<!here>"');
+
+        $message = $notification->asChatMessage(new NoRecipient(), 'slack_dev');
+
+        self::assertNull($message->getOptions());
+        self::assertSame('&lt;!channel&gt; Page modified' . "\n" . 'Adam modified the page "&lt;!here&gt;"', $message->getSubject());
     }
 
     public function testUnnamedTransportGetsEscapedPlainText(): void
