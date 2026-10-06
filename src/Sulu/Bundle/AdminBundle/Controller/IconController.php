@@ -40,7 +40,7 @@ class IconController
 
         if (!\array_key_exists($iconSetName, $this->iconSets)) {
             throw new NotFoundHttpException(\sprintf(
-                'Unkown icon set "%s". Known icon sets are: %s',
+                'Unknown icon set "%s". Known icon sets are: %s',
                 $iconSetName,
                 \implode(', ', \array_keys($this->iconSets)),
             ));
