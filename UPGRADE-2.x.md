@@ -4,17 +4,6 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.28
 
-### Warning when deleting a referenced media
-
-Deleting a media that is still referenced by a page, snippet or other content now returns a `409`
-response listing the referencing resources instead of removing the media silently. The admin shows the
-referencing resources and lets the user confirm the deletion. Pass `force=true` to delete the media
-regardless of its references:
-
-```
-DELETE /admin/api/media/{id}?force=true
-```
-
 ### Deprecated instantiating `MediaController` without `$referenceRepository` and `$requestStack`
 
 Instantiating the `MediaController` without the `$referenceRepository` or `$requestStack` argument is
