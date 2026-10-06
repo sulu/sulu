@@ -53,6 +53,7 @@ class RemoteStorageTest extends WebsiteTestCase
         $this->assertTrue($this->getFilesystem()->has($this->getStoragePath($media)));
     }
 
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function testDownloadRedirectsToStorage(): void
     {
         $media = $this->createMedia();
@@ -64,6 +65,7 @@ class RemoteStorageTest extends WebsiteTestCase
         $this->assertSame(InMemoryRemoteStorage::PUBLIC_URL . '/' . $this->getStoragePath($media), $response->headers->get('Location'));
     }
 
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function testFormatIsCreatedFromStorage(): void
     {
         $media = $this->createMedia();
