@@ -2257,12 +2257,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/SchemaMetadata/TextPropertyMetadataMapper.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\AdminBundle\\Serializer\\Handler\\SchemaHandler\:\:getSubscribingMethods\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Serializer/Handler/SchemaHandler.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Serializer\\Handler\\SchemaHandler\:\:serializeToJsonSchema\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -12853,12 +12847,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
-			message: '#^Variable \$entities in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\ContactBundle\\Contact\\AccountFactory\:\:createEntity\(\) should return Sulu\\Bundle\\ContactBundle\\Entity\\AccountInterface but returns object\.$#'
 			identifier: return.type
 			count: 1
@@ -12866,12 +12854,6 @@ parameters:
 
 		-
 			message: '#^Call to an undefined method Sulu\\Bundle\\ContactBundle\\Entity\\AccountRepositoryInterface\:\:findByFilters\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\MediaBundle\\Entity\\MediaRepositoryInterface\:\:findById\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -13007,12 +12989,6 @@ parameters:
 			identifier: booleanOr.alwaysFalse
 			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: '#^Call to an undefined method Sulu\\Bundle\\MediaBundle\\Entity\\MediaRepositoryInterface\:\:findById\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
 			message: '#^Call to function array_key_exists\(\) with ''id'' and \*NEVER\* will always evaluate to true\.$#'
@@ -20869,12 +20845,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/Serializer/Handler/ChildrenCollectionHandler.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\Serializer\\Handler\\ChildrenCollectionHandler\:\:getSubscribingMethods\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/Serializer/Handler/ChildrenCollectionHandler.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\Serializer\\Subscriber\\ChildrenSubscriber\:\:getSubscribedEvents\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -26215,6 +26185,24 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$changer type mapping mismatch\: property can contain Sulu\\Component\\Security\\Authentication\\UserInterface\|null but database expects Sulu\\Bundle\\SecurityBundle\\Entity\\User\|null\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$children type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection\<int, Sulu\\Bundle\\MediaBundle\\Entity\\CollectionInterface\> but database expects Doctrine\\Common\\Collections\\Collection&iterable\<Sulu\\Bundle\\MediaBundle\\Entity\\Collection\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$creator type mapping mismatch\: property can contain Sulu\\Component\\Security\\Authentication\\UserInterface\|null but database expects Sulu\\Bundle\\SecurityBundle\\Entity\\User\|null\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$defaultMeta \(Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\) does not accept Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -26222,6 +26210,12 @@ parameters:
 
 		-
 			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$defaultMeta type mapping mismatch\: database can contain Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\|null but property expects Sulu\\Bundle\\MediaBundle\\Entity\\CollectionMeta\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\MediaBundle\\Entity\\Collection\:\:\$media type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection\<int, Sulu\\Bundle\\MediaBundle\\Entity\\MediaInterface\> but database expects Doctrine\\Common\\Collections\\Collection&iterable\<Sulu\\Bundle\\MediaBundle\\Entity\\Media\>\.$#'
 			identifier: doctrine.associationType
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
@@ -38539,12 +38533,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Serializer/Handler/ExtensionContainerHandler.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Serializer\\Handler\\ExtensionContainerHandler\:\:getSubscribingMethods\(\) return type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Serializer/Handler/ExtensionContainerHandler.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Serializer\\Handler\\StructureHandler\:\:doDeserialize\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -38570,12 +38558,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Bundle\\PageBundle\\Serializer\\Handler\\StructureHandler\:\:doSerialize\(\) has parameter \$type with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Serializer/Handler/StructureHandler.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\PageBundle\\Serializer\\Handler\\StructureHandler\:\:getSubscribingMethods\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Serializer/Handler/StructureHandler.php
@@ -44725,12 +44707,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
 
 		-
-			message: '#^PHPDoc tag @var with type Sulu\\Component\\Content\\Compat\\StructureInterface is not subtype of native type Sulu\\Bundle\\PageBundle\\Document\\PageDocument\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/SmartContent/QueryBuilderTest.php
-
-		-
 			message: '#^Parameter \#1 \$id of method PHPCR\\SessionInterface\:\:getNodeByIdentifier\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
@@ -45557,6 +45533,12 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/Compiler/ResolveTargetEntitiesPass.php
+
+		-
+			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/PersistenceExtensionTrait.php
 
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertIsInt\(\) with int will always evaluate to true\.$#'
@@ -52423,12 +52405,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
-			message: '#^Variable \$entities in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Util\\TokenGenerator\:\:getRandomNumber\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -56581,14 +56557,14 @@ parameters:
 			path: src/Sulu/Bundle/TestBundle/Testing/PHPCRImporter.php
 
 		-
-			message: '#^Call to an undefined method object\:\:getUser\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
 			message: '#^Call to function method_exists\(\) with Doctrine\\DBAL\\Connection and ''executeStatement'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Sulu/Bundle/TestBundle/Testing/PurgeDatabaseTrait.php
+
+		-
+			message: '#^Call to an undefined method object\:\:getUser\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
 
@@ -57733,12 +57709,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
 
 		-
-			message: '#^Call to function array_key_exists\(\) with ''model'' and array\{model\: class\-string, repository\?\: class\-string\} will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
-
-		-
 			message: '#^Cannot access offset ''attributes'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -58371,7 +58341,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''excerpt'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 2
 			path: src/Sulu/Bundle/WebsiteBundle/Navigation/NavigationMapper.php
 
 		-
@@ -62966,12 +62936,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Component\\Content\\Compat\\Serializer\\PageBridgeHandler\:\:doDeserialize\(\) has parameter \$type with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Serializer/PageBridgeHandler.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Compat\\Serializer\\PageBridgeHandler\:\:getSubscribingMethods\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Serializer/PageBridgeHandler.php
@@ -67819,7 +67783,7 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
-			message: '#^Parameter \#1 \$page of method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getLocalizedUrlsForPage\(\) expects Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument, object given\.$#'
+			message: '#^Parameter \#1 \$page of method Sulu\\Bundle\\DocumentManagerBundle\\Bridge\\DocumentInspector\:\:getLocalizedUrlsForPage\(\) expects Sulu\\Bundle\\PageBundle\\Document\\BasePageDocument, Sulu\\Component\\Content\\Document\\Behavior\\RedirectTypeBehavior\|Sulu\\Component\\Content\\Document\\Behavior\\ResourceSegmentBehavior given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
@@ -71593,18 +71557,6 @@ parameters:
 			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
 
 		-
-			message: '#^Binary operation "\." between ''page\.\[i18n\:'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
-
-		-
 			message: '#^Cannot access an offset on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -71701,12 +71653,6 @@ parameters:
 			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\SmartContent\\QueryBuilder\:\:buildOrder\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\SmartContent\\QueryBuilder\:\:buildOrder\(\) has parameter \$locale with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -71779,12 +71725,6 @@ parameters:
 			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\SmartContent\\QueryBuilder\:\:buildSegmentKey\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\SmartContent\\QueryBuilder\:\:buildSegmentKey\(\) has parameter \$locale with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -71845,12 +71785,6 @@ parameters:
 			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
 
 		-
-			message: '#^Method Sulu\\Component\\Content\\SmartContent\\QueryBuilder\:\:buildWhere\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\SmartContent\\QueryBuilder\:\:buildWhere\(\) has parameter \$locale with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -71905,12 +71839,6 @@ parameters:
 			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
 
 		-
-			message: '#^Parameter \#1 \$string of function strtoupper expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
-
-		-
 			message: '#^Parameter \#1 \$targetGroupId of method Sulu\\Component\\Content\\SmartContent\\QueryBuilder\:\:buildAudienceTargeting\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -71918,18 +71846,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$types of method Sulu\\Component\\Content\\SmartContent\\QueryBuilder\:\:buildTypesWhere\(\) expects array\<string\>\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
-
-		-
-			message: '#^Parameter \#2 \$languageCode of method Sulu\\Component\\Content\\SmartContent\\QueryBuilder\:\:buildTypesWhere\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
-
-		-
-			message: '#^Parameter \#2 \$locale of method Sulu\\Component\\Content\\SmartContent\\QueryBuilder\:\:buildAudienceTargeting\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
@@ -71961,7 +71877,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
 
 		-
@@ -80881,18 +80797,6 @@ parameters:
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
 
 		-
-			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
-			identifier: equal.alwaysTrue
-			count: 2
-			path: src/Sulu/Component/Persistence/RelationTrait.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 2
-			path: src/Sulu/Component/Persistence/RelationTrait.php
-
-		-
 			message: '#^Method Sulu\\Component\\Persistence\\EventSubscriber\\ORM\\MetadataSubscriber\:\:loadClassMetadata\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -81073,6 +80977,24 @@ parameters:
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/UserBlameSubscriber.php
 
 		-
+			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
+			identifier: equal.alwaysTrue
+			count: 1
+			path: src/Sulu/Component/Persistence/RelationTrait.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: src/Sulu/Component/Persistence/RelationTrait.php
+
+		-
+			message: '#^Variable \$entities in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Sulu/Component/Persistence/RelationTrait.php
+
+		-
 			message: '#^Property Sulu\\Component\\Persistence\\Tests\\Unit\\EventSubscriber\\ORM\\MetadataSubscriberTest\:\:\$classMetadata with generic class Doctrine\\ORM\\Mapping\\ClassMetadata does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
@@ -81217,18 +81139,6 @@ parameters:
 			path: src/Sulu/Component/Rest/AbstractRestController.php
 
 		-
-			message: '#^Call to function is_object\(\) with non\-empty\-array\<Sulu\\Bundle\\CoreBundle\\Entity\\ApiEntity\> will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 1
-			path: src/Sulu/Component/Rest/AbstractRestController.php
-
-		-
-			message: '#^Call to function method_exists\(\) with \*NEVER\* and ''getValues'' will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Sulu/Component/Rest/AbstractRestController.php
-
-		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -81315,18 +81225,6 @@ parameters:
 		-
 			message: '#^Property Sulu\\Component\\Rest\\AbstractRestController\:\:\$unsortable type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/AbstractRestController.php
-
-		-
-			message: '#^Result of && is always false\.$#'
-			identifier: booleanAnd.alwaysFalse
-			count: 1
-			path: src/Sulu/Component/Rest/AbstractRestController.php
-
-		-
-			message: '#^Strict comparison using \!\=\= between null and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Component/Rest/AbstractRestController.php
 
@@ -81500,12 +81398,6 @@ parameters:
 
 		-
 			message: '#^Method Sulu\\Component\\Rest\\Handler\\DateHandler\:\:deserialize\(\) has parameter \$type with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Sulu/Component/Rest/Handler/DateHandler.php
-
-		-
-			message: '#^Method Sulu\\Component\\Rest\\Handler\\DateHandler\:\:getSubscribingMethods\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Sulu/Component/Rest/Handler/DateHandler.php
@@ -82539,7 +82431,7 @@ parameters:
 		-
 			message: '#^Cannot call method getName\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
 		-
@@ -82833,7 +82725,7 @@ parameters:
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
-			count: 4
+			count: 3
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
 		-
@@ -83617,14 +83509,32 @@ parameters:
 			path: src/Sulu/Component/Rest/Listing/ListRestHelper.php
 
 		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
+			message: '#^Call to function is_object\(\) with non\-empty\-array\<Sulu\\Bundle\\CoreBundle\\Entity\\ApiEntity\> will always evaluate to false\.$#'
+			identifier: function.impossibleType
 			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
+			path: src/Sulu/Component/Rest/RestControllerTrait.php
 
 		-
-			message: '#^Loose comparison using \=\= between null and null will always evaluate to true\.$#'
-			identifier: equal.alwaysTrue
+			message: '#^Call to function method_exists\(\) with \*NEVER\* and ''getValues'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Sulu/Component/Rest/RestControllerTrait.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: src/Sulu/Component/Rest/RestControllerTrait.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and string will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Sulu/Component/Rest/RestControllerTrait.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
 
@@ -83755,20 +83665,8 @@ parameters:
 			path: src/Sulu/Component/Rest/RestHelper.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
 			message: '#^Trying to invoke \(callable\(\)\: mixed\)\|null but it might not be a callable\.$#'
 			identifier: callable.nonCallable
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
-			message: '#^Variable \$entities in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
 
