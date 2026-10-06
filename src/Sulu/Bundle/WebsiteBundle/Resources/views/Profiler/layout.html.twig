@@ -49,6 +49,14 @@
                 {% endif %}
             </span>
         </div>
+        {% if collector.data('adminUrl') is not null %}
+            <div class="sf-toolbar-info-piece">
+                <b>Admin Url</b>
+                <span>
+                    <a href="{{ collector.data('adminUrl') }}">Go to admin view</a>
+                </span>
+            </div>
+        {% endif %}
     {% endset %}
     {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': profiler_url } %}
 {% endblock %}
