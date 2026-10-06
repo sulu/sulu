@@ -26,9 +26,11 @@ use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
+use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
+use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
@@ -45,6 +47,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Webmozart\Assert\Assert;
@@ -85,7 +88,9 @@ class MediaController extends AbstractMediaController implements
         private string $mediaClass,
         private string $collectionClass,
         private ?MediaListBuilderFactory $mediaListBuilderFactory = null,
-        private ?MediaListRepresentationFactory $mediaListRepresentationFactory = null
+        private ?MediaListRepresentationFactory $mediaListRepresentationFactory = null,
+        private ?ReferenceRepositoryInterface $referenceRepository = null,
+        private ?RequestStack $requestStack = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
@@ -94,6 +99,22 @@ class MediaController extends AbstractMediaController implements
                 'sulu/sulu',
                 '2.3',
                 'Instantiating MediaController without the $mediaListBuilderFactory or $mediaListRepresentationFactory argument is deprecated.'
+            );
+        }
+
+        if (null === $this->referenceRepository) {
+            @trigger_deprecation(
+                'sulu/sulu',
+                '2.6.28',
+                'Instantiating MediaController without the $referenceRepository argument is deprecated.'
+            );
+        }
+
+        if (null === $this->requestStack) {
+            @trigger_deprecation(
+                'sulu/sulu',
+                '2.6.28',
+                'Instantiating MediaController without the $requestStack argument is deprecated, deleting a referenced media is not checked without it.'
             );
         }
     }
@@ -372,6 +393,24 @@ class MediaController extends AbstractMediaController implements
      */
     public function deleteAction($id)
     {
+        $request = $this->requestStack?->getCurrentRequest();
+
+        if (null !== $request && !$this->getBooleanRequestParameter($request, 'force', false, false)) {
+            $referencingResources = $this->getReferencingResources($id);
+
+            if (\count($referencingResources) > 0) {
+                throw new ReferencingResourcesFoundException(
+                    [
+                        'id' => (int) $id,
+                        'resourceKey' => MediaInterface::RESOURCE_KEY,
+                        'title' => $this->getMediaTitle($id, $request),
+                    ],
+                    $referencingResources,
+                    \count($referencingResources)
+                );
+            }
+        }
+
         $delete = function($id) {
             try {
                 $this->mediaManager->delete($id, true);
@@ -383,6 +422,69 @@ class MediaController extends AbstractMediaController implements
         $view = $this->responseDelete($id, $delete);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @param int|string $id
+     */
+    private function getMediaTitle($id, Request $request): ?string
+    {
+        $locale = $this->getRequestParameter($request, 'locale');
+
+        if (!$locale) {
+            return null;
+        }
+
+        try {
+            $media = $this->mediaManager->getById((int) $id, $locale);
+        } catch (MediaNotFoundException) {
+            return null;
+        }
+
+        return $media->getTitle() ?: $media->getName();
+    }
+
+    /**
+     * @param int|string $id
+     *
+     * @return array<array{id: int|string, resourceKey: string, title: string|null}>
+     */
+    private function getReferencingResources($id): array
+    {
+        if (null === $this->referenceRepository) {
+            return [];
+        }
+
+        $referencingResources = [];
+        $references = $this->referenceRepository->findFlatBy(
+            [
+                'resourceKey' => MediaInterface::RESOURCE_KEY,
+                'resourceId' => (string) $id,
+            ],
+            [],
+            ['referenceResourceKey', 'referenceResourceId', 'referenceTitle'],
+            true
+        );
+
+        foreach ($references as $reference) {
+            if (!isset($reference['referenceResourceId'], $reference['referenceResourceKey'], $reference['referenceTitle'])) {
+                continue;
+            }
+
+            // one reference per locale
+            $key = $reference['referenceResourceKey'] . '::' . $reference['referenceResourceId'];
+            if (isset($referencingResources[$key])) {
+                continue;
+            }
+
+            $referencingResources[$key] = [
+                'id' => $reference['referenceResourceId'],
+                'resourceKey' => $reference['referenceResourceKey'],
+                'title' => $reference['referenceTitle'],
+            ];
+        }
+
+        return \array_values($referencingResources);
     }
 
     /**

@@ -9,8 +9,15 @@ import ProgressBar from '../../components/ProgressBar';
 import ResourceRequester from '../../services/ResourceRequester';
 import RequestPromise from '../../services/Requester/RequestPromise';
 import {translate} from '../../utils';
+import {ERROR_CODE_REFERENCING_RESOURCES_FOUND} from '../../constants';
+import ReferencingResources from '../DeleteReferencedResourceDialog/ReferencingResources';
 import styles from './deleteDependantResourcesDialogStyles.scss';
-import type {Resource, DependantResourcesData, DependantResourceBatches} from '../../types';
+import type {
+    Resource,
+    DependantResourcesData,
+    DependantResourceBatches,
+    ReferencingResourcesData,
+} from '../../types';
 
 type Props = {
     dependantResourcesData: DependantResourcesData,
@@ -28,8 +35,10 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
     @observable error: string | typeof undefined = undefined;
     @observable closed: boolean = false;
     @observable totalDeletedResources: number = 0;
+    @observable.ref referencingResourcesData: ?Array<ReferencingResourcesData> = undefined;
 
     promises: Array<RequestPromise<any>> = [];
+    resolveReferencingResources: ?(confirmed: boolean) => void = undefined;
 
     @computed get title(): string {
         return this.props.dependantResourcesData.title;
@@ -56,7 +65,9 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             this.error = undefined;
             this.closed = false;
             this.totalDeletedResources = 0;
+            this.referencingResourcesData = undefined;
             this.promises = [];
+            this.resolveReferencingResources = undefined;
         }
     }
 
@@ -64,13 +75,28 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
         return !!this.error;
     }
 
+    @computed get awaitsReferencingResourcesConfirmation(): boolean {
+        return !!this.referencingResourcesData;
+    }
+
     @action handleConfirm = () => {
         const {onFinish, onError} = this.props;
+
+        if (this.resolveReferencingResources) {
+            this.resolveReferencingResources(true);
+
+            return;
+        }
 
         this.inProgress = true;
 
         this.deleteResourceBatches(this.dependantResourceBatches)
             .then(action(() => {
+                if (!this.inProgress) {
+                    // cancelled
+                    return;
+                }
+
                 this.inProgress = false;
                 this.finished = true;
 
@@ -94,18 +120,14 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
             });
     };
 
-    deleteResourceBatches = (batchedResources: DependantResourceBatches): Promise<void> => {
+    deleteResources = (resources: Array<Resource>, options: Object = {}): Promise<void> => {
         const {requestOptions} = this.props;
+        const handledPromises = [];
 
-        if (batchedResources.length === 0) {
-            return Promise.resolve();
-        }
-
-        const [currentBatch, ...remainingBatches] = batchedResources;
-
-        currentBatch.forEach((resource: Resource) => {
+        resources.forEach((resource: Resource) => {
             const promise = ResourceRequester.delete(resource.resourceKey, {
                 ...requestOptions,
+                ...options,
                 id: resource.id,
             });
 
@@ -119,12 +141,76 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                 });
 
             this.promises.push(promise);
+            handledPromises.push(promise.then(() => undefined, (errorResponse) => {
+                if (errorResponse.status !== 409) {
+                    return Promise.reject(errorResponse);
+                }
+
+                return errorResponse.clone().json().then((error) => {
+                    if (error.code !== ERROR_CODE_REFERENCING_RESOURCES_FOUND) {
+                        return Promise.reject(errorResponse);
+                    }
+
+                    return {resource, error};
+                });
+            }));
         });
 
-        return Promise.all(this.promises)
-            .then(() => {
+        return Promise.all(handledPromises)
+            .then((results) => {
                 this.promises.splice(0, this.promises.length);
 
+                const referenced = results.filter(Boolean);
+
+                return this.deleteReferencedResources(
+                    referenced.map(({resource}) => resource),
+                    referenced.map(({error}) => error)
+                );
+            });
+    };
+
+    deleteReferencedResources = (
+        referencedResources: Array<Resource>,
+        referencingResourcesData: Array<ReferencingResourcesData>
+    ): Promise<void> => {
+        if (referencedResources.length === 0 || !this.inProgress) {
+            return Promise.resolve();
+        }
+
+        return this.confirmReferencingResources(referencingResourcesData)
+            .then((confirmed) => {
+                if (!confirmed) {
+                    return;
+                }
+
+                return this.deleteResources(referencedResources, {force: true});
+            });
+    };
+
+    @action confirmReferencingResources = (
+        referencingResourcesData: Array<ReferencingResourcesData>
+    ): Promise<boolean> => {
+        this.referencingResourcesData = referencingResourcesData;
+
+        return new Promise((resolve) => {
+            this.resolveReferencingResources = action((confirmed: boolean) => {
+                this.referencingResourcesData = undefined;
+                this.resolveReferencingResources = undefined;
+
+                resolve(confirmed);
+            });
+        });
+    };
+
+    deleteResourceBatches = (batchedResources: DependantResourceBatches): Promise<void> => {
+        if (batchedResources.length === 0) {
+            return Promise.resolve();
+        }
+
+        const [currentBatch, ...remainingBatches] = batchedResources;
+
+        return this.deleteResources(currentBatch)
+            .then(() => {
                 if (!this.inProgress) {
                     // do not delete next batch if user cancelled the dialog during the previous batch
                     return;
@@ -139,6 +225,10 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
 
         if (this.inProgress) {
             this.inProgress = false;
+
+            if (this.resolveReferencingResources) {
+                this.resolveReferencingResources(false);
+            }
 
             this.promises.forEach((promise: RequestPromise<any>) => {
                 promise.abort();
@@ -183,7 +273,7 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                         : translate('sulu_admin.cancel')
                 }
                 confirmDisabled={this.errored || this.finished}
-                confirmLoading={this.inProgress}
+                confirmLoading={this.inProgress && !this.awaitsReferencingResourcesConfirmation}
                 confirmText={translate('sulu_admin.delete')}
                 onCancel={this.handleCancel}
                 onConfirm={this.handleConfirm}
@@ -191,7 +281,10 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                 open={!this.closed}
                 snackbarMessage={this.snackbarMessage}
                 snackbarType={this.snackbarType}
-                title={this.title}
+                title={this.awaitsReferencingResourcesConfirmation
+                    ? translate('sulu_admin.delete_linked_warning_title')
+                    : this.title
+                }
             >
                 {!this.inProgress && !this.finished && !this.errored && (
                     <p>
@@ -199,7 +292,14 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                     </p>
                 )}
 
-                {(this.inProgress || this.finished || this.errored) && (
+                {this.referencingResourcesData && (
+                    <ReferencingResources
+                        allowDeletion={true}
+                        referencingResourcesData={this.referencingResourcesData}
+                    />
+                )}
+
+                {(this.inProgress || this.finished || this.errored) && !this.awaitsReferencingResourcesConfirmation && (
                     <React.Fragment>
                         <div className={styles.progressBar}>
                             <ProgressBar
