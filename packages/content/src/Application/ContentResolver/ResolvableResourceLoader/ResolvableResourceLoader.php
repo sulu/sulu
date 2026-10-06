@@ -32,6 +32,11 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
 
     public function loadResources(array $resourcesPerLoader, ?string $locale, array $context = []): array
     {
+        // the self reference is only meant for the smart resolvers: resource loaders put their params in their
+        // cache key, so the same resource would be loaded again for every page it appears on
+        $resourceLoaderContext = $context;
+        unset($resourceLoaderContext['selfReference']);
+
         $loadedResources = [];
         foreach ($resourcesPerLoader as $loaderKey => $resourcesToLoad) {
             if (!$loaderKey) {
@@ -64,7 +69,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             }
 
             if (\count($resolvableResources) > 0) {
-                $result = $this->loadResolvableResources($resolvableResources, $loaderKey, $locale, $context);
+                $result = $this->loadResolvableResources($resolvableResources, $loaderKey, $locale, $resourceLoaderContext);
                 foreach ($result as $id => $loadedResource) {
                     foreach ($metadataIdentifiersPerResourceId[$id] as $metadataIdentifier) {
                         $loadedResources[$loaderKey][$id][$metadataIdentifier] = $loadedResource;

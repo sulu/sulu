@@ -162,6 +162,9 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_content.teaser_selection_property_resolver', TeaserSelectionPropertyResolver::class)
+        ->args([
+            new Reference('sulu_content.content_deduplication_tracker'),
+        ])
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_content.date_property_resolver', DatePropertyResolver::class)
