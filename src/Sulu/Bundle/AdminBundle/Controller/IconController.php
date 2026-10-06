@@ -13,12 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Controller;
 
 use Sulu\Bundle\AdminBundle\Exception\InvalidIconProviderException;
 use Sulu\Bundle\AdminBundle\Icon\IconProviderInterface;
-use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @experimental This is an experimental feature and may change in future releases.
@@ -30,7 +29,6 @@ class IconController
      * @param iterable<IconProviderInterface> $iconProviders
      */
     public function __construct(
-        private NormalizerInterface $normalizer,
         private array $iconSets,
         private iterable $iconProviders,
     ) {
@@ -38,10 +36,17 @@ class IconController
 
     public function cgetAction(Request $request): Response
     {
-        $iconSetName = $request->query->getString('icon_set') ?: throw new MissingParameterException(\get_class($this), 'icon_set');
+        $iconSetName = $request->query->getString('icon_set', 'sulu');
+
+        if (!\array_key_exists($iconSetName, $this->iconSets)) {
+            throw new NotFoundHttpException(\sprintf(
+                'Unkown icon set "%s". Known icon sets are: %s',
+                $iconSetName,
+                \implode(', ', \array_keys($this->iconSets)),
+            ));
+        }
 
         $iconSet = \explode('://', $this->iconSets[$iconSetName]);
-        $search = $request->query->get('search');
         $provider = $iconSet[0];
         $path = $iconSet[1] ?? '';
 
@@ -56,6 +61,7 @@ class IconController
         }
 
         // Implement a simple search functionality.
+        $search = $request->query->get('search');
         if ($search) {
             $filteredIcons = [];
 
@@ -73,13 +79,6 @@ class IconController
 
         $data = new CollectionRepresentation($icons, 'icons');
 
-        return new JsonResponse($this->normalizer->normalize(
-            $data->toArray(),
-            'json',
-            [
-                'locale' => $request->query->getString('locale', $request->getLocale()),
-                'sulu_admin' => true,
-            ]
-        ));
+        return new JsonResponse($data->toArray());
     }
 }
