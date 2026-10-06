@@ -15,6 +15,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\PropertyResolver\Resolver;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Teaser\Teaser;
+use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\PropertyResolver\Resolver\TeaserSelectionPropertyResolver;
 
@@ -172,6 +173,24 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $this->assertSame('Article Title', $mergedTeaser->getTitle());
         $this->assertSame('Article Description', $mergedTeaser->getDescription());
         $this->assertSame(11, $mergedTeaser->getMediaId());
+    }
+
+    public function testResolveRegistersTheTeasersForDeduplication(): void
+    {
+        $deduplicationTracker = new ContentDeduplicationTracker();
+        $resolver = new TeaserSelectionPropertyResolver($deduplicationTracker);
+
+        $resolver->resolve([
+            'items' => [
+                ['id' => 'page-1', 'type' => 'pages'],
+                ['id' => 'article-1', 'type' => 'articles'],
+                ['id' => '', 'type' => 'pages'],
+            ],
+        ], 'en');
+
+        // the resolvables use a "<type>::<id>" id and no resource key, so the content resolver cannot register them
+        self::assertSame(['page-1'], $deduplicationTracker->getAll('pages'));
+        self::assertSame(['article-1'], $deduplicationTracker->getAll('articles'));
     }
 
     public function testGetType(): void

@@ -247,6 +247,81 @@ class ResolvableResourceLoaderTest extends TestCase
         self::assertSame('de', $contextAwareLoader->lastParams['_shadowLocale']);
     }
 
+    public function testLoadResourcesPassesTheSelfReferenceToSmartResolversOnly(): void
+    {
+        $contextAwareLoader = new class() implements ResourceLoaderInterface {
+            /** @var array<mixed> */
+            public array $lastParams = [];
+
+            public function load(array $ids, ?string $locale, array $params = []): array
+            {
+                $this->lastParams = $params;
+
+                return ['1' => ['title' => 'test']];
+            }
+
+            public static function getKey(): string
+            {
+                return 'context_test';
+            }
+        };
+
+        $contextAwareSmartResolver = new class() implements SmartResolverInterface {
+            /** @var array<string, mixed> */
+            public array $lastContext = [];
+
+            public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
+            {
+                $this->lastContext = $context;
+
+                return ContentView::create([], []);
+            }
+
+            public static function getType(): string
+            {
+                return 'smart_example';
+            }
+        };
+
+        $smartResolverProvider = new class($contextAwareSmartResolver) implements SmartResolverProviderInterface {
+            public function __construct(private SmartResolverInterface $smartResolver)
+            {
+            }
+
+            public function getSmartResolver(string $type): SmartResolverInterface
+            {
+                return $this->smartResolver;
+            }
+
+            public function hasSmartResolver(string $type): bool
+            {
+                return true;
+            }
+        };
+
+        $loader = new ResolvableResourceLoader(
+            new ResourceLoaderProvider(['context_test' => $contextAwareLoader]),
+            $smartResolverProvider,
+        );
+
+        $resolvable = new ResolvableResource('1', 'context_test', 1);
+        $smartResolvable = new SmartResolvable(['value' => []], 'smart_example', 1);
+        $selfReference = ['resourceKey' => 'pages', 'id' => '123'];
+
+        $loader->loadResources(
+            [
+                'context_test' => ['1' => [$resolvable->getMetadataIdentifier() => $resolvable]],
+                'smart_example' => ['smart-1' => ['default' => $smartResolvable]],
+            ],
+            'de_li',
+            ['_shadowLocale' => 'de', 'selfReference' => $selfReference],
+        );
+
+        // the self reference would otherwise be part of the cache key of every resource loader
+        self::assertSame(['_shadowLocale' => 'de'], $contextAwareLoader->lastParams);
+        self::assertSame(['_shadowLocale' => 'de', 'selfReference' => $selfReference], $contextAwareSmartResolver->lastContext);
+    }
+
     public function testLoadResourcesWithInvalidLoaderKey(): void
     {
         $this->expectException(\RuntimeException::class);
