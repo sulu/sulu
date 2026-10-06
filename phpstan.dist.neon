@@ -34,6 +34,7 @@ parameters:
                 - src/Sulu/Bundle/MediaBundle/Resources/config/services_storage_*.php
                 - src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Storage/*StorageTest.php
                 - src/Sulu/Bundle/MediaBundle/Tests/Unit/DependencyInjection/SuluMediaExtensionStorageTest.php
+                - src/Sulu/Bundle/MediaBundle/Tests/Application/RemoteStorageKernel.php
     excludePaths:
         - %currentWorkingDirectory%/node_modules/*
         - %currentWorkingDirectory%/var/*
@@ -51,8 +52,6 @@ parameters:
         - %currentWorkingDirectory%/src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/LegacyResettingControllerTest.php
         - %currentWorkingDirectory%/src/Sulu/Bundle/MarkupBundle/Listener/SwiftMailerListener.php
         - %currentWorkingDirectory%/src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/SwiftMailerListenerTest.php
-        # extends an adapter of league/flysystem 1.x which is not installed together with 3.x
-        - %currentWorkingDirectory%/src/Sulu/Bundle/MediaBundle/Tests/Functional/Mock/S3AdapterMock.php
     disallowedMethodCalls:
         -
             method: 'Doctrine\Common\Collections\Collection::clear()'
