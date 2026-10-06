@@ -287,5 +287,6 @@
     "sulu_admin.link_target_self": "_self",
     "sulu_admin.link_target_parent": "_parent",
     "sulu_admin.link_target_top": "_top",
-    "sulu_admin.text_part_language_marker": "Language: {language}"
+    "sulu_admin.text_part_language_marker": "Language: {language}",
+    "sulu_admin.template_group.default": "Default"
 }
