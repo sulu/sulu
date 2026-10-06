@@ -166,6 +166,10 @@ readonly class ContentResolver implements ContentResolverInterface
             'id' => (string) $dimensionContent->getResource()->getId(),
         ];
 
+        // Register the resolved resource itself, so content resolved later in the same request, like a snippet
+        // area loaded on this page, excludes it when "exclude_duplicates" is enabled.
+        $this->deduplicationTracker->add($context['selfReference']['resourceKey'], $context['selfReference']['id']);
+
         // Initial resolution to gather ResolvableResources
         /** @var array<int, array<string, array<int, array<int|string, array<string, ResolvableInterface>>>>> $priorityQueue */
         $priorityQueue = [];
