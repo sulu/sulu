@@ -50,6 +50,7 @@
             '.outline { --border-color: var(--sulu-preview-deep-link-border-color, #23a3ec);' +
             ' position: fixed; z-index: 2147483647; pointer-events: none; box-sizing: border-box;' +
             ' border-radius: var(--sulu-preview-deep-link-border-radius, 0);' +
+            ' padding: var(--sulu-preview-deep-link-padding, 12px);' +
             ' outline: var(--sulu-preview-deep-link-border-width, 2px) solid var(--border-color);' +
             ' outline-offset: calc(var(--sulu-preview-deep-link-border-width, 2px) * -1);' +
             ' background: var(--sulu-preview-deep-link-background,' +
@@ -88,10 +89,18 @@
     function positionAt(overlay, element) {
         var rect = element.getBoundingClientRect();
 
-        overlay.outline.style.top = rect.top + 'px';
-        overlay.outline.style.left = rect.left + 'px';
-        overlay.outline.style.width = rect.width + 'px';
-        overlay.outline.style.height = rect.height + 'px';
+        // The outline surrounds the element at a padding's distance, but stays inside the viewport so a full width
+        // element does not lose its border.
+        var padding = parseFloat(getComputedStyle(overlay.outline).paddingTop) || 0;
+        var top = Math.max(rect.top - padding, 0);
+        var left = Math.max(rect.left - padding, 0);
+        var right = Math.min(rect.right + padding, document.documentElement.clientWidth);
+        var bottom = rect.bottom + padding;
+
+        overlay.outline.style.top = top + 'px';
+        overlay.outline.style.left = left + 'px';
+        overlay.outline.style.width = right - left + 'px';
+        overlay.outline.style.height = bottom - top + 'px';
         overlay.outline.style.display = 'block';
 
         // The button sits above the top left corner, a gap away so it does not touch the outline. Without room
@@ -99,9 +108,9 @@
         overlay.button.style.display = 'flex';
         var buttonHeight = overlay.button.offsetHeight;
         var gap = parseFloat(getComputedStyle(overlay.button).marginBottom) || 0;
-        var above = rect.top >= buttonHeight + gap;
-        overlay.button.style.top = (above ? rect.top - buttonHeight - gap : Math.max(rect.top, 0) + gap) + 'px';
-        overlay.button.style.left = (above ? rect.left : rect.left + gap) + 'px';
+        var above = top >= buttonHeight + gap;
+        overlay.button.style.top = (above ? top - buttonHeight - gap : top + gap) + 'px';
+        overlay.button.style.left = (above ? left : left + gap) + 'px';
     }
 
     function hide(overlay) {
@@ -109,35 +118,50 @@
         overlay.button.style.display = 'none';
     }
 
-    // The button sits outside the element, so the pointer may cross a few pixels of page on its way there.
-    function scheduleHide(state) {
-        clearTimeout(state.hideTimer);
-        state.hideTimer = setTimeout(function () {
-            cancelSwitch(state);
+    // The box around the outline and the button counts as the overlay: a straight path from the outline to the button
+    // stays inside it, so the pointer is on its way to the button while it is there, whatever element it is over.
+    function isPointerNearOverlay(state) {
+        var pointer = state.pointer;
+        if (!pointer || !state.activeAnchor) {
+            return false;
+        }
+
+        var outline = state.overlay.outline.getBoundingClientRect();
+        var button = state.overlay.button.getBoundingClientRect();
+
+        return pointer.x >= Math.min(outline.left, button.left) && pointer.x <= Math.max(outline.right, button.right)
+            && pointer.y >= Math.min(outline.top, button.top) && pointer.y <= Math.max(outline.bottom, button.bottom);
+    }
+
+    function activate(state, anchor) {
+        state.activeAnchor = anchor;
+        positionAt(state.overlay, anchor);
+    }
+
+    // The button sits outside its element, often over a neighbour or an ancestor, so the pointer crosses other
+    // elements on its way there. Apart from entering a child, the overlay only follows the pointer to the element
+    // under it once the pointer has left the overlay's area for a moment.
+    function settle(state) {
+        clearTimeout(state.settleTimer);
+        state.settleTimer = setTimeout(function () {
+            if (isPointerNearOverlay(state)) {
+                settle(state);
+
+                return;
+            }
+
+            var element = state.pointer ? document.elementFromPoint(state.pointer.x, state.pointer.y) : null;
+            var anchor = findAnchor(element);
+
+            if (anchor) {
+                activate(state, anchor);
+
+                return;
+            }
+
             state.activeAnchor = null;
             hide(state.overlay);
         }, HIDE_DELAY);
-    }
-
-    // Leaving a nested element upwards crosses its ancestor on the way to the button, so a switch to an ancestor
-    // waits for the pointer to settle there.
-    function switchAnchor(state, anchor) {
-        if (state.pendingAnchor === anchor) {
-            return;
-        }
-
-        clearTimeout(state.switchTimer);
-        state.pendingAnchor = anchor;
-        state.switchTimer = setTimeout(function () {
-            state.pendingAnchor = null;
-            state.activeAnchor = anchor;
-            positionAt(state.overlay, anchor);
-        }, HIDE_DELAY);
-    }
-
-    function cancelSwitch(state) {
-        clearTimeout(state.switchTimer);
-        state.pendingAnchor = null;
     }
 
     function rebuildOverlay(state) {
@@ -145,13 +169,9 @@
         state.overlay = overlay;
         state.activeAnchor = null;
 
-        overlay.host.addEventListener('mouseenter', function () {
-            clearTimeout(state.hideTimer);
-            cancelSwitch(state);
-        });
         // mouseleave on the host is not subject to the shadow-tree retargeting the window listeners see.
         overlay.host.addEventListener('mouseleave', function () {
-            scheduleHide(state);
+            settle(state);
         });
 
         overlay.button.addEventListener('click', function () {
@@ -166,26 +186,21 @@
     // Rebound each run: document.open() dropped the previous window listeners, so nothing stacks.
     function bindGlobalListeners(state) {
         window.addEventListener('mouseover', function (event) {
-            if (!state.overlay) {
-                return;
-            }
+            state.pointer = {x: event.clientX, y: event.clientY};
 
             var anchor = findAnchor(event.target);
-            if (!anchor) {
+            if (!state.overlay || !anchor) {
                 return;
             }
 
-            clearTimeout(state.hideTimer);
-
-            if (state.activeAnchor && anchor !== state.activeAnchor && anchor.contains(state.activeAnchor)) {
-                switchAnchor(state, anchor);
-
-                return;
+            if (anchor === state.activeAnchor) {
+                clearTimeout(state.settleTimer);
+            } else if (!state.activeAnchor || state.activeAnchor.contains(anchor)) {
+                clearTimeout(state.settleTimer);
+                activate(state, anchor);
+            } else {
+                settle(state);
             }
-
-            cancelSwitch(state);
-            state.activeAnchor = anchor;
-            positionAt(state.overlay, anchor);
         }, true);
 
         window.addEventListener('mouseout', function (event) {
@@ -193,23 +208,17 @@
                 return;
             }
 
-            var anchor = findAnchor(event.target);
-            if (!anchor || anchor !== state.activeAnchor) {
-                return;
+            // Without a related target the pointer left the page, so no mouse event reports where it went.
+            if (!event.relatedTarget) {
+                state.pointer = null;
+                settle(state);
+            } else if (findAnchor(event.target) === state.activeAnchor) {
+                settle(state);
             }
+        }, true);
 
-            // Pointer entering the button/outline retargets relatedTarget to the shadow host; without
-            // this the overlay would hide the instant the pointer reaches the button.
-            if (event.relatedTarget === state.overlay.host) {
-                return;
-            }
-
-            var toAnchor = event.relatedTarget instanceof Element ? findAnchor(event.relatedTarget) : null;
-            if (toAnchor) {
-                return;
-            }
-
-            scheduleHide(state);
+        window.addEventListener('mousemove', function (event) {
+            state.pointer = {x: event.clientX, y: event.clientY};
         }, true);
 
         window.addEventListener('scroll', function () {
@@ -220,7 +229,7 @@
     }
 
     function run() {
-        var state = {overlay: null, activeAnchor: null, hideTimer: null, switchTimer: null, pendingAnchor: null};
+        var state = {overlay: null, activeAnchor: null, settleTimer: null, pointer: null};
 
         bindGlobalListeners(state);
         rebuildOverlay(state);
