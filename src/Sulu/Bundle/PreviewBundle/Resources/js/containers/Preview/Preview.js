@@ -63,6 +63,23 @@ function findBlockElement(id: string): ?HTMLElement {
     return element instanceof HTMLElement ? element : undefined;
 }
 
+// Shows a border around the block, so the user sees which block the click opened. It stays solid while the smooth
+// scroll brings the block into view and fades afterwards.
+function highlightBlockElement(element: HTMLElement) {
+    if (typeof element.animate !== 'function') {
+        return;
+    }
+
+    element.animate(
+        [
+            {boxShadow: '0 0 0 2px #23a3ec', offset: 0},
+            {boxShadow: '0 0 0 2px #23a3ec', offset: 0.4, easing: 'ease-out'},
+            {boxShadow: '0 0 0 2px transparent', offset: 1},
+        ],
+        {duration: 2500}
+    );
+}
+
 @observer
 class Preview extends React.Component<Props> {
     static debounceDelay: number = 250;
@@ -375,6 +392,7 @@ class Preview extends React.Component<Props> {
                 const target = findBlockElement(idPath[idPath.length - 1]);
                 if (target) {
                     target.scrollIntoView({behavior: 'smooth', block: 'start'});
+                    highlightBlockElement(target);
                 }
 
                 return;
