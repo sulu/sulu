@@ -7,7 +7,7 @@ import {action, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import BlockCollection from '../../components/BlockCollection';
 import {translate} from '../../utils/Translator';
-import {memoryFormStoreFactory} from '../Form';
+import {memoryFormStoreFactory, parentConditionDataProvider} from '../Form';
 import FormOverlay from '../FormOverlay';
 import snackbarStore from '../../stores/snackbarStore';
 import conditionDataProviderRegistry from '../Form/registries/conditionDataProviderRegistry';
@@ -459,6 +459,23 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         );
     };
 
+    getBlockConditionData(block: Object, index: number) {
+        const {data, dataPath, formInspector} = this.props;
+        const blockConditionData = {...block, ...parentConditionDataProvider(data, dataPath + '/' + index)};
+
+        // a block inside a settings form continues with the block owning that form as its outermost parent
+        const owningBlock = formInspector.options?.__block;
+        if (owningBlock !== undefined) {
+            let outermost = blockConditionData;
+            while (outermost.__parent) {
+                outermost = outermost.__parent;
+            }
+            outermost.__parent = owningBlock;
+        }
+
+        return blockConditionData;
+    }
+
     @action handleSettingsClick = (index: number) => {
         const settingsFormKey = this.settingsFormKey;
 
@@ -468,12 +485,15 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
 
         // create new formstore to make sure that overlay displays correct data
         this.blockSettingsFormStore?.destroy();
+        // the settings are left out, because the copy would not follow changes made in the overlay
+        const {[SETTINGS_KEY]: settings, ...block} = this.value[index];
         this.blockSettingsFormStore = memoryFormStoreFactory.createFromFormKey(
             settingsFormKey,
             {...this.value[index][SETTINGS_KEY]},
             this.props.formInspector.locale,
             undefined,
-            this.props.formInspector.options
+            this.props.formInspector.options,
+            {__block: this.getBlockConditionData(block, index)}
         );
 
         this.openedBlockSettingsIndex = index;
