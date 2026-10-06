@@ -34,7 +34,10 @@ return static function(ContainerConfigurator $container) {
     $services = $container->services();
 
     $services->set('sulu_document_manager.subscriber.security', SecuritySubscriber::class)
-        ->args([new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE)])
+        ->args([
+            new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            new Reference('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+        ])
         ->tag('sulu_document_manager.event_subscriber');
 
     $services->set('sulu_document_manager.subscriber.behavior.auto_name', AutoNameSubscriber::class)
