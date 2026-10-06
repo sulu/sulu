@@ -32,6 +32,7 @@ jest.mock('loglevel', () => ({
 jest.mock('../../../utils/Translator');
 
 const textEditorConfig = {enterMode: 'p', attributes: [], tags: ['strong']};
+const lineBreakTextEditorConfig = {enterMode: 'br', attributes: ['style'], tags: ['strong']};
 
 const defaultEditor = {
     editing: {
@@ -422,4 +423,69 @@ test('Call onFocus prop when CKEditor5 fires its focus event', async() => {
     editor.editing.view.document.on.mock.calls[0][1]();
     expect(focusSpy).toHaveBeenCalledWith({target});
     expect(querySelectorSpy).toHaveBeenCalledWith('div[contenteditable="true"]');
+});
+
+test('Store the value of a line break config without paragraph styles', async() => {
+    const changeSpy = jest.fn();
+    const editor = {
+        ...defaultEditor,
+        getData: jest.fn().mockReturnValue('<p style="text-align:center;">one</p>'),
+        model: {
+            document: {
+                on: jest.fn(),
+                differ: {
+                    getChanges: jest.fn().mockReturnValue([{}]),
+                },
+            },
+        },
+    };
+
+    const editorPromise = Promise.resolve(editor);
+    ClassicEditor.create.mockReturnValue(editorPromise);
+
+    render(
+        <CKEditor5 config={lineBreakTextEditorConfig} onBlur={jest.fn()} onChange={changeSpy} value={undefined} />
+    );
+
+    await editorPromise;
+
+    editor.model.document.on.mock.calls[0][1]();
+    expect(changeSpy).toHaveBeenLastCalledWith('one');
+
+    editor.getData.mockReturnValue(
+        '<p style="text-align:center;">one</p><p style="text-align:right;">two <span style="color:red;">red</span></p>'
+    );
+    editor.model.document.on.mock.calls[0][1]();
+    expect(changeSpy).toHaveBeenLastCalledWith(
+        '<!--p-->one<!--/p--><br></br><!--p-->two <span style="color:red;">red</span><!--/p-->'
+    );
+});
+
+test('Load the value of a line break config into the editor as unstyled paragraphs', async() => {
+    const editor = {
+        ...defaultEditor,
+        getData: jest.fn().mockReturnValue('<p>other</p>'),
+    };
+
+    const editorPromise = Promise.resolve(editor);
+    ClassicEditor.create.mockReturnValue(editorPromise);
+
+    const {rerender} = render(
+        <CKEditor5 config={lineBreakTextEditorConfig} onBlur={jest.fn()} onChange={jest.fn()} value="one<br>two" />
+    );
+
+    await editorPromise;
+
+    expect(editor.setData).toHaveBeenLastCalledWith('<p>one<br>two</p>');
+
+    rerender(
+        <CKEditor5
+            config={lineBreakTextEditorConfig}
+            onBlur={jest.fn()}
+            onChange={jest.fn()}
+            value="<!--p-->one<!--/p--><br></br><!--p-->two<!--/p-->"
+        />
+    );
+
+    expect(editor.setData).toHaveBeenLastCalledWith('<p>one</p><p>two</p>');
 });
