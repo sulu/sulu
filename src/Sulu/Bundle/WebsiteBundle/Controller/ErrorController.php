@@ -26,6 +26,8 @@ class ErrorController
     /** @var SymfonyErrorController */
     private $symfonyErrorController;
 
+    private string $hashAlgorithm;
+
     public function __construct(
         SymfonyErrorController $symfonyErrorController,
         private TemplateAttributeResolverInterface $templateAttributeResolver,
@@ -33,6 +35,7 @@ class ErrorController
         private bool $debug = false,
         private ?CacheItemPoolInterface $cache = null,
     ) {
+        $this->hashAlgorithm = \PHP_VERSION_ID >= 80100 ? 'xxh128' : 'sha256';
         $this->symfonyErrorController = $symfonyErrorController;
     }
 
@@ -54,7 +57,10 @@ class ErrorController
         $webspaceKey = $webspace?->getKey() ?? '';
 
         if ($this->cache instanceof CacheItemPoolInterface) {
-            $cacheKey = \sprintf('%s-%s-%s-%s', $webspaceKey, $locale, $request->getRequestFormat(), $code);
+            $cacheKey = \hash(
+                $this->hashAlgorithm,
+                \sprintf('%s-%s-%s-%s', $webspaceKey, $locale, $request->getRequestFormat(), $code)
+            );
             $item = $this->cache->getItem($cacheKey);
 
             if ($item->isHit()) {

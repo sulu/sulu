@@ -186,7 +186,7 @@ class ErrorControllerTest extends TestCase
         $item->get()->shouldBeCalled()->willReturn('Cached content');
 
         $cachePool = $this->prophesize(CacheItemPoolInterface::class);
-        $cachePool->getItem('webspaceKey-en-html-404')->shouldBeCalled()->willReturn($item);
+        $cachePool->getItem('08c2817fa6be7c7d6db9b1c83b736691')->shouldBeCalled()->willReturn($item);
 
         $errorController = new ErrorController(
             $this->symfonyErrorController->reveal(),
@@ -209,6 +209,53 @@ class ErrorControllerTest extends TestCase
 
         $this->assertSame($code, $response->getStatusCode());
         $this->assertSame('Cached content', $response->getContent());
+    }
+
+    public function testReturningRenderedResponseWhenNoCacheHit(): void
+    {
+        $item = $this->prophesize(CacheItemInterface::class);
+        $item->isHit()->shouldBeCalled()->willReturn(false);
+        $item->get()->shouldNotBeCalled();
+        $item->set('HTML Content')->shouldBeCalled()->willReturn($item);
+
+        $cachePool = $this->prophesize(CacheItemPoolInterface::class);
+        $cachePool->getItem('08c2817fa6be7c7d6db9b1c83b736691')->shouldBeCalled()->willReturn($item);
+        $cachePool->save($item)->shouldBeCalled()->willReturn(true);
+
+        $errorController = new ErrorController(
+            $this->symfonyErrorController->reveal(),
+            $this->templateAttributeResolver->reveal(),
+            $this->twig->reveal(),
+            false,
+            $cachePool->reveal(),
+        );
+
+        $code = 404;
+        $exception = new HttpException($code);
+        $webspace = new Webspace();
+        $webspace->setKey('webspaceKey');
+        $webspace->addTemplate('error', 'error/error');
+        $request = $this->createRequest($webspace);
+
+        $this->twig->render(Argument::type('string'), Argument::type('array'))
+            ->shouldBeCalled()
+            ->willReturn('HTML Content')
+        ;
+
+        $this->twig->getLoader()
+            ->shouldBeCalled()
+            ->willReturn($this->loader->reveal());
+
+        $this->loader->exists('error/error.html.twig')
+            ->shouldBeCalled()
+            ->willReturn(true);
+
+        $this->templateAttributeResolver->resolve(Argument::any())->willReturnArgument(0);
+
+        $response = $errorController->__invoke($request, $exception);
+
+        $this->assertSame($code, $response->getStatusCode());
+        $this->assertSame('HTML Content', $response->getContent());
     }
 
     private function createErrorController(bool $debug = false): ErrorController

@@ -183,7 +183,7 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
         $cacheEnabled = $errorCache ?? !$container->getParameter('kernel.debug');
         if (!$cacheEnabled) {
             $container->removeDefinition('sulu_website.error_page_cache_clear_subscriber');
-            $container->removeDefinition('sulu_website.error_page_cache');
+            $container->getDefinition('sulu_website.error_controller')->replaceArgument(4, null);
         }
     }
 }
