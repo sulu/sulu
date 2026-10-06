@@ -11,16 +11,22 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
-use League\Flysystem\AdapterInterface;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
+use League\Flysystem\FilesystemOperator;
+use League\Flysystem\UnableToReadFile;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Symfony\Component\Filesystem\Exception\IOException;
 
+/**
+ * Supports league/flysystem 1.x (FilesystemInterface) and 3.x (FilesystemOperator).
+ */
 abstract class FlysystemStorage implements StorageInterface
 {
-    public function __construct(private FilesystemInterface $filesystem, private int $segments)
+    private const VISIBILITY_PUBLIC = 'public';
+
+    public function __construct(private FilesystemInterface|FilesystemOperator $filesystem, private int $segments)
     {
     }
 
@@ -41,7 +47,7 @@ abstract class FlysystemStorage implements StorageInterface
             $this->filesystem->writeStream(
                 $filePath,
                 \fopen($tempPath, 'r'),
-                ['visibility' => AdapterInterface::VISIBILITY_PUBLIC]
+                ['visibility' => self::VISIBILITY_PUBLIC]
             );
         } catch (FileExistsException $exception) {
             throw new FilenameAlreadyExistsException($filePath);
@@ -56,7 +62,7 @@ abstract class FlysystemStorage implements StorageInterface
 
         try {
             return $this->filesystem->readStream($filePath);
-        } catch (FileNotFoundException $exception) {
+        } catch (FileNotFoundException|UnableToReadFile $exception) {
             throw new IOException(\sprintf('Failed to open file with path "%s"', $filePath), path: $filePath);
         }
     }
@@ -87,7 +93,7 @@ abstract class FlysystemStorage implements StorageInterface
             throw new FilenameAlreadyExistsException($targetFilePath);
         }
 
-        $this->filesystem->rename($this->getFilePath($sourceStorageOptions), $targetFilePath);
+        $this->moveFile($this->getFilePath($sourceStorageOptions), $targetFilePath);
 
         return $targetStorageOptions;
     }
@@ -141,14 +147,36 @@ abstract class FlysystemStorage implements StorageInterface
         $directoryPath = \implode('/', \array_filter([$directory]));
 
         if ($directoryPath && !$this->filesystem->has($directoryPath)) {
-            $this->filesystem->createDir($directoryPath);
+            $this->createDirectory($directoryPath);
         }
 
         $segment = $this->getStorageOption($storageOptions, 'segment');
         $segmentPath = \implode('/', \array_filter([$directory, $segment]));
 
         if ($segmentPath && !$this->filesystem->has($segmentPath)) {
-            $this->filesystem->createDir($segmentPath);
+            $this->createDirectory($segmentPath);
         }
+    }
+
+    private function createDirectory(string $path): void
+    {
+        if (FlysystemVersion::isV3()) {
+            $this->filesystem->createDirectory($path);
+
+            return;
+        }
+
+        $this->filesystem->createDir($path);
+    }
+
+    private function moveFile(string $source, string $target): void
+    {
+        if (FlysystemVersion::isV3()) {
+            $this->filesystem->move($source, $target);
+
+            return;
+        }
+
+        $this->filesystem->rename($source, $target);
     }
 }

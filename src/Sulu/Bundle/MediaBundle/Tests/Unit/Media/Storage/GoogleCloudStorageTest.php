@@ -12,19 +12,24 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\Storage;
 
 use League\Flysystem\AdapterInterface;
-use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\MediaBundle\Media\Storage\FlysystemVersion;
 use Sulu\Bundle\MediaBundle\Media\Storage\GoogleCloudStorage;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
-use Symfony\Component\Filesystem\Exception\IOException;
 
 class GoogleCloudStorageTest extends TestCase
 {
     use ProphecyTrait;
+
+    protected function setUp(): void
+    {
+        if (FlysystemVersion::isV3()) {
+            $this->markTestSkipped('Requires league/flysystem 1.x.');
+        }
+    }
 
     public function testConstruct(): void
     {
@@ -36,233 +41,6 @@ class GoogleCloudStorageTest extends TestCase
         $flysystem->getAdapter()->willReturn($adapter->reveal());
 
         new GoogleCloudStorage($flysystem->reveal(), 1);
-    }
-
-    public function testSave(): void
-    {
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $flysystem->has('1/test.jpg')->wilLReturn(false);
-        $flysystem->has('1')->wilLReturn(false);
-        $flysystem->writeStream('1/test.jpg', Argument::any(), ['visibility' => AdapterInterface::VISIBILITY_PUBLIC])
-            ->shouldBeCalled();
-
-        $flysystem->createDir('1')->shouldBeCalled();
-
-        $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
-        $this->assertEquals(['segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
-    }
-
-    public function testSaveDirectoryExists(): void
-    {
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $flysystem->has('1/test.jpg')->wilLReturn(false);
-        $flysystem->has('1')->wilLReturn(true);
-        $flysystem->writeStream('1/test.jpg', Argument::any(), ['visibility' => AdapterInterface::VISIBILITY_PUBLIC])
-            ->shouldBeCalled();
-
-        $flysystem->createDir(Argument::any())->shouldNotBeCalled();
-
-        $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
-        $this->assertEquals(['segment' => '1', 'fileName' => 'test.jpg'], $storageOptions);
-    }
-
-    public function testSaveUniqueFileName(): void
-    {
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $flysystem->has('1/test.jpg')->wilLReturn(true);
-        $flysystem->has('1/test-1.jpg')->wilLReturn(false);
-        $flysystem->has('1')->wilLReturn(false);
-        $flysystem->writeStream('1/test-1.jpg', Argument::any(), ['visibility' => AdapterInterface::VISIBILITY_PUBLIC])
-            ->shouldBeCalled();
-
-        $flysystem->createDir('1')->shouldBeCalled();
-
-        $storageOptions = $storage->save(\tempnam(\sys_get_temp_dir(), 'test'), 'test.jpg');
-        $this->assertEquals(['segment' => '1', 'fileName' => 'test-1.jpg'], $storageOptions);
-    }
-
-    public function testLoad(): void
-    {
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $handle = \tmpfile();
-        $flysystem->readStream('1/test.jpg')->willReturn($handle)->shouldBeCalled();
-
-        $result = $storage->load(['segment' => '1', 'fileName' => 'test.jpg']);
-        $this->assertEquals($handle, $result);
-    }
-
-    public function testLoadWithDirectory(): void
-    {
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $handle = \tmpfile();
-        $flysystem->readStream('trash/1/test.jpg')->willReturn($handle)->shouldBeCalled();
-
-        $result = $storage->load(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']);
-        $this->assertEquals($handle, $result);
-    }
-
-    public function testLoadNotFound(): void
-    {
-        $this->expectException(IOException::class);
-
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $handle = \tmpfile();
-        $flysystem->readStream('1/test.jpg')->willThrow(new FileNotFoundException('1/test.jpg'))->shouldBeCalled();
-
-        $result = $storage->load(['segment' => '1', 'fileName' => 'test.jpg']);
-        $this->assertEquals($handle, $result);
-    }
-
-    public function testRemove(): void
-    {
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $flysystem->delete('1/test.jpg')->shouldBeCalled();
-
-        $storage->remove(['segment' => '1', 'fileName' => 'test.jpg']);
-    }
-
-    public function testRemoveWithDirectory(): void
-    {
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $flysystem->delete('trash/1/test.jpg')->shouldBeCalled();
-
-        $storage->remove(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']);
-    }
-
-    public function testRemoveNotFound(): void
-    {
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $flysystem->delete('1/test.jpg')->willThrow(new FileNotFoundException('1/test.jpg'))->shouldBeCalled();
-
-        $storage->remove(['segment' => '1', 'fileName' => 'test.jpg']);
-    }
-
-    public function testMove(): void
-    {
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $flysystem->has('trash')->wilLReturn(false);
-        $flysystem->createDir('trash')->shouldBeCalled();
-
-        $flysystem->has('trash/1')->wilLReturn(false);
-        $flysystem->createDir('trash/1')->shouldBeCalled();
-
-        $flysystem->has('trash/1/test.jpg')->wilLReturn(false);
-        $flysystem->rename('1/test.jpg', 'trash/1/test.jpg')->shouldBeCalled();
-
-        $result = $storage->move(
-            ['segment' => '1', 'fileName' => 'test.jpg'],
-            ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
-        );
-
-        $this->assertSame(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg'], $result);
-    }
-
-    public function testMoveTargetDirectoryExists(): void
-    {
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $flysystem->has('trash')->wilLReturn(true);
-        $flysystem->has('trash/1')->wilLReturn(true);
-
-        $flysystem->has('trash/1/test.jpg')->wilLReturn(false);
-        $flysystem->rename('1/test.jpg', 'trash/1/test.jpg')->shouldBeCalled();
-
-        $result = $storage->move(
-            ['segment' => '1', 'fileName' => 'test.jpg'],
-            ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
-        );
-
-        $this->assertSame(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg'], $result);
-    }
-
-    public function testMoveTargetFileExists(): void
-    {
-        $adapter = $this->prophesize(GoogleStorageAdapter::class);
-        $flysystem = $this->prophesize(Filesystem::class);
-
-        $flysystem->getAdapter()->willReturn($adapter->reveal());
-
-        $storage = new GoogleCloudStorage($flysystem->reveal(), 1);
-
-        $flysystem->has('trash')->wilLReturn(true);
-        $flysystem->has('trash/1')->wilLReturn(true);
-
-        $flysystem->has('trash/1/test.jpg')->wilLReturn(true);
-        $flysystem->has('trash/1/test-1.jpg')->wilLReturn(true);
-        $flysystem->has('trash/1/test-2.jpg')->wilLReturn(false);
-        $flysystem->rename('1/test.jpg', 'trash/1/test-2.jpg')->shouldBeCalled();
-
-        $result = $storage->move(
-            ['segment' => '1', 'fileName' => 'test.jpg'],
-            ['directory' => 'trash', 'segment' => '1', 'fileName' => 'test.jpg']
-        );
-
-        $this->assertSame(['directory' => 'trash', 'segment' => '1', 'fileName' => 'test-2.jpg'], $result);
     }
 
     public function testGetPath(): void

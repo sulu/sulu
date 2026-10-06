@@ -2,6 +2,39 @@
 
 For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upgrades/upgrade-2.x.html) steps.
 
+## 2.6.28
+
+### The media storages support league/flysystem 3.x
+
+The `S3Storage`, `GoogleCloudStorage`, `AzureBlobStorage` and `FlysystemStorage` of the `SuluMediaBundle` work with
+`league/flysystem` `^1.0` and `^3.6`. The service ids and the `sulu_media.storages` configuration stay the same.
+
+`league/flysystem` 1.x has no fix for the security advisory `PKSA-w9tt-7782-78jx`, so composer refuses to install it.
+To get the fix, require `league/flysystem` `^3.35.3` together with the 3.x version of the adapter you use:
+
+```bash
+composer require league/flysystem:"^3.35.3" league/flysystem-aws-s3-v3:"^3.6"
+composer require league/flysystem:"^3.35.3" league/flysystem-azure-blob-storage:"^3.6"
+composer remove superbalist/flysystem-google-storage
+composer require league/flysystem:"^3.35.3" league/flysystem-google-cloud-storage:"^3.6"
+```
+
+Run only the command of your storage. The `league/flysystem-google-cloud-storage` replaces the
+`superbalist/flysystem-google-storage`.
+
+Clear the cache after switching the major version, because the container is built for the installed one.
+
+These behaviours differ with flysystem 3.x:
+
+- Without `public_url`, `S3Storage` uses the url of the S3 adapter. For AWS it is now
+  `https://<bucket>.s3.<region>.amazonaws.com/<path>` instead of `<endpoint>/<bucket>/<path>`. With a custom endpoint it
+  depends on the `use_path_style_endpoint` argument of the S3 client.
+- A failed write or delete is no longer reported as `FilenameAlreadyExistsException` or ignored, the exception of
+  flysystem is thrown.
+
+If you extend one of the storage classes, the filesystem is now either a `League\Flysystem\FilesystemInterface`
+(1.x) or a `League\Flysystem\FilesystemOperator` (3.x).
+
 ## 2.6.27
 
 ### The target group select of the preview follows the audience targeting permission

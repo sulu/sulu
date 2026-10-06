@@ -12,7 +12,9 @@
 namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter;
+use League\Flysystem\GoogleCloudStorage\GoogleCloudStorageAdapter;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
@@ -204,7 +206,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end();
 
-        if (\class_exists(GoogleStorageAdapter::class)) {
+        if (\class_exists(GoogleStorageAdapter::class) || \class_exists(GoogleCloudStorageAdapter::class)) {
             $storages[] = self::STORAGE_GOOGLE_CLOUD;
 
             $storagesNode
@@ -219,7 +221,7 @@ class Configuration implements ConfigurationInterface
                 ->end();
         }
 
-        if (\class_exists(AwsS3Adapter::class)) {
+        if (\class_exists(AwsS3Adapter::class) || \class_exists(AwsS3V3Adapter::class)) {
             $storages[] = self::STORAGE_S3;
             $storagesNode
                 ->arrayNode(self::STORAGE_S3)

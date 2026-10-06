@@ -41,13 +41,24 @@ return $config
     ->ignoreErrorsOnPackages(
         [
             'guzzlehttp/guzzle', // bc layer replaced later by symfony/http-client
-            'aws/aws-sdk-php', // bc layer replaced later by flysystem v3
         ],
         [ErrorType::SHADOW_DEPENDENCY]
     )
     // UnknownClasses
     ->ignoreUnknownClasses([
         ...$optionalIgnoreUnknownClasses,
+        // storage adapters of flysystem 1.x and 3.x, only one major is installed and the adapters are optional
+        'Aws\S3\S3Client',
+        'Google\Cloud\Storage\Bucket',
+        'Google\Cloud\Storage\StorageClient',
+        'League\Flysystem\AwsS3V3\AwsS3V3Adapter',
+        'League\Flysystem\AwsS3v3\AwsS3Adapter',
+        'League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter',
+        'League\Flysystem\FileExistsException',
+        'League\Flysystem\FileNotFoundException',
+        'League\Flysystem\FilesystemInterface',
+        'League\Flysystem\GoogleCloudStorage\GoogleCloudStorageAdapter',
+        'Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter',
         // bc layer for lowest
         'FOS\RestBundle\Controller\FOSRestController',
         'Swift_Events_SendEvent',
@@ -71,10 +82,7 @@ return $config
     // DEV_DEPENDENCY_IN_PROD: optional dependency
     ->ignoreErrorsOnPackages(
         [
-            'google/cloud-storage',
             'league/flysystem',
-            'league/flysystem-aws-s3-v3',
-            'league/flysystem-azure-blob-storage',
             'microsoft/azure-storage-blob',
             'php-ffmpeg/php-ffmpeg',
             'rokka/imagine-vips',
@@ -84,7 +92,6 @@ return $config
             'scheb/2fa-google-authenticator',
             'scheb/2fa-totp',
             'scheb/2fa-trusted-device',
-            'superbalist/flysystem-google-storage',
             'symfony/stopwatch',
             'symfony/monolog-bundle', // false positive only used in SuluTestKernel
         ],
