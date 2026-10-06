@@ -18,12 +18,9 @@ namespace Sulu\Component\Security\Authorization;
 class MaskConverter implements MaskConverterInterface
 {
     /**
-     * @param mixed[] $permissions
+     * @param array<PermissionTypes::*, int> $permissions the permissions available, defined by config
      */
     public function __construct(
-        /**
-         * The permissions available, defined by config.
-         */
         protected $permissions
     ) {
     }

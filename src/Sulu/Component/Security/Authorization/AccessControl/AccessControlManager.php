@@ -211,7 +211,7 @@ class AccessControlManager implements AccessControlManagerInterface
     /**
      * Returns the permissions for the given permission array and the given user.
      *
-     * @param array $permissions Object permissions
+     * @param array|null $permissions Object permissions
      * @param RoleInterface[] $roles The role for which the security should be checked
      *
      * @return array

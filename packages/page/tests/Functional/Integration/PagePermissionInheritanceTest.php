@@ -212,7 +212,7 @@ class PagePermissionInheritanceTest extends SuluTestCase
         );
 
         $childPermissions = $accessControlManager->getPermissions(Page::class, $parentPage->getUuid());
-        $this->assertArrayHasKey($roleId, $childPermissions);
+        $this->assertArrayHasKey($roleId, $childPermissions ?? []);
         $this->assertSame($expectedPermissions, $childPermissions);
     }
 }
