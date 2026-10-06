@@ -18,18 +18,14 @@ use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 
 class GoogleCloudStorage extends FlysystemStorage
 {
-    private FilesystemInterface|FilesystemOperator $filesystem;
-
     /**
      * @var GoogleStorageAdapter
      */
     private $adapter;
 
-    public function __construct(FilesystemInterface|FilesystemOperator $filesystem, int $segments)
+    public function __construct(private FilesystemInterface|FilesystemOperator $filesystem, int $segments)
     {
         parent::__construct($filesystem, $segments);
-
-        $this->filesystem = $filesystem;
 
         if (FlysystemVersion::isV3()) {
             return;

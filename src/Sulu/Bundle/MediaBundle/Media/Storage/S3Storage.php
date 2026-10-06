@@ -18,8 +18,6 @@ use League\Flysystem\FilesystemOperator;
 
 class S3Storage extends FlysystemStorage
 {
-    private FilesystemInterface|FilesystemOperator $filesystem;
-
     /**
      * @var AwsS3Adapter
      */
@@ -36,23 +34,15 @@ class S3Storage extends FlysystemStorage
     private $bucketName;
 
     /**
-     * @var string|null
-     */
-    private $publicUrl;
-
-    /**
      * @param string|null $pathPrefix Prefix of the adapter, only used with flysystem 3.x to build the url of the $publicUrl
      */
     public function __construct(
-        FilesystemInterface|FilesystemOperator $filesystem,
+        private FilesystemInterface|FilesystemOperator $filesystem,
         int $segments,
-        ?string $publicUrl = null,
+        private ?string $publicUrl = null,
         private ?string $pathPrefix = null,
     ) {
         parent::__construct($filesystem, $segments);
-
-        $this->filesystem = $filesystem;
-        $this->publicUrl = $publicUrl;
 
         if (FlysystemVersion::isV3()) {
             return;
@@ -67,7 +57,7 @@ class S3Storage extends FlysystemStorage
         $this->endpoint = (string) $this->adapter->getClient()->getEndpoint();
         $this->bucketName = $this->adapter->getBucket();
 
-        $this->publicUrl = null !== $publicUrl ? $publicUrl : ($this->endpoint . '/' . $this->bucketName);
+        $this->publicUrl ??= $this->endpoint . '/' . $this->bucketName;
     }
 
     public function getPath(array $storageOptions): string

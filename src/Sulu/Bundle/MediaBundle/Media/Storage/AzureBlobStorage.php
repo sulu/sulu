@@ -19,22 +19,18 @@ use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 
 class AzureBlobStorage extends FlysystemStorage
 {
-    private FilesystemInterface|FilesystemOperator $filesystem;
-
     /**
      * @var AzureBlobStorageAdapter
      */
     private $adapter;
 
     public function __construct(
-        FilesystemInterface|FilesystemOperator $filesystem,
+        private FilesystemInterface|FilesystemOperator $filesystem,
         private BlobRestProxy $client,
         private string $container,
         int $segments
     ) {
         parent::__construct($filesystem, $segments);
-
-        $this->filesystem = $filesystem;
 
         if (FlysystemVersion::isV3()) {
             return;
