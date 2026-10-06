@@ -170,6 +170,91 @@ class ResolvableResourceReplacerTest extends TestCase
         self::assertCount(2, $tags);
     }
 
+    public function testReplaceWithResolvableResourceReturnedByCallback(): void
+    {
+        $nestedResource = new ResolvableResource(
+            '456',
+            'media',
+            1,
+            null,
+            null,
+            'media'
+        );
+
+        $firstResource = new ResolvableResource(
+            '123',
+            'page',
+            1,
+            function(array $resource) {
+                return $resource['image'];
+            },
+            null,
+            'pages'
+        );
+
+        $content = [
+            'image' => $firstResource,
+        ];
+
+        $resolvedResources = [
+            'page' => [
+                '123' => [
+                    $firstResource->getMetadataIdentifier() => $this->createResolvedEntry(['image' => $nestedResource]),
+                ],
+            ],
+            'media' => [
+                '456' => [
+                    $nestedResource->getMetadataIdentifier() => $this->createResolvedEntry('Media Title'),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            $content,
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertSame('Media Title', $result['content']['image']);
+
+        $tags = $this->referenceStore->getAll();
+        self::assertContains('pages-123', $tags);
+        self::assertContains('media-456', $tags);
+    }
+
+    public function testReplaceWithUnresolvedResolvableResourceReturnedByCallback(): void
+    {
+        $nestedResource = new ResolvableResource('456', 'media', 1, null, null, 'media');
+        $firstResource = new ResolvableResource(
+            '123',
+            'page',
+            1,
+            function(array $resource) {
+                return $resource['image'];
+            },
+            null,
+            'pages'
+        );
+
+        $resolvedResources = [
+            'page' => [
+                '123' => [
+                    $firstResource->getMetadataIdentifier() => $this->createResolvedEntry(['image' => $nestedResource]),
+                ],
+            ],
+        ];
+
+        $result = $this->replacer->replaceResolvableResourcesWithResolvedValues(
+            ['title' => 'Test', 'image' => $firstResource],
+            $resolvedResources,
+            0,
+            5
+        );
+
+        self::assertSame(['title' => 'Test', 'image' => null], $result['content']);
+    }
+
     public function testReplaceWithMaxDepthExceeded(): void
     {
         $resolvableResource = new ResolvableResource(
