@@ -147,7 +147,7 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
         $form = $this->xmlFormMetadataLoader->getMetadata('form_with_tab_sections', 'en');
         $this->assertNotNull($form);
 
-        /** @var array{tabs: array{layout: string, items: array{content: array{layout: string}}}} $serializedItems */
+        /** @var array{tabs: array{layout: string, items: array{content: array<string, mixed>}}} $serializedItems */
         $serializedItems = \json_decode(
             $this->getContainer()->get('jms_serializer')->serialize(
                 $form->getItems(),
@@ -158,7 +158,7 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
         );
 
         $this->assertSame('tabs', $serializedItems['tabs']['layout']);
-        $this->assertSame('default', $serializedItems['tabs']['items']['content']['layout']);
+        $this->assertArrayNotHasKey('layout', $serializedItems['tabs']['items']['content']);
     }
 
     public function testGetMetadataWithBlocks(): void

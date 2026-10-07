@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
+use JMS\Serializer\Annotation\Exclude;
+
 class SectionMetadata extends ItemMetadata
 {
     /**
@@ -22,7 +24,9 @@ class SectionMetadata extends ItemMetadata
 
     /**
      * Either "default" or "tabs", which renders the child sections as tabs instead of underneath each other.
+     * The default layout is not serialized, so the metadata of all other sections stays the same.
      */
+    #[Exclude(if: "object.getLayout() === 'default'")]
     protected string $layout = 'default';
 
     /**

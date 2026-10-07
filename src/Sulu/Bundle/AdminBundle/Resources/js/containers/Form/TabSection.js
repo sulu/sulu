@@ -9,7 +9,7 @@ import Tabs from '../../components/Tabs';
 import conditionDataProviderRegistry from './registries/conditionDataProviderRegistry';
 import FormInspector from './FormInspector';
 import tabSectionStyles from './tabSection.scss';
-import type {Node} from 'react';
+import type {Element, Node} from 'react';
 import type {ErrorCollection, Schema, SchemaEntry} from './types';
 
 type Props = {|
@@ -17,7 +17,7 @@ type Props = {|
     errors?: ErrorCollection,
     formInspector: FormInspector,
     name: string,
-    renderItem: (schemaField: SchemaEntry, schemaKey: string, schemaPath: string) => Node,
+    renderItem: (schemaField: SchemaEntry, schemaKey: string, schemaPath: string) => ?Node,
     schema: SchemaEntry,
     schemaPath: string,
     showAllErrors: boolean,
@@ -112,7 +112,7 @@ class TabSection extends React.Component<Props> {
     }
 
     // the fields of an unselected tab are not visible, therefore the tab itself has to show their errors
-    renderBadges(tab: Tab): Array<Node> {
+    renderBadges(tab: Tab): Array<Element<'span'>> {
         const {showAllErrors} = this.props;
 
         if (!showAllErrors) {
@@ -128,7 +128,7 @@ class TabSection extends React.Component<Props> {
         return [<span className={tabSectionStyles.errorBadge} key="errors">{errorCount}</span>];
     }
 
-    renderItems(items: Schema, schemaPath: string): Array<Node> {
+    renderItems(items: Schema, schemaPath: string): Array<?Node> {
         const {renderItem} = this.props;
 
         return Object.keys(items).map((key) => renderItem(items[key], key, schemaPath + '/items/' + key));
@@ -150,9 +150,9 @@ class TabSection extends React.Component<Props> {
         const activeIndex = this.activeIndex;
 
         // properties next to the tabs belong to all tabs, therefore they are rendered above the tab bar
-        const sharedItems = Object.keys(items)
+        const sharedItems: Schema = Object.keys(items)
             .filter((key) => items[key].type !== 'section')
-            .reduce((sharedItems, key) => ({...sharedItems, [key]: items[key]}), {});
+            .reduce((sharedItems: Schema, key) => ({...sharedItems, [key]: items[key]}), {});
 
         const children = [];
 
