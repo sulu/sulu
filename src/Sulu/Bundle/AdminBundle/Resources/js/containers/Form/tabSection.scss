@@ -1,0 +1,48 @@
+@import '../Application/colors.scss';
+@import '../../components/Form/variables.scss';
+
+$tabSectionBorderColor: $silver;
+$tabSectionErrorBadgeBackgroundColor: $persianRed;
+$tabSectionErrorBadgeColor: $white;
+$tabSectionErrorBadgeSize: 14px;
+
+/* horizontal padding of the inline tabs, removed so the first tab lines up with the fields */
+$tabSectionInlineTabsPadding: 20px;
+
+.tab-section {
+    margin-bottom: -$fieldMarginBottom;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.tab-bar {
+    margin-bottom: $fieldMarginBottom;
+
+    /* an inset shadow instead of a border, so the underline of the selected tab covers the line */
+    box-shadow: inset 0 -1px 0 $tabSectionBorderColor;
+}
+
+.tabs {
+    margin-right: -$tabSectionInlineTabsPadding;
+    margin-left: -$tabSectionInlineTabsPadding;
+}
+
+.hidden {
+    display: none;
+}
+
+.error-badge {
+    display: inline-block;
+    min-width: $tabSectionErrorBadgeSize;
+    height: $tabSectionErrorBadgeSize;
+    padding: 0 3px;
+    border-radius: calc($tabSectionErrorBadgeSize / 2);
+    background-color: $tabSectionErrorBadgeBackgroundColor;
+    color: $tabSectionErrorBadgeColor;
+    font-size: 9px;
+    font-weight: bold;
+    line-height: $tabSectionErrorBadgeSize;
+    text-align: center;
+}

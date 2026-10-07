@@ -21,6 +21,11 @@ class SectionMetadata extends ItemMetadata
     protected $type = 'section';
 
     /**
+     * Either "default" or "tabs", which renders the child sections as tabs instead of underneath each other.
+     */
+    protected string $layout = 'default';
+
+    /**
      * @return ItemMetadata[]
      */
     public function getItems(): array
@@ -31,6 +36,16 @@ class SectionMetadata extends ItemMetadata
     public function addItem(ItemMetadata $item): void
     {
         $this->items[$item->getName()] = $item;
+    }
+
+    public function getLayout(): string
+    {
+        return $this->layout;
+    }
+
+    public function setLayout(string $layout): void
+    {
+        $this->layout = $layout;
     }
 
     /**

@@ -239,7 +239,7 @@ class PropertiesXmlParser
         $result = $this->loadValues(
             $xpath,
             $node,
-            ['name', 'colspan', 'cssClass', 'disabledCondition', 'visibleCondition']
+            ['name', 'colspan', 'cssClass', 'disabledCondition', 'visibleCondition', 'layout']
         );
 
         $result['type'] = 'section';
@@ -447,6 +447,11 @@ class PropertiesXmlParser
 
         if (isset($data['visibleCondition'])) {
             $section->setVisibleCondition($this->normalizeConditionData($data['visibleCondition']));
+        }
+
+        $layout = \is_array($data) ? ($data['layout'] ?? null) : null;
+        if (\is_string($layout)) {
+            $section->setLayout($layout);
         }
 
         foreach ($data['properties'] as $name => $property) {

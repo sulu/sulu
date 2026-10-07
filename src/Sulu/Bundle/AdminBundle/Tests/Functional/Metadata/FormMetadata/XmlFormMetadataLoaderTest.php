@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Functional\Metadata\FormMetadata;
 
+use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\XmlFormMetadataLoader;
@@ -139,6 +140,25 @@ class XmlFormMetadataLoaderTest extends KernelTestCase
         $this->assertEquals('test11', $section1->getItems()['test11']->getName());
         $this->assertEquals('test21', $section2->getItems()['test21']->getName());
         $this->assertEquals('test221', $section22->getItems()['test221']->getName());
+    }
+
+    public function testGetMetadataWithTabSections(): void
+    {
+        $form = $this->xmlFormMetadataLoader->getMetadata('form_with_tab_sections', 'en');
+        $this->assertNotNull($form);
+
+        /** @var array{tabs: array{layout: string, items: array{content: array{layout: string}}}} $serializedItems */
+        $serializedItems = \json_decode(
+            $this->getContainer()->get('jms_serializer')->serialize(
+                $form->getItems(),
+                'json',
+                SerializationContext::create()->setGroups(['Default'])->setAttribute('locale', 'en')
+            ),
+            true
+        );
+
+        $this->assertSame('tabs', $serializedItems['tabs']['layout']);
+        $this->assertSame('default', $serializedItems['tabs']['items']['content']['layout']);
     }
 
     public function testGetMetadataWithBlocks(): void
