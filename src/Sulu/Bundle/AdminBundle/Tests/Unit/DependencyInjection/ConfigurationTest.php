@@ -18,30 +18,30 @@ use Symfony\Component\Config\Definition\Processor;
 
 class ConfigurationTest extends TestCase
 {
-    public function testTextPartLanguagesDefaultToEmpty(): void
+    public function testTextEditorContentLocalesDefaultToEmpty(): void
     {
-        /** @var array{ckeditor: array{text_part_languages: array<string>}} $config */
+        /** @var array{text_editor: array{content_locales: array<string>}} $config */
         $config = (new Processor())->processConfiguration(new Configuration(false), []);
 
-        $this->assertSame([], $config['ckeditor']['text_part_languages']);
+        $this->assertSame([], $config['text_editor']['content_locales']);
     }
 
-    public function testTextPartLanguages(): void
+    public function testTextEditorContentLocales(): void
     {
-        /** @var array{ckeditor: array{text_part_languages: array<string>}} $config */
+        /** @var array{text_editor: array{content_locales: array<string>}} $config */
         $config = (new Processor())->processConfiguration(new Configuration(false), [
-            ['ckeditor' => ['text_part_languages' => ['en', 'de', 'ar']]],
+            ['text_editor' => ['content_locales' => ['en', 'de', 'ar']]],
         ]);
 
-        $this->assertSame(['en', 'de', 'ar'], $config['ckeditor']['text_part_languages']);
+        $this->assertSame(['en', 'de', 'ar'], $config['text_editor']['content_locales']);
     }
 
-    public function testTextPartLanguagesWithCountry(): void
+    public function testTextEditorContentLocalesWithCountry(): void
     {
         $this->expectException(InvalidConfigurationException::class);
 
         (new Processor())->processConfiguration(new Configuration(false), [
-            ['ckeditor' => ['text_part_languages' => ['en', 'de_at']]],
+            ['text_editor' => ['content_locales' => ['en', 'de_at']]],
         ]);
     }
 }

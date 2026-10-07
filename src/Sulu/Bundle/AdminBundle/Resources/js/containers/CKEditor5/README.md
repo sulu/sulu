@@ -42,14 +42,14 @@ which lets an editor mark a selection with a language (`<span lang="â€¦" dir="â€
 parts" requirement. Marked text is highlighted in the editor and shows a tooltip with the language name; the saved
 content only contains the `lang` and `dir` attributes.
 
-The offered languages default to the languages of all webspace localizations, without their country variants. Their titles are localised to the
+The offered locales default to the languages of all webspace localizations, without their country variants. Their titles are localised to the
 administration interface language via `Intl.DisplayNames`. Configure a different list in
 `config/packages/sulu_admin.yaml`:
 
 ```yaml
 sulu_admin:
-    ckeditor:
-        text_part_languages: ['en', 'de', 'ar']
+    text_editor:
+        content_locales: ['en', 'de', 'ar']
 ```
 
 Only language codes without a country (`de`, not `de_at`) are accepted.
