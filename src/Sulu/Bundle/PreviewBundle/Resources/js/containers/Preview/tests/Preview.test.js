@@ -698,7 +698,7 @@ test('Scroll to and expand a block referenced by a preview navigate click, mount
     expect(handleParentClick).toHaveBeenCalled();
     // The target may be collapsed too, so it is clicked/expanded before scrolling.
     expect(handleChildClick).toHaveBeenCalled();
-    expect(child.scrollIntoView).toHaveBeenCalledWith({behavior: 'smooth', block: 'start'});
+    expect(child.scrollIntoView).toHaveBeenCalledWith({behavior: 'smooth', block: 'center'});
     expect(child.animate).toHaveBeenCalledWith(expect.any(Array), expect.objectContaining({duration: 2500}));
     expect(parent.animate).not.toHaveBeenCalled();
 
@@ -721,7 +721,7 @@ test('Expands the target block itself (not just its ancestors) for a top-level, 
     postPreviewMessage(previewWindow, {type: 'sulu.preview.navigate', id: 'block-1'});
 
     expect(handleClick).toHaveBeenCalled();
-    expect(block.scrollIntoView).toHaveBeenCalledWith({behavior: 'smooth', block: 'start'});
+    expect(block.scrollIntoView).toHaveBeenCalledWith({behavior: 'smooth', block: 'center'});
 
     block.remove();
 });
@@ -741,7 +741,7 @@ test('Scrolls to the block without a highlight when the browser cannot animate e
 
     postPreviewMessage(previewWindow, {type: 'sulu.preview.navigate', id: 'block-1'});
 
-    expect(block.scrollIntoView).toHaveBeenCalledWith({behavior: 'smooth', block: 'start'});
+    expect(block.scrollIntoView).toHaveBeenCalledWith({behavior: 'smooth', block: 'center'});
 
     block.remove();
 });

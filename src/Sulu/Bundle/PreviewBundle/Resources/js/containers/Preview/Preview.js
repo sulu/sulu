@@ -391,7 +391,7 @@ class Preview extends React.Component<Props> {
             if (index >= idPath.length) {
                 const target = findBlockElement(idPath[idPath.length - 1]);
                 if (target) {
-                    target.scrollIntoView({behavior: 'smooth', block: 'start'});
+                    target.scrollIntoView({behavior: 'smooth', block: 'center'});
                     highlightBlockElement(target);
                 }
 
