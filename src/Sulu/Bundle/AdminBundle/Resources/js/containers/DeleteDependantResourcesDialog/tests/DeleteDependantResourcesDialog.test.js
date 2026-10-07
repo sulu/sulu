@@ -4,6 +4,7 @@ import {act, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import DeleteDependantResourcesDialog from '../DeleteDependantResourcesDialog';
 import ResourceRequester from '../../../services/ResourceRequester';
+import {translate} from '../../../utils/Translator';
 import type {DependantResourcesData} from '../../../types';
 
 jest.mock('../../../utils/Translator');
@@ -109,8 +110,39 @@ async function rejectRequest(request: DeferredRequestPromise, error: any) {
     });
 }
 
+function createReferencingResourcesResponse(
+    id: number,
+    title: string,
+    referencingId: string = 'page-' + id,
+    mediaTitle: ?string = 'Media ' + id
+) {
+    const data = {
+        code: 1106,
+        resource: {id, resourceKey: 'media', title: mediaTitle},
+        referencingResources: [{id: referencingId, resourceKey: 'pages', title}],
+        referencingResourcesCount: 1,
+    };
+
+    return {
+        status: 409,
+        clone: () => ({json: () => Promise.resolve(data)}),
+        json: () => Promise.resolve(data),
+    };
+}
+
+async function flushPromises() {
+    await act(async() => {
+        await new Promise((resolve) => setTimeout(resolve));
+    });
+}
+
+async function clickButton(user: Object, name: string) {
+    await user.click(screen.getByRole('button', {name}));
+}
+
 beforeEach(() => {
     getDeleteMock().mockReset();
+    (translate: any).mockClear();
 });
 
 test('The component should render', () => {
@@ -341,4 +373,156 @@ test('The component should abort requests on cancel', async() => {
     expect(props.onCancel).toHaveBeenCalled();
     expect(props.onError).not.toHaveBeenCalled();
     expect(props.onFinish).not.toHaveBeenCalled();
+});
+
+test('The component should ask once for all referenced resources of a batch and delete them with force', async() => {
+    const user = userEvent.setup();
+    const props = createProps();
+    const requestOptions = props.requestOptions;
+
+    getDeleteMock()
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.reject(createReferencingResourcesResponse(2, 'Page 1')))
+        .mockReturnValueOnce(RequestPromise.reject(createReferencingResourcesResponse(3, 'Page 2')))
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.resolve({}));
+
+    render(<DeleteDependantResourcesDialog {...props} />);
+
+    await clickButton(user, 'sulu_admin.delete');
+    expect(await screen.findByText('Page 1')).toBeInTheDocument();
+
+    expect(ResourceRequester.delete).toHaveBeenCalledTimes(4);
+    expect(screen.getByText('sulu_admin.delete_linked_warning_title')).toBeInTheDocument();
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 2'});
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 3'});
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+    expect(screen.getAllByText(/^Page \d$/).map((item) => item.textContent.trim())).toEqual(['Page 1', 'Page 2']);
+    expect(screen.getByRole('button', {name: 'sulu_admin.delete'})).toBeEnabled();
+    expect(props.onFinish).not.toHaveBeenCalled();
+    expect(props.onError).not.toHaveBeenCalled();
+
+    await clickButton(user, 'sulu_admin.delete');
+    await waitFor(() => expect(props.onFinish).toHaveBeenCalled());
+
+    expect(ResourceRequester.delete).toHaveBeenCalledTimes(8);
+    expect(ResourceRequester.delete).toHaveBeenNthCalledWith(5, 'media', {...requestOptions, force: true, id: 2});
+    expect(ResourceRequester.delete).toHaveBeenNthCalledWith(6, 'media', {...requestOptions, force: true, id: 3});
+    expect(ResourceRequester.delete).toHaveBeenNthCalledWith(7, 'collections', {...requestOptions, id: 2});
+    expect(ResourceRequester.delete).toHaveBeenNthCalledWith(8, 'media', {...requestOptions, id: 1});
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_dependants_progress_text', {count: '6/6'});
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+    expect(props.onError).not.toHaveBeenCalled();
+});
+
+test('The component should list a resource referencing multiple resources for each of them', async() => {
+    const user = userEvent.setup();
+
+    getDeleteMock()
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.reject(createReferencingResourcesResponse(2, 'Team', 'page-1')))
+        .mockReturnValueOnce(RequestPromise.reject(createReferencingResourcesResponse(3, 'Team', 'page-1')))
+        .mockReturnValueOnce(RequestPromise.resolve({}));
+
+    render(<DeleteDependantResourcesDialog {...createProps()} />);
+
+    await clickButton(user, 'sulu_admin.delete');
+    expect(await screen.findAllByText('Team')).toHaveLength(2);
+
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 2'});
+    expect(translate).toHaveBeenCalledWith('sulu_admin.delete_linked_resource_text', {title: 'Media 3'});
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+});
+
+test('The component should list the referenced resources in the order of the batch', async() => {
+    const user = userEvent.setup();
+    const firstRequest = createDeferredRequestPromise();
+    const secondRequest = createDeferredRequestPromise();
+
+    getDeleteMock()
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(firstRequest.promise)
+        .mockReturnValueOnce(secondRequest.promise);
+
+    render(<DeleteDependantResourcesDialog {...createProps()} />);
+
+    await clickButton(user, 'sulu_admin.delete');
+
+    // the second media answers before the first one
+    await rejectRequest(secondRequest, createReferencingResourcesResponse(3, 'Page 2'));
+    await rejectRequest(firstRequest, createReferencingResourcesResponse(2, 'Page 1'));
+
+    expect(await screen.findByText('Page 1')).toBeInTheDocument();
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+    expect(screen.getAllByText(/^Page \d$/).map((item) => item.textContent.trim())).toEqual(['Page 1', 'Page 2']);
+});
+
+test('The component should ask without a title if the referenced resource has none', async() => {
+    const user = userEvent.setup();
+
+    getDeleteMock()
+        .mockReturnValueOnce(RequestPromise.reject(createReferencingResourcesResponse(4, 'Page 1', 'page-1', null)));
+
+    render(<DeleteDependantResourcesDialog {...createProps()} />);
+
+    await clickButton(user, 'sulu_admin.delete');
+    expect(await screen.findByText('Page 1')).toBeInTheDocument();
+
+    expect(screen.getByText('sulu_admin.delete_linked_warning_text')).toBeInTheDocument();
+    expect(translate).not.toHaveBeenCalledWith(
+        'sulu_admin.delete_linked_warning_text_with_title',
+        expect.anything()
+    );
+    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Page 1']);
+});
+
+test('The component should not delete any referenced resource of the batch when cancelled', async() => {
+    const user = userEvent.setup();
+    const props = createProps();
+
+    getDeleteMock()
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.resolve({}))
+        .mockReturnValueOnce(RequestPromise.reject(createReferencingResourcesResponse(2, 'Page 1')))
+        .mockReturnValueOnce(RequestPromise.reject(createReferencingResourcesResponse(3, 'Page 2')))
+        .mockReturnValueOnce(RequestPromise.resolve({}));
+
+    render(<DeleteDependantResourcesDialog {...props} />);
+
+    await clickButton(user, 'sulu_admin.delete');
+    expect(await screen.findByText('Page 1')).toBeInTheDocument();
+    expect(screen.getByText('Page 2')).toBeInTheDocument();
+
+    await clickButton(user, 'sulu_admin.cancel');
+    await flushPromises();
+
+    expect(ResourceRequester.delete).toHaveBeenCalledTimes(4);
+    expect(props.onCancel).toHaveBeenCalled();
+    expect(props.onFinish).not.toHaveBeenCalled();
+    expect(props.onError).not.toHaveBeenCalled();
+});
+
+test('The component should stop when deleting referenced resources is cancelled', async() => {
+    const user = userEvent.setup();
+    const props = createProps();
+
+    getDeleteMock().mockReturnValueOnce(RequestPromise.reject(createReferencingResourcesResponse(4, 'Page 1')));
+
+    render(<DeleteDependantResourcesDialog {...props} />);
+
+    await clickButton(user, 'sulu_admin.delete');
+    expect(await screen.findByText('Page 1')).toBeInTheDocument();
+
+    await clickButton(user, 'sulu_admin.cancel');
+    await flushPromises();
+
+    expect(ResourceRequester.delete).toHaveBeenCalledTimes(1);
+    expect(props.onCancel).toHaveBeenCalled();
+    expect(props.onFinish).not.toHaveBeenCalled();
+    expect(props.onError).not.toHaveBeenCalled();
 });

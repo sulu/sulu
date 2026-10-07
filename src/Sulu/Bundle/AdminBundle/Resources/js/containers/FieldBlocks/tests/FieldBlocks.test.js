@@ -879,6 +879,154 @@ test('Should open and close block settings overlay when confirm button is clicke
     ]);
 });
 
+test('Should pass the owning block without its settings as "__block" to the block settings form store', async() => {
+    const user = userEvent.setup();
+    const createSpy = jest.spyOn(memoryFormStoreFactory, 'createFromFormKey').mockReturnValue({
+        data: {},
+        dirty: false,
+        schema: {},
+        destroy: jest.fn(),
+    });
+    const formInspector = createFormInspector();
+
+    const value = [{type: 'image', url: 'logo.png', settings: {hidden: false}}];
+
+    renderFieldBlocks({
+        data: {blocks: value},
+        dataPath: '/blocks',
+        defaultType: 'image',
+        formInspector,
+        schemaOptions: {settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}},
+        types: {image: {title: 'Image', form: {url: {label: 'Url', type: 'text_line'}}}},
+        value,
+    });
+
+    await user.click(screen.getByRole('button', {name: 'settings-0'}));
+
+    expect(createSpy).toHaveBeenLastCalledWith(
+        'content_block_settings',
+        {hidden: false},
+        formInspector.locale,
+        undefined,
+        formInspector.options,
+        {__block: {type: 'image', url: 'logo.png'}}
+    );
+    createSpy.mockRestore();
+});
+
+test('Should pass the enclosing blocks of a nested block as "__parent" of "__block" to the settings form', async() => {
+    const user = userEvent.setup();
+    const createSpy = jest.spyOn(memoryFormStoreFactory, 'createFromFormKey').mockReturnValue({
+        data: {},
+        dirty: false,
+        schema: {},
+        destroy: jest.fn(),
+    });
+    const formInspector = createFormInspector();
+    const value = [{type: 'image', url: 'logo.png', settings: {hidden: false}}];
+    const data = {
+        blocks: [
+            {type: 'other'},
+            {type: 'container', settings: {width: 'full'}, children: value},
+        ],
+    };
+
+    renderFieldBlocks({
+        data,
+        dataPath: '/blocks/1/children',
+        defaultType: 'image',
+        formInspector,
+        schemaOptions: {settings_form_key: {name: 'settings_form_key', value: 'content_block_settings'}},
+        types: {image: {title: 'Image', form: {url: {label: 'Url', type: 'text_line'}}}},
+        value,
+    });
+
+    await user.click(screen.getByRole('button', {name: 'settings-0'}));
+
+    expect(createSpy).toHaveBeenLastCalledWith(
+        'content_block_settings',
+        {hidden: false},
+        formInspector.locale,
+        undefined,
+        formInspector.options,
+        {
+            __block: {
+                type: 'image',
+                url: 'logo.png',
+                __parent: {type: 'container', settings: {width: 'full'}, children: value},
+            },
+        }
+    );
+    createSpy.mockRestore();
+});
+
+test('Should continue with the owning block of a settings form as parent of "__block" inside of it', async() => {
+    const user = userEvent.setup();
+    const createSpy = jest.spyOn(memoryFormStoreFactory, 'createFromFormKey').mockReturnValue({
+        data: {},
+        dirty: false,
+        schema: {},
+        destroy: jest.fn(),
+    });
+    const owningBlock = {type: 'text', __parent: {type: 'container'}};
+    const formInspector: Object = createFormInspector();
+    formInspector.options = {__block: owningBlock};
+    const value = [{type: 'variant', label: 'x', settings: {}}];
+
+    renderFieldBlocks({
+        data: {variants: value},
+        dataPath: '/variants',
+        defaultType: 'variant',
+        formInspector,
+        schemaOptions: {settings_form_key: {name: 'settings_form_key', value: 'variant_settings'}},
+        types: {variant: {title: 'Variant', form: {label: {label: 'Label', type: 'text_line'}}}},
+        value,
+    });
+
+    await user.click(screen.getByRole('button', {name: 'settings-0'}));
+
+    expect(createSpy.mock.calls[createSpy.mock.calls.length - 1][5]).toEqual({
+        __block: {type: 'variant', label: 'x', __parent: owningBlock},
+    });
+    createSpy.mockRestore();
+});
+
+test('Should append the owning block of a settings form to the parents of a nested block inside of it', async() => {
+    const user = userEvent.setup();
+    const createSpy = jest.spyOn(memoryFormStoreFactory, 'createFromFormKey').mockReturnValue({
+        data: {},
+        dirty: false,
+        schema: {},
+        destroy: jest.fn(),
+    });
+    const owningBlock = {type: 'text'};
+    const formInspector: Object = createFormInspector();
+    formInspector.options = {__block: owningBlock};
+    const value = [{type: 'variant', label: 'y', settings: {}}];
+    const data = {variants: [{type: 'group', variants: value}]};
+
+    renderFieldBlocks({
+        data,
+        dataPath: '/variants/0/variants',
+        defaultType: 'variant',
+        formInspector,
+        schemaOptions: {settings_form_key: {name: 'settings_form_key', value: 'variant_settings'}},
+        types: {variant: {title: 'Variant', form: {label: {label: 'Label', type: 'text_line'}}}},
+        value,
+    });
+
+    await user.click(screen.getByRole('button', {name: 'settings-0'}));
+
+    expect(createSpy.mock.calls[createSpy.mock.calls.length - 1][5]).toEqual({
+        __block: {
+            type: 'variant',
+            label: 'y',
+            __parent: {type: 'group', variants: value, __parent: owningBlock},
+        },
+    });
+    createSpy.mockRestore();
+});
+
 test('Should destroy create new formstore when block settings overlay is opened for another block', async() => {
     const user = userEvent.setup();
     const formInspector = createFormInspector();

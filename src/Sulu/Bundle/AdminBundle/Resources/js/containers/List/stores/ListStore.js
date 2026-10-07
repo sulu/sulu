@@ -528,31 +528,46 @@ export default class ListStore {
             }));
     };
 
-    @action deleteSelection = () => {
-        const deletePromises = [];
+    @action deleteSelection = (options: Object = {}): Promise<void> => {
+        return this.deleteSelectionSettled(options)
+            .then((errors) => {
+                if (errors.length > 0) {
+                    return Promise.reject(errors[0]);
+                }
+            });
+    };
+
+    /**
+     * Resolves with the error responses of the failed deletions, their items stay selected.
+     */
+    @action deleteSelectionSettled = (options: Object = {}): Promise<Array<Object>> => {
         this.deletingSelection = true;
-        this.selectionIds.forEach((id) => {
-            deletePromises.push(
-                ResourceRequester.delete(this.resourceKey, {...this.queryOptions, id})
-                    .catch((error) => {
-                        if (error.status !== 404) {
-                            return Promise.reject(error);
-                        }
-                    })
-            );
-        });
+
+        const deletePromises = this.selectionIds.map((id) =>
+            ResourceRequester.delete(this.resourceKey, {...this.queryOptions, ...options, id})
+                .then(() => ({id}))
+                .catch((error) => ({id, error}))
+        );
 
         return Promise.all(deletePromises)
-            .then(action(() => {
-                this.selectionIds.forEach(this.remove);
-                this.clearSelection();
+            .then(action((results) => {
+                const errors = [];
+
+                results.forEach(({id, error}) => {
+                    if (error && error.status !== 404) {
+                        errors.push(error);
+
+                        return;
+                    }
+
+                    this.remove(id);
+                    this.deselectById(id);
+                });
+
                 this.reload();
                 this.deletingSelection = false;
-            }))
-            .catch(action((error) => {
-                this.deletingSelection = false;
 
-                return Promise.reject(error);
+                return errors;
             }));
     };
 

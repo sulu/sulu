@@ -131,6 +131,8 @@ return static function(ContainerConfigurator $container) {
             '%sulu.model.media.class%',
             new Reference('sulu_media.media_list_builder_factory'),
             new Reference('sulu_media.media_list_representation_factory'),
+            new Reference('sulu_reference.reference_repository', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            new Reference('request_stack'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 

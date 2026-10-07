@@ -16,7 +16,7 @@ namespace Sulu\Component\Rest\Exception;
 interface ReferencingResourcesFoundExceptionInterface extends RestExceptionInterface
 {
     /**
-     * @return array{id: int|string, resourceKey: string}
+     * @return array{id: int|string, resourceKey: string, title?: string|null}
      */
     public function getResource(): array;
 

@@ -7,6 +7,7 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {translate} from '../../../utils/Translator';
 import userStore from '../../../stores/userStore';
 import List from '../List';
+import DeleteReferencedResourceDialog from '../../DeleteReferencedResourceDialog';
 import ListStore from '../stores/ListStore';
 import listAdapterRegistry from '../registries/listAdapterRegistry';
 import listFieldFilterTypeRegistry from '../registries/listFieldFilterTypeRegistry';
@@ -80,8 +81,15 @@ jest.mock('../../DeleteReferencedResourceDialog', () => {
 
     return jest.fn((props) => (
         <div data-allow-deletion={props.allowDeletion ? 'true' : 'false'} data-testid="delete-referenced-dialog">
-            {props.referencingResourcesData.referencingResources.map((item, index) => (
-                <li key={index}>{item.title}</li>
+            {(Array.isArray(props.referencingResourcesData)
+                ? props.referencingResourcesData
+                : [props.referencingResourcesData]
+            ).map((referencingResourcesData, resourceIndex) => (
+                <ul key={resourceIndex}>
+                    {referencingResourcesData.referencingResources.map((item, index) => (
+                        <li key={index}>{item.title}</li>
+                    ))}
+                </ul>
             ))}
             <button
                 onClick={() => props.allowDeletion ? props.onConfirm() : props.onCancel()}
@@ -146,6 +154,7 @@ jest.mock('../stores/ListStore', () => {
         this.deactivate = jest.fn();
         this.delete = jest.fn();
         this.deleteSelection = jest.fn();
+        this.deleteSelectionSettled = jest.fn();
         this.order = jest.fn();
         this.sort = jest.fn();
         this.sortColumn = {
@@ -1320,10 +1329,10 @@ test('Delete warning should disappear when deleting selection was requested and 
 });
 
 test('ListStore should delete selections when deleting selection was requested and overlay is confirmed', async() => {
-    const deleteSelectionPromise = Promise.resolve();
+    const deleteSelectionPromise = Promise.resolve([]);
     const listStore = createListStore();
     listStore.selections.push({}, {}, {});
-    listStore.deleteSelection.mockReturnValue(deleteSelectionPromise);
+    listStore.deleteSelectionSettled.mockReturnValue(deleteSelectionPromise);
     const listRef = createListRef();
 
     render(<List adapters={['test']} ref={listRef} store={listStore} />);
@@ -1337,7 +1346,7 @@ test('ListStore should delete selections when deleting selection was requested a
 
     await clickOpenDialogButton('sulu_admin.delete_warning_title', 'sulu_admin.ok');
 
-    expect(listStore.deleteSelection).toHaveBeenCalledWith();
+    expect(listStore.deleteSelectionSettled).toHaveBeenCalledWith({});
     await waitFor(() => expect(screen.queryByRole('dialog', {name: 'sulu_admin.delete_warning_title'}))
         .not.toBeInTheDocument());
 });
@@ -1421,7 +1430,7 @@ test('ListStore should not delete linked item when onRequestItemDelete callback 
 test('ListStore should delete linked item when called with allowConflictDeletion value of true', async() => {
     const user = userEvent.setup();
     const listStore = createListStore();
-    listStore.deleteSelection.mockReturnValueOnce(Promise.reject(createReferencedResponse()));
+    listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([createReferencedResponse()]));
     listStore.selectionIds.push(5);
     const listRef = createListRef();
 
@@ -1435,17 +1444,17 @@ test('ListStore should delete linked item when called with allowConflictDeletion
 
     expect(await screen.findByTestId('delete-referenced-dialog')).toBeInTheDocument();
 
-    listStore.delete.mockReturnValueOnce(Promise.resolve());
+    listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([]));
     await user.click(screen.getByRole('button', {name: 'confirm-referenced-delete'}));
 
-    await waitFor(() => expect(listStore.delete).toHaveBeenCalledWith(5, {force: true}));
+    await waitFor(() => expect(listStore.deleteSelectionSettled).toHaveBeenLastCalledWith({force: true}));
     await waitFor(() => expect(screen.queryByTestId('delete-referenced-dialog')).not.toBeInTheDocument());
 });
 
 test('ListStore should not delete linked item when called with allowConflictDeletion value of false', async() => {
     const user = userEvent.setup();
     const listStore = createListStore();
-    listStore.deleteSelection.mockReturnValueOnce(Promise.reject(createReferencedResponse()));
+    listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([createReferencedResponse()]));
     listStore.selectionIds.push(5);
     const listRef = createListRef();
 
@@ -1461,8 +1470,144 @@ test('ListStore should not delete linked item when called with allowConflictDele
 
     await user.click(screen.getByRole('button', {name: 'confirm-referenced-delete'}));
 
-    expect(listStore.delete).not.toHaveBeenCalledWith(5, {force: true});
+    expect(listStore.deleteSelectionSettled).toHaveBeenCalledTimes(1);
     await waitFor(() => expect(screen.queryByTestId('delete-referenced-dialog')).not.toBeInTheDocument());
+});
+
+test('ListStore should ask once for all referenced items of a selection', async() => {
+    const user = userEvent.setup();
+    const listStore = createListStore();
+    listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([
+        createReferencedResponse(),
+        {
+            json: jest.fn().mockReturnValue(Promise.resolve({
+                code: 1106,
+                resource: {id: 6, resourceKey: 'media', title: 'Logo'},
+                referencingResources: [
+                    {id: 9, resourceKey: 'snippets', title: 'Item 3'},
+                ],
+                referencingResourcesCount: 1,
+            })),
+            status: 409,
+        },
+    ]));
+    listStore.selectionIds.push(5, 6);
+    const listRef = createListRef();
+
+    render(<List adapters={['test']} ref={listRef} store={listStore} />);
+
+    act(() => {
+        listRef.current.requestSelectionDelete(true);
+    });
+
+    await clickOpenDialogButton('sulu_admin.delete_warning_title', 'sulu_admin.ok');
+
+    expect(await screen.findByTestId('delete-referenced-dialog')).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole('dialog', {name: 'sulu_admin.delete_warning_title'}))
+        .not.toBeInTheDocument());
+
+    const dialogCalls = (DeleteReferencedResourceDialog: any).mock.calls;
+    const lastProps = dialogCalls[dialogCalls.length - 1][0];
+    expect(lastProps.referencingResourcesData).toEqual([
+        {
+            resource: {id: 5, resourceKey: 'pages'},
+            referencingResources: [
+                {id: 7, resourceKey: 'pages', title: 'Item 1'},
+                {id: 8, resourceKey: 'pages', title: 'Item 2'},
+            ],
+            referencingResourcesCount: 2,
+        },
+        {
+            resource: {id: 6, resourceKey: 'media', title: 'Logo'},
+            referencingResources: [
+                {id: 9, resourceKey: 'snippets', title: 'Item 3'},
+            ],
+            referencingResourcesCount: 1,
+        },
+    ]);
+    expect(screen.getAllByRole('listitem')).toHaveLength(3);
+
+    listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([]));
+    await user.click(screen.getByRole('button', {name: 'confirm-referenced-delete'}));
+
+    await waitFor(() => expect(listStore.deleteSelectionSettled).toHaveBeenCalledTimes(2));
+    expect(listStore.deleteSelectionSettled).toHaveBeenLastCalledWith({force: true});
+    expect(listStore.delete).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.queryByTestId('delete-referenced-dialog')).not.toBeInTheDocument());
+});
+
+test('ListStore should list a resource referencing multiple media of a selection for each of them', async() => {
+    const listStore = createListStore();
+    listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([
+        {
+            json: jest.fn().mockReturnValue(Promise.resolve({
+                code: 1106,
+                resource: {id: 5, resourceKey: 'media', title: 'Photo'},
+                referencingResources: [
+                    {id: 7, resourceKey: 'pages', title: 'Team'},
+                    {id: 8, resourceKey: 'pages', title: 'About us'},
+                ],
+                referencingResourcesCount: 2,
+            })),
+            status: 409,
+        },
+        {
+            json: jest.fn().mockReturnValue(Promise.resolve({
+                code: 1106,
+                resource: {id: 6, resourceKey: 'media', title: 'Logo'},
+                referencingResources: [
+                    {id: 7, resourceKey: 'pages', title: 'Team'},
+                    {id: 8, resourceKey: 'pages', title: 'About us'},
+                    {id: 8, resourceKey: 'snippets', title: 'Footer'},
+                ],
+                referencingResourcesCount: 3,
+            })),
+            status: 409,
+        },
+    ]));
+    listStore.selectionIds.push(5, 6);
+    const listRef = createListRef();
+
+    render(<List adapters={['test']} ref={listRef} store={listStore} />);
+
+    act(() => {
+        listRef.current.requestSelectionDelete(true);
+    });
+
+    await clickOpenDialogButton('sulu_admin.delete_warning_title', 'sulu_admin.ok');
+
+    const dialog = await screen.findByTestId('delete-referenced-dialog');
+    const lists = within(dialog).getAllByRole('list');
+    expect(lists).toHaveLength(2);
+    expect(within(lists[0]).getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Team', 'About us']);
+    expect(within(lists[1]).getAllByRole('listitem').map((item) => item.textContent))
+        .toEqual(['Team', 'About us', 'Footer']);
+});
+
+test('ListStore should call onDeleteError if a selection fails for another reason than references', async() => {
+    const errorData = {code: 0, message: 'Something went wrong'};
+    const deleteErrorSpy = jest.fn();
+    const listStore = createListStore();
+    listStore.deleteSelectionSettled.mockReturnValueOnce(Promise.resolve([
+        createReferencedResponse(),
+        {
+            json: jest.fn().mockReturnValue(Promise.resolve(errorData)),
+            status: 500,
+        },
+    ]));
+    listStore.selectionIds.push(5, 6);
+    const listRef = createListRef();
+
+    render(<List adapters={['test']} onDeleteError={deleteErrorSpy} ref={listRef} store={listStore} />);
+
+    act(() => {
+        listRef.current.requestSelectionDelete(true);
+    });
+
+    await clickOpenDialogButton('sulu_admin.delete_warning_title', 'sulu_admin.ok');
+
+    await waitFor(() => expect(deleteErrorSpy).toHaveBeenCalledWith(errorData));
+    expect(screen.queryByTestId('delete-referenced-dialog')).not.toBeInTheDocument();
 });
 
 test('ListStore should delete item with dependants when onFinish callback called', async() => {
