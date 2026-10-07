@@ -108,6 +108,8 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
                 icon: 'su-copy',
                 label: translate('sulu_admin.copy_locale'),
                 onClick: action(() => {
+                    // the locale can change without remounting the form, so the target locales are built on open
+                    this.destroyFormStore();
                     this.showCopyLocaleDialog = true;
                 }),
                 type: 'button',

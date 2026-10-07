@@ -396,3 +396,30 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
         open: false,
     }));
 });
+
+test('Offer the locales other than the current one after the locale was switched', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    // $FlowFixMe
+    resourceStore.locale.get.mockReturnValue('de');
+    const router = new Router({});
+    const copyLocaleToolbarAction = new CopyLocaleToolbarAction(
+        new ResourceFormStore(resourceStore, 'test'),
+        new Form({locales: [], resourceStore, route: router.route, router}),
+        router,
+        ['de', 'en', 'fr'],
+        {},
+        resourceStore
+    );
+
+    // $FlowFixMe
+    resourceStore.locale.get.mockReturnValue('en');
+
+    const toolbarItemConfig = copyLocaleToolbarAction.getToolbarItemConfig();
+    if (!toolbarItemConfig || !toolbarItemConfig.onClick) {
+        throw new Error('A onClick callback should be registered on the copy locale option');
+    }
+
+    toolbarItemConfig.onClick();
+
+    expect(metadataStore.getSchema).toHaveBeenLastCalledWith('copy_locale', undefined, {locales: ['de', 'fr']});
+});
