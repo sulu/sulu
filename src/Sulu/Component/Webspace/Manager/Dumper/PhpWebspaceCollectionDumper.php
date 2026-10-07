@@ -13,6 +13,9 @@ namespace Sulu\Component\Webspace\Manager\Dumper;
 
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 
+/**
+ * @internal
+ */
 class PhpWebspaceCollectionDumper extends WebspaceCollectionDumper
 {
     public function __construct(private WebspaceCollection $webspaceCollection)
