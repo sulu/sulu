@@ -145,6 +145,8 @@ $overlayContentHeight: 436px;
 
     &::after {
         border-bottom: 9px solid $alabaster;
+        border-left-width: 8px;
+        border-right-width: 8px;
         left: 13px;
         top: -9px;
     }
