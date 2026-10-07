@@ -294,7 +294,7 @@
         <property
             name="contentLocale"
             visibility="never"
-            translation="sulu_media.content_locale"
+            translation="sulu_media.content_locales"
         >
             <field-name>locale</field-name>
             <entity-name>Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage</entity-name>
