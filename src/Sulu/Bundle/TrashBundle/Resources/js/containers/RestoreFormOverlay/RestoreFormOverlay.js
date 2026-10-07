@@ -4,10 +4,10 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import FormOverlay from 'sulu-admin-bundle/containers/FormOverlay';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
-import {FormStoreInterface} from 'sulu-admin-bundle/containers/Form/types';
 import {ResourceRequester} from 'sulu-admin-bundle/services';
 import SchemaFormStoreDecorator from 'sulu-admin-bundle/containers/Form/stores/SchemaFormStoreDecorator';
 import MemoryFormStore from 'sulu-admin-bundle/containers/Form/stores/MemoryFormStore';
+import type {FormStoreInterface} from 'sulu-admin-bundle/containers/Form/types';
 
 type Props = {
     confirmLoading: boolean,

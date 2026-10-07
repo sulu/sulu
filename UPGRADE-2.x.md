@@ -2,6 +2,15 @@
 
 For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upgrades/upgrade-2.x.html) steps.
 
+## 2.6.28
+
+### Deprecated instantiating `MediaController` without `$referenceRepository` and `$requestStack`
+
+Instantiating the `MediaController` without the `$referenceRepository` or `$requestStack` argument is
+deprecated. The `$referenceRepository` is used to look up the resources that reference a media before deleting
+it, the `$requestStack` to read the `force` parameter of the request. Without one of them a media is deleted
+without the warning, as before.
+
 ## 2.6.27
 
 ### The target group select of the preview follows the audience targeting permission
