@@ -78,15 +78,17 @@ interface WorkflowTransitionRequestRepositoryInterface
     public function add(WorkflowTransitionRequest $workflowTransitionRequest): void;
 
     /**
-     * Claims a pending decision row and writes its verdict in one statement; the first writer wins.
+     * Claims a pending check row, writes its verdict in one statement (the first writer wins) and counts
+     * the request's checks by status. Both happen under a lock on the request, so of several checks
+     * settling on different workers the last one counts all the others as settled.
      *
      * @param list<WorkflowTransitionRequestDecisionMessage> $messages
      *
-     * @return bool whether this call settled the row, false when another writer had already
+     * @return array{approved: int, rejected: int, pending: int}|null null when another writer had settled the row already
      */
     public function settleDecision(
         WorkflowTransitionRequestDecision $decision,
         WorkflowTransitionRequestDecisionStatusEnum $status,
         array $messages,
-    ): bool;
+    ): ?array;
 }

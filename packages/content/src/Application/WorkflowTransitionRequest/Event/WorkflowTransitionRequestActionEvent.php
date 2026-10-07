@@ -21,7 +21,8 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionReques
  *
  * The context holds `comment` for approved and rejected (the reviewer's comment, null if none),
  * `validatorKey` for validation_retried and `approved` and `rejected` for validated (the counts over
- * all checks of the request).
+ * all checks of the request). Validated comes once every check has answered, and again after a retried
+ * check has answered.
  *
  * Validated events carry no current user when a worker runs the checks, but the editor's user when
  * the checks run inline in the request that sent the content for review.

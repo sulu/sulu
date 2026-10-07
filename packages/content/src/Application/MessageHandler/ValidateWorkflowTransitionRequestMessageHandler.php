@@ -25,8 +25,8 @@ use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionReques
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Runs every validator with a pending row and records its verdict. On a worker a crash escapes once
- * the remaining validators have run, so the retry strategy applies to the one that failed.
+ * Runs the validator its message names, when that check is still pending, and records its verdict. On a
+ * worker a crash escapes, so the retry strategy applies to this one validator and no other.
  *
  * @internal
  */
@@ -54,8 +54,9 @@ final class ValidateWorkflowTransitionRequestMessageHandler
         // Settled before this pass ran, by a cancel or a publish. Logged because under async
         // processing it is otherwise indistinguishable from a request that is simply gone.
         if (!$request->isOpen()) {
-            $this->logger->info('Request "{request}" is no longer open, its pending validators are skipped.', [
+            $this->logger->info('Request "{request}" is no longer open, its pending validator "{validator}" is skipped.', [
                 'request' => $request->getId(),
+                'validator' => $message->getValidatorKey(),
             ]);
 
             return;
@@ -63,86 +64,70 @@ final class ValidateWorkflowTransitionRequestMessageHandler
 
         $workflowName = $request->getWorkflowName();
         if (!$this->requestWorkflowRegistry->has($workflowName)) {
-            $this->logger->warning('Request workflow "{workflow}" is not registered, request "{request}" keeps its pending validators.', [
+            $this->logger->warning('Request workflow "{workflow}" is not registered, request "{request}" keeps its pending validator "{validator}".', [
                 'workflow' => $workflowName,
                 'request' => $request->getId(),
+                'validator' => $message->getValidatorKey(),
             ]);
 
             return;
         }
 
-        $entriesByKey = $this->requestWorkflowRegistry->get($workflowName)->validators;
-        $firstThrowable = null;
-        $settled = 0;
+        $validatorKey = $message->getValidatorKey();
+        $decision = $request->getValidatorDecision($validatorKey);
+        if (null === $decision || !$decision->isPending()) {
+            return;
+        }
 
-        foreach ($request->getDecisions() as $decision) {
-            $validatorKey = $decision->getValidatorKey();
-            if (null === $validatorKey || !$decision->isPending()) {
-                continue;
-            }
+        $entry = $this->requestWorkflowRegistry->get($workflowName)->validators[$validatorKey] ?? null;
 
-            $entry = $entriesByKey[$validatorKey] ?? null;
-
-            if (null === $entry) {
-                $result = ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::text(\sprintf("Check failed: validator '%s' is not registered", $validatorKey)));
-            } else {
-                try {
-                    $result = $entry['validator']->check(new ValidationContext(
-                        $request->getResourceKey(),
-                        $request->getResourceId(),
-                        $request->getLocale(),
-                        $workflowName,
-                        $entry['config'],
-                    ));
-                } catch (\Throwable $throwable) {
-                    if ($this->workerState->isRunning()) {
-                        // Kept and rethrown after the loop rather than here, so the validators
-                        // behind this one still get a real verdict. Its own row stays pending, so
-                        // the retry only has this one left to run.
-                        $firstThrowable ??= $throwable;
-
-                        continue;
-                    }
-
-                    $this->logger->error('Request workflow validator "{validator}" failed on request "{request}".', [
-                        'validator' => $validatorKey,
-                        'request' => $request->getId(),
-                        'exception' => $throwable,
-                    ]);
-
-                    $result = ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::translated('sulu_content.workflow_transition_request.check_errored'));
+        if (null === $entry) {
+            $result = ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::text(\sprintf("Check failed: validator '%s' is not registered", $validatorKey)));
+        } else {
+            try {
+                $result = $entry['validator']->check(new ValidationContext(
+                    $request->getResourceKey(),
+                    $request->getResourceId(),
+                    $request->getLocale(),
+                    $workflowName,
+                    $entry['config'],
+                ));
+            } catch (\Throwable $throwable) {
+                // The row stays pending, so the retry strategy has this one check left to run.
+                if ($this->workerState->isRunning()) {
+                    throw $throwable;
                 }
+
+                $this->logger->error('Request workflow validator "{validator}" failed on request "{request}".', [
+                    'validator' => $validatorKey,
+                    'request' => $request->getId(),
+                    'exception' => $throwable,
+                ]);
+
+                $result = ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::translated('sulu_content.workflow_transition_request.check_errored'));
             }
-
-            $status = $result->approved
-                ? WorkflowTransitionRequestDecisionStatusEnum::APPROVED
-                : WorkflowTransitionRequestDecisionStatusEnum::REJECTED;
-
-            if (!$this->workflowTransitionRequestRepository->settleDecision($decision, $status, $result->messages)) {
-                continue;
-            }
-
-            ++$settled;
         }
 
-        // Hands the message back to the retry strategy. A bus running this handler inside
-        // `doctrine_transaction` rolls the verdicts above back with it, so on such a bus the
-        // decisions settled in this pass are lost and every validator runs again on the retry.
-        if (null !== $firstThrowable) {
-            throw $firstThrowable;
+        $status = $result->approved
+            ? WorkflowTransitionRequestDecisionStatusEnum::APPROVED
+            : WorkflowTransitionRequestDecisionStatusEnum::REJECTED;
+
+        $counts = $this->workflowTransitionRequestRepository->settleDecision($decision, $status, $result->messages);
+        if (null === $counts) {
+            return;
         }
 
-        // The counts cover every check, not only this run's, so a retry of one check and a run that
-        // follows a crashed one both report the state the request is in.
-        if (0 < $settled) {
-            $this->eventDispatcher->dispatch(new WorkflowTransitionRequestActionEvent(
-                $request,
-                WorkflowTransitionRequestActionEvent::VALIDATED,
-                [
-                    'approved' => $request->countValidatorApprovals(),
-                    'rejected' => $request->countValidatorRejections(),
-                ],
-            ));
+        // The counts come from the database, because the other checks of the request settle on other
+        // workers. The request counts as validated once none is pending, so the last check to settle
+        // reports it.
+        if (0 < $counts['pending']) {
+            return;
         }
+
+        $this->eventDispatcher->dispatch(new WorkflowTransitionRequestActionEvent(
+            $request,
+            WorkflowTransitionRequestActionEvent::VALIDATED,
+            ['approved' => $counts['approved'], 'rejected' => $counts['rejected']],
+        ));
     }
 }

@@ -44,8 +44,14 @@ class RetryWorkflowTransitionRequestValidationMessageHandlerTest extends TestCas
 
         $messageBus = $this->prophesize(MessageBusInterface::class);
         $messageBus->dispatch(Argument::that(
-            static fn (Envelope $envelope) => $envelope->getMessage() instanceof ValidateWorkflowTransitionRequestMessage
-                && [] !== $envelope->all(DispatchAfterCurrentBusStamp::class),
+            static function(Envelope $envelope) use ($request): bool {
+                $message = $envelope->getMessage();
+
+                return $message instanceof ValidateWorkflowTransitionRequestMessage
+                    && $request->getId() === $message->getWorkflowTransitionRequestId()
+                    && 'seo_required' === $message->getValidatorKey()
+                    && [] !== $envelope->all(DispatchAfterCurrentBusStamp::class);
+            },
         ))->shouldBeCalledOnce()->willReturn(new Envelope(new \stdClass()));
 
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
@@ -63,6 +69,29 @@ class RetryWorkflowTransitionRequestValidationMessageHandlerTest extends TestCas
         );
 
         $this->assertSame($request, $handler(new RetryWorkflowTransitionRequestValidationMessage($request->getId(), 'seo_required')));
+    }
+
+    public function testInvokeDispatchesNothingForAnUnknownValidator(): void
+    {
+        $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
+        $request->addValidatorDecision('seo_required');
+
+        $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
+        $repository->getOneBy(['id' => $request->getId()])->willReturn($request);
+
+        $messageBus = $this->prophesize(MessageBusInterface::class);
+        $messageBus->dispatch(Argument::any())->shouldNotBeCalled();
+
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
+
+        $handler = new RetryWorkflowTransitionRequestValidationMessageHandler(
+            $repository->reveal(),
+            $messageBus->reveal(),
+            $eventDispatcher->reveal(),
+        );
+
+        $this->assertSame($request, $handler(new RetryWorkflowTransitionRequestValidationMessage($request->getId(), 'removed_validator')));
     }
 
     public function testInvokeDispatchesNothingForAClosedRequest(): void

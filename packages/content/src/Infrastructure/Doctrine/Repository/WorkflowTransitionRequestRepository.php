@@ -133,6 +133,36 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
         WorkflowTransitionRequestDecision $decision,
         WorkflowTransitionRequestDecisionStatusEnum $status,
         array $messages,
+    ): ?array {
+        $connection = $this->entityManager->getConnection();
+
+        return $connection->transactional(function() use ($connection, $decision, $status, $messages): ?array {
+            // The first read of the transaction, so that no snapshot predates the lock and the count below
+            // sees every check the other workers settled before they released it.
+            $requestId = $connection->fetchOne(
+                \sprintf(
+                    'SELECT r.id FROM %s r INNER JOIN %s d ON d.workflow_transition_request_id = r.id WHERE d.id = :id FOR UPDATE',
+                    $this->entityManager->getClassMetadata(WorkflowTransitionRequest::class)->getTableName(),
+                    $this->entityManager->getClassMetadata(WorkflowTransitionRequestDecision::class)->getTableName(),
+                ),
+                ['id' => $decision->getId()],
+            );
+
+            if (!\is_string($requestId) || !$this->claimDecision($decision, $status, $messages)) {
+                return null;
+            }
+
+            return $this->countValidatorDecisions($requestId);
+        });
+    }
+
+    /**
+     * @param list<WorkflowTransitionRequestDecisionMessage> $messages
+     */
+    private function claimDecision(
+        WorkflowTransitionRequestDecision $decision,
+        WorkflowTransitionRequestDecisionStatusEnum $status,
+        array $messages,
     ): bool {
         $decidedAt = new \DateTimeImmutable();
         $tableName = $this->entityManager->getClassMetadata(WorkflowTransitionRequestDecision::class)->getTableName();
@@ -165,6 +195,29 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
         $decision->settle($status, $messages, $decidedAt);
 
         return true;
+    }
+
+    /**
+     * @return array{approved: int, rejected: int, pending: int}
+     */
+    private function countValidatorDecisions(string $workflowTransitionRequestId): array
+    {
+        $tableName = $this->entityManager->getClassMetadata(WorkflowTransitionRequestDecision::class)->getTableName();
+
+        /** @var array<string, int|string> $countsByStatus */
+        $countsByStatus = $this->entityManager->getConnection()->fetchAllKeyValue(
+            \sprintf(
+                'SELECT status, COUNT(*) FROM %s WHERE workflow_transition_request_id = :id AND validator_key IS NOT NULL GROUP BY status',
+                $tableName,
+            ),
+            ['id' => $workflowTransitionRequestId],
+        );
+
+        return [
+            'approved' => (int) ($countsByStatus[WorkflowTransitionRequestDecisionStatusEnum::APPROVED->value] ?? 0),
+            'rejected' => (int) ($countsByStatus[WorkflowTransitionRequestDecisionStatusEnum::REJECTED->value] ?? 0),
+            'pending' => (int) ($countsByStatus[WorkflowTransitionRequestDecisionStatusEnum::PENDING->value] ?? 0),
+        ];
     }
 
     /**

@@ -26,11 +26,14 @@ trait ConsumeTransportTrait
         /** @var InMemoryTransport $transport */
         $transport = static::getContainer()->get('messenger.transport.' . $transportName);
 
-        foreach ($transport->get() as $envelope) {
-            // The received stamp makes the bus handle the message instead of sending it to the
-            // transport again; no worker is started, so validators run on the synchronous path.
-            $bus->dispatch($envelope->with(new ReceivedStamp($transportName)));
-            $transport->ack($envelope);
+        // `get()` hands out one envelope per call, so it is asked until the queue is empty.
+        while ([] !== $envelopes = [...$transport->get()]) {
+            foreach ($envelopes as $envelope) {
+                // The received stamp makes the bus handle the message instead of sending it to the
+                // transport again; no worker is started, so validators run on the synchronous path.
+                $bus->dispatch($envelope->with(new ReceivedStamp($transportName)));
+                $transport->ack($envelope);
+            }
         }
     }
 }
