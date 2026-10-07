@@ -28,6 +28,16 @@
                     </meta>
                 </property>
 
+                <property name="contentLocales" type="select">
+                    <meta>
+                        <title>sulu_media.content_locales</title>
+                    </meta>
+
+                    <params>
+                        <param name="values" type="expression" value="service('sulu_media.content_locale_provider').getValues(locale)"/>
+                    </params>
+                </property>
+
                 <property name="origin" type="single_select">
                     <meta>
                         <title>sulu_media.origin</title>
@@ -61,16 +71,6 @@
                                 </meta>
                             </param>
                         </param>
-                    </params>
-                </property>
-
-                <property name="contentLocales" type="select">
-                    <meta>
-                        <title>sulu_media.content_locale</title>
-                    </meta>
-
-                    <params>
-                        <param name="values" type="expression" value="service('sulu_media.content_locale_provider').getValues(locale)"/>
                     </params>
                 </property>
 
