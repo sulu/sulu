@@ -61,16 +61,19 @@ class LinkTag implements TagInterface
                     $url = $this->urlHelper->getAbsoluteUrl($url);
                 }
 
+                // the provider may hand back an url that is already escaped, so its entities are kept
+                $url = $this->escape($url, false);
+
                 if ($query) {
-                    $url .= '?' . $query;
+                    $url .= '?' . $this->escape($query);
                 }
 
                 if ($anchor) {
-                    $url .= '#' . $anchor;
+                    $url .= '#' . $this->escape($anchor);
                 }
 
                 $title = $item->getTitle();
-                $attributes['href'] = \htmlspecialchars($url, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
+                $attributes['href'] = $url;
             } elseif ($this->isPreview && self::VALIDATE_UNPUBLISHED === $validationState) {
                 // render anchor without href to keep styling even if target is not published in preview
                 $title = $this->getContent($attributes);
@@ -227,5 +230,10 @@ class LinkTag implements TagInterface
             'anchor' => $anchor,
             'query' => $query,
         ];
+    }
+
+    private function escape(string $value, bool $doubleEncode = true): string
+    {
+        return \htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8', $doubleEncode);
     }
 }

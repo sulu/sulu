@@ -381,6 +381,45 @@ class LinkTagTest extends TestCase
         );
     }
 
+    public function testParseAllKeepsEntitiesOfAnAlreadyEscapedProviderUrl(): void
+    {
+        $href = '123-123-123';
+        $tag = '<sulu-link href="' . $href . '" provider="article">Test-Content</sulu-link>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test?first=1&amp;second="2"', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'provider' => 'article', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="http://sulu.lo/de/test?first=1&amp;second=&quot;2&quot;">Test-Content</a>'],
+            $result
+        );
+    }
+
+    public function testParseAllEncodesAnEntityWrittenInTheAnchor(): void
+    {
+        // the decoded anchor is "a&amp;b" as typed by the editor, so its ampersand is escaped again
+        $href = '123-123-123#a&amp;amp;b';
+        $tag = '<sulu-link href="' . $href . '" provider="article">Test-Content</sulu-link>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => ['href' => $href, 'provider' => 'article', 'content' => 'Test-Content']],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="http://sulu.lo/de/test#a&amp;amp;b">Test-Content</a>'],
+            $result
+        );
+    }
+
     public function testParseAllWithInvalidUtf8InHref(): void
     {
         // without ENT_SUBSTITUTE htmlspecialchars() returns an empty string here, and the empty
