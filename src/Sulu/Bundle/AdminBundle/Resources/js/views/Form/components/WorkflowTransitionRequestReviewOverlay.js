@@ -155,7 +155,8 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
         void this.send(
             this.step === 'reject'
                 ? this.props.onReject?.(comment)
-                : this.props.onApprove?.(comment || null)
+                : this.props.onApprove?.(comment || null),
+            this.step === 'approve'
         );
     };
 
@@ -167,8 +168,8 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
         void this.send(this.props.onRetry?.(validatorKey));
     };
 
-    /** Stays open on success: the caller reloads the request, and the reviewer reads the new state here. */
-    @action async send(decision: ?Promise<mixed>) {
+    /** Stays open on success unless told to close, so a retry shows the reloaded checks. */
+    @action async send(decision: ?Promise<mixed>, closeOnSuccess: boolean = false) {
         if (this.submitting) {
             return;
         }
@@ -179,6 +180,10 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
         try {
             await decision;
             this.reset();
+
+            if (closeOnSuccess) {
+                this.props.onClose();
+            }
         } catch (error) {
             const detail = await resolveErrorDetail(error);
             runInAction(() => {
