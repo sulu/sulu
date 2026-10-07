@@ -383,7 +383,7 @@ function processConfig(config: Object) {
     smartContentConfigStore.setConfig(config.smartContent);
     CollaborationStore.enabled = config.collaborationEnabled;
     CollaborationStore.interval = config.collaborationInterval;
-    CKEditor5Container.textPartLanguages = config.textPartLanguages;
+    CKEditor5Container.contentLocales = config.textEditorContentLocales;
 }
 
 function startAdmin() {

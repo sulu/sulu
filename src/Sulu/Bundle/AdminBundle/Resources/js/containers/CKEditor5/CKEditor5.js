@@ -55,7 +55,7 @@ export default class CKEditor5 extends React.Component<Props> {
     containerRef: ?ElementRef<'div'>;
     editorInstance: any;
 
-    static textPartLanguages: Array<string> = [];
+    static contentLocales: Array<string> = [];
 
     static defaultProps = {
         disabled: false,
@@ -184,7 +184,7 @@ export default class CKEditor5 extends React.Component<Props> {
                 ].filter((entry) => entry !== undefined),
             },
             language: {
-                textPartLanguage: CKEditor5.textPartLanguages.map((languageCode) => ({
+                textPartLanguage: CKEditor5.contentLocales.map((languageCode) => ({
                     languageCode,
                     title: languageNames.of(languageCode) || languageCode,
                 })),

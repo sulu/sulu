@@ -168,11 +168,11 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter($this->getAlias() . '.collaboration_interval', $config['collaboration']['interval']);
         $container->setParameter($this->getAlias() . '.collaboration_threshold', $config['collaboration']['threshold']);
 
-        /** @var array{text_part_languages: list<string>} $ckeditorConfig */
-        $ckeditorConfig = $config['ckeditor'];
+        /** @var array{content_locales: list<string>} $textEditor */
+        $textEditor = $config['text_editor'];
         $container->setParameter(
-            $this->getAlias() . '.ckeditor_text_part_languages',
-            $ckeditorConfig['text_part_languages']
+            $this->getAlias() . '.text_editor_content_locales',
+            $textEditor['content_locales']
         );
 
         $container->setParameter($this->getAlias() . '.forms.directories', $config['forms']['directories'] ?? []);
