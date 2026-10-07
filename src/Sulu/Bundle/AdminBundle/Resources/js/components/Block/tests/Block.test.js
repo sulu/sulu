@@ -48,6 +48,28 @@ test('Render a selected block', () => {
     expect(container).toMatchSnapshot();
 });
 
+test('Render a block with errors', () => {
+    render(
+        <Block errorCount={3} expanded={false} handle={<span>Test</span>} onCollapse={jest.fn()} onExpand={jest.fn()}>
+            Some block content
+        </Block>
+    );
+
+    expect(screen.getByRole('switch')).toHaveClass('error');
+    expect(screen.getByText('3')).toHaveClass('errorBadge');
+});
+
+test('Render no error badge for a block without errors', () => {
+    render(
+        <Block errorCount={0} expanded={true}>
+            Some block content
+        </Block>
+    );
+
+    expect(screen.getByRole('switch')).not.toHaveClass('error');
+    expect(screen.queryByText('0')).not.toBeInTheDocument();
+});
+
 test('Render a collapsed block', () => {
     const {container} = render(
         <Block expanded={false} icons={['su-eye', 'su-people']} onCollapse={jest.fn()} onExpand={jest.fn()}>

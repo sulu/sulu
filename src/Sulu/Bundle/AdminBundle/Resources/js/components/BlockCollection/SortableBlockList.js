@@ -14,6 +14,7 @@ import type {Node} from 'react';
 type Props<T: string, U: {type: T}> = {|
     blockActions: Array<BlockActionConfig>,
     disabled: boolean,
+    errorCounts?: Array<number>,
     expandedBlocks: Array<boolean>,
     generatedBlockIds: Array<number>,
     icons?: Array<Array<string>>,
@@ -125,6 +126,7 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
     render() {
         const {
             disabled,
+            errorCounts,
             expandedBlocks,
             generatedBlockIds,
             icons,
@@ -156,6 +158,7 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
                         <SortableBlock
                             actions={this.blockActions}
                             activeType={block.type}
+                            errorCount={errorCounts && errorCounts[index]}
                             expanded={!disabled && expandedBlocks[index]}
                             icons={icons && icons[index]}
                             index={index}
