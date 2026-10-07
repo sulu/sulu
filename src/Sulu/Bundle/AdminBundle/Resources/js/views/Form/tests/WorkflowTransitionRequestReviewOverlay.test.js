@@ -219,7 +219,7 @@ test('disables both decisions once the request is closed', () => {
     expect(screen.getByRole('button', {name: 'sulu_content.approve'})).toBeDisabled();
 });
 
-test('approves with a comment', async() => {
+test('approves with a comment and closes the overlay afterwards', async() => {
     const user = userEvent.setup();
     const onApprove = jest.fn().mockResolvedValue();
     const onClose = jest.fn();
@@ -239,9 +239,7 @@ test('approves with a comment', async() => {
     await user.click(screen.getByRole('button', {name: 'sulu_admin.send'}));
 
     expect(onApprove).toHaveBeenCalledWith('Looks good');
-    // The reviewer stays in the overlay and reads the refreshed request instead of reopening it.
-    expect(onClose).not.toHaveBeenCalled();
-    expect(document.querySelectorAll('.row')).toHaveLength(5);
+    expect(onClose).toHaveBeenCalledTimes(1);
 });
 
 test('approves without a comment, because the comment is optional', async() => {
@@ -438,6 +436,7 @@ test('shows an error snackbar when approving fails and clears it on a successful
     await user.click(screen.getByRole('button', {name: 'sulu_admin.send'}));
 
     expect(onApprove).toHaveBeenCalledTimes(2);
+    expect(onClose).toHaveBeenCalledTimes(1);
     // the Snackbar keeps rendering its last message during its own fade-out transition, so the
     // visible flag - not the text - is what proves the error was cleared on the successful retry
     expect(document.querySelector('.snackbar.visible')).toBeNull();
@@ -447,12 +446,15 @@ test('prefers the message the server sent over the generic failure message', asy
     const user = userEvent.setup();
     const onApprove = jest.fn(() => Promise.reject({json: () => Promise.resolve({detail: 'You already decided'})}));
 
-    renderOverlay({onApprove});
+    const onClose = jest.fn();
+
+    renderOverlay({onApprove, onClose});
 
     await user.click(screen.getByRole('button', {name: 'sulu_content.approve'}));
     await user.click(screen.getByRole('button', {name: 'sulu_admin.send'}));
 
     expect(document.querySelector('.snackbar')?.textContent).toContain('You already decided');
+    expect(onClose).not.toHaveBeenCalled();
 });
 
 test('renders a no-reviewers message when nothing is expected and nobody decided', () => {
