@@ -13,6 +13,18 @@ const mockReact = require('react');
 
 jest.mock('sulu-admin-bundle/utils/Translator');
 
+jest.mock('../../MediaEditOverlay', () => jest.fn((props) => {
+    if (!props.open) {
+        return null;
+    }
+
+    return mockReact.createElement(
+        'button',
+        {onClick: props.onConfirm, type: 'button'},
+        `save media ${props.id} in ${props.locale.get()}`
+    );
+}));
+
 jest.mock('../../SingleMediaSelectionOverlay', () => jest.fn((props) => {
     mockSingleMediaSelectionOverlayProps = props;
 
@@ -432,4 +444,35 @@ test('Set loading prop of SingleItemSelection component if SingleSelectionStore 
     expect(screen.getByText('sulu_media.select_media_singular')).toBeInTheDocument();
     getLatestSingleSelectionStore().loading = true;
     expect(screen.getByText('…')).toBeInTheDocument();
+});
+
+test('Should open the edit overlay if editable and reload the item on confirm', async() => {
+    const user = userEvent.setup();
+
+    // $FlowFixMe
+    mockSingleSelectionStoreOnce(function() {
+        this.item = {id: 6, title: 'test media', mimeType: 'image/jpeg'};
+        this.loadItem = jest.fn();
+    });
+
+    const itemClickSpy = jest.fn();
+
+    render(
+        <SingleMediaSelection
+            editable={true}
+            locale={observable.box('de')}
+            onChange={jest.fn()}
+            onItemClick={itemClickSpy}
+            value={{displayOption: undefined, id: 6}}
+        />
+    );
+
+    expect(screen.queryByText('save media 6 in de')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', {name: /test media/}));
+    expect(itemClickSpy).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole('button', {name: 'save media 6 in de'}));
+    expect(getLatestSingleSelectionStore().loadItem).toHaveBeenCalledWith(6);
+    expect(screen.queryByText('save media 6 in de')).not.toBeInTheDocument();
 });

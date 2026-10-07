@@ -7,6 +7,7 @@ import {translate} from 'sulu-admin-bundle/utils/Translator';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 import {getIconForDisplayOption, getTranslationForDisplayOption} from '../../utils/MediaSelectionHelper';
 import SingleMediaSelectionOverlay from '../SingleMediaSelectionOverlay';
+import MediaEditOverlay from '../MediaEditOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
 import singleMediaSelectionStyle from './singleMediaSelection.scss';
 import type {DisplayOption, Media} from '../../types';
@@ -17,6 +18,7 @@ type Props = {|
     className?: string,
     disabled: boolean,
     displayOptions: Array<DisplayOption>,
+    editable: boolean,
     locale: IObservableValue<string>,
     onChange: (selectedId: Value, media: ?Media) => void,
     onItemClick?: (itemId: ?number, value: ?Media) => void,
@@ -33,6 +35,7 @@ class SingleMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         displayOptions: [],
+        editable: false,
         types: [],
         valid: true,
         value: {displayOption: undefined, id: undefined},
@@ -42,6 +45,7 @@ class SingleMediaSelection extends React.Component<Props> {
     changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
+    @observable editOverlayOpen: boolean = false;
 
     constructor(props: Props) {
         super(props);
@@ -83,6 +87,14 @@ class SingleMediaSelection extends React.Component<Props> {
         this.overlayOpen = false;
     }
 
+    @action openEditOverlay() {
+        this.editOverlayOpen = true;
+    }
+
+    @action closeEditOverlay() {
+        this.editOverlayOpen = false;
+    }
+
     handleRemove = () => {
         this.singleMediaSelectionStore.clear();
     };
@@ -106,8 +118,27 @@ class SingleMediaSelection extends React.Component<Props> {
         onChange({...value, displayOption});
     };
 
+    handleEditOverlayClose = () => {
+        this.closeEditOverlay();
+    };
+
+    handleEditOverlayConfirm = () => {
+        const {item} = this.singleMediaSelectionStore;
+
+        this.closeEditOverlay();
+
+        if (item) {
+            this.singleMediaSelectionStore.loadItem(item.id);
+        }
+    };
+
     handleItemClick = (itemId: ?number, item: ?Media) => {
-        const {onItemClick} = this.props;
+        const {editable, onItemClick} = this.props;
+
+        if (editable && item) {
+            this.openEditOverlay();
+            return;
+        }
 
         if (!onItemClick) {
             return;
@@ -117,7 +148,7 @@ class SingleMediaSelection extends React.Component<Props> {
     };
 
     render() {
-        const {className, disabled, displayOptions, locale, types, valid, value} = this.props;
+        const {className, disabled, displayOptions, editable, locale, types, valid, value} = this.props;
         const {loading, item: media} = this.singleMediaSelectionStore;
 
         const rightButton = displayOptions.length > 0
@@ -177,6 +208,15 @@ class SingleMediaSelection extends React.Component<Props> {
                     open={this.overlayOpen}
                     types={types}
                 />
+                {editable &&
+                    <MediaEditOverlay
+                        id={media && media.id}
+                        locale={locale}
+                        onClose={this.handleEditOverlayClose}
+                        onConfirm={this.handleEditOverlayConfirm}
+                        open={this.editOverlayOpen}
+                    />
+                }
             </Fragment>
         );
     }
