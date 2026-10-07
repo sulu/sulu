@@ -77,7 +77,7 @@
         icon.className = 'icon';
         icon.setAttribute('part', 'icon');
         button.appendChild(icon);
-                root.appendChild(button);
+        root.appendChild(button);
 
         return {host: host, outline: outline, button: button};
     }
