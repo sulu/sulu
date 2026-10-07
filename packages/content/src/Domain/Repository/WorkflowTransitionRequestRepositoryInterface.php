@@ -81,10 +81,12 @@ interface WorkflowTransitionRequestRepositoryInterface
      * Claims a pending decision row and writes its verdict in one statement; the first writer wins.
      *
      * @param list<WorkflowTransitionRequestDecisionMessage> $messages
+     *
+     * @return bool whether this call settled the row, false when another writer had already
      */
     public function settleDecision(
         WorkflowTransitionRequestDecision $decision,
         WorkflowTransitionRequestDecisionStatusEnum $status,
         array $messages,
-    ): void;
+    ): bool;
 }

@@ -21,12 +21,14 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\Message\ApproveWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\MessageHandler\ApproveWorkflowTransitionRequestMessageHandler;
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Exception\MissingAuthenticatedUserException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[CoversClass(ApproveWorkflowTransitionRequestMessageHandler::class)]
 class ApproveWorkflowTransitionRequestMessageHandlerTest extends TestCase
@@ -47,9 +49,13 @@ class ApproveWorkflowTransitionRequestMessageHandlerTest extends TestCase
         $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanReview(Argument::cetera())->shouldNotBeCalled();
 
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
+
         $handler = new ApproveWorkflowTransitionRequestMessageHandler(
             $repository->reveal(),
             $authorizer->reveal(),
+            $eventDispatcher->reveal(),
             $tokenStorage->reveal(),
         );
 
@@ -68,9 +74,13 @@ class ApproveWorkflowTransitionRequestMessageHandlerTest extends TestCase
         $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanReview('pages', 'res-1', 'en')->willThrow(new AccessDeniedException());
 
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
+
         $handler = new ApproveWorkflowTransitionRequestMessageHandler(
             $repository->reveal(),
             $authorizer->reveal(),
+            $eventDispatcher->reveal(),
             $this->createTokenStorage($this->createUser(2)),
         );
 
@@ -94,9 +104,18 @@ class ApproveWorkflowTransitionRequestMessageHandlerTest extends TestCase
         $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanReview('pages', 'res-1', 'en')->shouldBeCalled();
 
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::that(
+            static fn (object $event) => $event instanceof WorkflowTransitionRequestActionEvent
+                && $event->getWorkflowTransitionRequest() === $request
+                && WorkflowTransitionRequestActionEvent::APPROVED === $event->getAction()
+                && ['comment' => 'Looks good'] === $event->getContext(),
+        ))->shouldBeCalledOnce()->willReturnArgument(0);
+
         $handler = new ApproveWorkflowTransitionRequestMessageHandler(
             $repository->reveal(),
             $authorizer->reveal(),
+            $eventDispatcher->reveal(),
             $this->createTokenStorage($reviewer),
         );
 
@@ -124,9 +143,18 @@ class ApproveWorkflowTransitionRequestMessageHandlerTest extends TestCase
         $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
         $authorizer->assertCanReview(Argument::cetera())->shouldBeCalled();
 
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::that(
+            static fn (object $event) => $event instanceof WorkflowTransitionRequestActionEvent
+                && $event->getWorkflowTransitionRequest() === $request
+                && WorkflowTransitionRequestActionEvent::APPROVED === $event->getAction()
+                && ['comment' => null] === $event->getContext(),
+        ))->shouldBeCalledOnce()->willReturnArgument(0);
+
         $handler = new ApproveWorkflowTransitionRequestMessageHandler(
             $repository->reveal(),
             $authorizer->reveal(),
+            $eventDispatcher->reveal(),
             $this->createTokenStorage($reviewer),
         );
 

@@ -46,6 +46,7 @@ use Sulu\Page\Infrastructure\Doctrine\Hydrator\SafeTreeObjectHydrator;
 use Sulu\Page\Infrastructure\Doctrine\Repository\NavigationRepository;
 use Sulu\Page\Infrastructure\Doctrine\Repository\PageRepository;
 use Sulu\Page\Infrastructure\JMS\Serializer\WebspaceSerializeEventSubscriber;
+use Sulu\Page\Infrastructure\Sulu\Activity\PageWorkflowTransitionRequestSubscriber;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\BlockSettingsFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceRouteModeTypedFormMetadataVisitor;
 use Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor\WebspaceTypedFormMetadataVisitor;
@@ -710,6 +711,16 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_route.route_repository'),
                 new Reference('sulu_content.content_aggregator'),
                 new Reference('sulu_route.route_generator'),
+            ])
+            ->tag('kernel.event_subscriber');
+
+        // Activity
+        $services->set('sulu_page.page_workflow_transition_request_subscriber')
+            ->class(PageWorkflowTransitionRequestSubscriber::class)
+            ->args([
+                new Reference('sulu_page.page_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_activity.domain_event_dispatcher'),
             ])
             ->tag('kernel.event_subscriber');
     }

@@ -295,4 +295,19 @@ class WorkflowTransitionRequestTest extends TestCase
 
         return $request;
     }
+
+    public function testCountValidatorDecisionsIgnoresPendingAndUserDecisions(): void
+    {
+        $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
+        foreach (['approved_one', 'approved_two', 'rejected_one', 'still_pending'] as $validatorKey) {
+            $request->addValidatorDecision($validatorKey);
+        }
+        $request->getValidatorDecision('approved_one')?->settle(WorkflowTransitionRequestDecisionStatusEnum::APPROVED, [], new \DateTimeImmutable());
+        $request->getValidatorDecision('approved_two')?->settle(WorkflowTransitionRequestDecisionStatusEnum::APPROVED, [], new \DateTimeImmutable());
+        $request->getValidatorDecision('rejected_one')?->settle(WorkflowTransitionRequestDecisionStatusEnum::REJECTED, [], new \DateTimeImmutable());
+        $request->addApproval($this->createUser());
+
+        $this->assertSame(2, $request->countValidatorApprovals());
+        $this->assertSame(1, $request->countValidatorRejections());
+    }
 }

@@ -15,12 +15,14 @@ namespace Sulu\Content\Application\MessageHandler;
 
 use Sulu\Content\Application\Message\RetryWorkflowTransitionRequestValidationMessage;
 use Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage;
+use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @internal
@@ -30,6 +32,7 @@ final class RetryWorkflowTransitionRequestValidationMessageHandler
     public function __construct(
         private readonly WorkflowTransitionRequestRepositoryInterface $workflowTransitionRequestRepository,
         private readonly MessageBusInterface $messageBus,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -52,6 +55,12 @@ final class RetryWorkflowTransitionRequestValidationMessageHandler
         $this->messageBus->dispatch(new Envelope(
             new ValidateWorkflowTransitionRequestMessage($workflowTransitionRequest->getId()),
             [new DispatchAfterCurrentBusStamp()],
+        ));
+
+        $this->eventDispatcher->dispatch(new WorkflowTransitionRequestActionEvent(
+            $workflowTransitionRequest,
+            WorkflowTransitionRequestActionEvent::VALIDATION_RETRIED,
+            ['validatorKey' => $message->getValidatorKey()],
         ));
 
         return $workflowTransitionRequest;

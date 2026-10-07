@@ -18,9 +18,11 @@ use Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowRegistryInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationContext;
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
+use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Runs every validator with a pending row and records its verdict. On a worker a crash escapes once
@@ -35,6 +37,7 @@ final class ValidateWorkflowTransitionRequestMessageHandler
         private readonly RequestWorkflowRegistryInterface $requestWorkflowRegistry,
         private readonly LoggerInterface $logger,
         private readonly WorkerState $workerState,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -70,6 +73,7 @@ final class ValidateWorkflowTransitionRequestMessageHandler
 
         $entriesByKey = $this->requestWorkflowRegistry->get($workflowName)->validators;
         $firstThrowable = null;
+        $settled = 0;
 
         foreach ($request->getDecisions() as $decision) {
             $validatorKey = $decision->getValidatorKey();
@@ -110,13 +114,15 @@ final class ValidateWorkflowTransitionRequestMessageHandler
                 }
             }
 
-            $this->workflowTransitionRequestRepository->settleDecision(
-                $decision,
-                $result->approved
-                    ? WorkflowTransitionRequestDecisionStatusEnum::APPROVED
-                    : WorkflowTransitionRequestDecisionStatusEnum::REJECTED,
-                $result->messages,
-            );
+            $status = $result->approved
+                ? WorkflowTransitionRequestDecisionStatusEnum::APPROVED
+                : WorkflowTransitionRequestDecisionStatusEnum::REJECTED;
+
+            if (!$this->workflowTransitionRequestRepository->settleDecision($decision, $status, $result->messages)) {
+                continue;
+            }
+
+            ++$settled;
         }
 
         // Hands the message back to the retry strategy. A bus running this handler inside
@@ -124,6 +130,19 @@ final class ValidateWorkflowTransitionRequestMessageHandler
         // decisions settled in this pass are lost and every validator runs again on the retry.
         if (null !== $firstThrowable) {
             throw $firstThrowable;
+        }
+
+        // The counts cover every check, not only this run's, so a retry of one check and a run that
+        // follows a crashed one both report the state the request is in.
+        if (0 < $settled) {
+            $this->eventDispatcher->dispatch(new WorkflowTransitionRequestActionEvent(
+                $request,
+                WorkflowTransitionRequestActionEvent::VALIDATED,
+                [
+                    'approved' => $request->countValidatorApprovals(),
+                    'rejected' => $request->countValidatorRejections(),
+                ],
+            ));
         }
     }
 }
