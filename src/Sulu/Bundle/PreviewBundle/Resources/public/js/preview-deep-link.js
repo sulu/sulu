@@ -7,8 +7,6 @@
 (function () {
     'use strict';
 
-    // The overlay only exists in the docked preview, where the admin is window.parent and its form sits next to the
-    // preview. A preview in its own window (window.opener) has no form to navigate to.
     var adminWindow = window.parent !== window ? window.parent : null;
     if (!adminWindow) {
         return;
@@ -18,7 +16,6 @@
     var MESSAGE_NAVIGATE = 'sulu.preview.navigate';
     var HIDE_DELAY = 200;
 
-    // The pencil of the design, used as a mask so the icon takes the button color.
     var ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="218 60 834 834">' +
         '<path d="M780 155L852 83Q906 37 960 83L1033 157Q1068 200 1035 240L950 325z"/>' +
         '<path d="M737 200L906 370L477 801L307 631z"/>' +
@@ -44,8 +41,6 @@
         var root = host.attachShadow({mode: 'closed'});
 
         var style = document.createElement('style');
-        // Projects restyle the overlay with the --sulu-preview-deep-link-* custom properties (they inherit into
-        // the shadow tree) or with ::part(outline) and ::part(button) on the host's sulu-preview-deep-link class.
         style.textContent =
             ':host { all: initial; }' +
             '.outline { --border-color: var(--sulu-preview-deep-link-border-color, #23a3ec);' +
@@ -90,8 +85,6 @@
     function positionAt(overlay, element) {
         var rect = element.getBoundingClientRect();
 
-        // The outline surrounds the element at a padding's distance, but stays inside the viewport so a full width
-        // element does not lose its border.
         var padding = parseFloat(getComputedStyle(overlay.outline).paddingTop) || 0;
         var top = Math.max(rect.top - padding, 0);
         var left = Math.max(rect.left - padding, 0);
@@ -104,8 +97,6 @@
         overlay.outline.style.height = bottom - top + 'px';
         overlay.outline.style.display = 'block';
 
-        // The button sits above the top left corner, a gap away so it does not touch the outline. Without room
-        // above the element it moves inside, the same gap away from the corner.
         overlay.button.style.display = 'flex';
         var buttonHeight = overlay.button.offsetHeight;
         var gap = parseFloat(getComputedStyle(overlay.button).marginBottom) || 0;
@@ -119,8 +110,6 @@
         overlay.button.style.display = 'none';
     }
 
-    // The box around the outline and the button counts as the overlay: a straight path from the outline to the button
-    // stays inside it, so the pointer is on its way to the button while it is there, whatever element it is over.
     function isPointerNearOverlay(state) {
         var pointer = state.pointer;
         if (!pointer || !state.activeAnchor) {
@@ -139,9 +128,8 @@
         positionAt(state.overlay, anchor);
     }
 
-    // The button sits outside its element, often over a neighbour or an ancestor, so the pointer crosses other
-    // elements on its way there. Apart from entering a child, the overlay only follows the pointer to the element
-    // under it once the pointer has left the overlay's area for a moment.
+    // The button often sits over a neighbour, so apart from entering a child the overlay only follows the pointer
+    // once it has left the overlay's area.
     function settle(state) {
         clearTimeout(state.settleTimer);
         state.settleTimer = setTimeout(function () {
@@ -209,7 +197,7 @@
                 return;
             }
 
-            // Without a related target the pointer left the page, so no mouse event reports where it went.
+            // No related target: the pointer left the page and no event reports where it went.
             if (!event.relatedTarget) {
                 state.pointer = null;
                 settle(state);

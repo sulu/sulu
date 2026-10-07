@@ -63,8 +63,7 @@ function findBlockElement(id: string): ?HTMLElement {
     return element instanceof HTMLElement ? element : undefined;
 }
 
-// Shows a border around the block, so the user sees which block the click opened. It stays solid while the smooth
-// scroll brings the block into view and fades afterwards.
+// Solid while the smooth scroll runs, then it fades.
 function highlightBlockElement(element: HTMLElement) {
     if (typeof element.animate !== 'function') {
         return;
