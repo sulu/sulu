@@ -24,7 +24,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class MediaLanguageControllerTest extends SuluTestCase
+class ContentLocaleControllerTest extends SuluTestCase
 {
     private KernelBrowser $client;
 
@@ -47,43 +47,43 @@ class MediaLanguageControllerTest extends SuluTestCase
         $this->entityManager->flush();
     }
 
-    public function testPutStoresTheMediaLanguages(): void
+    public function testPutStoresTheContentLocales(): void
     {
         $media = $this->createDocument('datasheet', ['de']);
 
-        $this->putMediaLanguages($media, ['de', 'fr']);
-        self::assertSame(['de', 'fr'], $this->getResponseData()['mediaLanguages']);
+        $this->putContentLocales($media, ['de', 'fr']);
+        self::assertSame(['de', 'fr'], $this->getResponseData()['contentLocales']);
 
-        $this->putMediaLanguages($media, ['fr']);
-        self::assertSame(['fr'], $this->getResponseData()['mediaLanguages']);
+        $this->putContentLocales($media, ['fr']);
+        self::assertSame(['fr'], $this->getResponseData()['contentLocales']);
 
         $this->client->jsonRequest('GET', '/api/media/' . $media->getId() . '?locale=en');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        self::assertSame(['fr'], $this->getResponseData()['mediaLanguages']);
+        self::assertSame(['fr'], $this->getResponseData()['contentLocales']);
     }
 
-    public function testNewVersionAppliesTheSentMediaLanguages(): void
+    public function testNewVersionAppliesTheSentContentLocales(): void
     {
         $media = $this->createDocument('datasheet', ['de', 'en']);
 
         $this->client->request(
             'POST',
             '/api/media/' . $media->getId() . '?locale=en&action=new-version',
-            ['mediaLanguages' => ['en']],
+            ['contentLocales' => ['en']],
             ['fileVersion' => new UploadedFile(__DIR__ . '/../../Fixtures/files/small.txt', 'small.txt', 'text/plain')]
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        self::assertSame(['en'], $this->getResponseData()['mediaLanguages']);
+        self::assertSame(['en'], $this->getResponseData()['contentLocales']);
 
         $this->entityManager->clear();
         $file = $this->entityManager->find(Media::class, $media->getId())?->getFiles()[0];
         self::assertInstanceOf(File::class, $file);
-        self::assertSame(['en'], $file->getFileVersion(2)?->getMediaLanguages(), 'The removed language must not be carried over to the new version.');
-        self::assertSame(['de', 'en'], $file->getFileVersion(1)?->getMediaLanguages());
+        self::assertSame(['en'], $file->getFileVersion(2)?->getContentLocales(), 'The removed locale must not be carried over to the new version.');
+        self::assertSame(['de', 'en'], $file->getFileVersion(1)?->getContentLocales());
     }
 
-    public function testCgetFiltersByMediaLanguage(): void
+    public function testCgetFiltersByContentLocale(): void
     {
         $this->createDocument('german', ['de']);
         $this->createDocument('french', ['fr']);
@@ -96,9 +96,9 @@ class MediaLanguageControllerTest extends SuluTestCase
     }
 
     /**
-     * @param string[] $mediaLanguages
+     * @param string[] $contentLocales
      */
-    private function createDocument(string $name, array $mediaLanguages): MediaInterface
+    private function createDocument(string $name, array $contentLocales): MediaInterface
     {
         $media = new Media();
         $media->setType(MediaInterface::TYPE_DOCUMENT);
@@ -115,7 +115,7 @@ class MediaLanguageControllerTest extends SuluTestCase
         $fileVersion->setMimeType('text/plain');
         $fileVersion->setSize(10);
         $fileVersion->setStorageOptions(['segment' => '1', 'fileName' => $name . '.txt']);
-        $fileVersion->setMediaLanguages($mediaLanguages);
+        $fileVersion->setContentLocales($contentLocales);
         $fileVersion->setFile($file);
         $file->addFileVersion($fileVersion);
 
@@ -133,14 +133,14 @@ class MediaLanguageControllerTest extends SuluTestCase
     }
 
     /**
-     * @param string[] $mediaLanguages
+     * @param string[] $contentLocales
      */
-    private function putMediaLanguages(MediaInterface $media, array $mediaLanguages): void
+    private function putContentLocales(MediaInterface $media, array $contentLocales): void
     {
         $this->client->jsonRequest(
             'PUT',
             '/api/media/' . $media->getId() . '?locale=en',
-            ['collection' => $this->collection->getId(), 'title' => 'datasheet', 'mediaLanguages' => $mediaLanguages]
+            ['collection' => $this->collection->getId(), 'title' => 'datasheet', 'contentLocales' => $contentLocales]
         );
         $this->assertHttpStatusCode(200, $this->client->getResponse());
     }
@@ -150,7 +150,7 @@ class MediaLanguageControllerTest extends SuluTestCase
      */
     private function getFilteredNames(string $filter): array
     {
-        $this->client->jsonRequest('GET', '/api/media?locale=en&fields=id,name&filter[mediaLanguage]=' . $filter);
+        $this->client->jsonRequest('GET', '/api/media?locale=en&fields=id,name&filter[contentLocale]=' . $filter);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         /** @var array{_embedded: array{media: array<array{name: string}>}} $data */

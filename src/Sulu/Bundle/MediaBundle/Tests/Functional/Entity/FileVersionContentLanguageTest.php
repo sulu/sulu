@@ -17,7 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class FileVersionMediaLanguageTest extends SuluTestCase
+class FileVersionContentLanguageTest extends SuluTestCase
 {
     private EntityManagerInterface $entityManager;
 
@@ -35,7 +35,7 @@ class FileVersionMediaLanguageTest extends SuluTestCase
         $this->entityManager->clear();
         $fileVersion = $this->entityManager->find(FileVersion::class, $id);
         self::assertInstanceOf(FileVersion::class, $fileVersion);
-        self::assertSame(['de', 'en'], $fileVersion->getMediaLanguages());
+        self::assertSame(['de', 'en'], $fileVersion->getContentLocales());
     }
 
     public function testUpdatingLanguagesRemovesTheOldOnes(): void
@@ -45,17 +45,17 @@ class FileVersionMediaLanguageTest extends SuluTestCase
         $this->entityManager->clear();
         $fileVersion = $this->entityManager->find(FileVersion::class, $id);
         self::assertInstanceOf(FileVersion::class, $fileVersion);
-        $fileVersion->setMediaLanguages(['fr']);
+        $fileVersion->setContentLocales(['fr']);
         $this->entityManager->flush();
 
         $this->entityManager->clear();
         $reloaded = $this->entityManager->find(FileVersion::class, $id);
         self::assertInstanceOf(FileVersion::class, $reloaded);
-        self::assertSame(['fr'], $reloaded->getMediaLanguages());
+        self::assertSame(['fr'], $reloaded->getContentLocales());
 
         // orphanRemoval must have deleted the two previous rows, leaving exactly one
         $count = $this->entityManager->getConnection()
-            ->fetchOne('SELECT COUNT(*) FROM me_file_version_media_languages');
+            ->fetchOne('SELECT COUNT(*) FROM me_file_version_content_languages');
         self::assertEquals(1, $count);
     }
 
@@ -66,13 +66,13 @@ class FileVersionMediaLanguageTest extends SuluTestCase
         $this->entityManager->clear();
         $fileVersion = $this->entityManager->find(FileVersion::class, $id);
         self::assertInstanceOf(FileVersion::class, $fileVersion);
-        $fileVersion->setMediaLanguages([]);
+        $fileVersion->setContentLocales([]);
         $this->entityManager->flush();
 
         $this->entityManager->clear();
         $reloaded = $this->entityManager->find(FileVersion::class, $id);
         self::assertInstanceOf(FileVersion::class, $reloaded);
-        self::assertSame([], $reloaded->getMediaLanguages());
+        self::assertSame([], $reloaded->getContentLocales());
     }
 
     public function testCloneCarriesTheLanguagesForward(): void
@@ -92,46 +92,46 @@ class FileVersionMediaLanguageTest extends SuluTestCase
         $this->entityManager->clear();
         $reloadedClone = $this->entityManager->find(FileVersion::class, $clone->getId());
         self::assertInstanceOf(FileVersion::class, $reloadedClone);
-        self::assertSame(['de', 'en'], $reloadedClone->getMediaLanguages());
+        self::assertSame(['de', 'en'], $reloadedClone->getContentLocales());
 
         // the clone owns its own rows: two originals plus two clones
         $count = $this->entityManager->getConnection()
-            ->fetchOne('SELECT COUNT(*) FROM me_file_version_media_languages');
+            ->fetchOne('SELECT COUNT(*) FROM me_file_version_content_languages');
         self::assertEquals(4, $count);
     }
 
     public function testResavingAnOverlappingLanguageSetKeepsUnchangedRows(): void
     {
         $id = $this->persistFileVersion(['en']);
-        $enRowId = $this->fetchMediaLanguageRowId($id, 'en');
+        $enRowId = $this->fetchContentLocaleRowId($id, 'en');
 
         $this->entityManager->clear();
         $fileVersion = $this->entityManager->find(FileVersion::class, $id);
         self::assertInstanceOf(FileVersion::class, $fileVersion);
         // 'en' stays and 'fr' is added: the kept row must not be deleted and re-inserted
-        $fileVersion->setMediaLanguages(['en', 'fr']);
+        $fileVersion->setContentLocales(['en', 'fr']);
         $this->entityManager->flush();
 
         $this->entityManager->clear();
         $reloaded = $this->entityManager->find(FileVersion::class, $id);
         self::assertInstanceOf(FileVersion::class, $reloaded);
-        self::assertSame(['en', 'fr'], $reloaded->getMediaLanguages());
-        self::assertSame($enRowId, $this->fetchMediaLanguageRowId($id, 'en'));
-        $frRowId = $this->fetchMediaLanguageRowId($id, 'fr');
+        self::assertSame(['en', 'fr'], $reloaded->getContentLocales());
+        self::assertSame($enRowId, $this->fetchContentLocaleRowId($id, 'en'));
+        $frRowId = $this->fetchContentLocaleRowId($id, 'fr');
 
         // re-saving the identical set is a no-op
-        $reloaded->setMediaLanguages(['en', 'fr']);
+        $reloaded->setContentLocales(['en', 'fr']);
         $this->entityManager->flush();
 
-        self::assertSame($enRowId, $this->fetchMediaLanguageRowId($id, 'en'));
-        self::assertSame($frRowId, $this->fetchMediaLanguageRowId($id, 'fr'));
+        self::assertSame($enRowId, $this->fetchContentLocaleRowId($id, 'en'));
+        self::assertSame($frRowId, $this->fetchContentLocaleRowId($id, 'fr'));
     }
 
-    private function fetchMediaLanguageRowId(int $fileVersionId, string $language): int
+    private function fetchContentLocaleRowId(int $fileVersionId, string $locale): int
     {
         $rowId = $this->entityManager->getConnection()->fetchOne(
-            'SELECT id FROM me_file_version_media_languages WHERE idFileVersions = ? AND language = ?',
-            [$fileVersionId, $language],
+            'SELECT id FROM me_file_version_content_languages WHERE idFileVersions = ? AND locale = ?',
+            [$fileVersionId, $locale],
         );
         self::assertIsNumeric($rowId);
 
@@ -139,9 +139,9 @@ class FileVersionMediaLanguageTest extends SuluTestCase
     }
 
     /**
-     * @param string[] $languages
+     * @param string[] $locales
      */
-    private function persistFileVersion(array $languages): int
+    private function persistFileVersion(array $locales): int
     {
         $fileVersion = new FileVersion();
         $fileVersion->setName('document.pdf');
@@ -150,7 +150,7 @@ class FileVersionMediaLanguageTest extends SuluTestCase
         $fileVersion->setMimeType('application/pdf');
         $fileVersion->setCreated(new \DateTimeImmutable('2026-09-23'));
         $fileVersion->setChanged(new \DateTimeImmutable('2026-09-23'));
-        $fileVersion->setMediaLanguages($languages);
+        $fileVersion->setContentLocales($locales);
 
         $this->entityManager->persist($fileVersion);
         $this->entityManager->flush();

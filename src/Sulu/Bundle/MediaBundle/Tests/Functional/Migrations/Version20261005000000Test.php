@@ -17,13 +17,13 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Tools\SchemaTool;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\FileVersionMediaLanguage;
-use Sulu\Bundle\MediaBundle\Migrations\Version20260923000000;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
+use Sulu\Bundle\MediaBundle\Migrations\Version20261005000000;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class Version20260923000000Test extends SuluTestCase
+class Version20261005000000Test extends SuluTestCase
 {
-    private const TABLE = 'me_file_version_media_languages';
+    private const TABLE = 'me_file_version_content_languages';
 
     private Connection $connection;
 
@@ -42,28 +42,27 @@ class Version20260923000000Test extends SuluTestCase
         parent::tearDown();
     }
 
-    public function testDownDropsTableAndUpCreatesItBack(): void
+    public function testUpCreatesTheMissingTable(): void
     {
-        self::assertTrue($this->hasTable(self::TABLE));
-
-        $this->runMigration('down');
+        $this->dropTable();
         self::assertFalse($this->hasTable(self::TABLE));
 
         $this->runMigration('up');
+
         self::assertTrue($this->hasTable(self::TABLE));
-        self::assertTrue($this->hasColumn(self::TABLE, 'language'));
+        self::assertTrue($this->hasColumn(self::TABLE, 'locale'));
         self::assertTrue($this->hasColumn(self::TABLE, 'idFileVersions'));
     }
 
     public function testUpMatchesTheOrmMapping(): void
     {
-        $this->runMigration('down');
+        $this->dropTable();
         $this->runMigration('up');
 
         $entityManager = self::getEntityManager();
         $ormSchema = (new SchemaTool($entityManager))->getSchemaFromMetadata([
             $entityManager->getClassMetadata(FileVersion::class),
-            $entityManager->getClassMetadata(FileVersionMediaLanguage::class),
+            $entityManager->getClassMetadata(FileVersionContentLanguage::class),
         ]);
         $schemaManager = $this->connection->createSchemaManager();
         $tableDiff = $schemaManager->createComparator()->compareTables(
@@ -78,12 +77,29 @@ class Version20260923000000Test extends SuluTestCase
         );
     }
 
-    public function testUpIsIdempotent(): void
+    public function testUpKeepsAnExistingTableWithItsRows(): void
     {
-        $this->runMigration('up');
+        $this->connection->insert(self::TABLE, ['locale' => 'de']);
+
         $this->runMigration('up');
 
+        self::assertSame(
+            ['de'],
+            $this->connection->fetchFirstColumn('SELECT locale FROM ' . self::TABLE),
+            'A table that exists since 2.x must keep its rows.'
+        );
+    }
+
+    public function testDownKeepsTheTable(): void
+    {
+        $this->runMigration('down');
+
         self::assertTrue($this->hasTable(self::TABLE));
+    }
+
+    private function dropTable(): void
+    {
+        $this->connection->createSchemaManager()->dropTable(self::TABLE);
     }
 
     /**
@@ -95,7 +111,7 @@ class Version20260923000000Test extends SuluTestCase
         $fromSchema = $schemaManager->introspectSchema();
         $toSchema = $schemaManager->introspectSchema();
 
-        $migration = new Version20260923000000($this->connection, new NullLogger());
+        $migration = new Version20261005000000($this->connection, new NullLogger());
         $migration->$direction($toSchema);
 
         $platform = $this->connection->getDatabasePlatform();

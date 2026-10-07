@@ -9,25 +9,25 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\MediaLanguage;
+namespace Sulu\Bundle\MediaBundle\Media\ContentLocale;
 
-use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\MediaLanguageFilterType;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\ContentLocaleFilterType;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Component\Intl\Languages;
 use Symfony\Component\Intl\Locales;
 
 /**
- * Selectable media languages: the configured list, or the content locales by default.
+ * Selectable content locales of a media file: the configured list, or the configured content locales by default.
  *
  * @internal
  */
-class MediaLanguageProvider
+class ContentLocaleProvider
 {
     /**
-     * @param string[] $configuredLanguages
+     * @param string[] $configuredLocales
      */
     public function __construct(
-        private array $configuredLanguages,
+        private array $configuredLocales,
         private LocalizationManagerInterface $localizationManager,
     ) {
     }
@@ -38,7 +38,7 @@ class MediaLanguageProvider
     public function getValues(string $locale): array
     {
         $values = [];
-        foreach ($this->getLanguageCodes() as $code) {
+        foreach ($this->getLocaleCodes() as $code) {
             $values[] = ['name' => $code, 'title' => $this->getLanguageName($code, $locale)];
         }
 
@@ -51,10 +51,10 @@ class MediaLanguageProvider
     public function getFilterOptions(string $locale): array
     {
         $options = [];
-        foreach ($this->getLanguageCodes() as $code) {
+        foreach ($this->getLocaleCodes() as $code) {
             $options[$code] = $this->getLanguageName($code, $locale);
         }
-        $options[MediaLanguageFilterType::NONE_VALUE] = 'sulu_media.media_language_none';
+        $options[ContentLocaleFilterType::NONE_VALUE] = 'sulu_media.content_locale_none';
 
         return $options;
     }
@@ -62,10 +62,10 @@ class MediaLanguageProvider
     /**
      * @return string[]
      */
-    private function getLanguageCodes(): array
+    private function getLocaleCodes(): array
     {
-        if ([] !== $this->configuredLanguages) {
-            return \array_values(\array_unique($this->configuredLanguages));
+        if ([] !== $this->configuredLocales) {
+            return \array_values(\array_unique($this->configuredLocales));
         }
 
         return \array_values(\array_unique($this->localizationManager->getLocales()));

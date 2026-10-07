@@ -18,12 +18,12 @@ use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
 /**
- * Filters media by content language, plus a value matching media without any language set.
+ * Filters media by content locale, plus a value matching media without any content locale set.
  */
-class MediaLanguageFilterType implements FilterTypeInterface
+class ContentLocaleFilterType implements FilterTypeInterface
 {
     /**
-     * Matches media with no language set, via IS NULL on the LEFT join.
+     * Matches media with no content locale set, via IS NULL on the LEFT join.
      */
     public const NONE_VALUE = '_none';
 
@@ -34,7 +34,7 @@ class MediaLanguageFilterType implements FilterTypeInterface
     ): void {
         if (!\is_string($options)) {
             throw new InvalidFilterTypeOptionsException(
-                'The MediaLanguageFilterType requires its options to be a comma-separated list of values'
+                'The ContentLocaleFilterType requires its options to be a comma-separated list of values'
             );
         }
 
@@ -43,13 +43,13 @@ class MediaLanguageFilterType implements FilterTypeInterface
             fn (string $value) => '' !== $value
         ));
 
-        $languages = \array_values(\array_filter($values, fn (string $value) => self::NONE_VALUE !== $value));
+        $locales = \array_values(\array_filter($values, fn (string $value) => self::NONE_VALUE !== $value));
         $includeNone = \in_array(self::NONE_VALUE, $values, true);
 
         /** @var ExpressionInterface[] $expressions */
         $expressions = [];
-        if ([] !== $languages) {
-            $expressions[] = $listBuilder->createInExpression($fieldDescriptor, $languages);
+        if ([] !== $locales) {
+            $expressions[] = $listBuilder->createInExpression($fieldDescriptor, $locales);
         }
         if ($includeNone) {
             $expressions[] = $listBuilder->createIsNullExpression($fieldDescriptor);
@@ -66,6 +66,6 @@ class MediaLanguageFilterType implements FilterTypeInterface
 
     public static function getDefaultIndexName(): string
     {
-        return 'media_language';
+        return 'content_locale';
     }
 }

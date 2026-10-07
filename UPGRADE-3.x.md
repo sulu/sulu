@@ -76,10 +76,11 @@ migration to apply the schema change:
 bin/console doctrine:migrations:migrate
 ```
 
-### Media language table
+### Media content locales table
 
-Documents and videos can record the language(s) they are in, which are stored in the new
-`me_file_version_media_languages` table. Run the new migration to apply the schema change:
+Media files can record the locales their content is in, which are stored in the
+`me_file_version_content_languages` table. A new migration creates the table when it does not exist yet, an
+existing table from 2.x and its rows are kept. Run the new migration to apply the schema change:
 
 ```bash
 bin/console doctrine:migrations:migrate
@@ -1217,11 +1218,11 @@ ALTER TABLE cu_custom_url_route ADD CONSTRAINT FK_D2349CF44ED689B2 FOREIGN KEY (
 The media bundle removed some unused tables:
 
 ```sql
-ALTER TABLE me_file_version_content_languages DROP FOREIGN KEY FK_F3FD652C911ADE33;
 ALTER TABLE me_file_version_publish_languages DROP FOREIGN KEY FK_195DAB3C911ADE33;
-DROP TABLE me_file_version_content_languages;
 DROP TABLE me_file_version_publish_languages;
 ```
+
+The `me_file_version_content_languages` table is kept, the content locales of a media file are stored in it again.
 
 Also the `MediaType` entity has been removed the value has been moved to the `me_media` table itself as a string column:
 

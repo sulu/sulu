@@ -46,7 +46,7 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     listAdapterRegistry.add('media_card_overview', MediaCardOverviewAdapter);
     listAdapterRegistry.add('media_card_selection', MediaCardSelectionAdapter);
 
-    listFieldFilterTypeRegistry.add('media_language', SelectFieldFilterType);
+    listFieldFilterTypeRegistry.add('content_locale', SelectFieldFilterType);
 
     fieldRegistry.add(FIELD_TYPE_MEDIA_SELECTION, MediaSelection);
     fieldRegistry.add(FIELD_TYPE_SINGLE_MEDIA_SELECTION, SingleMediaSelection);

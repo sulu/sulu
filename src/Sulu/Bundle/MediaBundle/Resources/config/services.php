@@ -46,12 +46,13 @@ use Sulu\Bundle\MediaBundle\FileInspector\SvgSanitizerFactory;
 use Sulu\Bundle\MediaBundle\FileInspector\UploadFileSubscriber;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\SmartContent\MediaSmartContentProvider;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\Visitor\MediaSmartContentFiltersVisitor;
-use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\MediaLanguageFilterType;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\ContentLocaleFilterType;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionIndexListener;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionReindexProvider;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaIndexListener;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaReindexProvider;
 use Sulu\Bundle\MediaBundle\Markup\Link\MediaLinkProvider;
+use Sulu\Bundle\MediaBundle\Media\ContentLocale\ContentLocaleProvider;
 use Sulu\Bundle\MediaBundle\Media\DispositionType\DispositionTypeResolver;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidator;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheClearer;
@@ -75,7 +76,6 @@ use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\MediaLanguage\MediaLanguageProvider;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\ImagePropertiesProvider;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
@@ -539,13 +539,13 @@ return static function(ContainerConfigurator $container) {
         ])
         ->tag('cmsig_seal.reindex_provider');
 
-    $services->set('sulu_media.media_language_provider', MediaLanguageProvider::class)
+    $services->set('sulu_media.content_locale_provider', ContentLocaleProvider::class)
         ->public()
         ->args([
-            '%sulu_media.media_languages%',
+            '%sulu_media.content_locales%',
             new Reference('sulu.core.localization_manager'),
         ]);
 
-    $services->set('sulu_media.media_language_filter_type', MediaLanguageFilterType::class)
+    $services->set('sulu_media.content_locale_filter_type', ContentLocaleFilterType::class)
         ->tag('sulu_core.list_builder_filter_type');
 };

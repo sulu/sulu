@@ -124,9 +124,9 @@
                     "tags": [],
                     "label": "Origin"
                 },
-                "mediaLanguages": {
+                "contentLocales": {
                     "disabledCondition": null,
-                    "visibleCondition": "type == 'document' || type == 'video'",
+                    "visibleCondition": null,
                     "type": "select",
                     "colSpan": 12,
                     "options": {
