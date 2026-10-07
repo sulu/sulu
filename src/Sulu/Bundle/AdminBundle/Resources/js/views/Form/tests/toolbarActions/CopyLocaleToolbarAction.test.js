@@ -1,4 +1,5 @@
 // @flow
+import {observable} from 'mobx';
 import log from 'loglevel';
 import {waitFor} from '@testing-library/react';
 import {ResourceFormStore} from '../../../../containers/Form';
@@ -310,13 +311,8 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
         open: true,
     }));
 
-    const formStore = copyLocaleToolbarAction.formStore;
-    if (!formStore) {
-        throw new Error('The form store should be created when the dialog opens');
-    }
-
-    formStore.change('locales', ['de', 'fr']);
-    await waitFor(() => expect(formStore.data.locales).toEqual(['de', 'fr']));
+    copyLocaleToolbarAction.formStore.change('locales', ['de', 'fr']);
+    await waitFor(() => expect(copyLocaleToolbarAction.formStore.data.locales).toEqual(['de', 'fr']));
     dialogProps.onConfirm();
     expect(ResourceRequester.post).toHaveBeenCalledWith(
         'snippets',
@@ -380,14 +376,9 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
         open: true,
     }));
 
-    const formStore = copyLocaleToolbarAction.formStore;
-    if (!formStore) {
-        throw new Error('The form store should be created when the dialog opens');
-    }
-
-    formStore.change('title', 'Test 123');
-    formStore.change('locales', ['de', 'fr']);
-    await waitFor(() => expect(formStore.data).toEqual(expect.objectContaining({
+    copyLocaleToolbarAction.formStore.change('title', 'Test 123');
+    copyLocaleToolbarAction.formStore.change('locales', ['de', 'fr']);
+    await waitFor(() => expect(copyLocaleToolbarAction.formStore.data).toEqual(expect.objectContaining({
         locales: ['de', 'fr'],
         title: 'Test 123',
     })));
@@ -407,10 +398,11 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
     }));
 });
 
-test('Offer the locales other than the current one after the locale was switched', () => {
+test('Close the dialog and rebuild the target locales when the locale is switched', () => {
     const resourceStore = new ResourceStore('test', 3);
+    const locale = observable.box('de');
     // $FlowFixMe
-    resourceStore.locale.get.mockReturnValue('de');
+    resourceStore.locale = locale;
     const router = new Router({});
     const copyLocaleToolbarAction = new CopyLocaleToolbarAction(
         new ResourceFormStore(resourceStore, 'test'),
@@ -420,16 +412,38 @@ test('Offer the locales other than the current one after the locale was switched
         {},
         resourceStore
     );
+    const initialFormStore = copyLocaleToolbarAction.formStore;
+    const destroySpy = jest.spyOn(initialFormStore, 'destroy');
+    copyLocaleToolbarAction.showCopyLocaleDialog = true;
 
-    // $FlowFixMe
-    resourceStore.locale.get.mockReturnValue('en');
+    locale.set('en');
 
-    const toolbarItemConfig = copyLocaleToolbarAction.getToolbarItemConfig();
-    if (!toolbarItemConfig || !toolbarItemConfig.onClick) {
-        throw new Error('A onClick callback should be registered on the copy locale option');
-    }
-
-    toolbarItemConfig.onClick();
-
+    expect(copyLocaleToolbarAction.showCopyLocaleDialog).toBe(false);
+    expect(destroySpy).toHaveBeenCalled();
+    expect(copyLocaleToolbarAction.formStore).not.toBe(initialFormStore);
     expect(metadataStore.getSchema).toHaveBeenLastCalledWith('copy_locale', undefined, {locales: ['de', 'fr']});
+});
+
+test('Stop following the locale when destroyed', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    const locale = observable.box('de');
+    // $FlowFixMe
+    resourceStore.locale = locale;
+    const router = new Router({});
+    const copyLocaleToolbarAction = new CopyLocaleToolbarAction(
+        new ResourceFormStore(resourceStore, 'test'),
+        new Form({locales: [], resourceStore, route: router.route, router}),
+        router,
+        ['de', 'en', 'fr'],
+        {},
+        resourceStore
+    );
+    const formStore = copyLocaleToolbarAction.formStore;
+    const destroySpy = jest.spyOn(formStore, 'destroy');
+
+    copyLocaleToolbarAction.destroy();
+    locale.set('en');
+
+    expect(destroySpy).toHaveBeenCalledTimes(1);
+    expect(copyLocaleToolbarAction.formStore).toBe(formStore);
 });
