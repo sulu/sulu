@@ -291,7 +291,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         return this.computedIcons;
     }
 
-    @computed get errorCounts(): ?Array<number> {
+    @computed get errorCounts(): Array<number> | void {
         const {error, showAllErrors} = this.props;
         const errors = toJS(error);
 
