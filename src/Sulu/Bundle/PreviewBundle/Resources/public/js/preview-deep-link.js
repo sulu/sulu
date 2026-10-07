@@ -7,8 +7,9 @@
 (function () {
     'use strict';
 
-    // The admin is window.parent (iframe) or window.opener ("open in window"); absent means standalone.
-    var adminWindow = window.opener || (window.parent !== window ? window.parent : null);
+    // The overlay only exists in the docked preview, where the admin is window.parent and its form sits next to the
+    // preview. A preview in its own window (window.opener) has no form to navigate to.
+    var adminWindow = window.parent !== window ? window.parent : null;
     if (!adminWindow) {
         return;
     }
