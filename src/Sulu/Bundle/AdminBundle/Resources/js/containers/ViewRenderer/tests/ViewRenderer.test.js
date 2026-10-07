@@ -1,6 +1,8 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {runInAction} from 'mobx';
+import {act, render, screen} from '@testing-library/react';
+import userStore from '../../../stores/userStore';
 import ViewRenderer from '../ViewRenderer';
 import viewRegistry from '../registries/viewRegistry';
 
@@ -11,6 +13,7 @@ jest.mock('../registries/viewRegistry', () => ({
 
 beforeEach(() => {
     jest.clearAllMocks();
+    userStore.clear();
 });
 
 function createRouter(route, attributes = {}) {
@@ -309,4 +312,57 @@ test('Clear bindings of router when same view with a different rerender attribut
 
     updateRouteHook(route, {locale: 'de', webspace: 'example'});
     expect(router.clearBindings).toHaveBeenCalledWith();
+});
+
+function createUser(id) {
+    return {id, locale: 'en', roles: [], settings: {}, username: 'user' + id};
+}
+
+function logIn(user) {
+    runInAction(() => {
+        userStore.setUser(user);
+        userStore.setLoggedIn(true);
+    });
+}
+
+function renderMountProbe() {
+    const onMount = jest.fn();
+    const router = createRouter({type: 'test'});
+    viewRegistry.get.mockReturnValue(function MountProbeView() {
+        React.useEffect(onMount, []);
+
+        return <h1>Test</h1>;
+    });
+    viewRegistry.getConfig.mockReturnValue({});
+
+    render(<ViewRenderer router={router} />);
+
+    return onMount;
+}
+
+test('Remount views when another user logs in', () => {
+    logIn(createUser(1));
+    const onMount = renderMountProbe();
+    expect(onMount).toHaveBeenCalledTimes(1);
+
+    act(() => {
+        userStore.setLoggedIn(false);
+        userStore.clear();
+    });
+    act(() => logIn(createUser(2)));
+
+    expect(onMount).toHaveBeenCalledTimes(2);
+});
+
+test('Do not remount views when the same user logs in again', () => {
+    logIn(createUser(1));
+    const onMount = renderMountProbe();
+
+    act(() => {
+        userStore.setLoggedIn(false);
+        userStore.clear();
+    });
+    act(() => logIn(createUser(1)));
+
+    expect(onMount).toHaveBeenCalledTimes(1);
 });
