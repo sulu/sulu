@@ -19,6 +19,12 @@
         </testsuite>
     </testsuites>
 
+    <extensions>
+        <bootstrap class="Symfony\Bridge\PhpUnit\SymfonyExtension">
+            <parameter name="clock-mock-namespaces" value="Sulu" />
+        </bootstrap>
+    </extensions>
+
     <php>
         <server name="APP_ENV" value="test" force="true"/>
         <env name="KERNEL_CLASS" value="Sulu\Bundle\AdminBundle\Tests\Application\Kernel"/>
