@@ -237,6 +237,10 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
             $seoAndExcerptToolbarActions = ['save' => $toolbarActions['save']];
             $settingsToolbarActions = ['save' => $toolbarActions['save']];
         }
+        if (isset($toolbarActions['approval'])) {
+            $seoAndExcerptToolbarActions['approval'] = $toolbarActions['approval'];
+            $settingsToolbarActions['approval'] = $toolbarActions['approval'];
+        }
         if (isset($toolbarActions['edit'])) {
             $seoAndExcerptToolbarActions['edit'] = $toolbarActions['edit'];
             $settingsToolbarActions['edit'] = $toolbarActions['edit'];
