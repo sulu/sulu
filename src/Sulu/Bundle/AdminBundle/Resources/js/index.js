@@ -192,7 +192,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerListItemActions();
         registerFieldTypes(config.fieldTypeOptions);
         registerTextEditors();
-        registerCKEditor5Plugins(config.textPartLanguages);
+        registerCKEditor5Plugins(config.textEditorContentLocales);
         registerTextEditorConfigs(config.textEditorConfigs);
         registerLinkOverlays();
         registerInternalLinkTypes(config.internalLinkTypes);

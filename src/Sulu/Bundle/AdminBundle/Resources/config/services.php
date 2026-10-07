@@ -124,7 +124,7 @@ return static function(ContainerConfigurator $container) {
             '%sulu_security.password_policy_pattern%',
             '%sulu_security.password_policy_info_translation_key%',
             '%sulu_security.has_single_sign_on_providers%',
-            '%sulu_admin.ckeditor_text_part_languages%',
+            '%sulu_admin.text_editor_content_locales%',
             '%sulu_admin.text_editor_configs%',
         ])
         ->tag('sulu.context', ['context' => 'admin']);

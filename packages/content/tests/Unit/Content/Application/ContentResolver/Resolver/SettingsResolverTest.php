@@ -129,8 +129,8 @@ class SettingsResolverTest extends TestCase
         self::assertSame(1, $references[0]->getResourceId());
         self::assertSame(UserInterface::RESOURCE_KEY, $references[0]->getResourceKey());
 
-        self::assertSame('2021-01-01', $content['authored']?->format('Y-m-d'));
-        self::assertSame('2021-01-01', $content['lastModified']?->format('Y-m-d'));
+        self::assertSame('2021-01-01', ($content['authored'] ?? null)?->format('Y-m-d'));
+        self::assertSame('2021-01-01', ($content['lastModified'] ?? null)?->format('Y-m-d'));
     }
 
     public function testResolveShadowData(): void

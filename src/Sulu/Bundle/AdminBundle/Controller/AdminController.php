@@ -44,7 +44,7 @@ class AdminController
      * @param array<string> $locales
      * @param array<string> $translations
      * @param iterable<SmartContentProviderInterface> $smartContentProviders
-     * @param array<string> $textPartLanguages
+     * @param array<string> $textEditorContentLocales
      * @param array<string, array{enterMode: string, tags: string[], attributes: string[]}> $textEditorConfigs
      */
     public function __construct(
@@ -75,7 +75,7 @@ class AdminController
         private ?string $passwordPattern = null,
         private ?string $passwordInfoTranslationKey = null,
         private bool $hasSingleSignOnProvider = false,
-        private array $textPartLanguages = [],
+        private array $textEditorContentLocales = [],
         private array $textEditorConfigs = [],
     ) {
     }
@@ -148,7 +148,7 @@ class AdminController
                 'contact' => $contact,
                 'collaborationEnabled' => $this->collaborationEnabled,
                 'collaborationInterval' => $this->collaborationInterval * 1000,
-                'textPartLanguages' => $this->getTextPartLanguages($localizations),
+                'textEditorContentLocales' => $this->getTextEditorContentLocales($localizations),
             ],
             ...$this->adminPool->getAdminConfigs(),
         ];
@@ -216,10 +216,10 @@ class AdminController
      *
      * @return array<string>
      */
-    private function getTextPartLanguages(array $localizations): array
+    private function getTextEditorContentLocales(array $localizations): array
     {
-        if ($this->textPartLanguages) {
-            return \array_values($this->textPartLanguages);
+        if ($this->textEditorContentLocales) {
+            return \array_values($this->textEditorContentLocales);
         }
 
         return \array_values(\array_unique(\array_map(
