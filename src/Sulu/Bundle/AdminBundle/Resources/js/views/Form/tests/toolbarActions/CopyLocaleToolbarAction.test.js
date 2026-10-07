@@ -310,8 +310,13 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
         open: true,
     }));
 
-    copyLocaleToolbarAction.formStore.change('locales', ['de', 'fr']);
-    await waitFor(() => expect(copyLocaleToolbarAction.formStore.data.locales).toEqual(['de', 'fr']));
+    const formStore = copyLocaleToolbarAction.formStore;
+    if (!formStore) {
+        throw new Error('The form store should be created when the dialog opens');
+    }
+
+    formStore.change('locales', ['de', 'fr']);
+    await waitFor(() => expect(formStore.data.locales).toEqual(['de', 'fr']));
     dialogProps.onConfirm();
     expect(ResourceRequester.post).toHaveBeenCalledWith(
         'snippets',
@@ -375,9 +380,14 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
         open: true,
     }));
 
-    copyLocaleToolbarAction.formStore.change('title', 'Test 123');
-    copyLocaleToolbarAction.formStore.change('locales', ['de', 'fr']);
-    await waitFor(() => expect(copyLocaleToolbarAction.formStore.data).toEqual(expect.objectContaining({
+    const formStore = copyLocaleToolbarAction.formStore;
+    if (!formStore) {
+        throw new Error('The form store should be created when the dialog opens');
+    }
+
+    formStore.change('title', 'Test 123');
+    formStore.change('locales', ['de', 'fr']);
+    await waitFor(() => expect(formStore.data).toEqual(expect.objectContaining({
         locales: ['de', 'fr'],
         title: 'Test 123',
     })));

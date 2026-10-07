@@ -18,7 +18,7 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
     @observable showCopyLocaleDialog = false;
     @observable selectedLocales: Array<string> = [];
     @observable copying: boolean = false;
-    formStore: FormStoreInterface;
+    formStore: ?FormStoreInterface;
 
     constructor(
         resourceFormStore: ResourceFormStore,
@@ -46,12 +46,6 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
         }
 
         super(resourceFormStore, form, router, locales, options, parentResourceStore);
-
-        if (locales) {
-            this.formStore = memoryFormStoreFactory.createFromFormKey('copy_locale', undefined, undefined, undefined, {
-                locales: locales.filter((locale) => locale !== this.resourceFormStore.locale?.get()),
-            });
-        }
     }
 
     getNode() {
@@ -74,7 +68,7 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
         return (
             <Dialog
                 cancelText={translate('sulu_admin.cancel')}
-                confirmDisabled={(this.formStore.data.locales?.length ?? 0) === 0}
+                confirmDisabled={(this.formStore?.data.locales?.length ?? 0) === 0}
                 confirmLoading={this.copying}
                 confirmText={translate('sulu_admin.ok')}
                 key="sulu_admin.copy_locale"
@@ -84,10 +78,12 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
                 title={translate('sulu_admin.copy_locale')}
             >
                 <div className={copyLocaleActionStyles.dialog}>
-                    <FormContainer
-                        onSubmit={this.handleConfirm}
-                        store={this.formStore}
-                    />
+                    {this.formStore &&
+                        <FormContainer
+                            onSubmit={this.handleConfirm}
+                            store={this.formStore}
+                        />
+                    }
                 </div>
             </Dialog>
         );
@@ -108,8 +104,8 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
                 icon: 'su-copy',
                 label: translate('sulu_admin.copy_locale'),
                 onClick: action(() => {
-                    // the locale can change without remounting the form, so the target locales are built on open
-                    this.destroyFormStore();
+                    this.formStore?.destroy();
+                    this.formStore = this.createFormStore();
                     this.showCopyLocaleDialog = true;
                 }),
                 type: 'button',
@@ -118,6 +114,10 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
     }
 
     @action handleConfirm = () => {
+        if (!this.formStore) {
+            return;
+        }
+
         this.copying = true;
         const {
             resourceFormStore: {
@@ -155,13 +155,11 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
             this.copying = false;
             this.showCopyLocaleDialog = false;
             this.form.showSuccessSnackbar();
-            this.destroyFormStore();
         }));
     };
 
     @action handleClose = () => {
         this.showCopyLocaleDialog = false;
-        this.destroyFormStore();
     };
 
     @action handleCheckboxChange = (checked: boolean, value?: string | number) => {
@@ -172,11 +170,14 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
         }
     };
 
-    @action destroyFormStore = () => {
-        this.formStore.destroy();
-
-        this.formStore = memoryFormStoreFactory.createFromFormKey('copy_locale', undefined, undefined, undefined, {
+    // built on every opening, because the locale can switch while the form view stays mounted
+    createFormStore(): FormStoreInterface {
+        return memoryFormStoreFactory.createFromFormKey('copy_locale', undefined, undefined, undefined, {
             locales: this.locales?.filter((locale) => locale !== this.resourceFormStore.locale?.get()),
         });
-    };
+    }
+
+    destroy() {
+        this.formStore?.destroy();
+    }
 }
