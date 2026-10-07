@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Security\Authentication\RoleSettingRepositoryInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,14 +23,13 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Endpoint for role-settings.
  */
-class RoleSettingController extends AbstractRestController implements SecuredControllerInterface
+class RoleSettingController implements SecuredControllerInterface
 {
     public function __construct(
-        ViewHandlerInterface $viewHandler,
+        private ViewHandlerInterface $viewHandler,
         private RoleSettingRepositoryInterface $roleSettingRepository,
         private EntityManagerInterface $entityManager
     ) {
-        parent::__construct($viewHandler);
     }
 
     /**
@@ -45,7 +44,7 @@ class RoleSettingController extends AbstractRestController implements SecuredCon
     {
         $settingValue = $this->roleSettingRepository->findSettingValue($roleId, $key);
 
-        return $this->handleView($this->view($settingValue));
+        return $this->viewHandler->handle(View::create($settingValue));
     }
 
     /**
@@ -73,11 +72,16 @@ class RoleSettingController extends AbstractRestController implements SecuredCon
         $this->entityManager->persist($setting);
         $this->entityManager->flush();
 
-        return $this->handleView($this->view($setting->getValue()));
+        return $this->viewHandler->handle(View::create($setting->getValue()));
     }
 
     public function getSecurityContext(): string
     {
         return 'sulu.security.roles';
+    }
+
+    public function getLocale(Request $request)
+    {
+        return $request->query->get('locale', $request->getLocale());
     }
 }
