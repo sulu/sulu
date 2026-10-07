@@ -25,6 +25,23 @@ const SETTINGS_KEY = 'settings';
 const SETTINGS_PREFIX = '/settings/';
 const SETTINGS_TAG = 'sulu.block_setting_icon';
 
+// errors are nested in objects for properties and arrays for blocks, every leaf is the error of a single field
+function countErrors(error: mixed): number {
+    if (!error || typeof error !== 'object') {
+        return 0;
+    }
+
+    if (Array.isArray(error)) {
+        return error.reduce((count, item) => count + countErrors(item), 0);
+    }
+
+    if (typeof error.keyword === 'string') {
+        return 1;
+    }
+
+    return Object.keys(error).reduce((count, key) => count + countErrors(error[key]), 0);
+}
+
 @observer
 class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
     @observable openedBlockSettingsIndex: ?number;
@@ -272,6 +289,18 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         }
 
         return this.computedIcons;
+    }
+
+    @computed get errorCounts(): ?Array<number> {
+        const {error, showAllErrors} = this.props;
+        const errors = toJS(error);
+
+        // the fields inside of the blocks also only show their errors after the form has been submitted
+        if (!showAllErrors || !Array.isArray(errors)) {
+            return undefined;
+        }
+
+        return errors.map(countErrors);
     }
 
     getConditionData(data: {[string]: any}, dataPath: ?string) {
@@ -588,6 +617,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                     collapsable={this.collapsable}
                     defaultType={defaultType}
                     disabled={!!disabled}
+                    errorCounts={this.errorCounts}
                     generateBlockIds={this.generateBlockIds ? blockIdGenerator.generateBlockIds : undefined}
                     icons={this.icons}
                     maxOccurs={maxOccurs}
