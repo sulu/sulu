@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Component\Security\Tests\Unit\Authorization;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Security\Authorization\MaskConverter;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
@@ -29,15 +30,24 @@ final class MaskConverterTest extends TestCase
         ]);
     }
 
-    public function testConvertingBackAndForth(): void
+    #[DataProvider('dataConvertingBackAndForth')]
+    public function testConvertingBackAndForth(int $permissionValue): void
     {
-        $number = 3;
-        $permission = $this->maskConverter->convertPermissionsToArray($number);
+        $permission = $this->maskConverter->convertPermissionsToArray($permissionValue);
 
         $this->assertSame(
-            $number,
+            $permissionValue,
             $this->maskConverter->convertPermissionsToNumber($permission),
         );
+    }
+
+    /** @return \Generator<string, array{int}> */
+    public static function dataConvertingBackAndForth(): \Generator
+    {
+        yield 'no permissions' => [0];
+        yield 'only test' => [1];
+        yield 'only export' => [2];
+        yield 'all permissions' => [3];
     }
 
     public function testConvertingToArray(): void
@@ -76,6 +86,32 @@ final class MaskConverterTest extends TestCase
         $this->assertSame(
             $permissionData,
             $this->maskConverter->convertPermissionsToArray(0),
+        );
+    }
+
+    public function testConvertingPermissions(): void
+    {
+        $this->maskConverter = new MaskConverter([
+            'view' => 64,
+            'add' => 32,
+            'edit' => 16,
+            'delete' => 8,
+            'archive' => 4,
+            'live' => 2,
+            'security' => 1,
+        ]);
+
+        $this->assertSame(
+            [
+                'view' => true,
+                'add' => true,
+                'edit' => true,
+                'delete' => true,
+                'archive' => true,
+                'live' => true,
+                'security' => true,
+            ],
+            $this->maskConverter->convertPermissionsToArray(127),
         );
     }
 }
