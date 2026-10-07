@@ -292,7 +292,7 @@ class AdminControllerTest extends TestCase
         $this->adminController->configAction();
     }
 
-    public function testConfigActionTextPartLanguagesDefaultToLocalizationLanguages(): void
+    public function testConfigActionTextEditorContentLocalesDefaultToLocalizationLanguages(): void
     {
         $this->adminPool->getAdminConfigs()->willReturn([]);
 
@@ -302,23 +302,23 @@ class AdminControllerTest extends TestCase
             'en' => new Localization('en'),
         ]);
 
-        $this->assertSame(['de', 'en'], $this->getConfiguredTextPartLanguages([]));
+        $this->assertSame(['de', 'en'], $this->getConfiguredTextEditorContentLocales([]));
     }
 
-    public function testConfigActionWithConfiguredTextPartLanguages(): void
+    public function testConfigActionWithConfiguredTextEditorContentLocales(): void
     {
         $this->adminPool->getAdminConfigs()->willReturn([]);
         $this->localizationManager->getLocalizations()->willReturn(['de' => new Localization('de')]);
 
-        $this->assertSame(['en', 'ar'], $this->getConfiguredTextPartLanguages(['en', 'ar']));
+        $this->assertSame(['en', 'ar'], $this->getConfiguredTextEditorContentLocales(['en', 'ar']));
     }
 
     /**
-     * @param array<string> $textPartLanguages
+     * @param array<string> $textEditorContentLocales
      *
      * @return array<string>
      */
-    private function getConfiguredTextPartLanguages(array $textPartLanguages): array
+    private function getConfiguredTextEditorContentLocales(array $textEditorContentLocales): array
     {
         $adminController = new AdminController(
             $this->urlGenerator->reveal(),
@@ -348,7 +348,7 @@ class AdminControllerTest extends TestCase
             null,
             null,
             false,
-            $textPartLanguages,
+            $textEditorContentLocales,
         );
 
         $this->fieldTypeOptionRegistry->toArray()->willReturn([]);
@@ -363,9 +363,9 @@ class AdminControllerTest extends TestCase
 
         $result = [];
         $this->viewHandler->handle(Argument::that(function(View $view) use (&$result) {
-            /** @var array{sulu_admin: array{textPartLanguages: array<string>}} $data */
+            /** @var array{sulu_admin: array{textEditorContentLocales: array<string>}} $data */
             $data = $view->getData();
-            $result = $data['sulu_admin']['textPartLanguages'];
+            $result = $data['sulu_admin']['textEditorContentLocales'];
 
             return true;
         }))->shouldBeCalled()->willReturn(new Response());

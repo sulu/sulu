@@ -60,7 +60,7 @@ beforeEach(() => {
     jest.clearAllMocks();
     pluginRegistry.plugins = [];
     configRegistry.configs = [];
-    CKEditor5.textPartLanguages = [];
+    CKEditor5.contentLocales = [];
 });
 
 test('Create a CKEditor5 instance', async() => {
@@ -129,7 +129,7 @@ test('Create a CKEditor5 instance with the text part language feature', async() 
     };
     const editorPromise = Promise.resolve(editor);
     ClassicEditor.create.mockReturnValue(editorPromise);
-    CKEditor5.textPartLanguages = ['en', 'de'];
+    CKEditor5.contentLocales = ['en', 'de'];
 
     render(<CKEditor5 onBlur={jest.fn()} onChange={jest.fn()} value={undefined} />);
 
