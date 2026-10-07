@@ -63,6 +63,22 @@ function findBlockElement(id: string): ?HTMLElement {
     return element instanceof HTMLElement ? element : undefined;
 }
 
+// Solid while the smooth scroll runs, then it fades.
+function highlightBlockElement(element: HTMLElement) {
+    if (typeof element.animate !== 'function') {
+        return;
+    }
+
+    element.animate(
+        [
+            {boxShadow: '0 0 0 2px #23a3ec', offset: 0},
+            {boxShadow: '0 0 0 2px #23a3ec', offset: 0.4, easing: 'ease-out'},
+            {boxShadow: '0 0 0 2px transparent', offset: 1},
+        ],
+        {duration: 2500}
+    );
+}
+
 @observer
 class Preview extends React.Component<Props> {
     static debounceDelay: number = 250;
@@ -374,7 +390,8 @@ class Preview extends React.Component<Props> {
             if (index >= idPath.length) {
                 const target = findBlockElement(idPath[idPath.length - 1]);
                 if (target) {
-                    target.scrollIntoView({behavior: 'smooth', block: 'start'});
+                    target.scrollIntoView({behavior: 'smooth', block: 'center'});
+                    highlightBlockElement(target);
                 }
 
                 return;
