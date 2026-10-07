@@ -25,6 +25,28 @@ test('Test remove p tags from several paragraphs carrying attributes', () => {
         .toBe('<!--p-->one<!--/p--><br></br><!--p-->two<!--/p-->');
 });
 
+test('Test remove p tags from a paragraph carrying a text alignment', () => {
+    expect(removePTags('<p style="text-align:center;">centered</p>')).toBe('centered');
+});
+
+test('Test remove p tags from several paragraphs carrying a text alignment', () => {
+    expect(removePTags('<p style="text-align:center;">one</p><p style="text-align:right;">two</p>'))
+        .toBe('<!--p-->one<!--/p--><br></br><!--p-->two<!--/p-->');
+});
+
+test('Test keep the style of an inline element when removing p tags', () => {
+    expect(removePTags('<p style="text-align:center;">a <span style="color:red;">red</span> word</p>'))
+        .toBe('a <span style="color:red;">red</span> word');
+    expect(removePTags('<p style="text-align:center;">one</p><p>a <span style="color:red;">red</span></p>'))
+        .toBe('<!--p-->one<!--/p--><br></br><!--p-->a <span style="color:red;">red</span><!--/p-->');
+});
+
+test('Test no paragraph style survives removing and readding p tags', () => {
+    expect(addPTags(removePTags('<p style="text-align:center;">one</p>'))).toBe('<p>one</p>');
+    expect(addPTags(removePTags('<p style="text-align:center;">one</p><p dir="rtl" class="intro">two</p>')))
+        .toBe('<p>one</p><p>two</p>');
+});
+
 test('Test readd p tags to a paragraph holding a line break', () => {
     expect(addPTags('one<br>two')).toBe('<p>one<br>two</p>');
 });
