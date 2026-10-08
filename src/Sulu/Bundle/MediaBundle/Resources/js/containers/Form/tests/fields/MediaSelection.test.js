@@ -52,6 +52,14 @@ jest.mock('sulu-admin-bundle/containers/Form/FormInspector', () => jest.fn(funct
 
 jest.mock('sulu-admin-bundle/utils/Translator');
 
+jest.mock('../../../MediaEditOverlay', () => jest.fn(function(props) {
+    if (!props.open) {
+        return null;
+    }
+
+    return require('react').createElement('div', {}, `edit media ${props.id} in ${props.locale.get()}`);
+}));
+
 jest.mock('sulu-admin-bundle/stores/userStore', () => ({
     contentLocale: 'userContentLocale',
 }));
@@ -286,7 +294,7 @@ test('Should call onChange and onFinish if the selection changes', () => {
     expect(finishSpy).toHaveBeenCalled();
 });
 
-test('Should navigate to media if a media is clicked', async() => {
+test('Should open the media edit overlay if a media is clicked', async() => {
     const user = userEvent.setup();
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
@@ -325,10 +333,9 @@ test('Should navigate to media if a media is clicked', async() => {
         />
     );
 
-    await user.click(screen.getByRole('button', {name: /Media 55/}));
-    expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 55, locale: 'en'});
     await user.click(screen.getByRole('button', {name: /Media 66/}));
-    expect(router.navigate).toHaveBeenLastCalledWith('sulu_media.form', {id: 66, locale: 'en'});
+    expect(screen.getByText('edit media 66 in en')).toBeInTheDocument();
+    expect(router.navigate).not.toHaveBeenCalled();
 });
 
 test('Should throw an error if given value does not have an ids property', () => {
