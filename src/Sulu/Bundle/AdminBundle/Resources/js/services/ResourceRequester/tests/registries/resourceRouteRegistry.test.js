@@ -143,3 +143,25 @@ test('Throw exception when getting detail url for not existing list url', () => 
     expect(() => resourceRouteRegistry.getUrl('list', 'existing'))
         .toThrow(/no "list" route for the resourceKey "existing"/);
 });
+
+test('Should tell whether a route of a given type is registered for a resourceKey', () => {
+    resourceRouteRegistry.setEndpoints({
+        snippets: {
+            routes: {
+                detail: 'get_snippet',
+                prefill: 'get_snippet_prefill',
+            },
+        },
+        tags: {
+            routes: {
+                list: 'get_tags',
+            },
+        },
+    });
+
+    expect(resourceRouteRegistry.hasRoute('detail', 'snippets')).toEqual(true);
+    expect(resourceRouteRegistry.hasRoute('prefill', 'snippets')).toEqual(true);
+    expect(resourceRouteRegistry.hasRoute('list', 'snippets')).toEqual(false);
+    expect(resourceRouteRegistry.hasRoute('prefill', 'tags')).toEqual(false);
+    expect(resourceRouteRegistry.hasRoute('prefill', 'unknown')).toEqual(false);
+});

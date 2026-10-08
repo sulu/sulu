@@ -4,6 +4,7 @@ export type EndpointConfiguration = {
         routes: {
             detail?: string,
             list?: string,
+            prefill?: string,
         },
     },
 };
