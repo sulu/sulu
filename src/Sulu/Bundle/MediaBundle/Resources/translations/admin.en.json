@@ -10,6 +10,7 @@
     "sulu_media.video": "Video",
     "sulu_media.copy_url": "Copy URL",
     "sulu_media.download_masterfile": "Download master file",
+    "sulu_media.master_file": "Master file",
     "sulu_media.select_media_singular": "Select media",
     "sulu_media.select_media_plural": "Select media",
     "sulu_media.reset_selection": "Reset selection",
