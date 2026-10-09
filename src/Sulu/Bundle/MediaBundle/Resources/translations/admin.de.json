@@ -116,6 +116,5 @@
     "sulu_activity.description.media.preview_image_modified": "{userFullName} hat das Vorschaubild des Mediums \"{resourceTitle}\" geändert",
     "sulu_activity.description.media.preview_image_removed": "{userFullName} hat das Vorschaubild des Mediums \"{resourceTitle}\" gelöscht",
     "sulu_activity.description.media.version_added": "{userFullName} hat eine neue Version für das Medium \"{resourceTitle}\" hinzugefügt",
-    "sulu_activity.description.media.version_removed": "{userFullName} hat die Version {context_version} des Mediums \"{resourceTitle}\" gelöscht",
-    "sulu_reference.resource.media": "Medium"
+    "sulu_activity.description.media.version_removed": "{userFullName} hat die Version {context_version} des Mediums \"{resourceTitle}\" gelöscht"
 }
