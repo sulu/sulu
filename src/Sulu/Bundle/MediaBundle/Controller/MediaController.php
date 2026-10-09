@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewUrlGeneratorInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -48,6 +49,8 @@ class MediaController extends AbstractMediaController implements
     SecuredControllerInterface,
     SecuredObjectControllerInterface
 {
+    private const MAX_REFERENCING_RESOURCE_LINKS = 20;
+
     /**
      * @param class-string $mediaClass
      */
@@ -64,6 +67,7 @@ class MediaController extends AbstractMediaController implements
         private MediaListRepresentationFactory $mediaListRepresentationFactory,
         private ?ReferenceRepositoryInterface $referenceRepository = null,
         private ?RequestStack $requestStack = null,
+        private ?ResourceViewUrlGeneratorInterface $resourceViewUrlGenerator = null,
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
@@ -80,6 +84,14 @@ class MediaController extends AbstractMediaController implements
                 'sulu/sulu',
                 '2.6.28',
                 'Instantiating MediaController without the $requestStack argument is deprecated, deleting a referenced media is not checked without it.'
+            );
+        }
+
+        if (null === $this->resourceViewUrlGenerator) {
+            @trigger_deprecation(
+                'sulu/sulu',
+                '3.1',
+                'Instantiating MediaController without the $resourceViewUrlGenerator argument is deprecated, the resources referencing a media are listed without a link without it.'
             );
         }
     }
@@ -211,7 +223,7 @@ class MediaController extends AbstractMediaController implements
         $request = $this->requestStack?->getCurrentRequest();
 
         if (null !== $request && !$request->query->getBoolean('force', false)) {
-            $referencingResources = $this->getReferencingResources($id);
+            $referencingResources = $this->getReferencingResources($id, $this->getRequestLocale($request));
 
             if (\count($referencingResources) > 0) {
                 throw new ReferencingResourcesFoundException(
@@ -244,9 +256,9 @@ class MediaController extends AbstractMediaController implements
      */
     private function getMediaTitle($id, Request $request): ?string
     {
-        $locale = $request->query->getString('locale');
+        $locale = $this->getRequestLocale($request);
 
-        if (!$locale) {
+        if (null === $locale) {
             return null;
         }
 
@@ -259,47 +271,102 @@ class MediaController extends AbstractMediaController implements
         return $media->getTitle() ?: $media->getName();
     }
 
+    private function getRequestLocale(Request $request): ?string
+    {
+        return $request->query->getString('locale') ?: null;
+    }
+
     /**
      * @param int|string $id
      *
-     * @return array<array{id: int|string, resourceKey: string, title: string|null}>
+     * @return array<array{id: int|string, resourceKey: string, title: string|null, url: string|null}>
      */
-    private function getReferencingResources($id): array
+    private function getReferencingResources($id, ?string $locale): array
     {
         if (null === $this->referenceRepository) {
             return [];
         }
 
-        $referencingResources = [];
         $references = $this->referenceRepository->findFlatBy(
             [
                 'resourceKey' => MediaInterface::RESOURCE_KEY,
                 'resourceId' => (string) $id,
             ],
             [],
-            ['referenceResourceKey', 'referenceResourceId', 'referenceTitle'],
+            ['referenceResourceKey', 'referenceResourceId', 'referenceTitle', 'referenceLocale', 'referenceRouterAttributes'],
             true
         );
 
+        // one reference per locale and property
+        $referencesByResource = [];
         foreach ($references as $reference) {
             if (!isset($reference['referenceResourceId'], $reference['referenceResourceKey'], $reference['referenceTitle'])) {
                 continue;
             }
 
-            // one reference per locale
-            $key = $reference['referenceResourceKey'] . '::' . $reference['referenceResourceId'];
-            if (isset($referencingResources[$key])) {
-                continue;
+            $referencesByResource[$reference['referenceResourceKey'] . '::' . $reference['referenceResourceId']][] = $reference;
+        }
+
+        $referencingResources = [];
+        $linkCount = 0;
+        foreach ($referencesByResource as $resourceReferences) {
+            $reference = $resourceReferences[0];
+
+            // link to the locale the user is working in, else to the first locale: the database order is not stable
+            foreach ($resourceReferences as $resourceReference) {
+                $referenceLocale = $resourceReference['referenceLocale'] ?? '';
+
+                if (null !== $locale && $referenceLocale === $locale) {
+                    $reference = $resourceReference;
+
+                    break;
+                }
+
+                if (\strcmp($referenceLocale, $reference['referenceLocale'] ?? '') < 0) {
+                    $reference = $resourceReference;
+                }
             }
 
-            $referencingResources[$key] = [
+            // generating a link can query the database, so the resources beyond the limit are listed without one
+            $referencingResources[] = [
                 'id' => $reference['referenceResourceId'],
                 'resourceKey' => $reference['referenceResourceKey'],
                 'title' => $reference['referenceTitle'],
+                'url' => $linkCount++ < self::MAX_REFERENCING_RESOURCE_LINKS
+                    ? $this->getReferencingResourceUrl($reference)
+                    : null,
             ];
         }
 
-        return \array_values($referencingResources);
+        return $referencingResources;
+    }
+
+    /**
+     * @param array{referenceResourceKey: string, referenceResourceId: string, referenceRouterAttributes?: array<string, mixed>|null} $reference
+     */
+    private function getReferencingResourceUrl(array $reference): ?string
+    {
+        if (null === $this->resourceViewUrlGenerator) {
+            return null;
+        }
+
+        // the attributes are stored as JSON, so a value is not guaranteed to be a string
+        $viewParameters = \array_filter(
+            $reference['referenceRouterAttributes'] ?? [],
+            static fn (mixed $value): bool => \is_int($value) || (\is_string($value) && '' !== $value),
+        );
+        $viewParameters['id'] = $reference['referenceResourceId'];
+
+        try {
+            return $this->resourceViewUrlGenerator->generate(
+                $reference['referenceResourceKey'],
+                'detail',
+                $viewParameters,
+            );
+        } catch (\Throwable) {
+            // the link is a convenience: whatever fails here must not turn the refused delete into a server error
+            return null;
+        }
     }
 
     /**
