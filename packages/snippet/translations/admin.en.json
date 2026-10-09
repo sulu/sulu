@@ -54,5 +54,6 @@
     "sulu_activity.description.webspaces.default_snippet_removed": "{userFullName} has removed the default snippet for area \"{context_snippetAreaKey}\" in webspace \"{resourceTitle}\"",
     "sulu_activity.resource.snippet_areas": "Snippet Area",
     "sulu_activity.description.snippet_areas.modified": "{userFullName} has changed the snippet area \"{resourceTitle}\"",
-    "sulu_activity.description.snippet_areas.removed": "{userFullName} has removed the snippet area \"{resourceTitle}\""
+    "sulu_activity.description.snippet_areas.removed": "{userFullName} has removed the snippet area \"{resourceTitle}\"",
+    "sulu_reference.resource.snippets": "Snippet"
 }
