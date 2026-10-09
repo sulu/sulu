@@ -69,7 +69,9 @@ class ReferencesOption
         foreach ($classMetadata->getFieldNames() as $fieldName) {
             $mapping = $classMetadata->getFieldMapping($fieldName);
 
-            if (!isset($mapping['options']['references'])) {
+            // Doctrine ORM 3 returns a FieldMapping object, whose array access is deprecated. The "references"
+            // option is kept in its options there and read from it in postGenerateSchemaTable.
+            if (!\is_array($mapping) || !isset($mapping['options']['references'])) {
                 continue;
             }
 
@@ -94,13 +96,14 @@ class ReferencesOption
 
         foreach ($classMetadata->getFieldNames() as $fieldName) {
             $mapping = $classMetadata->getFieldMapping($fieldName);
+            /** @var array<string, mixed>|null $referencesOptions */
+            $referencesOptions = \is_array($mapping)
+                ? $mapping['_custom']['references'] ?? null
+                : $mapping->options['references'] ?? null;
 
-            if (!isset($mapping['_custom']['references'])) {
+            if (null === $referencesOptions) {
                 continue;
             }
-
-            /** @var array<string, mixed> $referencesOptions */
-            $referencesOptions = $mapping['_custom']['references'];
 
             $unknownOptions = \array_diff_key($referencesOptions, \array_flip(self::$knownOptions));
 
