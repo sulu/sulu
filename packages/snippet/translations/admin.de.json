@@ -55,5 +55,6 @@
     "sulu_activity.description.webspaces.default_snippet_removed": "{userFullName} hat das Standardschnipsel für den Bereich \"{context_snippetAreaKey}\" im Webspace \"{resourceTitle}\" gelöscht",
     "sulu_activity.resource.snippet_areas": "Schnipsel",
     "sulu_activity.description.snippet_areas.modified": "{userFullName} hat den Schnipsel \"{resourceTitle}\" geändert",
-    "sulu_activity.description.snippet_areas.removed": "{userFullName} hat den Schnipsel \"{resourceTitle}\" gelöscht"
+    "sulu_activity.description.snippet_areas.removed": "{userFullName} hat den Schnipsel \"{resourceTitle}\" gelöscht",
+    "sulu_reference.resource.snippets": "Schnipsel"
 }

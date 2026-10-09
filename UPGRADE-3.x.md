@@ -2,6 +2,12 @@
 
 ## 3.1.0
 
+### Deprecated instantiating `MediaController` without `$resourceViewUrlGenerator`
+
+Instantiating the `MediaController` without the `$resourceViewUrlGenerator` argument is deprecated. It generates
+the link to each resource that references a media when a deletion is refused. Without it the resources are listed
+without a link.
+
 ### Content resolvers declare their type and output path on the interface
 
 `ResolverInterface` gained two methods that every implementation must now provide:
