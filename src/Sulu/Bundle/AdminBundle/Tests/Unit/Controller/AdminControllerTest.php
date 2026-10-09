@@ -18,7 +18,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
@@ -174,24 +173,11 @@ class AdminControllerTest extends TestCase
     {
         $this->user->getLocale()->willReturn('en');
 
-        $contact = $this->prophesize(ContactInterface::class);
-        $contact->getId()->willReturn(5);
-
-        $admin1 = $this->prophesize(Admin::class);
-        $admin1Config = ['test1' => 'value1'];
-        $admin1->getConfig()->willReturn($admin1Config);
-        $admin1->getConfigKey()->willReturn('sulu_admin');
-
-        $admin2 = $this->prophesize(Admin::class);
-        $admin2Config = ['test2' => 'value2'];
-        $admin2->getConfig()->willReturn($admin2Config);
-        $admin2->getConfigKey()->willReturn('admin2');
-
-        $admin3 = $this->prophesize(Admin::class);
-        $admin3->getConfig()->shouldBeCalled();
-        $admin3->getConfigKey()->shouldBeCalled();
-
-        $this->adminPool->getAdmins()->willReturn([$admin1, $admin2, $admin3]);
+        $this->adminPool->getAdminConfigs()
+            ->willReturn([
+                'admin1' => ['test1' => 'value1'],
+                'admin2' => ['test2' => 'value2'],
+            ]);
 
         $this->viewHandler->handle(
             Argument::that(
@@ -200,7 +186,7 @@ class AdminControllerTest extends TestCase
                     $data = $view->getData();
 
                     return 'json' === $view->getFormat()
-                        && ['test1' => 'value1'] === $data['sulu_admin']
+                        && ['test1' => 'value1'] === $data['admin1']
                         && ['test2' => 'value2'] === $data['admin2'];
                 }
             )

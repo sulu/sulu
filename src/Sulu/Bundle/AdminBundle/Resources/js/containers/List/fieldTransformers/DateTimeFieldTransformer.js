@@ -52,6 +52,9 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
             case 'relative':
                 formattedDate = this.getRelativeDateTime(momentObject);
                 break;
+            case 'default_with_seconds':
+                formattedDate = this.getDefaultDateTimeWithSeconds(momentObject);
+                break;
             default:
                 formattedDate = this.getDefaultDateTime(momentObject);
                 break;
@@ -84,5 +87,9 @@ export default class DateTimeFieldTransformer implements FieldTransformer {
 
     getDefaultDateTime(momentObject: moment): string {
         return momentObject.format('LLL');
+    }
+
+    getDefaultDateTimeWithSeconds(momentObject: moment): string {
+        return momentObject.format('L') + ' · ' + momentObject.format('LTS');
     }
 }

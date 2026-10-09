@@ -1,28 +1,12 @@
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
-import {FormInspector, ResourceFormStore} from 'sulu-admin-bundle/containers';
-import {ResourceStore} from 'sulu-admin-bundle/stores';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {fieldTypeDefaultProps} from 'sulu-admin-bundle/utils/TestHelper';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import AnalyticsDomainSelect from '../../fields/AnalyticsDomainSelect';
 
-jest.mock('sulu-admin-bundle/containers', () => ({
-    FormInspector: jest.fn(function(formStore) {
-        this.options = formStore.options;
-    }),
-    ResourceFormStore: jest.fn(function(resourceStore, formKey, options) {
-        this.options = options;
-    }),
-}));
-
-jest.mock('sulu-admin-bundle/stores', () => ({
-    ResourceStore: jest.fn(),
-}));
-
-jest.mock('sulu-admin-bundle/utils/Translator', () => ({
-    translate: jest.fn((key) => key),
-}));
+jest.mock('sulu-admin-bundle/utils/Translator');
 
 jest.mock('sulu-page-bundle/stores', () => ({
     webspaceStore: {
@@ -30,15 +14,13 @@ jest.mock('sulu-page-bundle/stores', () => ({
     },
 }));
 
-test('Pass correct props to MultiSelect', () => {
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
-    );
+function createFormInspector(): any {
+    return {
+        options: {webspace: 'sulu_io'},
+    };
+}
 
+beforeEach(() => {
     const webspace = {
         urls: [
             {url: '{host}/{localization}'},
@@ -46,8 +28,13 @@ test('Pass correct props to MultiSelect', () => {
         ],
     };
     webspaceStore.getWebspace.mockReturnValue(webspace);
+});
 
-    const analyticsDomainSelect = shallow(
+test('Pass correct props to MultiSelect', async() => {
+    const user = userEvent.setup();
+    const formInspector = createFormInspector();
+
+    const {unmount} = render(
         <AnalyticsDomainSelect
             {...fieldTypeDefaultProps}
             disabled={true}
@@ -57,36 +44,31 @@ test('Pass correct props to MultiSelect', () => {
     );
 
     expect(webspaceStore.getWebspace).toHaveBeenCalledWith('sulu_io');
+    expect(screen.getByRole('button', {name: /\{host\}/})).toBeDisabled();
 
-    expect(analyticsDomainSelect.find('MultiSelect').prop('disabled')).toEqual(true);
-    expect(analyticsDomainSelect.find('MultiSelect').prop('values')).toEqual(['{host}']);
-    expect(analyticsDomainSelect.find('Option').at(0).prop('children')).toEqual('{host}/{localization}');
-    expect(analyticsDomainSelect.find('Option').at(0).prop('value')).toEqual('{host}/{localization}');
-    expect(analyticsDomainSelect.find('Option').at(1).prop('children')).toEqual('{host}');
-    expect(analyticsDomainSelect.find('Option').at(1).prop('value')).toEqual('{host}');
-});
+    unmount();
 
-test('Call onChange and onBlur if the value is changed', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const formInspector = new FormInspector(
-        new ResourceFormStore(
-            new ResourceStore('test'),
-            'test',
-            {webspace: 'sulu_io'}
-        )
+    render(
+        <AnalyticsDomainSelect
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            value={['{host}']}
+        />
     );
 
-    const webspace = {
-        urls: [
-            {url: '{host}/{localization}'},
-            {url: '{host}'},
-        ],
-    };
-    webspaceStore.getWebspace.mockReturnValue(webspace);
+    await user.click(screen.getByRole('button', {name: /\{host\}/}));
 
-    const analyticsDomainSelect = shallow(
+    expect(screen.getByRole('button', {name: /{host}\/{localization}$/})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /{host}$/})).toBeInTheDocument();
+});
+
+test('Call onChange and onBlur if the value is changed', async() => {
+    const user = userEvent.setup();
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+    const formInspector = createFormInspector();
+
+    render(
         <AnalyticsDomainSelect
             {...fieldTypeDefaultProps}
             formInspector={formInspector}
@@ -96,7 +78,9 @@ test('Call onChange and onBlur if the value is changed', () => {
         />
     );
 
-    analyticsDomainSelect.find('MultiSelect').prop('onChange')(['{host}', '{host}/{localization}']);
+    await user.click(screen.getByRole('button', {name: /\{host\}/}));
+    await user.click(screen.getByRole('button', {name: /{host}\/{localization}$/}));
+
     expect(changeSpy).toHaveBeenCalledWith(['{host}', '{host}/{localization}']);
     expect(finishSpy).toHaveBeenCalledWith();
 });

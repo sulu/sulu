@@ -31,20 +31,22 @@ describe('FeatureBadge', () => {
     });
 
     it('calls onWritingAssistantClick when WritingAssistantIcon is clicked', async() => {
+        const user = userEvent.setup();
         const handleWritingAssistantClick = jest.fn();
         render(
             <FeatureBadge {...defaultProps} onWritingAssistantClick={handleWritingAssistantClick} />
         );
-        await userEvent.click(screen.getByTitle('Writing Assistant'));
+        await user.click(screen.getByTitle('Writing Assistant'));
         expect(handleWritingAssistantClick).toHaveBeenCalled();
     });
 
     it('calls onTranslateClick when TranslateIcon is clicked', async() => {
+        const user = userEvent.setup();
         const handleTranslateClick = jest.fn();
         render(
             <FeatureBadge {...defaultProps} onTranslateClick={handleTranslateClick} />
         );
-        await userEvent.click(screen.getByTitle('Translate'));
+        await user.click(screen.getByTitle('Translate'));
         expect(handleTranslateClick).toHaveBeenCalled();
     });
 

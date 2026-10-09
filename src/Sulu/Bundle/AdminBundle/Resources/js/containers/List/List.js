@@ -97,7 +97,8 @@ class List extends React.Component<Props> {
     @observable showOrderDialog: boolean = false;
     @observable adapterOptionsOpen: boolean = false;
     @observable columnOptionsOpen: boolean = false;
-    @observable referencingResourcesData: ?ReferencingResourcesData = undefined;
+    // a ref, because the dialog distinguishes a single resource from a list of them and mobx 4 arrays are no arrays
+    @observable.ref referencingResourcesData: ?(ReferencingResourcesData | Array<ReferencingResourcesData>) = undefined;
     @observable dependantResourcesData: ?DependantResourcesData = undefined;
     @observable movingRestrictedTarget: ?Object = undefined;
     resolveCopy: ?(ResolveCopyArgument) => void;
@@ -214,11 +215,41 @@ class List extends React.Component<Props> {
     };
 
     @action handleSelectionDeleteDialogConfirmClick = () => {
-        this.props.store.deleteSelection()
-            .then(action(() => {
-                this.showDeleteSelectionDialog = false;
-            }))
-            .catch(this.handleDeleteResponseError);
+        this.deleteSelection();
+    };
+
+    deleteSelection = (options: Object = {}) => {
+        this.props.store.deleteSelectionSettled(options)
+            .then((errorResponses) => {
+                if (errorResponses.length === 0) {
+                    this.closeAllDialogs();
+
+                    return;
+                }
+
+                return Promise.all(errorResponses.map(
+                    (response) => response.json().then((data) => ({data, status: response.status}))
+                )).then((errors) => {
+                    const otherError = errors.find(({data, status}) => {
+                        return status !== 409 || data.code !== ERROR_CODE_REFERENCING_RESOURCES_FOUND;
+                    });
+
+                    if (otherError) {
+                        this.handleDeleteError(otherError.status, otherError.data);
+
+                        return;
+                    }
+
+                    this.showReferencingResourcesDialog(
+                        errors.map(({data}) => ({
+                            resource: data.resource,
+                            referencingResources: data.referencingResources,
+                            referencingResourcesCount: data.referencingResourcesCount,
+                        })),
+                        () => this.deleteSelection({force: true})
+                    );
+                });
+            });
     };
 
     @action handleSelectionDeleteDialogCancelClick = () => {
@@ -254,69 +285,85 @@ class List extends React.Component<Props> {
         this.dependantResourcesData = undefined;
     };
 
-    @action handleDeleteResponseError = (response: Object) => {
+    handleDeleteResponseError = (response: Object) => {
+        response.json().then((data) => this.handleDeleteError(response.status, data));
+    };
+
+    @action showReferencingResourcesDialog = (
+        referencingResourcesData: ReferencingResourcesData | Array<ReferencingResourcesData>,
+        forceDelete: () => void
+    ) => {
+        this.closeAllDialogs();
+
+        this.referencingResourcesData = referencingResourcesData;
+
+        const promise: Promise<ResolveDeleteArgument> = new Promise(
+            (resolve) => this.resolveDelete = resolve
+        );
+
+        promise.then(action((response) => {
+            if (!response.deleted) {
+                this.closeAllDialogs();
+
+                return response;
+            }
+
+            forceDelete();
+        }));
+    };
+
+    @action handleDeleteError = (status: number, data: Object) => {
         const {onDeleteError} = this.props;
 
-        response.json().then(action((data) => {
-            this.closeAllDialogs();
+        this.closeAllDialogs();
 
-            if (response.status === 409 && data.code === ERROR_CODE_REFERENCING_RESOURCES_FOUND) {
-                this.referencingResourcesData = {
+        if (status === 409 && data.code === ERROR_CODE_REFERENCING_RESOURCES_FOUND) {
+            this.showReferencingResourcesDialog(
+                {
                     resource: data.resource,
                     referencingResources: data.referencingResources,
                     referencingResourcesCount: data.referencingResourcesCount,
-                };
-
-                const promise: Promise<ResolveDeleteArgument> = new Promise(
-                    (resolve) => this.resolveDelete = resolve
-                );
-
-                promise.then(action((response) => {
-                    if (!response.deleted) {
-                        this.closeAllDialogs();
-
-                        return response;
-                    }
-
+                },
+                () => {
                     this.props.store.delete(data.resource.id, {force: true})
                         .then(this.closeAllDialogs)
                         .catch(this.handleDeleteResponseError);
-                }));
+                }
+            );
 
-                return;
-            }
+            return;
+        }
 
-            if (response.status === 409 && data.code === ERROR_CODE_DEPENDANT_RESOURCES_FOUND) {
-                this.dependantResourcesData = {
-                    dependantResourceBatches: data.dependantResourceBatches,
-                    dependantResourcesCount: data.dependantResourcesCount,
-                    detail: data.detail,
-                    title: data.title,
-                };
+        if (status === 409 && data.code === ERROR_CODE_DEPENDANT_RESOURCES_FOUND) {
+            this.dependantResourcesData = {
+                dependantResourceBatches: data.dependantResourceBatches,
+                dependantResourcesCount: data.dependantResourcesCount,
+                detail: data.detail,
+                title: data.title,
+            };
 
-                const promise: Promise<ResolveDeleteArgument> = new Promise(
-                    (resolve) => this.resolveDelete = resolve
-                );
+            const promise: Promise<ResolveDeleteArgument> = new Promise(
+                (resolve) => this.resolveDelete = resolve
+            );
 
-                promise.then(action((response) => {
-                    if (!response.deleted) {
-                        this.closeAllDialogs();
+            promise.then(action((response) => {
+                if (!response.deleted) {
+                    this.closeAllDialogs();
 
-                        return response;
-                    }
+                    return response;
+                }
 
-                    this.props.store.delete(data.resource.id)
-                        .then(this.closeAllDialogs)
-                        .catch(this.handleDeleteResponseError);
-                }));
+                this.props.store.delete(data.resource.id)
+                    .then(this.closeAllDialogs)
+                    .catch(this.handleDeleteResponseError);
+            }));
 
-                return;
-            }
+            return;
+        }
 
-            if (onDeleteError) {
-                onDeleteError(data);
-            }
-        }));
+        if (onDeleteError) {
+            onDeleteError(data);
+        }
     };
 
     @action handleDeleteDialogConfirmClick = () => {
@@ -584,7 +631,7 @@ class List extends React.Component<Props> {
         return (
             <DeleteReferencedResourceDialog
                 allowDeletion={this.allowConflictDeletion}
-                confirmLoading={store.deleting}
+                confirmLoading={store.deleting || store.deletingSelection}
                 onCancel={this.handleDeleteDialogCancelClick}
                 onConfirm={this.handleDeleteDialogConfirmClick}
                 referencingResourcesData={this.referencingResourcesData}

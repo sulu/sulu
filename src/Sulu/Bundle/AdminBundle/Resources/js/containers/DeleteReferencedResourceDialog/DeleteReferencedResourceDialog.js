@@ -2,6 +2,7 @@
 import React from 'react';
 import Dialog from '../../components/Dialog';
 import {translate} from '../../utils';
+import ReferencingResources from './ReferencingResources';
 import type {ReferencingResourcesData} from '../../types';
 
 type Props = {
@@ -9,7 +10,7 @@ type Props = {
     confirmLoading: boolean,
     onCancel: () => void,
     onConfirm: () => void,
-    referencingResourcesData: ReferencingResourcesData,
+    referencingResourcesData: ReferencingResourcesData | Array<ReferencingResourcesData>,
 }
 
 class DeleteReferencedResourceDialog extends React.PureComponent<Props> {
@@ -51,24 +52,10 @@ class DeleteReferencedResourceDialog extends React.PureComponent<Props> {
                     : translate('sulu_admin.item_not_deletable')
                 }
             >
-                {allowDeletion
-                    ? translate('sulu_admin.delete_linked_warning_text')
-                    : translate('sulu_admin.delete_linked_abort_text')
-                }
-
-                <ul>
-                    {referencingResourcesData.referencingResources.map((item, index) => {
-                        const {title = null} = item;
-
-                        if (!title) {
-                            return null;
-                        }
-
-                        return (
-                            <li key={index}>{title}</li>
-                        );
-                    })}
-                </ul>
+                <ReferencingResources
+                    allowDeletion={allowDeletion}
+                    referencingResourcesData={referencingResourcesData}
+                />
             </Dialog>
         );
     }

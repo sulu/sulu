@@ -120,6 +120,7 @@ return static function(ContainerConfigurator $container) {
             '%sulu_security.password_policy_pattern%',
             '%sulu_security.password_policy_info_translation_key%',
             '%sulu_security.has_single_sign_on_providers%',
+            [],
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
@@ -136,6 +137,7 @@ return static function(ContainerConfigurator $container) {
             '%sulu_admin.resources%',
             '%sulu_admin.collaboration_interval%',
             '%sulu_admin.collaboration_enabled%',
+            '%sulu_admin.text_editor_content_locales%',
         ])
         ->tag('sulu.admin')
         ->tag('sulu.context', ['context' => 'admin'])

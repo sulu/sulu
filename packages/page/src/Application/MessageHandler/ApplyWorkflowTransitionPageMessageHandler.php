@@ -11,7 +11,6 @@
 
 namespace Sulu\Page\Application\MessageHandler;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -30,7 +29,6 @@ final class ApplyWorkflowTransitionPageMessageHandler
     public function __construct(
         private PageRepositoryInterface $pageRepository,
         private ContentWorkflowInterface $contentWorkflow,
-        private EntityManagerInterface $entityManager,
         private DomainEventCollectorInterface $domainEventCollector,
     ) {
     }
@@ -44,10 +42,6 @@ final class ApplyWorkflowTransitionPageMessageHandler
         // The shadow source and dependent locales are only known once this locale is loaded.
         $relatedLocales = $this->resolveRelatedLocales($page, $locale);
         if ([] !== $relatedLocales) {
-            // Drop the identity-map collection (filled by a preceding ModifyPageMessage) so the
-            // wider query re-hydrates it with all locales.
-            $this->entityManager->refresh($page);
-
             $page = $this->loadPage($message, [$locale, ...$relatedLocales]);
         }
 

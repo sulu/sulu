@@ -33,6 +33,7 @@ import List, {
 } from './views/List';
 import Tabs from './views/Tabs';
 import CKEditor5 from './containers/TextEditor/adapters/CKEditor5';
+import CKEditor5Container from './containers/CKEditor5';
 import {
     ArrayFieldTransformer,
     BooleanFieldFilterType,
@@ -40,7 +41,9 @@ import {
     ColorFieldTransformer,
     HtmlFieldTransformer,
     IconFieldTransformer,
+    BadgeFieldTransformer,
     BytesFieldTransformer,
+    DurationFieldTransformer,
     ColumnListAdapter,
     listAdapterRegistry,
     listFieldTransformerRegistry,
@@ -73,6 +76,7 @@ import FieldBlocks, {
     TimeBlockPreviewTransformer,
 } from './containers/FieldBlocks';
 import {
+    blockConditionDataProvider,
     bundlesConditionDataProvider,
     Checkbox,
     ColorPicker,
@@ -126,6 +130,7 @@ import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
 import Subscription from './views/Subscription';
 import {setSubscriptionConfig} from './views/Subscription/subscriptionConfig';
+import RequestLog from './views/RequestLog';
 import {initializeJexl} from './utils/jexl';
 import {ExternalLinkTypeOverlay, linkOverlayRegistry, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
@@ -184,6 +189,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         registerListToolbarActions();
         registerViews();
 
+        conditionDataProviderRegistry.add(blockConditionDataProvider);
         conditionDataProviderRegistry.add(bundlesConditionDataProvider);
         conditionDataProviderRegistry.add(localeConditionDataProvider);
         conditionDataProviderRegistry.add(parentConditionDataProvider);
@@ -210,6 +216,7 @@ function registerViews() {
         {disableDefaultSpacing: true, fullscreen: true}
     );
     viewRegistry.add('sulu_ai_platform.subscription', Subscription);
+    viewRegistry.add('sulu_ai_platform.request_log', RequestLog);
 }
 
 function registerListAdapters() {
@@ -236,7 +243,9 @@ function registerListFieldFilterTypes() {
 
 function registerListFieldTransformers() {
     listFieldTransformerRegistry.add('array', new ArrayFieldTransformer());
+    listFieldTransformerRegistry.add('badge', new BadgeFieldTransformer());
     listFieldTransformerRegistry.add('bytes', new BytesFieldTransformer());
+    listFieldTransformerRegistry.add('duration', new DurationFieldTransformer());
     listFieldTransformerRegistry.add('date', new DateFieldTransformer());
     listFieldTransformerRegistry.add('time', new TimeFieldTransformer());
     listFieldTransformerRegistry.add('datetime', new DateTimeFieldTransformer());
@@ -384,6 +393,7 @@ function processConfig(config: Object) {
     smartContentConfigStore.setConfig(config.smartContent);
     CollaborationStore.enabled = config.collaborationEnabled;
     CollaborationStore.interval = config.collaborationInterval;
+    CKEditor5Container.contentLocales = config.textEditorContentLocales;
 }
 
 function startAdmin() {

@@ -1,6 +1,7 @@
 // @flow
 import Form from './Form';
 import FormInspector from './FormInspector';
+import blockConditionDataProvider from './conditionDataProviders/blockConditionDataProvider';
 import bundlesConditionDataProvider from './conditionDataProviders/bundlesConditionDataProvider';
 import localeConditionDataProvider from './conditionDataProviders/localeConditionDataProvider';
 import parentConditionDataProvider from './conditionDataProviders/parentConditionDataProvider';
@@ -38,6 +39,7 @@ import SingleIconSelection from './fields/SingleIconSelection';
 import type {FormStoreInterface, Schema, Types} from './types';
 
 export {
+    blockConditionDataProvider,
     bundlesConditionDataProvider,
     localeConditionDataProvider,
     parentConditionDataProvider,

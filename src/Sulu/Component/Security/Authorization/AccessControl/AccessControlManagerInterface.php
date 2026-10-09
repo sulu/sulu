@@ -25,6 +25,8 @@ interface AccessControlManagerInterface
      * @param string $type The type of the protected object
      * @param string $identifier The identifier of the protected object
      * @param mixed[] $permissions
+     *
+     * @return void
      */
     public function setPermissions($type, $identifier, $permissions, bool $inherit = false);
 
@@ -34,7 +36,7 @@ interface AccessControlManagerInterface
      * @param string|null $type The type of the protected object
      * @param string|null $identifier The identifier of the protected object
      *
-     * @return mixed[]
+     * @return array<int, array<string, bool>>|null Key: RoleId, Value: Permission mask
      */
     public function getPermissions($type, $identifier);
 
@@ -53,7 +55,7 @@ interface AccessControlManagerInterface
      *
      * @param string|null $locale
      * @param string $securityContext
-     * @param mixed[] $objectPermissionsByRole
+     * @param mixed[]|null $objectPermissionsByRole
      * @param UserInterface|null $user The user for which the security is returned
      * @param string|null $system The system in which the permission should be checked
      *

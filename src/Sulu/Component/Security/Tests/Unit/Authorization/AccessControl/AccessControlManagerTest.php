@@ -268,7 +268,9 @@ class AccessControlManagerTest extends TestCase
 
     public function testSetPermissionsWithoutProvider(): void
     {
-        $this->assertNull($this->accessControlManager->setPermissions(\stdClass::class, '1', []));
+        $this->accessControlManager->setPermissions(\stdClass::class, '1', []);
+
+        $this->eventDispatcher->dispatch(Argument::cetera())->shouldNotBeCalled();
     }
 
     #[DataProvider('dataWithSystem')]

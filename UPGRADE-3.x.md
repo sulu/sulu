@@ -2,6 +2,22 @@
 
 ## 3.0.10
 
+### The target group select of the preview follows the audience targeting permission
+
+The preview offered its target group select as soon as the `SuluAudienceTargetingBundle` was installed, and the
+select loads the target groups through the API. A user without the `view` permission on
+`sulu.settings.target-groups` got a `403` there, which left the preview, and with it the whole page, unusable.
+The select is now offered only to users who have that permission.
+
+If you replaced `sulu_preview.admin`, pass the `sulu_security.security_checker` as the last constructor
+argument. Without it the select is offered to everyone, as before. Leaving it out triggers a deprecation.
+
+### Mandatory fields reject an empty string
+
+A mandatory field whose type has no dedicated schema mapper, like `text_editor` or `color`, accepted an empty
+string. The generated JSON schema now forbids `""` for these fields. Existing content whose mandatory field still
+holds `""` cannot be saved until the field is filled in.
+
 ### Cache tags now match the invalidation
 
 Pages are tagged with the resource key of a resource (`tags-5`, `contacts-3`), while the invalidation used
@@ -12,6 +28,13 @@ with the old aliases need to switch to the resource key:
 ```php
 $cacheManager->invalidateReference(TagInterface::RESOURCE_KEY, (string) $tag->getId());
 ```
+
+### New constructor arguments for the teaser providers, the snippet area resolver and the link resolver
+
+`PageTeaserProvider`, `ArticleTeaserProvider` and `SnippetAreaSmartResolver` take the `sulu_http_cache.reference_store`
+as their last argument, `LinkPropertyResolver` takes the `sulu_markup.link_tag.provider_pool`. Projects that extend one
+of these classes or define their own service for it need to pass it, otherwise the container throws an
+`ArgumentCountError`. Clear the HTTP cache once, pages cached before lack the new tags.
 
 ### Add and live permissions are enforced for pages, snippets and articles
 
@@ -55,6 +78,23 @@ rows on its next save, so refresh existing content once after upgrading:
 
 ```bash
 bin/console sulu:reference:refresh
+```
+
+### Forced two factor authentication without the email method
+
+With `sulu_security.two_factor.force` enabled and `scheb/2fa-email` not installed, the users matching the pattern
+have to set up a method after the login. Until then the admin API answers every other route with a `403` and the
+`two_factor_setup_required` error, technical API users included. Disabling the method is rejected for these users.
+
+`trusted_devices` does not count as a method a user can activate anymore. A project that enables nothing else
+can not force two factor authentication anymore.
+
+### Index for the reference table
+
+The `re_references` table has a new index. Update your database schema, or add it by hand:
+
+```sql
+CREATE INDEX reference_resource_idx ON re_references (referenceResourceKey, referenceResourceId, referenceLocale, referenceContext);
 ```
 
 ## 3.0.9

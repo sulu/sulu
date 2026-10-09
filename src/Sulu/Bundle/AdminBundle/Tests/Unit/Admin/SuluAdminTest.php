@@ -16,6 +16,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
@@ -24,7 +25,10 @@ use Sulu\Bundle\AdminBundle\Admin\View\View;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface;
+use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -39,6 +43,41 @@ class SuluAdminTest extends TestCase
 
     private SuluAdmin $suluAdmin;
 
+    /**
+     * @var ObjectProphecy<ViewRegistry>
+     */
+    private ObjectProphecy $viewRegistry;
+
+    /**
+     * @var ObjectProphecy<NavigationRegistry>
+     */
+    private ObjectProphecy $navigationRegistry;
+
+    /**
+     * @var ObjectProphecy<TokenStorageInterface>
+     */
+    private ObjectProphecy $tokenStorage;
+
+    /**
+     * @var ObjectProphecy<ContactManagerInterface<ContactInterface, ContactApi, ContactAddress>>
+     */
+    private ObjectProphecy $contactManager;
+
+    /**
+     * @var ObjectProphecy<FieldTypeOptionRegistryInterface>
+     */
+    private ObjectProphecy $fieldTypeOptionRegistry;
+
+    /** @var \ArrayIterator<array-key, SmartContentProviderInterface> */
+    private \ArrayIterator $smartContentProviders;
+
+    private LinkProviderPool $linkProviderPool;
+
+    /**
+     * @var ObjectProphecy<LocalizationManagerInterface>
+     */
+    private ObjectProphecy $localizationManager;
+
     /** @var array<string, array{routes: array<string, string>}> */
     private array $resources = [
         'tags' => [
@@ -51,52 +90,53 @@ class SuluAdminTest extends TestCase
 
     public function setUp(): void
     {
-        $viewRegistry = $this->prophesize(ViewRegistry::class);
+        $this->viewRegistry = $this->prophesize(ViewRegistry::class);
         $views = [
             new View('sulu_snippet.list', '/snippets', 'sulu_admin.list'),
         ];
-        $viewRegistry->getViews()->willReturn($views);
+        $this->viewRegistry->getViews()->willReturn($views);
 
-        $navigationRegistry = $this->prophesize(NavigationRegistry::class);
+        $this->navigationRegistry = $this->prophesize(NavigationRegistry::class);
         $navigationItem1 = new NavigationItem('navigation_item1');
         $navigationItem2 = new NavigationItem('navigation_item2');
-        $navigationRegistry->getNavigationItems()->willReturn([$navigationItem1, $navigationItem2]);
+        $this->navigationRegistry->getNavigationItems()->willReturn([$navigationItem1, $navigationItem2]);
 
         $user = $this->prophesize(User::class);
         $user->getLocale()->willReturn('de');
 
-        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $token = $this->prophesize(TokenInterface::class);
-        $tokenStorage->getToken()->willReturn($token->reveal());
+        $this->tokenStorage->getToken()->willReturn($token->reveal());
         $token->getUser()->willReturn($user->reveal());
 
-        $contactManager = $this->prophesize(ContactManagerInterface::class);
+        $this->contactManager = $this->prophesize(ContactManagerInterface::class);
         $contact = $this->prophesize(ContactInterface::class);
         $contact->getId()->willReturn(5);
 
         $user->getContact()->willReturn($contact->reveal());
 
-        $fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
-        $fieldTypeOptionRegistry->toArray()->willReturn(['selection' => []]);
+        $this->fieldTypeOptionRegistry = $this->prophesize(FieldTypeOptionRegistryInterface::class);
+        $this->fieldTypeOptionRegistry->toArray()->willReturn(['selection' => []]);
 
-        $smartContentProviders = new \ArrayIterator([]);
-        $linkProviderPool = new LinkProviderPool([]);
+        $this->smartContentProviders = new \ArrayIterator([]);
+        $this->linkProviderPool = new LinkProviderPool([]);
 
-        $localizationManager = $this->prophesize(LocalizationManagerInterface::class);
-        $localizationManager->getLocalizations()->willReturn([
+        $this->localizationManager = $this->prophesize(LocalizationManagerInterface::class);
+        $this->localizationManager->getLocalizations()->willReturn([
             new Localization('de', 'DE'),
+            new Localization('de', 'at'),
             new Localization('en', 'US'),
         ]);
 
         $this->suluAdmin = new SuluAdmin(
-            $tokenStorage->reveal(),
-            $viewRegistry->reveal(),
-            $navigationRegistry->reveal(),
-            $fieldTypeOptionRegistry->reveal(),
-            $contactManager->reveal(),
-            $smartContentProviders,
-            $linkProviderPool,
-            $localizationManager->reveal(),
+            $this->tokenStorage->reveal(),
+            $this->viewRegistry->reveal(),
+            $this->navigationRegistry->reveal(),
+            $this->fieldTypeOptionRegistry->reveal(),
+            $this->contactManager->reveal(),
+            $this->smartContentProviders,
+            $this->linkProviderPool,
+            $this->localizationManager->reveal(),
             $this->resources,
             10,
             true,
@@ -132,5 +172,28 @@ class SuluAdminTest extends TestCase
         $this->assertSame($config['resources'], $this->resources);
         $this->assertTrue($config['collaborationEnabled']);
         $this->assertSame(10000, $config['collaborationInterval']);
+        $this->assertSame(['de', 'en'], $config['textEditorContentLocales']);
+    }
+
+    public function testConfiguredTextEditorContentLocales(): void
+    {
+        $this->suluAdmin = new SuluAdmin(
+            $this->tokenStorage->reveal(),
+            $this->viewRegistry->reveal(),
+            $this->navigationRegistry->reveal(),
+            $this->fieldTypeOptionRegistry->reveal(),
+            $this->contactManager->reveal(),
+            $this->smartContentProviders,
+            $this->linkProviderPool,
+            $this->localizationManager->reveal(),
+            $this->resources,
+            10,
+            true,
+            [
+                'keys should be ignored' => 'ar',
+            ]
+        );
+
+        $this->assertSame(['ar'], $this->suluAdmin->getConfig()['textEditorContentLocales']);
     }
 }

@@ -1,8 +1,39 @@
 // @flow
 import React from 'react';
+import {render} from '@testing-library/react';
 import {observable} from 'mobx';
-import {shallow} from 'enzyme';
 import CKEditor5 from '../../adapters/CKEditor5';
+
+let mockCKEditor5Props: Object = {};
+
+const mockReact = require('react');
+
+jest.mock('../../../CKEditor5', () => {
+    const CKEditor5Mock: any = jest.fn((props) => {
+        mockCKEditor5Props = props;
+
+        return mockReact.createElement('div', {'data-testid': 'ckeditor5'});
+    });
+
+    CKEditor5Mock.defaultProps = {
+        formats: ['h2', 'h3', 'h4', 'h5', 'h6'],
+    };
+
+    return CKEditor5Mock;
+});
+
+beforeEach(() => {
+    jest.clearAllMocks();
+    mockCKEditor5Props = {};
+});
+
+function expectRenderToThrow(element, error) {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    expect(() => render(element)).toThrow(error);
+
+    consoleErrorSpy.mockRestore();
+}
 
 test('Pass correct props to CKEditor5 component', () => {
     const blurSpy = jest.fn();
@@ -10,7 +41,7 @@ test('Pass correct props to CKEditor5 component', () => {
 
     const locale = observable.box('en');
 
-    const ckeditor5 = shallow(
+    render(
         <CKEditor5
             disabled={false}
             locale={locale}
@@ -21,7 +52,7 @@ test('Pass correct props to CKEditor5 component', () => {
         />
     );
 
-    expect(ckeditor5.find('CKEditor5').props()).toEqual(expect.objectContaining({
+    expect(mockCKEditor5Props).toEqual(expect.objectContaining({
         disabled: false,
         formats: ['h2', 'h3', 'h4', 'h5', 'h6'],
         locale,
@@ -49,7 +80,7 @@ test('Pass formats to CKEditor5 component', () => {
         },
     };
 
-    const ckeditor5 = shallow(
+    render(
         <CKEditor5
             disabled={false}
             locale={undefined}
@@ -60,7 +91,7 @@ test('Pass formats to CKEditor5 component', () => {
         />
     );
 
-    expect(ckeditor5.find('CKEditor5').props()).toEqual(expect.objectContaining({
+    expect(mockCKEditor5Props).toEqual(expect.objectContaining({
         disabled: false,
         formats: ['h2', 'h3'],
         onBlur: blurSpy,
@@ -77,21 +108,20 @@ test('Throw error if passed formats is not an array', () => {
         },
     };
 
-    expect(() =>
-        shallow(
-            <CKEditor5
-                disabled={true}
-                locale={undefined}
-                onBlur={jest.fn()}
-                onChange={jest.fn()}
-                options={options}
-                value={undefined}
-            />
-        )
-    ).toThrow(/"formats" must be an array of strings/);
+    expectRenderToThrow(
+        <CKEditor5
+            disabled={true}
+            locale={undefined}
+            onBlur={jest.fn()}
+            onChange={jest.fn()}
+            options={options}
+            value={undefined}
+        />,
+        /"formats" must be an array of strings/
+    );
 });
 
-test('Throw error if passed formats is not an array', () => {
+test('Throw error if passed formats contains a non-string name', () => {
     const options = {
         formats: {
             name: 'formats',
@@ -106,16 +136,15 @@ test('Throw error if passed formats is not an array', () => {
         },
     };
 
-    expect(() =>
-        shallow(
-            <CKEditor5
-                disabled={true}
-                locale={undefined}
-                onBlur={jest.fn()}
-                onChange={jest.fn()}
-                options={options}
-                value={undefined}
-            />
-        )
-    ).toThrow(/"formats" must be strings/);
+    expectRenderToThrow(
+        <CKEditor5
+            disabled={true}
+            locale={undefined}
+            onBlur={jest.fn()}
+            onChange={jest.fn()}
+            options={options}
+            value={undefined}
+        />,
+        /"formats" must be strings/
+    );
 });

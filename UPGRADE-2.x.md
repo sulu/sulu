@@ -2,7 +2,32 @@
 
 For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upgrades/upgrade-2.x.html) steps.
 
+## 2.6.28
+
+### Deprecated instantiating `MediaController` without `$referenceRepository` and `$requestStack`
+
+Instantiating the `MediaController` without the `$referenceRepository` or `$requestStack` argument is
+deprecated. The `$referenceRepository` is used to look up the resources that reference a media before deleting
+it, the `$requestStack` to read the `force` parameter of the request. Without one of them a media is deleted
+without the warning, as before.
+
 ## 2.6.27
+
+### The target group select of the preview follows the audience targeting permission
+
+The preview offered its target group select as soon as the `SuluAudienceTargetingBundle` was installed, and the
+select loads the target groups through the API. A user without the `view` permission on
+`sulu.settings.target-groups` got a `403` there, which left the preview, and with it the whole page, unusable.
+The select is now offered only to users who have that permission.
+
+If you replaced `sulu_preview.admin`, pass the `sulu_security.security_checker` as the last constructor
+argument. Without it the select is offered to everyone, as before. Leaving it out triggers a deprecation.
+
+### Mandatory fields reject an empty string
+
+A mandatory field whose type has no dedicated schema mapper, like `text_editor` or `color`, accepted an empty
+string. The generated JSON schema now forbids `""` for these fields. Existing content whose mandatory field still
+holds `""` cannot be saved until the field is filled in.
 
 ### Copying a page or snippet requires the add permission
 
@@ -25,17 +50,24 @@ bin/adminconsole sulu:reference:refresh
 bin/websiteconsole sulu:reference:refresh
 ```
 
-## 2.6.26
+### Forced two factor authentication without the email method
 
-### Improved reference tracking performance
+With `sulu_security.two_factor.force` enabled and `scheb/2fa-email` not installed, the users matching the pattern
+have to set up a method after the login. Until then the admin API answers every other route with a `403` and the
+`two_factor_setup_required` error, technical API users included. Disabling the method is rejected for these users.
 
-`ReferenceRepository` filters by `referenceResourceKey`, `referenceResourceId`, `referenceLocale` and
-`referenceContext` when it removes the references a resource holds, which happens on every publish.
-Only the source side of the table was indexed, so that removal was a full table scan:
+`trusted_devices` does not count as a method a user can activate anymore. A project that enables nothing else
+can not force two factor authentication anymore.
+
+### Index for the reference table
+
+The `re_references` table has a new index. Update your database schema, or add it by hand:
 
 ```sql
 CREATE INDEX reference_resource_idx ON re_references (referenceResourceKey, referenceResourceId, referenceLocale, referenceContext);
 ```
+
+## 2.6.26
 
 ### AI Disclosure
 

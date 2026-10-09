@@ -1,6 +1,5 @@
-/* eslint-disable testing-library/prefer-user-event */
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import SingleAutoComplete from '../SingleAutoComplete';
@@ -35,7 +34,8 @@ function getInput() {
     return screen.getByRole('textbox');
 }
 
-test('SingleAutoComplete should render with suggestions', () => {
+test('SingleAutoComplete should render with suggestions', async() => {
+    const user = userEvent.setup();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
         {id: 2, name: 'Suggestion 2'},
@@ -43,7 +43,7 @@ test('SingleAutoComplete should render with suggestions', () => {
     ];
     const {asFragment} = renderSingleAutoComplete({suggestions});
 
-    fireEvent.focus(getInput());
+    await user.click(getInput());
 
     expect(asFragment()).toMatchSnapshot();
     expect(screen.getByRole('list')).toMatchSnapshot();
@@ -80,14 +80,15 @@ test('Selecting suggestion should fire onChange callback and update value of Inp
 
     expect(getInput().value).toEqual('Test');
 
-    fireEvent.focus(getInput());
+    await user.click(getInput());
     await user.click(screen.getByRole('button', {name: 'Suggestion 1'}));
 
     expect(getInput().value).toEqual('Suggestion 1');
     expect(changeSpy).toHaveBeenCalledWith(suggestions[0]);
 });
 
-test('Should call onChange with undefined if all characters are removed from input', () => {
+test('Should call onChange with undefined if all characters are removed from input', async() => {
+    const user = userEvent.setup();
     const changeSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
@@ -101,11 +102,12 @@ test('Should call onChange with undefined if all characters are removed from inp
     });
 
     expect(getInput().value).toEqual('Test');
-    fireEvent.change(getInput(), {target: {value: ''}});
+    await user.clear(getInput());
     expect(changeSpy).toHaveBeenCalledWith(undefined);
 });
 
-test('Should call the onFinish callback when the Input lost focus', () => {
+test('Should call the onFinish callback when the Input lost focus', async() => {
+    const user = userEvent.setup();
     const finishSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
@@ -116,7 +118,8 @@ test('Should call the onFinish callback when the Input lost focus', () => {
         suggestions,
     });
 
-    fireEvent.blur(getInput());
+    await user.click(getInput());
+    await user.tab();
     expect(finishSpy).toHaveBeenCalled();
 });
 
@@ -141,7 +144,8 @@ test('Should update value of Input when the value prop is updated', () => {
     expect(getInput().value).toEqual('new value');
 });
 
-test('Should fire onSearch callback and open popover when input field is focused', () => {
+test('Should fire onSearch callback and open popover when input field is focused', async() => {
+    const user = userEvent.setup();
     const searchSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
@@ -155,12 +159,13 @@ test('Should fire onSearch callback and open popover when input field is focused
     expect(searchSpy).not.toHaveBeenCalled();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
 
-    fireEvent.focus(getInput());
+    await user.click(getInput());
     expect(searchSpy).toHaveBeenCalledWith('Test');
     expect(screen.getByRole('list')).toBeInTheDocument();
 });
 
-test('Should close popover when requested and reopen popover when input field is changed', () => {
+test('Should close popover when requested and reopen popover when input field is changed', async() => {
+    const user = userEvent.setup();
     const searchSpy = jest.fn();
     const suggestions = [
         {id: 1, name: 'Suggestion 1'},
@@ -171,14 +176,15 @@ test('Should close popover when requested and reopen popover when input field is
         suggestions,
     });
 
-    fireEvent.focus(getInput());
+    await user.click(getInput());
     expect(searchSpy).toHaveBeenNthCalledWith(1, 'Test');
     expect(screen.getByRole('list')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByTestId('backdrop'));
+    await user.click(screen.getByTestId('backdrop'));
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
 
-    fireEvent.change(getInput(), {target: {value: 'search term'}});
-    expect(searchSpy).toHaveBeenNthCalledWith(2, 'search term');
+    await user.clear(getInput());
+    await user.type(getInput(), 'search term');
+    expect(searchSpy).toHaveBeenLastCalledWith('search term');
     expect(screen.getByRole('list')).toBeInTheDocument();
 });

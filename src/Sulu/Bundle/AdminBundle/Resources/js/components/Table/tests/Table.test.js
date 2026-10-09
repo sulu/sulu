@@ -1,6 +1,6 @@
-/* eslint-disable testing-library/prefer-user-event */
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Table from '../Table';
 import Header from '../Header';
@@ -216,7 +216,8 @@ test('Render a table with disabled rows', () => {
     );
 });
 
-test('Table buttons should implement an onClick handler', () => {
+test('Table buttons should implement an onClick handler', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     const buttons = [{
         icon: 'fa-pencil',
@@ -247,14 +248,15 @@ test('Table buttons should implement an onClick handler', () => {
 
     const rowButtons = screen.getAllByRole('button', {name: 'fa-pencil'});
     expect(clickSpy).toHaveBeenCalledTimes(0);
-    fireEvent.click(rowButtons[0]);
-    fireEvent.click(rowButtons[1]);
+    await user.click(rowButtons[0]);
+    await user.click(rowButtons[1]);
     expect(clickSpy).toHaveBeenCalledWith(19, 0);
     expect(clickSpy).toHaveBeenCalledWith(25, 1);
     expect(clickSpy).toHaveBeenCalledTimes(2);
 });
 
-test('Table buttons should not call onClick handler if button is disabled', () => {
+test('Table buttons should not call onClick handler if button is disabled', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
     const buttons = [{
         disabled: true,
@@ -286,8 +288,8 @@ test('Table buttons should not call onClick handler if button is disabled', () =
 
     const rowButtons = screen.getAllByRole('button', {name: 'fa-pencil'});
     expect(clickSpy).toHaveBeenCalledTimes(0);
-    fireEvent.click(rowButtons[0]);
-    fireEvent.click(rowButtons[1]);
+    await user.click(rowButtons[0]);
+    await user.click(rowButtons[1]);
     expect(clickSpy).not.toHaveBeenCalled();
 });
 
@@ -310,7 +312,8 @@ test('Render the Table component in single selection mode', () => {
     );
 });
 
-test('Clicking on the radio button should call onRowSelectionChange with the row-id', () => {
+test('Clicking on the radio button should call onRowSelectionChange with the row-id', async() => {
+    const user = userEvent.setup();
     const onChangeSpy = jest.fn();
     const props = {
         selectMode: 'single',
@@ -335,7 +338,7 @@ test('Clicking on the radio button should call onRowSelectionChange with the row
     );
 
     expect(onChangeSpy).toHaveBeenCalledTimes(0);
-    fireEvent.click(screen.getByRole('radio'));
+    await user.click(screen.getByRole('radio'));
     expect(onChangeSpy).toHaveBeenCalledWith(rowId, undefined);
 });
 
@@ -377,7 +380,8 @@ test('Render the Table component in multiple selection mode with select inside f
     );
 });
 
-test('Clicking a checkbox should call onRowSelectionChange with the selection state and row-id', () => {
+test('Clicking a checkbox should call onRowSelectionChange with the selection state and row-id', async() => {
+    const user = userEvent.setup();
     const onChangeSpy = jest.fn();
     const props = {
         selectMode: 'multiple',
@@ -410,7 +414,7 @@ test('Clicking a checkbox should call onRowSelectionChange with the selection st
     expect(onChangeSpy).toHaveBeenCalledTimes(0);
 
     const checkboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(checkboxes[1]);
+    await user.click(checkboxes[1]);
     expect(onChangeSpy).toHaveBeenCalledWith(rowIdOne, true);
 });
 
@@ -474,7 +478,8 @@ test('Select-all checkbox should be checked if every non-disabled line is select
     expect(screen.getAllByRole('checkbox')[0]).toBeChecked();
 });
 
-test('Clicking the select-all checkbox should call the onAllSelectionChange callback', () => {
+test('Clicking the select-all checkbox should call the onAllSelectionChange callback', async() => {
+    const user = userEvent.setup();
     const onChangeSpy = jest.fn();
     const props = {
         selectMode: 'multiple',
@@ -498,7 +503,7 @@ test('Clicking the select-all checkbox should call the onAllSelectionChange call
     );
 
     const allCheckboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(allCheckboxes[0]);
+    await user.click(allCheckboxes[0]);
     expect(onChangeSpy).toHaveBeenCalledWith(true);
 });
 
@@ -516,7 +521,8 @@ test('Header cells with a defined sortOrder must show a sort indicator', () => {
     );
 });
 
-test('Header cells with an attached onClick handler should be clickable', () => {
+test('Header cells with an attached onClick handler should be clickable', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
 
     render(
@@ -536,11 +542,12 @@ test('Header cells with an attached onClick handler should be clickable', () => 
         </Table>
     );
 
-    fireEvent.click(screen.getByRole('button', {name: 'Column Title'}));
+    await user.click(screen.getByRole('button', {name: 'Column Title'}));
     expect(clickSpy).toHaveBeenCalledTimes(1);
 });
 
-test('Header cells with an attached name should call the onClick callback with the name and the new sortOrder', () => {
+test('Header cells with an attached name should call onClick with the name and new sortOrder', async() => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
 
     render(
@@ -561,17 +568,18 @@ test('Header cells with an attached name should call the onClick callback with t
     );
 
     const headerButtons = screen.getAllByRole('button');
-    fireEvent.click(headerButtons[0]);
+    await user.click(headerButtons[0]);
     expect(clickSpy).toHaveBeenLastCalledWith('column1', 'asc');
 
-    fireEvent.click(headerButtons[1]);
+    await user.click(headerButtons[1]);
     expect(clickSpy).toHaveBeenLastCalledWith('column2', 'desc');
 
-    fireEvent.click(headerButtons[2]);
+    await user.click(headerButtons[2]);
     expect(clickSpy).toHaveBeenLastCalledWith('column3', 'asc');
 });
 
-test('Collapse should be called correctly', () => {
+test('Collapse should be called correctly', async() => {
+    const user = userEvent.setup();
     const onRowCollapse = jest.fn();
 
     render(
@@ -601,11 +609,12 @@ test('Collapse should be called correctly', () => {
         </Table>
     );
 
-    fireEvent.click(screen.getAllByRole('button', {name: 'su-angle-down'})[1]);
+    await user.click(screen.getAllByRole('button', {name: 'su-angle-down'})[1]);
     expect(onRowCollapse).toHaveBeenCalledTimes(1);
 });
 
-test('Expand should be called correctly', () => {
+test('Expand should be called correctly', async() => {
+    const user = userEvent.setup();
     const onRowExpand = jest.fn();
 
     render(
@@ -635,6 +644,6 @@ test('Expand should be called correctly', () => {
         </Table>
     );
 
-    fireEvent.click(screen.getByRole('button', {name: 'su-angle-right'}));
+    await user.click(screen.getByRole('button', {name: 'su-angle-right'}));
     expect(onRowExpand).toHaveBeenCalledTimes(1);
 });

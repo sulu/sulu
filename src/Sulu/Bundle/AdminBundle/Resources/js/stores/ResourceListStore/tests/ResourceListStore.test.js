@@ -2,11 +2,16 @@
 import {toJS} from 'mobx';
 import ResourceListStore from '../ResourceListStore';
 import ResourceRequester from '../../../services/ResourceRequester';
+import snackbarStore from '../../snackbarStore';
 
 jest.mock('../../../services/ResourceRequester', () => ({
     deleteList: jest.fn(),
     getList: jest.fn(),
     patchList: jest.fn(),
+}));
+
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
 }));
 
 test('Send a request using the ResourceRequester', () => {
@@ -26,6 +31,26 @@ test('Send a request using the ResourceRequester', () => {
         expect(ResourceRequester.getList).toHaveBeenCalledWith('accounts', {});
         expect(resourceListStore.data).toEqual(requestResults);
         expect(resourceListStore.loading).toEqual(false);
+    });
+});
+
+test('Keep an empty list and show an error when the request fails', () => {
+    const requestPromise = Promise.reject({status: 403});
+
+    ResourceRequester.getList.mockReturnValue(requestPromise);
+    const addSpy = jest.spyOn(snackbarStore, 'add');
+
+    const resourceListStore = new ResourceListStore('target_groups');
+
+    return requestPromise.catch(() => undefined).then(() => {
+        expect(toJS(resourceListStore.data)).toEqual([]);
+        expect(resourceListStore.loading).toEqual(false);
+        expect(addSpy).toHaveBeenCalledWith(
+            {text: 'sulu_admin.resource_list_load_error', type: 'error'},
+            4000
+        );
+        addSpy.mockRestore();
+        snackbarStore.clear();
     });
 });
 

@@ -116,6 +116,11 @@
             {
                 "type": "object",
                 "properties": {
+                    "locale": {
+                        "not": {
+                            "const": ""
+                        }
+                    },
                     "username": {
                         "type": "string",
                         "minLength": 1

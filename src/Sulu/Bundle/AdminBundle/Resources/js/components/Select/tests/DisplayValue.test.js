@@ -49,12 +49,13 @@ test('A click on the component should fire the callback and prevent the default'
 });
 
 test('A click on the component should not fire the callback when disabled', () => {
+    const user = userEvent.setup();
     const clickSpy = jest.fn();
 
     render(<DisplayValue disabled={true} onClick={clickSpy}>My value</DisplayValue>);
     const display = screen.queryByRole('button');
 
-    return userEvent.click(display).then(() => {
+    return user.click(display).then(() => {
         expect(clickSpy).not.toHaveBeenCalled();
     });
 });

@@ -121,16 +121,7 @@ class AdminController
         $user = $this->tokenStorage->getToken()->getUser();
         $locale = $user->getLocale();
 
-        $config = [];
-
-        foreach ($this->adminPool->getAdmins() as $admin) {
-            $adminConfigKey = $admin->getConfigKey();
-            $adminConfig = $admin->getConfig();
-
-            if ($adminConfigKey && $adminConfig) {
-                $config[$adminConfigKey] = $adminConfig;
-            }
-        }
+        $config = $this->adminPool->getAdminConfigs();
 
         $view = View::create($config);
 

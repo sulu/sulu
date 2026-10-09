@@ -25,6 +25,7 @@ use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Webmozart\Assert\Assert;
@@ -39,6 +40,7 @@ final class SuluAdmin extends Admin
      * @param array<string, array{routes: array<string, string>}> $resources
      * @param iterable<SmartContentProviderInterface> $smartContentProviders
      * @param ContactManagerInterface<ContactInterface, ContactApi, ContactAddress> $contactManager
+     * @param array<string> $textEditorContentLocales
      */
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
@@ -52,6 +54,7 @@ final class SuluAdmin extends Admin
         private readonly array $resources,
         private readonly int $collaborationInterval,
         private readonly bool $collaborationEnabled,
+        private readonly array $textEditorContentLocales = [],
     ) {
     }
 
@@ -77,6 +80,7 @@ final class SuluAdmin extends Admin
      * 'contact' : ContactApi,
      * 'collaborationEnabled' : bool,
      * 'collaborationInterval' : int,
+     * 'textEditorContentLocales': array<string>,
      * }
      */
     public function getConfig(): array
@@ -108,7 +112,25 @@ final class SuluAdmin extends Admin
             'contact' => $contact,
             'collaborationEnabled' => $this->collaborationEnabled,
             'collaborationInterval' => $this->collaborationInterval * 1000,
+            'textEditorContentLocales' => $this->getTextEditorContentLocales(),
         ];
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function getTextEditorContentLocales(): array
+    {
+        if ($this->textEditorContentLocales) {
+            return \array_values($this->textEditorContentLocales);
+        }
+
+        $localizations = $this->localizationManager->getLocalizations();
+
+        return \array_values(\array_unique(\array_map(
+            fn (Localization $localization) => \strtolower($localization->getLanguage()),
+            \array_values($localizations)
+        )));
     }
 
     public function getConfigKey(): string

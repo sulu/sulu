@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Should render the component 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="header"
   >
     sulu_admin.welcome
-  </div>,
+  </div>
   <form
     class="form"
   >
@@ -89,17 +89,17 @@ Array [
         </button>
       </div>
     </fieldset>
-  </form>,
-]
+  </form>
+</DocumentFragment>
 `;
 
 exports[`Should render the component loading 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="header"
   >
     sulu_admin.welcome
-  </div>,
+  </div>
   <form
     class="form"
   >
@@ -184,7 +184,7 @@ Array [
           >
             <div
               class="spinner"
-              style="width:25px;height:25px"
+              style="width: 25px; height: 25px;"
             >
               <div
                 class="doubleBounce1"
@@ -197,17 +197,17 @@ Array [
         </button>
       </div>
     </fieldset>
-  </form>,
-]
+  </form>
+</DocumentFragment>
 `;
 
 exports[`Should render the component with error 1`] = `
-Array [
+<DocumentFragment>
   <div
     class="header small"
   >
     sulu_admin.login_error
-  </div>,
+  </div>
   <form
     class="form"
   >
@@ -290,6 +290,6 @@ Array [
         </button>
       </div>
     </fieldset>
-  </form>,
-]
+  </form>
+</DocumentFragment>
 `;

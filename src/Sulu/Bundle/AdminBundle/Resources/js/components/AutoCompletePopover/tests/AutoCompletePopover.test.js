@@ -127,7 +127,7 @@ test('Call onSelect with clicked suggestion', async() => {
     );
 
     const user = userEvent.setup();
-    await user.click(screen.getByText(/selector-2/));
+    await user.click(screen.getByRole('button', {name: /selector-2/}));
     expect(selectSpy).toHaveBeenCalledWith(suggestions[1]);
 });
 

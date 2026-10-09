@@ -1,18 +1,20 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`Render an empty ConditionList 1`] = `
-<button
-  class="button secondary hasText"
-  type="button"
->
-  <span
-    aria-label="su-plus"
-    class="su-plus buttonIcon"
-  />
-  <span
-    class="buttonText"
+<DocumentFragment>
+  <button
+    class="button secondary hasText"
+    type="button"
   >
-    sulu_audience_targeting.add_condition
-  </span>
-</button>
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="buttonText"
+    >
+      sulu_audience_targeting.add_condition
+    </span>
+  </button>
+</DocumentFragment>
 `;

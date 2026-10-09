@@ -197,9 +197,143 @@ class ProfileTwoFactorControllerTest extends SuluTestCase
 
     public function testSetupInvalidMethod(): void
     {
-        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'email']);
+        // trusting a device only skips the second factor of a later login, activating it as the
+        // method would leave the user without any second factor at all
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'trusted_devices']);
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
+    }
+
+    public function testSetupUnknownMethod(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'carrier-pigeon']);
+
+        $this->assertHttpStatusCode(404, $this->client->getResponse());
+    }
+
+    public function testSetupReplacesStaleMethodWithoutSecret(): void
+    {
+        /** @var User $user */
+        $user = static::getTestUser();
+        $twoFactor = new UserTwoFactor($user);
+        // a method without its confirmed secret does not authenticate anybody, so a fresh setup
+        // for the very same method has to stay possible
+        $twoFactor->setMethod('totp');
+        $twoFactor->setOptions([]);
+        $user->setTwoFactor($twoFactor);
+
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($twoFactor);
+        $entityManager->flush();
+
+        $client = $this->createLoggedInClient($user);
+        $client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'totp']);
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+    }
+
+    public function testSetupConfirmedMethodAgain(): void
+    {
+        $user = $this->activateTwoFactor();
+        $client = $this->createLoggedInClient($user);
+
+        $client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'totp']);
+
+        $this->assertHttpStatusCode(400, $client->getResponse());
+        /** @var array{error: string} $response */
+        $response = \json_decode((string) $client->getResponse()->getContent(), true);
+        $this->assertSame('method_already_enabled', $response['error']);
+    }
+
+    public function testEmailSetup(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'email']);
+
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        // the method must not be activated before the code was confirmed
+        $user = $this->refreshTestUser();
+        $this->assertNotNull($user->getTwoFactor());
+        $this->assertNull($user->getTwoFactor()->getMethod());
+        $this->assertNotEmpty($user->getTwoFactor()->getOptions()['authCode'] ?? null);
+    }
+
+    public function testEmailConfirm(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'email']);
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $code = $user->getTwoFactor()?->getOptions()['authCode'] ?? null;
+
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/confirm', ['method' => 'email', 'code' => $code]);
+
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $this->assertSame('email', $user->getTwoFactor()?->getMethod());
+    }
+
+    public function testEmailConfirmInvalidCode(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'email']);
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/confirm', ['method' => 'email', 'code' => 'invalid']);
+
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $this->assertNull($user->getTwoFactor()?->getMethod());
+    }
+
+    public function testEmailConfirmWithoutSetup(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/confirm', ['method' => 'email', 'code' => '123456']);
+
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+    }
+
+    public function testEmailSetupAlreadyEnabled(): void
+    {
+        /** @var User $user */
+        $user = static::getTestUser();
+        $twoFactor = new UserTwoFactor($user);
+        $twoFactor->setMethod('email');
+        $user->setTwoFactor($twoFactor);
+
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($twoFactor);
+        $entityManager->flush();
+
+        $client = $this->createLoggedInClient($user);
+        $client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'email']);
+
+        $this->assertHttpStatusCode(400, $client->getResponse());
+        /** @var array{error: string} $response */
+        $response = \json_decode((string) $client->getResponse()->getContent(), true);
+        $this->assertSame('method_already_enabled', $response['error']);
+    }
+
+    public function testEmailConfirmClearsAbandonedAuthenticatorSecret(): void
+    {
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'totp']);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/setup', ['method' => 'email']);
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $code = $user->getTwoFactor()?->getOptions()['authCode'] ?? null;
+
+        $this->client->jsonRequest('POST', '/api/profile/two-factor/confirm', ['method' => 'email', 'code' => $code]);
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $user = $this->refreshTestUser();
+        $options = $user->getTwoFactor()?->getOptions() ?? [];
+
+        $this->assertArrayNotHasKey('totpSecret', $options);
+        $this->assertArrayNotHasKey('pendingTotpSecret', $options);
     }
 
     public function testBackupCodes(): void

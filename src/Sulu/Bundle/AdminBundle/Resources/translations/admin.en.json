@@ -96,6 +96,9 @@
     "sulu_admin.delete_locale_warning_text": "This operation deletes all data from the current localization and cannot be undone. Do you really wish to proceed?",
     "sulu_admin.delete_linked_warning_title": "Confirm deletion",
     "sulu_admin.delete_linked_warning_text": "This item is referenced by the following items, are you sure you want to delete it?",
+    "sulu_admin.delete_linked_warning_text_with_title": "\"{title}\" is referenced by the following items, are you sure you want to delete it?",
+    "sulu_admin.delete_linked_warning_text_multiple": "The following items are referenced by other items, are you sure you want to delete them?",
+    "sulu_admin.delete_linked_resource_text": "\"{title}\" is referenced by:",
     "sulu_admin.delete_selection_warning_text": "This operation deletes {count} {count, plural, =1 {item} other {items}} and cannot be undone. Do you really wish to proceed?",
     "sulu_admin.item_not_deletable": "Item cannot be deleted",
     "sulu_admin.delete_linked_abort_text": "This item cannot be deleted as long as it has sub items. Delete the following sub items or remove the relation:",
@@ -184,6 +187,7 @@
     "sulu_admin.show_history": "Show history",
     "sulu_admin.history": "History",
     "sulu_admin.resource_locator_history_delete_warning": "The URL will be deleted for all draft and live versions. This cannot be undone. Do you wish to proceed?",
+    "sulu_admin.resource_list_load_error": "An error occurred while loading the list.",
     "sulu_admin.has_changed_warning_dialog_title": "Content will be overwritten!",
     "sulu_admin.has_changed_warning_dialog_text": "This content has been edited by another user. When you save the content this data will get lost.",
     "sulu_admin.edit_profile": "Edit profile",
@@ -285,5 +289,7 @@
     "sulu_admin.link_target_blank": "_blank",
     "sulu_admin.link_target_self": "_self",
     "sulu_admin.link_target_parent": "_parent",
-    "sulu_admin.link_target_top": "_top"
+    "sulu_admin.link_target_top": "_top",
+    "sulu_admin.text_part_language_marker": "Language: {language}",
+    "sulu_admin.template_group.default": "Default"
 }

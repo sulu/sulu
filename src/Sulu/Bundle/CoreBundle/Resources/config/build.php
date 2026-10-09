@@ -27,5 +27,9 @@ return static function(ContainerConfigurator $container) {
         ->tag('massive_build.builder');
 
     $services->set('sulu_core.build.builder.search', SearchBuilder::class)
+        ->args([
+            service('cmsig_seal.engine.default'),
+            service('cmsig_seal.schema.default'),
+        ])
         ->tag('massive_build.builder');
 };

@@ -96,6 +96,9 @@
     "sulu_admin.delete_locale_warning_text": "Diese Operation löscht alle Daten von der aktuellen Sprache und kann nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?",
     "sulu_admin.delete_linked_warning_title": "Löschen bestätigen",
     "sulu_admin.delete_linked_warning_text": "Dieser Eintrag wird von folgenden anderen Einträgen referenziert, sind Sie sich sicher, dass sie diesen Eintrag löschen wollen?",
+    "sulu_admin.delete_linked_warning_text_with_title": "\"{title}\" wird von folgenden anderen Einträgen referenziert, sind Sie sich sicher, dass Sie diesen Eintrag löschen wollen?",
+    "sulu_admin.delete_linked_warning_text_multiple": "Die folgenden Einträge werden von anderen Einträgen referenziert, sind Sie sich sicher, dass Sie diese Einträge löschen wollen?",
+    "sulu_admin.delete_linked_resource_text": "\"{title}\" wird referenziert von:",
     "sulu_admin.delete_selection_warning_text": "Diese Operation löscht {count} {count, plural, =1 {Datensatz} other {Datensätze}} und kann nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?",
     "sulu_admin.item_not_deletable": "Eintrag nicht löschbar",
     "sulu_admin.delete_linked_abort_text": "Dieser Eintrag kann nicht gelöscht werden, solange er noch von anderen Einträgen referenziert wird. Bitte löschen Sie die folgenden referenzierenden Einträge oder entfernen sie die Relation",
@@ -184,6 +187,7 @@
     "sulu_admin.show_history": "Verlauf anzeigen",
     "sulu_admin.history": "Verlauf",
     "sulu_admin.resource_locator_history_delete_warning": "Die URL wird für alle Entwurfs- und Live-Versionen gelöscht, und kann nicht wieder hergestellt werden. Wollen Sie wirklich fortfahren?",
+    "sulu_admin.resource_list_load_error": "Beim Laden der Liste ist ein Fehler aufgetreten.",
     "sulu_admin.has_changed_warning_dialog_title": "Inhalte werden überschrieben!",
     "sulu_admin.has_changed_warning_dialog_text": "Dieser Inhalt wurde zwischenzeitlich von einem anderen Benutzer geändert. Wenn der Inhalt gespeichert wird, gehen diese Daten verloren.",
     "sulu_admin.edit_profile": "Profil bearbeiten",
@@ -285,5 +289,7 @@
     "sulu_admin.link_target_blank": "_blank",
     "sulu_admin.link_target_self": "_self",
     "sulu_admin.link_target_parent": "_parent",
-    "sulu_admin.link_target_top": "_top"
+    "sulu_admin.link_target_top": "_top",
+    "sulu_admin.text_part_language_marker": "Sprache: {language}",
+    "sulu_admin.template_group.default": "Standard"
 }

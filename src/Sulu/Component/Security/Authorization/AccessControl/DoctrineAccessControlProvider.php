@@ -19,11 +19,17 @@ use Sulu\Component\Security\Authorization\MaskConverterInterface;
 
 /**
  * This class handles permission information for doctrine entities.
+ *
+ * @phpstan-import-type Permissions from MaskConverterInterface
  */
 class DoctrineAccessControlProvider implements AccessControlProviderInterface
 {
-    public function __construct(private ObjectManager $objectManager, private RoleRepositoryInterface $roleRepository, private AccessControlRepositoryInterface $accessControlRepository, private MaskConverterInterface $maskConverter)
-    {
+    public function __construct(
+        private ObjectManager $objectManager,
+        private RoleRepositoryInterface $roleRepository,
+        private AccessControlRepositoryInterface $accessControlRepository,
+        private MaskConverterInterface $maskConverter,
+    ) {
     }
 
     /**
@@ -31,7 +37,9 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
      *
      * @param string $type The name of the class to protect
      * @param string $identifier
-     * @param mixed[] $permissions
+     * @param array<int, Permissions> $permissions
+     *
+     * @return void
      */
     public function setPermissions($type, $identifier, $permissions)
     {
@@ -77,14 +85,6 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
         $this->objectManager->flush();
     }
 
-    /**
-     * Returns the permissions for all security identities.
-     *
-     * @param string $type The type of the protected object
-     * @param string $identifier The identifier of the protected object
-     *
-     * @return array
-     */
     public function getPermissions($type, $identifier, $system = null)
     {
         $accessControls = $this->accessControlRepository->findByTypeAndId($type, $identifier, $system);
