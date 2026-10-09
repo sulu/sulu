@@ -24,6 +24,7 @@ import Email from './fields/Email';
 import Heading from './fields/Heading';
 import Input from './fields/Input';
 import Number from './fields/Number';
+import NumberRange from './fields/NumberRange';
 import PasswordConfirmation from './fields/PasswordConfirmation';
 import Phone from './fields/Phone';
 import ProductAttributesField from './fields/ProductAttributesField';
@@ -64,6 +65,7 @@ export {
     ResourceFormStore,
     resourceFormStoreFactory,
     Number,
+    NumberRange,
     PasswordConfirmation,
     Phone,
     ProductAttributesField,
