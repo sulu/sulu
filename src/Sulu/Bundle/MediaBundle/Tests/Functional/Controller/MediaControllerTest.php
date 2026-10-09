@@ -1526,6 +1526,28 @@ class MediaControllerTest extends SuluTestCase
         }
     }
 
+    public function testDeleteByIdWithManyReferencesListsOnlyTheFirstOnes(): void
+    {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $mediaId = (int) $media->getId();
+        for ($i = 1; $i <= 7; ++$i) {
+            $this->createMediaReference($mediaId, 'Team ' . $i, 'page-uuid-' . $i);
+        }
+
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId);
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        /** @var array{referencingResources: array<int, array{title: string}>, referencingResourcesCount: int} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame(7, $response['referencingResourcesCount']);
+        $this->assertSame(
+            ['Team 1', 'Team 2', 'Team 3', 'Team 4', 'Team 5'],
+            \array_column($response['referencingResources'], 'title'),
+        );
+    }
+
     /**
      * @param array<string, string> $routerAttributes
      */

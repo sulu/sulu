@@ -44,9 +44,15 @@ const getReferencingResourceItems = (referencingResourcesData: ReferencingResour
         .map(renderReferencingResource);
 };
 
-const renderItems = (items: Array<Node>) => (
+// the response lists only the first resources, but counts all of them
+const getHiddenCount = ({referencingResources, referencingResourcesCount}: ReferencingResourcesData): number => {
+    return Math.max(0, referencingResourcesCount - referencingResources.length);
+};
+
+const renderItems = (items: Array<Node>, hiddenCount: number) => (
     <ul>
         {items.map((item, index) => <li key={index}>{item}</li>)}
+        {hiddenCount > 0 && <li>{translate('sulu_admin.delete_linked_more_text', {count: hiddenCount})}</li>}
     </ul>
 );
 
@@ -85,7 +91,8 @@ const ReferencingResources = ({allowDeletion, referencingResourcesData}: Props) 
                     {referencingResourcesData.map((data, index) => {
                         const {title} = data.resource;
                         const items = getReferencingResourceItems(data);
-                        const inline = !!title && items.length === 1;
+                        const hiddenCount = getHiddenCount(data);
+                        const inline = !!title && items.length === 1 && hiddenCount === 0;
 
                         return (
                             <React.Fragment key={index}>
@@ -95,7 +102,7 @@ const ReferencingResources = ({allowDeletion, referencingResourcesData}: Props) 
                                         {inline && <span className={styles.inline}>{' '}{items[0]}</span>}
                                     </p>
                                 )}
-                                {!inline && renderItems(items)}
+                                {!inline && renderItems(items, hiddenCount)}
                             </React.Fragment>
                         );
                     })}
@@ -116,7 +123,7 @@ const ReferencingResources = ({allowDeletion, referencingResourcesData}: Props) 
                 : translate('sulu_admin.delete_linked_abort_text')
             }
 
-            {renderItems(getReferencingResourceItems(data))}
+            {renderItems(getReferencingResourceItems(data), getHiddenCount(data))}
         </React.Fragment>
     );
 };

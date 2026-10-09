@@ -61,7 +61,7 @@ class MediaControllerTest extends TestCase
         $referencingResources = $this->deleteReferencedMedia(
             $resourceViewUrlGenerator,
             [$this->createReference('page-uuid-1', 'en', ['webspace' => 'sulu_io', 'locale' => null, 'empty' => '', 'nested' => ['en']])],
-        );
+        )->getReferencingResources();
 
         $this->assertSame('/admin/#/webspaces/sulu_io/pages/en/page-uuid-1', $referencingResources[0]['url'] ?? null);
     }
@@ -74,7 +74,7 @@ class MediaControllerTest extends TestCase
         $referencingResources = $this->deleteReferencedMedia(
             $resourceViewUrlGenerator,
             [$this->createReference('page-uuid-1', 'en', ['webspace' => 'sulu_io'])],
-        );
+        )->getReferencingResources();
 
         $this->assertCount(1, $referencingResources);
         $this->assertSame('page-uuid-1', $referencingResources[0]['id']);
@@ -95,30 +95,33 @@ class MediaControllerTest extends TestCase
         ];
 
         foreach ([$references, \array_reverse($references)] as $orderedReferences) {
-            $referencingResources = $this->deleteReferencedMedia($resourceViewUrlGenerator, $orderedReferences, 'fr');
+            $referencingResources = $this->deleteReferencedMedia($resourceViewUrlGenerator, $orderedReferences, 'fr')->getReferencingResources();
 
             $this->assertSame('Team (Deutsch)', $referencingResources[0]['title']);
             $this->assertSame('/de', $referencingResources[0]['url'] ?? null);
         }
     }
 
-    public function testDeleteLinksOnlyTheFirstResources(): void
+    public function testDeleteListsOnlyTheFirstResourcesAndCountsAll(): void
     {
         $resourceViewUrlGenerator = $this->createMock(ResourceViewUrlGeneratorInterface::class);
-        $resourceViewUrlGenerator->expects($this->exactly(20))
+        $resourceViewUrlGenerator->expects($this->exactly(5))
             ->method('generate')
             ->willReturn('/admin');
 
         $references = [];
-        for ($i = 1; $i <= 25; ++$i) {
-            $references[] = $this->createReference('page-uuid-' . $i, 'en', []);
+        for ($i = 25; $i >= 1; --$i) {
+            $references[] = $this->createReference('page-uuid-' . $i, 'en', [], \sprintf('Team %02d', $i));
         }
 
-        $referencingResources = $this->deleteReferencedMedia($resourceViewUrlGenerator, $references);
+        $exception = $this->deleteReferencedMedia($resourceViewUrlGenerator, $references);
 
-        $this->assertCount(25, $referencingResources);
-        $this->assertSame('/admin', $referencingResources[19]['url'] ?? null);
-        $this->assertNull($referencingResources[20]['url'] ?? null);
+        $this->assertSame(25, $exception->getReferencingResourcesCount());
+        $this->assertSame(
+            ['Team 01', 'Team 02', 'Team 03', 'Team 04', 'Team 05'],
+            \array_column($exception->getReferencingResources(), 'title'),
+        );
+        $this->assertSame(['/admin'], \array_unique(\array_column($exception->getReferencingResources(), 'url')));
     }
 
     /**
@@ -143,14 +146,12 @@ class MediaControllerTest extends TestCase
 
     /**
      * @param array<array<string, mixed>> $references
-     *
-     * @return array<array{id: int|string, resourceKey: string, title: string|null, url?: string|null}>
      */
     private function deleteReferencedMedia(
         ResourceViewUrlGeneratorInterface $resourceViewUrlGenerator,
         array $references,
         ?string $locale = null,
-    ): array {
+    ): ReferencingResourcesFoundException {
         $referenceRepository = $this->createStub(ReferenceRepositoryInterface::class);
         $referenceRepository->method('findFlatBy')->willReturn($references);
 
@@ -179,7 +180,7 @@ class MediaControllerTest extends TestCase
         try {
             $controller->deleteAction(1);
         } catch (ReferencingResourcesFoundException $exception) {
-            return $exception->getReferencingResources();
+            return $exception;
         }
 
         $this->fail('The media is referenced, the delete should have been refused.');
