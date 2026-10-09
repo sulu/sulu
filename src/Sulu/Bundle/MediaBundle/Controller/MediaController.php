@@ -49,7 +49,7 @@ class MediaController extends AbstractMediaController implements
     SecuredControllerInterface,
     SecuredObjectControllerInterface
 {
-    private const MAX_REFERENCING_RESOURCE_LINKS = 20;
+    private const MAX_REFERENCING_RESOURCES = 5;
 
     /**
      * @param class-string $mediaClass
@@ -223,9 +223,12 @@ class MediaController extends AbstractMediaController implements
         $request = $this->requestStack?->getCurrentRequest();
 
         if (null !== $request && !$request->query->getBoolean('force', false)) {
-            $referencingResources = $this->getReferencingResources($id, $this->getRequestLocale($request));
+            ['resources' => $referencingResources, 'count' => $referencingResourcesCount] = $this->getReferencingResources(
+                $id,
+                $this->getRequestLocale($request),
+            );
 
-            if (\count($referencingResources) > 0) {
+            if ($referencingResourcesCount > 0) {
                 throw new ReferencingResourcesFoundException(
                     [
                         'id' => (int) $id,
@@ -233,7 +236,7 @@ class MediaController extends AbstractMediaController implements
                         'title' => $this->getMediaTitle($id, $request),
                     ],
                     $referencingResources,
-                    \count($referencingResources)
+                    $referencingResourcesCount,
                 );
             }
         }
@@ -277,14 +280,19 @@ class MediaController extends AbstractMediaController implements
     }
 
     /**
+     * Returns the first referencing resources, which are linked, and the number of all of them.
+     *
      * @param int|string $id
      *
-     * @return array<array{id: int|string, resourceKey: string, title: string|null, url: string|null}>
+     * @return array{
+     *     resources: array<array{id: int|string, resourceKey: string, title: string|null, url: string|null}>,
+     *     count: int,
+     * }
      */
     private function getReferencingResources($id, ?string $locale): array
     {
         if (null === $this->referenceRepository) {
-            return [];
+            return ['resources' => [], 'count' => 0];
         }
 
         $references = $this->referenceRepository->findFlatBy(
@@ -307,8 +315,7 @@ class MediaController extends AbstractMediaController implements
             $referencesByResource[$reference['referenceResourceKey'] . '::' . $reference['referenceResourceId']][] = $reference;
         }
 
-        $referencingResources = [];
-        $linkCount = 0;
+        $selectedReferences = [];
         foreach ($referencesByResource as $resourceReferences) {
             $reference = $resourceReferences[0];
 
@@ -327,18 +334,28 @@ class MediaController extends AbstractMediaController implements
                 }
             }
 
-            // generating a link can query the database, so the resources beyond the limit are listed without one
+            $selectedReferences[] = $reference;
+        }
+
+        // the shown resources must not depend on the database order
+        \usort(
+            $selectedReferences,
+            static fn (array $a, array $b): int => \strcasecmp($a['referenceTitle'], $b['referenceTitle'])
+                ?: \strcmp($a['referenceResourceId'], $b['referenceResourceId']),
+        );
+
+        // generating a link can query the database, so only the shown resources get one
+        $referencingResources = [];
+        foreach (\array_slice($selectedReferences, 0, self::MAX_REFERENCING_RESOURCES) as $reference) {
             $referencingResources[] = [
                 'id' => $reference['referenceResourceId'],
                 'resourceKey' => $reference['referenceResourceKey'],
                 'title' => $reference['referenceTitle'],
-                'url' => $linkCount++ < self::MAX_REFERENCING_RESOURCE_LINKS
-                    ? $this->getReferencingResourceUrl($reference)
-                    : null,
+                'url' => $this->getReferencingResourceUrl($reference),
             ];
         }
 
-        return $referencingResources;
+        return ['resources' => $referencingResources, 'count' => \count($selectedReferences)];
     }
 
     /**
