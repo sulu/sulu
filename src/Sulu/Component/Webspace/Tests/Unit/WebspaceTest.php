@@ -54,6 +54,7 @@ class WebspaceTest extends TestCase
             'templates' => [],
             'defaultTemplates' => [],
             'excludedTemplates' => [],
+            'webspaceSettingsForm' => 'footer',
             'portals' => [
                 [
                     'key' => 'one',
@@ -84,6 +85,7 @@ class WebspaceTest extends TestCase
         $webspace->setName($expected['name']);
         $webspace->setResourceLocatorStrategy($expected['resourceLocator']['strategy']);
         $webspace->setTheme($expected['theme']);
+        $webspace->setWebspaceSettingsForm('footer');
 
         $security = new Security();
         $security->setSystem($expected['security']['system']);

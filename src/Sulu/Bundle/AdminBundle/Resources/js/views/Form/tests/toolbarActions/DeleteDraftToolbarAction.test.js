@@ -170,6 +170,20 @@ test('Return no dialog if no id is set', () => {
     expect(deleteDraftToolbarAction.getNode()).toEqual(null);
 });
 
+test('Show the default warning text in the dialog', () => {
+    const deleteDraftToolbarAction = createDeleteDraftToolbarAction();
+    deleteDraftToolbarAction.resourceFormStore.resourceStore.id = 3;
+
+    expect(getDialogProps(deleteDraftToolbarAction).children).toEqual('sulu_page.delete_draft_warning_text');
+});
+
+test('Show the warning text passed as option in the dialog', () => {
+    const deleteDraftToolbarAction = createDeleteDraftToolbarAction({warning_text: 'app.delete_draft_warning'});
+    deleteDraftToolbarAction.resourceFormStore.resourceStore.id = 3;
+
+    expect(getDialogProps(deleteDraftToolbarAction).children).toEqual('app.delete_draft_warning');
+});
+
 test('Close dialog when onClose from delete draft dialog is called', () => {
     const deleteDraftToolbarAction = createDeleteDraftToolbarAction();
     deleteDraftToolbarAction.resourceFormStore.resourceStore.id = 3;

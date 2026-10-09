@@ -46,6 +46,9 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
 
     getNode() {
         const {
+            options: {
+                warning_text: warningText = 'sulu_page.unpublish_warning_text',
+            },
             resourceFormStore: {
                 id,
             },
@@ -53,6 +56,10 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
 
         if (!id) {
             return null;
+        }
+
+        if (typeof warningText !== 'string') {
+            throw new Error('The "warning_text" option must be a string!');
         }
 
         return (
@@ -66,7 +73,7 @@ export default class SetUnpublishedToolbarAction extends AbstractFormToolbarActi
                 open={this.showUnpublishDialog}
                 title={translate('sulu_page.unpublish_warning_title')}
             >
-                {translate('sulu_page.unpublish_warning_text')}
+                {translate(warningText)}
             </Dialog>
         );
     }

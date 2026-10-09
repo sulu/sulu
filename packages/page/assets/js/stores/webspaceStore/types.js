@@ -14,7 +14,9 @@ export type Webspace = {
     resourceLocatorStrategy: ResourceLocatorStrategy,
     security: Security | typeof undefined,
     segments: Array<Segment>,
+    settingsPermissions?: {[permission: string]: boolean},
     urls: Array<Url>,
+    webspaceSettingsForm?: ?string,
 };
 
 export type ResourceLocatorStrategy = {
