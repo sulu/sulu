@@ -68,6 +68,33 @@ $cellPaddingVertical: calc(($rowHeight - $inputHeight - 2 * $cellBorderWidth) / 
     display: none;
 }
 
+/* the items of a multi-property attribute side by side; the rules mirror the ones above for one level deeper */
+.section-items {
+    display: flex;
+    gap: 10px;
+}
+
+.section-items > div {
+    flex: 1 1 0;
+    float: none;
+    min-width: 0;
+    padding-right: 0;
+    width: auto;
+}
+
+.section-items > div > div {
+    margin-bottom: 0;
+}
+
+.section-items > div > div > div:empty {
+    display: none;
+}
+
+.section-items label {
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
 /* one line at every width: the search gives way, the toggler keeps its size and its single line */
 .toolbar {
     display: flex;

@@ -24,4 +24,6 @@ API needs a matching sulu release.
   for the rows. Validation is the host form's: its JSON schema carries the family's attribute rules
   (an `if/then` branch per family, like block types), a row finishes on the host under
   `/attributes/<id>`, and the errors come back through the field's `error` prop to the rows.
+  An attribute with several properties arrives as a nested section named `attribute_<id>`: its row
+  shows the properties side by side, and its value is an object keyed by the property names.
 - `AttributeGroupTable`: the flat table both containers put inside a card.
