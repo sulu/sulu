@@ -69,13 +69,15 @@ class ReferencesOption
         foreach ($classMetadata->getFieldNames() as $fieldName) {
             $mapping = $classMetadata->getFieldMapping($fieldName);
 
-            if (!isset($mapping['options']['references'])) {
-                continue;
+            // Doctrine ORM 2 only: ORM 3 returns a FieldMapping object, whose array access is deprecated, and keeps
+            // the "references" option in its options, where postGenerateSchemaTable reads it.
+            // @phpstan-ignore function.impossibleType, booleanAnd.alwaysFalse (Doctrine ORM 2 compatibility)
+            if (\is_array($mapping) && isset($mapping['options']['references'])) {
+                $mapping['_custom']['references'] = $mapping['options']['references'];
+                unset($mapping['options']['references']);
+                // @phpstan-ignore offsetAccess.nonOffsetAccessible, argument.type, argument.type (Doctrine ORM 2 compatibility)
+                $classMetadata->setAttributeOverride($mapping['fieldName'], $mapping);
             }
-
-            $mapping['_custom']['references'] = $mapping['options']['references'];
-            unset($mapping['options']['references']);
-            $classMetadata->setAttributeOverride($mapping['fieldName'], $mapping);
         }
     }
 
@@ -94,13 +96,15 @@ class ReferencesOption
 
         foreach ($classMetadata->getFieldNames() as $fieldName) {
             $mapping = $classMetadata->getFieldMapping($fieldName);
+            /** @var array<string, mixed>|null $referencesOptions */
+            // @phpstan-ignore function.impossibleType (Doctrine ORM 2 compatibility)
+            $referencesOptions = \is_array($mapping)
+                ? $mapping['_custom']['references'] ?? null
+                : $mapping->options['references'] ?? null;
 
-            if (!isset($mapping['_custom']['references'])) {
+            if (null === $referencesOptions) {
                 continue;
             }
-
-            /** @var array<string, mixed> $referencesOptions */
-            $referencesOptions = $mapping['_custom']['references'];
 
             $unknownOptions = \array_diff_key($referencesOptions, \array_flip(self::$knownOptions));
 
