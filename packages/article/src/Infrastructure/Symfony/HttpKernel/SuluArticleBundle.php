@@ -64,6 +64,7 @@ use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexProvide
 use Sulu\Article\Infrastructure\Sulu\Search\Visitor\WebsiteArticleReindexTaxonomyEnhancer;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleIndexListener;
 use Sulu\Article\Infrastructure\Sulu\Search\WebsiteArticleReindexProvider;
+use Sulu\Article\Infrastructure\Sulu\Security\ArticleSecurityContextResolver;
 use Sulu\Article\Infrastructure\Sulu\Security\ArticleWorkflowTransitionRequestSecurityContextResolver;
 use Sulu\Article\Infrastructure\Sulu\Sitemap\ArticlesSitemapProvider;
 use Sulu\Article\Infrastructure\Sulu\Trash\ArticleTrashItemHandler;
@@ -309,6 +310,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_core.doctrine_list_builder_factory'),
                 new Reference('sulu_core.doctrine_rest_helper'),
                 new Reference('sulu_security.security_checker'),
+                new Reference('sulu_article.security_context_resolver'),
                 param('sulu_core.is_single_locale'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
@@ -495,13 +497,21 @@ final class SuluArticleBundle extends AbstractBundle
             ->tag('kernel.event_listener', ['event' => ArticleTranslationRemovedEvent::class, 'method' => 'onArticleChanged'])
             ->tag('kernel.event_listener', ['event' => ArticleTranslationCopiedEvent::class, 'method' => 'onArticleChanged']);
 
+        $services->set('sulu_article.security_context_resolver')
+            ->class(ArticleSecurityContextResolver::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_admin.metadata_group_provider'),
+                new Reference('sulu_admin.metadata_provider_registry'),
+            ])
+            ->tag('sulu.context', ['context' => 'admin']);
+
         $services->set('sulu_article.workflow_transition_request_security_context_resolver')
             ->class(ArticleWorkflowTransitionRequestSecurityContextResolver::class)
             ->decorate('sulu_content.workflow_transition_request_security_context_resolver')
             ->args([
                 new Reference('.inner'),
-                new Reference('doctrine.orm.entity_manager'),
-                new Reference('sulu_admin.metadata_group_provider'),
+                new Reference('sulu_article.security_context_resolver'),
             ])
             ->tag('sulu.context', ['context' => 'admin']);
 

@@ -18,10 +18,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerInterface;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Infrastructure\Sulu\Security\ArticleSecurityContextResolver;
 use Sulu\Article\Infrastructure\Sulu\Security\ArticleWorkflowTransitionRequestSecurityContextResolver;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
 
@@ -37,39 +39,12 @@ class ArticleWorkflowTransitionRequestSecurityContextResolverTest extends TestCa
         $inner = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
         $inner->resolve('snippets', 'snippet-id-1', 'en')->willReturn($condition);
 
-        $groupProvider = $this->prophesize(GroupProviderInterface::class);
-        $groupProvider->getGroups(Argument::cetera())->shouldNotBeCalled();
-
-        $resolver = new ArticleWorkflowTransitionRequestSecurityContextResolver(
-            $inner->reveal(),
-            $this->prophesize(EntityManagerInterface::class)->reveal(),
-            $groupProvider->reveal(),
-        );
-
-        $this->assertSame($condition, $resolver->resolve('snippets', 'snippet-id-1', 'en'));
-    }
-
-    public function testResolveDelegatesWithoutQueryingWhenThereIsASingleGroup(): void
-    {
-        $condition = new SecurityCondition('sulu.article.articles', 'en');
-
-        $inner = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
-        $inner->resolve(ArticleInterface::RESOURCE_KEY, 'article-id-1', 'en')->willReturn($condition);
-
-        $groupProvider = $this->prophesize(GroupProviderInterface::class);
-        $groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE)
-            ->willReturn(['default' => new FormGroup('default', 'Default', ['article'])]);
-
         $entityManager = $this->prophesize(EntityManagerInterface::class);
         $entityManager->getRepository(Argument::cetera())->shouldNotBeCalled();
 
-        $resolver = new ArticleWorkflowTransitionRequestSecurityContextResolver(
-            $inner->reveal(),
-            $entityManager->reveal(),
-            $groupProvider->reveal(),
-        );
+        $resolver = $this->createResolver($inner->reveal(), $entityManager->reveal());
 
-        $this->assertSame($condition, $resolver->resolve(ArticleInterface::RESOURCE_KEY, 'article-id-1', 'en'));
+        $this->assertSame($condition, $resolver->resolve('snippets', 'snippet-id-1', 'en'));
     }
 
     public function testHasDelegates(): void
@@ -78,13 +53,23 @@ class ArticleWorkflowTransitionRequestSecurityContextResolverTest extends TestCa
         $inner->has(ArticleInterface::RESOURCE_KEY)->willReturn(true);
         $inner->has('products')->willReturn(false);
 
-        $resolver = new ArticleWorkflowTransitionRequestSecurityContextResolver(
-            $inner->reveal(),
-            $this->prophesize(EntityManagerInterface::class)->reveal(),
-            $this->prophesize(GroupProviderInterface::class)->reveal(),
-        );
+        $resolver = $this->createResolver($inner->reveal(), $this->prophesize(EntityManagerInterface::class)->reveal());
 
         $this->assertTrue($resolver->has(ArticleInterface::RESOURCE_KEY));
         $this->assertFalse($resolver->has('products'));
+    }
+
+    private function createResolver(
+        WorkflowTransitionRequestSecurityContextResolverInterface $inner,
+        EntityManagerInterface $entityManager,
+    ): ArticleWorkflowTransitionRequestSecurityContextResolver {
+        return new ArticleWorkflowTransitionRequestSecurityContextResolver(
+            $inner,
+            new ArticleSecurityContextResolver(
+                $entityManager,
+                $this->prophesize(GroupProviderInterface::class)->reveal(),
+                new MetadataProviderRegistry($this->prophesize(ContainerInterface::class)->reveal()),
+            ),
+        );
     }
 }

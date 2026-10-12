@@ -62,7 +62,7 @@ class ArticleAdmin extends Admin
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         $hasArticleTypeWithEditPermissions = false;
         foreach ($groups as $group) {
-            $securityContext = $this->resolveSecurityContext($groups, $group);
+            $securityContext = static::getGroupSecurityContext($groups, $group);
             if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::EDIT)) {
                 $hasArticleTypeWithEditPermissions = true;
                 break;
@@ -93,21 +93,9 @@ class ArticleAdmin extends Admin
 
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         foreach ($groups as $group) {
-            $securityContext = $this->resolveSecurityContext($groups, $group);
+            $securityContext = static::getGroupSecurityContext($groups, $group);
             $this->configureGroupViews($group, $locales, $resourceKey, $viewCollection, $securityContext);
         }
-    }
-
-    /**
-     * @param array<string, FormGroup> $groups
-     */
-    private function resolveSecurityContext(array $groups, FormGroup $group): string
-    {
-        if (1 === \count($groups) || GroupProviderInterface::DEFAULT_GROUP === $group->identifier) {
-            return static::SECURITY_CONTEXT;
-        }
-
-        return static::getArticleSecurityContext($group->identifier);
     }
 
     /**
@@ -314,6 +302,20 @@ class ArticleAdmin extends Admin
                 ),
             ],
         ];
+    }
+
+    /**
+     * A single group or the default group falls back to the base context.
+     *
+     * @param array<string, FormGroup> $groups
+     */
+    public static function getGroupSecurityContext(array $groups, FormGroup $group): string
+    {
+        if (1 === \count($groups) || GroupProviderInterface::DEFAULT_GROUP === $group->identifier) {
+            return static::SECURITY_CONTEXT;
+        }
+
+        return static::getArticleSecurityContext($group->identifier);
     }
 
     public static function getArticleSecurityContext(string $groupIdentifier): string
