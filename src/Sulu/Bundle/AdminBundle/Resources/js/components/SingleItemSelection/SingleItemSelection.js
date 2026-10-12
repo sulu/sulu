@@ -13,11 +13,13 @@ type Props<T, U> = {|
     children?: Node,
     className?: string,
     disabled: boolean,
+    editIcon: string,
     emptyText?: string,
     id?: T,
     itemDisabled: boolean,
     leftButton: ButtonConfig<*>,
     loading: boolean,
+    onEdit?: () => void,
     onItemClick?: (itemId: T, value: ?U) => void,
     onRemove?: () => void,
     rightButton?: ButtonConfig<*>,
@@ -29,6 +31,7 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
     static defaultProps = {
         allowRemoveWhileItemDisabled: false,
         disabled: false,
+        editIcon: 'su-pen',
         itemDisabled: false,
         loading: false,
         valid: true,
@@ -48,10 +51,12 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
             children,
             className,
             disabled,
+            editIcon,
             itemDisabled,
             emptyText,
             leftButton,
             loading,
+            onEdit,
             onItemClick,
             onRemove,
             rightButton,
@@ -90,6 +95,15 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
                             </div>
                         }
                     </div>
+                    {onEdit && !loading && !disabled && !itemDisabled &&
+                        <button
+                            className={singleItemSelectionStyles.editButton}
+                            onClick={onEdit}
+                            type="button"
+                        >
+                            <Icon name={editIcon} />
+                        </button>
+                    }
                     {onRemove && !loading && !disabled && (!itemDisabled || allowRemoveWhileItemDisabled) &&
                         <button
                             className={singleItemSelectionStyles.removeButton}
