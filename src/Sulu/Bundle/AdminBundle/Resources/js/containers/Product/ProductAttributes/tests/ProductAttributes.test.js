@@ -384,3 +384,62 @@ test('reports an empty list and an empty object as empty', async() => {
     expect(rendererProps.filterItem({name: 'attribute_8', schema: {label: 'Colour', type: 'text_line'}}))
         .toEqual(false);
 });
+
+test('keeps the object of an attribute with several properties as the row value', async() => {
+    const onChange = jest.fn();
+    await renderLoaded({onChange, value: {'7': {from: 1, to: 9}, '42': 'keep'}});
+
+    expect(rendererProps.data).toEqual({attribute_7: {from: 1, to: 9}, attribute_42: 'keep'});
+
+    act(() => {
+        rendererProps.onChange('attribute_7', {from: 1, to: 5});
+    });
+
+    expect(rendererProps.formInspector.getValueByPath('/attribute_7/to')).toEqual(5);
+    expect(onChange).toHaveBeenCalledWith({'7': {from: 1, to: 5}, '42': 'keep'});
+});
+
+test('finishes a property of an attribute on the host form under its host path', async() => {
+    const onFinish = jest.fn();
+    await renderLoaded({onFinish});
+
+    act(() => {
+        rendererProps.onFinish('/attribute_7/from', '/attribute_group_1/items/attribute_7/items/from');
+    });
+
+    expect(onFinish).toHaveBeenCalledWith('/attributes/7/from', '/attributes');
+});
+
+test('passes the error of a touched property only, keyed by field name and property', async() => {
+    const error = {'7': {from: {keyword: 'minimum', parameters: {}}, to: {keyword: 'maximum', parameters: {}}}};
+    const {formInspector} = await renderLoaded({error, value: {'7': {from: -1, to: 99}}});
+
+    expect(JSON.parse(screen.getByTestId('renderer-props').textContent).errors).toEqual({});
+
+    formInspector.isFieldModified.mockImplementation((dataPath) => dataPath === '/attributes/7/to');
+    act(() => {
+        // $FlowFixMe
+        formInspector.family.set('family-1x');
+    });
+    expect(await screen.findByTestId('renderer')).toBeInTheDocument();
+
+    expect(JSON.parse(screen.getByTestId('renderer-props').textContent).errors).toEqual(
+        {attribute_7: {to: {keyword: 'maximum', parameters: {}}}}
+    );
+});
+
+test('passes the errors of every property when all errors are shown', async() => {
+    const error = {'7': {from: {keyword: 'minimum', parameters: {}}, to: {keyword: 'maximum', parameters: {}}}};
+    await renderLoaded({error, showAllErrors: true});
+
+    expect(JSON.parse(screen.getByTestId('renderer-props').textContent).errors).toEqual({attribute_7: error['7']});
+});
+
+test('reports an object as empty when none of its values is filled', async() => {
+    await renderLoaded({value: {'7': {from: null, to: ''}, '8': {from: null, to: 3}}});
+
+    await userEvent.click(screen.getByRole('checkbox'));
+
+    expect(rendererProps.filterItem({name: 'attribute_7', schema: {label: 'Length', type: 'section'}})).toEqual(false);
+    expect(rendererProps.filterItem({name: 'attribute_8', schema: {label: 'Width', type: 'section'}})).toEqual(true);
+});
