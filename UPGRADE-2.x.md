@@ -32,9 +32,10 @@ sulu_media:
 ```
 
 Point the flysystem storage at the place of the existing media, so they are found after the switch: the former `path` of
-the `local` storage, or the bucket with its `path_prefix` as `prefix`. The `public_url` of the flysystem storage has to
-contain the former `path_prefix` too, because flysystem does not add it. The section "Updating to flysystem 3" of the
-Sulu 3.0 upgrade guide maps the S3, Google Cloud and Azure settings to the flysystem configuration.
+the `local` storage, or the bucket with its `path_prefix` as `prefix`. Without a `public_url` the adapter builds the URL
+including the `prefix`. If you set a `public_url` on the flysystem storage, for example for a CDN, it has to contain the
+former `path_prefix` too, because flysystem does not add it. The section "Updating to flysystem 3" of the Sulu 3.0
+upgrade guide maps the S3, Google Cloud and Azure settings to the flysystem configuration.
 
 The `sulu_media.storages` configuration is not used with this storage and can be removed.
 
