@@ -218,6 +218,7 @@
         "league/flysystem-aws-s3-v3": "^1.0.1 - Needed for AWS S3 compatible storages (aws s3 or minio)",
         "league/flysystem-azure-blob-storage": "^0.1 Needed for Azure Blob media-storage implementation",
         "superbalist/flysystem-google-storage": "^7.1 - Needed for Google-Bucket media-storage implementation",
+        "league/flysystem-bundle": "^3.0 - Needed to configure a league/flysystem 3.x storage with sulu_media.storage.flysystem_service",
         "php-ffmpeg/php-ffmpeg": "Needed (as in require-dev) to generate preview images for videos",
         "scheb/2fa-bundle": "Needed for two factor authentication.",
         "scheb/2fa-totp": "Needed for two factor authentication via authenticator apps (TOTP).",

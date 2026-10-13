@@ -14,6 +14,8 @@ namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 use Contao\ImagineSvg\Imagine as SvgImagine;
 use FFMpeg\FFMpeg;
 use Imagine\Vips\Imagine as VipsImagine;
+use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemOperator;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
@@ -26,6 +28,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheClearerInterface;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
+use Sulu\Bundle\MediaBundle\Media\Storage\FlysystemV3Storage;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\SearchBundle\SuluSearchBundle;
@@ -35,8 +38,10 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Process\ExecutableFinder;
+use Webmozart\Assert\Assert;
 
 class SuluMediaExtension extends Extension implements PrependExtensionInterface
 {
@@ -434,7 +439,13 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
     private function configureStorage(array $config, ContainerBuilder $container, LoaderInterface $loader)
     {
-        $storage = $container->resolveEnvPlaceholders($config['storage'], true);
+        $mediaStorage = $config['storage'];
+        Assert::isArray($mediaStorage);
+
+        $flysystemV3Storage = null !== $mediaStorage['flysystem_service'] || null !== $mediaStorage['segments'];
+        $storage = $flysystemV3Storage
+            ? Configuration::STORAGE_FLYSYSTEM_V3
+            : $container->resolveEnvPlaceholders($mediaStorage['name'] ?? 'local', true);
         $container->setParameter('sulu_media.media.storage', $storage);
 
         foreach ($config['storages'] as $storageKey => $storageConfig) {
@@ -448,9 +459,41 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             }
         }
 
+        if ($flysystemV3Storage) {
+            $this->configureFlysystemV3Storage($mediaStorage, $container);
+
+            return;
+        }
+
         $loader->load('services_storage_' . $storage . '.php');
 
         $container->setAlias('sulu_media.storage', 'sulu_media.storage.' . $storage)->setPublic(true);
+        $container->setAlias(StorageInterface::class, 'sulu_media.storage')->setPublic(true);
+    }
+
+    /**
+     * @param array<mixed> $storage
+     */
+    private function configureFlysystemV3Storage(array $storage, ContainerBuilder $container): void
+    {
+        if (!\interface_exists(FilesystemOperator::class) || !\method_exists(Filesystem::class, 'publicUrl')) {
+            throw new InvalidConfigurationException(
+                'The configuration "sulu_media.storage.flysystem_service" requires "league/flysystem" in version ^3.6.'
+            );
+        }
+
+        $serviceId = $storage['flysystem_service'] ?? 'default.storage';
+        Assert::string($serviceId);
+
+        $container->register('sulu_media.storage', FlysystemV3Storage::class)
+            ->setArguments([
+                new Reference($serviceId),
+                new Reference('flysystem.adapter.' . $serviceId),
+                $storage['segments'] ?? 10,
+                null, // defined via compiler pass @see FlysystemV3CompilerPass
+            ])
+            ->setPublic(true);
+
         $container->setAlias(StorageInterface::class, 'sulu_media.storage')->setPublic(true);
     }
 

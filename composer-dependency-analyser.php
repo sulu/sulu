@@ -48,6 +48,14 @@ return $config
     // UnknownClasses
     ->ignoreUnknownClasses([
         ...$optionalIgnoreUnknownClasses,
+        // flysystem 3.x for the FlysystemV3Storage, the dev packages are flysystem 1.x
+        'League\Flysystem\FilesystemAdapter',
+        'League\Flysystem\FilesystemOperator',
+        'League\Flysystem\InMemory\InMemoryFilesystemAdapter',
+        'League\Flysystem\Local\LocalFilesystemAdapter',
+        'League\Flysystem\UnableToDeleteFile',
+        'League\Flysystem\UnableToReadFile',
+        'League\Flysystem\Visibility',
         // bc layer for lowest
         'FOS\RestBundle\Controller\FOSRestController',
         'Swift_Events_SendEvent',

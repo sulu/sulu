@@ -282,6 +282,66 @@ jobs:
               run: time composer test
               env: ${{ matrix.env }}
 
+    php-flysystem-3:
+        name: "PHP 8.4 (flysystem 3)"
+        runs-on: ubuntu-22.04
+        timeout-minutes: 30
+
+        env:
+            APP_ENV: test
+            APP_SECRET: a448d1dfcaa563fce56c2fd9981f662b
+            MAILER_URL: null://localhost
+            SULU_ADMIN_EMAIL:
+            PHPCR_TRANSPORT: doctrinedbal
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            SYMFONY_DEPRECATIONS_HELPER: weak
+            DATABASE_URL: mysql://root:ChangeMe@127.0.0.1:3306/sulu_test?serverVersion=8.0
+            DATABASE_CHARSET: utf8mb4
+            DATABASE_COLLATE: utf8mb4_unicode_ci
+
+        steps:
+            - name: Checkout project
+              uses: actions/checkout@v4
+
+            - name: Start Database
+              run: |
+                  docker compose -f tests/docker/docker-compose.mysql-80.yml up --wait
+
+            - name: Install and configure PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: 'ctype, iconv, mysql, imagick'
+                  tools: 'composer'
+                  ini-values: memory_limit=-1
+                  coverage: none
+
+            - name: Remove Lint Tools
+              run: composer remove "*php-cs-fixer*" "*phpstan*" "*rector*" --dev --no-update
+
+            - name: Use flysystem 3.x
+              # the media storages of flysystem 1.x are tested by the other jobs, the dev packages cannot have both majors
+              run: |
+                  composer remove \
+                      league/flysystem \
+                      league/flysystem-aws-s3-v3 \
+                      league/flysystem-azure-blob-storage \
+                      superbalist/flysystem-google-storage \
+                      --dev --no-interaction --no-update
+                  composer require league/flysystem:"^3.35.3" league/flysystem-memory:"^3.0" --dev --no-interaction --no-update
+
+            - name: Install composer dependencies
+              uses: ramsey/composer-install@v3
+              with:
+                  dependency-versions: highest
+
+            - name: Bootstrap test environment
+              run: composer bootstrap-test-environment
+
+            - name: Execute test cases
+              working-directory: src/Sulu/Bundle/MediaBundle
+              run: ../../../../vendor/bin/phpunit --filter 'FlysystemV3|SuluMediaExtensionTest|ConfigurationTest'
+
     php-lint:
         name: "PHP Lint"
         runs-on: ubuntu-22.04
