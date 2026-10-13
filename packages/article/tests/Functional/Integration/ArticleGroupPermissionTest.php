@@ -171,6 +171,17 @@ class ArticleGroupPermissionTest extends SuluTestCase
         yield 'remove_draft' => ['remove_draft'];
     }
 
+    public function testWorkflowTransitionsNeedEditPermission(): void
+    {
+        $id = $this->createArticle('review');
+        $this->createUser('viewer', [self::BASE => self::VIEW, self::GROUP => self::VIEW]);
+
+        $client = $this->request('viewer', 'POST', '/admin/api/articles/' . $id . '?locale=en&action=request_for_review');
+
+        $this->assertHttpStatusCode(403, $client->getResponse());
+        $this->assertSame('unpublished', $this->getArticle($id)['workflowPlace'] ?? null);
+    }
+
     public function testMovingAGroupArticleOutOfItsGroupAndPublishingNeedsLiveOnBothGroups(): void
     {
         $id = $this->createArticle('blog');
