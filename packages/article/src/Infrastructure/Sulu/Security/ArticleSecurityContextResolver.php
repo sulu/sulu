@@ -70,6 +70,26 @@ final class ArticleSecurityContextResolver
      */
     public function resolveByArticle(string $articleId, array $locales = []): array
     {
+        return $this->resolveByDimensionContents($articleId, $locales, DimensionContentInterface::STAGE_DRAFT, DimensionContentInterface::CURRENT_VERSION);
+    }
+
+    /**
+     * A version keeps the template it had when it was published, so restoring it can move the article to another group.
+     *
+     * @return list<string> no context if the article has no such version, the base one for a single group
+     */
+    public function resolveByVersion(string $articleId, string $locale, int $version, string $stage = DimensionContentInterface::STAGE_DRAFT): array
+    {
+        return $this->resolveByDimensionContents($articleId, [$locale], $stage, $version);
+    }
+
+    /**
+     * @param list<string> $locales all locales if empty
+     *
+     * @return list<string>
+     */
+    private function resolveByDimensionContents(string $articleId, array $locales, string $stage, int $version): array
+    {
         $groups = $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE);
         if (\count($groups) <= 1) {
             return [ArticleAdmin::SECURITY_CONTEXT];
@@ -82,8 +102,8 @@ final class ArticleSecurityContextResolver
             ->andWhere('dimensionContent.stage = :stage')
             ->andWhere('dimensionContent.version = :version')
             ->setParameter('id', $articleId)
-            ->setParameter('stage', DimensionContentInterface::STAGE_DRAFT)
-            ->setParameter('version', DimensionContentInterface::CURRENT_VERSION);
+            ->setParameter('stage', $stage)
+            ->setParameter('version', $version);
 
         if ([] !== $locales) {
             $queryBuilder->andWhere('dimensionContent.locale IN (:locales)')->setParameter('locales', $locales);

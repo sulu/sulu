@@ -244,6 +244,69 @@ class ArticleGroupPermissionTest extends SuluTestCase
         $this->assertStatusCode(403, $client, 'no permission in de');
     }
 
+    #[DataProvider('provideCopyActions')]
+    public function testCopyNeedsThePermissionOfTheCopiedLocales(string $method, string $query): void
+    {
+        $id = $this->createArticle('blog');
+        $client = $this->request(null, 'PUT', '/admin/api/articles/' . $id . '?locale=de', $this->data('article', 'Artikel'));
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->createUser('writer', [self::BASE => self::ALL], ['en', 'de', 'fr']);
+
+        $client = $this->request('writer', $method, '/admin/api/articles/' . $id . '?locale=de&' . $query, 'PUT' === $method ? $this->data('article', 'Artikel') : null);
+
+        $this->assertStatusCode(403, $client, 'en is in the blog group');
+    }
+
+    /**
+     * @return iterable<string, array{string, string}>
+     */
+    public static function provideCopyActions(): iterable
+    {
+        foreach (['POST', 'PUT'] as $method) {
+            yield $method . ' copy_locale' => [$method, 'action=copy_locale&src=en&dest=fr'];
+            yield $method . ' copy' => [$method, 'action=copy'];
+        }
+    }
+
+    #[DataProvider('provideMethods')]
+    public function testRestoringAVersionOfAnotherGroupNeedsEditOnThatGroup(string $method): void
+    {
+        $id = $this->createArticle('blog', true);
+        $version = $this->latestVersion($id);
+        $client = $this->request(null, 'PUT', '/admin/api/articles/' . $id . '?locale=en', $this->data('article', 'Moved'));
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->createUser('writer', [self::BASE => self::ALL]);
+
+        $client = $this->request('writer', $method, '/admin/api/articles/' . $id . '?locale=en&action=restore&version=' . $version, 'PUT' === $method ? $this->data('article', 'Moved') : null);
+
+        $this->assertStatusCode(403, $client, 'the version is in the blog group');
+        $this->assertSame('article', $this->getArticle($id)['template']);
+    }
+
+    #[DataProvider('provideMethods')]
+    public function testRestoringAVersionOfAnotherGroupWorksWithEditOnBothGroups(string $method): void
+    {
+        $id = $this->createArticle('blog', true);
+        $version = $this->latestVersion($id);
+        $client = $this->request(null, 'PUT', '/admin/api/articles/' . $id . '?locale=en', $this->data('article', 'Moved'));
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->createUser('editor', [self::BASE => self::ALL, self::GROUP => self::ALL]);
+
+        $client = $this->request('editor', $method, '/admin/api/articles/' . $id . '?locale=en&action=restore&version=' . $version, 'PUT' === $method ? $this->data('article', 'Moved') : null);
+
+        $this->assertStatusCode(200, $client, 'edit on both groups');
+        $this->assertSame('blog', $this->getArticle($id)['template']);
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideMethods(): iterable
+    {
+        yield 'POST' => ['POST'];
+        yield 'PUT' => ['PUT'];
+    }
+
     public function testDeleteNeedsThePermissionOfEveryLocale(): void
     {
         $id = $this->createArticle('blog');
@@ -277,6 +340,19 @@ class ArticleGroupPermissionTest extends SuluTestCase
         \sort($titles);
 
         return $titles;
+    }
+
+    private function latestVersion(string $id): int
+    {
+        $client = $this->request(null, 'GET', '/admin/api/articles/' . $id . '/versions?page=1&locale=en&fields=title,version,changer,id');
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        /** @var array{_embedded: array{articles_versions: array<int, array{version: int}>}} $content */
+        $content = \json_decode((string) $client->getResponse()->getContent(), true);
+        $version = $content['_embedded']['articles_versions'][0]['version'] ?? null;
+        $this->assertNotEmpty($version, 'Publishing has to leave a version behind for the restore.');
+
+        return $version;
     }
 
     /**

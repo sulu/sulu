@@ -104,6 +104,7 @@ class ArticleSecurityContextResolverTest extends TestCase
         );
 
         $this->assertSame(['sulu.article.articles'], $resolver->resolveByArticle('id', ['en']));
+        $this->assertSame(['sulu.article.articles'], $resolver->resolveByVersion('id', 'en', 1));
     }
 
     /**

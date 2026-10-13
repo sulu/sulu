@@ -334,6 +334,7 @@ final class ArticleController implements SecuredControllerInterface
             $contexts,
             [] !== $targetContexts ? \array_values(\array_diff($storedContexts, $targetContexts)) : [],
         );
+        $this->checkSourcePermission($request, $id);
 
         $message = new ModifyArticleMessage(['uuid' => $id], $data);
         /** @see \Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler */
@@ -346,20 +347,13 @@ final class ArticleController implements SecuredControllerInterface
 
     public function postTriggerAction(Request $request, string $id): Response
     {
-        $locale = $this->getLocale($request);
-        $locales = match ($request->query->getString('action')) {
-            'copy' => [], // copies every locale
-            'copy_locale' => [(string) ($request->query->get('src') ?: $locale), $request->query->getString('dest')],
-            default => [$locale],
-        };
-        $contexts = $this->getArticleContexts($id, $locales);
-
-        $this->checkPermission($request, PermissionTypes::EDIT, $contexts);
-        if ('copy_locale' === $request->query->getString('action')) {
-            // the copy creates content in the destination locale, which has its own permissions
-            $this->checkPermission($request, PermissionTypes::EDIT, $contexts, $request->query->getString('dest') ?: null);
+        // the copy actions are checked on the locales they read, the request locale may have no content yet
+        if (!\in_array($request->query->getString('action'), ['copy', 'copy_locale'], true)) {
+            $contexts = $this->getArticleContexts($id, [$this->getLocale($request)]);
+            $this->checkPermission($request, PermissionTypes::EDIT, $contexts);
+            $this->checkActionPermission($request, $contexts);
         }
-        $this->checkActionPermission($request, $contexts);
+        $this->checkSourcePermission($request, $id);
 
         $result = $this->handleAction($request, $id);
 
@@ -551,6 +545,40 @@ final class ArticleController implements SecuredControllerInterface
         // publishing replaces the live content of the group the article leaves
         if (WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH === $action) {
             $this->checkPermission($request, PermissionTypes::LIVE, $leftContexts);
+        }
+    }
+
+    /**
+     * The copy and restore actions take content from other locales or versions than the request locale, and with it
+     * their groups. `putAction` and `postTriggerAction` both run these actions, so both check them here.
+     */
+    private function checkSourcePermission(Request $request, string $id): void
+    {
+        $locale = $this->getLocale($request);
+
+        switch ($request->query->getString('action')) {
+            case 'copy':
+                $contexts = $this->getArticleContexts($id, []); // copies every locale
+                $this->checkPermission($request, PermissionTypes::EDIT, $contexts);
+                $this->checkActionPermission($request, $contexts);
+
+                break;
+            case 'copy_locale':
+                $contexts = $this->getArticleContexts($id, [(string) ($request->query->get('src') ?: $locale), $request->query->getString('dest')]);
+                $this->checkPermission($request, PermissionTypes::EDIT, $contexts);
+                // the copy creates content in the destination locale, which has its own permissions
+                $this->checkPermission($request, PermissionTypes::EDIT, $contexts, $request->query->getString('dest') ?: null);
+
+                break;
+            case 'restore':
+                $this->checkPermission($request, PermissionTypes::EDIT, $this->securityContextResolver->resolveByVersion(
+                    $id,
+                    $locale,
+                    (int) $request->query->get('version'),
+                    $request->query->getString('stage') ?: DimensionContentInterface::STAGE_DRAFT,
+                ));
+
+                break;
         }
     }
 
