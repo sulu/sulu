@@ -30,7 +30,7 @@
                 <title lang="de">Adresse</title>
             </meta>
 
-            <tag name="sulu_content.publish_required"/>
+            <tag name="sulu_content.publish_required_pre_validator"/>
         </property>
     </properties>
 </template>

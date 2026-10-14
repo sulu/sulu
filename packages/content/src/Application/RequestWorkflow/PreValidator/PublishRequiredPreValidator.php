@@ -36,7 +36,7 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionReques
  */
 class PublishRequiredPreValidator implements RequestWorkflowPreValidatorInterface
 {
-    public const TAG = 'sulu_content.publish_required';
+    public const TAG = 'sulu_content.publish_required_pre_validator';
 
     // The tag is structural, not translated, so the locale is irrelevant; 'en' is a fixed sentinel.
     private const METADATA_LOCALE_FALLBACK = 'en';
