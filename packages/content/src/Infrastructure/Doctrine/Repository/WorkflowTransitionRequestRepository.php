@@ -139,14 +139,14 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
         return $connection->transactional(function() use ($connection, $decision, $status, $messages): ?array {
             // The first read of the transaction, so that no snapshot predates the lock and the count below
             // sees every check the other workers settled before they released it.
-            $requestId = $connection->fetchOne(
-                \sprintf(
-                    'SELECT r.id FROM %s r INNER JOIN %s d ON d.workflow_transition_request_id = r.id WHERE d.id = :id FOR UPDATE',
-                    $this->entityManager->getClassMetadata(WorkflowTransitionRequest::class)->getTableName(),
-                    $this->entityManager->getClassMetadata(WorkflowTransitionRequestDecision::class)->getTableName(),
-                ),
-                ['id' => $decision->getId()],
-            );
+            $requestId = $connection->createQueryBuilder()
+                ->select('r.id')
+                ->from($this->entityManager->getClassMetadata(WorkflowTransitionRequest::class)->getTableName(), 'r')
+                ->innerJoin('r', $this->entityManager->getClassMetadata(WorkflowTransitionRequestDecision::class)->getTableName(), 'd', 'd.workflow_transition_request_id = r.id')
+                ->where('d.id = :id')
+                ->setParameter('id', $decision->getId())
+                ->forUpdate()
+                ->fetchOne();
 
             if (!\is_string($requestId) || !$this->claimDecision($decision, $status, $messages)) {
                 return null;
