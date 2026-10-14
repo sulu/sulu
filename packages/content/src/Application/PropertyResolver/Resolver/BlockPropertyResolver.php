@@ -16,9 +16,9 @@ namespace Sulu\Content\Application\PropertyResolver\Resolver;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\GlobalBlockMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
-use Sulu\Content\Application\MetadataResolver\GlobalBlockMetadataResolver;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\BlockVisitor\BlockVisitorInterface;
 
@@ -26,7 +26,7 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
 {
     private MetadataResolver $metadataResolver;
 
-    private GlobalBlockMetadataResolver $globalBlockMetadataResolver;
+    private GlobalBlockMetadataProvider $globalBlockMetadataProvider;
 
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -35,7 +35,7 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
         private readonly iterable $blockVisitors,
         private readonly bool $debug = false,
     ) {
-        $this->globalBlockMetadataResolver = new GlobalBlockMetadataResolver($metadataProviderRegistry);
+        $this->globalBlockMetadataProvider = new GlobalBlockMetadataProvider($metadataProviderRegistry);
     }
 
     /**
@@ -103,7 +103,7 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
                 }
             }
 
-            $formMetadata = $this->globalBlockMetadataResolver->resolve($formMetadata, $locale);
+            $formMetadata = $this->globalBlockMetadataProvider->getMetadata($formMetadata, $locale);
 
             $blockDefaults = ['type' => $type];
             $blockIdGeneratorOption = $metadata->findOption('block_id_generator');

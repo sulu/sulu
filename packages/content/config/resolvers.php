@@ -29,7 +29,6 @@ use Sulu\Content\Application\ContentResolver\Resolver\RoutableTemplateResolver;
 use Sulu\Content\Application\ContentResolver\Resolver\SeoResolver;
 use Sulu\Content\Application\ContentResolver\Resolver\SettingsResolver;
 use Sulu\Content\Application\ContentResolver\Resolver\TemplateResolver;
-use Sulu\Content\Application\MetadataResolver\GlobalBlockMetadataResolver;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\BlockVisitor\HiddenBlockVisitor;
 use Sulu\Content\Application\PropertyResolver\BlockVisitor\ScheduleBlockVisitor;
@@ -143,9 +142,6 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_content.dimension_content_resolver', DimensionContentResolver::class)
         ->args([new Reference('property_accessor')])
         ->tag('sulu_content.content_resolver');
-
-    $services->set('sulu_content.global_block_metadata_resolver', GlobalBlockMetadataResolver::class)
-        ->args([new Reference('sulu_admin.metadata_provider_registry')]);
 
     $services->set('sulu_content.metadata_resolver', MetadataResolver::class)
         ->args([new Reference('sulu_content.property_resolver_provider')]);

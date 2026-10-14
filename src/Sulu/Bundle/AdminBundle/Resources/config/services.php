@@ -41,6 +41,7 @@ use Sulu\Bundle\AdminBundle\Icon\providers\SvgProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\CachedFormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ExpressionFormMetadataVisitor;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\GlobalBlockMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\GlobalBlocksTypedFormMetadataVisitor;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\FormXmlLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Loader\TemplateXmlLoader;
@@ -196,6 +197,9 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_admin.tag_filter_typed_form_metadata_visitor', TagFilterTypedFormMetadataVisitor::class)
         ->tag('sulu_admin.typed_form_metadata_visitor');
+
+    $services->set('sulu_admin.global_block_metadata_provider', GlobalBlockMetadataProvider::class)
+        ->args([new Reference('sulu_admin.metadata_provider_registry')]);
 
     $services->set('sulu_admin.global_block_form_metadata_visitor', GlobalBlocksTypedFormMetadataVisitor::class)
         ->args([new Reference('sulu_admin.metadata_provider_registry')])

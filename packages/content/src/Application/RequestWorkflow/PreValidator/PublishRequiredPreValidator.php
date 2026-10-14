@@ -16,9 +16,9 @@ namespace Sulu\Content\Application\RequestWorkflow\PreValidator;
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\GlobalBlockMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Content\Application\MetadataResolver\GlobalBlockMetadataResolver;
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
@@ -40,7 +40,7 @@ class PublishRequiredPreValidator implements RequestWorkflowPreValidatorInterfac
 
     public function __construct(
         private readonly MetadataProviderRegistry $metadataProviderRegistry,
-        private readonly GlobalBlockMetadataResolver $globalBlockMetadataResolver,
+        private readonly GlobalBlockMetadataProvider $globalBlockMetadataProvider,
     ) {
     }
 
@@ -129,7 +129,7 @@ class PublishRequiredPreValidator implements RequestWorkflowPreValidatorInterfac
                 }
 
                 $emptyFields = \array_merge($emptyFields, $this->collectEmptyPublishRequired(
-                    $this->globalBlockMetadataResolver->resolve($blockType, self::METADATA_LOCALE_FALLBACK)->getFlatFieldMetadata(),
+                    $this->globalBlockMetadataProvider->getMetadata($blockType, self::METADATA_LOCALE_FALLBACK)->getFlatFieldMetadata(),
                     $block,
                     $path . $name . '/' . $index . '/',
                 ));

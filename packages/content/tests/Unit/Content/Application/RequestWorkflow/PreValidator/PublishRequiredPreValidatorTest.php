@@ -22,11 +22,11 @@ use Psr\Container\ContainerInterface;
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\GlobalBlockMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Content\Application\MetadataResolver\GlobalBlockMetadataResolver;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\PreValidationContext;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\PublishRequiredPreValidator;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -288,7 +288,7 @@ final class PublishRequiredPreValidatorTest extends TestCase
 
     private function createValidatorWithRegistry(MetadataProviderRegistry $registry): PublishRequiredPreValidator
     {
-        return new PublishRequiredPreValidator($registry, new GlobalBlockMetadataResolver($registry));
+        return new PublishRequiredPreValidator($registry, new GlobalBlockMetadataProvider($registry));
     }
 
     private function createRegistry(MetadataProviderInterface $provider): MetadataProviderRegistry

@@ -11,10 +11,8 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Application\MetadataResolver;
+namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 
 /**
@@ -22,7 +20,7 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
  *
  * @internal
  */
-class GlobalBlockMetadataResolver
+class GlobalBlockMetadataProvider
 {
     /**
      * @var array<string, array<FormMetadata>>
@@ -37,7 +35,7 @@ class GlobalBlockMetadataResolver
     /**
      * Returns the global block the block type references, or the block type itself when it references none.
      */
-    public function resolve(FormMetadata $blockType, string $locale): FormMetadata
+    public function getMetadata(FormMetadata $blockType, string $locale): FormMetadata
     {
         $tag = $blockType->getTagsByName('sulu.global_block')[0] ?? null;
         $globalBlockType = $tag?->getAttribute('global_block');

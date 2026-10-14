@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Tests\Unit\Content\Application\MetadataResolver;
+namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\FormMetadata;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -19,23 +19,23 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\GlobalBlockMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Content\Application\MetadataResolver\GlobalBlockMetadataResolver;
 
-#[CoversClass(GlobalBlockMetadataResolver::class)]
-class GlobalBlockMetadataResolverTest extends TestCase
+#[CoversClass(GlobalBlockMetadataProvider::class)]
+class GlobalBlockMetadataProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testResolvesTheGlobalBlockTheBlockTypeReferences(): void
+    public function testReturnsTheGlobalBlockTheBlockTypeReferences(): void
     {
         $globalBlock = $this->createForm('teaser');
-        $resolver = $this->createResolver(['teaser' => $globalBlock]);
+        $metadataProvider = $this->createGlobalBlockMetadataProvider(['teaser' => $globalBlock]);
 
-        $this->assertSame($globalBlock, $resolver->resolve($this->createReference('teaser'), 'en'));
+        $this->assertSame($globalBlock, $metadataProvider->getMetadata($this->createReference('teaser'), 'en'));
     }
 
     public function testReturnsTheBlockTypeItselfWhenItReferencesNoGlobalBlock(): void
@@ -44,14 +44,14 @@ class GlobalBlockMetadataResolverTest extends TestCase
         $provider = $this->prophesize(MetadataProviderInterface::class);
         $provider->getMetadata(Argument::cetera())->shouldNotBeCalled();
 
-        $this->assertSame($blockType, $this->createResolverForProvider($provider->reveal())->resolve($blockType, 'en'));
+        $this->assertSame($blockType, $this->createGlobalBlockMetadataProviderFor($provider->reveal())->getMetadata($blockType, 'en'));
     }
 
     public function testReturnsTheBlockTypeItselfWhenTheGlobalBlockIsUnknown(): void
     {
         $reference = $this->createReference('unknown');
 
-        $this->assertSame($reference, $this->createResolver([])->resolve($reference, 'en'));
+        $this->assertSame($reference, $this->createGlobalBlockMetadataProvider([])->getMetadata($reference, 'en'));
     }
 
     public function testLoadsTheGlobalBlocksOncePerLocale(): void
@@ -63,16 +63,16 @@ class GlobalBlockMetadataResolverTest extends TestCase
         $provider->getMetadata('block', 'en', [])->shouldBeCalledTimes(1)->willReturn($typed);
         $provider->getMetadata('block', 'de', [])->shouldBeCalledTimes(1)->willReturn($typed);
 
-        $resolver = $this->createResolverForProvider($provider->reveal());
-        $resolver->resolve($this->createReference('teaser'), 'en');
-        $resolver->resolve($this->createReference('teaser'), 'en');
-        $resolver->resolve($this->createReference('teaser'), 'de');
+        $metadataProvider = $this->createGlobalBlockMetadataProviderFor($provider->reveal());
+        $metadataProvider->getMetadata($this->createReference('teaser'), 'en');
+        $metadataProvider->getMetadata($this->createReference('teaser'), 'en');
+        $metadataProvider->getMetadata($this->createReference('teaser'), 'de');
     }
 
     /**
      * @param array<string, FormMetadata> $globalBlocks
      */
-    private function createResolver(array $globalBlocks): GlobalBlockMetadataResolver
+    private function createGlobalBlockMetadataProvider(array $globalBlocks): GlobalBlockMetadataProvider
     {
         $typed = new TypedFormMetadata();
         foreach ($globalBlocks as $name => $form) {
@@ -82,16 +82,16 @@ class GlobalBlockMetadataResolverTest extends TestCase
         $provider = $this->prophesize(MetadataProviderInterface::class);
         $provider->getMetadata('block', Argument::any(), [])->willReturn($typed);
 
-        return $this->createResolverForProvider($provider->reveal());
+        return $this->createGlobalBlockMetadataProviderFor($provider->reveal());
     }
 
-    private function createResolverForProvider(MetadataProviderInterface $provider): GlobalBlockMetadataResolver
+    private function createGlobalBlockMetadataProviderFor(MetadataProviderInterface $provider): GlobalBlockMetadataProvider
     {
         $container = $this->prophesize(ContainerInterface::class);
         $container->has('form')->willReturn(true);
         $container->get('form')->willReturn($provider);
 
-        return new GlobalBlockMetadataResolver(new MetadataProviderRegistry($container->reveal()));
+        return new GlobalBlockMetadataProvider(new MetadataProviderRegistry($container->reveal()));
     }
 
     private function createForm(string $key): FormMetadata

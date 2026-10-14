@@ -78,7 +78,7 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_content.request_workflow_pre_validator.publish_required', PublishRequiredPreValidator::class)
         ->args([
             new Reference('sulu_admin.metadata_provider_registry'),
-            new Reference('sulu_content.global_block_metadata_resolver'),
+            new Reference('sulu_admin.global_block_metadata_provider'),
         ])
         ->tag('sulu_content.request_workflow_pre_validator')
         ->tag('sulu.context', ['context' => 'admin']);
