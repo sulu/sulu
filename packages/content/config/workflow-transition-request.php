@@ -75,8 +75,9 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu_content.request_workflow_pre_validator')
         ->tag('sulu.context', ['context' => 'admin']);
 
-    $services->set('sulu_content.publish_required_pre_validator', PublishRequiredPreValidator::class)
+    $services->set('sulu_content.request_workflow_pre_validator.publish_required', PublishRequiredPreValidator::class)
         ->args([new Reference('sulu_admin.metadata_provider_registry')])
+        ->tag('sulu_content.request_workflow_pre_validator')
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_content.request_workflow_registry', RequestWorkflowRegistry::class)
@@ -128,7 +129,6 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_content.request_workflow_resolver'),
             new Reference('security.token_storage'),
-            new Reference('sulu_content.publish_required_pre_validator'),
         ])
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);

@@ -105,50 +105,16 @@ class RequestWorkflowPreValidationSubscriberTest extends TestCase
     }
 
     /**
-     * Content outside any request workflow is still held to the properties its template marks as
-     * required for publishing.
+     * Content outside any request workflow has no pre-validators, so publishing it is untouched.
      */
-    public function testContentWithoutAWorkflowStillRunsThePublishRequiredCheck(): void
+    public function testContentWithoutAWorkflowIsLetThrough(): void
     {
         $dimensionContent = $this->createDimensionContent();
 
-        $subscriber = $this->createSubscriber($dimensionContent, null, $this->createPreValidator(
-            ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::translated('publish.missing', ['fields' => 'intro']))
-        ));
+        $this->createSubscriber($dimensionContent, null)
+            ->onTransition(new TransitionEvent($dimensionContent, new Marking()));
 
-        try {
-            $subscriber->onTransition(new TransitionEvent($dimensionContent, new Marking()));
-            $this->fail('Expected the publish required check to abort the transition.');
-        } catch (WorkflowTransitionRequestPreValidationFailedException $exception) {
-            $this->assertSame(
-                [[
-                    'key' => 'publish_required',
-                    'passed' => false,
-                    'messages' => [['key' => 'publish.missing', 'parameters' => ['fields' => 'intro'], 'text' => null]],
-                ]],
-                $exception->getResponseData()['preValidationResults'],
-            );
-        }
-    }
-
-    public function testThePublishRequiredCheckFollowsTheWorkflowsOwnChecks(): void
-    {
-        $dimensionContent = $this->createDimensionContent();
-
-        $subscriber = $this->createSubscriber($dimensionContent, new RequestWorkflow('review', [], 1, [], [
-            'seo_required' => ['pre_validator' => $this->createPreValidator(ValidationResult::approve()), 'config' => []],
-        ]), $this->createPreValidator(
-            ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::translated('publish.missing', ['fields' => 'intro']))
-        ));
-
-        try {
-            $subscriber->onTransition(new TransitionEvent($dimensionContent, new Marking()));
-            $this->fail('Expected the publish required check to abort the transition.');
-        } catch (WorkflowTransitionRequestPreValidationFailedException $exception) {
-            $results = $exception->getResponseData()['preValidationResults'];
-            $this->assertIsArray($results);
-            $this->assertSame(['seo_required', 'publish_required'], \array_column($results, 'key'));
-        }
+        $this->expectNotToPerformAssertions();
     }
 
     private function createPreValidator(ValidationResult $result): RequestWorkflowPreValidatorInterface
@@ -173,27 +139,18 @@ class RequestWorkflowPreValidationSubscriberTest extends TestCase
         $tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $tokenStorage->getToken()->willReturn(null);
 
-        $subscriber = new RequestWorkflowPreValidationSubscriber(
-            $resolver->reveal(),
-            $tokenStorage->reveal(),
-            $this->createPreValidator(ValidationResult::reject(WorkflowTransitionRequestDecisionMessage::translated('publish.missing'))),
-        );
+        $subscriber = new RequestWorkflowPreValidationSubscriber($resolver->reveal(), $tokenStorage->reveal());
         $subscriber->onTransition(new TransitionEvent($dimensionContent, new Marking()));
     }
 
     private function createSubscriber(
         ExampleDimensionContent $dimensionContent,
         ?RequestWorkflow $workflow,
-        ?RequestWorkflowPreValidatorInterface $publishRequiredPreValidator = null,
     ): RequestWorkflowPreValidationSubscriber {
         $resolver = $this->prophesize(RequestWorkflowResolverInterface::class);
         $resolver->resolveForContent($dimensionContent)->willReturn($workflow);
 
-        return new RequestWorkflowPreValidationSubscriber(
-            $resolver->reveal(),
-            $this->authenticatedTokenStorage(),
-            $publishRequiredPreValidator ?? $this->createPreValidator(ValidationResult::approve()),
-        );
+        return new RequestWorkflowPreValidationSubscriber($resolver->reveal(), $this->authenticatedTokenStorage());
     }
 
     /**

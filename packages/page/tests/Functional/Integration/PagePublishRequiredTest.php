@@ -20,8 +20,7 @@ use Sulu\Page\Domain\Model\PageInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
- * The template has no request workflow, so only the publish required check stands between the
- * draft and the live page.
+ * The template's request workflow lists only the publish required pre-validator.
  */
 #[CoversNothing]
 class PagePublishRequiredTest extends SuluTestCase

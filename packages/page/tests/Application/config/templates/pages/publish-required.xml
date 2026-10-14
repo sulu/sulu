@@ -9,6 +9,8 @@
     <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
     <cacheLifetime>2400</cacheLifetime>
 
+    <tag name="sulu_content.request_workflow" workflow="publish_required"/>
+
     <meta>
         <title lang="en">Description required to publish</title>
         <title lang="de">Beschreibung zum Veröffentlichen erforderlich</title>

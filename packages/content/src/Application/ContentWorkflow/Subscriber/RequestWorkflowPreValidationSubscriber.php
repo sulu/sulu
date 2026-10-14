@@ -15,8 +15,6 @@ namespace Sulu\Content\Application\ContentWorkflow\Subscriber;
 
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\PreValidationContext;
-use Sulu\Content\Application\RequestWorkflow\PreValidator\PublishRequiredPreValidator;
-use Sulu\Content\Application\RequestWorkflow\PreValidator\RequestWorkflowPreValidatorInterface;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestPreValidationFailedException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -26,9 +24,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Workflow\Event\TransitionEvent;
 
 /**
- * Runs the workflow's pre-validators on every transition that would take content live, followed by
- * the publish required check, which applies with or without a request workflow. A failure aborts the
- * transition before anything is written.
+ * Runs the workflow's pre-validators on every transition that would take content live. A failure
+ * aborts the transition before anything is written.
  *
  * @final
  *
@@ -39,7 +36,6 @@ class RequestWorkflowPreValidationSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly RequestWorkflowResolverInterface $requestWorkflowResolver,
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly RequestWorkflowPreValidatorInterface $publishRequiredPreValidator,
     ) {
     }
 
@@ -65,14 +61,16 @@ class RequestWorkflowPreValidationSubscriber implements EventSubscriberInterface
         }
 
         $workflow = $this->requestWorkflowResolver->resolveForContent($dimensionContent);
-
-        $workflowName = $workflow->name ?? '';
+        if (null === $workflow) {
+            return;
+        }
 
         // Passed checks travel too, so the author sees what is done as well as what is left.
         $results = [];
         $passed = true;
-        foreach ($workflow->preValidators ?? [] as $key => $entry) {
-            $result = $entry['pre_validator']->check(new PreValidationContext($dimensionContent, $entry['config'], $workflowName));
+        foreach ($workflow->preValidators as $key => $entry) {
+            $context = new PreValidationContext($dimensionContent, $entry['config'], $workflow->name);
+            $result = $entry['pre_validator']->check($context);
 
             $results[] = [
                 'key' => $key,
@@ -80,17 +78,6 @@ class RequestWorkflowPreValidationSubscriber implements EventSubscriberInterface
                 'messages' => $result->messagesToArray(),
             ];
             $passed = $passed && $result->approved;
-        }
-
-        // Most content marks nothing as required for publishing, so a pass would only add a row to every list.
-        $publishRequired = $this->publishRequiredPreValidator->check(new PreValidationContext($dimensionContent, [], $workflowName));
-        if (!$publishRequired->approved) {
-            $results[] = [
-                'key' => PublishRequiredPreValidator::getKey(),
-                'passed' => false,
-                'messages' => $publishRequired->messagesToArray(),
-            ];
-            $passed = false;
         }
 
         if ($passed) {

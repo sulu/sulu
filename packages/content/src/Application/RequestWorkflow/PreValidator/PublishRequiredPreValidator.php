@@ -28,9 +28,8 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionReques
 
 /**
  * Requires the template properties tagged with {@see self::TAG} to be filled before the content goes live.
- * The tagged properties stay optional in a draft. It checks every publish and request of an editor,
- * whatever the request workflow of the content configures. A shadow locale is left out, because it
- * publishes the content of its source locale.
+ * The tagged properties stay optional in a draft. A shadow locale is left out, because it publishes
+ * the content of its source locale.
  *
  * @internal
  */

@@ -17,7 +17,6 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Content\Application\RequestWorkflow\PreValidator\PublishRequiredPreValidator;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
@@ -94,12 +93,7 @@ class RoutableDataMapper implements DataMapperInterface
         }
 
         if (!$this->hasRouteData($property, $data[$name] ?? null)) {
-            if (\array_key_exists($name, $data)
-                && $localizedDimensionContent::isRouteMandatory()
-                && !(DimensionContentInterface::STAGE_DRAFT === $localizedDimensionContent->getStage()
-                    && null === $localizedDimensionContent->getRoute()
-                    && $property->hasTag(PublishRequiredPreValidator::TAG))
-            ) {
+            if (\array_key_exists($name, $data) && $localizedDimensionContent::isRouteMandatory()) {
                 throw new \RuntimeException(\sprintf(
                     'Expected a route value for the mandatory property "%s".',
                     $name
