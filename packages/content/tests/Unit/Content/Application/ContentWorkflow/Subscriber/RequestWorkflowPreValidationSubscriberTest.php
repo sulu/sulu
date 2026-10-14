@@ -18,6 +18,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\RequestWorkflowPreValidationSubscriber;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\PreValidationContext;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\RequestWorkflowPreValidatorInterface;
@@ -25,6 +27,7 @@ use Sulu\Content\Application\RequestWorkflow\RequestWorkflow;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\ValidationResult;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestPreValidationFailedException;
+use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
@@ -117,6 +120,37 @@ class RequestWorkflowPreValidationSubscriberTest extends TestCase
         $this->expectNotToPerformAssertions();
     }
 
+    /**
+     * The transition runs on the draft dimension alone, so a pre-validator would miss what only the
+     * other dimensions hold, such as the properties that are not multilingual.
+     */
+    public function testPreValidatorsGetTheContentMergedFromTheCollectionOfTheTransition(): void
+    {
+        $dimensionContent = $this->createDimensionContent();
+        $merged = $this->createDimensionContent();
+        $collection = $this->prophesize(DimensionContentCollectionInterface::class)->reveal();
+
+        $contentMerger = $this->prophesize(ContentMergerInterface::class);
+        $contentMerger->merge($collection)->willReturn($merged);
+
+        $preValidator = $this->prophesize(RequestWorkflowPreValidatorInterface::class);
+        $preValidator->check(Argument::that(static fn (PreValidationContext $context): bool => $context->dimensionContent === $merged))
+            ->shouldBeCalled()
+            ->willReturn(ValidationResult::approve());
+
+        $subscriber = $this->createSubscriber($dimensionContent, new RequestWorkflow('review', [], 1, [], [
+            'seo_required' => ['pre_validator' => $preValidator->reveal(), 'config' => []],
+        ]), $contentMerger->reveal());
+
+        $subscriber->onTransition(new TransitionEvent(
+            $dimensionContent,
+            new Marking(),
+            null,
+            null,
+            [ContentWorkflowInterface::DIMENSION_CONTENT_COLLECTION_CONTEXT_KEY => $collection],
+        ));
+    }
+
     private function createPreValidator(ValidationResult $result): RequestWorkflowPreValidatorInterface
     {
         $preValidator = $this->prophesize(RequestWorkflowPreValidatorInterface::class);
@@ -139,18 +173,19 @@ class RequestWorkflowPreValidationSubscriberTest extends TestCase
         $tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $tokenStorage->getToken()->willReturn(null);
 
-        $subscriber = new RequestWorkflowPreValidationSubscriber($resolver->reveal(), $tokenStorage->reveal());
+        $subscriber = new RequestWorkflowPreValidationSubscriber($resolver->reveal(), $tokenStorage->reveal(), $this->prophesize(ContentMergerInterface::class)->reveal());
         $subscriber->onTransition(new TransitionEvent($dimensionContent, new Marking()));
     }
 
     private function createSubscriber(
         ExampleDimensionContent $dimensionContent,
         ?RequestWorkflow $workflow,
+        ?ContentMergerInterface $contentMerger = null,
     ): RequestWorkflowPreValidationSubscriber {
         $resolver = $this->prophesize(RequestWorkflowResolverInterface::class);
         $resolver->resolveForContent($dimensionContent)->willReturn($workflow);
 
-        return new RequestWorkflowPreValidationSubscriber($resolver->reveal(), $this->authenticatedTokenStorage());
+        return new RequestWorkflowPreValidationSubscriber($resolver->reveal(), $this->authenticatedTokenStorage(), $contentMerger ?? $this->prophesize(ContentMergerInterface::class)->reveal());
     }
 
     /**

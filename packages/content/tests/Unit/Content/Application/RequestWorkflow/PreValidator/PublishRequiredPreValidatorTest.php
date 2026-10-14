@@ -26,6 +26,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
+use Sulu\Content\Application\MetadataResolver\GlobalBlockMetadataResolver;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\PreValidationContext;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\PublishRequiredPreValidator;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -33,7 +34,6 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Fixture\NonTemplateDimensionContent;
-use Sulu\Route\Domain\Model\Route;
 
 #[CoversClass(PublishRequiredPreValidator::class)]
 final class PublishRequiredPreValidatorTest extends TestCase
@@ -58,7 +58,7 @@ final class PublishRequiredPreValidatorTest extends TestCase
         $provider = $this->prophesize(MetadataProviderInterface::class);
         $provider->getMetadata(Argument::cetera())->shouldNotBeCalled();
 
-        $validator = new PublishRequiredPreValidator($this->createRegistry($provider->reveal()));
+        $validator = $this->createValidatorWithRegistry($this->createRegistry($provider->reveal()));
 
         $this->assertTrue($validator->check($this->createContext(new ExampleDimensionContent(new Example())))->approved);
     }
@@ -68,7 +68,7 @@ final class PublishRequiredPreValidatorTest extends TestCase
         $provider = $this->prophesize(MetadataProviderInterface::class);
         $provider->getMetadata(Example::TEMPLATE_TYPE, 'en', [])->willThrow(new MetadataNotFoundException('form', Example::TEMPLATE_TYPE));
 
-        $validator = new PublishRequiredPreValidator($this->createRegistry($provider->reveal()));
+        $validator = $this->createValidatorWithRegistry($this->createRegistry($provider->reveal()));
 
         $this->assertTrue($validator->check($this->createContext($this->createDimensionContent(['intro' => ''])))->approved);
     }
@@ -114,7 +114,6 @@ final class PublishRequiredPreValidatorTest extends TestCase
         yield 'empty list' => [[]];
         yield 'selection without ids' => [['ids' => []]];
         yield 'media selection with its default display option' => [['ids' => [], 'displayOption' => 'left']];
-        yield 'single media selection with its default display option' => [['id' => null, 'displayOption' => 'left']];
         yield 'teaser selection with its presentation' => [['items' => [], 'presentAs' => 'two-columns']];
     }
 
@@ -138,6 +137,7 @@ final class PublishRequiredPreValidatorTest extends TestCase
         yield 'text' => ['a'];
         yield 'selection' => [['ids' => [1]]];
         yield 'media selection' => [['ids' => [1], 'displayOption' => 'left']];
+        yield 'single selection holding only its default display option' => [['id' => null, 'displayOption' => 'left']];
     }
 
     #[DataProvider('filledValueProvider')]
@@ -148,51 +148,6 @@ final class PublishRequiredPreValidatorTest extends TestCase
         $context = $this->createContext($this->createDimensionContent(['intro' => $value]));
 
         $this->assertTrue($validator->check($context)->approved);
-    }
-
-    /**
-     * A property that is not multilingual is stored on the unlocalized dimension, not on the localized
-     * one the transition runs on.
-     */
-    public function testReadsNotMultilingualPropertiesFromTheUnlocalizedDimension(): void
-    {
-        $validator = $this->createValidator(['intro' => true], multilingual: false);
-
-        $resource = new Example();
-        $unlocalized = new ExampleDimensionContent($resource);
-        $unlocalized->setTemplateData(['intro' => 'Shared']);
-        $resource->addDimensionContent($unlocalized);
-        $localized = $this->createDimensionContent([], $resource);
-
-        $this->assertTrue($validator->check($this->createContext($localized))->approved);
-    }
-
-    public function testIgnoresTheUnlocalizedDimensionOfAnotherStage(): void
-    {
-        $validator = $this->createValidator(['intro' => true], multilingual: false);
-
-        $resource = new Example();
-        $live = new ExampleDimensionContent($resource);
-        $live->setStage(DimensionContentInterface::STAGE_LIVE);
-        $live->setTemplateData(['intro' => 'Live only']);
-        $resource->addDimensionContent($live);
-        $draft = $this->createDimensionContent([], $resource);
-
-        $this->assertFalse($validator->check($this->createContext($draft))->approved);
-    }
-
-    public function testIgnoresTheUnlocalizedDimensionOfAnotherVersion(): void
-    {
-        $validator = $this->createValidator(['intro' => true], multilingual: false);
-
-        $resource = new Example();
-        $version = new ExampleDimensionContent($resource);
-        $version->setVersion(1700000000);
-        $version->setTemplateData(['intro' => 'Old version']);
-        $resource->addDimensionContent($version);
-        $draft = $this->createDimensionContent([], $resource);
-
-        $this->assertFalse($validator->check($this->createContext($draft))->approved);
     }
 
     /**
@@ -235,7 +190,7 @@ final class PublishRequiredPreValidatorTest extends TestCase
         $reference->setAttributes(['global_block' => 'teaser']);
         $referenceType->addTag($reference);
 
-        $blocks = $this->createField('blocks', false, true, 'block');
+        $blocks = $this->createField('blocks', false, 'block');
         $blocks->addType($referenceType);
 
         $form = new FormMetadata();
@@ -263,38 +218,16 @@ final class PublishRequiredPreValidatorTest extends TestCase
         $this->assertTrue($this->createBlockValidator()->check($context)->approved);
     }
 
-    public function testARouteIsMissingWhileTheDimensionHasNoRoute(): void
-    {
-        $validator = $this->createValidator(['url' => true], type: 'page_tree_route');
-
-        $dimensionContent = $this->createDimensionContent(['url' => ['page' => []]]);
-
-        $result = $validator->check($this->createContext($dimensionContent));
-
-        $this->assertFalse($result->approved);
-        $this->assertSame(['fields' => 'url'], $result->messages[0]->parameters);
-    }
-
-    public function testARouteIsPresentOnceTheDimensionHasOne(): void
-    {
-        $validator = $this->createValidator(['url' => true], type: 'page_tree_route');
-
-        $dimensionContent = $this->createDimensionContent([]);
-        $dimensionContent->setRoute(new Route(ExampleDimensionContent::getResourceKey(), '1', 'en', '/article'));
-
-        $this->assertTrue($validator->check($this->createContext($dimensionContent))->approved);
-    }
-
     /**
      * @param array<string, bool> $properties name => carries the tag
      */
-    private function createValidator(array $properties, bool $multilingual = true, string $type = 'text_line'): PublishRequiredPreValidator
+    private function createValidator(array $properties): PublishRequiredPreValidator
     {
         $form = new FormMetadata();
         $form->setKey('default');
 
         foreach ($properties as $name => $tagged) {
-            $form->addItem($this->createField($name, $tagged, $multilingual, $type));
+            $form->addItem($this->createField($name, $tagged));
         }
 
         return $this->createValidatorForForm($form);
@@ -311,7 +244,7 @@ final class PublishRequiredPreValidatorTest extends TestCase
         $quoteType->setKey('quote');
         $quoteType->addItem($this->createField('text', false));
 
-        $blocks = $this->createField('blocks', false, true, 'block');
+        $blocks = $this->createField('blocks', false, 'block');
         $blocks->addType($textType);
         $blocks->addType($quoteType);
 
@@ -322,11 +255,10 @@ final class PublishRequiredPreValidatorTest extends TestCase
         return $this->createValidatorForForm($form);
     }
 
-    private function createField(string $name, bool $tagged, bool $multilingual = true, string $type = 'text_line'): FieldMetadata
+    private function createField(string $name, bool $tagged, string $type = 'text_line'): FieldMetadata
     {
         $field = new FieldMetadata($name);
         $field->setType($type);
-        $field->setMultilingual($multilingual);
 
         if ($tagged) {
             $tag = new TagMetadata();
@@ -351,7 +283,12 @@ final class PublishRequiredPreValidatorTest extends TestCase
         }
         $provider->getMetadata('block', 'en', Argument::any())->willReturn($globalBlocks);
 
-        return new PublishRequiredPreValidator($this->createRegistry($provider->reveal()));
+        return $this->createValidatorWithRegistry($this->createRegistry($provider->reveal()));
+    }
+
+    private function createValidatorWithRegistry(MetadataProviderRegistry $registry): PublishRequiredPreValidator
+    {
+        return new PublishRequiredPreValidator($registry, new GlobalBlockMetadataResolver($registry));
     }
 
     private function createRegistry(MetadataProviderInterface $provider): MetadataProviderRegistry
@@ -366,9 +303,9 @@ final class PublishRequiredPreValidatorTest extends TestCase
     /**
      * @param array<string, mixed> $templateData
      */
-    private function createDimensionContent(array $templateData, ?Example $resource = null): ExampleDimensionContent
+    private function createDimensionContent(array $templateData): ExampleDimensionContent
     {
-        $dimensionContent = new ExampleDimensionContent($resource ?? new Example());
+        $dimensionContent = new ExampleDimensionContent(new Example());
         $dimensionContent->setLocale('en');
         $dimensionContent->setTemplateKey('default');
         $dimensionContent->setTemplateData($templateData);

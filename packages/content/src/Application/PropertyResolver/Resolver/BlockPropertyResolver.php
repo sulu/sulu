@@ -16,15 +16,17 @@ namespace Sulu\Content\Application\PropertyResolver\Resolver;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\MetadataResolver\GlobalBlockMetadataResolver;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\BlockVisitor\BlockVisitorInterface;
 
 class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
 {
     private MetadataResolver $metadataResolver;
+
+    private GlobalBlockMetadataResolver $globalBlockMetadataResolver;
 
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -33,6 +35,7 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
         private readonly iterable $blockVisitors,
         private readonly bool $debug = false,
     ) {
+        $this->globalBlockMetadataResolver = new GlobalBlockMetadataResolver($metadataProviderRegistry);
     }
 
     /**
@@ -59,13 +62,6 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
         }
 
         $metadataTypes = $metadata->getTypes();
-
-        $typedFormMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
-            ->getMetadata('block', $locale, []);
-
-        \assert($typedFormMetadata instanceof TypedFormMetadata, 'Block form metadata not found for block resolving.');
-
-        $globalBlocksMetadata = $typedFormMetadata->getForms();
 
         $contentViews = [];
         /** @var array<string, mixed> $block */
@@ -107,10 +103,7 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
                 }
             }
 
-            $globalBlockType = $this->getGlobalBlockType($formMetadata);
-            if ($globalBlockType && \array_key_exists($globalBlockType, $globalBlocksMetadata)) {
-                $formMetadata = $globalBlocksMetadata[$globalBlockType];
-            }
+            $formMetadata = $this->globalBlockMetadataResolver->resolve($formMetadata, $locale);
 
             $blockDefaults = ['type' => $type];
             $blockIdGeneratorOption = $metadata->findOption('block_id_generator');
@@ -142,16 +135,6 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
         }
 
         return ContentView::create($contentViews, [...$returnedParams]);
-    }
-
-    private function getGlobalBlockType(FormMetadata $formMetadata): ?string
-    {
-        $tag = $formMetadata->getTagsByName('sulu.global_block')[0] ?? null;
-
-        /** @var string|null $result */
-        $result = $tag?->getAttribute('global_block');
-
-        return $result;
     }
 
     /**

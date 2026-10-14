@@ -43,5 +43,14 @@
 
             <tag name="sulu_content.publish_required_pre_validator"/>
         </property>
+
+        <property name="reference" type="text_line" multilingual="false">
+            <meta>
+                <title lang="en">Reference</title>
+                <title lang="de">Referenz</title>
+            </meta>
+
+            <tag name="sulu_content.publish_required_pre_validator"/>
+        </property>
     </properties>
 </template>

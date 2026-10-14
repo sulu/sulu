@@ -76,6 +76,31 @@ class PagePublishRequiredTest extends SuluTestCase
         $this->assertSame('unpublished', $page['workflowPlace']);
     }
 
+    /**
+     * The reference is not multilingual, so it is stored on the unlocalized dimension and the check
+     * only sees it on the merged content.
+     */
+    public function testPublishWithoutThePropertyThatIsNotMultilingualIsRefusedAndNamesIt(): void
+    {
+        $id = $this->createDraft();
+
+        $this->client->request(
+            'PUT',
+            \sprintf('/admin/api/pages/%s?locale=en&webspace=sulu-io&action=publish', $id),
+            [],
+            [],
+            [],
+            $this->payload('Now described', null),
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(422, $response->getStatusCode(), (string) $response->getContent());
+
+        /** @var array{preValidationResults: list<array{messages: list<array{parameters: array<string, string>}>}>} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertSame(['fields' => 'reference'], $content['preValidationResults'][0]['messages'][0]['parameters']);
+    }
+
     public function testPublishWithTheProperty(): void
     {
         $id = $this->createDraft();
@@ -117,13 +142,14 @@ class PagePublishRequiredTest extends SuluTestCase
         return $content['id'];
     }
 
-    private function payload(?string $description): string
+    private function payload(?string $description, ?string $reference = 'Shared'): string
     {
         return (string) \json_encode([
             'template' => self::TEMPLATE,
             'title' => 'Publish required',
             'url' => '/publish-required',
             'description' => $description,
+            'reference' => $reference,
         ]);
     }
 
