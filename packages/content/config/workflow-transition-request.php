@@ -27,6 +27,7 @@ use Sulu\Content\Application\MessageHandler\ValidateWorkflowTransitionRequestFai
 use Sulu\Content\Application\MessageHandler\ValidateWorkflowTransitionRequestMessageHandler;
 use Sulu\Content\Application\MessageHandler\WorkerState;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\ExcerptRequiredPreValidator;
+use Sulu\Content\Application\RequestWorkflow\PreValidator\PublishRequiredPreValidator;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\SeoRequiredPreValidator;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowRegistry;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowRegistryInterface;
@@ -72,6 +73,10 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_content.request_workflow_pre_validator.excerpt_required', ExcerptRequiredPreValidator::class)
         ->tag('sulu_content.request_workflow_pre_validator')
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_content.publish_required_pre_validator', PublishRequiredPreValidator::class)
+        ->args([new Reference('sulu_admin.metadata_provider_registry')])
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_content.request_workflow_registry', RequestWorkflowRegistry::class)
@@ -123,6 +128,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_content.request_workflow_resolver'),
             new Reference('security.token_storage'),
+            new Reference('sulu_content.publish_required_pre_validator'),
         ])
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);

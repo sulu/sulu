@@ -20,11 +20,13 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\RoutableDataMapper;
+use Sulu\Content\Application\RequestWorkflow\PreValidator\PublishRequiredPreValidator;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
@@ -323,6 +325,65 @@ class RoutableDataMapperTest extends TestCase
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
+    public function testMapEmptyRouteWhenThePropertyIsOnlyRequiredOnPublish(): void
+    {
+        $data = ['url' => ['page' => [], 'suffix' => '/my-page']];
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithPageTreeRoute(publishRequired: true));
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertNull($localizedDimensionContent->getRoute());
+    }
+
+    /**
+     * Without the exception, clearing the route of a content that has one would leave the old URL live.
+     */
+    public function testMapEmptyRouteThrowsWhenThePropertyIsOnlyRequiredOnPublishButTheContentHasARoute(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Expected a route value for the mandatory property "url".');
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+        $localizedDimensionContent->setRoute(new Route('examples', '1', 'en', '/existing'));
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithPageTreeRoute(publishRequired: true));
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, ['url' => ['page' => [], 'suffix' => '/existing']]);
+    }
+
+    /**
+     * Only the draft may go without a route: a live copy without one would be published without a URL.
+     */
+    public function testMapEmptyRouteThrowsOnTheLiveStageWhenThePropertyIsOnlyRequiredOnPublish(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Expected a route value for the mandatory property "url".');
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setStage(DimensionContentInterface::STAGE_LIVE);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithPageTreeRoute(publishRequired: true));
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, ['url' => ['page' => [], 'suffix' => '/my-page']]);
+    }
+
     public function testMapPageTreeRoutePropertyClearedThrowsWhenRouteIsMandatory(): void
     {
         $this->expectException(\RuntimeException::class);
@@ -591,7 +652,7 @@ class RoutableDataMapperTest extends TestCase
         return $typedFormMetadata;
     }
 
-    private function createTypedFormMetadataWithPageTreeRoute(string $propertyName = 'url'): TypedFormMetadata
+    private function createTypedFormMetadataWithPageTreeRoute(string $propertyName = 'url', bool $publishRequired = false): TypedFormMetadata
     {
         $formMetadata = new FormMetadata();
         $formMetadata->setTitle('Default', 'en');
@@ -600,6 +661,12 @@ class RoutableDataMapperTest extends TestCase
         $routeProperty = new FieldMetadata($propertyName);
         $routeProperty->setMultilingual(true);
         $routeProperty->setType('page_tree_route');
+
+        if ($publishRequired) {
+            $tag = new TagMetadata();
+            $tag->setName(PublishRequiredPreValidator::TAG);
+            $routeProperty->addTag($tag);
+        }
 
         $formMetadata->addItem($routeProperty);
 
