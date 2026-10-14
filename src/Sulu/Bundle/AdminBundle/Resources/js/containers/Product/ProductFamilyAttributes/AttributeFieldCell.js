@@ -54,7 +54,7 @@ export default class AttributeFieldCell extends React.PureComponent<Props> {
                     onFinish={this.handleFinish}
                     onSuccess={undefined}
                     router={router}
-                    schemaOptions={{}}
+                    schemaOptions={column.schemaOptions || {}}
                     schemaPath={schemaPath + '/' + column.name}
                     showAllErrors={false}
                     types={undefined}
