@@ -17,12 +17,9 @@ sulu_admin.delete_collaborations:
 
 # Icon
 sulu_admin.get_icons:
-    path: '/icons.{_format}'
+    path: '/icons'
     methods: GET
     controller: 'sulu_admin.icon_controller::cgetAction'
-    format: json
-    requirements:
-        _format: json|csv
 
 # Teaser
 sulu_page.get_teasers:

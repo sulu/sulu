@@ -11,59 +11,42 @@
 
 namespace Sulu\Bundle\AdminBundle\Controller;
 
-use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\AdminBundle\Exception\InvalidIconProviderException;
 use Sulu\Bundle\AdminBundle\Icon\IconProviderInterface;
-use Sulu\Component\Rest\AbstractRestController;
-use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @experimental This is an experimental feature and may change in future releases.
  */
-class IconController extends AbstractRestController
+class IconController
 {
-    /**
-     * @var array<string, string>
-     */
-    private array $iconSets;
-
-    /**
-     * @var iterable<IconProviderInterface>
-     */
-    private iterable $iconProviders;
-
     /**
      * @param array<string, string> $iconSets
      * @param iterable<IconProviderInterface> $iconProviders
      */
     public function __construct(
-        ViewHandlerInterface $viewHandler,
-        array $iconSets,
-        iterable $iconProviders,
+        private array $iconSets,
+        private iterable $iconProviders,
     ) {
-        parent::__construct($viewHandler);
-        $this->iconSets = $iconSets;
-        $this->iconProviders = $iconProviders;
     }
 
-    /**
-     * Returns icons.
-     *
-     * @return Response
-     */
-    public function cgetAction(Request $request)
+    public function cgetAction(Request $request): Response
     {
-        $iconSetName = $request->query->getString('icon_set');
+        $iconSetName = $request->query->getString('icon_set', 'sulu');
 
-        if (!$iconSetName) {
-            throw new MissingParameterException(\get_class($this), 'icon_set');
+        if (!\array_key_exists($iconSetName, $this->iconSets)) {
+            throw new NotFoundHttpException(\sprintf(
+                'Unknown icon set "%s". Known icon sets are: %s',
+                $iconSetName,
+                \implode(', ', \array_keys($this->iconSets)),
+            ));
         }
 
         $iconSet = \explode('://', $this->iconSets[$iconSetName]);
-        $search = $request->query->get('search');
         $provider = $iconSet[0];
         $path = $iconSet[1] ?? '';
 
@@ -78,6 +61,7 @@ class IconController extends AbstractRestController
         }
 
         // Implement a simple search functionality.
+        $search = $request->query->get('search');
         if ($search) {
             $filteredIcons = [];
 
@@ -93,13 +77,8 @@ class IconController extends AbstractRestController
         // Sort by ID.
         \usort($icons, fn ($a, $b) => $a['id'] <=> $b['id']);
 
-        return $this->handleView(
-            $this->view(
-                new CollectionRepresentation(
-                    $icons,
-                    'icons'
-                )
-            )
-        );
+        $data = new CollectionRepresentation($icons, 'icons');
+
+        return new JsonResponse($data->toArray());
     }
 }
