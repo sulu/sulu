@@ -1,4 +1,5 @@
 @import '../../../containers/Application/colors.scss';
+@import '../../../containers/Application/variables.scss';
 
 $overlayWidth: 660px;
 $overlayContentHeight: 436px;
@@ -10,7 +11,7 @@ $overlayContentHeight: 436px;
     gap: 16px;
     max-height: $overlayContentHeight;
     overflow: auto;
-    padding: 24px;
+    padding: 24px $viewPaddingHorizontal;
     width: $overlayWidth;
 }
 

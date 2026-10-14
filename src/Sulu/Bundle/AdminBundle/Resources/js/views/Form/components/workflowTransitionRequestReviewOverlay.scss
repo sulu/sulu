@@ -1,4 +1,5 @@
 @import '../../../containers/Application/colors.scss';
+@import '../../../containers/Application/variables.scss';
 
 $overlayWidth: 660px;
 $overlayContentHeight: 436px;
@@ -6,7 +7,7 @@ $overlayContentHeight: 436px;
 .comment-body {
     box-sizing: border-box;
     max-height: $overlayContentHeight;
-    padding: 24px 40px;
+    padding: 24px $viewPaddingHorizontal;
     width: $overlayWidth;
 }
 
