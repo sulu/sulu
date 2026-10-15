@@ -141,7 +141,10 @@ class WorkflowTransitionRequestRepositoryTest extends SuluTestCase
         }
 
         $tableName = static::getEntityManager()->getClassMetadata(WorkflowTransitionRequest::class)->getTableName();
-        $otherWorker = DriverManager::getConnection($connection->getParams()); // @phpstan-ignore argument.type
+        // DBAL 3 lets a leftover `url` param win over the suffixed `dbname` of the test schema.
+        $params = $connection->getParams();
+        unset($params['url']);
+        $otherWorker = DriverManager::getConnection($params); // @phpstan-ignore argument.type
         $otherWorker->beginTransaction();
 
         try {
