@@ -99,7 +99,7 @@ class RequestWorkflowResolverTest extends TestCase
     public function testResolveTemplateKeysWithWorkflowSkipsOnlyTheOptedOutTemplate(): void
     {
         $resolver = $this->makeResolver(
-            ['blog' => [], RequestWorkflow::DEFAULT_NAME => []],
+            ['blog' => [], RequestWorkflow::DEFAULT_NAME => ['resources' => [Example::RESOURCE_KEY]]],
             $this->makeMetadataProviderWithTypedForms(Example::TEMPLATE_TYPE, [
                 'tagged' => 'blog',
                 'untagged' => null,
@@ -128,7 +128,7 @@ class RequestWorkflowResolverTest extends TestCase
 
     public function testResolveForContentWithNonTemplateInterfaceReturnsDefaultWorkflow(): void
     {
-        $resolver = $this->makeResolver([RequestWorkflow::DEFAULT_NAME => []]);
+        $resolver = $this->makeResolver([RequestWorkflow::DEFAULT_NAME => ['resources' => [Example::RESOURCE_KEY]]]);
 
         $result = $resolver->resolveForContent(new NonTemplateDimensionContent(new Example()));
 
@@ -144,7 +144,7 @@ class RequestWorkflowResolverTest extends TestCase
 
     public function testResolveForContentWithNullTemplateKeyFallsBackToDefault(): void
     {
-        $resolver = $this->makeResolver([RequestWorkflow::DEFAULT_NAME => []]);
+        $resolver = $this->makeResolver([RequestWorkflow::DEFAULT_NAME => ['resources' => [Example::RESOURCE_KEY]]]);
 
         // A fresh ExampleDimensionContent implements TemplateInterface but never had a template set.
         $result = $resolver->resolveForContent(new ExampleDimensionContent(new Example()));
@@ -167,7 +167,7 @@ class RequestWorkflowResolverTest extends TestCase
     public function testResolveForContentWithNoneTagReturnsNullDespiteADefaultWorkflow(): void
     {
         $resolver = $this->makeResolver(
-            [RequestWorkflow::DEFAULT_NAME => []],
+            [RequestWorkflow::DEFAULT_NAME => ['resources' => [Example::RESOURCE_KEY]]],
             $this->makeMetadataProviderWithTypedForm(Example::TEMPLATE_TYPE, 'no_review', RequestWorkflow::NONE_NAME),
         );
 
@@ -188,7 +188,7 @@ class RequestWorkflowResolverTest extends TestCase
     public function testResolveForContentWithNoTagFallsBackToDefault(): void
     {
         $resolver = $this->makeResolver(
-            [RequestWorkflow::DEFAULT_NAME => []],
+            [RequestWorkflow::DEFAULT_NAME => ['resources' => [Example::RESOURCE_KEY]]],
             $this->makeMetadataProviderWithTypedForm(Example::TEMPLATE_TYPE, 'simple', null),
         );
 
@@ -202,7 +202,7 @@ class RequestWorkflowResolverTest extends TestCase
         $provider = $this->prophesize(MetadataProviderInterface::class);
         $provider->getMetadata(Example::TEMPLATE_TYPE, 'en', [])->willThrow(new MetadataNotFoundException('form', Example::TEMPLATE_TYPE));
 
-        $resolver = $this->makeResolver([RequestWorkflow::DEFAULT_NAME => []], $provider->reveal());
+        $resolver = $this->makeResolver([RequestWorkflow::DEFAULT_NAME => ['resources' => [Example::RESOURCE_KEY]]], $provider->reveal());
 
         $result = $resolver->resolveForContent($this->makeDimensionContent('some_template'));
 
@@ -214,9 +214,31 @@ class RequestWorkflowResolverTest extends TestCase
         $provider = $this->prophesize(MetadataProviderInterface::class);
         $provider->getMetadata(Example::TEMPLATE_TYPE, 'en', [])->willReturn(new FormMetadata());
 
-        $resolver = $this->makeResolver([RequestWorkflow::DEFAULT_NAME => []], $provider->reveal());
+        $resolver = $this->makeResolver([RequestWorkflow::DEFAULT_NAME => ['resources' => [Example::RESOURCE_KEY]]], $provider->reveal());
 
         $result = $resolver->resolveForContent($this->makeDimensionContent('simple'));
+
+        $this->assertSame(RequestWorkflow::DEFAULT_NAME, $result?->name);
+    }
+
+    public function testResolveForContentReturnsNullForUntaggedTemplateWhenDefaultWorkflowListsNoResources(): void
+    {
+        $resolver = $this->makeResolver(
+            [RequestWorkflow::DEFAULT_NAME => []],
+            $this->makeMetadataProviderWithTypedForm(Example::TEMPLATE_TYPE, 'simple', null),
+        );
+
+        $this->assertNull($resolver->resolveForContent($this->makeDimensionContent('simple')));
+    }
+
+    public function testResolveForContentWithTagNamingTheDefaultWorkflowReturnsItWithoutResources(): void
+    {
+        $resolver = $this->makeResolver(
+            [RequestWorkflow::DEFAULT_NAME => []],
+            $this->makeMetadataProviderWithTypedForm(Example::TEMPLATE_TYPE, 'tagged', RequestWorkflow::DEFAULT_NAME),
+        );
+
+        $result = $resolver->resolveForContent($this->makeDimensionContent('tagged'));
 
         $this->assertSame(RequestWorkflow::DEFAULT_NAME, $result?->name);
     }
