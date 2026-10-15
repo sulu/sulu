@@ -22,7 +22,7 @@ use Sulu\Article\Application\Message\RestoreArticleVersionMessage;
 use Sulu\Article\Domain\Exception\ArticleNotFoundException;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
-use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
+use Sulu\Article\Infrastructure\Sulu\Security\ArticleSecurityContextResolver;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormGroup;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -46,6 +46,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -58,9 +59,7 @@ final class ArticleController implements SecuredControllerInterface
     use HandleTrait;
 
     /**
-     * Permissions the request method based check of the SuluSecurityListener does not cover:
-     * the live actions change the live content, copying creates an article. Publishing is left to the
-     * content workflow, which also lets an approved transition request through.
+     * Publishing is left to the content workflow, which also lets an approved transition request through.
      */
     private const ACTION_PERMISSIONS = [
         WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH => PermissionTypes::LIVE,
@@ -79,6 +78,7 @@ final class ArticleController implements SecuredControllerInterface
         private DoctrineListBuilderFactoryInterface $listBuilderFactory,
         private RestHelperInterface $restHelper,
         private SecurityCheckerInterface $securityChecker,
+        private ArticleSecurityContextResolver $securityContextResolver,
         private bool $isSingleLocale = false,
     ) {
         $this->messageBus = $messageBus;
@@ -132,6 +132,7 @@ final class ArticleController implements SecuredControllerInterface
             $listBuilder->addSelectField($fieldDescriptors['ghostLocale']);
         }
         $listBuilder->setParameter('locale', $this->getLocale($request));
+        $this->restrictToViewableGroups($request, $listBuilder, $fieldDescriptors['templateKey'], $groups);
 
         $templateFilterRequested = [] !== $groupIdentifiers || [] !== $requestedTemplateKeys;
         // the requested groups/templateKeys did not resolve to any known template key, so the
@@ -171,6 +172,7 @@ final class ArticleController implements SecuredControllerInterface
     public function getVersionsAction(Request $request, string $id): JsonResponse
     {
         $locale = $this->getLocale($request);
+        $this->checkPermission($request, PermissionTypes::VIEW, $this->getArticleContexts($id, [$locale]));
 
         /** @var DoctrineFieldDescriptorInterface[] $fieldDescriptors */
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('articles_versions');
@@ -200,6 +202,11 @@ final class ArticleController implements SecuredControllerInterface
     }
 
     public function getAction(Request $request, string $id): Response // TODO route should be a uuid?
+    {
+        return $this->createArticleResponse($request, $id, true);
+    }
+
+    private function createArticleResponse(Request $request, string $id, bool $checkViewPermission = false): Response
     {
         $dimensionAttributes = [
             'locale' => $request->query->getString('locale', $request->getLocale()),
@@ -231,7 +238,6 @@ final class ArticleController implements SecuredControllerInterface
         // TODO the `$article` should just be serialized
         //      Instead of calling the content resolver service which triggers an additional query.
         $dimensionContent = $this->contentManager->resolve($article, $dimensionAttributes);
-        $normalizedContent = $this->contentManager->normalize($dimensionContent);
 
         $templateKey = $dimensionContent->getTemplateKey();
         $ghostLocale = $dimensionContent->getGhostLocale();
@@ -254,6 +260,16 @@ final class ArticleController implements SecuredControllerInterface
             $templateKey = $ghostResult[0]['templateKey'] ?? null;
         }
 
+        if ($checkViewPermission) {
+            $this->checkPermission(
+                $request,
+                PermissionTypes::VIEW,
+                [$this->securityContextResolver->resolveByTemplateKey($templateKey)],
+            );
+        }
+
+        $normalizedContent = $this->contentManager->normalize($dimensionContent);
+
         // prefixed to avoid colliding with a template property of the same name
         $normalizedContent['_group'] = $this->resolveGroup(
             $this->groupProvider->getGroups(ArticleInterface::TEMPLATE_TYPE),
@@ -269,9 +285,16 @@ final class ArticleController implements SecuredControllerInterface
 
     public function postAction(Request $request): Response
     {
-        $this->checkActionPermission($request);
+        $data = $this->getData($request);
+        $templateKey = $this->getTemplateKey($data);
+        // without a template the mapper falls back to the default type, which can belong to a group
+        $contexts = [null !== $templateKey
+            ? $this->securityContextResolver->resolveByTemplateKey($templateKey)
+            : $this->securityContextResolver->resolveByDefaultType($this->getLocale($request))];
+        $this->checkPermission($request, PermissionTypes::ADD, $contexts);
+        $this->checkActionPermission($request, $contexts);
 
-        $message = new CreateArticleMessage($this->getData($request));
+        $message = new CreateArticleMessage($data);
 
         /** @see \Sulu\Article\Application\MessageHandler\CreateArticleMessageHandler */
         /** @var ArticleInterface $article */
@@ -280,37 +303,69 @@ final class ArticleController implements SecuredControllerInterface
 
         $this->handleAction($request, $uuid);
 
-        $response = $this->getAction($request, $uuid);
+        $response = $this->createArticleResponse($request, $uuid);
 
         return $response->setStatusCode(201);
     }
 
     public function putAction(Request $request, string $id): Response // TODO route should be a uuid?
     {
-        $this->checkActionPermission($request);
+        $data = $this->getData($request);
 
-        $message = new ModifyArticleMessage(['uuid' => $id], $this->getData($request));
+        $locale = $this->getLocale($request);
+        $storedContexts = $this->securityContextResolver->resolveByArticle($id, [$locale]);
+        $submittedTemplateKey = $this->getTemplateKey($data);
+        if (null !== $submittedTemplateKey) {
+            $targetContexts = [$this->securityContextResolver->resolveByTemplateKey($submittedTemplateKey)];
+        } elseif ([] === $storedContexts && true !== ($data['shadowOn'] ?? false)) {
+            // a new locale without a template gets the default type
+            $targetContexts = [$this->securityContextResolver->resolveByDefaultType($locale)];
+        } else {
+            $targetContexts = [];
+        }
+
+        // a new locale belongs to the groups of the other locales, a new template can move the article to another group
+        $articleContexts = [] === $storedContexts ? $this->securityContextResolver->resolveByArticle($id) : $storedContexts;
+        $contexts = $this->withDefault(\array_values(\array_unique(\array_merge($articleContexts, $targetContexts))));
+
+        $this->checkPermission($request, PermissionTypes::EDIT, $contexts);
+        $this->checkActionPermission(
+            $request,
+            $contexts,
+            [] !== $targetContexts ? \array_values(\array_diff($storedContexts, $targetContexts)) : [],
+        );
+        $this->checkSourcePermission($request, $id);
+
+        $message = new ModifyArticleMessage(['uuid' => $id], $data);
         /** @see \Sulu\Article\Application\MessageHandler\ModifyArticleMessageHandler */
         $this->handle(new Envelope($message, [new EnableFlushStamp()]));
 
         $this->handleAction($request, $id);
 
-        return $this->getAction($request, $id);
+        return $this->createArticleResponse($request, $id);
     }
 
     public function postTriggerAction(Request $request, string $id): Response
     {
-        $this->checkActionPermission($request);
+        // the copy actions are checked on the locales they read, the request locale may have no content yet
+        if (!\in_array($request->query->getString('action'), ['copy', 'copy_locale'], true)) {
+            $contexts = $this->getArticleContexts($id, [$this->getLocale($request)]);
+            $this->checkPermission($request, PermissionTypes::EDIT, $contexts);
+            $this->checkActionPermission($request, $contexts);
+        }
+        $this->checkSourcePermission($request, $id);
 
         $result = $this->handleAction($request, $id);
 
-        return $this->getAction($request, $result?->getUuid() ?? $id);
+        return $this->createArticleResponse($request, $result?->getUuid() ?? $id);
     }
 
     public function deleteAction(Request $request, string $id): Response // TODO route should be a uuid
     {
         $deleteLocale = $request->query->getBoolean('deleteLocale', false);
         $locale = $this->getLocale($request);
+
+        $this->checkPermission($request, PermissionTypes::DELETE, $this->getArticleContexts($id, $deleteLocale ? [$locale] : []));
 
         if ($deleteLocale) {
             $message = new RemoveArticleTranslationMessage(['uuid' => $id], $locale);
@@ -378,7 +433,7 @@ final class ArticleController implements SecuredControllerInterface
         if ('copy_locale' === $action) {
             $message = new CopyLocaleArticleMessage(
                 ['uuid' => $uuid],
-                (string) ($request->query->get('src') ?: $request->query->get('locale')),
+                (string) ($request->query->get('src') ?: $this->getLocale($request)),
                 (string) $request->query->get('dest'),
             );
 
@@ -418,22 +473,158 @@ final class ArticleController implements SecuredControllerInterface
         return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
     }
 
+    /**
+     * @return string|null
+     *
+     * @phpstan-ignore return.type
+     */
     public function getSecurityContext()
     {
-        return ArticleAdmin::SECURITY_CONTEXT;
+        // the context depends on the group of the article, so every action checks it itself
+        return null;
     }
 
-    private function checkActionPermission(Request $request): void
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function getTemplateKey(array $data): ?string
     {
-        $permission = self::ACTION_PERMISSIONS[$request->query->getString('action')] ?? null;
+        $templateKey = $data['template'] ?? null;
 
-        if (null === $permission) {
+        return \is_string($templateKey) ? $templateKey : null;
+    }
+
+    /**
+     * @param list<string> $locales all locales if empty
+     *
+     * @return non-empty-list<string>
+     */
+    private function getArticleContexts(string $id, array $locales): array
+    {
+        return $this->withDefault($this->securityContextResolver->resolveByArticle($id, $locales));
+    }
+
+    /**
+     * An article without a draft in the locale has no group, so the default one applies.
+     *
+     * @param list<string> $contexts
+     *
+     * @return non-empty-list<string>
+     */
+    private function withDefault(array $contexts): array
+    {
+        return [] === $contexts ? [$this->securityContextResolver->resolveByTemplateKey(null)] : $contexts;
+    }
+
+    /**
+     * @param list<string> $contexts
+     */
+    private function checkPermission(Request $request, string $permission, array $contexts, ?string $locale = null): void
+    {
+        foreach ($contexts as $context) {
+            $this->securityChecker->checkPermission(
+                new SecurityCondition($context, $locale ?? $this->getLocale($request)),
+                $permission,
+            );
+        }
+    }
+
+    /**
+     * @param list<string> $contexts
+     * @param list<string> $leftContexts the contexts the article leaves with a new template
+     */
+    private function checkActionPermission(Request $request, array $contexts, array $leftContexts = []): void
+    {
+        $action = $request->query->getString('action');
+        $permission = self::ACTION_PERMISSIONS[$action] ?? null;
+
+        if (null !== $permission) {
+            $this->checkPermission($request, $permission, $contexts);
+        }
+
+        // publishing replaces the live content of the group the article leaves
+        if (WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH === $action) {
+            $this->checkPermission($request, PermissionTypes::LIVE, $leftContexts);
+        }
+    }
+
+    /**
+     * The copy and restore actions take content from other locales or versions than the request locale, and with it
+     * their groups. `putAction` and `postTriggerAction` both run these actions, so both check them here.
+     */
+    private function checkSourcePermission(Request $request, string $id): void
+    {
+        $locale = $this->getLocale($request);
+
+        switch ($request->query->getString('action')) {
+            case 'copy':
+                $contexts = $this->getArticleContexts($id, []); // copies every locale
+                $this->checkPermission($request, PermissionTypes::EDIT, $contexts);
+                $this->checkActionPermission($request, $contexts);
+
+                break;
+            case 'copy_locale':
+                $contexts = $this->getArticleContexts($id, [(string) ($request->query->get('src') ?: $locale), $request->query->getString('dest')]);
+                $this->checkPermission($request, PermissionTypes::EDIT, $contexts);
+                // the copy creates content in the destination locale, which has its own permissions
+                $this->checkPermission($request, PermissionTypes::EDIT, $contexts, $request->query->getString('dest') ?: null);
+
+                break;
+            case 'restore':
+                $this->checkPermission($request, PermissionTypes::EDIT, $this->securityContextResolver->resolveByVersion(
+                    $id,
+                    $locale,
+                    (int) $request->query->get('version'),
+                    $request->query->getString('stage') ?: DimensionContentInterface::STAGE_DRAFT,
+                ));
+
+                break;
+        }
+    }
+
+    /**
+     * Articles of a template in no group are only listed to a user who may view everything.
+     *
+     * @param array<string, FormGroup> $groups
+     */
+    private function restrictToViewableGroups(
+        Request $request,
+        DoctrineListBuilder $listBuilder,
+        DoctrineFieldDescriptorInterface $templateKeyFieldDescriptor,
+        array $groups,
+    ): void {
+        $defaultCondition = new SecurityCondition(
+            $this->securityContextResolver->resolveByTemplateKey(null),
+            $this->getLocale($request),
+        );
+        $isRestricted = !$this->securityChecker->hasPermission($defaultCondition, PermissionTypes::VIEW);
+
+        $viewableTemplateKeys = [];
+        foreach ($groups as $group) {
+            $condition = new SecurityCondition(
+                $this->securityContextResolver->resolveByGroup($group, $groups),
+                $this->getLocale($request),
+            );
+
+            if ($this->securityChecker->hasPermission($condition, PermissionTypes::VIEW)) {
+                $viewableTemplateKeys = \array_merge($viewableTemplateKeys, $group->templates);
+            } else {
+                $isRestricted = true;
+            }
+        }
+
+        if (!$isRestricted) {
             return;
         }
 
-        $this->securityChecker->checkPermission(
-            new SecurityCondition($this->getSecurityContext(), $this->getLocale($request)),
-            $permission,
-        );
+        if ([] === $viewableTemplateKeys) {
+            throw new AccessDeniedException(\sprintf(
+                'Permission "%s" for context "%s" not granted',
+                PermissionTypes::VIEW,
+                $defaultCondition->getSecurityContext(),
+            ));
+        }
+
+        $listBuilder->in($templateKeyFieldDescriptor, $viewableTemplateKeys);
     }
 }

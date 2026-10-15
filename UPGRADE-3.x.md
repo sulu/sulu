@@ -267,6 +267,16 @@ The admin API now checks these permissions:
 Before, users without these permissions could still create, publish and copy through the API and parts of
 the admin. Check your roles and grant `add` and `live` where users need them, otherwise they get a `403`.
 
+### Article endpoints check the permissions of the article group
+
+The article REST endpoints check the permissions of the group the template of the article belongs to (with the same
+fallback to the umbrella permission as the admin), no longer the umbrella `sulu.article.articles` permission alone. A role
+holding only `sulu.article.articles` therefore gets a `403` on the articles of a custom group. Grant the permissions
+(including `live` and `review`) on `sulu.article.articles_<group>` to every role that works on those articles.
+
+The reverse also applies: a role holding only `sulu.article.articles_<group>` no longer works on the articles of the
+default group, and the list contains the articles of the viewable groups only (a `403` if there are none).
+
 ### Additional Optional Parameter contentNormalizer for ContentObjectProvider
 
 The `ContentObjectProvider` gained an optional `$contentNormalizer` argument, which it uses to keep the
