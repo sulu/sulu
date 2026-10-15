@@ -17,8 +17,12 @@ const UPDATE_ROUTE_HOOK_PRIORITY = 1024;
 @observer
 class ViewRenderer extends React.Component<Props> {
     @observable loginCount: number = 0;
+    @observable userChangeCount: number = 0;
+
+    lastUserId: ?number;
 
     updateLoginCountDisposer: ?() => *;
+    updateUserChangeCountDisposer: ?() => *;
 
     componentDidMount() {
         const {router} = this.props;
@@ -40,11 +44,31 @@ class ViewRenderer extends React.Component<Props> {
                 }
             }
         );
+
+        this.lastUserId = userStore.user ? userStore.user.id : undefined;
+        this.updateUserChangeCountDisposer = reaction(
+            () => (userStore.user ? userStore.user.id : undefined),
+            (newUserId) => {
+                if (newUserId === undefined) {
+                    return;
+                }
+
+                if (this.lastUserId !== undefined && this.lastUserId !== newUserId) {
+                    this.userChangeCount = this.userChangeCount + 1;
+                }
+
+                this.lastUserId = newUserId;
+            }
+        );
     }
 
     componentWillUnmount() {
         if (this.updateLoginCountDisposer) {
             this.updateLoginCountDisposer();
+        }
+
+        if (this.updateUserChangeCountDisposer) {
+            this.updateUserChangeCountDisposer();
         }
     }
 
@@ -53,7 +77,8 @@ class ViewRenderer extends React.Component<Props> {
         const CurrentView = viewRegistry.get(route.type);
         const viewConfig = viewRegistry.getConfig(route.type);
 
-        let viewKey = getViewKeyFromRoute(route, router.attributes) || '';
+        // the data of a view, permissions included, belongs to the user who loaded it
+        let viewKey = (getViewKeyFromRoute(route, router.attributes) || '') + '__user' + this.userChangeCount;
         if (CurrentView.remountViewOnLogin) {
             viewKey = viewKey + '__' + this.loginCount;
         }
