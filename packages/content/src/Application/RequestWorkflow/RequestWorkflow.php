@@ -34,7 +34,7 @@ final class RequestWorkflow
 
     /**
      * @param array<string, array{validator: RequestWorkflowValidatorInterface, config: array<string, mixed>, required: bool}> $validators keyed by the validator's tag key, which is also its key on the check rows
-     * @param list<string> $resources resource keys this workflow covers as the implicit default; empty means all, only the `default` workflow reads it
+     * @param list<string> $resources resource keys this workflow covers as the implicit default for templates without a workflow tag; empty means none, only the `default` workflow reads it
      * @param array<string, array{pre_validator: RequestWorkflowPreValidatorInterface, config: array<string, mixed>}> $preValidators sync rules that must pass before the content goes live, on request and on publish alike, keyed by tag key
      */
     public function __construct(
@@ -48,7 +48,7 @@ final class RequestWorkflow
 
     public function appliesToResource(string $resourceKey): bool
     {
-        return [] === $this->resources || \in_array($resourceKey, $this->resources, true);
+        return \in_array($resourceKey, $this->resources, true);
     }
 
     public function getRequiredUserApprovals(): int

@@ -67,7 +67,7 @@ final class SuluContentBundle extends AbstractBundle
                     ->arrayPrototype()
                         ->children()
                             ->arrayNode('resources')
-                                ->info('Resource keys the "default" workflow covers for untagged templates, empty means all. Only "default" reads it, a named workflow is selected by its template tag and refuses it.')
+                                ->info('Resource keys the "default" workflow covers for untagged templates, empty means none, so only templates tagged workflow="default" use it. Only "default" reads it, a named workflow is selected by its template tag and refuses it.')
                                 ->example(['pages', 'articles'])
                                 ->scalarPrototype()->end()
                                 ->defaultValue([])
