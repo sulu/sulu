@@ -76,6 +76,7 @@ jackrabbit/*
 
 /config/reference.php
 /src/Sulu/Bundle/*/Tests/Application/config/reference.php
+/packages/*/tests/Application/config/reference.php
 
 ###> symfony/framework-bundle ###
 /.env.local
