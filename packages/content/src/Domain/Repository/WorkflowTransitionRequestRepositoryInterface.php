@@ -84,7 +84,7 @@ interface WorkflowTransitionRequestRepositoryInterface
      *
      * @param list<WorkflowTransitionRequestDecisionMessage> $messages
      *
-     * @return array{approved: int, rejected: int, pending: int}|null null when another writer had settled the row already
+     * @return array{approved: int, rejected: int, pending: int}|null null when another writer had settled the row already or the request is no longer open
      */
     public function settleDecision(
         WorkflowTransitionRequestDecision $decision,

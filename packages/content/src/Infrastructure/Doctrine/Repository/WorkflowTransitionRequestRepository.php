@@ -24,6 +24,7 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionReques
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum;
 
 /**
  * @phpstan-type WorkflowTransitionRequestFilters array{
@@ -138,13 +139,16 @@ final class WorkflowTransitionRequestRepository implements WorkflowTransitionReq
 
         return $connection->transactional(function() use ($connection, $decision, $status, $messages): ?array {
             // The first read of the transaction, so that no snapshot predates the lock and the count below
-            // sees every check the other workers settled before they released it.
+            // sees every check the other workers settled before they released it. A request closed by a
+            // cancel or a publish while the check ran is not found, so a late verdict is dropped.
             $requestId = $connection->createQueryBuilder()
                 ->select('r.id')
                 ->from($this->entityManager->getClassMetadata(WorkflowTransitionRequest::class)->getTableName(), 'r')
                 ->innerJoin('r', $this->entityManager->getClassMetadata(WorkflowTransitionRequestDecision::class)->getTableName(), 'd', 'd.workflow_transition_request_id = r.id')
                 ->where('d.id = :id')
+                ->andWhere('r.place = :open')
                 ->setParameter('id', $decision->getId())
+                ->setParameter('open', WorkflowTransitionRequestPlaceEnum::OPEN->value)
                 ->forUpdate()
                 ->fetchOne();
 

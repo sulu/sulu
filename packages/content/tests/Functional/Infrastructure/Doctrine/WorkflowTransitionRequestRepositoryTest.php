@@ -89,6 +89,36 @@ class WorkflowTransitionRequestRepositoryTest extends SuluTestCase
         $this->assertSame(WorkflowTransitionRequestDecisionStatusEnum::APPROVED, $decision->getStatus());
     }
 
+    public function testSettleDecisionOfAClosedRequestWritesNothing(): void
+    {
+        foreach (['cancel', 'publish'] as $closing) {
+            $request = new WorkflowTransitionRequest('pages', 'res-' . $closing, 'en', 'default');
+            $request->addValidatorDecision('first');
+            $this->repository->add($request);
+            static::getEntityManager()->flush();
+
+            // A slow check answers after the request was closed, the entity in hand still says it is open.
+            $decision = $this->decision($request, 'first');
+            static::getEntityManager()->getConnection()->executeStatement(
+                \sprintf('UPDATE %s SET place = :place WHERE id = :id', static::getEntityManager()->getClassMetadata(WorkflowTransitionRequest::class)->getTableName()),
+                ['place' => 'cancel' === $closing ? 'cancelled' : 'published', 'id' => $request->getId()],
+            );
+
+            $this->assertNull(
+                $this->repository->settleDecision($decision, WorkflowTransitionRequestDecisionStatusEnum::APPROVED, []),
+                \sprintf('A verdict that comes after "%s" is dropped.', $closing),
+            );
+            $this->assertSame(WorkflowTransitionRequestDecisionStatusEnum::PENDING, $decision->getStatus());
+            $this->assertSame(
+                WorkflowTransitionRequestDecisionStatusEnum::PENDING->value,
+                static::getEntityManager()->getConnection()->fetchOne(
+                    \sprintf('SELECT status FROM %s WHERE id = :id', static::getEntityManager()->getClassMetadata(WorkflowTransitionRequestDecision::class)->getTableName()),
+                    ['id' => $decision->getId()],
+                ),
+            );
+        }
+    }
+
     public function testSettleDecisionWaitsForTheLockOnTheRequest(): void
     {
         $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
