@@ -61,12 +61,15 @@ class LinkTag implements TagInterface
                     $url = $this->urlHelper->getAbsoluteUrl($url);
                 }
 
+                // the provider may hand back an url that is already escaped, so its entities are kept
+                $url = $this->escape($url, false);
+
                 if ($query) {
-                    $url .= '?' . $query;
+                    $url .= '?' . $this->escape($query);
                 }
 
                 if ($anchor) {
-                    $url .= '#' . $anchor;
+                    $url .= '#' . $this->escape($anchor);
                 }
 
                 $title = $item->getTitle();
@@ -212,7 +215,7 @@ class LinkTag implements TagInterface
      */
     private function getPartsFromHref($href): array
     {
-        $href = (string) $href ?: null;
+        $href = $href ? \html_entity_decode((string) $href, \ENT_QUOTES | \ENT_HTML5, 'UTF-8') : null;
 
         /** @var string[] $hrefParts */
         $hrefParts = $href ? \explode('#', $href, 2) : [];
@@ -227,5 +230,10 @@ class LinkTag implements TagInterface
             'anchor' => $anchor,
             'query' => $query,
         ];
+    }
+
+    private function escape(string $value, bool $doubleEncode = true): string
+    {
+        return \htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8', $doubleEncode);
     }
 }
