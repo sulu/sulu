@@ -19,6 +19,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
+use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -53,6 +54,7 @@ class SmartContentSmartResolverTest extends TestCase
 
         $this->resolver = new SmartContentSmartResolver(
             $this->serviceLocator->reveal(),
+            new ContentDeduplicationTracker(),
         );
     }
 
@@ -63,6 +65,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => true,
+                'excludeDuplicates' => false,
                 'categories' => [1, 2],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -105,6 +108,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => true,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -146,6 +150,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => false,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -188,6 +193,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => false,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -230,6 +236,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => false,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -263,6 +270,7 @@ class SmartContentSmartResolverTest extends TestCase
 
         $resolver = new SmartContentSmartResolver(
             $serviceLocator->reveal(),
+            new ContentDeduplicationTracker(),
         );
 
         $data = [
@@ -270,6 +278,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => false,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -302,6 +311,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => false,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],
