@@ -18,7 +18,7 @@ parameters:
         processTimeout: 300.0
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
-        # the flysystem 3.x storage is analysed with the flysystem 1.x dev packages, where its classes do not exist
+        # the lint job installs the flysystem 1.x packages, where the classes of the flysystem 3.x storage do not exist
         -
             identifiers:
                 - class.notFound

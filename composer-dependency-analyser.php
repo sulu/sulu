@@ -48,7 +48,7 @@ return $config
     // UnknownClasses
     ->ignoreUnknownClasses([
         ...$optionalIgnoreUnknownClasses,
-        // flysystem 3.x for the FlysystemV3Storage, the dev packages are flysystem 1.x
+        // flysystem 3.x for the FlysystemV3Storage, the lint job installs the flysystem 1.x packages
         'League\Flysystem\FilesystemAdapter',
         'League\Flysystem\FilesystemOperator',
         'League\Flysystem\InMemory\InMemoryFilesystemAdapter',

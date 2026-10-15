@@ -27,6 +27,13 @@ class AzureBlobStorageTest extends TestCase
 {
     use ProphecyTrait;
 
+    protected function setUp(): void
+    {
+        if (!\interface_exists(AdapterInterface::class)) {
+            $this->markTestSkipped('Requires league/flysystem 1.x.');
+        }
+    }
+
     public function testConstruct(): void
     {
         $this->expectException(\RuntimeException::class);

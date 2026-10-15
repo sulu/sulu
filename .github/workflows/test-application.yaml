@@ -142,6 +142,7 @@ jobs:
                       database: mysql-57
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'lowest'
+                      flysystem: 'v1'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
                       env:
@@ -154,6 +155,7 @@ jobs:
                       database: mysql-57
                       phpcr-transport: jackrabbit
                       dependency-versions: 'highest'
+                      flysystem: 'v1'
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
                       env:
@@ -244,6 +246,19 @@ jobs:
                   composer remove jackalope/jackalope-doctrine-dbal --dev --no-interaction --no-update
                   composer require jackalope/jackalope-jackrabbit:"^1.4 || ^2.0"  --no-interaction --no-update
 
+            - name: Use flysystem 1.x
+              # the dev packages use flysystem 3.x, the media storages of flysystem 1.x need the 1.x packages
+              if: ${{ matrix.flysystem == 'v1' }}
+              run: |
+                  composer config --json audit.ignore '{"PKSA-w9tt-7782-78jx": "flysystem 1.x is only installed to test the flysystem 1.x storages"}'
+                  composer remove league/flysystem league/flysystem-memory --dev --no-interaction --no-update
+                  composer require \
+                      league/flysystem:"^1.0" \
+                      league/flysystem-aws-s3-v3:"^1.0.1" \
+                      league/flysystem-azure-blob-storage:"^0.1 || ^1.0" \
+                      superbalist/flysystem-google-storage:"^7.1" \
+                      --dev --no-interaction --no-update
+
             - name: Install additional lowest dependencies
               if: ${{ matrix.dependency-versions == 'lowest' }}
               run: |
@@ -282,66 +297,6 @@ jobs:
               run: time composer test
               env: ${{ matrix.env }}
 
-    php-flysystem-3:
-        name: "PHP 8.4 (flysystem 3)"
-        runs-on: ubuntu-22.04
-        timeout-minutes: 30
-
-        env:
-            APP_ENV: test
-            APP_SECRET: a448d1dfcaa563fce56c2fd9981f662b
-            MAILER_URL: null://localhost
-            SULU_ADMIN_EMAIL:
-            PHPCR_TRANSPORT: doctrinedbal
-            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            SYMFONY_DEPRECATIONS_HELPER: weak
-            DATABASE_URL: mysql://root:ChangeMe@127.0.0.1:3306/sulu_test?serverVersion=8.0
-            DATABASE_CHARSET: utf8mb4
-            DATABASE_COLLATE: utf8mb4_unicode_ci
-
-        steps:
-            - name: Checkout project
-              uses: actions/checkout@v4
-
-            - name: Start Database
-              run: |
-                  docker compose -f tests/docker/docker-compose.mysql-80.yml up --wait
-
-            - name: Install and configure PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.4'
-                  extensions: 'ctype, iconv, mysql, imagick'
-                  tools: 'composer'
-                  ini-values: memory_limit=-1
-                  coverage: none
-
-            - name: Remove Lint Tools
-              run: composer remove "*php-cs-fixer*" "*phpstan*" "*rector*" --dev --no-update
-
-            - name: Use flysystem 3.x
-              # the media storages of flysystem 1.x are tested by the other jobs, the dev packages cannot have both majors
-              run: |
-                  composer remove \
-                      league/flysystem \
-                      league/flysystem-aws-s3-v3 \
-                      league/flysystem-azure-blob-storage \
-                      superbalist/flysystem-google-storage \
-                      --dev --no-interaction --no-update
-                  composer require league/flysystem:"^3.35.3" league/flysystem-memory:"^3.0" --dev --no-interaction --no-update
-
-            - name: Install composer dependencies
-              uses: ramsey/composer-install@v3
-              with:
-                  dependency-versions: highest
-
-            - name: Bootstrap test environment
-              run: composer bootstrap-test-environment
-
-            - name: Execute test cases
-              working-directory: src/Sulu/Bundle/MediaBundle
-              run: ../../../../vendor/bin/phpunit --filter 'FlysystemV3|SuluMediaExtensionTest|ConfigurationTest'
-
     php-lint:
         name: "PHP Lint"
         runs-on: ubuntu-22.04
@@ -366,6 +321,18 @@ jobs:
                   tools: 'composer:v2'
                   ini-values: memory_limit=-1
                   coverage: none
+
+            - name: Use flysystem 1.x
+              # the media storages of flysystem 1.x can only be analysed with the 1.x packages
+              run: |
+                  composer config --json audit.ignore '{"PKSA-w9tt-7782-78jx": "flysystem 1.x is only installed to test the flysystem 1.x storages"}'
+                  composer remove league/flysystem league/flysystem-memory --dev --no-interaction --no-update
+                  composer require \
+                      league/flysystem:"^1.0" \
+                      league/flysystem-aws-s3-v3:"^1.0.1" \
+                      league/flysystem-azure-blob-storage:"^0.1 || ^1.0" \
+                      superbalist/flysystem-google-storage:"^7.1" \
+                      --dev --no-interaction --no-update
 
             - name: Install composer dependencies
               uses: ramsey/composer-install@v3
