@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable} from 'mobx';
+import {action, observable, reaction} from 'mobx';
 import jexl from 'jexl';
 import log from 'loglevel';
 import Dialog from '../../../components/Dialog';
@@ -19,6 +19,7 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
     @observable selectedLocales: Array<string> = [];
     @observable copying: boolean = false;
     formStore: FormStoreInterface;
+    localeDisposer: ?() => void;
 
     constructor(
         resourceFormStore: ResourceFormStore,
@@ -51,6 +52,9 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
             this.formStore = memoryFormStoreFactory.createFromFormKey('copy_locale', undefined, undefined, undefined, {
                 locales: locales.filter((locale) => locale !== this.resourceFormStore.locale?.get()),
             });
+
+            // the form view stays mounted when the locale switches, so closing rebuilds the target locales
+            this.localeDisposer = reaction(() => this.resourceFormStore.locale?.get(), this.handleClose);
         }
     }
 
@@ -177,4 +181,9 @@ export default class CopyLocaleToolbarAction extends AbstractFormToolbarAction {
             locales: this.locales?.filter((locale) => locale !== this.resourceFormStore.locale?.get()),
         });
     };
+
+    destroy() {
+        this.localeDisposer?.();
+        this.formStore?.destroy();
+    }
 }
