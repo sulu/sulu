@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\GlobalBlockMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TagMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
@@ -55,6 +56,7 @@ class BlockPropertyResolverTest extends TestCase
             $metadataProviderRegistry,
             [],
             false,
+            new GlobalBlockMetadataProvider($metadataProviderRegistry),
         );
         $metadataResolverProperty = new PropertyResolverProvider(
             new \ArrayIterator([
@@ -402,6 +404,57 @@ class BlockPropertyResolverTest extends TestCase
         $this->assertSame([], $blockData['description']->getView());
 
         $this->assertSame([], $content->getView());
+    }
+
+    public function testConstructWithoutGlobalBlockMetadataProviderIsDeprecated(): void
+    {
+        $deprecations = $this->collectDeprecations(fn () => new BlockPropertyResolver(
+            $this->logger,
+            new MetadataProviderRegistry($this->container),
+            [],
+            false,
+        ));
+
+        $this->assertSame(
+            ['Since sulu/sulu 3.1: Instantiating BlockPropertyResolver without the $globalBlockMetadataProvider argument is deprecated.'],
+            $deprecations,
+        );
+    }
+
+    public function testConstructWithGlobalBlockMetadataProviderIsNotDeprecated(): void
+    {
+        $metadataProviderRegistry = new MetadataProviderRegistry($this->container);
+
+        $deprecations = $this->collectDeprecations(fn () => new BlockPropertyResolver(
+            $this->logger,
+            $metadataProviderRegistry,
+            [],
+            false,
+            new GlobalBlockMetadataProvider($metadataProviderRegistry),
+        ));
+
+        $this->assertSame([], $deprecations);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function collectDeprecations(callable $callback): array
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            $callback();
+        } finally {
+            \restore_error_handler();
+        }
+
+        return $deprecations;
     }
 
     public function testGetType(): void

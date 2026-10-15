@@ -26,7 +26,7 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
 {
     private MetadataResolver $metadataResolver;
 
-    private GlobalBlockMetadataProvider $globalBlockMetadataProvider;
+    private readonly GlobalBlockMetadataProvider $globalBlockMetadataProvider;
 
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -34,8 +34,13 @@ class BlockPropertyResolver implements PropertyResolverMetadataAwareInterface
         /** @var iterable<BlockVisitorInterface> */
         private readonly iterable $blockVisitors,
         private readonly bool $debug = false,
+        ?GlobalBlockMetadataProvider $globalBlockMetadataProvider = null,
     ) {
-        $this->globalBlockMetadataProvider = new GlobalBlockMetadataProvider($metadataProviderRegistry);
+        if (null === $globalBlockMetadataProvider) {
+            @trigger_deprecation('sulu/sulu', '3.1', 'Instantiating BlockPropertyResolver without the $globalBlockMetadataProvider argument is deprecated.');
+        }
+
+        $this->globalBlockMetadataProvider = $globalBlockMetadataProvider ?? new GlobalBlockMetadataProvider($metadataProviderRegistry);
     }
 
     /**
