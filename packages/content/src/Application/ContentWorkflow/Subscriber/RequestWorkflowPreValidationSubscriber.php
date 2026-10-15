@@ -14,9 +14,12 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentWorkflow\Subscriber;
 
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\PreValidationContext;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestPreValidationFailedException;
+use Sulu\Content\Domain\Model\DimensionContentCollectionInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -36,6 +39,7 @@ class RequestWorkflowPreValidationSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly RequestWorkflowResolverInterface $requestWorkflowResolver,
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly ContentMergerInterface $contentMerger,
     ) {
     }
 
@@ -65,11 +69,17 @@ class RequestWorkflowPreValidationSubscriber implements EventSubscriberInterface
             return;
         }
 
+        // The transition runs on the draft dimension alone, but what goes live is all its dimensions merged.
+        $dimensionContentCollection = $transitionEvent->getContext()[ContentWorkflowInterface::DIMENSION_CONTENT_COLLECTION_CONTEXT_KEY] ?? null;
+        $mergedDimensionContent = $dimensionContentCollection instanceof DimensionContentCollectionInterface
+            ? $this->contentMerger->merge($dimensionContentCollection)
+            : $dimensionContent;
+
         // Passed checks travel too, so the author sees what is done as well as what is left.
         $results = [];
         $passed = true;
         foreach ($workflow->preValidators as $key => $entry) {
-            $context = new PreValidationContext($dimensionContent, $entry['config'], $workflow->name);
+            $context = new PreValidationContext($mergedDimensionContent, $entry['config'], $workflow->name);
             $result = $entry['pre_validator']->check($context);
 
             $results[] = [

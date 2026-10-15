@@ -11,7 +11,7 @@ twig:
     paths:
         - '%kernel.project_dir%/templates'
 
-# Three named workflows, opted into by the `review`, `review-seo` and `review-validated` templates:
+# Four named workflows, opted into by the `review`, `review-seo`, `publish-required` and `review-validated` templates:
 # every other template publishes directly.
 sulu_content:
     request_workflows:
@@ -22,6 +22,9 @@ sulu_content:
             pre_validators:
                 seo_required:
                     fields: ['title', 'description']
+        publish_required:
+            pre_validators:
+                publish_required: ~
         review_validated:
             required_user_approvals: 1
             validators:

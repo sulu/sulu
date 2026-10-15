@@ -170,6 +170,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_admin.metadata_provider_registry'),
             tagged_iterator('sulu_content.block_visitor', indexAttribute: 'type', defaultIndexMethod: 'getType'),
             '%kernel.debug%',
+            new Reference('sulu_admin.global_block_metadata_provider'),
         ])
         ->call('setMetadataResolver', [new Reference('sulu_content.metadata_resolver')])
         ->tag('sulu_content.property_resolver');

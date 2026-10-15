@@ -66,6 +66,13 @@ a new shadow locale the template and content of its source locale. Omitting it i
 integrators registering their own mapper service should pass the `sulu_content.dimension_content_repository`
 service now to remain compatible with a future version where it is required.
 
+### Additional Optional Parameter globalBlockMetadataProvider for BlockPropertyResolver
+
+The `BlockPropertyResolver` gained an optional `$globalBlockMetadataProvider` argument, which it uses to look up
+the metadata of a global block. Omitting it is deprecated, so integrators registering their own resolver service
+should pass the `sulu_admin.global_block_metadata_provider` service now to remain compatible with a future
+version where it is required.
+
 ### New workflow transition request tables
 
 The review flow stores its requests in `ct_workflow_transition_requests` and every verdict on them,

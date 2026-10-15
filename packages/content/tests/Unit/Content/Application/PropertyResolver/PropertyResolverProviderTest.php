@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Tests\Unit\Content\Application\PropertyResolver;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\GlobalBlockMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
 use Sulu\Content\Application\PropertyResolver\Resolver\BlockPropertyResolver;
@@ -33,7 +34,8 @@ class PropertyResolverProviderTest extends TestCase
                     new BufferingLogger(),
                     $metadataProviderRegistry,
                     [],
-                    false
+                    false,
+                    new GlobalBlockMetadataProvider($metadataProviderRegistry),
                 ),
                 'default' => new DefaultPropertyResolver(),
             ])
