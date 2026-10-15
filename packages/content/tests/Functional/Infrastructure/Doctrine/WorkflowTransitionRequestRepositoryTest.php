@@ -13,6 +13,11 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Functional\Infrastructure\Doctrine;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecision;
@@ -82,6 +87,52 @@ class WorkflowTransitionRequestRepositoryTest extends SuluTestCase
             'The first answer wins.',
         );
         $this->assertSame(WorkflowTransitionRequestDecisionStatusEnum::APPROVED, $decision->getStatus());
+    }
+
+    public function testSettleDecisionWaitsForTheLockOnTheRequest(): void
+    {
+        $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
+        $request->addValidatorDecision('first');
+        $request->addValidatorDecision('second');
+
+        $this->repository->add($request);
+        static::getEntityManager()->flush();
+
+        $connection = static::getEntityManager()->getConnection();
+        $platform = $connection->getDatabasePlatform();
+        if ($platform instanceof AbstractMySQLPlatform) {
+            $setTimeout = 'SET SESSION innodb_lock_wait_timeout = 1';
+            $resetTimeout = 'SET SESSION innodb_lock_wait_timeout = DEFAULT';
+        } elseif ($platform instanceof PostgreSQLPlatform) {
+            $setTimeout = "SET lock_timeout = '1s'";
+            $resetTimeout = 'RESET lock_timeout';
+        } else {
+            $this->markTestSkipped('The row lock is only observable on MySQL, MariaDB and PostgreSQL.');
+        }
+
+        $tableName = static::getEntityManager()->getClassMetadata(WorkflowTransitionRequest::class)->getTableName();
+        $otherWorker = DriverManager::getConnection($connection->getParams()); // @phpstan-ignore argument.type
+        $otherWorker->beginTransaction();
+
+        try {
+            $otherWorker->fetchOne(\sprintf('SELECT id FROM %s WHERE id = :id FOR UPDATE', $tableName), ['id' => $request->getId()]);
+            $connection->executeStatement($setTimeout);
+
+            try {
+                $this->expectException(DriverException::class);
+                $this->repository->settleDecision($this->decision($request, 'first'), WorkflowTransitionRequestDecisionStatusEnum::APPROVED, []);
+            } finally {
+                $connection->executeStatement($resetTimeout);
+            }
+        } finally {
+            $this->release($otherWorker);
+        }
+    }
+
+    private function release(Connection $connection): void
+    {
+        $connection->rollBack();
+        $connection->close();
     }
 
     private function decision(WorkflowTransitionRequest $request, string $validatorKey): WorkflowTransitionRequestDecision
