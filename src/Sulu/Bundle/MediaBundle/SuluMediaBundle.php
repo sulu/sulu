@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle;
 
+use Sulu\Bundle\MediaBundle\DependencyInjection\FlysystemV3CompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\FormatCacheClearerCompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\ImageFormatCompilerPass;
 use Sulu\Bundle\MediaBundle\DependencyInjection\ImageTransformationCompilerPass;
@@ -45,6 +46,7 @@ class SuluMediaBundle extends Bundle
         $container->addCompilerPass(new ImageFormatCompilerPass());
         $container->addCompilerPass(new ImageTransformationCompilerPass());
         $container->addCompilerPass(new S3ClientCompilerPass());
+        $container->addCompilerPass(new FlysystemV3CompilerPass());
 
         parent::build($container);
     }

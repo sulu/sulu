@@ -11,11 +11,16 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\DependencyInjection;
 
+use League\Flysystem\FilesystemOperator;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\DependencyInjection\SuluMediaExtension;
+use Sulu\Bundle\MediaBundle\Media\Storage\FlysystemV3Storage;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Process\ExecutableFinder;
 
 class SuluMediaExtensionTest extends AbstractExtensionTestCase
@@ -160,5 +165,52 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
             'setBlockedMimeTypes',
             [['image/jpeg']]
         );
+    }
+
+    public function testLoadFlysystemV3Storage(): void
+    {
+        if (!\interface_exists(FilesystemOperator::class)) {
+            $this->markTestSkipped('Requires league/flysystem 3.x.');
+        }
+
+        $this->executableFinder->find(Argument::any())->willReturn(null);
+        $this->container->setParameter('kernel.bundles', []);
+        $this->container->setParameter('kernel.project_dir', '/project');
+
+        $this->load(['storage' => ['flysystem_service' => 'media.storage', 'segments' => 20]]);
+
+        $this->assertContainerBuilderHasParameter('sulu_media.media.storage', 'flysystem_v3');
+        $this->assertContainerBuilderHasService('sulu_media.storage', FlysystemV3Storage::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument('sulu_media.storage', 0, new Reference('media.storage'));
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument('sulu_media.storage', 1, new Reference('flysystem.adapter.media.storage'));
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument('sulu_media.storage', 2, 20);
+        $this->assertContainerBuilderHasAlias(StorageInterface::class, 'sulu_media.storage');
+        $this->assertContainerBuilderNotHasService('sulu_media.storage.local');
+    }
+
+    public function testLoadFlysystemV3StorageWithoutFlysystem(): void
+    {
+        if (\interface_exists(FilesystemOperator::class)) {
+            $this->markTestSkipped('Requires league/flysystem 1.x.');
+        }
+
+        $this->executableFinder->find(Argument::any())->willReturn(null);
+        $this->container->setParameter('kernel.bundles', []);
+        $this->container->setParameter('kernel.project_dir', '/project');
+
+        $this->expectException(InvalidConfigurationException::class);
+
+        $this->load(['storage' => ['flysystem_service' => 'media.storage']]);
+    }
+
+    public function testLoadLocalStorageStaysDefault(): void
+    {
+        $this->executableFinder->find(Argument::any())->willReturn(null);
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->load();
+
+        $this->assertContainerBuilderHasParameter('sulu_media.media.storage', 'local');
+        $this->assertContainerBuilderHasAlias('sulu_media.storage', 'sulu_media.storage.local');
     }
 }

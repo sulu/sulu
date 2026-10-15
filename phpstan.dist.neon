@@ -17,6 +17,19 @@ parameters:
     parallel:
         processTimeout: 300.0
     reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        # the lint job installs the flysystem 1.x packages, where the classes of the flysystem 3.x storage do not exist
+        -
+            identifiers:
+                - class.notFound
+                - argument.type
+                - assign.propertyType
+                - return.type
+            paths:
+                - src/Sulu/Bundle/MediaBundle/DependencyInjection/FlysystemV3CompilerPass.php
+                - src/Sulu/Bundle/MediaBundle/Media/Storage/FlysystemV3Storage.php
+                - src/Sulu/Bundle/MediaBundle/Tests/Unit/DependencyInjection/FlysystemV3CompilerPassTest.php
+                - src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Storage/FlysystemV3StorageTest.php
     excludePaths:
         - %currentWorkingDirectory%/node_modules/*
         - %currentWorkingDirectory%/var/*

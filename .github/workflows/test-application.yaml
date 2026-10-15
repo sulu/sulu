@@ -142,6 +142,7 @@ jobs:
                       database: mysql-57
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'lowest'
+                      flysystem: 'v1'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
                       env:
@@ -154,6 +155,7 @@ jobs:
                       database: mysql-57
                       phpcr-transport: jackrabbit
                       dependency-versions: 'highest'
+                      flysystem: 'v1'
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
                       env:
@@ -244,6 +246,19 @@ jobs:
                   composer remove jackalope/jackalope-doctrine-dbal --dev --no-interaction --no-update
                   composer require jackalope/jackalope-jackrabbit:"^1.4 || ^2.0"  --no-interaction --no-update
 
+            - name: Use flysystem 1.x
+              # the dev packages use flysystem 3.x, the media storages of flysystem 1.x need the 1.x packages
+              if: ${{ matrix.flysystem == 'v1' }}
+              run: |
+                  composer config --json audit.ignore '{"PKSA-w9tt-7782-78jx": "flysystem 1.x is only installed to test the flysystem 1.x storages"}'
+                  composer remove league/flysystem league/flysystem-memory --dev --no-interaction --no-update
+                  composer require \
+                      league/flysystem:"^1.0" \
+                      league/flysystem-aws-s3-v3:"^1.0.1" \
+                      league/flysystem-azure-blob-storage:"^0.1 || ^1.0" \
+                      superbalist/flysystem-google-storage:"^7.1" \
+                      --dev --no-interaction --no-update
+
             - name: Install additional lowest dependencies
               if: ${{ matrix.dependency-versions == 'lowest' }}
               run: |
@@ -306,6 +321,18 @@ jobs:
                   tools: 'composer:v2'
                   ini-values: memory_limit=-1
                   coverage: none
+
+            - name: Use flysystem 1.x
+              # the media storages of flysystem 1.x can only be analysed with the 1.x packages
+              run: |
+                  composer config --json audit.ignore '{"PKSA-w9tt-7782-78jx": "flysystem 1.x is only installed to test the flysystem 1.x storages"}'
+                  composer remove league/flysystem league/flysystem-memory --dev --no-interaction --no-update
+                  composer require \
+                      league/flysystem:"^1.0" \
+                      league/flysystem-aws-s3-v3:"^1.0.1" \
+                      league/flysystem-azure-blob-storage:"^0.1 || ^1.0" \
+                      superbalist/flysystem-google-storage:"^7.1" \
+                      --dev --no-interaction --no-update
 
             - name: Install composer dependencies
               uses: ramsey/composer-install@v3

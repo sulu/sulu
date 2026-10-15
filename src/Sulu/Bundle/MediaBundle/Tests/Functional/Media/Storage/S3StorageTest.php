@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Media\Storage;
 
+use League\Flysystem\AdapterInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\S3Storage;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Tests\Application\S3Kernel;
@@ -21,6 +22,10 @@ class S3StorageTest extends SuluTestCase
 {
     protected function setUp(): void
     {
+        if (!\interface_exists(AdapterInterface::class)) {
+            $this->markTestSkipped('Requires league/flysystem 1.x.');
+        }
+
         static::$class = S3Kernel::class;
     }
 

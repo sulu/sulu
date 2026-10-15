@@ -1,0 +1,15 @@
+sulu_media:
+    storage:
+        flysystem_service: sulu_media_test.filesystem
+        segments: 10
+
+services:
+    flysystem.adapter.sulu_media_test.filesystem:
+        class: League\Flysystem\InMemory\InMemoryFilesystemAdapter
+
+    sulu_media_test.filesystem:
+        class: League\Flysystem\Filesystem
+        public: true
+        arguments:
+            - '@flysystem.adapter.sulu_media_test.filesystem'
+            - { public_url: 'https://cdn.example.com' }

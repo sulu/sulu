@@ -28,6 +28,8 @@ class Configuration implements ConfigurationInterface
 
     public const STORAGE_AZURE_BLOB = 'azure_blob';
 
+    public const STORAGE_FLYSYSTEM_V3 = 'flysystem_v3';
+
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('sulu_media');
@@ -257,7 +259,23 @@ class Configuration implements ConfigurationInterface
         }
 
         $node->children()
-                ->scalarNode('storage')->defaultValue('local')->end()
+                ->arrayNode('storage')
+                    ->info('The name of the storage in "storages", or the "flysystem_service" and "segments" of a league/flysystem 3.x storage, as in Sulu 3.0.')
+                    ->addDefaultsIfNotSet()
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(static fn (string $name): array => ['name' => $name])
+                    ->end()
+                    ->children()
+                        ->scalarNode('name')->defaultNull()->end()
+                        ->scalarNode('flysystem_service')->defaultNull()->end()
+                        ->integerNode('segments')->defaultNull()->end()
+                    ->end()
+                    ->validate()
+                        ->ifTrue(static fn (array $storage): bool => null !== $storage['name'] && (null !== $storage['flysystem_service'] || null !== $storage['segments']))
+                        ->thenInvalid('The storage can not be a name and have a "flysystem_service" or "segments" at the same time.')
+                    ->end()
+                ->end()
             ->end();
     }
 
