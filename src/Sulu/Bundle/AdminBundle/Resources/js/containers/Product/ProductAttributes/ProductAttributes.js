@@ -30,7 +30,8 @@ function isEmpty(value: mixed): boolean {
     }
 
     if (typeof value === 'object') {
-        return Object.keys(value).length === 0;
+        // an attribute with several properties is empty when none of its properties has a value
+        return Object.keys(value).every((key) => isEmpty(value[key]));
     }
 
     return false;
@@ -166,9 +167,10 @@ class ProductAttributes extends React.Component<Props> {
 
     /*
      * The host errors sit at /attributes/<id>; a row shows its error once touched or when the form asks for all.
+     * An attribute with several properties has errors keyed by property, each shown once that property was touched.
      * The numeric ids make the host store build an observable array, read as a plain one like FieldBlocks does.
      */
-    @computed get errors(): {[string]: FieldError} {
+    @computed get errors(): {[string]: FieldError | ErrorCollection} {
         const {dataPath, error, formInspector, showAllErrors} = this.props;
         const errors = {};
 
@@ -177,11 +179,30 @@ class ProductAttributes extends React.Component<Props> {
         }
 
         // $FlowFixMe: an object or an array, both read by their set keys
-        const rowErrors: {[string]: ?FieldError} = toJS(error);
+        const rowErrors: {[string]: ?Object} = toJS(error);
         Object.keys(rowErrors).forEach((id) => {
             const rowError = rowErrors[id];
-            if (rowError && (showAllErrors || formInspector.isFieldModified(dataPath + '/' + id))) {
+            if (!rowError) {
+                return;
+            }
+
+            if (showAllErrors || formInspector.isFieldModified(dataPath + '/' + id)) {
                 errors[NAME_PREFIX + id] = rowError;
+
+                return;
+            }
+
+            if (typeof rowError.keyword !== 'string') {
+                const itemErrors = {};
+                Object.keys(rowError)
+                    .filter((item) => formInspector.isFieldModified(dataPath + '/' + id + '/' + item))
+                    .forEach((item) => {
+                        itemErrors[item] = rowError[item];
+                    });
+
+                if (Object.keys(itemErrors).length > 0) {
+                    errors[NAME_PREFIX + id] = itemErrors;
+                }
             }
         });
 
