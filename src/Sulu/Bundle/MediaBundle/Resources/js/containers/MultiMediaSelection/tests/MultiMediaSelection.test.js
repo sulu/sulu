@@ -4,6 +4,7 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MultiSelectionStore from 'sulu-admin-bundle/stores/MultiSelectionStore';
+import CropOverlay from '../../MediaVersionUpload/CropOverlay';
 import MultiMediaSelection from '../MultiMediaSelection';
 
 let mockMultiSelectionStoreInstances: Array<Object> = [];
@@ -54,6 +55,8 @@ function mockMultiMediaSelectionOverlay(props) {
 }
 
 jest.mock('../../MultiMediaSelectionOverlay', () => jest.fn(mockMultiMediaSelectionOverlay));
+
+jest.mock('../../MediaVersionUpload/CropOverlay', () => jest.fn(() => null));
 
 jest.mock('sulu-admin-bundle/stores/MultiSelectionStore', () => jest.fn(function() {
     this.items = [];
@@ -493,4 +496,52 @@ test('Should disable the selection if the selection is disabled', () => {
 
     expect(screen.getByRole('button', {name: 'su-image'})).toBeDisabled();
     expect(screen.getByText('Media 1')).toBeInTheDocument();
+});
+
+test('Should open the crop overlay for the edited image if formats are given', async() => {
+    const user = userEvent.setup();
+    // $FlowFixMe
+    mockMultiSelectionStoreOnce(function() {
+        this.items = [
+            {id: 1, title: 'Media 1', mimeType: 'image/jpeg', thumbnails: {}, url: '/uploads/media/1.jpg'},
+            {id: 2, title: 'Media 2', mimeType: 'application/pdf', thumbnails: {}, url: '/uploads/media/2.pdf'},
+            {id: 3, title: 'Media 3', mimeType: 'image/png', thumbnails: {}, adminUrl: '/admin/3.png', url: '/3.png'},
+        ];
+        this.loadItems = jest.fn();
+    });
+
+    render(
+        <MultiMediaSelection formats={['sulu-400x400']} locale={observable.box('en')} onChange={jest.fn()} />
+    );
+
+    expect(CropOverlay).not.toHaveBeenCalled();
+
+    const editButtons = screen.getAllByRole('button', {name: 'su-crop-pen'});
+    expect(editButtons).toHaveLength(2);
+
+    await user.click(editButtons[1]);
+
+    expect(CropOverlay).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+            formats: ['sulu-400x400'],
+            id: 3,
+            image: '/admin/3.png',
+            locale: 'en',
+            open: true,
+        }),
+        expect.anything()
+    );
+});
+
+test('Should not show edit buttons without formats', () => {
+    // $FlowFixMe
+    mockMultiSelectionStoreOnce(function() {
+        this.items = [{id: 1, title: 'Media 1', mimeType: 'image/jpeg', thumbnails: {}, url: '/1.jpg'}];
+    });
+
+    render(
+        <MultiMediaSelection locale={observable.box('en')} onChange={jest.fn()} />
+    );
+
+    expect(screen.queryByRole('button', {name: 'su-crop-pen'})).not.toBeInTheDocument();
 });

@@ -5,8 +5,13 @@ import {action, observable, reaction, toJS} from 'mobx';
 import SingleItemSelection from 'sulu-admin-bundle/components/SingleItemSelection';
 import {translate} from 'sulu-admin-bundle/utils/Translator';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
-import {getIconForDisplayOption, getTranslationForDisplayOption} from '../../utils/MediaSelectionHelper';
+import {
+    getCropImageUrl,
+    getIconForDisplayOption,
+    getTranslationForDisplayOption,
+} from '../../utils/MediaSelectionHelper';
 import SingleMediaSelectionOverlay from '../SingleMediaSelectionOverlay';
+import CropOverlay from '../MediaVersionUpload/CropOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
 import singleMediaSelectionStyle from './singleMediaSelection.scss';
 import type {DisplayOption, Media} from '../../types';
@@ -17,6 +22,7 @@ type Props = {|
     className?: string,
     disabled: boolean,
     displayOptions: Array<DisplayOption>,
+    formats: Array<string>,
     locale: IObservableValue<string>,
     onChange: (selectedId: Value, media: ?Media) => void,
     onItemClick?: (itemId: ?number, value: ?Media) => void,
@@ -33,6 +39,7 @@ class SingleMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         displayOptions: [],
+        formats: [],
         types: [],
         valid: true,
         value: {displayOption: undefined, id: undefined},
@@ -42,6 +49,7 @@ class SingleMediaSelection extends React.Component<Props> {
     changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
+    @observable cropOverlayOpen: boolean = false;
 
     constructor(props: Props) {
         super(props);
@@ -83,6 +91,14 @@ class SingleMediaSelection extends React.Component<Props> {
         this.overlayOpen = false;
     }
 
+    @action handleCropOverlayOpen = () => {
+        this.cropOverlayOpen = true;
+    };
+
+    @action handleCropOverlayClose = () => {
+        this.cropOverlayOpen = false;
+    };
+
     handleRemove = () => {
         this.singleMediaSelectionStore.clear();
     };
@@ -117,8 +133,10 @@ class SingleMediaSelection extends React.Component<Props> {
     };
 
     render() {
-        const {className, disabled, displayOptions, locale, types, valid, value} = this.props;
+        const {className, disabled, displayOptions, formats, locale, types, valid, value} = this.props;
         const {loading, item: media} = this.singleMediaSelectionStore;
+
+        const cropImage = media ? getCropImageUrl(media, formats) : undefined;
 
         const rightButton = displayOptions.length > 0
             ? {
@@ -137,6 +155,7 @@ class SingleMediaSelection extends React.Component<Props> {
                 <SingleItemSelection
                     className={className}
                     disabled={disabled}
+                    editIcon="su-crop-pen"
                     emptyText={translate('sulu_media.select_media_singular')}
                     id={media && media.id}
                     leftButton={{
@@ -144,6 +163,7 @@ class SingleMediaSelection extends React.Component<Props> {
                         onClick: this.handleOverlayOpen,
                     }}
                     loading={loading}
+                    onEdit={cropImage ? this.handleCropOverlayOpen : undefined}
                     onItemClick={this.handleItemClick}
                     onRemove={media ? this.handleRemove : undefined}
                     rightButton={rightButton}
@@ -177,6 +197,17 @@ class SingleMediaSelection extends React.Component<Props> {
                     open={this.overlayOpen}
                     types={types}
                 />
+                {media && cropImage && this.cropOverlayOpen &&
+                    <CropOverlay
+                        formats={formats}
+                        id={media.id}
+                        image={cropImage}
+                        locale={locale.get()}
+                        onClose={this.handleCropOverlayClose}
+                        onConfirm={this.handleCropOverlayClose}
+                        open={true}
+                    />
+                }
             </Fragment>
         );
     }

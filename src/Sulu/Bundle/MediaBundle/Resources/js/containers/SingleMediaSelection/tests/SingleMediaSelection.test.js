@@ -4,6 +4,7 @@ import {extendObservable as mockExtendObservable, observable} from 'mobx';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
+import CropOverlay from '../../MediaVersionUpload/CropOverlay';
 import SingleMediaSelection from '../SingleMediaSelection';
 
 let mockSingleSelectionStoreInstances: Array<Object> = [];
@@ -37,6 +38,8 @@ jest.mock('../../SingleMediaSelectionOverlay', () => jest.fn((props) => {
         )
     );
 }));
+
+jest.mock('../../MediaVersionUpload/CropOverlay', () => jest.fn(() => null));
 
 jest.mock('sulu-admin-bundle/stores/SingleSelectionStore', () => jest.fn(function() {
     mockSingleSelectionStoreInstances.push(this);
@@ -432,4 +435,76 @@ test('Set loading prop of SingleItemSelection component if SingleSelectionStore 
     expect(screen.getByText('sulu_media.select_media_singular')).toBeInTheDocument();
     getLatestSingleSelectionStore().loading = true;
     expect(screen.getByText('…')).toBeInTheDocument();
+});
+
+test('Should open the crop overlay with the given formats if the edit button is clicked', async() => {
+    const user = userEvent.setup();
+    // $FlowFixMe
+    mockSingleSelectionStoreOnce(function() {
+        this.item = {
+            id: 33,
+            title: 'test media',
+            mimeType: 'image/jpeg',
+            thumbnails: {},
+            url: '/uploads/media/test.jpg',
+        };
+    });
+
+    render(
+        <SingleMediaSelection
+            formats={['sulu-400x400']}
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={{displayOption: undefined, id: 33}}
+        />
+    );
+
+    expect(CropOverlay).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole('button', {name: 'su-crop-pen'}));
+
+    expect(CropOverlay).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+            formats: ['sulu-400x400'],
+            id: 33,
+            image: '/uploads/media/test.jpg',
+            locale: 'en',
+            open: true,
+        }),
+        expect.anything()
+    );
+});
+
+test('Should not show the edit button without formats or for non-image media', () => {
+    // $FlowFixMe
+    mockSingleSelectionStoreOnce(function() {
+        this.item = {id: 33, title: 'test media', mimeType: 'image/jpeg', thumbnails: {}, url: '/test.jpg'};
+    });
+
+    const {unmount} = render(
+        <SingleMediaSelection
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={{displayOption: undefined, id: 33}}
+        />
+    );
+
+    expect(screen.queryByRole('button', {name: 'su-crop-pen'})).not.toBeInTheDocument();
+    unmount();
+
+    // $FlowFixMe
+    mockSingleSelectionStoreOnce(function() {
+        this.item = {id: 34, title: 'test pdf', mimeType: 'application/pdf', thumbnails: {}, url: '/test.pdf'};
+    });
+
+    render(
+        <SingleMediaSelection
+            formats={['sulu-400x400']}
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={{displayOption: undefined, id: 34}}
+        />
+    );
+
+    expect(screen.queryByRole('button', {name: 'su-crop-pen'})).not.toBeInTheDocument();
 });
