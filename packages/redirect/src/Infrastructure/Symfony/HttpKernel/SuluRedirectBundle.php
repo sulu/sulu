@@ -66,6 +66,26 @@ final class SuluRedirectBundle extends AbstractBundle
      */
     public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+        if ($builder->hasExtension('doctrine')) {
+            $builder->prependExtensionConfig(
+                'doctrine',
+                [
+                    'orm' => [
+                        'mappings' => [
+                            'SuluRedirect' => [
+                                'type' => 'xml',
+                                'prefix' => 'Sulu\Redirect\Domain\Model',
+                                'dir' => \dirname(__DIR__, 4) . '/config/doctrine/Redirect',
+                                'alias' => 'SuluRedirect',
+                                'is_bundle' => false,
+                                'mapping' => true,
+                            ],
+                        ],
+                    ],
+                ],
+            );
+        }
+
         if ($builder->hasExtension('doctrine_migrations')) {
             $builder->prependExtensionConfig(
                 'doctrine_migrations',
