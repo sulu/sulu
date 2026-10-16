@@ -93,6 +93,16 @@ existing table from 2.x and its rows are kept. Run the new migration to apply th
 bin/console doctrine:migrations:migrate
 ```
 
+### New redirects table
+
+The new redirect package (`packages/redirect`, bundle `SuluRedirectBundle` in the `Sulu\Redirect` namespace)
+stores redirects in the new `rd_redirects` table. A new migration creates the table when it does not exist
+yet. Run the new migration to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
 ### Text editor configs decide which CKEditor plugins are loaded
 
 Which plugins a `text_editor` property loads now follows from the tags and attributes its text editor config enables.
