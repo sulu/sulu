@@ -48,12 +48,18 @@ final class RetryWorkflowTransitionRequestValidationMessageHandler
             throw new WorkflowTransitionRequestClosedException($workflowTransitionRequest);
         }
 
-        $workflowTransitionRequest->getValidatorDecision($message->getValidatorKey())?->resetToPending();
+        $decision = $workflowTransitionRequest->getValidatorDecision($message->getValidatorKey());
+        if (null === $decision) {
+            // Nothing to run again, so no message goes out and no activity claims a retry that did not happen.
+            return $workflowTransitionRequest;
+        }
+
+        $decision->resetToPending();
 
         // Held back until the reset row is flushed, so the validation run reads a pending row and
         // can claim it. A double dispatch is harmless, the first answer wins.
         $this->messageBus->dispatch(new Envelope(
-            new ValidateWorkflowTransitionRequestMessage($workflowTransitionRequest->getId()),
+            new ValidateWorkflowTransitionRequestMessage($workflowTransitionRequest->getId(), $message->getValidatorKey()),
             [new DispatchAfterCurrentBusStamp()],
         ));
 

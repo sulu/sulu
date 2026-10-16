@@ -20,6 +20,8 @@ use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
+use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\Kernel;
 use Sulu\Content\Tests\Traits\WorkflowTransitionRequestTrait;
@@ -91,6 +93,66 @@ class WorkflowTransitionRequestActivityTest extends SuluTestCase
         $this->assertNull($activity->getUser());
     }
 
+    public function testSeveralValidatorsStoreOneValidatedActivityWithTheFinalCounts(): void
+    {
+        $this->sendForReview('example-multiple-validators-workflow');
+
+        $this->runWorker();
+
+        $activity = $this->findActivity('workflow_transition_request.validated');
+        $this->assertSame(['approved' => 1, 'rejected' => 1], $activity->getContext());
+    }
+
+    public function testAReviewersDecisionIsNotCountedAsACheck(): void
+    {
+        $example = $this->sendForReview('example-multiple-validators-workflow');
+
+        $request = static::getContainer()->get(WorkflowTransitionRequestRepositoryInterface::class)->getOneBy([
+            'resourceKey' => Example::RESOURCE_KEY,
+            'resourceId' => (string) $example->getId(),
+            'locale' => 'en',
+            'active' => true,
+        ]);
+        $request->addApproval($this->createRequestCreator('activity-reviewer'));
+        static::getEntityManager()->flush();
+
+        $this->runWorker();
+
+        $activity = $this->findActivity('workflow_transition_request.validated');
+        $this->assertSame(['approved' => 1, 'rejected' => 1], $activity->getContext());
+    }
+
+    /**
+     * The crashing validator keeps its row pending through the retries, so the request is validated only
+     * when the failure listener rejects it, with the answer of the healthy validator counted.
+     */
+    public function testACrashingValidatorAmongSeveralStoresOneValidatedActivityAfterTheLastRetry(): void
+    {
+        $example = $this->sendForReview('example-multiple-validators-throwing-workflow');
+
+        $this->runWorker();
+
+        $this->assertCount(1, $this->transport()->getRejected());
+
+        $activity = $this->findActivity('workflow_transition_request.validated');
+        $this->assertSame(['approved' => 1, 'rejected' => 1], $activity->getContext());
+
+        $request = static::getContainer()->get(WorkflowTransitionRequestRepositoryInterface::class)->getOneBy([
+            'resourceKey' => Example::RESOURCE_KEY,
+            'resourceId' => (string) $example->getId(),
+            'locale' => 'en',
+            'active' => true,
+        ]);
+        $this->assertSame(
+            WorkflowTransitionRequestDecisionStatusEnum::APPROVED,
+            $request->getValidatorDecision('unpublished_example_references')?->getStatus(),
+        );
+        $this->assertSame(
+            'sulu_content.workflow_transition_request.check_errored',
+            $request->getValidatorDecision('test_configured_result')?->getMessages()[0]->key,
+        );
+    }
+
     private function transport(): InMemoryTransport
     {
         /** @var InMemoryTransport $transport */
@@ -118,7 +180,7 @@ class WorkflowTransitionRequestActivityTest extends SuluTestCase
         $worker->run(['sleep' => 0]);
     }
 
-    private function sendForReview(string $template): void
+    private function sendForReview(string $template): Example
     {
         $example = $this->createExampleAtDraft($template);
 
@@ -128,6 +190,8 @@ class WorkflowTransitionRequestActivityTest extends SuluTestCase
             WorkflowInterface::WORKFLOW_TRANSITION_REQUEST_FOR_REVIEW_DRAFT,
         );
         static::getEntityManager()->flush();
+
+        return $example;
     }
 
     private function findActivity(string $type): ActivityInterface

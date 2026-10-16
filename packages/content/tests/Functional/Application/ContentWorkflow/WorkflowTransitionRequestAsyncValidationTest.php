@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Functional\Application\ContentWorkflow;
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
+use Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
@@ -26,6 +27,7 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\Kernel;
 use Sulu\Content\Tests\Traits\ConsumeTransportTrait;
 use Sulu\Content\Tests\Traits\WorkflowTransitionRequestTrait;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 
 /**
@@ -39,6 +41,8 @@ class WorkflowTransitionRequestAsyncValidationTest extends SuluTestCase
     use WorkflowTransitionRequestTrait;
 
     private const CONFIGURED_TEMPLATE = 'example-configured-workflow';
+
+    private const MULTIPLE_VALIDATORS_TEMPLATE = 'example-multiple-validators-workflow';
 
     private ContentManagerInterface $contentManager;
 
@@ -105,6 +109,47 @@ class WorkflowTransitionRequestAsyncValidationTest extends SuluTestCase
             WorkflowTransitionRequestStatusEnum::PENDING,
             $this->resolveRequestStatus($request),
             'A rejecting check does not count as an approval, so the second approval is still missing.',
+        );
+    }
+
+    public function testEveryValidatorGetsItsOwnMessage(): void
+    {
+        $example = $this->sendForReview($this->createExampleAtDraft(self::MULTIPLE_VALIDATORS_TEMPLATE));
+
+        $validatorKeys = \array_map(
+            static function(Envelope $envelope): string {
+                $message = $envelope->getMessage();
+                self::assertInstanceOf(ValidateWorkflowTransitionRequestMessage::class, $message);
+
+                return $message->getValidatorKey();
+            },
+            $this->transport()->getSent(),
+        );
+        \sort($validatorKeys);
+
+        $this->assertSame(['test_configured_result', 'unpublished_example_references'], $validatorKeys);
+
+        foreach ($this->findRequest($example)->getDecisions() as $decision) {
+            $this->assertSame(WorkflowTransitionRequestDecisionStatusEnum::PENDING, $decision->getStatus());
+        }
+    }
+
+    public function testConsumingEveryMessageSettlesEveryValidator(): void
+    {
+        $example = $this->sendForReview($this->createExampleAtDraft(self::MULTIPLE_VALIDATORS_TEMPLATE));
+
+        $this->consumeTransport(Kernel::VALIDATION_TRANSPORT);
+
+        static::getEntityManager()->clear();
+        $request = $this->findRequest($example);
+
+        $this->assertSame(
+            WorkflowTransitionRequestDecisionStatusEnum::APPROVED,
+            $request->getValidatorDecision('unpublished_example_references')?->getStatus(),
+        );
+        $this->assertSame(
+            WorkflowTransitionRequestDecisionStatusEnum::REJECTED,
+            $request->getValidatorDecision('test_configured_result')?->getStatus(),
         );
     }
 

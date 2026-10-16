@@ -84,7 +84,8 @@ class WorkflowTransitionRequestTransitionSubscriber implements EventSubscriberIn
 
         // One pending row per validator. Whether it blocks is read from the config on every status
         // check, so it is not copied here.
-        foreach (\array_keys($workflow->validators) as $validatorKey) {
+        $validatorKeys = \array_keys($workflow->validators);
+        foreach ($validatorKeys as $validatorKey) {
             $workflowTransitionRequest->addValidatorDecision($validatorKey);
         }
 
@@ -92,10 +93,12 @@ class WorkflowTransitionRequestTransitionSubscriber implements EventSubscriberIn
 
         // No flush: the row and the workflow marking must land in one transaction, and Symfony
         // writes the marking only after these events return.
-        $this->messageBus->dispatch(new Envelope(
-            new ValidateWorkflowTransitionRequestMessage($workflowTransitionRequest->getId()),
-            [new DispatchAfterCurrentBusStamp()],
-        ));
+        foreach ($validatorKeys as $validatorKey) {
+            $this->messageBus->dispatch(new Envelope(
+                new ValidateWorkflowTransitionRequestMessage($workflowTransitionRequest->getId(), $validatorKey),
+                [new DispatchAfterCurrentBusStamp()],
+            ));
+        }
     }
 
     private function resolveUser(): UserInterface

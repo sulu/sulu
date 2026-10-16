@@ -14,17 +14,25 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\Message;
 
 /**
- * Runs a request's validators; carries the id only so it survives serialization. Routing it to a
- * transport is the whole async switch, consumed via `bin/adminconsole messenger:consume`.
+ * Runs one validator of a request; carries the ids only so it survives serialization. A request with
+ * several validators sends one message each, so they can run side by side on several workers. Routing
+ * it to a transport is the whole async switch, consumed via `bin/adminconsole messenger:consume`.
  */
 final class ValidateWorkflowTransitionRequestMessage
 {
-    public function __construct(private readonly string $workflowTransitionRequestId)
-    {
+    public function __construct(
+        private readonly string $workflowTransitionRequestId,
+        private readonly string $validatorKey,
+    ) {
     }
 
     public function getWorkflowTransitionRequestId(): string
     {
         return $this->workflowTransitionRequestId;
+    }
+
+    public function getValidatorKey(): string
+    {
+        return $this->validatorKey;
     }
 }

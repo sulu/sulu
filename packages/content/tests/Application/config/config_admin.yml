@@ -50,3 +50,13 @@ sulu_content:
             validators:
                 test_configured_result:
                     result: 'throw'
+        multiple_validators:
+            validators:
+                unpublished_example_references: ~
+                test_configured_result:
+                    result: 'reject'
+        multiple_validators_throwing:
+            validators:
+                unpublished_example_references: ~
+                test_configured_result:
+                    result: 'throw'

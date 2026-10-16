@@ -34,27 +34,27 @@ class ValidateWorkflowTransitionRequestFailureListenerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testDispatchesValidatedOnceWithTheCountsOverAllChecks(): void
+    public function testRejectsOnlyTheNamedValidatorAndDispatchesValidatedWithTheCountsFromTheDatabase(): void
     {
         $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
         $request->addValidatorDecision('answered');
         $request->addValidatorDecision('first');
         $request->addValidatorDecision('second');
-        $request->addValidatorDecision('claimed_elsewhere');
         $request->getValidatorDecision('answered')?->settle(WorkflowTransitionRequestDecisionStatusEnum::APPROVED, [], new \DateTimeImmutable());
 
         $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
         $repository->findOneBy(['id' => $request->getId()])->willReturn($request);
-        $repository->settleDecision($request->getValidatorDecision('first'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, Argument::type('array'))->will($this->settleAs(WorkflowTransitionRequestDecisionStatusEnum::REJECTED));
-        $repository->settleDecision($request->getValidatorDecision('second'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, Argument::type('array'))->will($this->settleAs(WorkflowTransitionRequestDecisionStatusEnum::REJECTED));
-        $repository->settleDecision($request->getValidatorDecision('claimed_elsewhere'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, Argument::type('array'))->willReturn(false);
+        $repository->settleDecision($request->getValidatorDecision('first'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, Argument::type('array'))
+            ->shouldBeCalledOnce()
+            ->will($this->settleAs(WorkflowTransitionRequestDecisionStatusEnum::REJECTED, ['approved' => 4, 'rejected' => 2, 'pending' => 0]));
+        $repository->settleDecision($request->getValidatorDecision('second'), Argument::cetera())->shouldNotBeCalled();
 
         $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
         $eventDispatcher->dispatch(Argument::that(
             static fn (object $event) => $event instanceof WorkflowTransitionRequestActionEvent
                 && $event->getWorkflowTransitionRequest() === $request
                 && WorkflowTransitionRequestActionEvent::VALIDATED === $event->getAction()
-                && ['approved' => 1, 'rejected' => 2] === $event->getContext(),
+                && ['approved' => 4, 'rejected' => 2] === $event->getContext(),
         ))->shouldBeCalledOnce()->willReturnArgument(0);
 
         $listener = new ValidateWorkflowTransitionRequestFailureListener(
@@ -62,12 +62,16 @@ class ValidateWorkflowTransitionRequestFailureListenerTest extends TestCase
             $eventDispatcher->reveal(),
         );
 
-        $listener($this->createFailedEvent($request, false));
+        $listener($this->createFailedEvent($request, 'first', false));
+
+        $this->assertTrue($request->getValidatorDecision('second')?->isPending());
     }
 
-    public function testDispatchesNothingWhenNothingIsSettled(): void
+    public function testDispatchesNothingWhenTheValidatorAnsweredInTheMeantime(): void
     {
         $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
+        $request->addValidatorDecision('first');
+        $request->getValidatorDecision('first')?->settle(WorkflowTransitionRequestDecisionStatusEnum::APPROVED, [], new \DateTimeImmutable());
 
         $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
         $repository->findOneBy(['id' => $request->getId()])->willReturn($request);
@@ -81,7 +85,49 @@ class ValidateWorkflowTransitionRequestFailureListenerTest extends TestCase
             $eventDispatcher->reveal(),
         );
 
-        $listener($this->createFailedEvent($request, false));
+        $listener($this->createFailedEvent($request, 'first', false));
+    }
+
+    public function testDispatchesNothingWhenAnotherWriterClaimedTheRow(): void
+    {
+        $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
+        $request->addValidatorDecision('first');
+
+        $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
+        $repository->findOneBy(['id' => $request->getId()])->willReturn($request);
+        $repository->settleDecision($request->getValidatorDecision('first'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, Argument::type('array'))
+            ->willReturn(null);
+
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
+
+        $listener = new ValidateWorkflowTransitionRequestFailureListener(
+            $repository->reveal(),
+            $eventDispatcher->reveal(),
+        );
+
+        $listener($this->createFailedEvent($request, 'first', false));
+    }
+
+    public function testDispatchesNothingWhileAnotherCheckIsStillPending(): void
+    {
+        $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
+        $request->addValidatorDecision('first');
+
+        $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
+        $repository->findOneBy(['id' => $request->getId()])->willReturn($request);
+        $repository->settleDecision($request->getValidatorDecision('first'), WorkflowTransitionRequestDecisionStatusEnum::REJECTED, Argument::type('array'))
+            ->will($this->settleAs(WorkflowTransitionRequestDecisionStatusEnum::REJECTED, ['approved' => 0, 'rejected' => 1, 'pending' => 1]));
+
+        $eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(Argument::any())->shouldNotBeCalled();
+
+        $listener = new ValidateWorkflowTransitionRequestFailureListener(
+            $repository->reveal(),
+            $eventDispatcher->reveal(),
+        );
+
+        $listener($this->createFailedEvent($request, 'first', false));
     }
 
     public function testDoesNothingWhenTheMessageWillBeRetried(): void
@@ -100,26 +146,29 @@ class ValidateWorkflowTransitionRequestFailureListenerTest extends TestCase
             $eventDispatcher->reveal(),
         );
 
-        $listener($this->createFailedEvent($request, true));
+        $listener($this->createFailedEvent($request, 'first', true));
     }
 
-    private function settleAs(WorkflowTransitionRequestDecisionStatusEnum $status): callable
+    /**
+     * @param array{approved: int, rejected: int, pending: int} $counts
+     */
+    private function settleAs(WorkflowTransitionRequestDecisionStatusEnum $status, array $counts): callable
     {
-        return static function(array $arguments) use ($status): bool {
+        return static function(array $arguments) use ($status, $counts): array {
             /** @var WorkflowTransitionRequestDecision $decision */
             $decision = $arguments[0];
             /** @var list<WorkflowTransitionRequestDecisionMessage> $messages */
             $messages = $arguments[2];
             $decision->settle($status, $messages, new \DateTimeImmutable());
 
-            return true;
+            return $counts;
         };
     }
 
-    private function createFailedEvent(WorkflowTransitionRequest $request, bool $willRetry): WorkerMessageFailedEvent
+    private function createFailedEvent(WorkflowTransitionRequest $request, string $validatorKey, bool $willRetry): WorkerMessageFailedEvent
     {
         $event = new WorkerMessageFailedEvent(
-            new Envelope(new ValidateWorkflowTransitionRequestMessage($request->getId())),
+            new Envelope(new ValidateWorkflowTransitionRequestMessage($request->getId(), $validatorKey)),
             'async',
             new \RuntimeException('down'),
         );
