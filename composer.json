@@ -223,6 +223,7 @@
             "Sulu\\Search\\": "packages/search/src",
             "Sulu\\Content\\": "packages/content/src",
             "Sulu\\CustomUrl\\": "packages/custom-url/src",
+            "Sulu\\Redirect\\": "packages/redirect/src",
             "Sulu\\Notifier\\": "packages/notifier/src"
         },
         "exclude-from-classmap": [
@@ -245,6 +246,8 @@
             "Sulu\\Content\\Tests\\": "packages/content/tests",
             "Sulu\\Content\\Migrations\\": "packages/content/migrations",
             "Sulu\\CustomUrl\\Tests\\": "packages/custom-url/tests",
+            "Sulu\\Redirect\\Tests\\": "packages/redirect/tests",
+            "Sulu\\Redirect\\Migrations\\": "packages/redirect/migrations",
             "Sulu\\Notifier\\Tests\\": "packages/notifier/tests"
         }
     },
