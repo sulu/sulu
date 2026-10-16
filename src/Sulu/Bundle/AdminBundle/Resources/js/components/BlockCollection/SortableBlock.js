@@ -15,6 +15,7 @@ import type {BlockActionConfig, BlockMode, RenderBlockContentCallback} from './t
 type Props<T: string, U: {type: T}> = {
     actions: Array<BlockActionConfig>,
     activeType: T,
+    errorCount?: number,
     expanded: boolean,
     icons?: Array<string>,
     mode?: BlockMode,
@@ -149,6 +150,7 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
     render() {
         const {
             activeType,
+            errorCount,
             expanded,
             icons,
             onCollapse,
@@ -165,6 +167,7 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
             <Block
                 actions={this.actions}
                 activeType={activeType}
+                errorCount={errorCount}
                 expanded={expanded}
                 handle={this.renderHandle()}
                 icons={icons}
