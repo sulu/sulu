@@ -17,9 +17,12 @@ use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Redirect\Domain\Model\Redirect;
 use Sulu\Redirect\Domain\Model\RedirectInterface;
+use Sulu\Redirect\Domain\Repository\RedirectRepositoryInterface;
+use Sulu\Redirect\Infrastructure\Doctrine\Repository\RedirectRepository;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
@@ -59,6 +62,17 @@ final class SuluRedirectBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $this->configurePersistence($config['objects'], $builder); // @phpstan-ignore-line
+
+        $services = $container->services();
+
+        // Repositories
+        $services->set('sulu_redirect.redirect_repository')
+            ->class(RedirectRepository::class)
+            ->args([
+                new Reference('doctrine.orm.entity_manager'),
+            ]);
+
+        $services->alias(RedirectRepositoryInterface::class, 'sulu_redirect.redirect_repository');
     }
 
     /**
