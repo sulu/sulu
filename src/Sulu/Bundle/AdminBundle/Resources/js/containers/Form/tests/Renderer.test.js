@@ -8,6 +8,11 @@ import Renderer from '../Renderer';
 import FormInspector from '../FormInspector';
 import ResourceFormStore from '../stores/ResourceFormStore';
 
+window.ResizeObserver = jest.fn(function() {
+    this.observe = jest.fn();
+    this.disconnect = jest.fn();
+});
+
 let mockFieldTypeProps: Array<Object> = [];
 
 jest.mock('../../../services/Router/Router', () => jest.fn());
@@ -466,6 +471,44 @@ test('Should render nested sections', () => {
     expect(screen.getByText('Section 2')).toBeInTheDocument();
     expect(screen.getByLabelText('Item 1.1')).toBeInTheDocument();
     expect(screen.getByLabelText('Item 2.1')).toBeInTheDocument();
+});
+
+test('Should render sections with the tabs layout as tabs', () => {
+    renderRenderer({
+        schema: {
+            tabs: {
+                layout: 'tabs',
+                type: 'section',
+                items: {
+                    section1: {
+                        label: 'Tab 1',
+                        type: 'section',
+                        items: {
+                            item11: {
+                                label: 'Item 1.1',
+                                type: 'text_line',
+                            },
+                        },
+                    },
+                    section2: {
+                        label: 'Tab 2',
+                        type: 'section',
+                        items: {
+                            item21: {
+                                label: 'Item 2.1',
+                                type: 'text_line',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    expect(screen.getByRole('button', {name: 'Tab 1'})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'Tab 2'})).toBeInTheDocument();
+    expect(getField('Item 1.1')).toHaveAttribute('data-schema-path', '/tabs/items/section1/items/item11');
+    expect(getField('Item 2.1')).toHaveAttribute('data-schema-path', '/tabs/items/section2/items/item21');
 });
 
 test('Should render sections with colSpan', () => {

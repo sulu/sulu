@@ -8,6 +8,7 @@ import Router from '../../services/Router';
 import Field from './Field';
 import FormInspector from './FormInspector';
 import Section from './Section';
+import TabSection from './TabSection';
 import type {Element} from 'react';
 import type {ErrorCollection, Schema, SchemaEntry, ChangeContext} from './types';
 
@@ -40,9 +41,36 @@ class Renderer extends React.Component<Props> {
         }
     };
 
+    // the tab section keeps the identity of this callback between renders, so it does not rerender unnecessarily
+    renderTabItem = (schemaField: SchemaEntry, schemaKey: string, schemaPath: string) => {
+        return this.renderItem(schemaField, schemaKey, schemaPath);
+    };
+
+    renderTabSection(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
+        const {data, errors, formInspector, showAllErrors} = this.props;
+
+        return (
+            <TabSection
+                data={data}
+                errors={errors}
+                formInspector={formInspector}
+                key={schemaKey}
+                name={schemaKey}
+                renderItem={this.renderTabItem}
+                schema={schemaField}
+                schemaPath={schemaPath}
+                showAllErrors={showAllErrors}
+            />
+        );
+    }
+
     renderSection(schemaField: SchemaEntry, schemaKey: string, schemaPath: string) {
         const {data, formInspector} = this.props;
         const {items} = schemaField;
+
+        if (schemaField.layout === 'tabs') {
+            return this.renderTabSection(schemaField, schemaKey, schemaPath);
+        }
 
         return (
             <Section data={data} formInspector={formInspector} key={schemaKey} name={schemaKey} schema={schemaField}>
@@ -88,7 +116,7 @@ class Renderer extends React.Component<Props> {
         schemaField: SchemaEntry,
         schemaKey: string,
         schemaPath: string
-    ): ?Element<typeof Field | typeof Section> {
+    ): ?Element<typeof Field | typeof Section | typeof TabSection> {
         if (schemaField.type === 'section') {
             return this.renderSection(schemaField, schemaKey, schemaPath);
         }
