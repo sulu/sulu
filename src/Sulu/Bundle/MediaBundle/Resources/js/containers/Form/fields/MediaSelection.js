@@ -11,7 +11,6 @@ import {
 } from '../../../utils/MediaSelectionHelper';
 import MultiMediaSelection from '../../MultiMediaSelection';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
-import type {Media} from '../../../types';
 import type {Value} from '../../MultiMediaSelection';
 
 @observer
@@ -78,18 +77,6 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
         onFinish();
     };
 
-    handleItemClick = (itemId: string | number, item: ?Media) => {
-        const {router} = this.props;
-
-        if (!router || !item) {
-            return;
-        }
-
-        const {id, locale} = item;
-
-        router.navigate('sulu_media.form', {id, locale});
-    };
-
     render() {
         const {disabled, formInspector, schemaOptions} = this.props;
         const {
@@ -126,9 +113,9 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             <MultiMediaSelection
                 disabled={!!disabled}
                 displayOptions={displayOptionValues}
+                editable={true}
                 locale={locale}
                 onChange={this.handleChange}
-                onItemClick={this.handleItemClick}
                 sortable={sortable}
                 types={mediaTypeValues}
                 value={this.value ? this.value : undefined}
