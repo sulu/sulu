@@ -17,7 +17,7 @@ class ReferencingResourcesFoundException extends \Exception implements Referenci
 {
     /**
      * @param array{id: int|string, resourceKey: string, title?: string|null} $resource
-     * @param array<array{id: int|string, resourceKey: string, title: string|null}> $referencingResources
+     * @param array<array{id: int|string, resourceKey: string, title: string|null, url?: string|null}> $referencingResources
      */
     public function __construct(
         private array $resource,
