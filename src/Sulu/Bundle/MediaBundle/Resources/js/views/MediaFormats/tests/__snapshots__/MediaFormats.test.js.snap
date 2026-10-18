@@ -33,6 +33,16 @@ exports[`Render a MediaFormats view 1`] = `
             >
               <span>
                 <span
+                  aria-label="su-download"
+                  class="su-download"
+                />
+              </span>
+            </th>
+            <th
+              class="headerButtonCell headerCell"
+            >
+              <span>
+                <span
                   aria-label="su-copy"
                   class="su-copy"
                 />
@@ -70,6 +80,22 @@ exports[`Render a MediaFormats view 1`] = `
                   <span
                     aria-label="su-eye"
                     class="su-eye"
+                  />
+                </button>
+              </div>
+            </td>
+            <td
+              class="buttonCell cell"
+            >
+              <div
+                class="cellContent"
+              >
+                <button
+                  type="button"
+                >
+                  <span
+                    aria-label="su-download"
+                    class="su-download"
                   />
                 </button>
               </div>
@@ -124,6 +150,22 @@ exports[`Render a MediaFormats view 1`] = `
                   <span
                     aria-label="su-eye"
                     class="su-eye"
+                  />
+                </button>
+              </div>
+            </td>
+            <td
+              class="buttonCell cell"
+            >
+              <div
+                class="cellContent"
+              >
+                <button
+                  type="button"
+                >
+                  <span
+                    aria-label="su-download"
+                    class="su-download"
                   />
                 </button>
               </div>
