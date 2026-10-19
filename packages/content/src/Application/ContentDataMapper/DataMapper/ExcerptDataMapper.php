@@ -39,9 +39,30 @@ readonly class ExcerptDataMapper implements DataMapperInterface
             $excerptData = $data['excerpt'];
             Assert::isArray($excerptData);
 
-            $validExcerptProperties = $this->getExcerptProperties($localizedDimensionContent); // add support of unlocalized excerpt data in future
+            $unlocalizedExcerptPropertyNames = $unlocalizedDimensionContent instanceof ExcerptInterface
+                ? $this->getUnlocalizedExcerptPropertyNames($localizedDimensionContent)
+                : [];
 
-            $localizedDimensionContent->setExcerptData($excerptData);  // @phpstan-ignore-line argument.type
+            if ([] === $unlocalizedExcerptPropertyNames) {
+                $localizedDimensionContent->setExcerptData($excerptData); // @phpstan-ignore-line argument.type
+
+                return;
+            }
+
+            $unlocalizedExcerptData = $unlocalizedDimensionContent->getExcerptData();
+            $localizedExcerptData = [];
+            foreach ($excerptData as $name => $value) {
+                if (\in_array($name, $unlocalizedExcerptPropertyNames, true)) {
+                    $unlocalizedExcerptData[$name] = $value;
+
+                    continue;
+                }
+
+                $localizedExcerptData[$name] = $value;
+            }
+
+            $unlocalizedDimensionContent->setExcerptData($unlocalizedExcerptData);
+            $localizedDimensionContent->setExcerptData($localizedExcerptData); // @phpstan-ignore-line argument.type
         }
     }
 
@@ -50,9 +71,9 @@ readonly class ExcerptDataMapper implements DataMapperInterface
      *
      * @param T $dimensionContent
      *
-     * @return array<string, mixed>
+     * @return string[]
      */
-    private function getExcerptProperties(DimensionContentInterface $dimensionContent): array
+    private function getUnlocalizedExcerptPropertyNames(DimensionContentInterface $dimensionContent): array
     {
         $locale = $dimensionContent->getLocale();
         if (!$locale) {
@@ -66,6 +87,16 @@ readonly class ExcerptDataMapper implements DataMapperInterface
             ['instanceOf' => $dimensionContent::class],
         );
 
-        return $formMetadata->getFlatFieldMetadata();
+        $propertyNames = [];
+        foreach ($formMetadata->getFlatFieldMetadata() as $fieldMetadata) {
+            $name = $fieldMetadata->getName();
+            if ($fieldMetadata->isMultilingual() || !\str_starts_with($name, 'excerpt/')) {
+                continue;
+            }
+
+            $propertyNames[] = \explode('/', $name, 3)[1];
+        }
+
+        return $propertyNames;
     }
 }
