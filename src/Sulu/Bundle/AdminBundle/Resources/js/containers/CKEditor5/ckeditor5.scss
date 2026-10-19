@@ -241,8 +241,21 @@ $textEditorUnpublishedLinkColor: $gold;
     }
 
     .ck-content .sulu-text-part-language {
-        background-color: $textEditorLightAccentColor;
-        border-radius: $textEditorBorderRadius;
+        text-decoration: underline dotted;
+        text-underline-offset: 2px;
+
+        /* the span carries the dir of the marked language, so the label ends up right for ltr and left for rtl */
+        &::after {
+            content: attr(lang);
+            display: inline-block; /* keeps the label out of the underline */
+            font-size: 0.6em;
+            font-weight: bold;
+            line-height: 1;
+            margin-inline-start: 2px;
+            text-transform: uppercase;
+            user-select: none;
+            vertical-align: super;
+        }
     }
 
     .ck-preview-button {

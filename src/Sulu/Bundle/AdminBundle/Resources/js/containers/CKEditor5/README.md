@@ -39,8 +39,9 @@ as seen e.g. in the above code snippet.
 
 The editor ships the [`TextPartLanguage`](https://ckeditor.com/docs/ckeditor5/latest/features/language.html) feature,
 which lets an editor mark a selection with a language (`<span lang="…" dir="…">`) to satisfy the WCAG "language of
-parts" requirement. Marked text is highlighted in the editor and shows a tooltip with the language name; the saved
-content only contains the `lang` and `dir` attributes.
+parts" requirement. Marked text is underlined with a dotted line, followed by its language code (right of the text for
+LTR, left for RTL), and shows a tooltip with the language name; the saved content only contains the `lang` and `dir`
+attributes.
 
 The offered locales default to the languages of all webspace localizations, without their country variants. Their titles are localised to the
 administration interface language via `Intl.DisplayNames`. Configure a different list in
