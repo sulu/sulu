@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
@@ -21,6 +20,8 @@ use Webmozart\Assert\Assert;
 
 readonly class ExcerptDataMapper implements DataMapperInterface
 {
+    use UnlocalizedPropertiesDataMapperTrait;
+
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
     ) {
@@ -40,7 +41,7 @@ readonly class ExcerptDataMapper implements DataMapperInterface
             Assert::isArray($excerptData);
 
             $unlocalizedExcerptPropertyNames = $unlocalizedDimensionContent instanceof ExcerptInterface
-                ? $this->getUnlocalizedExcerptPropertyNames($localizedDimensionContent)
+                ? $this->getUnlocalizedPropertyNames($this->formMetadataProvider, 'content_excerpt', 'excerpt', $localizedDimensionContent)
                 : [];
 
             if ([] === $unlocalizedExcerptPropertyNames) {
@@ -49,54 +50,14 @@ readonly class ExcerptDataMapper implements DataMapperInterface
                 return;
             }
 
-            $unlocalizedExcerptData = $unlocalizedDimensionContent->getExcerptData();
-            $localizedExcerptData = [];
-            foreach ($excerptData as $name => $value) {
-                if (\in_array($name, $unlocalizedExcerptPropertyNames, true)) {
-                    $unlocalizedExcerptData[$name] = $value;
-
-                    continue;
-                }
-
-                $localizedExcerptData[$name] = $value;
-            }
+            [$unlocalizedExcerptData, $localizedExcerptData] = $this->splitUnlocalizedData(
+                $excerptData,
+                $unlocalizedDimensionContent->getExcerptData(),
+                $unlocalizedExcerptPropertyNames,
+            );
 
             $unlocalizedDimensionContent->setExcerptData($unlocalizedExcerptData);
-            $localizedDimensionContent->setExcerptData($localizedExcerptData); // @phpstan-ignore-line argument.type
+            $localizedDimensionContent->setExcerptData($localizedExcerptData);
         }
-    }
-
-    /**
-     * @template T of DimensionContentInterface
-     *
-     * @param T $dimensionContent
-     *
-     * @return string[]
-     */
-    private function getUnlocalizedExcerptPropertyNames(DimensionContentInterface $dimensionContent): array
-    {
-        $locale = $dimensionContent->getLocale();
-        if (!$locale) {
-            return [];
-        }
-
-        /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->formMetadataProvider->getMetadata(
-            'content_excerpt',
-            $locale,
-            ['instanceOf' => $dimensionContent::class],
-        );
-
-        $propertyNames = [];
-        foreach ($formMetadata->getFlatFieldMetadata() as $fieldMetadata) {
-            $name = $fieldMetadata->getName();
-            if ($fieldMetadata->isMultilingual() || !\str_starts_with($name, 'excerpt/')) {
-                continue;
-            }
-
-            $propertyNames[] = \explode('/', $name, 3)[1];
-        }
-
-        return $propertyNames;
     }
 }
