@@ -17,6 +17,8 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -33,6 +35,16 @@ class SecuritySubscriberTest extends TestCase
     private $tokenStorage;
 
     /**
+     * @var ObjectProphecy<RequestStack>
+     */
+    private $requestStack;
+
+    /**
+     * @var ObjectProphecy<Request>
+     */
+    private $request;
+
+    /**
      * @var SecuritySubscriber
      */
     private $securitySubscriber;
@@ -40,7 +52,41 @@ class SecuritySubscriberTest extends TestCase
     public function setUp(): void
     {
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
-        $this->securitySubscriber = new SecuritySubscriber($this->tokenStorage->reveal());
+        $this->request = $this->prophesize(Request::class);
+        $this->request->hasPreviousSession()->willReturn(true);
+        $this->requestStack = $this->prophesize(RequestStack::class);
+        $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
+        $this->securitySubscriber = new SecuritySubscriber($this->tokenStorage->reveal(), $this->requestStack->reveal());
+    }
+
+    public function testSetDefaultUserWithoutPreviousSession(): void
+    {
+        $event = $this->prophesize(ConfigureOptionsEvent::class);
+
+        $optionsResolver = $this->prophesize(OptionsResolver::class);
+        $event->getOptions()->willReturn($optionsResolver->reveal());
+
+        $this->request->hasPreviousSession()->willReturn(false);
+        $this->tokenStorage->getToken()->shouldNotBeCalled();
+
+        $optionsResolver->setDefault('user', null)->shouldBeCalled()->willReturn($optionsResolver->reveal());
+
+        $this->securitySubscriber->setDefaultUser($event->reveal());
+    }
+
+    public function testSetDefaultUserWithoutRequest(): void
+    {
+        $event = $this->prophesize(ConfigureOptionsEvent::class);
+
+        $optionsResolver = $this->prophesize(OptionsResolver::class);
+        $event->getOptions()->willReturn($optionsResolver->reveal());
+
+        $this->requestStack->getCurrentRequest()->willReturn(null);
+        $this->tokenStorage->getToken()->shouldNotBeCalled();
+
+        $optionsResolver->setDefault('user', null)->shouldBeCalled()->willReturn($optionsResolver->reveal());
+
+        $this->securitySubscriber->setDefaultUser($event->reveal());
     }
 
     public function testSetDefaultUser(): void
