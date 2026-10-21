@@ -22,6 +22,7 @@ use Sulu\Article\Tests\Traits\CreateArticleTrait;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
+use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Messenger\Envelope;
@@ -169,6 +170,54 @@ class ArticleShadowPublishTest extends SuluTestCase
         $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
         self::assertSame('article', $content['template']);
         self::assertSame('Source EN', $content['title']);
+    }
+
+    public function testChangeShadowUrlFromSettingsTab(): void
+    {
+        self::purgeDatabase();
+
+        $this->client->request(
+            'POST',
+            '/admin/api/articles?locale=en&action=publish',
+            [], [], [],
+            \json_encode(['template' => 'article', 'title' => 'Source EN', 'url' => '/source-en', 'mainWebspace' => 'sulu-io']) ?: null,
+        );
+        self::assertSame(201, $this->client->getResponse()->getStatusCode(), (string) $this->client->getResponse()->getContent());
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $id = $content['id'];
+
+        $this->client->request(
+            'PUT',
+            '/admin/api/articles/' . $id . '?locale=de&action=publish',
+            [], [], [],
+            \json_encode(['template' => 'article', 'title' => 'Source EN', 'url' => '/quelle-de', 'mainWebspace' => 'sulu-io', 'shadowOn' => true, 'shadowLocale' => 'en']) ?: null,
+        );
+        self::assertSame(200, $this->client->getResponse()->getStatusCode(), (string) $this->client->getResponse()->getContent());
+
+        // The tabs share one resource store, so the settings tab sends the whole content next to the mirrored url.
+        $this->client->request(
+            'PUT',
+            '/admin/api/articles/' . $id . '?locale=de',
+            [], [], [],
+            \json_encode(['template' => 'article', 'title' => 'Source EN', 'mainWebspace' => 'sulu-io', 'shadowOn' => true, 'shadowLocale' => 'en', 'url' => '/neue-quelle-de']) ?: null,
+        );
+        self::assertSame(200, $this->client->getResponse()->getStatusCode(), (string) $this->client->getResponse()->getContent());
+        /** @var array{url: string, title: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        self::assertSame('/neue-quelle-de', $content['url']);
+        self::assertSame('Source EN', $content['title']);
+
+        $this->client->request('PUT', '/admin/api/articles/' . $id . '?locale=de&action=publish', [], [], [], \json_encode(['template' => 'article', 'title' => 'Source EN', 'mainWebspace' => 'sulu-io', 'shadowOn' => true, 'shadowLocale' => 'en', 'url' => '/neue-quelle-de']) ?: null);
+        self::assertSame(200, $this->client->getResponse()->getStatusCode(), (string) $this->client->getResponse()->getContent());
+
+        $routes = self::getEntityManager()->getRepository(Route::class)->findBy(['resourceKey' => 'articles', 'resourceId' => $id]);
+        $slugs = [];
+        foreach ($routes as $route) {
+            $slugs[$route->getLocale()] = $route->getSlug();
+        }
+        \ksort($slugs);
+        self::assertSame(['de' => '/neue-quelle-de', 'en' => '/source-en'], $slugs);
     }
 
     public function testRepublishingSourceUpdatesLiveShadowDependent(): void

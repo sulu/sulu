@@ -31,6 +31,7 @@
     "sulu_content.enable_shadow": "Shadow aktivieren",
     "sulu_content.enable_shadow_info_text": "Diese Funktion ist deaktiviert, wenn die aktuelle Sprache bereits als Shadow verwendet wird.",
     "sulu_content.shadow_locale": "Shadow Sprache",
+    "sulu_content.shadow_route": "URL",
     "sulu_content.link": "Link",
     "sulu_content.enable_link": "Link aktivieren",
     "sulu_content.enable_link_info_text": "Interne Inhalte oder externe URLs verlinken, um Navigationen, Inhaltsübersichten und die Seitenstruktur aufzubauen.",
