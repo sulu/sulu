@@ -15,3 +15,9 @@ sulu_route.delete_route_histories:
     methods: DELETE
     controller: sulu_route.route_history_controller::cdeleteAction
     format: json
+
+sulu_route.get_route_url:
+    path: /route-url.{_format}
+    methods: GET
+    controller: sulu_route.route_url_controller
+    format: json

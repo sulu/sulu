@@ -34,6 +34,7 @@ class RouteAdminTest extends KernelTestCase
     {
         $this->assertSame([
             'generateUrl' => '/admin/api/resource-locators',
+            'routeUrl' => '/admin/api/route-url',
         ], $this->routeAdmin->getConfig());
     }
 }

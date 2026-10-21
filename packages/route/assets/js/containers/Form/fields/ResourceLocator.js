@@ -7,6 +7,7 @@ import {translate} from 'sulu-admin-bundle/utils/Translator';
 import Button from 'sulu-admin-bundle/components/Button';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import ResourceLocatorHistory from '../../../containers/ResourceLocatorHistory';
+import ResourceLocatorOpenUrl from '../../../containers/ResourceLocatorOpenUrl';
 import ResourceLocatorComponent from '../../../components/ResourceLocator';
 import resourceLocatorStyles from './resourceLocator.scss';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
@@ -62,6 +63,31 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
         }
 
         return (this.inputChangedSinceRefresh || this.partsChangedSinceRefresh) && Object.keys(this.parts).length > 0;
+    }
+
+    @computed get nothingPublished(): boolean {
+        const {formInspector} = this.props;
+
+        // content with a workflow has a published date as soon as a live version exists, even with newer draft changes
+        return formInspector.getValueByPath('/workflowPlace') !== undefined
+            && !formInspector.getValueByPath('/published');
+    }
+
+    @computed get webspaces(): Array<string> {
+        const {formInspector} = this.props;
+
+        const webspace = formInspector.options.webspace;
+        if (webspace) {
+            return [webspace];
+        }
+
+        // contents without a webspace option (e.g. articles) define their webspaces in the form data
+        const webspaces = [
+            formInspector.getValueByPath('/mainWebspace'),
+            ...(toJS(formInspector.getValueByPath('/additionalWebspaces')) || []),
+        ];
+
+        return webspaces.filter((webspace, index) => webspace && webspaces.indexOf(webspace) === index);
     }
 
     constructor(props: FieldTypeProps<?string>) {
@@ -194,6 +220,7 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                 historyResourceKey,
                 defaultMode,
                 options = {},
+                routeUrl,
             },
             schemaOptions: {
                 mode: {
@@ -259,6 +286,18 @@ class ResourceLocator extends React.Component<FieldTypeProps<?string>> {
                                 ...options,
                             }}
                             resourceKey={historyResourceKey}
+                        />
+                        : null
+                    }
+                    {routeUrl
+                        ? <ResourceLocatorOpenUrl
+                            className={resourceLocatorStyles.openUrlButton}
+                            disabled={this.nothingPublished}
+                            locale={formInspector.locale ? formInspector.locale.get() : userStore.contentLocale}
+                            resourceId={formInspector.id}
+                            resourceKey={formInspector.resourceKey}
+                            url={routeUrl}
+                            webspaces={this.webspaces}
                         />
                         : null
                     }

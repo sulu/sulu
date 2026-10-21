@@ -19,6 +19,7 @@ initializer.addUpdateConfigHook('sulu_route', (config: Object, initialized: bool
                 parentId: 'parentId',
             },
             generationUrl: config.generateUrl,
+            routeUrl: config.routeUrl,
             options: {history: true},
         }
     );

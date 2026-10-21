@@ -2,8 +2,13 @@
     margin-top: 10px;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .refresh-button {
     margin-right: 20px;
+}
+
+.open-url-button {
+    margin-left: auto;
 }
