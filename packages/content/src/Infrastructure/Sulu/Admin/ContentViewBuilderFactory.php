@@ -29,6 +29,7 @@ use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextRe
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
+use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TaxonomyInterface;
@@ -431,8 +432,15 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
             }
         }
 
+        $metadataRequestParameters = ['forms' => $forms];
+        if (\is_subclass_of($dimensionContentClass, RoutableInterface::class)
+            && \is_subclass_of($dimensionContentClass, TemplateInterface::class)
+        ) {
+            $metadataRequestParameters['templateType'] = $dimensionContentClass::getTemplateType();
+        }
+
         return $this->createFormViewBuilder($parentView . '.settings', '/settings', $previewEnabled)
-            ->addMetadataRequestParameters(['forms' => $forms])
+            ->addMetadataRequestParameters($metadataRequestParameters)
             ->setResourceKey($resourceKey)
             ->setFormKey('content_settings')
             ->setTabTitle('sulu_content.settings')

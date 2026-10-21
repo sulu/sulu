@@ -16,6 +16,7 @@ use Sulu\Content\Infrastructure\Sulu\Form\InstanceOfFormMetadataVisitor;
 use Sulu\Content\Infrastructure\Sulu\Form\RouteFieldSkipTemplateDataMapperFormMetadataVisitor;
 use Sulu\Content\Infrastructure\Sulu\Form\SeoFormMetadataVisitor;
 use Sulu\Content\Infrastructure\Sulu\Form\SettingsFormMetadataVisitor;
+use Sulu\Content\Infrastructure\Sulu\Form\ShadowRouteSettingsFormMetadataVisitor;
 use Symfony\Component\DependencyInjection\Reference;
 
 return static function(ContainerConfigurator $container) {
@@ -24,6 +25,10 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_content.settings_author_visitor', SettingsFormMetadataVisitor::class)
         ->args([new Reference('sulu_admin.xml_form_metadata_loader')])
         ->tag('sulu_admin.form_metadata_visitor');
+
+    $services->set('sulu_content.shadow_route_settings_form_metadata_visitor', ShadowRouteSettingsFormMetadataVisitor::class)
+        ->args([new Reference('translator')])
+        ->tag('sulu_admin.form_metadata_visitor', ['priority' => -10]);
 
     $services->set('sulu_content.excerpt_form_metadata_visitor', ExcerptFormMetadataVisitor::class)
         ->args([new Reference('sulu_admin.xml_form_metadata_loader')])

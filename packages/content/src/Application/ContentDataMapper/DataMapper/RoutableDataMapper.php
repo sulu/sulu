@@ -93,7 +93,10 @@ class RoutableDataMapper implements DataMapperInterface
         }
 
         if (!$this->hasRouteData($property, $data[$name] ?? null)) {
-            if (\array_key_exists($name, $data) && $localizedDimensionContent::isRouteMandatory()) {
+            // The settings tab sends the url as null for a new shadow, as its route field only appears once the template is known.
+            $isNewShadowWithoutRoute = true === ($data['shadowOn'] ?? false) && null === ($data[$name] ?? null);
+
+            if (\array_key_exists($name, $data) && !$isNewShadowWithoutRoute && $localizedDimensionContent::isRouteMandatory()) {
                 throw new \RuntimeException(\sprintf(
                     'Expected a route value for the mandatory property "%s".',
                     $name

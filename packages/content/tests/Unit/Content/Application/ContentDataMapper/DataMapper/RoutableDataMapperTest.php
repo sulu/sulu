@@ -226,6 +226,39 @@ class RoutableDataMapperTest extends TestCase
         $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
     }
 
+    public function testMapNullRoutePropertyValueOfNewShadowWhenRouteIsMandatory(): void
+    {
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+
+        $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, ['url' => null, 'shadowOn' => true]);
+
+        $this->assertNull($localizedDimensionContent->getRoute());
+    }
+
+    public function testMapEmptyRoutePropertyValueOfShadowThrowsWhenRouteIsMandatory(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Expected a route value for the mandatory property "url".');
+
+        $example = new Example();
+        static::setPrivateProperty($example, 'id', 1);
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setTemplateKey('default');
+        $localizedDimensionContent->setLocale('en');
+
+        $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
+        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, ['url' => '', 'shadowOn' => true]);
+    }
+
     /**
      * @param array<string, mixed> $data
      */
