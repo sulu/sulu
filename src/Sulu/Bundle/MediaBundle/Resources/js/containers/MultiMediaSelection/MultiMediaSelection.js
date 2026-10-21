@@ -6,8 +6,14 @@ import equals from 'fast-deep-equal';
 import {CroppedText, MultiItemSelection} from 'sulu-admin-bundle/components';
 import {translate} from 'sulu-admin-bundle/utils';
 import {MultiSelectionStore} from 'sulu-admin-bundle/stores';
-import {getIconForDisplayOption, getTranslationForDisplayOption} from '../../utils/MediaSelectionHelper';
+import {
+    getCropImageUrl,
+    getIconForDisplayOption,
+    getTranslationForDisplayOption,
+} from '../../utils/MediaSelectionHelper';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
+import CropOverlay from '../MediaVersionUpload/CropOverlay';
+import MediaCollection from '../MediaCollection';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
 import multiMediaSelectionStyle from './multiMediaSelection.scss';
 import type {DisplayOption, Media} from '../../types';
@@ -17,6 +23,7 @@ import type {Value} from './types';
 type Props = {|
     disabled: boolean,
     displayOptions: Array<DisplayOption>,
+    formats: Array<string>,
     locale: IObservableValue<string>,
     onChange: (selectedIds: Value) => void,
     onItemClick?: (itemId: number, value: ?Media) => void,
@@ -33,6 +40,7 @@ class MultiMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         displayOptions: [],
+        formats: [],
         sortable: true,
         types: [],
         value: {displayOption: undefined, ids: []},
@@ -42,6 +50,7 @@ class MultiMediaSelection extends React.Component<Props> {
     changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
+    @observable cropMediaId: ?number = undefined;
 
     constructor(props: Props) {
         super(props);
@@ -94,6 +103,14 @@ class MultiMediaSelection extends React.Component<Props> {
         return translate('sulu_media.select_media_plural');
     }
 
+    @action handleCropOverlayOpen = (mediaId: number) => {
+        this.cropMediaId = mediaId;
+    };
+
+    @action handleCropOverlayClose = () => {
+        this.cropMediaId = undefined;
+    };
+
     handleRemove = (mediaId: number) => {
         this.mediaSelectionStore.removeById(mediaId);
     };
@@ -132,9 +149,11 @@ class MultiMediaSelection extends React.Component<Props> {
     };
 
     render() {
-        const {locale, disabled, displayOptions, sortable, types, value} = this.props;
+        const {locale, disabled, displayOptions, formats, sortable, types, value} = this.props;
 
         const {loading, items: medias} = this.mediaSelectionStore;
+        const cropMedia = medias.find((media) => media.id === this.cropMediaId);
+        const cropImage = cropMedia && MediaCollection.editable ? getCropImageUrl(cropMedia, formats) : undefined;
         const label = (loading) ? '' : this.getLabel(medias.length);
 
         const rightButton = displayOptions.length > 0
@@ -168,9 +187,13 @@ class MultiMediaSelection extends React.Component<Props> {
                     {medias.map((media, index) => {
                         return (
                             <MultiItemSelection.Item
+                                editIcon="su-crop-pen"
                                 id={media.id}
                                 index={index + 1}
                                 key={media.id}
+                                onEdit={MediaCollection.editable && getCropImageUrl(media, formats)
+                                    ? this.handleCropOverlayOpen
+                                    : undefined}
                                 value={media}
                             >
                                 <div className={multiMediaSelectionStyle.mediaItem}>
@@ -203,6 +226,18 @@ class MultiMediaSelection extends React.Component<Props> {
                     open={this.overlayOpen}
                     types={types}
                 />
+                {cropMedia && cropImage &&
+                    <CropOverlay
+                        formats={formats}
+                        id={cropMedia.id}
+                        image={cropImage}
+                        key={cropMedia.id}
+                        locale={locale.get()}
+                        onClose={this.handleCropOverlayClose}
+                        onConfirm={this.handleCropOverlayClose}
+                        open={true}
+                    />
+                }
             </Fragment>
         );
     }

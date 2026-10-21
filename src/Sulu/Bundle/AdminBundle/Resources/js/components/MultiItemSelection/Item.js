@@ -12,6 +12,7 @@ type Props<T, U> = {
     allowRemoveWhileDisabled: boolean,
     children: Node,
     disabled: boolean,
+    editIcon: string,
     id: T,
     index: number,
     onClick?: (id: T, value: ?U) => void,
@@ -25,6 +26,7 @@ export default class Item<T, U> extends React.PureComponent<Props<T, U>> {
     static defaultProps = {
         allowRemoveWhileDisabled: false,
         disabled: false,
+        editIcon: 'su-pen',
         sortable: true,
     };
 
@@ -71,6 +73,7 @@ export default class Item<T, U> extends React.PureComponent<Props<T, U>> {
             allowRemoveWhileDisabled,
             children,
             disabled,
+            editIcon,
             index,
             onClick,
             onEdit,
@@ -123,7 +126,7 @@ export default class Item<T, U> extends React.PureComponent<Props<T, U>> {
                 <div className={itemStyles.buttons}>
                     {onEdit && !disabled &&
                         <button className={itemStyles.button} onClick={this.handleEdit} type="button">
-                            <Icon name="su-pen" />
+                            <Icon name={editIcon} />
                         </button>
                     }
                     {onRemove && (!disabled || allowRemoveWhileDisabled) &&
