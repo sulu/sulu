@@ -206,6 +206,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     className={mediaOverviewStyles.mediaCollection}
                     collectionListStore={this.collectionListStore}
                     collectionStore={this.collectionStore}
+                    downloadable={true}
                     hideUploadAction={true}
                     locale={this.locale}
                     mediaListAdapters={['media_card_overview', 'table']}
