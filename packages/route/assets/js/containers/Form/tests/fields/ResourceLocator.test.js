@@ -13,6 +13,7 @@ import ResourceLocator from '../../fields/ResourceLocator';
 
 let mockResourceLocatorProps: Object = {};
 let mockResourceLocatorHistoryProps: Object = {};
+let mockResourceLocatorOpenUrlProps: Object = {};
 
 const mockReact = require('react');
 
@@ -87,9 +88,16 @@ jest.mock('../../../ResourceLocatorHistory', () => jest.fn((props) => {
     return mockReact.createElement('div');
 }));
 
+jest.mock('../../../ResourceLocatorOpenUrl', () => jest.fn((props) => {
+    mockResourceLocatorOpenUrlProps = props;
+
+    return mockReact.createElement('div');
+}));
+
 beforeEach(() => {
     mockResourceLocatorProps = {};
     mockResourceLocatorHistoryProps = {};
+    mockResourceLocatorOpenUrlProps = {};
     Requester.post.mockReset();
     // $FlowFixMe
     userStore.contentLocale = undefined;
@@ -173,6 +181,53 @@ test('Pass correct options to ResourceLocatorHistory if resource already existed
     expect(mockResourceLocatorHistoryProps.options)
         .toEqual({history: true, webspace: 'sulu', resourceId: 1, resourceKey: 'test'});
     expect(mockResourceLocatorHistoryProps.disabled).toEqual(false);
+});
+
+const renderWithOpenUrl = (data: Object) => {
+    const resourceStore = new ResourceStore('test', 1, {locale: observable.box('en')});
+    // $FlowFixMe
+    resourceStore.data = data;
+
+    const formInspector = new FormInspector(new ResourceFormStore(resourceStore, 'test', {webspace: 'sulu'}));
+
+    render(
+        <ResourceLocator
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={{
+                defaultMode: 'tree_leaf_edit',
+                generationUrl: '/admin/api/resource-locators',
+                routeUrl: '/admin/api/route-url',
+            }}
+            formInspector={formInspector}
+            schemaOptions={{}}
+        />
+    );
+};
+
+test('Pass resource and webspaces to ResourceLocatorOpenUrl', async() => {
+    renderWithOpenUrl({});
+
+    await waitFor(() => expect(mockResourceLocatorOpenUrlProps.url).toBe('/admin/api/route-url'));
+
+    expect(mockResourceLocatorOpenUrlProps.resourceKey).toBe('test');
+    expect(mockResourceLocatorOpenUrlProps.resourceId).toBe(1);
+    expect(mockResourceLocatorOpenUrlProps.locale).toBe('en');
+    expect(mockResourceLocatorOpenUrlProps.webspaces).toEqual(['sulu']);
+    expect(mockResourceLocatorOpenUrlProps.disabled).toBe(false);
+});
+
+test('Disable ResourceLocatorOpenUrl if the content has a workflow but nothing has been published', async() => {
+    renderWithOpenUrl({'/workflowPlace': 'unpublished'});
+
+    await waitFor(() => expect(mockResourceLocatorOpenUrlProps.disabled).toBe(true));
+});
+
+test('Keep ResourceLocatorOpenUrl enabled if a published version exists next to draft changes', async() => {
+    renderWithOpenUrl({'/workflowPlace': 'draft', '/published': '2026-10-20T14:05:13+02:00'});
+
+    await waitFor(() => expect(mockResourceLocatorOpenUrlProps.url).toBe('/admin/api/route-url'));
+
+    expect(mockResourceLocatorOpenUrlProps.disabled).toBe(false);
 });
 
 test('Pass locale from userStore to ResourceLocator and ResourceLocatorHistory if form has no locale', async() => {
