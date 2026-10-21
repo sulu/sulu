@@ -16,6 +16,7 @@ type Props = {|
     className?: string,
     collectionListStore: ListStore,
     collectionStore: CollectionStore,
+    downloadable: boolean,
     hideUploadAction: boolean,
     locale: IObservableValue<string>,
     mediaListAdapters: Array<string>,
@@ -34,6 +35,7 @@ type Props = {|
 @observer
 class MediaCollection extends React.Component<Props> {
     static defaultProps = {
+        downloadable: false,
         hideUploadAction: false,
         overlayType: 'overlay',
     };
@@ -74,12 +76,34 @@ class MediaCollection extends React.Component<Props> {
         mediaListStore.reload();
     };
 
+    getItemActions = (item: ?Object) => {
+        const url = item?.adminUrl || item?.url;
+
+        return [
+            {
+                disabled: !!item && !url,
+                icon: 'su-download',
+                onClick: () => {
+                    if (!url) {
+                        return;
+                    }
+
+                    const link = document.createElement('a');
+                    link.href = window.location.origin + url + (url.includes('?') ? '&' : '?') + 'inline=0';
+                    link.download = '';
+                    link.click();
+                },
+            },
+        ];
+    };
+
     render() {
         const {
             onDeleteError,
             className,
             collectionListStore,
             collectionStore,
+            downloadable,
             hideUploadAction,
             locale,
             overlayType,
@@ -140,6 +164,7 @@ class MediaCollection extends React.Component<Props> {
                 <List
                     actions={listActions}
                     adapters={mediaListAdapters}
+                    itemActionsProvider={downloadable ? this.getItemActions : undefined}
                     onDeleteError={onDeleteError}
                     onItemClick={onMediaNavigate}
                     ref={mediaListRef}

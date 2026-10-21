@@ -307,12 +307,23 @@ function createMediaCollectionTestProps(options: any = {}) {
         collectionStore.resourceStore.data = options.collectionData;
     }
 
+    if (options.mediaData) {
+        // $FlowFixMe
+        mediaListStore.data = options.mediaData;
+    }
+
+    if (options.mediaListAdapters?.includes('table')) {
+        // $FlowFixMe
+        mediaListStore.userSchema = {};
+    }
+
     const props = {
         collectionListStore,
         collectionStore,
+        downloadable: options.downloadable || false,
         hideUploadAction: options.hideUploadAction || false,
         locale,
-        mediaListAdapters: ['media_card_overview'],
+        mediaListAdapters: options.mediaListAdapters || ['media_card_overview'],
         mediaListStore,
         onCollectionNavigate: options.onCollectionNavigate || jest.fn(),
         onDeleteError: options.onDeleteError,
@@ -455,6 +466,7 @@ beforeEach(() => {
     listAdapterRegistry.getAllAdaptersMock.mockReturnValue({
         'folder': require('sulu-admin-bundle/containers/List/adapters/FolderAdapter').default,
         'media_card_overview': MediaCardOverviewAdapter,
+        'table': require('sulu-admin-bundle/containers/List/adapters/TableAdapter').default,
     });
 });
 
@@ -676,6 +688,32 @@ test('Do not pass action for uploading new media to media list if hideUploadActi
     rerender(<MediaCollection {...props} hideUploadAction={true} />);
 
     expect(screen.queryByRole('button', {name: /sulu_media.upload_file/})).not.toBeInTheDocument();
+});
+
+test('Pass download action to media list if downloadable prop is set to true', () => {
+    renderMediaCollection({
+        downloadable: true,
+        mediaData: [
+            {id: 1, title: 'With url', url: '/media/1/download/image.png'},
+            {id: 2, title: 'Without url'},
+        ],
+        mediaListAdapters: ['table'],
+    });
+
+    const downloadButtons = screen.getAllByLabelText('su-download').map((icon) => icon.closest('button'));
+
+    expect(downloadButtons).toHaveLength(2);
+    expect(downloadButtons[0]).toBeEnabled();
+    expect(downloadButtons[1]).toBeDisabled();
+});
+
+test('Do not pass download action to media list if downloadable prop is not set', () => {
+    renderMediaCollection({
+        mediaData: [{id: 1, title: 'With url', url: '/media/1/download/image.png'}],
+        mediaListAdapters: ['table'],
+    });
+
+    expect(screen.queryByLabelText('su-download')).not.toBeInTheDocument();
 });
 
 test('Do not pass action for uploading new media to media list if addable permission is set to false', () => {
