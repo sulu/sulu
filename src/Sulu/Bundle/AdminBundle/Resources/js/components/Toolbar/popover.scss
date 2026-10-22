@@ -1,12 +1,12 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$popoverBackgroundLightColor: $wildSand;
-$popoverBackgroundDarkColor: $mirage;
-$popoverTextLightColor: $blueZodiac;
-$popoverTextDarkColor: $white;
-$popoverTextLightColorDisabled: $silver;
-$popoverTextDarkColorDisabled: $stormGray;
-$popoverShadowColor: $silver;
+$popoverBackgroundLightColor: $neutral100;
+$popoverBackgroundDarkColor: $secondary900;
+$popoverTextLightColor: $secondary800;
+$popoverTextDarkColor: $neutral0;
+$popoverTextLightColorDisabled: $neutral400;
+$popoverTextDarkColorDisabled: $secondary500;
+$popoverShadowColor: $neutral400;
 
 .popover {
     position: relative;
@@ -20,7 +20,7 @@ $popoverShadowColor: $silver;
 .light {
     background-color: $popoverBackgroundLightColor;
     color: $popoverTextLightColor;
-    box-shadow: 2px 6px 12px 0 rgba($popoverShadowColor, .5);
+    box-shadow: 2px 6px 12px 0 color-mix(in sRGB, $popoverShadowColor 50%, transparent);
 
     &:disabled {
         color: $popoverTextLightColorDisabled;

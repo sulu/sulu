@@ -46,6 +46,38 @@ deprecated. The `$referenceRepository` is used to look up the resources that ref
 it, the `$requestStack` to read the `force` parameter of the request. Without one of them a media is deleted
 without the warning, as before.
 
+### New palette.scss for theming the administration interface
+
+The components of the administration interface import `containers/Application/palette.scss` instead of
+`containers/Application/colors.scss`. The colors are CSS custom properties now, defined once on `:root`, so a project
+themes the administration interface with plain CSS and without rebuilding it:
+
+```css
+:root {
+    --sulu-color-primary-500: #5b2bd6;
+    --sulu-color-neutral-100: #eef0f4;
+}
+```
+
+`primary`, `secondary`, `neutral`, `danger`, `success` and `warning` are scales with the steps 50, 100 to 900 and 950
+(`--sulu-color-primary-500`, `$primary500` in SCSS). The defaults are the variables of `colors.scss`. A step without one
+is mixed from the base step with `color-mix()`, so overriding `--sulu-color-primary-500` themes the whole primary scale,
+which has only the base from `colors.scss`. The role properties `--sulu-color-background`, `-surface`, `-text`, `-text-muted` and `-border` point to a step of
+a scale.
+
+The `colors.scss` file is unchanged and imported by `palette.scss`, so existing imports and the variables like `$white`
+keep working, but they do not follow an override. The old values map to the new names as follows, a few near duplicates
+share a step now (`$concrete` to `$neutral100`, `$gallery` to `$neutral200`, `$dustyGray` to `$neutral500`):
+
+| colors.scss | palette.scss |
+|---|---|
+| `$white`, `$alabaster`, `$wildSand`, `$mercury`, `$alto`, `$silver`, `$silverChalice`, `$gray`, `$doveGray`, `$scorpion`, `$mineShaft`, `$black` | `$neutral0`, `$neutral50`, `$neutral100`, `$neutral200`, `$neutral300`, `$neutral400`, `$neutral500`, `$neutral600`, `$neutral700`, `$neutral800`, `$neutral900`, `$neutral950` |
+| `$frenchGray`, `$stormGray`, `$pickledBluewood`, `$ebonyClay`, `$blueZodiac`, `$mirage` | `$secondary300`, `$secondary500`, `$secondary600`, `$secondary700`, `$secondary800`, `$secondary900` |
+| `$shakespeare`, `$persianRed`, `$roman`, `$mantis`, `$gold` | `$primary500`, `$danger500`, `$danger400`, `$success500`, `$warning500` |
+
+A variable of `palette.scss` can not be passed to `rgba($color, .5)`, because a `var()` has no channels. Use
+`color-mix(in sRGB, $color 50%, transparent)` instead.
+
 ## 2.6.27
 
 ### The target group select of the preview follows the audience targeting permission

@@ -1,16 +1,16 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
-$contentBackgroundColor: $concrete;
-$footerBackgroundColor: $white;
-$footerBorderColor: $silver;
+$contentBackgroundColor: $neutral100;
+$footerBackgroundColor: $neutral0;
+$footerBorderColor: $neutral400;
 $borderRadius: 3px;
 
-$titleColor: $black;
-$contentColor: $dustyGray;
+$titleColor: $neutral950;
+$contentColor: $neutral500;
 
-$confirmBackground: $shakespeare;
-$confirmColor: $white;
+$confirmBackground: $primary500;
+$confirmColor: $neutral0;
 
 $transitionDuration: 300ms;
 

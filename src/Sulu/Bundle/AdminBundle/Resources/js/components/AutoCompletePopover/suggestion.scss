@@ -1,8 +1,8 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$suggestionTextColor: $black;
-$suggestionTextColorActive: $shakespeare;
-$suggestionTextColorDisabled: rgba($suggestionTextColor, .3);
+$suggestionTextColor: $neutral950;
+$suggestionTextColorActive: $primary500;
+$suggestionTextColorDisabled: color-mix(in sRGB, $suggestionTextColor 30%, transparent);
 
 .suggestion-item {
     display: block;

@@ -1,16 +1,16 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$fontColor: $scorpion;
-$backgroundColorActive: $shakespeare;
-$borderColorToday: $blueZodiac;
-$borderColor: $silver;
-$iconColor: $dustyGray;
+$fontColor: $neutral800;
+$backgroundColorActive: $primary500;
+$borderColorToday: $secondary800;
+$borderColor: $neutral400;
+$iconColor: $neutral500;
 $iconBorderPadding: 5px;
-$placeholderColor: $dustyGray;
+$placeholderColor: $neutral500;
 $borderWidth: 1px;
 $borderRadius: 3px;
 $inputHeight: 30px;
-$inputColor: $black;
+$inputColor: $neutral950;
 $inputFontSize: 12px;
 
 :global {

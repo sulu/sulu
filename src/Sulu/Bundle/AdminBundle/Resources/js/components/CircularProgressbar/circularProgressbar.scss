@@ -1,8 +1,8 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$progressbarTextColor: $shakespeare;
-$progressbarStrokeColor: $shakespeare;
-$progressbarBackgroundColor: rgba($alabaster, .8);
+$progressbarTextColor: $primary500;
+$progressbarStrokeColor: $primary500;
+$progressbarBackgroundColor: color-mix(in sRGB, $neutral50 80%, transparent);
 
 .root {
     width: 100%;

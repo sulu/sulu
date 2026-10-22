@@ -1,6 +1,6 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$breadcrumbTextColor: $silver;
+$breadcrumbTextColor: $neutral400;
 
 .breadcrumb {
     margin: 0 0 30px;

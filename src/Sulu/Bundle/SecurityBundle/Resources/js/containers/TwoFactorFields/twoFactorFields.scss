@@ -1,4 +1,4 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
 /* the QR code and the verification input below it are meant to line up exactly */
 $qrBoxWidth: 210px;
@@ -15,14 +15,14 @@ $qrBoxWidth: 210px;
 }
 
 .hint {
-    color: $mineShaft;
+    color: $neutral900;
     line-height: 20px;
     margin: 0;
 }
 
 .qr-code {
-    background: $white;
-    border: 1px solid $silver;
+    background: $neutral0;
+    border: 1px solid $neutral400;
     border-radius: 3px;
     box-sizing: border-box;
     display: inline-flex;
@@ -35,13 +35,13 @@ $qrBoxWidth: 210px;
 }
 
 .label {
-    color: $mineShaft;
+    color: $neutral900;
     font-weight: bold;
     margin-bottom: 10px;
 }
 
 .secret {
-    background: $concrete;
+    background: $neutral100;
     border-radius: 3px;
     display: block;
     font-family: monospace;

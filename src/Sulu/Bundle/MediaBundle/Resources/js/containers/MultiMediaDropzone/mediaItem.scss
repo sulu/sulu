@@ -1,8 +1,8 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
 $mediaItemBorderWidth: 3px;
-$mediaItemBorderColor: $white;
-$mediaItemBackgroundColor: $white;
+$mediaItemBorderColor: $neutral0;
+$mediaItemBackgroundColor: $neutral0;
 
 .media-item {
     position: relative;

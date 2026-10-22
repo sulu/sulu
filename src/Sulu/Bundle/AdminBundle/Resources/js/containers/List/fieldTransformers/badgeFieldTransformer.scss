@@ -1,4 +1,4 @@
-@import '../../Application/colors.scss';
+@import '../../Application/palette.scss';
 
 $badgeSuccessColor: #2da44e;
 
@@ -6,18 +6,18 @@ $badgeSuccessColor: #2da44e;
     display: inline-block;
     padding: 4px 10px;
     border-radius: 2px;
-    background-color: rgba($dustyGray, .15);
-    color: $stormGray;
+    background-color: color-mix(in sRGB, $neutral500 15%, transparent);
+    color: $secondary500;
     font-size: 11px;
     font-weight: bold;
 
     &.success {
-        background-color: rgba($badgeSuccessColor, .12);
+        background-color: color-mix(in sRGB, $badgeSuccessColor 12%, transparent);
         color: $badgeSuccessColor;
     }
 
     &.error {
-        background-color: rgba($persianRed, .12);
-        color: $persianRed;
+        background-color: color-mix(in sRGB, $danger500 12%, transparent);
+        color: $danger500;
     }
 }

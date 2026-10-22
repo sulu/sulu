@@ -1,16 +1,16 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$itemColor: $shakespeare;
-$itemBorderColor: $shakespeare;
-$itemBackgroundColor: $white;
+$itemColor: $primary500;
+$itemBorderColor: $primary500;
+$itemBackgroundColor: $neutral0;
 
-$itemBackgroundColorSelected: $shakespeare;
-$itemColorSelected: $white;
+$itemBackgroundColorSelected: $primary500;
+$itemColorSelected: $neutral0;
 
-$itemColorDisabled: $silver;
-$itemBorderColorDisabled: $silver;
-$itemColorDisabledSelected: $white;
-$itemBackgroundColorDisabledSelected: $silver;
+$itemColorDisabled: $neutral400;
+$itemBorderColorDisabled: $neutral400;
+$itemColorDisabledSelected: $neutral0;
+$itemBackgroundColorDisabledSelected: $neutral400;
 
 .item {
     align-items: center;

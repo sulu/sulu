@@ -1,12 +1,12 @@
 @import './variables.scss';
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$color: $silver;
-$headerColor: $white;
-$activeColor: $wildSand;
-$backgroundColor: $pickledBluewood;
-$darkBackgroundColor: $ebonyClay;
-$hoverColor: $shakespeare;
+$color: $neutral400;
+$headerColor: $neutral0;
+$activeColor: $neutral100;
+$backgroundColor: $secondary600;
+$darkBackgroundColor: $secondary700;
+$hoverColor: $primary500;
 
 .navigation {
     width: $navigationWidth;

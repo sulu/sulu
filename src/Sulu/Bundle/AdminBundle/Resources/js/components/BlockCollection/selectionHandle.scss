@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
 .container {
-    color: $blueZodiac;
+    color: $secondary800;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -11,5 +11,5 @@
 }
 
 .container input + span {
-    background: $white;
+    background: $neutral0;
 }

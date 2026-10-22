@@ -1,0 +1,88 @@
+/**
+  Defines the custom properties that palette.scss refers to. Imported once by global.scss and never by a
+  component, because every import outputs the :root block again.
+
+  The defaults are the variables of colors.scss. Steps without one are mixed from the base step with white
+  (lighter) or black (darker), so overriding a base such as --sulu-color-primary-500 rethemes its whole scale.
+*/
+
+@import './colors.scss';
+
+:root {
+    --sulu-color-neutral-0: $white;
+    --sulu-color-neutral-50: $alabaster;
+    --sulu-color-neutral-100: $wildSand;
+    --sulu-color-neutral-200: $mercury;
+    --sulu-color-neutral-300: $alto;
+    --sulu-color-neutral-400: $silver;
+    --sulu-color-neutral-500: $silverChalice;
+    --sulu-color-neutral-600: $gray;
+    --sulu-color-neutral-700: $doveGray;
+    --sulu-color-neutral-800: $scorpion;
+    --sulu-color-neutral-900: $mineShaft;
+    --sulu-color-neutral-950: $black;
+    --sulu-color-secondary-50: color-mix(in oklab, var(--sulu-color-secondary-500) 8%, white);
+    --sulu-color-secondary-100: color-mix(in oklab, var(--sulu-color-secondary-500) 16%, white);
+    --sulu-color-secondary-200: color-mix(in oklab, var(--sulu-color-secondary-500) 32%, white);
+    --sulu-color-secondary-300: $frenchGray;
+    --sulu-color-secondary-400: color-mix(in oklab, var(--sulu-color-secondary-500) 80%, white);
+    --sulu-color-secondary-500: $stormGray;
+    --sulu-color-secondary-600: $pickledBluewood;
+    --sulu-color-secondary-700: $ebonyClay;
+    --sulu-color-secondary-800: $blueZodiac;
+    --sulu-color-secondary-900: $mirage;
+    --sulu-color-secondary-950: color-mix(in oklab, var(--sulu-color-secondary-900) 50%, black);
+    --sulu-color-primary-500: $shakespeare;
+    --sulu-color-primary-50: color-mix(in oklab, var(--sulu-color-primary-500) 8%, white);
+    --sulu-color-primary-100: color-mix(in oklab, var(--sulu-color-primary-500) 16%, white);
+    --sulu-color-primary-200: color-mix(in oklab, var(--sulu-color-primary-500) 32%, white);
+    --sulu-color-primary-300: color-mix(in oklab, var(--sulu-color-primary-500) 56%, white);
+    --sulu-color-primary-400: color-mix(in oklab, var(--sulu-color-primary-500) 80%, white);
+    --sulu-color-primary-600: color-mix(in oklab, var(--sulu-color-primary-500) 88%, black);
+    --sulu-color-primary-700: color-mix(in oklab, var(--sulu-color-primary-500) 72%, black);
+    --sulu-color-primary-800: color-mix(in oklab, var(--sulu-color-primary-500) 56%, black);
+    --sulu-color-primary-900: color-mix(in oklab, var(--sulu-color-primary-500) 40%, black);
+    --sulu-color-primary-950: color-mix(in oklab, var(--sulu-color-primary-500) 28%, black);
+    --sulu-color-danger-500: $persianRed;
+    --sulu-color-danger-50: color-mix(in oklab, var(--sulu-color-danger-500) 8%, white);
+    --sulu-color-danger-100: color-mix(in oklab, var(--sulu-color-danger-500) 16%, white);
+    --sulu-color-danger-200: color-mix(in oklab, var(--sulu-color-danger-500) 32%, white);
+    --sulu-color-danger-300: color-mix(in oklab, var(--sulu-color-danger-500) 56%, white);
+    --sulu-color-danger-400: color-mix(in oklab, var(--sulu-color-danger-500) 80%, white);
+    --sulu-color-danger-600: color-mix(in oklab, var(--sulu-color-danger-500) 88%, black);
+    --sulu-color-danger-700: color-mix(in oklab, var(--sulu-color-danger-500) 72%, black);
+    --sulu-color-danger-800: color-mix(in oklab, var(--sulu-color-danger-500) 56%, black);
+    --sulu-color-danger-900: color-mix(in oklab, var(--sulu-color-danger-500) 40%, black);
+    --sulu-color-danger-950: color-mix(in oklab, var(--sulu-color-danger-500) 28%, black);
+    --sulu-color-success-500: $mantis;
+    --sulu-color-success-50: color-mix(in oklab, var(--sulu-color-success-500) 8%, white);
+    --sulu-color-success-100: color-mix(in oklab, var(--sulu-color-success-500) 16%, white);
+    --sulu-color-success-200: color-mix(in oklab, var(--sulu-color-success-500) 32%, white);
+    --sulu-color-success-300: color-mix(in oklab, var(--sulu-color-success-500) 56%, white);
+    --sulu-color-success-400: color-mix(in oklab, var(--sulu-color-success-500) 80%, white);
+    --sulu-color-success-600: color-mix(in oklab, var(--sulu-color-success-500) 88%, black);
+    --sulu-color-success-700: color-mix(in oklab, var(--sulu-color-success-500) 72%, black);
+    --sulu-color-success-800: color-mix(in oklab, var(--sulu-color-success-500) 56%, black);
+    --sulu-color-success-900: color-mix(in oklab, var(--sulu-color-success-500) 40%, black);
+    --sulu-color-success-950: color-mix(in oklab, var(--sulu-color-success-500) 28%, black);
+    --sulu-color-warning-500: $gold;
+    --sulu-color-warning-50: color-mix(in oklab, var(--sulu-color-warning-500) 8%, white);
+    --sulu-color-warning-100: color-mix(in oklab, var(--sulu-color-warning-500) 16%, white);
+    --sulu-color-warning-200: color-mix(in oklab, var(--sulu-color-warning-500) 32%, white);
+    --sulu-color-warning-300: color-mix(in oklab, var(--sulu-color-warning-500) 56%, white);
+    --sulu-color-warning-400: color-mix(in oklab, var(--sulu-color-warning-500) 80%, white);
+    --sulu-color-warning-600: color-mix(in oklab, var(--sulu-color-warning-500) 88%, black);
+    --sulu-color-warning-700: color-mix(in oklab, var(--sulu-color-warning-500) 72%, black);
+    --sulu-color-warning-800: color-mix(in oklab, var(--sulu-color-warning-500) 56%, black);
+    --sulu-color-warning-900: color-mix(in oklab, var(--sulu-color-warning-500) 40%, black);
+    --sulu-color-warning-950: color-mix(in oklab, var(--sulu-color-warning-500) 28%, black);
+    --sulu-color-primary: var(--sulu-color-primary-500);
+    --sulu-color-danger: var(--sulu-color-danger-500);
+    --sulu-color-success: var(--sulu-color-success-500);
+    --sulu-color-warning: var(--sulu-color-warning-500);
+    --sulu-color-background: var(--sulu-color-neutral-100);
+    --sulu-color-surface: var(--sulu-color-neutral-0);
+    --sulu-color-text: var(--sulu-color-neutral-950);
+    --sulu-color-text-muted: var(--sulu-color-neutral-800);
+    --sulu-color-border: var(--sulu-color-neutral-400);
+}

@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
-$columnListContainerTextColor: $black;
+$columnListContainerTextColor: $neutral950;
 
 :export {
     column-width: $columnWidth;

@@ -1,11 +1,11 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$chipPrimaryBackgroundColor: $shakespeare;
-$chipPrimaryColor: $white;
-$chipSecondaryBackgroundColor: $wildSand;
-$chipSecondaryColor: $black;
-$chipDisabledBackgroundColor: $silver;
-$chipDisabledColor: $gray;
+$chipPrimaryBackgroundColor: $primary500;
+$chipPrimaryColor: $neutral0;
+$chipSecondaryBackgroundColor: $neutral100;
+$chipSecondaryColor: $neutral950;
+$chipDisabledBackgroundColor: $neutral400;
+$chipDisabledColor: $neutral600;
 
 .chip {
     border: none;

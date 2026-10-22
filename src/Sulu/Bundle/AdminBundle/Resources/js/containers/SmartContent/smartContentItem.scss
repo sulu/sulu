@@ -1,6 +1,6 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$smartContentColumnColor: $scorpion;
+$smartContentColumnColor: $neutral800;
 
 .smart-content-item {
     display: inline-flex;

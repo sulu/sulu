@@ -1,13 +1,13 @@
-@import '../../Application/colors.scss';
+@import '../../Application/palette.scss';
 
-$linkSelectionBackgroundColor: $white;
-$linkSelectionBorderColor: $silver;
-$linkSelectionButtonColor: $dustyGray;
-$linkSelectionInputColor: $black;
-$linkSelectionErrorBorderColor: $persianRed;
+$linkSelectionBackgroundColor: $neutral0;
+$linkSelectionBorderColor: $neutral400;
+$linkSelectionButtonColor: $neutral500;
+$linkSelectionInputColor: $neutral950;
+$linkSelectionErrorBorderColor: $danger500;
 
-$linkSelectionInputDisabledColor: $gray;
-$linkSelectionInputDisabledBackgroundColor: $wildSand;
+$linkSelectionInputDisabledColor: $neutral600;
+$linkSelectionInputDisabledBackgroundColor: $neutral100;
 
 .link {
     display: flex;

@@ -1,14 +1,14 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
-$itemBackgroundColorPrimary: $silver;
-$itemBackgroundColorSecondary: $shakespeare;
+$itemBackgroundColorPrimary: $neutral400;
+$itemBackgroundColorSecondary: $primary500;
 
-$itemPrimaryColor: $black;
-$itemSecondaryColor: $white;
+$itemPrimaryColor: $neutral950;
+$itemSecondaryColor: $neutral0;
 
 $borderRadius: 3px;
-$dropdownContainerBoxShadow: 2px 6px 12px 0 rgba($silver, .22);
+$dropdownContainerBoxShadow: 2px 6px 12px 0 color-mix(in sRGB, $neutral400 22%, transparent);
 
 .toolbar {
     height: $toolbarHeight;

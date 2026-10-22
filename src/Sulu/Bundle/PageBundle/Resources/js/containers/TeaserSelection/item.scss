@@ -1,7 +1,7 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$teaserSelectionMediaEditColor: $white;
-$teaserSelectionMediaHoverBackgroundColor: rgba($black, .5);
+$teaserSelectionMediaEditColor: $neutral0;
+$teaserSelectionMediaHoverBackgroundColor: color-mix(in sRGB, $neutral950 50%, transparent);
 
 $teaserSelectionMediaHeight: 25px;
 $teaserSelectionMediaWidth: 25px;

@@ -1,10 +1,10 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$itemBackgroundColor: $white;
-$disabledItemBackgroundColor: $wildSand;
+$itemBackgroundColor: $neutral0;
+$disabledItemBackgroundColor: $neutral100;
 
-$itemColor: $black;
-$disabledItemColor: $gray;
+$itemColor: $neutral950;
+$disabledItemColor: $neutral600;
 
 .item {
     display: flex;

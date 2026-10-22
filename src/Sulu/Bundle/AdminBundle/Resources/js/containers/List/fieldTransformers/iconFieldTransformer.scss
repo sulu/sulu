@@ -1,4 +1,4 @@
-@import '../../Application/colors.scss';
+@import '../../Application/palette.scss';
 
 .list-icon {
     font-size: 18px;
@@ -6,8 +6,8 @@
 
 .dark {
     font-size: 14px;
-    color: $white;
-    background: $blueZodiac;
+    color: $neutral0;
+    background: $secondary800;
     border-radius: 50%;
     padding: 5px;
 }

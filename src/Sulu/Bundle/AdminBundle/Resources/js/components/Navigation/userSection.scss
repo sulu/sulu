@@ -1,8 +1,8 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$color: $white;
-$hoverColor: $shakespeare;
-$lightColor: $silver;
+$color: $neutral0;
+$hoverColor: $primary500;
+$lightColor: $neutral400;
 
 .user-section {
     display: flex;
@@ -54,11 +54,11 @@ $lightColor: $silver;
     }
 
     .placeholder {
-        color: $alto;
+        color: $neutral300;
         font-size: 20px;
         line-height: 30px;
         text-align: center;
-        background-color: $mirage;
+        background-color: $secondary900;
     }
 }
 

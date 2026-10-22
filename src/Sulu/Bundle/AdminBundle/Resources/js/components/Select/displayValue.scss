@@ -1,23 +1,23 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
 $height: 30px;
 $lineHeight: 28px;
 $fontSize: 12px;
-$color: $black;
-$backgroundColor: $white;
+$color: $neutral950;
+$backgroundColor: $neutral0;
 $borderSize: 1px;
-$borderColor: $silver;
+$borderColor: $neutral400;
 $borderRadius: 3px;
 $iconSize: 10px;
-$hoverColor: $shakespeare;
+$hoverColor: $primary500;
 
-$disabledColor: $gray;
-$disabledBackgroundColor: $wildSand;
+$disabledColor: $neutral600;
+$disabledBackgroundColor: $neutral100;
 
 $darkBorderRadius: 4px;
-$darkBorderColor: $doveGray;
-$darkColor: $black;
-$darkBackgroundColor: $white;
+$darkBorderColor: $neutral700;
+$darkColor: $neutral950;
+$darkBackgroundColor: $neutral0;
 
 .displayValue {
     cursor: pointer;

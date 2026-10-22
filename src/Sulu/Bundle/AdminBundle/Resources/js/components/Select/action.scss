@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$focusColor: $shakespeare;
-$fontColor: $black;
+$focusColor: $primary500;
+$fontColor: $neutral950;
 
 .action {
     width: 100%;

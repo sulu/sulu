@@ -1,15 +1,15 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
 $snackbarHeight: 40px;
 
-$snackbarErrorColor: $white;
-$snackbarErrorBackgroundColor: $persianRed;
-$snackbarWarningColor: $blueZodiac;
-$snackbarWarningBackgroundColor: $gold;
-$snackbarInfoColor: $white;
-$snackbarInfoBackgroundColor: $blueZodiac;
-$snackbarSuccessColor: $white;
-$snackbarSuccessBackgroundColor: $mantis;
+$snackbarErrorColor: $neutral0;
+$snackbarErrorBackgroundColor: $danger500;
+$snackbarWarningColor: $secondary800;
+$snackbarWarningBackgroundColor: $warning500;
+$snackbarInfoColor: $neutral0;
+$snackbarInfoBackgroundColor: $secondary800;
+$snackbarSuccessColor: $neutral0;
+$snackbarSuccessBackgroundColor: $success500;
 
 .snackbar {
     min-height: $snackbarHeight;
@@ -29,7 +29,7 @@ $snackbarSuccessBackgroundColor: $mantis;
 }
 
 .floating {
-    box-shadow: 2px 6px 12px 0 rgba($black, .5);
+    box-shadow: 2px 6px 12px 0 color-mix(in sRGB, $neutral950 50%, transparent);
     border-radius: 3px;
     padding: 6px 7px;
     height: 32px;

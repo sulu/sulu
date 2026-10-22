@@ -1,14 +1,14 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$backdropColor: rgba($black, .6);
+$backdropColor: color-mix(in sRGB, $neutral950 60%, transparent);
 $rectangleBackgroundWithBackdrop: transparent;
 $rectangleBackgroundWithoutBackdrop: $backdropColor;
-$borderColor: $white;
+$borderColor: $neutral0;
 $borderSize: 2px;
-$minSizeNotificationColor: $white;
-$labelColor: $white;
-$labelColorDisabled: rgba($labelColor, .5);
-$resizeHandleBoxShadowColor: rgba($black, .3);
+$minSizeNotificationColor: $neutral0;
+$labelColor: $neutral0;
+$labelColorDisabled: color-mix(in sRGB, $labelColor 50%, transparent);
+$resizeHandleBoxShadowColor: color-mix(in sRGB, $neutral950 30%, transparent);
 
 .rectangle {
     position: absolute;

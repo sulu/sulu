@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$itemTextColor: $silver;
-$itemTextColorActive: $black;
+$itemTextColor: $neutral400;
+$itemTextColorActive: $neutral950;
 
 .item {
     font-size: 24px;

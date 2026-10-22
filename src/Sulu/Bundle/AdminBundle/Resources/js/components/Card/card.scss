@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$cardBackgroundColor: $white;
-$cardBorderColor: $silver;
+$cardBackgroundColor: $neutral0;
+$cardBorderColor: $neutral400;
 
 .card {
     background-color: $cardBackgroundColor;

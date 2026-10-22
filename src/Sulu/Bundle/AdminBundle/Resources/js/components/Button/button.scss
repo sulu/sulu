@@ -1,29 +1,29 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
 $borderRadius: 3px;
 $fontSize: 12px;
 $dropdownFontSize: 10px;
 
-$primaryBackground: $shakespeare;
-$primaryColor: $white;
-$primaryDisabledColor: $silver;
+$primaryBackground: $primary500;
+$primaryColor: $neutral0;
+$primaryDisabledColor: $neutral400;
 
-$secondaryBorder: $silver;
-$secondaryBackground: $wildSand;
-$secondaryColor: $black;
-$secondaryDisabledColor: $silver;
+$secondaryBorder: $neutral400;
+$secondaryBackground: $neutral100;
+$secondaryColor: $neutral950;
+$secondaryDisabledColor: $neutral400;
 
-$linkColor: $black;
-$linkDisabledColor: $silverChalice;
+$linkColor: $neutral950;
+$linkDisabledColor: $neutral500;
 
-$textColor: $black;
-$textDisabledColor: $silverChalice;
+$textColor: $neutral950;
+$textDisabledColor: $neutral500;
 
 $iconFontSize: 14px;
-$iconBackgroundColorActive: $doveGray;
-$iconBackgroundColorHover: $mercury;
-$iconColorActive: $white;
+$iconBackgroundColorActive: $neutral700;
+$iconBackgroundColorHover: $neutral200;
+$iconColorActive: $neutral0;
 
 .button {
     position: relative;
@@ -149,10 +149,10 @@ $iconColorActive: $white;
     padding: 0 5px;
 
     &:hover:not(:disabled) {
-        background-color: $silver;
+        background-color: $neutral400;
 
         &.active {
-            background-color: $scorpion;
+            background-color: $neutral800;
         }
     }
 

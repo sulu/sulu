@@ -1,9 +1,9 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$focusPointColor: $white;
-$focusPointBorderColor: $white;
-$focusPointBackgroundColor: rgba($black, .5);
-$focusPointBackgroundColorActive: rgba($white, .5);
+$focusPointColor: $neutral0;
+$focusPointBorderColor: $neutral0;
+$focusPointBackgroundColor: color-mix(in sRGB, $neutral950 50%, transparent);
+$focusPointBackgroundColorActive: color-mix(in sRGB, $neutral0 50%, transparent);
 
 .image-focus-point-cell {
     cursor: pointer;

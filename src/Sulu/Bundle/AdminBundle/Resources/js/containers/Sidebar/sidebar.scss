@@ -1,6 +1,6 @@
-@import '../Application/colors.scss';
+@import '../Application/palette.scss';
 
-$sidebarBorderColor: $silver;
+$sidebarBorderColor: $neutral400;
 
 .sidebar {
     border-left: 1px $sidebarBorderColor solid;

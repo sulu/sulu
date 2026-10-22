@@ -1,6 +1,6 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$dividerBackgroundColor: $frenchGray;
+$dividerBackgroundColor: $secondary300;
 
 .divider {
     width: 100%;

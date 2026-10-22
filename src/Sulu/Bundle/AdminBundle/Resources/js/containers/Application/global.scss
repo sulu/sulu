@@ -1,13 +1,14 @@
 @import 'normalize.css/normalize.css';
-@import './colors.scss';
+@import './theme.scss';
+@import './palette.scss';
 @import './fonts.scss';
 @import './variables.scss';
 
-$bodyBackgroundColor: $wildSand;
-$h1TextColor: $black;
-$h2TextColor: $black;
-$h3TextColor: $scorpion;
-$inputBackgroundColor: $white;
+$bodyBackgroundColor: $colorBackground;
+$h1TextColor: $colorText;
+$h2TextColor: $colorText;
+$h3TextColor: $colorTextMuted;
+$inputBackgroundColor: $colorSurface;
 
 *,
 *::after,

@@ -1,9 +1,9 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$color: $wildSand;
-$activeBorderColor: $shakespeare;
-$activeBackgroundColor: $ebonyClay;
-$hoverColor: $shakespeare;
+$color: $neutral100;
+$activeBorderColor: $primary500;
+$activeBackgroundColor: $secondary700;
+$hoverColor: $primary500;
 
 .item {
     font-size: 14px;

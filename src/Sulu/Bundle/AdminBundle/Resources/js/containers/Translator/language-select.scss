@@ -1,4 +1,4 @@
-@import '../Application/colors.scss';
+@import '../Application/palette.scss';
 
 .button {
     display: flex;
@@ -6,21 +6,21 @@
     gap: 4px;
     max-width: 100%;
     padding: 6px 10px;
-    background: $white;
-    border: 1px solid $silver;
+    background: $neutral0;
+    border: 1px solid $neutral400;
     border-radius: 3px;
     font-family: inherit;
     font-size: 13px;
-    color: $mineShaft;
+    color: $neutral900;
     cursor: pointer;
 }
 
 .button-open {
-    border-color: $shakespeare;
-    color: $shakespeare;
+    border-color: $primary500;
+    color: $primary500;
 
     .name {
-        color: $shakespeare;
+        color: $primary500;
     }
 }
 
@@ -31,7 +31,7 @@
 
 .variant,
 .suffix {
-    color: $doveGray;
+    color: $neutral700;
     white-space: nowrap;
 }
 
@@ -44,7 +44,7 @@
     display: flex;
     flex-direction: column;
     padding: 16px;
-    background: $white;
+    background: $neutral0;
     border-radius: 3px;
     box-shadow: 0 2px 8px 0 rgb(0 0 0 / 20%);
 }
@@ -62,7 +62,7 @@
 
 .section-title {
     margin-bottom: 8px;
-    color: $doveGray;
+    color: $neutral700;
     font-size: 12px;
 }
 
@@ -86,27 +86,27 @@
     border: 0;
     font-family: inherit;
     font-size: 13px;
-    color: $mineShaft;
+    color: $neutral900;
     text-align: left;
     cursor: pointer;
 
     &:hover .name {
-        color: $shakespeare;
+        color: $primary500;
     }
 }
 
 .selected {
     .name {
-        color: $shakespeare;
+        color: $primary500;
     }
 
     .variant {
-        color: $shakespeare;
+        color: $primary500;
     }
 }
 
 .check {
     margin-right: 4px;
-    color: $shakespeare;
+    color: $primary500;
     font-size: 12px;
 }

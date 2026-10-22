@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$characterCounterColor: $scorpion;
-$characterCounterExceededColor: $persianRed;
+$characterCounterColor: $neutral800;
+$characterCounterExceededColor: $danger500;
 
 .character-counter {
     color: $characterCounterColor;

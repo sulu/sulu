@@ -1,9 +1,9 @@
-@import '../Application/colors.scss';
+@import '../Application/palette.scss';
 
-$exceptionColor: $white;
-$exceptionBackgroundColor: $roman;
-$exceptionBorderColor: $persianRed;
-$exceptionBorderColor: $persianRed;
+$exceptionColor: $neutral0;
+$exceptionBackgroundColor: $danger400;
+$exceptionBorderColor: $danger500;
+$exceptionBorderColor: $danger500;
 
 .field-container {
     min-height: 30px;

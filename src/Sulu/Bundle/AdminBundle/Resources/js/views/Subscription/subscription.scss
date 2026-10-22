@@ -1,4 +1,4 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
 .subscription {
     max-width: 960px;
@@ -8,27 +8,27 @@
     margin: 0;
     font-size: 24px;
     line-height: 32px;
-    color: $blueZodiac;
+    color: $secondary800;
 }
 
 .description {
     margin: 5px 0 30px;
     font-size: 12px;
-    color: $dustyGray;
+    color: $neutral500;
 }
 
 .card {
     margin-bottom: 20px;
     padding: 20px 30px 30px;
-    border: 1px solid $mercury;
+    border: 1px solid $neutral200;
     border-radius: 4px;
-    background-color: $white;
+    background-color: $neutral0;
 
     h2 {
         margin: 0;
         font-size: 16px;
         line-height: 30px;
-        color: $blueZodiac;
+        color: $secondary800;
     }
 }
 
@@ -55,13 +55,13 @@
 
 .fact-label {
     font-size: 12px;
-    color: $dustyGray;
+    color: $neutral500;
 }
 
 .fact-value {
     font-size: 14px;
     font-weight: bold;
-    color: $blueZodiac;
+    color: $secondary800;
 }
 
 .status {
@@ -74,17 +74,17 @@
 
 .active {
     color: #3c7a3d;
-    background-color: rgba($mantis, .2);
+    background-color: color-mix(in sRGB, $success500 20%, transparent);
 }
 
 .will-be-canceled {
     color: #8a7400;
-    background-color: rgba($gold, .2);
+    background-color: color-mix(in sRGB, $warning500 20%, transparent);
 }
 
 .canceled {
-    color: $persianRed;
-    background-color: rgba($persianRed, .1);
+    color: $danger500;
+    background-color: color-mix(in sRGB, $danger500 10%, transparent);
 }
 
 .credits-left {
@@ -97,25 +97,25 @@
 .credits-left-number {
     font-size: 32px;
     font-weight: bold;
-    color: $blueZodiac;
+    color: $secondary800;
 }
 
 .credits-left-text {
     font-size: 14px;
-    color: $dustyGray;
+    color: $neutral500;
 }
 
 .progress-bar {
     height: 6px;
     border-radius: 3px;
-    background-color: $mercury;
+    background-color: $neutral200;
     overflow: hidden;
 }
 
 .progress-bar-fill {
     height: 100%;
     border-radius: 3px;
-    background-color: $shakespeare;
+    background-color: $primary500;
 }
 
 .progress-legend {
@@ -123,13 +123,13 @@
     justify-content: space-between;
     margin-top: 8px;
     font-size: 12px;
-    color: $dustyGray;
+    color: $neutral500;
 }
 
 .note {
     margin: 20px 0 0;
     font-size: 12px;
-    color: $dustyGray;
+    color: $neutral500;
 }
 
 .contact {
@@ -139,11 +139,11 @@
     gap: 5px;
     margin-bottom: 20px;
     padding: 15px 30px;
-    border: 1px solid $mercury;
+    border: 1px solid $neutral200;
     border-radius: 4px;
-    background-color: $white;
+    background-color: $neutral0;
     font-size: 12px;
-    color: $doveGray;
+    color: $neutral700;
 
     p {
         margin: 0;
@@ -151,12 +151,12 @@
 }
 
 .contact-link {
-    color: $shakespeare;
+    color: $primary500;
     font-weight: bold;
     text-decoration: underline;
 
     &:hover {
-        color: $blueZodiac;
+        color: $secondary800;
     }
 }
 
@@ -166,12 +166,12 @@
     align-items: flex-start;
     gap: 10px;
     padding: 20px 30px;
-    border: 1px solid $mercury;
+    border: 1px solid $neutral200;
     border-radius: 4px;
 
     p {
         margin: 0;
         font-size: 14px;
-        color: $blueZodiac;
+        color: $secondary800;
     }
 }

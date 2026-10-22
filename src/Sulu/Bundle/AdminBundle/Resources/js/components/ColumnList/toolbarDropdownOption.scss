@@ -1,8 +1,8 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$optionTextColor: $blueZodiac;
-$optionTextColorHover: $shakespeare;
-$optionTextColorDisabled: $dustyGray;
+$optionTextColor: $secondary800;
+$optionTextColorHover: $primary500;
+$optionTextColorDisabled: $neutral500;
 
 .option {
     display: block;

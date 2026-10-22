@@ -1,4 +1,4 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
 .container {
     padding: 20px;
@@ -9,15 +9,15 @@
 }
 
 .label {
-    color: $silverChalice;
+    color: $neutral500;
     display: block;
     height: 20px;
 }
 
 .input {
-    background-color: $blueZodiac;
-    border: 1px solid $doveGray;
-    color: $white;
+    background-color: $secondary800;
+    border: 1px solid $neutral700;
+    color: $neutral0;
     display: block;
     border-radius: 3px;
     height: 30px;
@@ -37,7 +37,7 @@
 }
 
 .revoke-button {
-    color: $white;
+    color: $neutral0;
     font-size: 14px;
     text-decoration: underline;
     background: transparent;
@@ -45,6 +45,6 @@
     cursor: pointer;
 
     &:hover {
-        color: $shakespeare;
+        color: $primary500;
     }
 }

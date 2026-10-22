@@ -1,7 +1,7 @@
-@import '../Application/colors.scss';
+@import '../Application/palette.scss';
 
-$filterOverlaySectionBorderColor: $silver;
-$filterOverlayDescriptionColor: $scorpion;
+$filterOverlaySectionBorderColor: $neutral400;
+$filterOverlayDescriptionColor: $neutral800;
 
 .content {
     margin: 0 60px 30px;

@@ -1,28 +1,28 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$inputBorderColor: $silver;
-$inputErrorBorderColor: $persianRed;
-$inputDisabledColor: $gray;
-$inputDisabledBackgroundColor: $wildSand;
+$inputBorderColor: $neutral400;
+$inputErrorBorderColor: $danger500;
+$inputDisabledColor: $neutral600;
+$inputDisabledBackgroundColor: $neutral100;
 $inputBorderWidth: 1px;
 $inputBorderRadius: 3px;
 $inputHeight: 30px;
 $inputHeadlineHeight: 40px;
-$inputColor: $black;
+$inputColor: $neutral950;
 $inputPrependWidth: 32px;
 $inputHeadlinePrependWidth: 42px;
-$iconColor: $dustyGray;
+$iconColor: $neutral500;
 $iconBorderPadding: 5px;
-$placeholderColor: $dustyGray;
-$backgroundColor: $white;
+$placeholderColor: $neutral500;
+$backgroundColor: $neutral0;
 
 $darkInputBorderRadius: 4px;
-$darkInputBorderColor: $doveGray;
-$darkInputColorCollapsed: $black;
-$darkInputColor: $black;
-$darkBackgroundColorCollapsed: $wildSand;
-$darkBackgroundColor: $white;
-$darkIconColor: $doveGray;
+$darkInputBorderColor: $neutral700;
+$darkInputColorCollapsed: $neutral950;
+$darkInputColor: $neutral950;
+$darkBackgroundColorCollapsed: $neutral100;
+$darkBackgroundColor: $neutral0;
+$darkIconColor: $neutral700;
 
 .input {
     border: $inputBorderWidth solid $inputBorderColor;

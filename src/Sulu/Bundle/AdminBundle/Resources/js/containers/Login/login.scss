@@ -1,10 +1,10 @@
-@import '../Application/colors.scss';
+@import '../Application/palette.scss';
 
-$loginTextColor: $black;
-$borderColor: $mercury;
-$formContainerBackgroundColor: $white;
-$formContainerBoxShadowColor: $black;
-$formContainerBoxShadow: 0 2px 18px 0 rgba($formContainerBoxShadowColor, .22);
+$loginTextColor: $neutral950;
+$borderColor: $neutral200;
+$formContainerBackgroundColor: $neutral0;
+$formContainerBoxShadowColor: $neutral950;
+$formContainerBoxShadow: 0 2px 18px 0 color-mix(in sRGB, $formContainerBoxShadowColor 22%, transparent);
 
 .login {
     height: 100vh;

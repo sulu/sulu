@@ -1,8 +1,8 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$multiSelectionMainColumnColor: $black;
-$multiSelectionColumnColor: $scorpion;
-$multiSelectionDisabledColumnColor: $gray;
+$multiSelectionMainColumnColor: $neutral950;
+$multiSelectionColumnColor: $neutral800;
+$multiSelectionDisabledColumnColor: $neutral600;
 
 .item-container {
     display: flex;

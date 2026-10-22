@@ -1,18 +1,18 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
-$buttonTextLightColor: $blueZodiac;
-$buttonTextDarkColor: $white;
-$buttonTextLightColorActive: $shakespeare;
-$buttonTextDarkColorActive: $white;
-$buttonTextLightColorDisabled: $silver;
-$buttonTextDarkColorDisabled: $stormGray;
-$buttonActiveBackgroundLightColor: $wildSand;
-$buttonActiveBackgroundDarkColor: $mirage;
-$primaryTextColor: $white;
-$primaryBackgroundColor: $shakespeare;
-$successColor: $white;
-$successBackgroundColor: $mantis;
+$buttonTextLightColor: $secondary800;
+$buttonTextDarkColor: $neutral0;
+$buttonTextLightColorActive: $primary500;
+$buttonTextDarkColorActive: $neutral0;
+$buttonTextLightColorDisabled: $neutral400;
+$buttonTextDarkColorDisabled: $secondary500;
+$buttonActiveBackgroundLightColor: $neutral100;
+$buttonActiveBackgroundDarkColor: $secondary900;
+$primaryTextColor: $neutral0;
+$primaryBackgroundColor: $primary500;
+$successColor: $neutral0;
+$successBackgroundColor: $success500;
 
 .light {
     color: $buttonTextLightColor;

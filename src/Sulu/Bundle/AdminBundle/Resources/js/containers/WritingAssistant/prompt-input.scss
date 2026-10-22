@@ -1,10 +1,10 @@
-@import '../Application/colors.scss';
+@import '../Application/palette.scss';
 
 .input-container {
     position: sticky;
     bottom: 0;
     z-index: 2;
-    background-color: $white;
+    background-color: $neutral0;
     padding: 40px;
 }
 
@@ -24,13 +24,13 @@
 .expert-select {
     min-width: 10vh;
     padding-right: 8px;
-    border-right: 1px solid $silver;
+    border-right: 1px solid $neutral400;
 }
 
 .single-expert {
     min-width: 10vh;
     padding-right: 8px;
-    border-right: 1px solid $silver;
+    border-right: 1px solid $neutral400;
     line-height: 30px;
 }
 
@@ -44,11 +44,11 @@
 
 .info-icon {
     font-size: 12px;
-    color: $silverChalice;
+    color: $neutral500;
 }
 
 .panel {
-    background-color: $wildSand;
+    background-color: $neutral100;
     border-radius: 3px;
     padding: 12px;
 }
@@ -63,7 +63,7 @@
 
     /* the secondary skin shares the panel background, so the prompts would melt into it */
     button {
-        background-color: $white;
+        background-color: $neutral0;
     }
 }
 

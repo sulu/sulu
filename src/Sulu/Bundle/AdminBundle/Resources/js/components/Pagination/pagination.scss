@@ -1,11 +1,11 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
 $borderRadius: 4px;
 $buttonWidth: 34px;
-$paginationColor: $gray;
-$buttonBackgroundColor: $wildSand;
-$buttonBorderColor: $scorpion;
-$buttonActiveColor: $blueZodiac;
+$paginationColor: $neutral600;
+$buttonBackgroundColor: $neutral100;
+$buttonBorderColor: $neutral800;
+$buttonActiveColor: $secondary800;
 
 .pagination {
     color: $paginationColor;

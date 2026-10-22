@@ -1,7 +1,7 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$bankCardPreviewColor: $scorpion;
-$bankCardPreviewNameColor: $black;
+$bankCardPreviewColor: $neutral800;
+$bankCardPreviewNameColor: $neutral950;
 
 .bank-card-preview {
     color: $bankCardPreviewColor;
