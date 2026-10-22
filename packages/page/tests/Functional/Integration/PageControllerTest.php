@@ -1983,4 +1983,81 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('fr', $content['contentLocales']);
         $this->assertContains('en', $content['contentLocales']);
     }
+
+    public function testPutTakesUrlBackFromOwnHistory(): void
+    {
+        $this->purgeDatabase();
+        $this->createHomepage('homepage-uuid-route-history', 'sulu_io');
+
+        $page = $this->createPage('homepage-uuid-route-history', ['url' => '/a']);
+        $uuid = $page->getUuid();
+        self::getEntityManager()->clear();
+
+        foreach (['/b', '/a'] as $url) {
+            $this->client->request('PUT', '/admin/api/pages/' . $uuid . '?locale=en&force=true', [], [], [], \json_encode([
+                'template' => 'default',
+                'title' => 'Test Page',
+                'url' => $url,
+            ]) ?: null);
+
+            $this->assertHttpStatusCode(200, $this->client->getResponse());
+        }
+
+        $routeRepository = self::getContainer()->get(RouteRepositoryInterface::class);
+        $route = $routeRepository->getOneBy(['resourceKey' => 'pages', 'resourceId' => $uuid, 'locale' => 'en']);
+        $this->assertSame('/a', $route->getSlug());
+    }
+
+    public function testPutWithUrlOfOtherPageReturnsConflict(): void
+    {
+        $this->purgeDatabase();
+        $this->createHomepage('homepage-uuid-route-conflict', 'sulu_io');
+
+        $page = $this->createPage('homepage-uuid-route-conflict', ['url' => '/a']);
+        $this->createPage('homepage-uuid-route-conflict', ['url' => '/b']);
+        $uuid = $page->getUuid();
+        self::getEntityManager()->clear();
+
+        $this->client->request('PUT', '/admin/api/pages/' . $uuid . '?locale=en&force=true', [], [], [], \json_encode([
+            'template' => 'default',
+            'title' => 'Test Page',
+            'url' => '/b',
+        ]) ?: null);
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(409, $response);
+
+        /** @var array{detail: string} $responseData */
+        $responseData = \json_decode((string) $response->getContent(), true);
+        $this->assertSame('The URL "/b" is already in use.', $responseData['detail']);
+    }
+
+    public function testPostWithUrlOfOtherPageReturnsConflict(): void
+    {
+        $this->purgeDatabase();
+        $homepage = $this->createHomepage('homepage-uuid-route-conflict-post', 'sulu-io');
+
+        $this->createPage('homepage-uuid-route-conflict-post', ['url' => '/a']);
+        self::getEntityManager()->clear();
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&parentId=%s&webspace=sulu-io', $homepage->getId()),
+            [],
+            [],
+            [],
+            \json_encode([
+                'template' => 'default',
+                'title' => 'Test Page',
+                'url' => '/a',
+            ]) ?: null,
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(409, $response);
+
+        /** @var array{detail: string} $responseData */
+        $responseData = \json_decode((string) $response->getContent(), true);
+        $this->assertSame('The URL "/a" is already in use.', $responseData['detail']);
+    }
 }
