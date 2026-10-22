@@ -139,6 +139,10 @@ class SuluCategoryExtension extends Extension implements PrependExtensionInterfa
                                 'list' => 'sulu_category.get_categories',
                                 'detail' => 'sulu_category.get_category',
                             ],
+                            'views' => [
+                                'list' => CategoryAdmin::LIST_VIEW,
+                                'detail' => CategoryAdmin::EDIT_FORM_VIEW,
+                            ],
                         ],
                         'category_keywords' => [
                             'routes' => [

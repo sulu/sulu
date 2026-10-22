@@ -488,6 +488,10 @@ final class SuluSnippetBundle extends AbstractBundle
                                 'list' => 'sulu_snippet.get_snippets',
                                 'detail' => 'sulu_snippet.get_snippet',
                             ],
+                            'views' => [
+                                'list' => SnippetAdmin::LIST_VIEW,
+                                'detail' => SnippetAdmin::EDIT_TABS_VIEW,
+                            ],
                         ],
                         'snippets_versions' => [
                             'routes' => [
@@ -507,6 +511,12 @@ final class SuluSnippetBundle extends AbstractBundle
                             'snippet_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'snippets',
+                                'view' => [
+                                    'name' => SnippetAdmin::EDIT_TABS_VIEW,
+                                    'result_to_view' => [
+                                        'id' => 'id',
+                                    ],
+                                ],
                                 'types' => [
                                     'list_overlay' => [
                                         'adapter' => 'table',
@@ -523,6 +533,12 @@ final class SuluSnippetBundle extends AbstractBundle
                             'single_snippet_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'snippets',
+                                'view' => [
+                                    'name' => SnippetAdmin::EDIT_TABS_VIEW,
+                                    'result_to_view' => [
+                                        'id' => 'id',
+                                    ],
+                                ],
                                 'types' => [
                                     'list_overlay' => [
                                         'adapter' => 'table',
