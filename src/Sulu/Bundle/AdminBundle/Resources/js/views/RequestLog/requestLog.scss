@@ -1,10 +1,10 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$chainExpertColor: $blueZodiac;
-$chainUserColor: $shakespeare;
+$chainExpertColor: $brand800;
+$chainUserColor: $brand500;
 $chainSuccessColor: #2da44e;
-$chainSystemColor: $dustyGray;
-$chainToolColor: $stormGray;
+$chainSystemColor: $gray500;
+$chainToolColor: $gray700;
 
 .request-log {
     height: 100%;
@@ -12,7 +12,7 @@ $chainToolColor: $stormGray;
 
 .title {
     margin: 30px 0 20px;
-    color: $blueZodiac;
+    color: $brand800;
     font-size: 24px;
     font-weight: bold;
 }
@@ -28,7 +28,7 @@ $chainToolColor: $stormGray;
 .detail-error {
     margin: 0;
     font-size: 14px;
-    color: $persianRed;
+    color: $danger500;
 }
 
 .facts-card {
@@ -37,7 +37,7 @@ $chainToolColor: $stormGray;
     gap: 20px;
     padding: 30px;
     border-radius: 4px;
-    background-color: $white;
+    background-color: $gray0;
 }
 
 .identity {
@@ -56,13 +56,13 @@ $chainToolColor: $stormGray;
 .feature-name {
     font-size: 18px;
     font-weight: 600;
-    color: $blueZodiac;
+    color: $brand800;
 }
 
 .timestamp {
     flex-shrink: 0;
     font-size: 12px;
-    color: $gray;
+    color: $gray600;
 }
 
 .request-id {
@@ -73,18 +73,18 @@ $chainToolColor: $stormGray;
 }
 
 .request-id-label {
-    color: $gray;
+    color: $gray600;
 }
 
 .request-id-value {
     font-family: monospace;
     font-size: 11px;
-    color: $blueZodiac;
+    color: $brand800;
 }
 
 .divider {
     height: 1px;
-    background-color: $mercury;
+    background-color: $gray200;
 }
 
 .facts {
@@ -105,13 +105,13 @@ $chainToolColor: $stormGray;
 .fact-label {
     margin: 0;
     font-size: 12px;
-    color: $gray;
+    color: $gray600;
 }
 
 .fact-value {
     margin: 0;
     font-size: 12px;
-    color: $blueZodiac;
+    color: $brand800;
     word-break: break-word;
 }
 
@@ -131,13 +131,13 @@ $chainToolColor: $stormGray;
     margin: 0;
     font-size: 14px;
     font-weight: 600;
-    color: $blueZodiac;
+    color: $brand800;
 }
 
 .chain-description {
     margin: 0;
     font-size: 12px;
-    color: $gray;
+    color: $gray600;
 }
 
 .translation-segment {
@@ -148,7 +148,7 @@ $chainToolColor: $stormGray;
     & + & {
         margin-top: 24px;
         padding-top: 24px;
-        border-top: 1px solid $mercury;
+        border-top: 1px solid $gray200;
     }
 }
 
@@ -156,7 +156,7 @@ $chainToolColor: $stormGray;
     margin: 0;
     font-family: monospace;
     font-size: 11px;
-    color: $gray;
+    color: $gray600;
 }
 
 .translation-columns {
@@ -183,7 +183,7 @@ $chainToolColor: $stormGray;
     padding: 30px;
     border-left: 3px solid var(--chain-color);
     border-radius: 4px;
-    background-color: $white;
+    background-color: $gray0;
 
     &.expert {
         --chain-color: $chainExpertColor;
@@ -218,7 +218,7 @@ $chainToolColor: $stormGray;
     height: 20px;
     border-radius: 10px;
     background-color: var(--chain-color);
-    color: $white;
+    color: $gray0;
     font-size: 11px;
     font-weight: bold;
 }
@@ -231,23 +231,23 @@ $chainToolColor: $stormGray;
 
 .chain-step-annotations {
     font-size: 11px;
-    color: $gray;
+    color: $gray600;
 }
 
 .writeback {
     margin: 0;
     font-size: 11px;
-    color: $gray;
+    color: $gray600;
 }
 
 .content-box {
     width: 100%;
     flex: 1;
     padding: 14px 16px;
-    border: 1px solid $mercury;
+    border: 1px solid $gray200;
     border-radius: 2px;
-    background-color: $alabaster;
-    color: $blueZodiac;
+    background-color: $gray50;
+    color: $brand800;
     font-size: 12px;
     line-height: 20px;
     white-space: pre-wrap;
@@ -276,7 +276,7 @@ $chainToolColor: $stormGray;
     padding: 0;
     border: none;
     background: none;
-    color: $shakespeare;
+    color: $brand500;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;

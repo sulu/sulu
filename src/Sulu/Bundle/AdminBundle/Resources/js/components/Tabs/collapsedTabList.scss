@@ -1,10 +1,10 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
 $collapsedTabListBackgroundColor: $tabMenuBackgroundColor;
-$collapsedTabListTransparentBackgroundColor: $white;
-$collapsedTabListBoxShadowColor: rgba($dustyGray, .5);
-$collapsedTabListTransparentBoxShadowColor: rgba($alto, .5);
+$collapsedTabListTransparentBackgroundColor: $gray0;
+$collapsedTabListBoxShadowColor: color-mix(in sRGB, $gray500 50%, transparent);
+$collapsedTabListTransparentBoxShadowColor: color-mix(in sRGB, $gray300 50%, transparent);
 
 .collapsed-tab-list {
     list-style: none;

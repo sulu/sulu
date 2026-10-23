@@ -1,15 +1,15 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
-$primaryBackground: $concrete;
-$secondaryBackground: $white;
+$primaryBackground: $gray100;
+$secondaryBackground: $gray0;
 $borderRadius: 3px;
-$overlayBorderColor: $silver;
+$overlayBorderColor: $gray400;
 
 $iconFontSize: 14px;
 
-$confirmBackground: $shakespeare;
-$confirmColor: $white;
+$confirmBackground: $brand500;
+$confirmColor: $gray0;
 
 $transitionDuration: 300ms;
 
@@ -64,7 +64,7 @@ $transitionDuration: 300ms;
 .content {
     border-radius: 0 0 $borderRadius $borderRadius;
     overflow: hidden;
-    box-shadow: 0 10px 18px 0 rgba($mineShaft, .5);
+    box-shadow: 0 10px 18px 0 color-mix(in sRGB, $gray900 50%, transparent);
 
     .header {
         background: $primaryBackground;

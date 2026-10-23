@@ -1,8 +1,8 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$hoverColor: $shakespeare;
-$fontColor: $black;
-$disabledColor: $silver;
+$hoverColor: $brand500;
+$fontColor: $gray950;
+$disabledColor: $gray400;
 
 .action {
     background: transparent;

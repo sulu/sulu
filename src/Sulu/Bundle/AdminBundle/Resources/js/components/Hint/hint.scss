@@ -1,6 +1,6 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$hintColor: $gray;
+$hintColor: $gray600;
 
 .hint {
     font-size: 18px;

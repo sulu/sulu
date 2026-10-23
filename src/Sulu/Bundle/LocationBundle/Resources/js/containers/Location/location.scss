@@ -1,12 +1,12 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$locationMapBorderColor: $alto;
-$locationLabelTextColor: $scorpion;
-$locationContentBackgroundColor: $alto;
-$locationButtonTextColor: $scorpion;
-$locationButtonTextColorActive: $white;
-$locationButtonBackgroundColor: $alto;
-$locationButtonBackgroundColorActive: $shakespeare;
+$locationMapBorderColor: $gray300;
+$locationLabelTextColor: $gray800;
+$locationContentBackgroundColor: $gray300;
+$locationButtonTextColor: $gray800;
+$locationButtonTextColorActive: $gray0;
+$locationButtonBackgroundColor: $gray300;
+$locationButtonBackgroundColorActive: $brand500;
 $locationButtonMargin: 2px;
 
 .location-container {

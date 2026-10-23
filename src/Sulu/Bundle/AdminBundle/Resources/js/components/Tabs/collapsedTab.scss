@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$collapsedTabTextColor: $black;
-$collapsedTabTextColorActive: $shakespeare;
+$collapsedTabTextColor: $gray950;
+$collapsedTabTextColorActive: $brand500;
 
 .collapsed-tab {
     position: relative;

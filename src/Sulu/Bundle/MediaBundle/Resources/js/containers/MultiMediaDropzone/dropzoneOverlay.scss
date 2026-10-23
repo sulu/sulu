@@ -1,8 +1,8 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$dropzoneBorderColor: $white;
-$dropzoneBackgroundColor: rgba($black, .75);
-$dropAreaInfoColor: $white;
+$dropzoneBorderColor: $gray0;
+$dropzoneBackgroundColor: color-mix(in sRGB, $gray950 75%, transparent);
+$dropAreaInfoColor: $gray0;
 
 .dropzone-overlay {
     position: fixed;

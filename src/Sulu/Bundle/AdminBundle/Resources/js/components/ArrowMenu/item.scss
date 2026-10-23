@@ -1,8 +1,8 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$itemColor: $black;
-$itemColorHover: $shakespeare;
-$disabledColor: $silver;
+$itemColor: $gray950;
+$itemColorHover: $brand500;
+$disabledColor: $gray400;
 
 .item {
     background: none;

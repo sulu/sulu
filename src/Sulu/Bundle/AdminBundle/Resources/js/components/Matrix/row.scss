@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$rowFontColor: $blueZodiac;
-$rowBorderColor: $mercury;
+$rowFontColor: $brand800;
+$rowBorderColor: $gray200;
 
 .row {
     color: $rowFontColor;

@@ -1,11 +1,11 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$searchResultBackgroundColor: $white;
+$searchResultBackgroundColor: $gray0;
 $searchResultBorderRadius: 3px;
-$searchResultResourceColor: $shakespeare;
-$searchResultLocaleColor: $scorpion;
-$searchResultDescriptionColor: $scorpion;
-$searchResultIconBackgroundColor: $concrete;
+$searchResultResourceColor: $brand500;
+$searchResultLocaleColor: $gray800;
+$searchResultDescriptionColor: $gray800;
+$searchResultIconBackgroundColor: $gray100;
 
 .search-result {
     display: flex;

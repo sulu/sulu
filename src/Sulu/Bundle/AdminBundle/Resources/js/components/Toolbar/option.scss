@@ -1,11 +1,11 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$optionTextLightColor: $blueZodiac;
-$optionTextDarkColor: $white;
-$optionTextLightColorDisabled: $silver;
-$optionTextDarkColorDisabled: $stormGray;
-$optionTextLightColorActive: $shakespeare;
-$optionTextDarkColorActive: $white;
+$optionTextLightColor: $brand800;
+$optionTextDarkColor: $gray0;
+$optionTextLightColorDisabled: $gray400;
+$optionTextDarkColorDisabled: $gray700;
+$optionTextLightColorActive: $brand500;
+$optionTextDarkColorActive: $gray0;
 
 .light {
     color: $optionTextLightColor;

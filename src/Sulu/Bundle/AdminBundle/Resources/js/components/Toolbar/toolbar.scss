@@ -6,7 +6,7 @@
     justify-content: space-between;
     height: $toolbarHeight;
     margin: 0;
-    box-shadow: 2px 6px 12px 0 rgba($shadowColor, .5);
+    box-shadow: 2px 6px 12px 0 color-mix(in sRGB, $shadowColor 50%, transparent);
 }
 
 .light {

@@ -1,12 +1,12 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
 $toolbarHeight: 60px;
 
-$toolbarBackgroundLightColor: $white;
-$toolbarBackgroundDarkColor: $blueZodiac;
-$shadowColor: $silver;
-$itemsBackgroundColor: $alabaster;
-$itemsContainerBorderColor: $gallery;
+$toolbarBackgroundLightColor: $gray0;
+$toolbarBackgroundDarkColor: $brand800;
+$shadowColor: $gray400;
+$itemsBackgroundColor: $gray50;
+$itemsContainerBorderColor: $gray200;
 
 $itemsContainerBorder: 1px $itemsContainerBorderColor solid;
 $smallSelectWidth: 60px;

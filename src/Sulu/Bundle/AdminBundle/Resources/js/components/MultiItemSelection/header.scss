@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$labelTextColor: $scorpion;
-$contentBackgroundColor: $alto;
+$labelTextColor: $gray800;
+$contentBackgroundColor: $gray300;
 
 .header {
     display: flex;

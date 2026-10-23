@@ -1,6 +1,6 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$matrixBackgroundColor: $white;
+$matrixBackgroundColor: $gray0;
 
 .matrix {
     background-color: $matrixBackgroundColor;

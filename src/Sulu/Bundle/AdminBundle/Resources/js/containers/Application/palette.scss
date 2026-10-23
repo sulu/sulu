@@ -1,0 +1,89 @@
+/**
+  Color variables of the Sulu admin, components import this file instead of colors.scss.
+  The values are CSS custom properties defined in theme.scss, so the admin is themed with plain CSS:
+  :root { --sulu-color-brand-500: #5b2bd6; }
+
+  colors.scss is imported for BC only: its variables are still available but are not themable.
+*/
+
+@import './colors.scss';
+
+$gray0: var(--sulu-color-gray-0);
+$gray50: var(--sulu-color-gray-50);
+$gray100: var(--sulu-color-gray-100);
+$gray200: var(--sulu-color-gray-200);
+$gray300: var(--sulu-color-gray-300);
+$gray400: var(--sulu-color-gray-400);
+$gray500: var(--sulu-color-gray-500);
+$gray600: var(--sulu-color-gray-600);
+$gray700: var(--sulu-color-gray-700);
+$gray800: var(--sulu-color-gray-800);
+$gray900: var(--sulu-color-gray-900);
+$gray950: var(--sulu-color-gray-950);
+
+$brand50: var(--sulu-color-brand-50);
+$brand100: var(--sulu-color-brand-100);
+$brand200: var(--sulu-color-brand-200);
+$brand300: var(--sulu-color-brand-300);
+$brand400: var(--sulu-color-brand-400);
+$brand500: var(--sulu-color-brand-500);
+$brand600: var(--sulu-color-brand-600);
+$brand700: var(--sulu-color-brand-700);
+$brand800: var(--sulu-color-brand-800);
+$brand900: var(--sulu-color-brand-900);
+$brand950: var(--sulu-color-brand-950);
+
+$danger50: var(--sulu-color-danger-50);
+$danger100: var(--sulu-color-danger-100);
+$danger200: var(--sulu-color-danger-200);
+$danger300: var(--sulu-color-danger-300);
+$danger400: var(--sulu-color-danger-400);
+$danger500: var(--sulu-color-danger-500);
+$danger600: var(--sulu-color-danger-600);
+$danger700: var(--sulu-color-danger-700);
+$danger800: var(--sulu-color-danger-800);
+$danger900: var(--sulu-color-danger-900);
+$danger950: var(--sulu-color-danger-950);
+
+$success50: var(--sulu-color-success-50);
+$success100: var(--sulu-color-success-100);
+$success200: var(--sulu-color-success-200);
+$success300: var(--sulu-color-success-300);
+$success400: var(--sulu-color-success-400);
+$success500: var(--sulu-color-success-500);
+$success600: var(--sulu-color-success-600);
+$success700: var(--sulu-color-success-700);
+$success800: var(--sulu-color-success-800);
+$success900: var(--sulu-color-success-900);
+$success950: var(--sulu-color-success-950);
+
+$warning50: var(--sulu-color-warning-50);
+$warning100: var(--sulu-color-warning-100);
+$warning200: var(--sulu-color-warning-200);
+$warning300: var(--sulu-color-warning-300);
+$warning400: var(--sulu-color-warning-400);
+$warning500: var(--sulu-color-warning-500);
+$warning600: var(--sulu-color-warning-600);
+$warning700: var(--sulu-color-warning-700);
+$warning800: var(--sulu-color-warning-800);
+$warning900: var(--sulu-color-warning-900);
+$warning950: var(--sulu-color-warning-950);
+
+$info50: var(--sulu-color-info-50);
+$info100: var(--sulu-color-info-100);
+$info200: var(--sulu-color-info-200);
+$info300: var(--sulu-color-info-300);
+$info400: var(--sulu-color-info-400);
+$info500: var(--sulu-color-info-500);
+$info600: var(--sulu-color-info-600);
+$info700: var(--sulu-color-info-700);
+$info800: var(--sulu-color-info-800);
+$info900: var(--sulu-color-info-900);
+$info950: var(--sulu-color-info-950);
+
+/* roles: what a color is used for, override these for a dark mode */
+$colorBackground: var(--sulu-color-background);
+$colorSurface: var(--sulu-color-surface);
+$colorText: var(--sulu-color-text);
+$colorTextMuted: var(--sulu-color-text-muted);
+$colorBorder: var(--sulu-color-border);

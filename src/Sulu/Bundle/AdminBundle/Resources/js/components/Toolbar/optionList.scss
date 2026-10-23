@@ -1,13 +1,13 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
-$optionListBackgroundLightColor: $wildSand;
-$optionListBackgroundDarkColor: $mirage;
-$optionListShadowColor: $silver;
+$optionListBackgroundLightColor: $gray100;
+$optionListBackgroundDarkColor: $brand900;
+$optionListShadowColor: $gray400;
 
 .light {
     background-color: $optionListBackgroundLightColor;
-    box-shadow: 2px 6px 12px 0 rgba($optionListShadowColor, .5);
+    box-shadow: 2px 6px 12px 0 color-mix(in sRGB, $optionListShadowColor 50%, transparent);
 }
 
 .dark {

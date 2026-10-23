@@ -1,6 +1,6 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$backdropBackground: rgba($dustyGray, .9);
+$backdropBackground: color-mix(in sRGB, $gray500 90%, transparent);
 
 .backdrop {
     width: 100%;

@@ -1,6 +1,6 @@
-@import '../../../containers/Application/colors.scss';
+@import '../../../containers/Application/palette.scss';
 
-$labelColor: $scorpion;
+$labelColor: $gray800;
 
 .label {
     display: block;

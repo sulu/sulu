@@ -1,6 +1,6 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$systemRolePermissionsBorderColor: $silver;
+$systemRolePermissionsBorderColor: $gray400;
 
 .systemRolePermissions {
     border-top: 1px solid $systemRolePermissionsBorderColor;

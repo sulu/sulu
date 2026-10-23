@@ -1,6 +1,6 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$ghostIndicatorColor: $shakespeare;
+$ghostIndicatorColor: $brand500;
 
 .ghost-indicator {
     display: block;

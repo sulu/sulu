@@ -1,4 +1,4 @@
-@import '../../../containers/Application/colors.scss';
+@import '../../../containers/Application/palette.scss';
 
 .column {
     display: flex;
@@ -6,15 +6,15 @@
 }
 
 .heading {
-    color: $mineShaft;
+    color: $gray900;
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 12px;
 }
 
 .card {
-    background: $white;
-    border: 1px solid $mercury;
+    background: $gray0;
+    border: 1px solid $gray200;
     border-radius: 4px;
     padding: 24px;
 }

@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$focusColor: $shakespeare;
-$fontColor: $black;
+$focusColor: $brand500;
+$fontColor: $gray950;
 $fontSize: 12px;
 
 .option {
@@ -21,7 +21,7 @@ $fontSize: 12px;
     }
 
     &:disabled {
-        color: rgba($fontColor, .3);
+        color: color-mix(in sRGB, $fontColor 30%, transparent);
         cursor: default;
     }
 

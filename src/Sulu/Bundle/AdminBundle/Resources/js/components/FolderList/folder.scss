@@ -1,8 +1,8 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$folderBackgroundColor: $white;
-$folderBorderColor: $silver;
-$metaFontColor: $silverChalice;
+$folderBackgroundColor: $gray0;
+$folderBorderColor: $gray400;
+$metaFontColor: $gray500;
 
 .folder {
     width: 240px;

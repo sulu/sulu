@@ -1,6 +1,6 @@
-@import '../Application/colors.scss';
+@import '../Application/palette.scss';
 
-$errorColor: $roman;
+$errorColor: $danger400;
 
 .form {
     width: 100%;
@@ -33,7 +33,7 @@ $errorColor: $roman;
 
 .information-label {
     display: block;
-    color: $scorpion;
+    color: $gray800;
     font-size: 10px;
     line-height: 20px;
     height: 20px;
