@@ -15,14 +15,14 @@ $qrBoxWidth: 210px;
 }
 
 .hint {
-    color: $neutral900;
+    color: $gray900;
     line-height: 20px;
     margin: 0;
 }
 
 .qr-code {
-    background: $neutral0;
-    border: 1px solid $neutral400;
+    background: $gray0;
+    border: 1px solid $gray400;
     border-radius: 3px;
     box-sizing: border-box;
     display: inline-flex;
@@ -35,13 +35,13 @@ $qrBoxWidth: 210px;
 }
 
 .label {
-    color: $neutral900;
+    color: $gray900;
     font-weight: bold;
     margin-bottom: 10px;
 }
 
 .secret {
-    background: $neutral100;
+    background: $gray100;
     border-radius: 3px;
     display: block;
     font-family: monospace;

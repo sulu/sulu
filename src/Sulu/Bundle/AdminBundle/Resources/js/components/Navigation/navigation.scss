@@ -1,12 +1,12 @@
 @import './variables.scss';
 @import '../../containers/Application/palette.scss';
 
-$color: $neutral400;
-$headerColor: $neutral0;
-$activeColor: $neutral100;
-$backgroundColor: $secondary600;
-$darkBackgroundColor: $secondary700;
-$hoverColor: $primary500;
+$color: $gray400;
+$headerColor: $gray0;
+$activeColor: $gray100;
+$backgroundColor: $brand600;
+$darkBackgroundColor: $brand700;
+$hoverColor: $brand500;
 
 .navigation {
     width: $navigationWidth;

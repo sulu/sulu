@@ -1,7 +1,7 @@
 @import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$webspaceSelectBackgroundColor: $secondary800;
-$buttonColor: $neutral400;
+$webspaceSelectBackgroundColor: $brand800;
+$buttonColor: $gray400;
 
 .webspace-select {
     cursor: pointer;
@@ -12,7 +12,7 @@ $buttonColor: $neutral400;
 .button {
     border-radius: 3px;
     background-color: $webspaceSelectBackgroundColor;
-    color: $neutral400;
+    color: $gray400;
     cursor: pointer;
     border: none;
     padding: 12px 20px;

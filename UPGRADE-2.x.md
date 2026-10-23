@@ -54,26 +54,27 @@ themes the administration interface with plain CSS and without rebuilding it:
 
 ```css
 :root {
-    --sulu-color-primary-500: #5b2bd6;
-    --sulu-color-neutral-100: #eef0f4;
+    --sulu-color-brand-500: #5b2bd6;
+    --sulu-color-gray-100: #eef0f4;
 }
 ```
 
-`primary`, `secondary`, `neutral`, `danger`, `success` and `warning` are scales with the steps 50, 100 to 900 and 950
-(`--sulu-color-primary-500`, `$primary500` in SCSS). The defaults are the variables of `colors.scss`. A step without one
-is mixed from the base step with `color-mix()`, so overriding `--sulu-color-primary-500` themes the whole primary scale,
-which has only the base from `colors.scss`. The role properties `--sulu-color-background`, `-surface`, `-text`, `-text-muted` and `-border` point to a step of
-a scale.
+`gray`, `brand`, `danger`, `success`, `warning` and `info` are scales with the steps 50, 100 to 900 and 950, and `gray`
+has a `0` for white (`--sulu-color-brand-500`, `$brand500` in SCSS). The defaults are the variables of `colors.scss`. A
+step without one is mixed from the base step with `color-mix()`, so overriding `--sulu-color-danger-500` themes the
+whole danger scale. `brand-600` to `brand-900` are the navy of the navigation. `info` is new and not used yet. The role
+properties `--sulu-color-background`, `-surface`, `-text`, `-text-muted` and `-border` point to a step of a scale.
 
 The `colors.scss` file is unchanged and imported by `palette.scss`, so existing imports and the variables like `$white`
 keep working, but they do not follow an override. The old values map to the new names as follows, a few near duplicates
-share a step now (`$concrete` to `$neutral100`, `$gallery` to `$neutral200`, `$dustyGray` to `$neutral500`):
+share a step now (`$concrete` to `$gray100`, `$gallery` to `$gray200`, `$dustyGray` to `$gray500`, `$frenchGray` to
+`$gray400`, `$stormGray` to `$gray700`):
 
 | colors.scss | palette.scss |
 |---|---|
-| `$white`, `$alabaster`, `$wildSand`, `$mercury`, `$alto`, `$silver`, `$silverChalice`, `$gray`, `$doveGray`, `$scorpion`, `$mineShaft`, `$black` | `$neutral0`, `$neutral50`, `$neutral100`, `$neutral200`, `$neutral300`, `$neutral400`, `$neutral500`, `$neutral600`, `$neutral700`, `$neutral800`, `$neutral900`, `$neutral950` |
-| `$frenchGray`, `$stormGray`, `$pickledBluewood`, `$ebonyClay`, `$blueZodiac`, `$mirage` | `$secondary300`, `$secondary500`, `$secondary600`, `$secondary700`, `$secondary800`, `$secondary900` |
-| `$shakespeare`, `$persianRed`, `$roman`, `$mantis`, `$gold` | `$primary500`, `$danger500`, `$danger400`, `$success500`, `$warning500` |
+| `$white`, `$alabaster`, `$wildSand`, `$mercury`, `$alto`, `$silver`, `$silverChalice`, `$gray`, `$doveGray`, `$scorpion`, `$mineShaft`, `$black` | `$gray0`, `$gray50`, `$gray100`, `$gray200`, `$gray300`, `$gray400`, `$gray500`, `$gray600`, `$gray700`, `$gray800`, `$gray900`, `$gray950` |
+| `$shakespeare`, `$pickledBluewood`, `$ebonyClay`, `$blueZodiac`, `$mirage` | `$brand500`, `$brand600`, `$brand700`, `$brand800`, `$brand900` |
+| `$persianRed`, `$roman`, `$mantis`, `$gold` | `$danger500`, `$danger400`, `$success500`, `$warning500` |
 
 A variable of `palette.scss` can not be passed to `rgba($color, .5)`, because a `var()` has no channels. Use
 `color-mix(in sRGB, $color 50%, transparent)` instead.

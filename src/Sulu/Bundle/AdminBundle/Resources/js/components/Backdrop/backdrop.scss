@@ -1,6 +1,6 @@
 @import '../../containers/Application/palette.scss';
 
-$backdropBackground: color-mix(in sRGB, $neutral500 90%, transparent);
+$backdropBackground: color-mix(in sRGB, $gray500 90%, transparent);
 
 .backdrop {
     width: 100%;

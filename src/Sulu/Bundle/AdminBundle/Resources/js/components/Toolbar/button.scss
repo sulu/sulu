@@ -1,17 +1,17 @@
 @import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
-$buttonTextLightColor: $secondary800;
-$buttonTextDarkColor: $neutral0;
-$buttonTextLightColorActive: $primary500;
-$buttonTextDarkColorActive: $neutral0;
-$buttonTextLightColorDisabled: $neutral400;
-$buttonTextDarkColorDisabled: $secondary500;
-$buttonActiveBackgroundLightColor: $neutral100;
-$buttonActiveBackgroundDarkColor: $secondary900;
-$primaryTextColor: $neutral0;
-$primaryBackgroundColor: $primary500;
-$successColor: $neutral0;
+$buttonTextLightColor: $brand800;
+$buttonTextDarkColor: $gray0;
+$buttonTextLightColorActive: $brand500;
+$buttonTextDarkColorActive: $gray0;
+$buttonTextLightColorDisabled: $gray400;
+$buttonTextDarkColorDisabled: $gray700;
+$buttonActiveBackgroundLightColor: $gray100;
+$buttonActiveBackgroundDarkColor: $brand900;
+$primaryTextColor: $gray0;
+$primaryBackgroundColor: $brand500;
+$successColor: $gray0;
 $successBackgroundColor: $success500;
 
 .light {

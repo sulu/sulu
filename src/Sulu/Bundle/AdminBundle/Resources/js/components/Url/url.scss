@@ -1,14 +1,14 @@
 @import '../../containers/Application/palette.scss';
 
-$urlBackgroundColor: $neutral0;
-$urlBorderColor: $neutral400;
-$urlButtonColor: $neutral500;
-$urlInputColor: $neutral950;
+$urlBackgroundColor: $gray0;
+$urlBorderColor: $gray400;
+$urlButtonColor: $gray500;
+$urlInputColor: $gray950;
 $urlErrorBorderColor: $danger500;
 $urlHeight: 30px;
 $urlBorderWidth: 1px;
-$urlInputDisabledColor: $neutral600;
-$urlInputDisabledBackgroundColor: $neutral100;
+$urlInputDisabledColor: $gray600;
+$urlInputDisabledBackgroundColor: $gray100;
 
 .url {
     display: flex;

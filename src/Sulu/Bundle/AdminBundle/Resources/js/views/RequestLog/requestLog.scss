@@ -1,10 +1,10 @@
 @import '../../containers/Application/palette.scss';
 
-$chainExpertColor: $secondary800;
-$chainUserColor: $primary500;
+$chainExpertColor: $brand800;
+$chainUserColor: $brand500;
 $chainSuccessColor: #2da44e;
-$chainSystemColor: $neutral500;
-$chainToolColor: $secondary500;
+$chainSystemColor: $gray500;
+$chainToolColor: $gray700;
 
 .request-log {
     height: 100%;
@@ -12,7 +12,7 @@ $chainToolColor: $secondary500;
 
 .title {
     margin: 30px 0 20px;
-    color: $secondary800;
+    color: $brand800;
     font-size: 24px;
     font-weight: bold;
 }
@@ -37,7 +37,7 @@ $chainToolColor: $secondary500;
     gap: 20px;
     padding: 30px;
     border-radius: 4px;
-    background-color: $neutral0;
+    background-color: $gray0;
 }
 
 .identity {
@@ -56,13 +56,13 @@ $chainToolColor: $secondary500;
 .feature-name {
     font-size: 18px;
     font-weight: 600;
-    color: $secondary800;
+    color: $brand800;
 }
 
 .timestamp {
     flex-shrink: 0;
     font-size: 12px;
-    color: $neutral600;
+    color: $gray600;
 }
 
 .request-id {
@@ -73,18 +73,18 @@ $chainToolColor: $secondary500;
 }
 
 .request-id-label {
-    color: $neutral600;
+    color: $gray600;
 }
 
 .request-id-value {
     font-family: monospace;
     font-size: 11px;
-    color: $secondary800;
+    color: $brand800;
 }
 
 .divider {
     height: 1px;
-    background-color: $neutral200;
+    background-color: $gray200;
 }
 
 .facts {
@@ -105,13 +105,13 @@ $chainToolColor: $secondary500;
 .fact-label {
     margin: 0;
     font-size: 12px;
-    color: $neutral600;
+    color: $gray600;
 }
 
 .fact-value {
     margin: 0;
     font-size: 12px;
-    color: $secondary800;
+    color: $brand800;
     word-break: break-word;
 }
 
@@ -131,13 +131,13 @@ $chainToolColor: $secondary500;
     margin: 0;
     font-size: 14px;
     font-weight: 600;
-    color: $secondary800;
+    color: $brand800;
 }
 
 .chain-description {
     margin: 0;
     font-size: 12px;
-    color: $neutral600;
+    color: $gray600;
 }
 
 .translation-segment {
@@ -148,7 +148,7 @@ $chainToolColor: $secondary500;
     & + & {
         margin-top: 24px;
         padding-top: 24px;
-        border-top: 1px solid $neutral200;
+        border-top: 1px solid $gray200;
     }
 }
 
@@ -156,7 +156,7 @@ $chainToolColor: $secondary500;
     margin: 0;
     font-family: monospace;
     font-size: 11px;
-    color: $neutral600;
+    color: $gray600;
 }
 
 .translation-columns {
@@ -183,7 +183,7 @@ $chainToolColor: $secondary500;
     padding: 30px;
     border-left: 3px solid var(--chain-color);
     border-radius: 4px;
-    background-color: $neutral0;
+    background-color: $gray0;
 
     &.expert {
         --chain-color: $chainExpertColor;
@@ -218,7 +218,7 @@ $chainToolColor: $secondary500;
     height: 20px;
     border-radius: 10px;
     background-color: var(--chain-color);
-    color: $neutral0;
+    color: $gray0;
     font-size: 11px;
     font-weight: bold;
 }
@@ -231,23 +231,23 @@ $chainToolColor: $secondary500;
 
 .chain-step-annotations {
     font-size: 11px;
-    color: $neutral600;
+    color: $gray600;
 }
 
 .writeback {
     margin: 0;
     font-size: 11px;
-    color: $neutral600;
+    color: $gray600;
 }
 
 .content-box {
     width: 100%;
     flex: 1;
     padding: 14px 16px;
-    border: 1px solid $neutral200;
+    border: 1px solid $gray200;
     border-radius: 2px;
-    background-color: $neutral50;
-    color: $secondary800;
+    background-color: $gray50;
+    color: $brand800;
     font-size: 12px;
     line-height: 20px;
     white-space: pre-wrap;
@@ -276,7 +276,7 @@ $chainToolColor: $secondary500;
     padding: 0;
     border: none;
     background: none;
-    color: $primary500;
+    color: $brand500;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;

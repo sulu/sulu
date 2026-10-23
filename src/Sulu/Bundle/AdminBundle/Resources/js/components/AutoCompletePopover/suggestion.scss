@@ -1,7 +1,7 @@
 @import '../../containers/Application/palette.scss';
 
-$suggestionTextColor: $neutral950;
-$suggestionTextColorActive: $primary500;
+$suggestionTextColor: $gray950;
+$suggestionTextColorActive: $brand500;
 $suggestionTextColorDisabled: color-mix(in sRGB, $suggestionTextColor 30%, transparent);
 
 .suggestion-item {

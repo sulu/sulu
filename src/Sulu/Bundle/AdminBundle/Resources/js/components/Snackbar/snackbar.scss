@@ -2,13 +2,13 @@
 
 $snackbarHeight: 40px;
 
-$snackbarErrorColor: $neutral0;
+$snackbarErrorColor: $gray0;
 $snackbarErrorBackgroundColor: $danger500;
-$snackbarWarningColor: $secondary800;
+$snackbarWarningColor: $brand800;
 $snackbarWarningBackgroundColor: $warning500;
-$snackbarInfoColor: $neutral0;
-$snackbarInfoBackgroundColor: $secondary800;
-$snackbarSuccessColor: $neutral0;
+$snackbarInfoColor: $gray0;
+$snackbarInfoBackgroundColor: $brand800;
+$snackbarSuccessColor: $gray0;
 $snackbarSuccessBackgroundColor: $success500;
 
 .snackbar {
@@ -29,7 +29,7 @@ $snackbarSuccessBackgroundColor: $success500;
 }
 
 .floating {
-    box-shadow: 2px 6px 12px 0 color-mix(in sRGB, $neutral950 50%, transparent);
+    box-shadow: 2px 6px 12px 0 color-mix(in sRGB, $gray950 50%, transparent);
     border-radius: 3px;
     padding: 6px 7px;
     height: 32px;

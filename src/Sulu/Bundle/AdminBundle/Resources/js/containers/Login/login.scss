@@ -1,9 +1,9 @@
 @import '../Application/palette.scss';
 
-$loginTextColor: $neutral950;
-$borderColor: $neutral200;
-$formContainerBackgroundColor: $neutral0;
-$formContainerBoxShadowColor: $neutral950;
+$loginTextColor: $gray950;
+$borderColor: $gray200;
+$formContainerBackgroundColor: $gray0;
+$formContainerBoxShadowColor: $gray950;
 $formContainerBoxShadow: 0 2px 18px 0 color-mix(in sRGB, $formContainerBoxShadowColor 22%, transparent);
 
 .login {

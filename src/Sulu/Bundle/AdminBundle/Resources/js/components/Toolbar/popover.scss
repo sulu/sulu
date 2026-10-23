@@ -1,12 +1,12 @@
 @import '../../containers/Application/palette.scss';
 
-$popoverBackgroundLightColor: $neutral100;
-$popoverBackgroundDarkColor: $secondary900;
-$popoverTextLightColor: $secondary800;
-$popoverTextDarkColor: $neutral0;
-$popoverTextLightColorDisabled: $neutral400;
-$popoverTextDarkColorDisabled: $secondary500;
-$popoverShadowColor: $neutral400;
+$popoverBackgroundLightColor: $gray100;
+$popoverBackgroundDarkColor: $brand900;
+$popoverTextLightColor: $brand800;
+$popoverTextDarkColor: $gray0;
+$popoverTextLightColorDisabled: $gray400;
+$popoverTextDarkColorDisabled: $gray700;
+$popoverShadowColor: $gray400;
 
 .popover {
     position: relative;

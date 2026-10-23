@@ -5,25 +5,25 @@ $borderRadius: 3px;
 $fontSize: 12px;
 $dropdownFontSize: 10px;
 
-$primaryBackground: $primary500;
-$primaryColor: $neutral0;
-$primaryDisabledColor: $neutral400;
+$primaryBackground: $brand500;
+$primaryColor: $gray0;
+$primaryDisabledColor: $gray400;
 
-$secondaryBorder: $neutral400;
-$secondaryBackground: $neutral100;
-$secondaryColor: $neutral950;
-$secondaryDisabledColor: $neutral400;
+$secondaryBorder: $gray400;
+$secondaryBackground: $gray100;
+$secondaryColor: $gray950;
+$secondaryDisabledColor: $gray400;
 
-$linkColor: $neutral950;
-$linkDisabledColor: $neutral500;
+$linkColor: $gray950;
+$linkDisabledColor: $gray500;
 
-$textColor: $neutral950;
-$textDisabledColor: $neutral500;
+$textColor: $gray950;
+$textDisabledColor: $gray500;
 
 $iconFontSize: 14px;
-$iconBackgroundColorActive: $neutral700;
-$iconBackgroundColorHover: $neutral200;
-$iconColorActive: $neutral0;
+$iconBackgroundColorActive: $gray700;
+$iconBackgroundColorHover: $gray200;
+$iconColorActive: $gray0;
 
 .button {
     position: relative;
@@ -149,10 +149,10 @@ $iconColorActive: $neutral0;
     padding: 0 5px;
 
     &:hover:not(:disabled) {
-        background-color: $neutral400;
+        background-color: $gray400;
 
         &.active {
-            background-color: $neutral800;
+            background-color: $gray800;
         }
     }
 

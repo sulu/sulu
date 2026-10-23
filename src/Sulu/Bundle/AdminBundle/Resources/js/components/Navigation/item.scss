@@ -1,9 +1,9 @@
 @import '../../containers/Application/palette.scss';
 
-$color: $neutral100;
-$activeBorderColor: $primary500;
-$activeBackgroundColor: $secondary700;
-$hoverColor: $primary500;
+$color: $gray100;
+$activeBorderColor: $brand500;
+$activeBackgroundColor: $brand700;
+$hoverColor: $brand500;
 
 .item {
     font-size: 14px;

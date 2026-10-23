@@ -1,12 +1,12 @@
 @import '../../containers/Application/palette.scss';
 
-$blockBackgroundColor: $neutral0;
-$blockBorderColor: $neutral400;
-$blockHandleColor: $neutral950;
-$blockHandleBackgroundColor: $neutral400;
-$blockCollapsedColor: $neutral600;
-$blockIconsColor: $neutral600;
-$blockSelectedColor: $secondary800;
+$blockBackgroundColor: $gray0;
+$blockBorderColor: $gray400;
+$blockHandleColor: $gray950;
+$blockHandleBackgroundColor: $gray400;
+$blockCollapsedColor: $gray600;
+$blockIconsColor: $gray600;
+$blockSelectedColor: $brand800;
 
 .block {
     display: flex;

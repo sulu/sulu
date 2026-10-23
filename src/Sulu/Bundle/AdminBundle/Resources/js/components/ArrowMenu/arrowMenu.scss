@@ -1,7 +1,7 @@
 @import '../../containers/Application/palette.scss';
 
-$arrowMenuBackgroundColor: $neutral0;
-$arrowMenuBoxShadow: 0 0 14px 0 color-mix(in sRGB, $neutral700 50%, transparent);
+$arrowMenuBackgroundColor: $gray0;
+$arrowMenuBoxShadow: 0 0 14px 0 color-mix(in sRGB, $gray700 50%, transparent);
 
 .arrowMenuContainer {
     margin: 0;

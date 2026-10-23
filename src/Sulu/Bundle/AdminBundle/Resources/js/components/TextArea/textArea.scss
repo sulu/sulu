@@ -1,11 +1,11 @@
 @import '../../containers/Application/palette.scss';
 
-$textareaDisabledColor: $neutral600;
-$textareaDisabledBackgroundColor: $neutral100;
-$textareaBorderColor: $neutral400;
+$textareaDisabledColor: $gray600;
+$textareaDisabledBackgroundColor: $gray100;
+$textareaBorderColor: $gray400;
 $textareaErrorBorderColor: $danger500;
-$textareaBackgroundColor: $neutral0;
-$textareaColor: $neutral950;
+$textareaBackgroundColor: $gray0;
+$textareaColor: $gray950;
 
 .text-area {
     width: 100%;

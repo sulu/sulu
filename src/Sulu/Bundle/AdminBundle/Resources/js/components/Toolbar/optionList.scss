@@ -1,9 +1,9 @@
 @import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
-$optionListBackgroundLightColor: $neutral100;
-$optionListBackgroundDarkColor: $secondary900;
-$optionListShadowColor: $neutral400;
+$optionListBackgroundLightColor: $gray100;
+$optionListBackgroundDarkColor: $brand900;
+$optionListShadowColor: $gray400;
 
 .light {
     background-color: $optionListBackgroundLightColor;

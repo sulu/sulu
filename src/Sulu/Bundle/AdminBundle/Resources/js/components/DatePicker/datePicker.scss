@@ -1,16 +1,16 @@
 @import '../../containers/Application/palette.scss';
 
-$fontColor: $neutral800;
-$backgroundColorActive: $primary500;
-$borderColorToday: $secondary800;
-$borderColor: $neutral400;
-$iconColor: $neutral500;
+$fontColor: $gray800;
+$backgroundColorActive: $brand500;
+$borderColorToday: $brand800;
+$borderColor: $gray400;
+$iconColor: $gray500;
 $iconBorderPadding: 5px;
-$placeholderColor: $neutral500;
+$placeholderColor: $gray500;
 $borderWidth: 1px;
 $borderRadius: 3px;
 $inputHeight: 30px;
-$inputColor: $neutral950;
+$inputColor: $gray950;
 $inputFontSize: 12px;
 
 :global {

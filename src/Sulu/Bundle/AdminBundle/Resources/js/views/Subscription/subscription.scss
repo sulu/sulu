@@ -8,27 +8,27 @@
     margin: 0;
     font-size: 24px;
     line-height: 32px;
-    color: $secondary800;
+    color: $brand800;
 }
 
 .description {
     margin: 5px 0 30px;
     font-size: 12px;
-    color: $neutral500;
+    color: $gray500;
 }
 
 .card {
     margin-bottom: 20px;
     padding: 20px 30px 30px;
-    border: 1px solid $neutral200;
+    border: 1px solid $gray200;
     border-radius: 4px;
-    background-color: $neutral0;
+    background-color: $gray0;
 
     h2 {
         margin: 0;
         font-size: 16px;
         line-height: 30px;
-        color: $secondary800;
+        color: $brand800;
     }
 }
 
@@ -55,13 +55,13 @@
 
 .fact-label {
     font-size: 12px;
-    color: $neutral500;
+    color: $gray500;
 }
 
 .fact-value {
     font-size: 14px;
     font-weight: bold;
-    color: $secondary800;
+    color: $brand800;
 }
 
 .status {
@@ -97,25 +97,25 @@
 .credits-left-number {
     font-size: 32px;
     font-weight: bold;
-    color: $secondary800;
+    color: $brand800;
 }
 
 .credits-left-text {
     font-size: 14px;
-    color: $neutral500;
+    color: $gray500;
 }
 
 .progress-bar {
     height: 6px;
     border-radius: 3px;
-    background-color: $neutral200;
+    background-color: $gray200;
     overflow: hidden;
 }
 
 .progress-bar-fill {
     height: 100%;
     border-radius: 3px;
-    background-color: $primary500;
+    background-color: $brand500;
 }
 
 .progress-legend {
@@ -123,13 +123,13 @@
     justify-content: space-between;
     margin-top: 8px;
     font-size: 12px;
-    color: $neutral500;
+    color: $gray500;
 }
 
 .note {
     margin: 20px 0 0;
     font-size: 12px;
-    color: $neutral500;
+    color: $gray500;
 }
 
 .contact {
@@ -139,11 +139,11 @@
     gap: 5px;
     margin-bottom: 20px;
     padding: 15px 30px;
-    border: 1px solid $neutral200;
+    border: 1px solid $gray200;
     border-radius: 4px;
-    background-color: $neutral0;
+    background-color: $gray0;
     font-size: 12px;
-    color: $neutral700;
+    color: $gray700;
 
     p {
         margin: 0;
@@ -151,12 +151,12 @@
 }
 
 .contact-link {
-    color: $primary500;
+    color: $brand500;
     font-weight: bold;
     text-decoration: underline;
 
     &:hover {
-        color: $secondary800;
+        color: $brand800;
     }
 }
 
@@ -166,12 +166,12 @@
     align-items: flex-start;
     gap: 10px;
     padding: 20px 30px;
-    border: 1px solid $neutral200;
+    border: 1px solid $gray200;
     border-radius: 4px;
 
     p {
         margin: 0;
         font-size: 14px;
-        color: $secondary800;
+        color: $brand800;
     }
 }

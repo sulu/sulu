@@ -1,16 +1,16 @@
 @import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$mediaCardBorderColor: $neutral300;
-$headerBackgroundColor: $neutral0;
-$metaInfoTextColor: $neutral500;
-$coverBackgroundColor: color-mix(in sRGB, $neutral950 50%, transparent);
-$coverIconTextColor: $neutral0;
+$mediaCardBorderColor: $gray300;
+$headerBackgroundColor: $gray0;
+$metaInfoTextColor: $gray500;
+$coverBackgroundColor: color-mix(in sRGB, $gray950 50%, transparent);
+$coverIconTextColor: $gray0;
 $mediaCardBorderRadius: 3px;
 $downloadButtonBackgroundColor: $headerBackgroundColor;
-$downloadButtonBackgroundColorActive: $primary500;
-$downloadButtonTextColor: $neutral300;
-$downloadButtonTextColorActive: $neutral0;
-$downloadButtonBorderColorActive: $primary500;
+$downloadButtonBackgroundColorActive: $brand500;
+$downloadButtonTextColor: $gray300;
+$downloadButtonTextColorActive: $gray0;
+$downloadButtonBorderColorActive: $brand500;
 
 .media-card {
     width: 240px;

@@ -1,9 +1,9 @@
 @import '../../containers/Application/palette.scss';
 
 $length: 16px;
-$primaryColor: $secondary800;
-$secondaryColor: $neutral0;
-$disabledColor: $neutral400;
+$primaryColor: $brand800;
+$secondaryColor: $gray0;
+$disabledColor: $gray400;
 
 .checkbox.dark {
     input + span {
@@ -14,7 +14,7 @@ $disabledColor: $neutral400;
     input:checked + span {
         background: $primaryColor;
         border-color: $primaryColor;
-        color: $neutral0;
+        color: $gray0;
     }
 }
 
@@ -66,6 +66,6 @@ $disabledColor: $neutral400;
 
     input:disabled:checked + span {
         background: $disabledColor;
-        color: $neutral0;
+        color: $gray0;
     }
 }

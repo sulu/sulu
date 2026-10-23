@@ -1,16 +1,16 @@
 @import '../../containers/Application/palette.scss';
 
-$itemColor: $primary500;
-$itemBorderColor: $primary500;
-$itemBackgroundColor: $neutral0;
+$itemColor: $brand500;
+$itemBorderColor: $brand500;
+$itemBackgroundColor: $gray0;
 
-$itemBackgroundColorSelected: $primary500;
-$itemColorSelected: $neutral0;
+$itemBackgroundColorSelected: $brand500;
+$itemColorSelected: $gray0;
 
-$itemColorDisabled: $neutral400;
-$itemBorderColorDisabled: $neutral400;
-$itemColorDisabledSelected: $neutral0;
-$itemBackgroundColorDisabledSelected: $neutral400;
+$itemColorDisabled: $gray400;
+$itemBorderColorDisabled: $gray400;
+$itemColorDisabledSelected: $gray0;
+$itemBackgroundColorDisabledSelected: $gray400;
 
 .item {
     align-items: center;

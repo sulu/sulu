@@ -1,8 +1,8 @@
 @import '../../containers/Application/palette.scss';
 
-$menuBorderColor: $secondary300;
-$menuBackgroundColor: $neutral100;
-$menuBoxShadow: 2px 6px 12px 0 color-mix(in sRGB, $neutral950 22%, transparent);
+$menuBorderColor: $gray400;
+$menuBackgroundColor: $gray100;
+$menuBoxShadow: 2px 6px 12px 0 color-mix(in sRGB, $gray950 22%, transparent);
 
 .menu {
     border-radius: 2px;

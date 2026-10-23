@@ -1,10 +1,10 @@
 @import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
-$singleItemSelectionButtonBackgroundColor: $neutral0;
-$singleItemSelectionButtonColor: $neutral500;
-$singleItemSelectionButtonActiveColor: $neutral0;
-$singleItemSelectionButtonActiveBackgroundColor: $primary500;
+$singleItemSelectionButtonBackgroundColor: $gray0;
+$singleItemSelectionButtonColor: $gray500;
+$singleItemSelectionButtonActiveColor: $gray0;
+$singleItemSelectionButtonActiveBackgroundColor: $brand500;
 
 .button {
     height: 100%;

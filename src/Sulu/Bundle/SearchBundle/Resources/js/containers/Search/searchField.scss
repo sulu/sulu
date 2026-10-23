@@ -1,11 +1,11 @@
 @import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$searchFieldBackgroundColor: $neutral0;
-$searchFieldIndexButtonColor: $neutral0;
-$searchFieldIndexButtonBackgroundColor: $primary500;
+$searchFieldBackgroundColor: $gray0;
+$searchFieldIndexButtonColor: $gray0;
+$searchFieldIndexButtonBackgroundColor: $brand500;
 $searchFieldBorderRadius: 3px;
-$searchFieldBorderColor: $neutral400;
-$searchFieldHintColor: $neutral600;
+$searchFieldBorderColor: $gray400;
+$searchFieldHintColor: $gray600;
 
 .search-field {
     display: flex;

@@ -1,9 +1,9 @@
 @import '../../containers/Application/palette.scss';
 
 $radius: 8px;
-$primaryColor: $secondary800;
-$secondaryColor: $neutral0;
-$disabledColor: $neutral400;
+$primaryColor: $brand800;
+$secondaryColor: $gray0;
+$disabledColor: $gray400;
 
 .radio {
     width: calc(2 * $radius);

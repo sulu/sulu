@@ -1,24 +1,24 @@
 @import '../../containers/Application/palette.scss';
 
-$headerTextDarkColor: $neutral0;
-$headerCellDarkBackgroundColor: $secondary800;
-$headerButtonCellDarkBorderColor: color-mix(in sRGB, $neutral500 25%, transparent);
-$headerTextBrightColor: $neutral950;
-$headerCellBrightBackgroundColor: $neutral300;
-$headerButtonCellBrightBorderColor: $neutral400;
-$cellTextColor: $neutral950;
-$cellTextColorActive: $neutral0;
-$cellBackgroundColor: $neutral0;
+$headerTextDarkColor: $gray0;
+$headerCellDarkBackgroundColor: $brand800;
+$headerButtonCellDarkBorderColor: color-mix(in sRGB, $gray500 25%, transparent);
+$headerTextBrightColor: $gray950;
+$headerCellBrightBackgroundColor: $gray300;
+$headerButtonCellBrightBorderColor: $gray400;
+$cellTextColor: $gray950;
+$cellTextColorActive: $gray0;
+$cellBackgroundColor: $gray0;
 $cellBorderColor: $cellBackgroundColor;
-$cellBorderColorActive: $primary500;
-$buttonCellBackgroundColor: $neutral0;
-$buttonCellBackgroundColorHover: $primary500;
-$buttonCellBackgroundColorDisabled: $secondary300;
-$buttonCellBorderColor: $neutral0;
+$cellBorderColorActive: $brand500;
+$buttonCellBackgroundColor: $gray0;
+$buttonCellBackgroundColorHover: $brand500;
+$buttonCellBackgroundColorDisabled: $gray400;
+$buttonCellBorderColor: $gray0;
 $buttonCellColor: $buttonCellBackgroundColorHover;
 $buttonCellColorDisabled: $buttonCellBackgroundColorDisabled;
 $buttonCellColorHover: $buttonCellBackgroundColor;
-$emptyMessageColor: $neutral400;
+$emptyMessageColor: $gray400;
 $rowHeight: 40px;
 $headerRowHeight: 60px;
 $rowHeightFlat: 48px;
@@ -267,7 +267,7 @@ $borderRadius: 3px;
         background-color: $cellBackgroundColor;
         font-weight: bold;
         padding: $paddingCell 20px;
-        border-bottom: 1px solid $neutral300;
+        border-bottom: 1px solid $gray300;
 
         button {
             height: $rowHeightFlat;

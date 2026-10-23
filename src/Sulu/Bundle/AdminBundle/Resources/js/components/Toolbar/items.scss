@@ -1,9 +1,9 @@
 @import '../../containers/Application/palette.scss';
 
-$itemsBackgroundLightColor: $neutral50;
+$itemsBackgroundLightColor: $gray50;
 $itemsBackgroundDarkColor: transparent;
-$itemsContainerBorderLightColor: $neutral200;
-$itemsContainerBorderDarkColor: color-mix(in sRGB, $neutral500 25%, transparent);
+$itemsContainerBorderLightColor: $gray200;
+$itemsContainerBorderDarkColor: color-mix(in sRGB, $gray500 25%, transparent);
 
 $itemsContainerBorderLight: 1px $itemsContainerBorderLightColor solid;
 $itemsContainerBorderDark: 1px $itemsContainerBorderDarkColor solid;

@@ -1,11 +1,11 @@
 @import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$buttonTextColor: $neutral800;
-$buttonTextColorActive: $neutral0;
-$buttonBackgroundColor: $neutral0;
-$buttonBackgroundColorActive: $primary500;
-$buttonBorderColor: $neutral400;
-$buttonDisabledBackgroundColor: $neutral100;
+$buttonTextColor: $gray800;
+$buttonTextColorActive: $gray0;
+$buttonBackgroundColor: $gray0;
+$buttonBackgroundColorActive: $brand500;
+$buttonBorderColor: $gray400;
+$buttonDisabledBackgroundColor: $gray100;
 
 .button {
     width: 40px;

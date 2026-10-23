@@ -3,21 +3,21 @@
 $height: 30px;
 $lineHeight: 28px;
 $fontSize: 12px;
-$color: $neutral950;
-$backgroundColor: $neutral0;
+$color: $gray950;
+$backgroundColor: $gray0;
 $borderSize: 1px;
-$borderColor: $neutral400;
+$borderColor: $gray400;
 $borderRadius: 3px;
 $iconSize: 10px;
-$hoverColor: $primary500;
+$hoverColor: $brand500;
 
-$disabledColor: $neutral600;
-$disabledBackgroundColor: $neutral100;
+$disabledColor: $gray600;
+$disabledBackgroundColor: $gray100;
 
 $darkBorderRadius: 4px;
-$darkBorderColor: $neutral700;
-$darkColor: $neutral950;
-$darkBackgroundColor: $neutral0;
+$darkBorderColor: $gray700;
+$darkColor: $gray950;
+$darkBackgroundColor: $gray0;
 
 .displayValue {
     cursor: pointer;

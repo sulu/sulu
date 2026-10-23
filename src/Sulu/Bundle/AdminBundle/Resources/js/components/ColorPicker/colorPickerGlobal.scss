@@ -1,10 +1,10 @@
 @import '../../containers/Application/palette.scss';
 
-$fontColor: $neutral800;
-$borderColor: $neutral400;
+$fontColor: $gray800;
+$borderColor: $gray400;
 $borderWidth: 1px;
 $borderRadius: 3px;
-$inputColor: $neutral950;
+$inputColor: $gray950;
 
 :global {
     .sketch-picker {

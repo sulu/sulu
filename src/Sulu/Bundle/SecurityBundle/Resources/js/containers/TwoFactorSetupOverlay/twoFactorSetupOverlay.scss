@@ -24,15 +24,15 @@
 }
 
 .hint {
-    color: $neutral900;
+    color: $gray900;
     line-height: 20px;
     margin: 0;
 }
 
 .method {
     align-items: flex-start;
-    background: $neutral0;
-    border: 1px solid $neutral400;
+    background: $gray0;
+    border: 1px solid $gray400;
     border-radius: 3px;
     cursor: pointer;
     display: flex;
@@ -42,7 +42,7 @@
     width: 100%;
 
     &:hover:not(:disabled) {
-        border-color: $primary500;
+        border-color: $brand500;
     }
 
     &:disabled {
@@ -53,7 +53,7 @@
 
 .method-icon {
     align-self: center;
-    color: $primary500;
+    color: $brand500;
     font-size: 20px;
     flex-shrink: 0;
 }
@@ -66,18 +66,18 @@
 }
 
 .method-title {
-    color: $neutral900;
+    color: $gray900;
     font-weight: bold;
 }
 
 .method-description {
-    color: $neutral900;
+    color: $gray900;
     font-size: 12px;
     line-height: 16px;
 }
 
 .method-arrow {
     align-self: center;
-    color: $neutral400;
+    color: $gray400;
     flex-shrink: 0;
 }

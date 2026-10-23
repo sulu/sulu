@@ -1,10 +1,10 @@
 @import '../../containers/Application/palette.scss';
 
-$itemBackgroundColor: $neutral0;
-$disabledItemBackgroundColor: $neutral100;
+$itemBackgroundColor: $gray0;
+$disabledItemBackgroundColor: $gray100;
 
-$itemColor: $neutral950;
-$disabledItemColor: $neutral600;
+$itemColor: $gray950;
+$disabledItemColor: $gray600;
 
 .item {
     display: flex;
