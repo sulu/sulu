@@ -62,7 +62,7 @@ class ResourceRouteRegistry {
         return this.getUrl('list', resourceKey, parameters);
     }
 
-    hasRoute(type: string, resourceKey: string): boolean {
+    hasUrl(type: string, resourceKey: string): boolean {
         return !!this.endpoints[resourceKey]?.routes?.[type];
     }
 

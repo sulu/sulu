@@ -61,7 +61,7 @@ export default class ResourceStore {
         }
 
         if (!id) {
-            if (resourceRouteRegistry.hasRoute('prefill', this.resourceKey)) {
+            if (resourceRouteRegistry.hasUrl('prefill', this.resourceKey)) {
                 this.prefill();
             } else {
                 this.initialized = true;
