@@ -562,6 +562,9 @@ final class SuluArticleBundle extends AbstractBundle
                                 'list' => 'sulu_article.get_articles',
                                 'detail' => 'sulu_article.get_article',
                             ],
+                            'views' => [
+                                'list' => ArticleAdmin::LIST_VIEW,
+                            ],
                         ],
                         'articles_versions' => [
                             'routes' => [
