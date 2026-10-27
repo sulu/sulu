@@ -16,7 +16,11 @@ import type {Error, Schema, SchemaEntry} from '../../Form/types';
 export type Row = {
     name: string,
     schema: SchemaEntry,
+    toggle?: Row,
 };
+
+// A field named attribute_override_<id> is the override toggle of the field after it, drawn in that field's row.
+const OVERRIDE_PREFIX = 'attribute_override_';
 
 // subtitle is never set, CollapsibleConfig asks for the key
 type Group = {
@@ -59,9 +63,22 @@ class ProductAttributesRenderer extends React.Component<Props> {
                 const section = schema[sectionKey];
                 const items = section.items || {};
 
-                const rows = Object.keys(items)
-                    .map((name) => ({name, schema: items[name]}))
-                    .filter((row) => filterItem(row));
+                const rows = [];
+                let toggle;
+                Object.keys(items).forEach((name) => {
+                    if (name.startsWith(OVERRIDE_PREFIX)) {
+                        toggle = {name, schema: items[name]};
+
+                        return;
+                    }
+
+                    const row = {name, schema: items[name], toggle};
+                    toggle = undefined;
+
+                    if (filterItem(row)) {
+                        rows.push(row);
+                    }
+                });
 
                 return {id: sectionKey, rows, sectionKey, title: section.label || ''};
             })
@@ -80,9 +97,34 @@ class ProductAttributesRenderer extends React.Component<Props> {
         };
     }
 
+    renderToggle(toggle: Row, sectionKey: string) {
+        const {data, errors, formInspector, onChange, onFinish, router} = this.props;
+        const {name, schema} = toggle;
+        const rowDataPath = '/' + name;
+
+        return (
+            <div className={productAttributesRendererStyles.toggle}>
+                <Field
+                    data={data}
+                    dataPath={rowDataPath}
+                    error={errors[name]}
+                    formInspector={formInspector}
+                    name={name}
+                    onChange={onChange}
+                    onFinish={onFinish}
+                    onSuccess={undefined}
+                    router={router}
+                    schema={this.rowSchema(schema)}
+                    schemaPath={'/' + sectionKey + '/items/' + name}
+                    value={formInspector.getValueByPath(rowDataPath)}
+                />
+            </div>
+        );
+    }
+
     renderRow(row: Row, sectionKey: string) {
         const {data, errors, formInspector, onChange, onFinish, router} = this.props;
-        const {name, schema} = row;
+        const {name, schema, toggle} = row;
         const rowDataPath = '/' + name;
 
         return (
@@ -91,20 +133,25 @@ class ProductAttributesRenderer extends React.Component<Props> {
                     {schema.label}{schema.required ? ' *' : ''}
                 </Table.Cell>
                 <Table.Cell className={productAttributesRendererStyles.fieldCell}>
-                    <Field
-                        data={data}
-                        dataPath={rowDataPath}
-                        error={errors[name]}
-                        formInspector={formInspector}
-                        name={name}
-                        onChange={onChange}
-                        onFinish={onFinish}
-                        onSuccess={undefined}
-                        router={router}
-                        schema={this.rowSchema(schema)}
-                        schemaPath={'/' + sectionKey + '/items/' + name}
-                        value={formInspector.getValueByPath(rowDataPath)}
-                    />
+                    <div className={productAttributesRendererStyles.fieldWithToggle}>
+                        <div className={productAttributesRendererStyles.field}>
+                            <Field
+                                data={data}
+                                dataPath={rowDataPath}
+                                error={errors[name]}
+                                formInspector={formInspector}
+                                name={name}
+                                onChange={onChange}
+                                onFinish={onFinish}
+                                onSuccess={undefined}
+                                router={router}
+                                schema={this.rowSchema(schema)}
+                                schemaPath={'/' + sectionKey + '/items/' + name}
+                                value={formInspector.getValueByPath(rowDataPath)}
+                            />
+                        </div>
+                        {toggle && this.renderToggle(toggle, sectionKey)}
+                    </div>
                 </Table.Cell>
             </Table.Row>
         );

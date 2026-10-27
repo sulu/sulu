@@ -9,7 +9,7 @@ import FormInspector from '../../FormInspector';
 import ResourceFormStore from '../../stores/ResourceFormStore';
 import ProductFamilyAttributesField from '../../fields/ProductFamilyAttributesField';
 
-const NEXT_VALUE = [{id: 'a1', required: true, mode: 'variantSpecific'}];
+const NEXT_VALUE = [{id: 'a1', required: true, mode: 'variant_specific'}];
 
 const SCHEMA_OPTIONS = {
     list_key: {name: 'list_key', value: 'attributes'},
@@ -126,6 +126,6 @@ test('calls onChange and onFinish when the container changes the value', async()
 
     await userEvent.click(screen.getByText('change'));
 
-    expect(handleChange).toHaveBeenCalledWith([{id: 'a1', required: true, mode: 'variantSpecific'}]);
+    expect(handleChange).toHaveBeenCalledWith([{id: 'a1', required: true, mode: 'variant_specific'}]);
     expect(handleFinish).toHaveBeenCalled();
 });

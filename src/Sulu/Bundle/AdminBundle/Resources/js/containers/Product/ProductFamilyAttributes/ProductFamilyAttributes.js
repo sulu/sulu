@@ -33,7 +33,7 @@ type Props = {|
 
 const MODES = [
     {name: 'shared', title: 'sulu_admin.attribute_mode_shared'},
-    {name: 'variantSpecific', title: 'sulu_admin.attribute_mode_variant_specific'},
+    {name: 'variant_specific', title: 'sulu_admin.attribute_mode_variant_specific'},
     {name: 'overridable', title: 'sulu_admin.attribute_mode_overridable'},
 ];
 

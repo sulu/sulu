@@ -80,7 +80,7 @@ const ITEMS = [
 
 const VALUE = [
     {id: 'a3', required: false, mode: 'shared'},
-    {id: 'a1', required: false, mode: 'variantSpecific'},
+    {id: 'a1', required: false, mode: 'variant_specific'},
     {id: 'a2', required: true, mode: 'shared'},
 ];
 
@@ -185,9 +185,9 @@ test('renders required as checkbox and the mode as select', async() => {
     expect(within(getRow('Size')).getAllByRole('checkbox')).toHaveLength(1);
 
     const select = within(getRow('Size')).getByRole('combobox');
-    expect(select).toHaveValue('variantSpecific');
+    expect(select).toHaveValue('variant_specific');
     expect(within(select).getAllByRole('option').map((option) => option.value))
-        .toEqual(['shared', 'variantSpecific', 'overridable']);
+        .toEqual(['shared', 'variant_specific', 'overridable']);
 });
 
 test('orders group cards alphabetically by group name', () => {
@@ -239,7 +239,7 @@ test('toggling required emits the updated value', async() => {
 
     expect(handleChange).toHaveBeenCalledWith([
         {id: 'a3', required: false, mode: 'shared'},
-        {id: 'a1', required: true, mode: 'variantSpecific'},
+        {id: 'a1', required: true, mode: 'variant_specific'},
         {id: 'a2', required: true, mode: 'shared'},
     ]);
 });
@@ -297,7 +297,7 @@ test('confirming the overlay replaces the selection, keeping flags of entries al
     expect(store.set).toHaveBeenCalledWith(mockOverlayItems);
     expect(store.loadItems).toHaveBeenCalledTimes(0);
     expect(handleChange).toHaveBeenCalledWith([
-        {id: 'a1', required: false, mode: 'variantSpecific'},
+        {id: 'a1', required: false, mode: 'variant_specific'},
         {id: 'a4', required: false, mode: 'shared'},
     ]);
 });
@@ -338,7 +338,7 @@ test('does not reload when the value only loses entries or changes flags', () =>
 
     rerenderWithValue(rerender, [
         {id: 'a3', required: true, mode: 'shared'},
-        {id: 'a1', required: false, mode: 'variantSpecific'},
+        {id: 'a1', required: false, mode: 'variant_specific'},
     ]);
 
     expect(store.loadItems).not.toHaveBeenCalled();

@@ -2,8 +2,8 @@
 
 export type Entry = {
     id: string,
+    mode: 'shared' | 'variant_specific' | 'overridable',
     required: boolean,
-    mode: 'shared' | 'variantSpecific' | 'overridable',
 };
 
 // A column of the attribute table: "name" is the entry key, "type" a registered field type.
