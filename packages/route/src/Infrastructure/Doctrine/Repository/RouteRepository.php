@@ -171,13 +171,20 @@ class RouteRepository implements RouteRepositoryInterface
         if (null !== $excludeResource) {
             $expr = $queryBuilder->expr();
 
+            // the history of the excluded resource is excluded as well, it never blocks a slug for its own resource
             $queryBuilder
                 ->andWhere($expr->not($expr->andX(
                     $expr->eq('route.resourceKey', ':excludeResourceKey'),
                     $expr->eq('route.resourceId', ':excludeResourceId'),
                 )))
+                ->andWhere($expr->not($expr->andX(
+                    $expr->eq('route.resourceKey', ':excludeHistoryKey'),
+                    $expr->eq('route.resourceId', ':excludeHistoryResourceId'),
+                )))
                 ->setParameter('excludeResourceKey', $excludeResource['resourceKey'])
-                ->setParameter('excludeResourceId', $excludeResource['resourceId']);
+                ->setParameter('excludeResourceId', $excludeResource['resourceId'])
+                ->setParameter('excludeHistoryKey', Route::HISTORY_RESOURCE_KEY)
+                ->setParameter('excludeHistoryResourceId', $excludeResource['resourceKey'] . '::' . $excludeResource['resourceId']);
         }
 
         if ([] !== $sortBys) {

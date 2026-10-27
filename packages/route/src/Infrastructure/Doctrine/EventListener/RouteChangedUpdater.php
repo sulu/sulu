@@ -65,6 +65,8 @@ class RouteChangedUpdater implements ResetInterface
             return;
         }
 
+        $this->removeOwnHistoryOfSlug($args->getObjectManager(), $route);
+
         $this->routeChanges[$route->getId()] = [
             'oldSlug' => $oldSlug,
             'oldWebspace' => $oldWebspace,
@@ -182,9 +184,11 @@ class RouteChangedUpdater implements ResetInterface
                 );
             }
 
+            // a route created in this request still carries its temporary id, the history needs the real one
+            $resourceId = $route->hasTemporaryId() ? $route->generateRealResourceId() : $route->getResourceId();
             $historyRoute = new Route(
                 Route::HISTORY_RESOURCE_KEY,
-                $route->getResourceKey() . '::' . $route->getResourceId(),
+                $route->getResourceKey() . '::' . $resourceId,
                 $locale,
                 $oldSlug,
                 $oldWebspace,
@@ -217,6 +221,35 @@ class RouteChangedUpdater implements ResetInterface
         }
 
         $this->routeChanges = [];
+    }
+
+    /**
+     * A route moving back to a slug it had before would collide with its own history route of that slug.
+     */
+    private function removeOwnHistoryOfSlug(EntityManagerInterface $objectManager, Route $route): void
+    {
+        $classMetadata = $objectManager->getClassMetadata(Route::class);
+        $resourceId = $route->hasTemporaryId() ? $route->generateRealResourceId() : $route->getResourceId();
+
+        $queryBuilder = $objectManager->getConnection()->createQueryBuilder()
+            ->delete($classMetadata->getTableName())
+            ->where('resource_key = :historyResourceKey')
+            ->andWhere('resource_id = :historyResourceId')
+            ->andWhere('locale = :locale')
+            ->andWhere('slug = :slug')
+            ->setParameter('historyResourceKey', Route::HISTORY_RESOURCE_KEY, ParameterType::STRING)
+            ->setParameter('historyResourceId', $route->getResourceKey() . '::' . $resourceId, ParameterType::STRING)
+            ->setParameter('locale', $route->getLocale(), ParameterType::STRING)
+            ->setParameter('slug', $route->getSlug(), ParameterType::STRING);
+
+        $webspace = $route->getWebspace();
+        if (null === $webspace) {
+            $queryBuilder->andWhere('webspace IS NULL');
+        } else {
+            $queryBuilder->andWhere('webspace = :webspace')->setParameter('webspace', $webspace, ParameterType::STRING);
+        }
+
+        $queryBuilder->executeStatement();
     }
 
     /**
