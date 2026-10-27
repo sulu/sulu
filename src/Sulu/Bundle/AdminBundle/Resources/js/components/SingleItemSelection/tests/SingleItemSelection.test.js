@@ -24,10 +24,36 @@ test('Render with right button', () => {
         onClick: jest.fn(),
     };
     const {container} = render(
-        <SingleItemSelection leftButton={leftButton} rightButton={rightButton}>Test Item</SingleItemSelection>
+        <SingleItemSelection buttons={[rightButton]} leftButton={leftButton}>Test Item</SingleItemSelection>
     );
 
     expect(container).toMatchSnapshot();
+});
+
+test('Call onClick callback of an additional button and disable it with the selection', async() => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+    const cropButton = {
+        icon: 'su-crop-pen',
+        onClick: jest.fn(),
+    };
+    const user = userEvent.setup();
+
+    const {rerender} = render(
+        <SingleItemSelection buttons={[cropButton]} leftButton={leftButton}>Test Item</SingleItemSelection>
+    );
+
+    await user.click(screen.getByRole('button', {name: 'su-crop-pen'}));
+    expect(cropButton.onClick).toHaveBeenCalledTimes(1);
+
+    rerender(
+        <SingleItemSelection buttons={[cropButton]} disabled={true} leftButton={leftButton}>
+            Test Item
+        </SingleItemSelection>
+    );
+    expect(screen.getByRole('button', {name: 'su-crop-pen'})).toBeDisabled();
 });
 
 test('Render with right button with options', () => {
@@ -43,7 +69,7 @@ test('Render with right button with options', () => {
         ],
     };
     const {container} = render(
-        <SingleItemSelection leftButton={leftButton} rightButton={rightButton}>Test Item</SingleItemSelection>
+        <SingleItemSelection buttons={[rightButton]} leftButton={leftButton}>Test Item</SingleItemSelection>
     );
 
     expect(container).toMatchSnapshot();
@@ -198,7 +224,7 @@ test('Call onClick callback with option value', async() => {
         ],
     };
 
-    render(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
+    render(<SingleItemSelection buttons={[rightButton]} leftButton={leftButton} />);
 
     const icon = screen.queryByLabelText('su-display-default');
     await user.click(icon);
@@ -220,7 +246,7 @@ test('Call onClick callback if right button is clicked', async() => {
         onClick: jest.fn(),
     };
 
-    render(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
+    render(<SingleItemSelection buttons={[rightButton]} leftButton={leftButton} />);
 
     const icon = screen.queryByLabelText('su-display-default');
     await user.click(icon);

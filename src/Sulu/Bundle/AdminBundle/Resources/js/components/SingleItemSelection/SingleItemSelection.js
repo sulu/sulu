@@ -10,19 +10,17 @@ import type {Button as ButtonConfig} from './types';
 
 type Props<T, U> = {|
     allowRemoveWhileItemDisabled: boolean,
+    buttons: Array<ButtonConfig<*>>,
     children?: Node,
     className?: string,
     disabled: boolean,
-    editIcon: string,
     emptyText?: string,
     id?: T,
     itemDisabled: boolean,
     leftButton: ButtonConfig<*>,
     loading: boolean,
-    onEdit?: () => void,
     onItemClick?: (itemId: T, value: ?U) => void,
     onRemove?: () => void,
-    rightButton?: ButtonConfig<*>,
     valid: boolean,
     value?: U,
 |};
@@ -30,8 +28,8 @@ type Props<T, U> = {|
 export default class SingleItemSelection<T: ?string | number, U> extends React.Component<Props<T, U>> {
     static defaultProps = {
         allowRemoveWhileItemDisabled: false,
+        buttons: [],
         disabled: false,
-        editIcon: 'su-pen',
         itemDisabled: false,
         loading: false,
         valid: true,
@@ -48,18 +46,16 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
     render() {
         const {
             allowRemoveWhileItemDisabled,
+            buttons,
             children,
             className,
             disabled,
-            editIcon,
             itemDisabled,
             emptyText,
             leftButton,
             loading,
-            onEdit,
             onItemClick,
             onRemove,
-            rightButton,
             valid,
         } = this.props;
 
@@ -95,15 +91,6 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
                             </div>
                         }
                     </div>
-                    {onEdit && !loading && !disabled && !itemDisabled &&
-                        <button
-                            className={singleItemSelectionStyles.editButton}
-                            onClick={onEdit}
-                            type="button"
-                        >
-                            <Icon name={editIcon} />
-                        </button>
-                    }
                     {onRemove && !loading && !disabled && (!itemDisabled || allowRemoveWhileItemDisabled) &&
                         <button
                             className={singleItemSelectionStyles.removeButton}
@@ -117,13 +104,14 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
                         <Loader className={singleItemSelectionStyles.loader} size={14} />
                     }
                 </div>
-                {rightButton &&
+                {buttons.map((button, index) => (
                     <Button
-                        {...rightButton}
-                        disabled={disabled || itemDisabled}
+                        {...button}
+                        disabled={disabled || itemDisabled || button.disabled}
+                        key={index}
                         location="right"
                     />
-                }
+                ))}
             </div>
         );
     }

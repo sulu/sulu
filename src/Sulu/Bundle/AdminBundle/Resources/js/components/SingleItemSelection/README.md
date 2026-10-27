@@ -20,10 +20,10 @@ const handleRemove = () => {
 };
 
 <SingleItemSelection
+    buttons={[rightButton]}
     emptyText="Nothing was selected!"
     leftButton={leftButton}
     onRemove={handleRemove}
-    rightButton={rightButton}
 >
     Test item
 </SingleItemSelection>
@@ -61,13 +61,32 @@ const handleRemove = () => {
 };
 
 <SingleItemSelection
+    buttons={[rightButton]}
     emptyText="Nothing was selected!"
     leftButton={leftButton}
     onRemove={handleRemove}
-    rightButton={rightButton}
 >
     Test item
 </SingleItemSelection>
+```
+
+Further buttons on the right side can be passed with the `buttons` prop; they are rendered in order.
+
+```javascript
+const leftButton = {
+    icon: 'su-document',
+};
+
+const buttons = [
+    {
+        icon: 'su-crop-pen',
+        onClick: () => {
+            alert('Crop was pressed!');
+        },
+    },
+];
+
+<SingleItemSelection buttons={buttons} leftButton={leftButton}>Test item</SingleItemSelection>
 ```
 
 It will also show a defined message in a slightly greyed out tone if no item seems to be selected.
@@ -108,11 +127,11 @@ const handleRemove = () => {
 };
 
 <SingleItemSelection
+    buttons={[rightButton]}
     valid={false}
     emptyText="Nothing was selected!"
     leftButton={leftButton}
     onRemove={handleRemove}
-    rightButton={rightButton}
 >
     Test item
 </SingleItemSelection>
@@ -146,11 +165,11 @@ const handleRemove = () => {
 };
 
 <SingleItemSelection
+    buttons={[rightButton]}
     disabled={true}
     emptyText="Nothing was selected!"
     leftButton={leftButton}
     onRemove={handleRemove}
-    rightButton={rightButton}
 >
     Test item
 </SingleItemSelection>
