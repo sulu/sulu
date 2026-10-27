@@ -2,13 +2,14 @@
 
 export type Entry = {
     id: string,
+    mode: 'shared' | 'variant_specific' | 'overridable',
     required: boolean,
-    variantSpecific: boolean,
 };
 
 // A column of the attribute table: "name" is the entry key, "type" a registered field type.
 export type FieldColumn = {
     name: string,
+    schemaOptions?: Object,
     title: string,
     type: string,
 };

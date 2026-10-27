@@ -13,10 +13,25 @@ jest.mock('../../../../utils/Translator', () => ({
 
 jest.mock('../../../Form/FormInspector', () => jest.fn());
 
-// The registry hands back a plain checkbox for every type, enough to see the value round-trip.
+// The registry hands back a plain checkbox, or a select for a field type with "values", enough to see the
+// value round-trip.
 jest.mock('../../../Form/registries/fieldRegistry', () => ({
     get: jest.fn(() => function Field(props) {
         const React = require('react');
+
+        if (props.schemaOptions.values) {
+            return React.createElement(
+                'select',
+                {
+                    disabled: props.disabled,
+                    onChange: (event) => props.onChange(event.target.value),
+                    value: props.value,
+                },
+                props.schemaOptions.values.value.map(({name, title}) => (
+                    React.createElement('option', {key: name, value: name}, title)
+                ))
+            );
+        }
 
         return React.createElement('input', {
             checked: !!props.value,
@@ -64,9 +79,9 @@ const ITEMS = [
 ];
 
 const VALUE = [
-    {id: 'a3', required: false, variantSpecific: false},
-    {id: 'a1', required: false, variantSpecific: true},
-    {id: 'a2', required: true, variantSpecific: false},
+    {id: 'a3', required: false, mode: 'shared'},
+    {id: 'a1', required: false, mode: 'variant_specific'},
+    {id: 'a2', required: true, mode: 'shared'},
 ];
 
 // $FlowFixMe
@@ -161,12 +176,18 @@ test('loads the selected attributes from the resource', () => {
     expect(MultiSelectionStore).toHaveBeenCalledWith('attributes', ['a3', 'a1', 'a2'], expect.anything(), 'ids');
 });
 
-test('renders the flag columns through the registered checkbox field type', async() => {
+test('renders required as checkbox and the mode as select', async() => {
     renderComponent();
     await expandAllCards();
 
     expect(fieldRegistry.get).toHaveBeenCalledWith('checkbox');
-    expect(within(getRow('Size')).getAllByRole('checkbox')).toHaveLength(2);
+    expect(fieldRegistry.get).toHaveBeenCalledWith('single_select');
+    expect(within(getRow('Size')).getAllByRole('checkbox')).toHaveLength(1);
+
+    const select = within(getRow('Size')).getByRole('combobox');
+    expect(select).toHaveValue('variant_specific');
+    expect(within(select).getAllByRole('option').map((option) => option.value))
+        .toEqual(['shared', 'variant_specific', 'overridable']);
 });
 
 test('orders group cards alphabetically by group name', () => {
@@ -202,7 +223,7 @@ test('shows the attribute count per group', () => {
 });
 
 test('skips an id whose attribute no longer resolves', () => {
-    renderComponent([...VALUE, {id: 'gone', required: false, variantSpecific: false}]);
+    renderComponent([...VALUE, {id: 'gone', required: false, mode: 'shared'}]);
 
     expect(screen.queryByText('gone')).not.toBeInTheDocument();
     expect(screen.getByText('sulu_admin.attribute_count:{"count":2}')).toBeInTheDocument();
@@ -217,24 +238,24 @@ test('toggling required emits the updated value', async() => {
     await userEvent.click(within(getRow('Size')).getAllByRole('checkbox')[0]);
 
     expect(handleChange).toHaveBeenCalledWith([
-        {id: 'a3', required: false, variantSpecific: false},
-        {id: 'a1', required: true, variantSpecific: true},
-        {id: 'a2', required: true, variantSpecific: false},
+        {id: 'a3', required: false, mode: 'shared'},
+        {id: 'a1', required: true, mode: 'variant_specific'},
+        {id: 'a2', required: true, mode: 'shared'},
     ]);
 });
 
-test('toggling variant emits the updated value', async() => {
+test('choosing a mode emits the updated value', async() => {
     const handleChange = jest.fn();
 
     renderComponent(VALUE, handleChange);
     await expandAllCards();
 
-    await userEvent.click(within(getRow('Size')).getAllByRole('checkbox')[1]);
+    await userEvent.selectOptions(within(getRow('Size')).getByRole('combobox'), 'overridable');
 
     expect(handleChange).toHaveBeenCalledWith([
-        {id: 'a3', required: false, variantSpecific: false},
-        {id: 'a1', required: false, variantSpecific: false},
-        {id: 'a2', required: true, variantSpecific: false},
+        {id: 'a3', required: false, mode: 'shared'},
+        {id: 'a1', required: false, mode: 'overridable'},
+        {id: 'a2', required: true, mode: 'shared'},
     ]);
 });
 
@@ -247,21 +268,21 @@ test('removing a row emits the value without it', async() => {
     await userEvent.click(within(getRow('Size')).getByRole('button', {name: 'sulu_admin.delete'}));
 
     expect(handleChange).toHaveBeenCalledWith([
-        {id: 'a3', required: false, variantSpecific: false},
-        {id: 'a2', required: true, variantSpecific: false},
+        {id: 'a3', required: false, mode: 'shared'},
+        {id: 'a2', required: true, mode: 'shared'},
     ]);
 });
 
 test('removing a group removes every resolved entry in it and keeps unresolved ids', async() => {
     const handleChange = jest.fn();
 
-    renderComponent([...VALUE, {id: 'gone', required: false, variantSpecific: false}], handleChange);
+    renderComponent([...VALUE, {id: 'gone', required: false, mode: 'shared'}], handleChange);
 
     await userEvent.click(within(getCardHeader('General')).getByRole('button', {name: 'sulu_admin.delete'}));
 
     expect(handleChange).toHaveBeenCalledWith([
-        {id: 'a3', required: false, variantSpecific: false},
-        {id: 'gone', required: false, variantSpecific: false},
+        {id: 'a3', required: false, mode: 'shared'},
+        {id: 'gone', required: false, mode: 'shared'},
     ]);
 });
 
@@ -276,8 +297,8 @@ test('confirming the overlay replaces the selection, keeping flags of entries al
     expect(store.set).toHaveBeenCalledWith(mockOverlayItems);
     expect(store.loadItems).toHaveBeenCalledTimes(0);
     expect(handleChange).toHaveBeenCalledWith([
-        {id: 'a1', required: false, variantSpecific: true},
-        {id: 'a4', required: false, variantSpecific: false},
+        {id: 'a1', required: false, mode: 'variant_specific'},
+        {id: 'a4', required: false, mode: 'shared'},
     ]);
 });
 
@@ -307,7 +328,7 @@ function rerenderWithValue(rerender, value) {
 test('loads the attributes when the value receives an id the store has not been asked for', () => {
     const {rerender, store} = renderComponent();
 
-    rerenderWithValue(rerender, [...VALUE, {id: 'a9', required: false, variantSpecific: false}]);
+    rerenderWithValue(rerender, [...VALUE, {id: 'a9', required: false, mode: 'shared'}]);
 
     expect(store.loadItems).toHaveBeenCalledWith(['a3', 'a1', 'a2', 'a9']);
 });
@@ -316,8 +337,8 @@ test('does not reload when the value only loses entries or changes flags', () =>
     const {rerender, store} = renderComponent();
 
     rerenderWithValue(rerender, [
-        {id: 'a3', required: true, variantSpecific: false},
-        {id: 'a1', required: false, variantSpecific: true},
+        {id: 'a3', required: true, mode: 'shared'},
+        {id: 'a1', required: false, mode: 'variant_specific'},
     ]);
 
     expect(store.loadItems).not.toHaveBeenCalled();
@@ -325,7 +346,7 @@ test('does not reload when the value only loses entries or changes flags', () =>
 
 test('does not reload again for an id the resource did not return', () => {
     const {rerender, store} = renderComponent();
-    const value = [...VALUE, {id: 'gone', required: false, variantSpecific: false}];
+    const value = [...VALUE, {id: 'gone', required: false, mode: 'shared'}];
 
     rerenderWithValue(rerender, value);
     rerenderWithValue(rerender, value.map((entry) => ({...entry, required: true})));

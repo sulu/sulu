@@ -31,9 +31,26 @@ type Props = {|
     value: ?Array<Entry>,
 |};
 
-const COLUMNS: Array<FieldColumn> = [
+const MODES = [
+    {name: 'shared', title: 'sulu_admin.attribute_mode_shared'},
+    {name: 'variant_specific', title: 'sulu_admin.attribute_mode_variant_specific'},
+    {name: 'overridable', title: 'sulu_admin.attribute_mode_overridable'},
+];
+
+// Built per render, because the option titles need the loaded translations.
+const getColumns = (): Array<FieldColumn> => [
     {name: 'required', title: 'sulu_admin.attribute_required', type: 'checkbox'},
-    {name: 'variantSpecific', title: 'sulu_admin.attribute_variant', type: 'checkbox'},
+    {
+        name: 'mode',
+        schemaOptions: {
+            values: {
+                name: 'values',
+                value: MODES.map(({name, title}) => ({name, title: translate(title)})),
+            },
+        },
+        title: 'sulu_admin.attribute_mode',
+        type: 'single_select',
+    },
 ];
 
 /**
@@ -127,7 +144,7 @@ class ProductFamilyAttributes extends React.Component<Props> {
             <Table.HeaderCell className={attributeGroupTableStyles.labelCell} key="label">
                 {translate('sulu_admin.attribute')}
             </Table.HeaderCell>,
-            ...COLUMNS.map((column) => (
+            ...getColumns().map((column) => (
                 <Table.HeaderCell className={attributeGroupTableStyles.fieldCell} key={column.name}>
                     {translate(column.title)}
                 </Table.HeaderCell>
@@ -148,7 +165,7 @@ class ProductFamilyAttributes extends React.Component<Props> {
 
         const cells = [
             <Table.Cell className={attributeGroupTableStyles.labelCell} key="label">{item.name}</Table.Cell>,
-            ...COLUMNS.map((column) => (
+            ...getColumns().map((column) => (
                 <AttributeFieldCell
                     column={column}
                     dataPath={dataPath}
@@ -194,7 +211,7 @@ class ProductFamilyAttributes extends React.Component<Props> {
         this.props.onChange(selectedItems.map((item) => existing[item.id] || {
             id: item.id,
             required: false,
-            variantSpecific: false,
+            mode: 'shared',
         }));
     };
 

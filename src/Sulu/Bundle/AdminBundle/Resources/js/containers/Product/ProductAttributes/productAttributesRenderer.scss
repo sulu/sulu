@@ -68,6 +68,48 @@ $cellPaddingVertical: calc(($rowHeight - $inputHeight - 2 * $cellBorderWidth) / 
     display: none;
 }
 
+/*
+ * An overridable attribute: the field and, at the end of the row, its override toggle. Field and switch
+ * share the row's centre line, the switch with its text next to it.
+ */
+.fieldWithToggle {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.field {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.toggle {
+    flex: 0 0 130px;
+    display: flex;
+    align-items: center;
+    min-height: $inputHeight;
+}
+
+/* the same Grid.Item and Form.Field resets as for the cell, one level deeper because of the wrapper */
+.field > div,
+.toggle > div:last-child {
+    float: none;
+    margin: 0;
+    padding-right: 0;
+    width: 100%;
+}
+
+.field > div > div,
+.toggle > div:last-child > div {
+    margin-bottom: 0;
+}
+
+.field > div > div > div:empty,
+.toggle > div:last-child > div > div:empty {
+    display: none;
+}
+
 /* one line at every width: the search gives way, the toggler keeps its size and its single line */
 .toolbar {
     display: flex;
