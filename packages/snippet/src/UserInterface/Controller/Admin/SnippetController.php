@@ -334,15 +334,23 @@ final class SnippetController implements SecuredControllerInterface
         }
 
         if ('copy_locale' === $action) {
-            $message = new CopyLocaleSnippetMessage(
-                ['uuid' => $uuid],
-                (string) ($request->query->get('src') ?: $request->query->get('locale')),
-                (string) $request->query->get('dest')
-            );
+            $srcLocale = (string) ($request->query->get('src') ?: $request->query->get('locale'));
+            $destLocales = \array_filter(\array_map('trim', \explode(',', (string) $request->query->get('dest'))));
 
-            /** @see \Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler */
-            /** @var SnippetInterface|null */
-            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+            $result = null;
+            foreach ($destLocales as $destLocale) {
+                $message = new CopyLocaleSnippetMessage(
+                    ['uuid' => $uuid],
+                    $srcLocale,
+                    $destLocale,
+                );
+
+                /** @see \Sulu\Snippet\Application\MessageHandler\CopyLocaleSnippetMessageHandler */
+                /** @var SnippetInterface|null */
+                $result = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+            }
+
+            return $result;
         } elseif ('copy' === $action) {
             $message = new CopySnippetMessage(
                 ['uuid' => $uuid],
