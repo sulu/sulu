@@ -517,6 +517,7 @@ final class SuluSnippetBundle extends AbstractBundle
                             ],
                             'security_context' => SnippetAdmin::SECURITY_CONTEXT,
                             'views' => [
+                                'list' => SnippetAdmin::LIST_VIEW, // tab parent: SnippetResourceViewParameterProvider can not resolve "_{group}" yet
                                 'detail' => SnippetAdmin::EDIT_TABS_VIEW . '_{group}',
                             ],
                         ],

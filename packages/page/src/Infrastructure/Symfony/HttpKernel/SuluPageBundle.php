@@ -759,6 +759,7 @@ final class SuluPageBundle extends AbstractBundle
                                 'detail' => 'sulu_page.get_page',
                             ],
                             'views' => [
+                                'list' => PageAdmin::PAGES_VIEW,
                                 'detail' => PageAdmin::EDIT_FORM_VIEW,
                             ],
                             'security_class' => Page::class,
@@ -776,6 +777,13 @@ final class SuluPageBundle extends AbstractBundle
                             'page_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'pages',
+                                'view' => [
+                                    'name' => PageAdmin::EDIT_FORM_VIEW,
+                                    'result_to_view' => [
+                                        'id' => 'id',
+                                        'webspaceKey' => 'webspace',
+                                    ],
+                                ],
                                 'types' => [
                                     'list_overlay' => [
                                         'adapter' => 'column_list',
@@ -792,6 +800,13 @@ final class SuluPageBundle extends AbstractBundle
                             'single_page_selection' => [
                                 'default_type' => 'list_overlay',
                                 'resource_key' => 'pages',
+                                'view' => [
+                                    'name' => PageAdmin::EDIT_FORM_VIEW,
+                                    'result_to_view' => [
+                                        'id' => 'id',
+                                        'webspace' => 'webspace',
+                                    ],
+                                ],
                                 'types' => [
                                     'list_overlay' => [
                                         'adapter' => 'column_list',

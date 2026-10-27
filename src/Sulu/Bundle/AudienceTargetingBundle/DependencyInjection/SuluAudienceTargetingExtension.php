@@ -115,6 +115,7 @@ class SuluAudienceTargetingExtension extends Extension implements PrependExtensi
                                 'detail' => 'sulu_audience_targeting.get_target-group',
                             ],
                             'views' => [
+                                'list' => AudienceTargetingAdmin::LIST_VIEW,
                                 'detail' => AudienceTargetingAdmin::EDIT_FORM_VIEW,
                             ],
                         ],

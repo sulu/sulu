@@ -606,6 +606,7 @@ final class SuluArticleBundle extends AbstractBundle
                             ],
                             'security_context' => ArticleAdmin::SECURITY_CONTEXT,
                             'views' => [
+                                'list' => ArticleAdmin::LIST_VIEW, // tab parent: ArticleResourceViewParameterProvider can not resolve "_{group}" yet
                                 'detail' => ArticleAdmin::EDIT_TABS_VIEW . '_{group}',
                             ],
                         ],

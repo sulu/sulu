@@ -224,6 +224,7 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
                                 'detail' => 'sulu_security.get_role',
                             ],
                             'views' => [
+                                'list' => SecurityAdmin::LIST_VIEW,
                                 'detail' => SecurityAdmin::EDIT_FORM_VIEW,
                             ],
                         ],

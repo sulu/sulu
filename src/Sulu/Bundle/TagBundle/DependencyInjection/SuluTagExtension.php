@@ -69,6 +69,7 @@ class SuluTagExtension extends Extension implements PrependExtensionInterface
                                 'detail' => 'sulu_tag.get_tag',
                             ],
                             'views' => [
+                                'list' => TagAdmin::LIST_VIEW,
                                 'detail' => TagAdmin::EDIT_FORM_VIEW,
                             ],
                         ],

@@ -81,6 +81,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                 'detail' => 'sulu_contact.get_contact',
                             ],
                             'views' => [
+                                'list' => ContactAdmin::CONTACT_LIST_VIEW,
                                 'detail' => ContactAdmin::CONTACT_EDIT_FORM_VIEW,
                             ],
                         ],
@@ -106,6 +107,7 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
                                 'detail' => 'sulu_contact.get_account',
                             ],
                             'views' => [
+                                'list' => ContactAdmin::ACCOUNT_LIST_VIEW,
                                 'detail' => ContactAdmin::ACCOUNT_EDIT_FORM_VIEW,
                             ],
                         ],
