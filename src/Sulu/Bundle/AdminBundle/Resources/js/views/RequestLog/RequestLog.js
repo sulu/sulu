@@ -190,6 +190,7 @@ function formatDateTime(startedAt: string): Node {
 @observer
 class RequestLog extends React.Component<ViewProps> {
     translationPrefix: string;
+    allowDelete: boolean;
     listStore: ListStore;
     list: ?ElementRef<typeof ListContainer>;
 
@@ -203,8 +204,9 @@ class RequestLog extends React.Component<ViewProps> {
     constructor(props: ViewProps) {
         super(props);
 
-        const {translationPrefix} = props.router.route.options;
+        const {allowDelete = true, translationPrefix} = props.router.route.options;
         this.translationPrefix = translationPrefix;
+        this.allowDelete = allowDelete;
 
         this.listStore = new ListStore(
             RESOURCE_KEY,
@@ -616,7 +618,7 @@ class RequestLog extends React.Component<ViewProps> {
                     paginated={true}
                     ref={this.setListRef}
                     searchable={true}
-                    selectable={true}
+                    selectable={this.allowDelete}
                     showColumnOptions={true}
                     store={this.listStore}
                 />
@@ -627,22 +629,25 @@ class RequestLog extends React.Component<ViewProps> {
 }
 
 export default withToolbar(RequestLog, function() {
-    return {
-        items: [
-            {
-                icon: 'su-sync',
-                label: this.translateKey('refresh'),
-                onClick: this.handleRefreshClick,
-                type: 'button',
-            },
-            {
-                disabled: this.listStore.selectionIds.length === 0,
-                icon: 'su-trash-alt',
-                label: translate('sulu_admin.delete'),
-                loading: this.listStore.deletingSelection,
-                onClick: this.handleDeleteClick,
-                type: 'button',
-            },
-        ],
-    };
+    const items = [
+        {
+            icon: 'su-sync',
+            label: this.translateKey('refresh'),
+            onClick: this.handleRefreshClick,
+            type: 'button',
+        },
+    ];
+
+    if (this.allowDelete) {
+        items.push({
+            disabled: this.listStore.selectionIds.length === 0,
+            icon: 'su-trash-alt',
+            label: translate('sulu_admin.delete'),
+            loading: this.listStore.deletingSelection,
+            onClick: this.handleDeleteClick,
+            type: 'button',
+        });
+    }
+
+    return {items};
 });
