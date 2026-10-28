@@ -561,23 +561,6 @@ class PageControllerTest extends SuluTestCase
     }
 
     #[Depends('testPost')]
-    public function testPostTriggerCopyLocaleWithMultipleDestinations(string $id): void
-    {
-        $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=en&action=copy_locale&src=en&dest=de,fr');
-
-        $response = $this->client->getResponse();
-        $content = \json_decode((string) $response->getContent(), true);
-
-        $this->assertHttpStatusCode(200, $response);
-        $this->assertIsArray($content);
-        $this->assertArrayHasKey('contentLocales', $content);
-        $this->assertIsArray($content['contentLocales']);
-        $this->assertContains('de', $content['contentLocales']);
-        $this->assertContains('fr', $content['contentLocales']);
-        $this->assertContains('en', $content['contentLocales']);
-    }
-
-    #[Depends('testPost')]
     #[Depends('testGet')]
     public function testPut(string $id): void
     {
@@ -1961,5 +1944,40 @@ class PageControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         self::getEntityManager()->clear();
+    }
+
+    public function testPostTriggerCopyLocaleWithMultipleDestinations(): void
+    {
+        self::purgeDatabase();
+
+        $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d5', 'sulu-io');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&parentId=%s&webspace=sulu-io', $homepage->getId()),
+            [],
+            [],
+            [],
+            \json_encode([
+                'template' => 'default',
+                'title' => 'Copy Page',
+                'url' => '/copy-page',
+            ]),
+        );
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+        $id = \json_decode((string) $this->client->getResponse()->getContent(), true)['id'];
+
+        $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=en&action=copy_locale&src=en&dest=de,fr');
+
+        $response = $this->client->getResponse();
+        $content = \json_decode((string) $response->getContent(), true);
+
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertIsArray($content);
+        $this->assertArrayHasKey('contentLocales', $content);
+        $this->assertIsArray($content['contentLocales']);
+        $this->assertContains('de', $content['contentLocales']);
+        $this->assertContains('fr', $content['contentLocales']);
+        $this->assertContains('en', $content['contentLocales']);
     }
 }
