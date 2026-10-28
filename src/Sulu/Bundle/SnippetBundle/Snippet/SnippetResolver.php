@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
-use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Symfony\Contracts\Service\ResetInterface;
@@ -25,7 +24,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class SnippetResolver implements SnippetResolverInterface, ResetInterface
 {
     /**
-     * @var array<array|StructureInterface>
+     * @var array<array<string, mixed>>
      */
     private $snippetCache = [];
 
@@ -47,7 +46,7 @@ class SnippetResolver implements SnippetResolverInterface, ResetInterface
      * @param string|null $shadowLocale
      * @param bool $loadExcerpt
      *
-     * @return array
+     * @return array<array<string, mixed>>
      */
     public function resolve($uuids, $webspaceKey, $locale, $shadowLocale = null, $loadExcerpt = false)
     {

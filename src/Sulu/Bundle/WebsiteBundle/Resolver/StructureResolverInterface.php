@@ -24,7 +24,7 @@ interface StructureResolverInterface
      * @param StructureInterface $structure The structure to resolve
      * @param bool $loadExcerpt Resolves also the extension data of the structure
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function resolve(StructureInterface $structure, bool $loadExcerpt = true/*, array $includedProperties = null*/);
 }
