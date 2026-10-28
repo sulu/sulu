@@ -82,10 +82,9 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             $value = $value->toArray();
         }
 
-        if (\is_array($value) && isset($value['limitResult']) && \is_string($value['limitResult'])) {
+        if (\is_array($value) && isset($value['limitResult'])) {
             $value['limitResult'] = \is_numeric($value['limitResult']) ? (int) $value['limitResult'] : null;
         }
-
         $this->resolveTags($value, 'tags');
         $this->resolveTags($value, 'websiteTags');
 
