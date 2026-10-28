@@ -182,6 +182,10 @@ class ContentViewBuilderFactoryTest extends TestCase
         $this->assertSame('edit_parent_key.settings', $views[4]->getName());
         $this->assertSame('content_settings', $views[4]->getView()->getOption('formKey'));
         $this->assertNull($views[4]->getView()->getOption('tabCondition'));
+        $this->assertSame(
+            ['forms' => ['content_settings_author'], 'templateType' => Example::TEMPLATE_TYPE],
+            $views[4]->getView()->getOption('metadataRequestParameters'),
+        );
     }
 
     public function testCreateViewsListsTheRequestsForPublishingUnderInsights(): void

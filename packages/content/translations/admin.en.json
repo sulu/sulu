@@ -31,6 +31,7 @@
     "sulu_content.enable_shadow": "Enable Shadow",
     "sulu_content.enable_shadow_info_text": "This function is disabled if the current locale is already used as shadow locale.",
     "sulu_content.shadow_locale": "Shadow locale",
+    "sulu_content.shadow_route": "URL",
     "sulu_content.link": "Link",
     "sulu_content.enable_link": "Enable Link",
     "sulu_content.enable_link_info_text": "Link internal content or external URLs for building navigations, content overviews, and organising the site structure.",
