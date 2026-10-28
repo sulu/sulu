@@ -1877,4 +1877,72 @@ class PageControllerTest extends SuluTestCase
 
         $this->assertSame([], $pages, 'A locale configured in no viewable webspace must yield an empty page list.');
     }
+
+    public function testRestoreIntoSelectedParent(): void
+    {
+        self::purgeDatabase();
+
+        $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d6', 'sulu-io');
+        $testA = $this->createPage($homepage->getId(), ['title' => 'Test A', 'url' => '/test-a']);
+        $aboutUs = $this->createPage($homepage->getId(), ['title' => 'About Us', 'url' => '/about-us']);
+        $testA1 = $this->createPage($testA->getId(), ['title' => 'Test A1', 'url' => '/test-a/test-a1']);
+        $testA1Uuid = $testA1->getUuid();
+
+        self::ensureKernelShutdown();
+
+        $this->deletePage($testA1Uuid);
+        $this->restorePage($testA1Uuid, $aboutUs->getUuid());
+
+        $restoredPage = self::getContainer()->get('sulu_page.page_repository')->findOneBy(['uuid' => $testA1Uuid]);
+        $this->assertNotNull($restoredPage);
+        $this->assertSame($aboutUs->getUuid(), $restoredPage->getParent()?->getUuid());
+        $this->assertSame(2, $restoredPage->getDepth());
+    }
+
+    public function testRestoreIntoSelectedParentWhenOriginalParentIsDeleted(): void
+    {
+        self::purgeDatabase();
+
+        $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d7', 'sulu-io');
+        $testA = $this->createPage($homepage->getId(), ['title' => 'Test A', 'url' => '/test-a']);
+        $aboutUs = $this->createPage($homepage->getId(), ['title' => 'About Us', 'url' => '/about-us']);
+        $testA1 = $this->createPage($testA->getId(), ['title' => 'Test A1', 'url' => '/test-a/test-a1']);
+        $testAUuid = $testA->getUuid();
+        $testA1Uuid = $testA1->getUuid();
+
+        self::ensureKernelShutdown();
+
+        $this->deletePage($testA1Uuid);
+        $this->deletePage($testAUuid);
+        $this->restorePage($testA1Uuid, $aboutUs->getUuid());
+
+        $restoredPage = self::getContainer()->get('sulu_page.page_repository')->findOneBy(['uuid' => $testA1Uuid]);
+        $this->assertNotNull($restoredPage);
+        $this->assertSame($aboutUs->getUuid(), $restoredPage->getParent()?->getUuid());
+        $this->assertSame(2, $restoredPage->getDepth());
+    }
+
+    private function deletePage(string $uuid): void
+    {
+        $this->client->request('DELETE', '/admin/api/pages/' . $uuid . '?locale=en&force=true');
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+    }
+
+    private function restorePage(string $uuid, string $parentUuid): void
+    {
+        $trashItem = self::getContainer()->get(TrashItemRepositoryInterface::class)->findOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $uuid,
+        ]);
+        $this->assertNotNull($trashItem);
+
+        $this->client->jsonRequest(
+            'POST',
+            '/admin/api/trash-items/' . $trashItem->getId() . '?action=restore',
+            ['parentUuid' => $parentUuid],
+        );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        self::getEntityManager()->clear();
+    }
 }
