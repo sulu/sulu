@@ -47,7 +47,7 @@ class SnippetResolver implements SnippetResolverInterface, ResetInterface
      * @param string|null $shadowLocale
      * @param bool $loadExcerpt
      *
-     * @return array
+     * @return array<array<string, mixed>>
      */
     public function resolve($uuids, $webspaceKey, $locale, $shadowLocale = null, $loadExcerpt = false)
     {
