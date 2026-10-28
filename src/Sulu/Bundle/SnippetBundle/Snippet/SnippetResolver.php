@@ -14,7 +14,6 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
-use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Symfony\Contracts\Service\ResetInterface;
