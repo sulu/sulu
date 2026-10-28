@@ -369,3 +369,35 @@ test('Throw error if toolbarActions are neither an object nor an array', () => {
         toolbarActions: false,
     })).toThrow(/toolbarActions/);
 });
+
+test('Destroy all child ToolbarActions', () => {
+    const deleteDestroySpy = jest.fn();
+    const copyDestroySpy = jest.fn();
+
+    formToolbarActionRegistry.get.mockImplementation((key) => {
+        switch (key) {
+            case 'sulu_admin.delete':
+                return class {
+                    destroy = deleteDestroySpy;
+                };
+            case 'sulu_admin.copy':
+                return class {
+                    destroy = copyDestroySpy;
+                };
+        }
+    });
+
+    const dropdownToolbarAction = createDropdownToolbarAction({
+        icon: 'su-edit',
+        label: 'edit',
+        toolbarActions: [
+            {type: 'sulu_admin.delete', options: {}},
+            {type: 'sulu_admin.copy', options: {}},
+        ],
+    });
+
+    dropdownToolbarAction.destroy();
+
+    expect(deleteDestroySpy).toHaveBeenCalledTimes(1);
+    expect(copyDestroySpy).toHaveBeenCalledTimes(1);
+});

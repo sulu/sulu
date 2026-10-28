@@ -1,4 +1,5 @@
 // @flow
+import {observable} from 'mobx';
 import log from 'loglevel';
 import {waitFor} from '@testing-library/react';
 import {ResourceFormStore} from '../../../../containers/Form';
@@ -395,4 +396,54 @@ test('Close dialog and show success message when onClose from CopyLocaleDialog i
     expect(dialogProps).toEqual(expect.objectContaining({
         open: false,
     }));
+});
+
+test('Close the dialog and rebuild the target locales when the locale is switched', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    const locale = observable.box('de');
+    // $FlowFixMe
+    resourceStore.locale = locale;
+    const router = new Router({});
+    const copyLocaleToolbarAction = new CopyLocaleToolbarAction(
+        new ResourceFormStore(resourceStore, 'test'),
+        new Form({locales: [], resourceStore, route: router.route, router}),
+        router,
+        ['de', 'en', 'fr'],
+        {},
+        resourceStore
+    );
+    const initialFormStore = copyLocaleToolbarAction.formStore;
+    const destroySpy = jest.spyOn(initialFormStore, 'destroy');
+    copyLocaleToolbarAction.showCopyLocaleDialog = true;
+
+    locale.set('en');
+
+    expect(copyLocaleToolbarAction.showCopyLocaleDialog).toBe(false);
+    expect(destroySpy).toHaveBeenCalled();
+    expect(copyLocaleToolbarAction.formStore).not.toBe(initialFormStore);
+    expect(metadataStore.getSchema).toHaveBeenLastCalledWith('copy_locale', undefined, {locales: ['de', 'fr']});
+});
+
+test('Stop following the locale when destroyed', () => {
+    const resourceStore = new ResourceStore('test', 3);
+    const locale = observable.box('de');
+    // $FlowFixMe
+    resourceStore.locale = locale;
+    const router = new Router({});
+    const copyLocaleToolbarAction = new CopyLocaleToolbarAction(
+        new ResourceFormStore(resourceStore, 'test'),
+        new Form({locales: [], resourceStore, route: router.route, router}),
+        router,
+        ['de', 'en', 'fr'],
+        {},
+        resourceStore
+    );
+    const formStore = copyLocaleToolbarAction.formStore;
+    const destroySpy = jest.spyOn(formStore, 'destroy');
+
+    copyLocaleToolbarAction.destroy();
+    locale.set('en');
+
+    expect(destroySpy).toHaveBeenCalledTimes(1);
+    expect(copyLocaleToolbarAction.formStore).toBe(formStore);
 });
