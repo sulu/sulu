@@ -37,6 +37,7 @@ final class RouteAdmin extends Admin
     {
         return [
             'generateUrl' => $this->urlGenerator->generate('sulu_route.post_resource_locator'),
+            'routeUrl' => $this->urlGenerator->generate('sulu_route.get_route_url'),
         ];
     }
 }

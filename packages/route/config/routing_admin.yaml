@@ -1,0 +1,4 @@
+sulu_route.get_route_url:
+    path: /route-url
+    methods: GET
+    controller: sulu_route.route_url_controller

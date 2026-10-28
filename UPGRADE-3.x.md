@@ -49,6 +49,16 @@ sulu_content_api:
     prefix: /admin/api
 ```
 
+### Route admin routes
+
+The "Open URL" button of the URL field needs the redirect route. Add to `config/routes/sulu_admin.yaml`:
+
+```yaml
+sulu_route_admin:
+    resource: "@SuluRouteBundle/config/routing_admin.yaml"
+    prefix: /admin
+```
+
 ### Snippets support shadow locales
 
 Snippet dimension contents can now shadow another locale, like pages and articles. Two columns,
