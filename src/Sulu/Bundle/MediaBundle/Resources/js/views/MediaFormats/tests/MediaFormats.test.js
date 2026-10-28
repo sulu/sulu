@@ -254,41 +254,49 @@ test('Download the image in the given format when icon is clicked', async() => {
     click.mockRestore();
 });
 
-test('Show the master file row and open, download and copy its URL', async() => {
+test('Download the original file via the toolbar', () => {
     const formatStore = require('../../../stores/formatStore');
-    const formatPromise = Promise.resolve([]);
-    formatStore.loadFormats.mockReturnValue(formatPromise);
+    formatStore.loadFormats.mockReturnValue(Promise.resolve());
 
-    window.open = jest.fn();
-    const copyToClipboard = require('copy-to-clipboard');
+    const MediaFormats = require('../MediaFormats').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const router = createRouter();
+    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+    resourceStore.data.adminUrl = '/admin/media/1/download/image.jpg?v=1';
+    resourceStore.data.url = '/media/1/download/image.jpg?v=1';
+
     const click = jest.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function() {
         click.mock.hrefs.push(this.href);
     });
     click.mock.hrefs = [];
 
+    render(<MediaFormats resourceStore={resourceStore} router={router} />);
+
+    const item = getToolbarConfig().items[0];
+    expect(item).toEqual(expect.objectContaining({
+        disabled: false,
+        icon: 'su-download',
+        label: 'sulu_media.download_masterfile',
+    }));
+
+    item.onClick();
+    expect(click.mock.hrefs).toEqual(['http://localhost/admin/media/1/download/image.jpg?v=1&inline=0']);
+
+    click.mockRestore();
+});
+
+test('Disable the original file download in the toolbar if the media has no url', () => {
+    const formatStore = require('../../../stores/formatStore');
+    formatStore.loadFormats.mockReturnValue(Promise.resolve());
+
     const MediaFormats = require('../MediaFormats').default;
     const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
-    const user = createUser();
     const router = createRouter();
     const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
-    resourceStore.data.name = 'image.jpg';
-    resourceStore.data.adminUrl = '/admin/media/1/download/image.jpg?v=1';
 
     render(<MediaFormats resourceStore={resourceStore} router={router} />);
 
-    await formatPromise;
-    expect(await screen.findByText('sulu_media.master_file')).toBeInTheDocument();
-
-    await user.click(getFormatButton('image.jpg', 'su-eye'));
-    expect(window.open).toHaveBeenLastCalledWith('/admin/media/1/download/image.jpg?v=1&inline=1');
-
-    await user.click(getFormatButton('image.jpg', 'su-download'));
-    expect(click.mock.hrefs).toEqual(['http://localhost/admin/media/1/download/image.jpg?v=1&inline=0']);
-
-    await user.click(getFormatButton('image.jpg', 'su-copy'));
-    expect(copyToClipboard).toHaveBeenLastCalledWith('http://localhost/admin/media/1/download/image.jpg?v=1');
-
-    click.mockRestore();
+    expect(getToolbarConfig().items[0].disabled).toEqual(true);
 });
 
 test('Should change locale via locale chooser', () => {

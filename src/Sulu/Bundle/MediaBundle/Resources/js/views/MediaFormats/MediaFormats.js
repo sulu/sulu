@@ -7,12 +7,13 @@ import {Loader, Table} from 'sulu-admin-bundle/components';
 import {withToolbar} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
+import downloadFile from '../../utils/downloadFile';
+import downloadOriginalFile from '../../utils/downloadOriginalFile';
 import formatStore from '../../stores/formatStore';
 import mediaFormatsStyles from './mediaFormats.scss';
 import type {ViewProps} from 'sulu-admin-bundle/containers';
 
 const COLLECTION_ROUTE = 'sulu_media.overview';
-const MASTER_FILE_ID = '__master_file__';
 
 function appendQueryParameter(url: string, parameter: string): string {
     return url + (url.includes('?') ? '&' : '?') + parameter;
@@ -55,14 +56,8 @@ class MediaFormats extends React.Component<Props> {
         return this.props.resourceStore.data.thumbnails;
     }
 
-    @computed get masterFileUrl(): ?string {
-        const {adminUrl, url} = this.props.resourceStore.data;
-
-        return adminUrl || url;
-    }
-
     getUrl(id: string | number): string {
-        return (id === MASTER_FILE_ID ? this.masterFileUrl : this.thumbnails[id]) || '';
+        return this.thumbnails[id] || '';
     }
 
     handleOpenClick = (id: string | number) => {
@@ -70,10 +65,7 @@ class MediaFormats extends React.Component<Props> {
     };
 
     handleDownloadClick = (id: string | number) => {
-        const link = document.createElement('a');
-        link.href = appendQueryParameter(this.getUrl(id), 'inline=0');
-        link.download = '';
-        link.click();
+        downloadFile(this.getUrl(id));
     };
 
     @action handleCopyClick = (id: string | number) => {
@@ -103,20 +95,9 @@ class MediaFormats extends React.Component<Props> {
         const getRowButtons = (id) => this.copySuccessThumbnailKey === id
             ? [buttons[0], buttons[1], {icon: 'su-check', onClick: undefined}]
             : buttons;
-        const rows = [];
-
-        if (this.masterFileUrl) {
-            rows.push(
-                <Table.Row buttons={getRowButtons(MASTER_FILE_ID)} id={MASTER_FILE_ID} key={MASTER_FILE_ID}>
-                    <Table.Cell>{translate('sulu_media.master_file')}</Table.Cell>
-                    <Table.Cell>{resourceStore.data.name}</Table.Cell>
-                </Table.Row>
-            );
-        }
-
-        (formats || [])
+        const rows = (formats || [])
             .filter((format) => !format.internal)
-            .forEach((format: Object) => rows.push(
+            .map((format: Object) => (
                 <Table.Row buttons={getRowButtons(format.key)} id={format.key} key={format.key}>
                     <Table.Cell>{format.title}</Table.Cell>
                     <Table.Cell>{format.key}</Table.Cell>
@@ -159,8 +140,19 @@ export default withToolbar(MediaFormats, function() {
         }
         : undefined;
 
+    const {adminUrl, url} = resourceStore.data;
+
     return {
         locale,
+        items: [
+            {
+                type: 'button',
+                icon: 'su-download',
+                label: translate('sulu_media.download_masterfile'),
+                disabled: !adminUrl && !url,
+                onClick: () => downloadOriginalFile(resourceStore.data),
+            },
+        ],
         backButton: {
             onClick: () => {
                 router.restore(COLLECTION_ROUTE, {locale: resourceStore.locale.get()});
