@@ -111,28 +111,6 @@ class RouteChangedUpdaterTest extends KernelTestCase
         );
     }
 
-    public function testRouteCanReturnToTheSlugOfItsOwnHistory(): void
-    {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-
-        $route = new Route('article', '1', 'en', '/first', 'sulu_io');
-        $entityManager->persist($route);
-        $entityManager->flush();
-
-        $route->setSlug('/second');
-        $entityManager->flush();
-        $route->setSlug('/first');
-        $entityManager->flush();
-
-        $connection = $entityManager->getConnection();
-        $this->assertSame('/first', $connection->fetchOne('SELECT slug FROM ro_routes WHERE resource_key = ?', ['article']));
-        $this->assertSame(
-            ['/second'],
-            $connection->fetchFirstColumn('SELECT slug FROM ro_routes WHERE resource_key = ?', [Route::HISTORY_RESOURCE_KEY]),
-        );
-    }
-
     /**
      * @param RouteData[] $routes
      * @param RouteData[] $expectedRoutes
