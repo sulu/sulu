@@ -1962,10 +1962,13 @@ class PageControllerTest extends SuluTestCase
                 'template' => 'default',
                 'title' => 'Copy Page',
                 'url' => '/copy-page',
-            ]),
+            ], \JSON_THROW_ON_ERROR),
         );
         $this->assertHttpStatusCode(201, $this->client->getResponse());
-        $id = \json_decode((string) $this->client->getResponse()->getContent(), true)['id'];
+
+        /** @var array{id: string} $page */
+        $page = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $id = $page['id'];
 
         $this->client->request('POST', '/admin/api/pages/' . $id . '?locale=en&action=copy_locale&src=en&dest=de,fr');
 
