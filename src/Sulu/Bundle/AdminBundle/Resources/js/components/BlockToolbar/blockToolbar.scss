@@ -1,8 +1,8 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
 .container {
     align-items: center;
-    background: $white;
+    background: $gray0;
     border-radius: 3px;
     display: flex;
     padding: 10px 20px;
@@ -10,15 +10,15 @@
 
     /* current workaround over global as compose import does not work here to get the .block class */
     :global([class^='sortableBlockList-'] [class^='block-']) & {
-        border: 1px solid $silver;
+        border: 1px solid $gray400;
     }
 }
 
 .sticky {
-    border: 1px solid $silver;
+    border: 1px solid $gray400;
     margin-left: -20px;
     margin-right: -20px;
-    box-shadow: 2px 6px 12px 0 rgba($silver, .5);
+    box-shadow: 2px 6px 12px 0 color-mix(in sRGB, $gray400 50%, transparent);
 }
 
 .divide {
@@ -28,7 +28,7 @@
 
 .divide > * {
     align-self: stretch;
-    border-right: 1px solid $silver;
+    border-right: 1px solid $gray400;
     padding: 0 14px;
     display: flex;
     align-items: center;
@@ -44,7 +44,7 @@
 }
 
 .selected {
-    color: $doveGray;
+    color: $gray700;
     font-size: 12px;
 }
 
@@ -76,14 +76,14 @@
     &:hover,
     &:focus {
         &:not(.actionButtonDisabled) {
-            color: $shakespeare;
+            color: $brand500;
             outline: none;
         }
     }
 }
 
 .actionButtonDisabled {
-    color: $silver;
+    color: $gray400;
     cursor: default;
 }
 

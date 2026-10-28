@@ -1,9 +1,9 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
 $radius: 8px;
-$primaryColor: $blueZodiac;
-$secondaryColor: $white;
-$disabledColor: $silver;
+$primaryColor: $brand800;
+$secondaryColor: $gray0;
+$disabledColor: $gray400;
 
 .radio {
     width: calc(2 * $radius);

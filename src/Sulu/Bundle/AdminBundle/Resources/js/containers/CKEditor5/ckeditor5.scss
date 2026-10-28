@@ -1,4 +1,4 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 @import '../../containers/Application/variables.scss';
 @import '../../components/Snackbar/snackbar.scss';
 @import '../../components/Tabs/variables.scss';
@@ -8,17 +8,17 @@ $textEditorFontSize: $baseFontSize;
 $textEditorFontFamily: $baseFontFamily;
 $textEditorButtonMinSize: 20px;
 $textEditorBorderRadius: 3px;
-$textEditorBackgroundColor: $silver;
-$textEditorDarkBackgroundColor: $dustyGray;
+$textEditorBackgroundColor: $gray400;
+$textEditorDarkBackgroundColor: $gray500;
 $textEditorBorderColor: $textEditorBackgroundColor;
 $textEditorDarkBorderColor: $textEditorDarkBackgroundColor;
-$textEditorAccentColor: $shakespeare;
+$textEditorAccentColor: $brand500;
 $textEditorLightAccentColor: #e5f4f7;
-$textEditorWhiteHover: $mercury;
-$textEditorPanelBackground: $white;
+$textEditorWhiteHover: $gray200;
+$textEditorPanelBackground: $gray0;
 $textEditorLinkColor: #00f;
-$textEditorRemovedLinkColor: $roman;
-$textEditorUnpublishedLinkColor: $gold;
+$textEditorRemovedLinkColor: $danger400;
+$textEditorUnpublishedLinkColor: $warning500;
 
 :global {
     :root {

@@ -1,9 +1,9 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$itemsBackgroundLightColor: $alabaster;
+$itemsBackgroundLightColor: $gray50;
 $itemsBackgroundDarkColor: transparent;
-$itemsContainerBorderLightColor: $gallery;
-$itemsContainerBorderDarkColor: rgba($silverChalice, .25);
+$itemsContainerBorderLightColor: $gray200;
+$itemsContainerBorderDarkColor: color-mix(in sRGB, $gray500 25%, transparent);
 
 $itemsContainerBorderLight: 1px $itemsContainerBorderLightColor solid;
 $itemsContainerBorderDark: 1px $itemsContainerBorderDarkColor solid;

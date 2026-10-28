@@ -1,13 +1,13 @@
-@import '../Application/colors.scss';
+@import '../Application/palette.scss';
 @import '../Application/variables.scss';
 
-$dragBoxShadowColor: rgba($black, .1);
+$dragBoxShadowColor: color-mix(in sRGB, $gray950 10%, transparent);
 
-$optionColor: $black;
-$optionBackgroundColor: $silver;
+$optionColor: $gray950;
+$optionBackgroundColor: $gray400;
 
-$optionDisabledColor: $dustyGray;
-$optionDisabledBackgroundColor: $mercury;
+$optionDisabledColor: $gray500;
+$optionDisabledBackgroundColor: $gray200;
 
 .overlay {
     display: flex;

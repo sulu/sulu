@@ -1,9 +1,9 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$hotspotsFormRendererBackgroundColor: $white;
-$hotspotsFormRendererBorderColor: $silver;
+$hotspotsFormRendererBackgroundColor: $gray0;
+$hotspotsFormRendererBorderColor: $gray400;
 $hotspotsFormRendererTabsBackgroundColor: transparent;
-$hotspotsFormRendererEmptyTabsLabelColor: $scorpion;
+$hotspotsFormRendererEmptyTabsLabelColor: $gray800;
 
 .hotspots-form-renderer {
     background-color: $hotspotsFormRendererBackgroundColor;

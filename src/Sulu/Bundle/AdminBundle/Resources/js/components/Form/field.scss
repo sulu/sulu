@@ -1,11 +1,11 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 @import './variables.scss';
 
-$labelColor: $scorpion;
-$labelDarkColor: $silver;
-$labelErrorColor: $roman;
-$errorLabelColor: $persianRed;
-$errorLabelBackgroundColor: $roman;
+$labelColor: $gray800;
+$labelDarkColor: $gray400;
+$labelErrorColor: $danger400;
+$errorLabelColor: $danger500;
+$errorLabelBackgroundColor: $danger400;
 
 $errorLabelHeight: 20px;
 

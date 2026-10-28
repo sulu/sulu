@@ -1,7 +1,7 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
-$itemTextColor: $black;
-$itemTextColorActive: $shakespeare;
+$itemTextColor: $gray950;
+$itemTextColorActive: $brand500;
 
 .item {
     display: block;

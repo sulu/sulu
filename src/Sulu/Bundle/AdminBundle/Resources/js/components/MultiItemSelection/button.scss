@@ -1,9 +1,9 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$buttonTextColor: $scorpion;
-$buttonTextColorActive: $white;
-$buttonBackgroundColor: $alto;
-$buttonBackgroundColorActive: $shakespeare;
+$buttonTextColor: $gray800;
+$buttonTextColorActive: $gray0;
+$buttonBackgroundColor: $gray300;
+$buttonBackgroundColorActive: $brand500;
 $buttonMargin: 2px;
 
 .button {

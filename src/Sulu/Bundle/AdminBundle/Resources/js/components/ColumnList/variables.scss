@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$columnListBackgroundColor: $white;
-$columnBorderColor: $silver;
+$columnListBackgroundColor: $gray0;
+$columnBorderColor: $gray400;
 $columnBorderWidth: 1px;
 $columnBorder: $columnBorderWidth solid $columnBorderColor;
 $columnListBorderRadius: 3px;

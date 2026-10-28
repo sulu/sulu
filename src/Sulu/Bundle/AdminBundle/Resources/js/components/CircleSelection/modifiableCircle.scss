@@ -1,16 +1,16 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$backgroundColor: rgba($black, .6);
-$borderColor: $white;
+$backgroundColor: color-mix(in sRGB, $gray950 60%, transparent);
+$borderColor: $gray0;
 $borderSize: 2px;
-$backgroundColorFilled: $white;
-$backgroundColorFilledDisabled: rgba($backgroundColorFilled, .6);
-$boxShadowColorFilled: rgba($black, .6);
-$labelColor: $white;
-$labelColorDisabled: rgba($labelColor, .5);
-$labelColorFilled: $black;
-$labelColorFilledDisabled: rgba($labelColorFilled, .6);
-$resizeHandleBoxShadowColor: rgba($black, .3);
+$backgroundColorFilled: $gray0;
+$backgroundColorFilledDisabled: color-mix(in sRGB, $backgroundColorFilled 60%, transparent);
+$boxShadowColorFilled: color-mix(in sRGB, $gray950 60%, transparent);
+$labelColor: $gray0;
+$labelColorDisabled: color-mix(in sRGB, $labelColor 50%, transparent);
+$labelColorFilled: $gray950;
+$labelColorFilledDisabled: color-mix(in sRGB, $labelColorFilled 60%, transparent);
+$resizeHandleBoxShadowColor: color-mix(in sRGB, $gray950 30%, transparent);
 
 .circle {
     position: absolute;

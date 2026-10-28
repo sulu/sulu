@@ -1,4 +1,4 @@
-@import 'sulu-admin-bundle/containers/Application/colors.scss';
+@import 'sulu-admin-bundle/containers/Application/palette.scss';
 
 $iconsTextColor: #262626;
 
@@ -26,7 +26,7 @@ $iconsTextColor: #262626;
     padding: 16px;
     border: 1px solid transparent;
     border-radius: 12px;
-    background: rgba($white, .5);
+    background: color-mix(in sRGB, $gray0 50%, transparent);
     text-align: center;
     transition: border-color .15s ease;
     cursor: pointer;
@@ -38,11 +38,11 @@ $iconsTextColor: #262626;
     }
 
     &:hover {
-        border-color: rgba($black, .2);
+        border-color: color-mix(in sRGB, $gray950 20%, transparent);
     }
 
     &.is-selected {
-        border-color: $shakespeare;
+        border-color: $brand500;
     }
 }
 

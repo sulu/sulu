@@ -1,7 +1,7 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$segmentCounterColor: $scorpion;
-$segmentCounterExceededColor: $persianRed;
+$segmentCounterColor: $gray800;
+$segmentCounterExceededColor: $danger500;
 
 .segment-counter {
     color: $segmentCounterColor;

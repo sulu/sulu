@@ -1,10 +1,10 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$listBorderColor: $alto;
+$listBorderColor: $gray300;
 $listBorderRadius: 3px;
-$listElementBackgroundColor: $white;
-$listElementBorderBottomColor: $silver;
-$listElementDragBoxShadowColor: rgba($black, .1);
+$listElementBackgroundColor: $gray0;
+$listElementBorderBottomColor: $gray400;
+$listElementDragBoxShadowColor: color-mix(in sRGB, $gray950 10%, transparent);
 
 .multiItemSelectionClass {
     &.disabled {

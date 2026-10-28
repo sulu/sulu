@@ -1,11 +1,11 @@
-@import '../../containers/Application/colors.scss';
+@import '../../containers/Application/palette.scss';
 
-$multiAutoCompleteBackgroundColor: $white;
-$multiAutoCompleteBorderColor: $silver;
-$multiAutoCompleteIconColor: $dustyGray;
+$multiAutoCompleteBackgroundColor: $gray0;
+$multiAutoCompleteBorderColor: $gray400;
+$multiAutoCompleteIconColor: $gray500;
 
-$multiAutoCompleteDisabledColor: $gray;
-$multiAutoCompleteDisabledBackgroundColor: $wildSand;
+$multiAutoCompleteDisabledColor: $gray600;
+$multiAutoCompleteDisabledBackgroundColor: $gray100;
 
 .multi-auto-complete {
     background-color: $multiAutoCompleteBackgroundColor;
