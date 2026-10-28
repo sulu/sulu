@@ -11,7 +11,10 @@ jest.mock('../../../../utils/Translator', () => ({
 
 // The inner form inspector of the container: value, errors and modified state live in its store.
 jest.mock('../../../Form/FormInspector', () => jest.fn(function() {
-    this.getValueByPath = jest.fn((dataPath) => this.data[dataPath.substring(1)]);
+    this.getValueByPath = jest.fn((dataPath) => dataPath.substring(1).split('/').reduce(
+        (value, key) => value === undefined || value === null ? undefined : value[key],
+        this.data
+    ));
 }));
 
 // The container Field is the real form field renderer; stand in with an input that shows what it got.
@@ -24,6 +27,7 @@ jest.mock('../../../Form/Field', () => function Field(props) {
         'data-label': props.schema.label,
         'data-name': props.name,
         'data-path': props.dataPath,
+        'data-required': String(!!props.schema.required),
         'data-schema-path': props.schemaPath,
         'data-type': props.schema.type,
         disabled: props.schema.disabledCondition === 'true',
@@ -275,4 +279,128 @@ test('shows no placeholder while there are rows', () => {
     renderComponent();
 
     expect(screen.queryByLabelText('su-battery-low')).not.toBeInTheDocument();
+});
+
+const RANGE_SCHEMA = {
+    attribute_group_1: {
+        items: {
+            attribute_5: {
+                items: {
+                    from: {label: 'From', options: {}, required: false, type: 'number'},
+                    to: {options: {}, required: false, type: 'number'},
+                },
+                label: 'Length (mm)',
+                type: 'section',
+            },
+        },
+        label: 'Dimensions',
+        type: 'section',
+    },
+};
+
+test('renders a section row as one row with a field per item', async() => {
+    renderComponent({data: {attribute_5: {from: 1, to: 9}}, schema: RANGE_SCHEMA});
+    await expandAllGroups();
+
+    expect(screen.getByText('Length (mm)')).toBeInTheDocument();
+
+    const inputs = screen.getAllByRole('textbox');
+    expect(inputs).toHaveLength(2);
+    expect(inputs[0]).toHaveAttribute('data-name', 'from');
+    expect(inputs[0]).toHaveAttribute('data-path', '/attribute_5/from');
+    expect(inputs[0]).toHaveAttribute('data-schema-path', '/attribute_group_1/items/attribute_5/items/from');
+    expect(inputs[0]).toHaveAttribute('data-label', 'From');
+    expect(inputs[0]).toHaveValue('1');
+    expect(inputs[1]).toHaveAttribute('data-path', '/attribute_5/to');
+    expect(inputs[1]).toHaveValue('9');
+});
+
+test('marks a section row as required once when one of its items is', async() => {
+    renderComponent({
+        data: {},
+        schema: {
+            attribute_group_1: {
+                items: {
+                    attribute_5: {
+                        items: {
+                            from: {label: 'From', options: {}, required: true, type: 'number'},
+                            to: {label: 'To', options: {}, required: true, type: 'number'},
+                        },
+                        label: 'Length (mm)',
+                        type: 'section',
+                    },
+                },
+                label: 'Dimensions',
+                type: 'section',
+            },
+        },
+    });
+    await expandAllGroups();
+
+    expect(screen.getByText('Length (mm) *')).toBeInTheDocument();
+    expect(screen.getAllByRole('textbox')[0]).toHaveAttribute('data-required', 'false');
+});
+
+test('renders the items of a section row empty when the row has no value', async() => {
+    renderComponent({data: {}, schema: RANGE_SCHEMA});
+    await expandAllGroups();
+
+    screen.getAllByRole('textbox').forEach((input) => {
+        expect(input).toHaveValue('');
+    });
+});
+
+test('emits the whole object of a section row when one of its items changes', async() => {
+    const onChange = jest.fn();
+    renderComponent({data: {attribute_5: {from: 1, to: 9}}, onChange, schema: RANGE_SCHEMA});
+    await expandAllGroups();
+
+    await userEvent.type(screen.getAllByRole('textbox')[1], '5');
+
+    expect(onChange).toHaveBeenLastCalledWith('attribute_5', {from: 1, to: '95'});
+});
+
+test('emits an object with the single item when a section row has no value yet', async() => {
+    const onChange = jest.fn();
+    renderComponent({data: {}, onChange, schema: RANGE_SCHEMA});
+    await expandAllGroups();
+
+    await userEvent.type(screen.getAllByRole('textbox')[0], '3');
+
+    expect(onChange).toHaveBeenLastCalledWith('attribute_5', {from: '3'});
+});
+
+test('finishes an item of a section row with its own paths', async() => {
+    const onFinish = jest.fn();
+    renderComponent({data: {}, onFinish, schema: RANGE_SCHEMA});
+    await expandAllGroups();
+
+    await userEvent.click(screen.getAllByRole('textbox')[1]);
+    await userEvent.tab();
+
+    expect(onFinish).toHaveBeenCalledWith(
+        '/attribute_5/to',
+        '/attribute_group_1/items/attribute_5/items/to'
+    );
+});
+
+test('shows the error of an item of a section row on that item only', async() => {
+    renderComponent({
+        data: {},
+        errors: {attribute_5: {to: {keyword: 'maximum', parameters: {}}}},
+        schema: RANGE_SCHEMA,
+    });
+    await expandAllGroups();
+
+    expect(screen.getAllByRole('textbox')[0]).not.toHaveAttribute('data-error');
+    expect(screen.getAllByRole('textbox')[1]).toHaveAttribute('data-error', 'maximum');
+});
+
+test('disables the items of a section row when disabled', async() => {
+    renderComponent({data: {}, disabled: true, schema: RANGE_SCHEMA});
+    await expandAllGroups();
+
+    screen.getAllByRole('textbox').forEach((input) => {
+        expect(input).toBeDisabled();
+    });
 });

@@ -11,7 +11,7 @@ import FormInspector from '../../Form/FormInspector';
 import AttributeGroupTable from '../AttributeGroupTable';
 import productAttributesRendererStyles from './productAttributesRenderer.scss';
 import type {Node} from 'react';
-import type {Error, Schema, SchemaEntry} from '../../Form/types';
+import type {Error, ErrorCollection, Schema, SchemaEntry} from '../../Form/types';
 
 export type Row = {
     name: string,
@@ -35,7 +35,7 @@ type Props = {|
     allExpanded: boolean,
     data: Object,
     disabled: boolean,
-    errors: {[string]: Error},
+    errors: {[string]: Error | ErrorCollection},
     filterItem: (row: Row) => boolean,
     formInspector: FormInspector,
     onChange: (name: string, value: mixed) => void,
@@ -122,6 +122,65 @@ class ProductAttributesRenderer extends React.Component<Props> {
         );
     }
 
+    // The row carries the marker once, for a section when one of its items is required.
+    isRequired(schema: SchemaEntry): boolean {
+        const {items} = schema;
+
+        return !!schema.required
+            || (!!items && Object.keys(items).some((itemName) => !!items[itemName].required));
+    }
+
+    // A change of one item emits the whole object of its row, because the row's value is stored as one.
+    createItemChangeHandler(rowName: string) {
+        const {formInspector, onChange} = this.props;
+
+        return (itemName: string, itemValue: mixed) => onChange(
+            rowName,
+            {...formInspector.getValueByPath('/' + rowName), [itemName]: itemValue}
+        );
+    }
+
+    // An attribute with several properties arrives as a section; its value is one object keyed by the item names.
+    renderSectionItems(row: Row, sectionKey: string) {
+        const {data, disabled, errors, formInspector, onFinish, router} = this.props;
+        const {name, schema} = row;
+        const rowDataPath = '/' + name;
+        const rowErrors: ?Object = errors[name];
+        const items = schema.items || {};
+
+        return (
+            <div className={productAttributesRendererStyles.sectionItems}>
+                {Object.keys(items).map((itemName) => {
+                    const itemDataPath = rowDataPath + '/' + itemName;
+                    const itemSchema = items[itemName];
+
+                    return (
+                        <Field
+                            data={data}
+                            dataPath={itemDataPath}
+                            error={rowErrors ? rowErrors[itemName] : undefined}
+                            formInspector={formInspector}
+                            key={itemName}
+                            name={itemName}
+                            onChange={this.createItemChangeHandler(name)}
+                            onFinish={onFinish}
+                            onSuccess={undefined}
+                            router={router}
+                            schema={{
+                                ...itemSchema,
+                                colSpan: 12,
+                                disabledCondition: disabled ? 'true' : itemSchema.disabledCondition,
+                                required: false,
+                            }}
+                            schemaPath={'/' + sectionKey + '/items/' + name + '/items/' + itemName}
+                            value={formInspector.getValueByPath(itemDataPath)}
+                        />
+                    );
+                })}
+            </div>
+        );
+    }
+
     renderRow(row: Row, sectionKey: string) {
         const {data, errors, formInspector, onChange, onFinish, router} = this.props;
         const {name, schema, toggle} = row;
@@ -130,25 +189,28 @@ class ProductAttributesRenderer extends React.Component<Props> {
         return (
             <Table.Row id={name} key={name}>
                 <Table.Cell className={productAttributesRendererStyles.labelCell}>
-                    {schema.label}{schema.required ? ' *' : ''}
+                    {schema.label}{this.isRequired(schema) ? ' *' : ''}
                 </Table.Cell>
                 <Table.Cell className={productAttributesRendererStyles.fieldCell}>
                     <div className={productAttributesRendererStyles.fieldWithToggle}>
                         <div className={productAttributesRendererStyles.field}>
-                            <Field
-                                data={data}
-                                dataPath={rowDataPath}
-                                error={errors[name]}
-                                formInspector={formInspector}
-                                name={name}
-                                onChange={onChange}
-                                onFinish={onFinish}
-                                onSuccess={undefined}
-                                router={router}
-                                schema={this.rowSchema(schema)}
-                                schemaPath={'/' + sectionKey + '/items/' + name}
-                                value={formInspector.getValueByPath(rowDataPath)}
-                            />
+                            {schema.type === 'section' && schema.items
+                                ? this.renderSectionItems(row, sectionKey)
+                                : <Field
+                                    data={data}
+                                    dataPath={rowDataPath}
+                                    error={errors[name]}
+                                    formInspector={formInspector}
+                                    name={name}
+                                    onChange={onChange}
+                                    onFinish={onFinish}
+                                    onSuccess={undefined}
+                                    router={router}
+                                    schema={this.rowSchema(schema)}
+                                    schemaPath={'/' + sectionKey + '/items/' + name}
+                                    value={formInspector.getValueByPath(rowDataPath)}
+                                />
+                            }
                         </div>
                         {toggle && this.renderToggle(toggle, sectionKey)}
                     </div>
