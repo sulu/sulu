@@ -25,7 +25,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class SnippetResolver implements SnippetResolverInterface, ResetInterface
 {
     /**
-     * @var array<array|StructureInterface>
+     * @var array<array<string, mixed>>
      */
     private $snippetCache = [];
 
