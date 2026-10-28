@@ -1,5 +1,4 @@
 @import '../Application/colors.scss';
-@import '../../components/Overlay/variables.scss';
 
 /* the list takes whatever the fixed dialog height leaves over and scrolls on its own, so the prompt
    stays reachable no matter how long the conversation gets */
@@ -12,12 +11,8 @@
 }
 
 /* the selected text stays in place so it can be compared with an answer further down the list.
-   answers scrolling out of view fade into the background instead of being cut off hard.
-   a long selection must not push the answers out of the fixed dialog height, so the text of the
-   selection scrolls within a share of it (see the max-height of .text in message.scss) */
+   answers scrolling out of view fade into the background instead of being cut off hard */
 .selected-text {
-    --message-text-max-height: calc(#{$overlayContentMaxHeight} * 0.3);
-
     position: sticky;
     top: 0;
     z-index: 1;

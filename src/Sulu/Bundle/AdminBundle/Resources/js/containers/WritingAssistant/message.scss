@@ -1,3 +1,5 @@
+@import '../../components/Overlay/variables.scss';
+
 .reply {
     display: flex;
     flex-direction: row;
@@ -32,7 +34,13 @@
 .text {
     overflow: auto;
     line-height: 1.5;
-    max-height: var(--message-text-max-height, 300px);
+    max-height: 300px;
+}
+
+/* a long selection must not push the answers out of the fixed dialog height, so the selected text scrolls
+   within a share of it */
+.selected-text {
+    max-height: calc($overlayContentMaxHeight * 0.3);
 }
 
 .actions {
