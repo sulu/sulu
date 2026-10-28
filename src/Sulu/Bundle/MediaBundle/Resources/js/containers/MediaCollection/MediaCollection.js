@@ -8,6 +8,7 @@ import {translate} from 'sulu-admin-bundle/utils/Translator';
 import CollectionStore from '../../stores/CollectionStore';
 import MultiMediaDropzone from '../MultiMediaDropzone';
 import CollectionSection from './CollectionSection';
+import type {ItemActionsProvider} from 'sulu-admin-bundle/containers/List/types';
 import type {OverlayType} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
@@ -17,6 +18,7 @@ type Props = {|
     collectionListStore: ListStore,
     collectionStore: CollectionStore,
     hideUploadAction: boolean,
+    itemActionsProvider?: ItemActionsProvider,
     locale: IObservableValue<string>,
     mediaListAdapters: Array<string>,
     mediaListRef?: (?ElementRef<typeof List>) => void,
@@ -81,6 +83,7 @@ class MediaCollection extends React.Component<Props> {
             collectionListStore,
             collectionStore,
             hideUploadAction,
+            itemActionsProvider,
             locale,
             overlayType,
             mediaListAdapters,
@@ -140,6 +143,7 @@ class MediaCollection extends React.Component<Props> {
                 <List
                     actions={listActions}
                     adapters={mediaListAdapters}
+                    itemActionsProvider={itemActionsProvider}
                     onDeleteError={onDeleteError}
                     onItemClick={onMediaNavigate}
                     ref={mediaListRef}

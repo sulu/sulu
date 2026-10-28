@@ -174,6 +174,27 @@ class MediaOverview extends React.Component<ViewProps> {
         );
     };
 
+    getDownloadItemActions = (item: ?Object) => {
+        const url = item?.adminUrl || item?.url;
+
+        return [
+            {
+                disabled: !!item && !url,
+                icon: 'su-download',
+                onClick: () => {
+                    if (!url) {
+                        return;
+                    }
+
+                    const link = document.createElement('a');
+                    link.href = window.location.origin + url + (url.includes('?') ? '&' : '?') + 'inline=0';
+                    link.download = '';
+                    link.click();
+                },
+            },
+        ];
+    };
+
     setMediaListRef = (mediaList: ?ElementRef<typeof List>) => {
         this.mediaList = mediaList;
     };
@@ -207,6 +228,7 @@ class MediaOverview extends React.Component<ViewProps> {
                     collectionListStore={this.collectionListStore}
                     collectionStore={this.collectionStore}
                     hideUploadAction={true}
+                    itemActionsProvider={this.getDownloadItemActions}
                     locale={this.locale}
                     mediaListAdapters={['media_card_overview', 'table']}
                     mediaListRef={this.setMediaListRef}

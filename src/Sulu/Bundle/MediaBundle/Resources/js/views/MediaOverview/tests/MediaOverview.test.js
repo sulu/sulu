@@ -228,6 +228,40 @@ test('Render a simple MediaOverview', () => {
     }));
 });
 
+test('Pass a download action for media to MediaCollection', () => {
+    renderMediaOverview(createRouter());
+
+    const MediaCollection = require('../../../containers/MediaCollection');
+    const {itemActionsProvider} = MediaCollection.mock.calls[0][0];
+
+    expect(itemActionsProvider({id: 1})[0]).toEqual(expect.objectContaining({disabled: true, icon: 'su-download'}));
+    expect(itemActionsProvider({id: 1, url: '/media/1'})[0].disabled).toBe(false);
+    expect(itemActionsProvider(undefined)[0].disabled).toBe(false);
+});
+
+test('Download the file with inline=0 when the download action is clicked', () => {
+    renderMediaOverview(createRouter());
+
+    const MediaCollection = require('../../../containers/MediaCollection');
+    const {itemActionsProvider} = MediaCollection.mock.calls[0][0];
+
+    const click = jest.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+    const createElement = jest.spyOn(document, 'createElement');
+
+    itemActionsProvider({adminUrl: '/admin/media/1?v=2', url: '/media/1'})[0].onClick(1, 0);
+    itemActionsProvider({url: '/media/2'})[0].onClick(2, 0);
+
+    const links = createElement.mock.results.map((result) => result.value);
+    expect(links).toHaveLength(2);
+    expect(links[0].href).toBe(window.location.origin + '/admin/media/1?v=2&inline=0');
+    expect(links[0].download).toBe('');
+    expect(links[1].href).toBe(window.location.origin + '/media/2?inline=0');
+    expect(click).toHaveBeenCalledTimes(2);
+
+    click.mockRestore();
+    createElement.mockRestore();
+});
+
 test('Destroy all stores on unmount', () => {
     const router = createRouter();
     const {unmount} = renderMediaOverview(router);
