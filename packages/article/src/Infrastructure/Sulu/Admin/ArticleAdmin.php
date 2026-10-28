@@ -119,10 +119,6 @@ class ArticleAdmin extends Admin
             $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
         }
 
-        if ($this->securityChecker->hasPermission($securityContext, PermissionTypes::VIEW)) {
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
-        }
-
         $viewCollection->add(
             $this->viewBuilderFactory->createListViewBuilder(static::LIST_VIEW . '_' . $groupIdentifier, '/:locale/' . $groupIdentifier)
                 ->setResourceKey($resourceKey)

@@ -13,7 +13,11 @@ jest.mock('../../../services/ResourceRequester', () => ({
 }));
 jest.mock('../../../utils/Translator');
 jest.mock('../../../containers/Toolbar', () => ({
-    withToolbar: (Component) => Component,
+    withToolbar: (Component, toolbarConfig) => {
+        Component.toolbarConfig = toolbarConfig;
+
+        return Component;
+    },
 }));
 jest.mock('../../../containers', () => ({
     TextEditor: jest.fn(({value}) => <div data-testid="text-editor">{value}</div>),
@@ -79,6 +83,13 @@ jest.mock('../../../containers/List', () => {
 
     class MockList extends MockReact.Component<{onItemClick: (number) => void}> {
         requestSelectionDelete = jest.fn();
+
+        constructor(props) {
+            super(props);
+
+            // $FlowFixMe
+            MockList.lastProps = props;
+        }
 
         handleClick = () => {
             this.props.onItemClick(42);
@@ -381,4 +392,38 @@ test('renders an error message when loading the detail fails', async() => {
     await userEvent.click(screen.getByText('open-item'));
 
     expect(await screen.findByText('test_request_log.detail_error')).toBeInTheDocument();
+});
+
+function toolbarLabels(allowDelete) {
+    // $FlowFixMe
+    const toolbarItems = RequestLog.toolbarConfig.call({
+        allowDelete,
+        listStore: {deletingSelection: false, selectionIds: []},
+        translateKey: (key) => key,
+    }).items;
+
+    return toolbarItems.map((item) => item.label);
+}
+
+test('allows selecting and deleting rows when the route does not restrict it', () => {
+    const List = require('../../../containers/List').default;
+
+    // $FlowFixMe
+    render(<RequestLog router={router} />);
+
+    // $FlowFixMe
+    expect(List.lastProps.selectable).toBe(true);
+    expect(toolbarLabels(true)).toContain('sulu_admin.delete');
+});
+
+test('hides row selection and the delete button when the route disallows deleting', () => {
+    const List = require('../../../containers/List').default;
+    const restrictedRouter = {route: {options: {allowDelete: false, translationPrefix: 'test_request_log.'}}};
+
+    // $FlowFixMe
+    render(<RequestLog router={restrictedRouter} />);
+
+    // $FlowFixMe
+    expect(List.lastProps.selectable).toBe(false);
+    expect(toolbarLabels(false)).not.toContain('sulu_admin.delete');
 });

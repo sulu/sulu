@@ -104,7 +104,7 @@ class RoutableDataMapper implements DataMapperInterface
         }
 
         $parentRoute = $this->findParentRoute($property, $data[$name], $locale);
-        $routeSlug = $this->extractRouteSlug($property, $data[$name]);
+        $routeSlug = $this->extractRouteSlug($property, $data[$name], $parentRoute);
 
         $route = $localizedDimensionContent->getRoute();
         if (!$route instanceof Route
@@ -200,7 +200,7 @@ class RoutableDataMapper implements DataMapperInterface
         return '' !== $routeData;
     }
 
-    private function extractRouteSlug(FieldMetadata $property, mixed $routeData): string
+    private function extractRouteSlug(FieldMetadata $property, mixed $routeData, ?Route $parentRoute): string
     {
         if ('page_tree_route' === $property->getType()) {
             \assert(
@@ -226,7 +226,11 @@ class RoutableDataMapper implements DataMapperInterface
                 \sprintf('Expected property "%s/suffix" be string but "%s" given.', $property->getName(), \get_debug_type($suffix))
             );
 
-            return \rtrim($pagePath, '/') . '/' . \ltrim($suffix, '/');
+            // the submitted path can belong to another locale (e.g. when the content was copied from another
+            // locale), so the path of the parent route in the target locale takes precedence
+            $parentPath = $parentRoute?->getSlug() ?? $pagePath;
+
+            return \rtrim($parentPath, '/') . '/' . \ltrim($suffix, '/');
         }
 
         \assert(

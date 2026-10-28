@@ -77,6 +77,10 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
         return true;
     }
 
+    destroy() {
+        this.toolbarActions.forEach((toolbarAction) => toolbarAction.destroy());
+    }
+
     getToolbarItemConfig(): ?DropdownItemConfig {
         const {icon, label} = this.options;
 

@@ -319,7 +319,7 @@ class ArticleAdminTest extends TestCase
         $this->articleAdmin->configureViews($viewCollection);
 
         $this->assertToolbarActions(
-            ['sulu_admin.add', 'sulu_admin.delete', 'sulu_admin.export'],
+            ['sulu_admin.add', 'sulu_admin.delete'],
             $viewCollection,
             ArticleAdmin::LIST_VIEW . '_default',
         );
@@ -383,7 +383,7 @@ class ArticleAdminTest extends TestCase
         $this->articleAdmin->configureViews($viewCollection);
 
         $this->assertToolbarActions(
-            ['sulu_admin.add', 'sulu_admin.delete', 'sulu_admin.export'],
+            ['sulu_admin.add', 'sulu_admin.delete'],
             $viewCollection,
             ArticleAdmin::LIST_VIEW . '_blog-group',
         );
@@ -482,7 +482,7 @@ class ArticleAdminTest extends TestCase
         $this->assertTrue($viewCollection->has(ArticleAdmin::LIST_VIEW . '_' . GroupProviderInterface::DEFAULT_GROUP));
         $this->assertFalse($viewCollection->has(ArticleAdmin::LIST_VIEW . '_custom'));
         $this->assertToolbarActions(
-            ['sulu_admin.add', 'sulu_admin.delete', 'sulu_admin.export'],
+            ['sulu_admin.add', 'sulu_admin.delete'],
             $viewCollection,
             ArticleAdmin::LIST_VIEW . '_' . GroupProviderInterface::DEFAULT_GROUP,
         );

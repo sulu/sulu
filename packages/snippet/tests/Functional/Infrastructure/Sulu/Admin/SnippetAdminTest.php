@@ -95,6 +95,20 @@ class SnippetAdminTest extends SuluTestCase
         $this->assertArrayNotHasKey(SnippetAdmin::getSnippetSecurityContext('default'), $snippetContexts);
     }
 
+    public function testListToolbarDoesNotContainExportAction(): void
+    {
+        $snippetAdmin = $this->getSnippetAdmin();
+
+        $viewCollection = new ViewCollection();
+        $snippetAdmin->configureViews($viewCollection);
+
+        $actionNames = $this->collectToolbarActionNames($viewCollection);
+
+        // the snippet list API answers with JSON only, see https://github.com/sulu/sulu/issues/9204
+        $this->assertContains('sulu_admin.add', $actionNames);
+        $this->assertNotContains('sulu_admin.export', $actionNames);
+    }
+
     private function getSnippetAdmin(): SnippetAdmin
     {
         /** @var SnippetAdmin $snippetAdmin */
