@@ -30,6 +30,10 @@ sulu_route_api:
     resource: "@SuluRouteBundle/config/routing_admin_api.yaml"
     prefix: /admin/api
 
+sulu_route_admin:
+    resource: "@SuluRouteBundle/config/routing_admin.yaml"
+    prefix: /admin
+
 sulu_search_api:
     resource: "@SuluSearchBundle/config/routing_admin_api.yaml"
     prefix: /admin/api

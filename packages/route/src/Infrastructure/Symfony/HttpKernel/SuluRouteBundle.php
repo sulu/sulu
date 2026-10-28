@@ -35,6 +35,7 @@ use Sulu\Route\Infrastructure\Symfony\DependencyInjection\RouteDefaultsOptionsCo
 use Sulu\Route\Infrastructure\SymfonyCmf\Routing\CmfRouteProvider;
 use Sulu\Route\Userinterface\Controller\Admin\ResourceLocatorGenerateController;
 use Sulu\Route\Userinterface\Controller\Admin\RouteHistoryController;
+use Sulu\Route\Userinterface\Controller\Admin\RouteUrlController;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
@@ -174,6 +175,14 @@ final class SuluRouteBundle extends AbstractBundle
             ->class(ResourceLocatorGenerateController::class)
             ->args([
                 new Reference('sulu_route.resource_locator_generator'),
+            ])
+            ->tag('controller.service_arguments');
+
+        $services->set('sulu_route.route_url_controller')
+            ->class(RouteUrlController::class)
+            ->args([
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_route.route_generator'),
             ])
             ->tag('controller.service_arguments');
 

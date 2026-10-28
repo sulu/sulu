@@ -58,6 +58,7 @@ initializer.addUpdateConfigHook('sulu_route', (config: Object, initialized: bool
         PageTreeRoute,
         {
             generationUrl: config.generateUrl,
+            routeUrl: config.routeUrl,
         }
     );
 });
