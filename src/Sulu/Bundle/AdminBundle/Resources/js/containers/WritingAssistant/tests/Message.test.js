@@ -36,6 +36,16 @@ describe('Message Component', () => {
         expect(screen.getByText(defaultProps.text)).toBeInTheDocument();
     });
 
+    test('limits the height of the selected text only', () => {
+        const {rerender} = render(<Message {...defaultProps} index={0} />);
+
+        expect(screen.getByText(defaultProps.text)).toHaveClass('selectedText');
+
+        rerender(<Message {...defaultProps} index={1} />);
+
+        expect(screen.getByText(defaultProps.text)).not.toHaveClass('selectedText');
+    });
+
     test('renders the expert if provided', () => {
         render(<Message {...defaultProps} expert="Test Expert" />);
 
