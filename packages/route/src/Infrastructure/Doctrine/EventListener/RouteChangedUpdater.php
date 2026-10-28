@@ -182,9 +182,11 @@ class RouteChangedUpdater implements ResetInterface
                 );
             }
 
+            // a route created in this request still carries its temporary id, the history needs the real one
+            $resourceId = $route->hasTemporaryId() ? $route->generateRealResourceId() : $route->getResourceId();
             $historyRoute = new Route(
                 Route::HISTORY_RESOURCE_KEY,
-                $route->getResourceKey() . '::' . $route->getResourceId(),
+                $route->getResourceKey() . '::' . $resourceId,
                 $locale,
                 $oldSlug,
                 $oldWebspace,

@@ -256,6 +256,32 @@ class RouteRepositoryTest extends KernelTestCase
         ]));
     }
 
+    public function testExistByExcludeResourceIgnoresItsOwnHistory(): void
+    {
+        $this->assertFalse($this->routeRepository->existBy([
+            'webspace' => 'the_site',
+            'slug' => '/test',
+            'locale' => 'en',
+            'excludeResource' => [
+                'resourceKey' => 'example',
+                'resourceId' => '1',
+            ],
+        ]));
+    }
+
+    public function testExistByExcludeResourceStillSeesTheHistoryOfAnotherResource(): void
+    {
+        $this->assertTrue($this->routeRepository->existBy([
+            'webspace' => 'the_site',
+            'slug' => '/test-2',
+            'locale' => 'en',
+            'excludeResource' => [
+                'resourceKey' => 'example',
+                'resourceId' => '1',
+            ],
+        ]));
+    }
+
     public function testExistByWebspaceSlugLocaleNotFound(): void
     {
         $this->assertFalse($this->routeRepository->existBy([

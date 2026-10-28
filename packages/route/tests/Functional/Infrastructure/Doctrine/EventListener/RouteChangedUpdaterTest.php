@@ -90,6 +90,27 @@ class RouteChangedUpdaterTest extends KernelTestCase
         $this->assertSame('2', $route2->getResourceId());
     }
 
+    public function testHistoryOfARouteMovedAfterItsCreationKeepsTheRealResourceId(): void
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+
+        $route = Route::createRouteWithTempId('article', fn (): string => '42', 'en', '/first', 'sulu_io');
+        $entityManager->persist($route);
+        $entityManager->flush();
+
+        $route->setSlug('/second');
+        $entityManager->flush();
+
+        $this->assertSame(
+            ['article::42'],
+            $entityManager->getConnection()->fetchFirstColumn(
+                'SELECT resource_id FROM ro_routes WHERE resource_key = ? AND slug = ?',
+                [Route::HISTORY_RESOURCE_KEY, '/first'],
+            ),
+        );
+    }
+
     /**
      * @param RouteData[] $routes
      * @param RouteData[] $expectedRoutes
