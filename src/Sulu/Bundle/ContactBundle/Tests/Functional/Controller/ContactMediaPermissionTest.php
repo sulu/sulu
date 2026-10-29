@@ -20,7 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
@@ -172,9 +172,6 @@ class ContactMediaPermissionTest extends SuluTestCase
         $this->assertNotNull($collectionType);
         $collection->setType($collectionType);
 
-        $mediaType = new MediaType();
-        $mediaType->setName('image');
-
         $file = new File();
         $file->setVersion(1);
 
@@ -185,18 +182,18 @@ class ContactMediaPermissionTest extends SuluTestCase
         $fileVersion->setFile($file);
         $fileVersion->setSize(111111);
         $fileVersion->setDownloadCounter(2);
-        $fileVersion->setChanged(new \DateTime('1950-04-20'));
-        $fileVersion->setCreated(new \DateTime('1950-04-20'));
+        $fileVersion->setChanged(new \DateTimeImmutable('1950-04-20'));
+        $fileVersion->setCreated(new \DateTimeImmutable('1950-04-20'));
         $file->addFileVersion($fileVersion);
 
         $media = new Media();
-        $media->setType($mediaType);
+        $media->setType(MediaInterface::TYPE_IMAGE);
         $media->setCollection($collection);
         $media->addFile($file);
         $file->setMedia($media);
 
         $entityManager = $this->getEntityManager();
-        foreach ([$collection, $mediaType, $fileVersion, $media, $file] as $entity) {
+        foreach ([$collection, $fileVersion, $media, $file] as $entity) {
             $entityManager->persist($entity);
         }
 

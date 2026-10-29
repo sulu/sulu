@@ -14,7 +14,6 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
-use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
@@ -55,7 +54,6 @@ class MediaControllerCollectionPermissionTest extends SuluTestCase
         $this->purgeDatabase();
 
         (new LoadCollectionTypes())->load($this->getEntityManager());
-        (new LoadMediaTypes())->load($this->getEntityManager());
 
         $role = $this->createRole();
         $this->createUser('attacker', $role);
