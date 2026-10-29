@@ -363,7 +363,7 @@ class MediaController extends AbstractMediaController implements
             throw new BadRequestException('Missing "locale" in the query string');
         }
 
-        $destination = $request->query->getInt('destination')
+        $destination = (int) $request->query->getString('destination')
             ?: throw new MissingParameterException(self::class, 'destination');
 
         try {
