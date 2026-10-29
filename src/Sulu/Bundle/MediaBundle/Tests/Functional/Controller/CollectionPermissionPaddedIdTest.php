@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
-use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
@@ -41,7 +40,6 @@ class CollectionPermissionPaddedIdTest extends SuluTestCase
         $this->purgeDatabase();
         $entityManager = $this->getEntityManager();
         (new LoadCollectionTypes())->load($entityManager);
-        (new LoadMediaTypes())->load($entityManager);
 
         $role = $this->createRole();
         $this->createUser($role);
@@ -98,7 +96,7 @@ class CollectionPermissionPaddedIdTest extends SuluTestCase
                 'put collection ' . $padding . $this->forbiddenCollectionId
             );
             $this->assertSame(
-                403,
+                '' === $padding ? 403 : 400, // a padded destination is not a valid integer
                 $this->send(
                     'POST',
                     '/api/media/' . $mediaId . '?action=move&locale=en&destination=' . $padding . $this->forbiddenCollectionId
