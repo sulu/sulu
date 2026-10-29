@@ -61,6 +61,12 @@ class FormMetadata extends AbstractMetadata
     #[Exclude()]
     protected $resources = [];
 
+    /**
+     * Order of the form in the list.
+     */
+    #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
+    private int $priority = 0;
+
     public function __construct()
     {
         $this->schema = new SchemaMetadata();
@@ -249,10 +255,24 @@ class FormMetadata extends AbstractMetadata
         return $this->resources;
     }
 
+    public function getPriority(): int
+    {
+        return $this->priority;
+    }
+
+    public function setPriority(int $priority): void
+    {
+        if ($priority < 0) {
+            throw new \InvalidArgumentException('Priority must be non-negative');
+        }
+        $this->priority = $priority;
+    }
+
     public function merge(self $otherForm): FormMetadata
     {
         $mergedForm = new self();
         $mergedForm->setKey($this->getKey());
+        $mergedForm->setPriority($this->getPriority());
         if ($this->titles) {
             $mergedForm->setTitles($this->titles);
         }

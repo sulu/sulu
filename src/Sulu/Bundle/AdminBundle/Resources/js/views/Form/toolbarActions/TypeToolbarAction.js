@@ -29,7 +29,13 @@ export default class TypeToolbarAction extends AbstractFormToolbarAction {
         const isDisabled = disabledCondition ? jexl.evalSync(disabledCondition, this.conditionData) : false;
 
         const sortedTypes = sortBy
-            ? formTypes.sort((t1, t2) => String(t1[sortBy]).localeCompare(String(t2[sortBy])))
+            ? formTypes.sort((t1, t2) => {
+                const priorityDiff = (t2.priority || 0) - (t1.priority || 0);
+                if (priorityDiff !== 0) {
+                    return priorityDiff;
+                }
+                return String(t1[sortBy]).localeCompare(String(t2[sortBy]));
+            })
             : formTypes;
 
         return {
