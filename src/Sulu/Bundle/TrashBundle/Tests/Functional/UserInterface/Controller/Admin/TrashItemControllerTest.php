@@ -33,6 +33,8 @@ class TrashItemControllerTest extends SuluTestCase
     public const GRANTED_CONTEXT = 'sulu.context.granted';
     public const NOT_GRANTED_CONTEXT = 'sulu.context.not_granted';
 
+    public const NO_DELETE_CONTEXT = 'sulu.context.no_delete';
+
     public const ALT_USER_USERNAME = 'test_alt';
 
     /**
@@ -188,6 +190,118 @@ class TrashItemControllerTest extends SuluTestCase
         static::assertHttpStatusCode(404, $this->client->getResponse());
     }
 
+    public function testDeleteActionWithPermissionCheck(): void
+    {
+        self::setUpUserRole();
+        // Needed to rename the username to bypass TestVoter.
+        self::renameUserUsername(self::ALT_USER_USERNAME);
+
+        $trashItem = static::createTrashItem(resourceSecurityContext: self::GRANTED_CONTEXT);
+        $id = $trashItem->getId();
+
+        $this->client->jsonRequest('DELETE', '/api/trash-items/' . $id, [], [
+            'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
+            'PHP_AUTH_PW' => 'test',
+        ]);
+        static::assertHttpStatusCode(204, $this->client->getResponse());
+
+        $this->entityManager->clear();
+        static::assertNull($this->repository->findOneBy(['id' => $id]));
+    }
+
+    public function testDeleteActionWithoutObjectPermission(): void
+    {
+        $accessControlManager = static::getContainer()->get('sulu_security.access_control_manager');
+
+        $role = self::setUpUserRole();
+        // Needed to rename the username to bypass TestVoter.
+        self::renameUserUsername(self::ALT_USER_USERNAME);
+
+        $trashItem = static::createTrashItem(
+            resourceSecurityContext: self::GRANTED_CONTEXT,
+            resourceSecurityObjectType: SecuredEntityInterface::class,
+            resourceSecurityObjectId: '1'
+        );
+        $id = $trashItem->getId();
+
+        $accessControlManager->setPermissions(
+            SecuredEntityInterface::class,
+            '1',
+            [
+                $role->getId() => [
+                    PermissionTypes::VIEW => true,
+                    PermissionTypes::DELETE => false,
+                ],
+            ]
+        );
+
+        $this->client->jsonRequest('DELETE', '/api/trash-items/' . $id, [], [
+            'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
+            'PHP_AUTH_PW' => 'test',
+        ]);
+        static::assertHttpStatusCode(403, $this->client->getResponse());
+
+        $this->entityManager->clear();
+        static::assertNotNull($this->repository->findOneBy(['id' => $id]));
+    }
+
+    public function testDeleteActionWithoutResourcePermission(): void
+    {
+        self::setUpUserRole();
+        // Needed to rename the username to bypass TestVoter.
+        self::renameUserUsername(self::ALT_USER_USERNAME);
+
+        $trashItem = static::createTrashItem(resourceSecurityContext: self::NOT_GRANTED_CONTEXT);
+        $id = $trashItem->getId();
+
+        $this->client->jsonRequest('DELETE', '/api/trash-items/' . $id, [], [
+            'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
+            'PHP_AUTH_PW' => 'test',
+        ]);
+        static::assertHttpStatusCode(403, $this->client->getResponse());
+
+        $this->entityManager->clear();
+        static::assertNotNull($this->repository->findOneBy(['id' => $id]));
+    }
+
+    public function testDeleteActionWithoutDeletePermissionOnResource(): void
+    {
+        self::setUpUserRole();
+        // Needed to rename the username to bypass TestVoter.
+        self::renameUserUsername(self::ALT_USER_USERNAME);
+
+        $trashItem = static::createTrashItem(resourceSecurityContext: self::NO_DELETE_CONTEXT);
+        $id = $trashItem->getId();
+
+        $this->client->jsonRequest('DELETE', '/api/trash-items/' . $id, [], [
+            'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
+            'PHP_AUTH_PW' => 'test',
+        ]);
+        static::assertHttpStatusCode(403, $this->client->getResponse());
+
+        $this->entityManager->clear();
+        static::assertNotNull($this->repository->findOneBy(['id' => $id]));
+    }
+
+    public function testDeleteActionWithoutResourceSecurityContext(): void
+    {
+        self::setUpUserRole();
+        // Needed to rename the username to bypass TestVoter.
+        self::renameUserUsername(self::ALT_USER_USERNAME);
+
+        $trashItem = static::createTrashItem();
+        $id = $trashItem->getId();
+
+        $this->client->jsonRequest('DELETE', '/api/trash-items/' . $id, [], [
+            'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
+            'PHP_AUTH_PW' => 'test',
+        ]);
+        static::assertHttpStatusCode(204, $this->client->getResponse());
+
+        $this->entityManager->clear();
+        static::assertNull($this->repository->findOneBy(['id' => $id]));
+    }
+
     public function testDeleteActionNotExisting(): void
     {
         $this->client->jsonRequest('DELETE', '/api/trash-items/12345');
@@ -263,6 +377,15 @@ class TrashItemControllerTest extends SuluTestCase
         $entityManager->persist($notGrantedPermission);
 
         $role->addPermission($notGrantedPermission);
+
+        $noDeletePermission = new Permission();
+        $noDeletePermission->setContext(self::NO_DELETE_CONTEXT);
+        $noDeletePermission->setPermissions(112);
+        $noDeletePermission->setRole($role);
+
+        $entityManager->persist($noDeletePermission);
+
+        $role->addPermission($noDeletePermission);
 
         $trashPermission = new Permission();
         $trashPermission->setContext(TrashAdmin::SECURITY_CONTEXT);

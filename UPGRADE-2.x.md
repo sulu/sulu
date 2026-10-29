@@ -46,6 +46,13 @@ deprecated. The `$referenceRepository` is used to look up the resources that ref
 it, the `$requestStack` to read the `force` parameter of the request. Without one of them a media is deleted
 without the warning, as before.
 
+### Deleting a trash item requires the delete permission on its resource
+
+Deleting (purging) a trash item now also needs the `delete` permission on the security context of the resource
+the trash item belongs to, in addition to the `delete` permission of the trash context. Roles that only have
+`view`, `add` or `edit` there get a `403` now, so grant `delete` on the resource's context to the roles that should still purge.
+A media also needs the `delete` permission in the permissions of its collection.
+
 ## 2.6.27
 
 ### The target group select of the preview follows the audience targeting permission
