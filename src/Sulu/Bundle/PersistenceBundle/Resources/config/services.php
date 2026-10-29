@@ -31,7 +31,10 @@ return static function(ContainerConfigurator $container) {
 
     // Priority 50 as the MetadataLoader need to be before the ResolveTargetEntityListener of Doctrine
     $services->set('sulu.persistence.event_subscriber.orm.user_blame', '%sulu.persistence.event_subscriber.orm.user_blame.class%')
-        ->args([new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE)])
+        ->args([
+            new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            new Reference('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+        ])
         ->tag('doctrine.event_listener', ['event' => 'loadClassMetadata', 'priority' => 50])
         ->tag('doctrine.event_listener', ['event' => 'onFlush', 'priority' => 50]);
 
