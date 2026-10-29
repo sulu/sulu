@@ -96,7 +96,7 @@ class CollectionPermissionPaddedIdTest extends SuluTestCase
                 'put collection ' . $padding . $this->forbiddenCollectionId
             );
             $this->assertSame(
-                403,
+                '' === $padding ? 403 : 400, // a padded destination is not a valid integer
                 $this->send(
                     'POST',
                     '/api/media/' . $mediaId . '?action=move&locale=en&destination=' . $padding . $this->forbiddenCollectionId
