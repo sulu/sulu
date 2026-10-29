@@ -208,6 +208,12 @@ class MediaController extends AbstractMediaController implements
      */
     public function deleteAction($id)
     {
+        try {
+            $this->checkMediaCollectionPermission((int) $id, PermissionTypes::DELETE);
+        } catch (MediaNotFoundException $e) {
+            return $this->handleView($this->view((new EntityNotFoundException($this->mediaClass, $id, $e))->toArray(), 404));
+        }
+
         $request = $this->requestStack?->getCurrentRequest();
 
         if (null !== $request && !$request->query->getBoolean('force', false)) {
@@ -226,9 +232,9 @@ class MediaController extends AbstractMediaController implements
             }
         }
 
-        $delete = function($id) {
+        $delete = function(int|string $id) {
             try {
-                $this->mediaManager->delete($id, true);
+                $this->mediaManager->delete((int) $id, true);
             } catch (MediaNotFoundException $e) {
                 throw new EntityNotFoundException($this->mediaClass, $id, $e); // will throw 404 Entity not found
             }
@@ -312,6 +318,8 @@ class MediaController extends AbstractMediaController implements
      */
     public function deleteVersionAction($id, $version)
     {
+        $this->checkMediaCollectionPermission((int) $id, PermissionTypes::DELETE);
+
         $this->mediaManager->removeFileVersion((int) $id, (int) $version);
 
         return new Response('', 204);
@@ -359,6 +367,7 @@ class MediaController extends AbstractMediaController implements
             ?: throw new MissingParameterException(self::class, 'destination');
 
         try {
+            $this->checkMediaCollectionPermission((int) $id, PermissionTypes::EDIT);
             $media = $this->mediaManager->move(
                 $id,
                 $locale,
@@ -381,6 +390,10 @@ class MediaController extends AbstractMediaController implements
     protected function saveEntity($id, Request $request)
     {
         try {
+            if (null !== $id) {
+                $this->checkMediaCollectionPermission((int) $id, PermissionTypes::EDIT);
+            }
+
             $data = $this->getData($request, null === $id);
             $data['id'] = $id;
             $uploadedFile = $this->getUploadedFile($request, 'fileVersion');
@@ -426,5 +439,30 @@ class MediaController extends AbstractMediaController implements
         }
 
         return $collection;
+    }
+
+    /**
+     * The security listener checks the collection given in the request, this checks the collection the media is in. The
+     * preview image of a media lives in a system collection without permissions, so the media it belongs to counts.
+     */
+    private function checkMediaCollectionPermission(int $id, string $permission): void
+    {
+        $media = $this->mediaManager->getEntityById($id);
+
+        $this->checkCollectionPermission($media->getCollection()->getId(), $permission);
+
+        /** @var MediaInterface[] $owners */
+        $owners = $this->entityManager->getRepository($this->mediaClass)->findBy(['previewImage' => $media]);
+        foreach ($owners as $owner) {
+            $this->checkCollectionPermission($owner->getCollection()->getId(), PermissionTypes::EDIT);
+        }
+    }
+
+    private function checkCollectionPermission(int $collectionId, string $permission): void
+    {
+        $this->securityChecker->checkPermission(
+            new SecurityCondition($this->getSecurityContext(), null, $this->getSecuredClass(), $collectionId),
+            $permission
+        );
     }
 }

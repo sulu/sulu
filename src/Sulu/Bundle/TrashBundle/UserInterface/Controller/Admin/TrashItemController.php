@@ -181,6 +181,18 @@ class TrashItemController extends AbstractRestController
 
         $trashItem = $this->trashItemRepository->getOneBy(['id' => $id]);
 
+        if (null !== $trashItem->getResourceSecurityContext()) {
+            $this->securityChecker->checkPermission(
+                new SecurityCondition(
+                    $trashItem->getResourceSecurityContext(),
+                    null,
+                    $trashItem->getResourceSecurityObjectType(),
+                    $trashItem->getResourceSecurityObjectId()
+                ),
+                PermissionTypes::DELETE
+            );
+        }
+
         $this->trashManager->remove($trashItem);
         $this->entityManager->flush();
 

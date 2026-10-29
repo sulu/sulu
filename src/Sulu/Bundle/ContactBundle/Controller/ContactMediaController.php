@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaAddedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaRemovedEvent;
@@ -108,6 +109,6 @@ class ContactMediaController extends AbstractMediaController implements SecuredC
 
     public function getSecurityContext(): string
     {
-        return 'sulu.contact.organizations';
+        return ContactAdmin::CONTACT_SECURITY_CONTEXT;
     }
 }
