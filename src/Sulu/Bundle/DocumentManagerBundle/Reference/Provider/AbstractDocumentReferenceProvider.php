@@ -14,6 +14,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Reference\Provider;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
@@ -84,6 +85,9 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
         }
 
         $templateStructure = $this->structureManager->getStructure($document->getStructureType(), $this->getStructureType());
+        if (!$templateStructure instanceof StructureInterface) {
+            return;
+        }
 
         foreach ($templateStructure->getProperties(true) as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
