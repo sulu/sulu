@@ -20,9 +20,14 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Kernel\SuluKernelBrowser;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 use function Symfony\Component\String\u;
 
@@ -39,6 +44,9 @@ use function Symfony\Component\String\u;
  * These tests prove that a user without VIEW permission on the page's webspace is rejected with a 403
  * when trying to generate or revoke a preview link, and that no preview link is created/removed as a
  * side effect of the denied request.
+ *
+ * Reading a preview link (GHSA-w7xr-qjf5-rqvg) needs the same permission, and for a page its own
+ * permissions count in all three actions.
  */
 class PreviewLinkControllerPermissionTest extends SuluTestCase
 {
@@ -76,6 +84,11 @@ class PreviewLinkControllerPermissionTest extends SuluTestCase
      * @var mixed[]
      */
     private $attackerAuth = ['PHP_AUTH_USER' => 'attacker', 'PHP_AUTH_PW' => 'attacker'];
+
+    /**
+     * @var mixed[]
+     */
+    private $viewerAuth = ['PHP_AUTH_USER' => 'viewer', 'PHP_AUTH_PW' => 'viewer'];
 
     public function setUp(): void
     {
@@ -145,6 +158,207 @@ class PreviewLinkControllerPermissionTest extends SuluTestCase
         static::assertNotNull($previewLink);
     }
 
+    public function testGetDeniedForUserWithoutViewPermission(): void
+    {
+        $page = $this->createPage(__METHOD__);
+        $resourceId = $page->getUuid();
+
+        $previewLink = $this->createPreviewLink($this->resourceKey, $resourceId, $this->locale, $this->webspaceKey);
+
+        $this->client->jsonRequest(
+            'GET',
+            \sprintf(
+                '/api/preview-links/%s?resourceKey=%s&locale=%s',
+                $resourceId,
+                $this->resourceKey,
+                $this->locale
+            ),
+            [],
+            $this->attackerAuth
+        );
+
+        static::assertHttpStatusCode(403, $this->client->getResponse());
+        static::assertStringNotContainsString(
+            $previewLink->getToken(),
+            (string) $this->client->getResponse()->getContent()
+        );
+    }
+
+    public function testGetAllowedForUserWithViewPermission(): void
+    {
+        $page = $this->createPage(__METHOD__);
+        $resourceId = $page->getUuid();
+
+        $previewLink = $this->createPreviewLink($this->resourceKey, $resourceId, $this->locale, $this->webspaceKey);
+
+        $this->client->jsonRequest(
+            'GET',
+            \sprintf(
+                '/api/preview-links/%s?resourceKey=%s&locale=%s',
+                $resourceId,
+                $this->resourceKey,
+                $this->locale
+            ),
+            [],
+            $this->viewerAuth
+        );
+
+        static::assertHttpStatusCode(200, $this->client->getResponse());
+        static::assertStringContainsString(
+            $previewLink->getToken(),
+            (string) $this->client->getResponse()->getContent()
+        );
+    }
+
+    public function testGetDeniedWhenThePageDeniesViewToTheRole(): void
+    {
+        $resourceId = $this->createPage(__METHOD__)->getUuid();
+        $previewLink = $this->createPreviewLink($this->resourceKey, $resourceId, $this->locale, $this->webspaceKey);
+        $this->setViewerPermissionOnPage($resourceId, false);
+
+        $this->client->jsonRequest(
+            'GET',
+            \sprintf('/api/preview-links/%s?resourceKey=%s&locale=%s', $resourceId, $this->resourceKey, $this->locale),
+            [],
+            $this->viewerAuth
+        );
+
+        static::assertHttpStatusCode(403, $this->client->getResponse());
+        static::assertStringNotContainsString(
+            $previewLink->getToken(),
+            (string) $this->client->getResponse()->getContent()
+        );
+    }
+
+    public function testGetAllowedWhenThePageGrantsViewToTheRole(): void
+    {
+        $resourceId = $this->createPage(__METHOD__)->getUuid();
+        $previewLink = $this->createPreviewLink($this->resourceKey, $resourceId, $this->locale, $this->webspaceKey);
+        $this->setViewerPermissionOnPage($resourceId, true);
+
+        $this->client->jsonRequest(
+            'GET',
+            \sprintf('/api/preview-links/%s?resourceKey=%s&locale=%s', $resourceId, $this->resourceKey, $this->locale),
+            [],
+            $this->viewerAuth
+        );
+
+        static::assertHttpStatusCode(200, $this->client->getResponse());
+        static::assertStringContainsString(
+            $previewLink->getToken(),
+            (string) $this->client->getResponse()->getContent()
+        );
+    }
+
+    public function testGenerateDeniedWhenThePageDeniesViewToTheRole(): void
+    {
+        $resourceId = $this->createPage(__METHOD__)->getUuid();
+        $this->setViewerPermissionOnPage($resourceId, false);
+
+        $this->client->jsonRequest(
+            'POST',
+            \sprintf(
+                '/api/preview-links/%s?action=generate&resourceKey=%s&locale=%s&webspaceKey=%s',
+                $resourceId,
+                $this->resourceKey,
+                $this->locale,
+                $this->webspaceKey
+            ),
+            [],
+            $this->viewerAuth
+        );
+
+        static::assertHttpStatusCode(403, $this->client->getResponse());
+        static::assertNull(
+            static::getContainer()->get('sulu_preview.preview_link_repository')
+                ->findByResource($this->resourceKey, $resourceId, $this->locale)
+        );
+    }
+
+    public function testRevokeDeniedWhenThePageDeniesViewToTheRole(): void
+    {
+        $resourceId = $this->createPage(__METHOD__)->getUuid();
+        $this->createPreviewLink($this->resourceKey, $resourceId, $this->locale, $this->webspaceKey);
+        $this->setViewerPermissionOnPage($resourceId, false);
+
+        $this->client->jsonRequest(
+            'POST',
+            \sprintf(
+                '/api/preview-links/%s?action=revoke&resourceKey=%s&locale=%s&webspaceKey=%s',
+                $resourceId,
+                $this->resourceKey,
+                $this->locale,
+                $this->webspaceKey
+            ),
+            [],
+            $this->viewerAuth
+        );
+
+        static::assertHttpStatusCode(403, $this->client->getResponse());
+        static::assertNotNull(
+            static::getContainer()->get('sulu_preview.preview_link_repository')
+                ->findByResource($this->resourceKey, $resourceId, $this->locale)
+        );
+    }
+
+    public function testActivityListHidesThePreviewLinkOfAPageDeniedToTheRole(): void
+    {
+        $allowedId = $this->createPage(__METHOD__ . ' allowed')->getUuid();
+        $deniedId = $this->createPage(__METHOD__ . ' denied')->getUuid();
+        $this->setViewerPermissionOnPage($allowedId, true);
+        $this->setViewerPermissionOnPage($deniedId, false);
+
+        $tokens = [];
+        foreach ([$allowedId, $deniedId] as $resourceId) {
+            $this->client->jsonRequest(
+                'POST',
+                \sprintf(
+                    '/api/preview-links/%s?action=generate&resourceKey=%s&locale=%s&webspaceKey=%s',
+                    $resourceId,
+                    $this->resourceKey,
+                    $this->locale,
+                    $this->webspaceKey
+                )
+            );
+            static::assertHttpStatusCode(201, $this->client->getResponse());
+            /** @var array{token: string} $link */
+            $link = \json_decode((string) $this->client->getResponse()->getContent(), true);
+            $tokens[$resourceId] = $link['token'];
+        }
+
+        $container = static::getContainer();
+        $viewer = $container->get('sulu.repository.user')->findOneBy(['username' => 'viewer']);
+        static::assertNotNull($viewer);
+        $container->get('security.token_storage')->setToken(
+            new UsernamePasswordToken($viewer, 'admin', $viewer->getRoles())
+        );
+
+        $request = new Request(['locale' => $this->locale]);
+        $request->setSession(new Session(new MockArraySessionStorage()));
+        $request->setRequestFormat('json');
+        $request->attributes->set('_format', 'json');
+        $container->get('request_stack')->push($request);
+
+        $response = $container->get('sulu_activity.activity_controller')->cgetAction($request);
+
+        static::assertSame(200, $response->getStatusCode());
+        $content = (string) $response->getContent();
+        static::assertStringContainsString($tokens[$allowedId], $content);
+        static::assertStringNotContainsString($tokens[$deniedId], $content);
+    }
+
+    public function testGetUnknownResourceKeyReturnsNotFound(): void
+    {
+        $resourceId = $this->createPage(__METHOD__)->getUuid();
+
+        $this->client->jsonRequest(
+            'GET',
+            \sprintf('/api/preview-links/%s?resourceKey=unknown&locale=%s', $resourceId, $this->locale)
+        );
+
+        static::assertHttpStatusCode(404, $this->client->getResponse());
+    }
+
     public function testGenerateAllowedForSuperadmin(): void
     {
         $page = $this->createPage(__METHOD__);
@@ -170,8 +384,10 @@ class PreviewLinkControllerPermissionTest extends SuluTestCase
      *  - the default "test" user (recreated via test_user_provider, as it was just purged) is granted
      *    full permissions (including VIEW) on the "sulu.webspaces.sulu_io" context, so it behaves like
      *    a superadmin for testGenerateAllowedForSuperadmin().
-     *  - an "attacker" user with a role that has no permissions on any context, used by the two denial
+     *  - an "attacker" user with a role that has no permissions on any context, used by the denial
      *    tests above via HTTP basic auth.
+     *  - a "viewer" user whose role holds only VIEW (64) on the webspace context, used by the tests that
+     *    need a real voter, not the test user, to decide.
      *
      * This mirrors the pattern used by SmartContentItemControllerTest::initOrm(). Purging is safe here
      * because pages are created afterwards directly through the DocumentManager (PHPCR), which does not
@@ -200,7 +416,38 @@ class PreviewLinkControllerPermissionTest extends SuluTestCase
 
         $this->createUser('attacker', $this->createRole('Attacker Role'));
 
+        $viewerRole = $this->createRole('Viewer Role');
+        $viewerPermission = new Permission();
+        $viewerPermission->setPermissions(64);
+        $viewerPermission->setRole($viewerRole);
+        $viewerRole->addPermission($viewerPermission);
+        $viewerPermission->setContext('sulu.webspaces.' . $this->webspaceKey);
+        $this->getEntityManager()->persist($viewerPermission);
+        $this->createUser('viewer', $viewerRole);
+
         $this->getEntityManager()->flush();
+    }
+
+    private function setViewerPermissionOnPage(string $uuid, bool $view): void
+    {
+        $viewerRole = static::getContainer()->get('sulu.repository.role')->findOneBy(['name' => 'Viewer Role']);
+        static::assertNotNull($viewerRole);
+
+        static::getContainer()->get('sulu_security.access_control_manager')->setPermissions(
+            SecurityBehavior::class,
+            $uuid,
+            [
+                $viewerRole->getId() => [
+                    'view' => $view,
+                    'add' => false,
+                    'edit' => false,
+                    'delete' => false,
+                    'archive' => false,
+                    'live' => false,
+                    'security' => false,
+                ],
+            ]
+        );
     }
 
     private function createRole(string $name): RoleInterface

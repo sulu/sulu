@@ -123,6 +123,8 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_preview.preview_link_manager'),
             new Reference('fos_rest.view_handler'),
             new Reference('security.token_storage'),
+            new Reference('sulu_preview.preview_object_provider_registry'),
+            new Reference('sulu_security.security_checker', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 };

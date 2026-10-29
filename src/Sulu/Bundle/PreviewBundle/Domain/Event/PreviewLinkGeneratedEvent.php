@@ -23,7 +23,8 @@ class PreviewLinkGeneratedEvent extends DomainEvent
         private PreviewLinkInterface $previewLink,
         private string $link,
         private array $payload,
-        private ?string $securityContext
+        private ?string $securityContext,
+        private ?string $securityObjectType = null,
     ) {
         parent::__construct();
     }
@@ -71,5 +72,10 @@ class PreviewLinkGeneratedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return $this->securityContext;
+    }
+
+    public function getResourceSecurityObjectType(): ?string
+    {
+        return $this->securityObjectType;
     }
 }

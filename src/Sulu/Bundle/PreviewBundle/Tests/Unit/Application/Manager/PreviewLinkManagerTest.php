@@ -24,6 +24,7 @@ use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -96,6 +97,7 @@ class PreviewLinkManagerTest extends TestCase
 
         $this->previewObjectProvider->getSecurityContext($resourceId, $locale)
             ->willReturn(PageAdmin::getPageSecurityContext('example'));
+        $this->previewObjectProvider->getObject($resourceId, $locale)->willReturn(new \stdClass());
 
         $previewLink = $this->prophesize(PreviewLinkInterface::class);
         $previewLink->getToken()->willReturn('123');
@@ -114,6 +116,7 @@ class PreviewLinkManagerTest extends TestCase
                 static::assertSame($resourceId, $event->getResourceId());
                 static::assertSame($this->resourceKey, $event->getResourceKey());
                 static::assertSame($link, $event->getResourceTitle());
+                static::assertNull($event->getResourceSecurityObjectType());
 
                 return true;
             })
@@ -135,6 +138,7 @@ class PreviewLinkManagerTest extends TestCase
         $this->previewObjectProvider->getSecurityContext($resourceId, $locale)->willReturn(
             PageAdmin::getPageSecurityContext('example')
         );
+        $this->previewObjectProvider->getObject($resourceId, $locale)->willReturn(new \stdClass());
 
         $previewLink = $this->prophesize(PreviewLinkInterface::class);
         $previewLink->getToken()->willReturn('123');
@@ -151,11 +155,76 @@ class PreviewLinkManagerTest extends TestCase
                 static::assertSame($resourceId, $event->getResourceId());
                 static::assertSame($this->resourceKey, $event->getResourceKey());
                 static::assertSame($link, $event->getResourceTitle());
+                static::assertNull($event->getResourceSecurityObjectType());
 
                 return true;
             })
         )->shouldBeCalled();
 
+        $this->previewLinkRepository->remove($previewLink->reveal())->shouldBeCalled();
+        $this->previewLinkRepository->commit()->shouldBeCalled();
+
+        $this->previewLinkManager->revoke($this->resourceKey, $resourceId, $locale);
+    }
+
+    public function testGenerateCollectsTheEventWithTheObjectTypeOfASecuredObject(): void
+    {
+        $resourceId = 'aac8f317-d479-457c-a6e4-d95a3f19c0a6';
+        $locale = 'en';
+
+        $this->previewObjectProvider->getSecurityContext($resourceId, $locale)
+            ->willReturn(PageAdmin::getPageSecurityContext('example'));
+        $this->previewObjectProvider->getObject($resourceId, $locale)
+            ->willReturn($this->prophesize(SecurityBehavior::class)->reveal());
+
+        $previewLink = $this->prophesize(PreviewLinkInterface::class);
+        $previewLink->getToken()->willReturn('123');
+        $previewLink->getResourceId()->willReturn($resourceId);
+        $previewLink->getResourceKey()->willReturn($this->resourceKey);
+        $this->previewLinkRepository->create($this->resourceKey, $resourceId, $locale, [])
+            ->willReturn($previewLink->reveal());
+        $this->router->generate('sulu_preview.public_render', ['token' => '123'], RouterInterface::ABSOLUTE_URL)
+            ->willReturn('http://localhost/admin/p/123');
+
+        $this->domainEventCollector->collect(
+            Argument::that(function(PreviewLinkGeneratedEvent $event) use ($resourceId) {
+                static::assertSame(SecurityBehavior::class, $event->getResourceSecurityObjectType());
+                static::assertSame($resourceId, $event->getResourceSecurityObjectId());
+
+                return true;
+            })
+        )->shouldBeCalled();
+        $this->previewLinkRepository->add($previewLink->reveal())->shouldBeCalled();
+        $this->previewLinkRepository->commit()->shouldBeCalled();
+
+        $this->previewLinkManager->generate($this->resourceKey, $resourceId, $locale, []);
+    }
+
+    public function testRevokeCollectsTheEventWithTheObjectTypeOfASecuredObject(): void
+    {
+        $resourceId = 'aac8f317-d479-457c-a6e4-d95a3f19c0a6';
+        $locale = 'en';
+
+        $this->previewObjectProvider->getSecurityContext($resourceId, $locale)
+            ->willReturn(PageAdmin::getPageSecurityContext('example'));
+        $this->previewObjectProvider->getObject($resourceId, $locale)
+            ->willReturn($this->prophesize(SecurityBehavior::class)->reveal());
+
+        $previewLink = $this->prophesize(PreviewLinkInterface::class);
+        $previewLink->getToken()->willReturn('123');
+        $this->previewLinkRepository->findByResource($this->resourceKey, $resourceId, $locale)
+            ->willReturn($previewLink->reveal());
+        $this->router->generate('sulu_preview.public_render', ['token' => '123'], RouterInterface::ABSOLUTE_URL)
+            ->willReturn('http://localhost/admin/p/123');
+
+        $this->domainEventCollector->collect(
+            Argument::that(function(PreviewLinkRevokedEvent $event) use ($resourceId) {
+                static::assertSame(SecurityBehavior::class, $event->getResourceSecurityObjectType());
+                static::assertSame($resourceId, $event->getResourceSecurityObjectId());
+
+                return true;
+            })
+        )->shouldBeCalled();
         $this->previewLinkRepository->remove($previewLink->reveal())->shouldBeCalled();
         $this->previewLinkRepository->commit()->shouldBeCalled();
 
@@ -185,6 +254,7 @@ class PreviewLinkManagerTest extends TestCase
 
         $this->previewObjectProvider->getSecurityContext($resourceId, $locale)
             ->willReturn($securityContext);
+        $this->previewObjectProvider->getObject($resourceId, $locale)->willReturn(new \stdClass());
 
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $securityChecker->checkPermission(
@@ -215,6 +285,43 @@ class PreviewLinkManagerTest extends TestCase
         $manager->generate($this->resourceKey, $resourceId, $locale, []);
     }
 
+    public function testGenerateChecksThePermissionOfASecuredObject(): void
+    {
+        $resourceId = 'aac8f317-d479-457c-a6e4-d95a3f19c0a6';
+        $locale = 'en';
+        $securityContext = PageAdmin::getPageSecurityContext('example');
+
+        $this->previewObjectProvider->getSecurityContext($resourceId, $locale)->willReturn($securityContext);
+        $this->previewObjectProvider->getObject($resourceId, $locale)
+            ->willReturn($this->prophesize(SecurityBehavior::class)->reveal());
+
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->checkPermission(
+            Argument::that(function(SecurityCondition $condition) use ($securityContext, $resourceId) {
+                static::assertSame($securityContext, $condition->getSecurityContext());
+                static::assertSame(SecurityBehavior::class, $condition->getObjectType());
+                static::assertSame($resourceId, $condition->getObjectId());
+
+                return true;
+            }),
+            PermissionTypes::VIEW
+        )->shouldBeCalled()->willThrow(new AccessDeniedException());
+
+        $manager = new PreviewLinkManager(
+            $this->previewLinkRepository->reveal(),
+            $this->domainEventCollector->reveal(),
+            $this->previewObjectProviderRegistry->reveal(),
+            $this->router->reveal(),
+            $securityChecker->reveal()
+        );
+
+        $this->previewLinkRepository->create(Argument::cetera())->shouldNotBeCalled();
+
+        $this->expectException(AccessDeniedException::class);
+
+        $manager->generate($this->resourceKey, $resourceId, $locale, []);
+    }
+
     public function testRevokeDeniedWithoutViewPermission(): void
     {
         $resourceId = 'aac8f317-d479-457c-a6e4-d95a3f19c0a6';
@@ -223,6 +330,7 @@ class PreviewLinkManagerTest extends TestCase
 
         $this->previewObjectProvider->getSecurityContext($resourceId, $locale)
             ->willReturn($securityContext);
+        $this->previewObjectProvider->getObject($resourceId, $locale)->willReturn(new \stdClass());
 
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $securityChecker->checkPermission(Argument::type(SecurityCondition::class), PermissionTypes::VIEW)

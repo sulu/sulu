@@ -16,10 +16,15 @@ use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\PreviewBundle\Application\Manager\PreviewLinkManagerInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
+use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -35,15 +40,27 @@ class PreviewLinkController extends AbstractRestController implements ClassResou
         private PreviewLinkRepositoryInterface $previewLinkRepository,
         private PreviewLinkManagerInterface $previewLinkManager,
         ViewHandlerInterface $viewHandler,
-        ?TokenStorageInterface $tokenStorage = null
+        ?TokenStorageInterface $tokenStorage = null,
+        private ?PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry = null,
+        private ?SecurityCheckerInterface $securityChecker = null,
     ) {
         parent::__construct($viewHandler, $tokenStorage);
+
+        if (null === $this->previewObjectProviderRegistry) {
+            @trigger_deprecation('sulu/sulu', '2.6.28', 'Initializing "' . __CLASS__ . '" without previewObjectProviderRegistry is deprecated, reading a preview link is not checked for permissions without it.');
+        }
     }
 
     public function getAction(Request $request, string $resourceId): Response
     {
         $resourceKey = $this->getRequestParameter($request, 'resourceKey', true);
         $locale = $this->getRequestParameter($request, 'locale', true);
+
+        if (null !== $this->previewObjectProviderRegistry && !$this->previewObjectProviderRegistry->hasPreviewObjectProvider($resourceKey)) {
+            return $this->handleView($this->view(null, 404));
+        }
+
+        $this->checkViewPermission($resourceKey, $resourceId, $locale);
 
         $previewLink = $this->previewLinkRepository->findByResource($resourceKey, $resourceId, $locale);
         if (!$previewLink) {
@@ -81,5 +98,31 @@ class PreviewLinkController extends AbstractRestController implements ClassResou
         } catch (RestException $ex) {
             return $this->handleView($this->view($ex->toArray(), 400));
         }
+    }
+
+    private function checkViewPermission(string $resourceKey, string $resourceId, string $locale): void
+    {
+        if (null === $this->previewObjectProviderRegistry || null === $this->securityChecker) {
+            return;
+        }
+
+        $provider = $this->previewObjectProviderRegistry->getPreviewObjectProvider($resourceKey);
+        $securityContext = $provider->getSecurityContext($resourceId, $locale);
+
+        if (null === $securityContext) {
+            return;
+        }
+
+        $securedObject = $provider->getObject($resourceId, $locale) instanceof SecurityBehavior;
+
+        $this->securityChecker->checkPermission(
+            new SecurityCondition(
+                $securityContext,
+                $locale,
+                $securedObject ? SecurityBehavior::class : null,
+                $securedObject ? $resourceId : null
+            ),
+            PermissionTypes::VIEW
+        );
     }
 }

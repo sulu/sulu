@@ -17,6 +17,7 @@ use Sulu\Bundle\PreviewBundle\Domain\Event\PreviewLinkRevokedEvent;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
+use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -40,7 +41,8 @@ class PreviewLinkManager implements PreviewLinkManagerInterface
         array $options
     ): PreviewLinkInterface {
         $securityContext = $this->resolveSecurityContext($resourceKey, $resourceId, $locale);
-        $this->checkViewPermission($securityContext, $locale);
+        $securityObjectType = $this->resolveSecurityObjectType($securityContext, $resourceKey, $resourceId, $locale);
+        $this->checkViewPermission($securityContext, $securityObjectType, $resourceId, $locale);
 
         $previewLink = $this->previewLinkRepository->create($resourceKey, $resourceId, $locale, $options);
         $this->previewLinkRepository->add($previewLink);
@@ -58,7 +60,8 @@ class PreviewLinkManager implements PreviewLinkManagerInterface
                     'locale' => $locale,
                     'options' => $options,
                 ],
-                $securityContext
+                $securityContext,
+                $securityObjectType
             )
         );
         $this->previewLinkRepository->commit();
@@ -69,7 +72,8 @@ class PreviewLinkManager implements PreviewLinkManagerInterface
     public function revoke(string $resourceKey, string $resourceId, string $locale): void
     {
         $securityContext = $this->resolveSecurityContext($resourceKey, $resourceId, $locale);
-        $this->checkViewPermission($securityContext, $locale);
+        $securityObjectType = $this->resolveSecurityObjectType($securityContext, $resourceKey, $resourceId, $locale);
+        $this->checkViewPermission($securityContext, $securityObjectType, $resourceId, $locale);
 
         $previewLink = $this->previewLinkRepository->findByResource($resourceKey, $resourceId, $locale);
         if (!$previewLink) {
@@ -88,7 +92,8 @@ class PreviewLinkManager implements PreviewLinkManagerInterface
                 $resourceKey,
                 $resourceId,
                 $link,
-                $securityContext
+                $securityContext,
+                $securityObjectType
             )
         );
         $this->previewLinkRepository->commit();
@@ -101,14 +106,32 @@ class PreviewLinkManager implements PreviewLinkManagerInterface
         return $provider->getSecurityContext($resourceId, $locale);
     }
 
-    private function checkViewPermission(?string $securityContext, string $locale): void
+    private function resolveSecurityObjectType(?string $securityContext, string $resourceKey, string $resourceId, string $locale): ?string
+    {
+        if (null === $securityContext) {
+            return null;
+        }
+
+        $object = $this->previewObjectProviderRegistry
+            ->getPreviewObjectProvider($resourceKey)
+            ->getObject($resourceId, $locale);
+
+        return $object instanceof SecurityBehavior ? SecurityBehavior::class : null;
+    }
+
+    private function checkViewPermission(?string $securityContext, ?string $securityObjectType, string $resourceId, string $locale): void
     {
         if (null === $this->securityChecker || null === $securityContext) {
             return;
         }
 
         $this->securityChecker->checkPermission(
-            new SecurityCondition($securityContext, $locale),
+            new SecurityCondition(
+                $securityContext,
+                $locale,
+                $securityObjectType,
+                null === $securityObjectType ? null : $resourceId
+            ),
             PermissionTypes::VIEW
         );
     }

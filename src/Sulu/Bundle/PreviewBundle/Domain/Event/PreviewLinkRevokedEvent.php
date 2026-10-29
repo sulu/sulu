@@ -20,6 +20,7 @@ class PreviewLinkRevokedEvent extends DomainEvent
         private string $resourceId,
         private string $link,
         private ?string $securityContext,
+        private ?string $securityObjectType = null,
     ) {
         parent::__construct();
     }
@@ -52,5 +53,10 @@ class PreviewLinkRevokedEvent extends DomainEvent
     public function getResourceSecurityContext(): ?string
     {
         return $this->securityContext;
+    }
+
+    public function getResourceSecurityObjectType(): ?string
+    {
+        return $this->securityObjectType;
     }
 }

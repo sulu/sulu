@@ -53,6 +53,41 @@ the trash item belongs to, in addition to the `delete` permission of the trash c
 `view`, `add` or `edit` there get a `403` now, so grant `delete` on the resource's context to the roles that should still purge.
 A media also needs the `delete` permission in the permissions of its collection.
 
+### Preview links require the view permission on the resource
+
+Reading a preview link now needs the `view` permission on the security context of the resource, like generating
+and revoking one. For a page the `view` permission of the page's own permissions counts in all three, so a user
+who was denied a page there gets a `403` now.
+
+If you replaced `sulu_preview.preview_link_controller`, pass the `sulu_preview.preview_object_provider_registry`
+and the `sulu_security.security_checker` as the last constructor arguments. Without the registry the controller
+triggers a deprecation, and without either of them reading a preview link is not checked for permissions.
+
+### The activity log follows the permissions of a page for preview links
+
+The activity entries for a generated or revoked preview link contain the public link. For a page they are now
+stored with the `Sulu\Component\Content\Document\Behavior\SecurityBehavior` object type, so a role the page's own
+permissions deny no longer sees them. A role without an entry in the page's permissions does not see them either.
+
+Entries written before the update have no object type and stay visible to every role that can view the activity
+log and the webspace. Run this statement once, and revoke links that are not needed any more:
+
+MySQL:
+
+```sql
+UPDATE ac_activities
+SET resourceSecurityObjectType = 'Sulu\\Component\\Content\\Document\\Behavior\\SecurityBehavior'
+WHERE resourceKey = 'pages' AND type IN ('preview_link_generated', 'preview_link_revoked');
+```
+
+PostgreSQL:
+
+```sql
+UPDATE ac_activities
+SET resourceSecurityObjectType = 'Sulu\Component\Content\Document\Behavior\SecurityBehavior'
+WHERE resourceKey = 'pages' AND type IN ('preview_link_generated', 'preview_link_revoked');
+```
+
 ## 2.6.27
 
 ### The target group select of the preview follows the audience targeting permission
