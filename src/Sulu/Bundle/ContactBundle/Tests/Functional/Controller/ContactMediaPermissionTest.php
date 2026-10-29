@@ -182,8 +182,8 @@ class ContactMediaPermissionTest extends SuluTestCase
         $fileVersion->setFile($file);
         $fileVersion->setSize(111111);
         $fileVersion->setDownloadCounter(2);
-        $fileVersion->setChanged(new \DateTime('1950-04-20'));
-        $fileVersion->setCreated(new \DateTime('1950-04-20'));
+        $fileVersion->setChanged(new \DateTimeImmutable('1950-04-20'));
+        $fileVersion->setCreated(new \DateTimeImmutable('1950-04-20'));
         $file->addFileVersion($fileVersion);
 
         $media = new Media();
