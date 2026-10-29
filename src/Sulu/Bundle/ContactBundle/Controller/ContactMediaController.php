@@ -16,6 +16,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaAddedEvent;
 use Sulu\Bundle\ContactBundle\Domain\Event\ContactMediaRemovedEvent;
@@ -112,6 +113,6 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
 
     public function getSecurityContext(): string
     {
-        return 'sulu.contact.organizations';
+        return ContactAdmin::CONTACT_SECURITY_CONTEXT;
     }
 }
