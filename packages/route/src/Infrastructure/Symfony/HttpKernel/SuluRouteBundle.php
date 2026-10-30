@@ -26,6 +26,7 @@ use Sulu\Route\Application\Routing\Matcher\RouteCollectionForRequestLoaderInterf
 use Sulu\Route\Application\Routing\Matcher\RouteCollectionForRequestRouteLoader;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteHistoryDefaultsProvider;
+use Sulu\Route\Domain\Exception\RouteSlugNotUniqueException;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Infrastructure\Doctrine\EventListener\RouteChangedUpdater;
@@ -225,6 +226,19 @@ final class SuluRouteBundle extends AbstractBundle
                             'routes' => [
                                 'list' => 'sulu_route.get_route_histories',
                             ],
+                        ],
+                    ],
+                ],
+            );
+        }
+
+        if ($builder->hasExtension('fos_rest')) {
+            $builder->prependExtensionConfig(
+                'fos_rest',
+                [
+                    'exception' => [
+                        'codes' => [
+                            RouteSlugNotUniqueException::class => 409,
                         ],
                     ],
                 ],

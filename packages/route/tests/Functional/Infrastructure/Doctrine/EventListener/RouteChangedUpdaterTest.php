@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
+use Sulu\Route\Domain\Exception\RouteSlugNotUniqueException;
 use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Infrastructure\Doctrine\EventListener\RouteChangedUpdater;
@@ -242,6 +243,205 @@ class RouteChangedUpdaterTest extends KernelTestCase
         $this->assertIsArray($routesWithTempIds);
         $this->assertCount(0, $routeChanges, 'There should be no route changes left after the update.');
         $this->assertCount(0, $routesWithTempIds, 'There should be no routes with temp ids left after the update.');
+    }
+
+    #[DataProvider('provideWebspaces')]
+    public function testRouteTakesSlugBackFromOwnHistory(?string $webspace): void
+    {
+        $entityManager = $this->getEntityManager();
+
+        $route = new Route('page', '1', 'en', '/a', $webspace);
+        $entityManager->persist($route);
+        $entityManager->flush();
+
+        $route->setSlug('/b');
+        $entityManager->flush();
+
+        $this->assertSame(['page|1|/b', 'route_histories|page::1|/a'], $this->fetchRoutes());
+
+        $route->setSlug('/a');
+        $entityManager->flush();
+
+        $this->assertSame(['page|1|/a', 'route_histories|page::1|/b'], $this->fetchRoutes());
+    }
+
+    #[DataProvider('provideWebspaces')]
+    public function testChildRouteTakesSlugBackFromOwnHistory(?string $webspace): void
+    {
+        $entityManager = $this->getEntityManager();
+
+        $route = new Route('page', '1', 'en', '/a', $webspace);
+        $childRoute = new Route('page', '2', 'en', '/a/c', $webspace);
+        $entityManager->persist($route);
+        $entityManager->persist($childRoute);
+        $entityManager->flush();
+
+        $route->setSlug('/b');
+        $entityManager->flush();
+        $entityManager->clear();
+
+        $this->assertSame(
+            ['page|1|/b', 'page|2|/b/c', 'route_histories|page::1|/a', 'route_histories|page::2|/a/c'],
+            $this->fetchRoutes(),
+        );
+
+        $route = $entityManager->find(Route::class, $route->getId());
+        $this->assertNotNull($route);
+        $route->setSlug('/a');
+        $entityManager->flush();
+
+        $this->assertSame(
+            ['page|1|/a', 'page|2|/a/c', 'route_histories|page::1|/b', 'route_histories|page::2|/b/c'],
+            $this->fetchRoutes(),
+        );
+    }
+
+    public function testPersistedRouteTakesSlugBackFromOwnHistory(): void
+    {
+        $entityManager = $this->getEntityManager();
+
+        $route = new Route('page', '1', 'en', '/a', 'website');
+        $entityManager->persist($route);
+        $entityManager->flush();
+
+        $route->setSlug('/b');
+        $entityManager->flush();
+
+        $entityManager->remove($route);
+        $entityManager->flush();
+
+        $this->assertSame(['route_histories|page::1|/a'], $this->fetchRoutes());
+
+        $entityManager->persist(new Route('page', '1', 'en', '/a', 'website'));
+        $entityManager->flush();
+
+        $this->assertSame(['page|1|/a'], $this->fetchRoutes());
+    }
+
+    public function testSlugOfOtherRouteIsNotUnique(): void
+    {
+        $webspace = 'website';
+
+        $entityManager = $this->getEntityManager();
+
+        $route = new Route('page', '1', 'en', '/a', $webspace);
+        $entityManager->persist($route);
+        $entityManager->persist(new Route('page', '2', 'en', '/b', $webspace));
+        $entityManager->flush();
+
+        $route->setSlug('/b');
+
+        $this->assertSlugNotUnique('/b', $webspace, $entityManager->flush(...));
+
+        $this->assertSame(['page|1|/a', 'page|2|/b'], $this->fetchRoutes());
+    }
+
+    public function testSlugInHistoryOfOtherRouteIsNotUnique(): void
+    {
+        $webspace = 'website';
+
+        $entityManager = $this->getEntityManager();
+
+        $route = new Route('page', '1', 'en', '/a', $webspace);
+        $otherRoute = new Route('page', '2', 'en', '/b', $webspace);
+        $entityManager->persist($route);
+        $entityManager->persist($otherRoute);
+        $entityManager->flush();
+
+        $otherRoute->setSlug('/c');
+        $entityManager->flush();
+
+        $route->setSlug('/b');
+
+        $this->assertSlugNotUnique('/b', $webspace, $entityManager->flush(...));
+
+        $this->assertSame(
+            ['page|1|/a', 'page|2|/c', 'route_histories|page::2|/b'],
+            $this->fetchRoutes(),
+        );
+    }
+
+    public function testSlugOfChildRouteIsNotUnique(): void
+    {
+        $webspace = 'website';
+
+        $entityManager = $this->getEntityManager();
+
+        $route = new Route('page', '1', 'en', '/a', $webspace);
+        $entityManager->persist($route);
+        $entityManager->persist(new Route('page', '2', 'en', '/a/c', $webspace));
+        $entityManager->persist(new Route('page', '3', 'en', '/b/c', $webspace));
+        $entityManager->flush();
+
+        $route->setSlug('/b');
+
+        $this->assertSlugNotUnique('/b/c', $webspace, $entityManager->flush(...));
+
+        $this->assertSame(['page|1|/a', 'page|2|/a/c', 'page|3|/b/c'], $this->fetchRoutes());
+    }
+
+    public function testSlugOfPersistedRouteIsNotUnique(): void
+    {
+        $webspace = 'website';
+
+        $entityManager = $this->getEntityManager();
+
+        $entityManager->persist(new Route('page', '1', 'en', '/a', $webspace));
+        $entityManager->flush();
+
+        $this->assertSlugNotUnique('/a', $webspace, function() use ($entityManager, $webspace): void {
+            $entityManager->persist(new Route('page', '2', 'en', '/a', $webspace));
+            $entityManager->flush();
+        });
+
+        $this->assertSame(['page|1|/a'], $this->fetchRoutes());
+    }
+
+    public function testSlugWithoutWebspaceCanBeSharedWithOtherResource(): void
+    {
+        $entityManager = $this->getEntityManager();
+
+        $route = new Route('article', '1', 'en', '/a');
+        $entityManager->persist($route);
+        $entityManager->persist(new Route('article', '2', 'en', '/b'));
+        $entityManager->flush();
+
+        $route->setSlug('/b');
+        $entityManager->flush();
+
+        $this->assertSame(
+            ['article|1|/b', 'article|2|/b', 'route_histories|article::1|/a'],
+            $this->fetchRoutes(),
+        );
+    }
+
+    public function testSlugOfOtherWebspaceAndLocaleIsUnique(): void
+    {
+        $entityManager = $this->getEntityManager();
+
+        $route = new Route('page', '1', 'en', '/a', 'website');
+        $entityManager->persist($route);
+        $entityManager->persist(new Route('page', '2', 'en', '/b', 'other'));
+        $entityManager->persist(new Route('page', '3', 'de', '/b', 'website'));
+        $entityManager->flush();
+
+        $route->setSlug('/b');
+        $entityManager->flush();
+
+        $this->assertSame(
+            ['page|1|/b', 'page|2|/b', 'page|3|/b', 'route_histories|page::1|/a'],
+            $this->fetchRoutes(),
+        );
+    }
+
+    /**
+     * @return iterable<string, array{0: string|null}>
+     */
+    public static function provideWebspaces(): iterable
+    {
+        yield 'webspace' => ['website'];
+
+        yield 'without_webspace' => [null];
     }
 
     /**
@@ -1057,6 +1257,44 @@ class RouteChangedUpdaterTest extends KernelTestCase
             'expectedRoutes' => $expectedRoutes,
             'expectedChangedRoutes' => null,
         ];
+    }
+
+    private function getEntityManager(): EntityManagerInterface
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+
+        return $entityManager;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function fetchRoutes(): array
+    {
+        $rows = $this->getEntityManager()->getConnection()->fetchAllAssociative(
+            'SELECT resource_key, resource_id, slug FROM ro_routes ORDER BY resource_key, resource_id, slug',
+        );
+
+        return \array_map(
+            static fn (array $row): string => \sprintf('%s|%s|%s', $row['resource_key'], $row['resource_id'], $row['slug']), // @phpstan-ignore-line argument.type
+            $rows,
+        );
+    }
+
+    private function assertSlugNotUnique(string $expectedSlug, string $expectedWebspace, callable $action): void
+    {
+        try {
+            $action();
+        } catch (RouteSlugNotUniqueException $exception) {
+            $this->assertSame($expectedSlug, $exception->getSlug());
+            $this->assertSame('en', $exception->getLocale());
+            $this->assertSame($expectedWebspace, $exception->getWebspace());
+
+            return;
+        }
+
+        $this->fail('Expected a RouteSlugNotUniqueException to be thrown.');
     }
 
     /**
