@@ -226,6 +226,79 @@ test('Copy the image URL for the given format when icon is clicked and show a su
     expect(getFormatButton('800x800', 'su-copy')).toBeInTheDocument();
 });
 
+test('Download the image in the given format when icon is clicked', async() => {
+    const formatStore = require('../../../stores/formatStore');
+    const formatPromise = Promise.resolve([{key: '400x400'}]);
+    formatStore.loadFormats.mockReturnValue(formatPromise);
+
+    const click = jest.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function() {
+        click.mock.hrefs.push(this.href);
+    });
+    click.mock.hrefs = [];
+
+    const MediaFormats = require('../MediaFormats').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const user = createUser();
+    const router = createRouter();
+    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+    resourceStore.data.thumbnails = {'400x400': '/media/400x400/image.jpg?v=1'};
+
+    render(<MediaFormats resourceStore={resourceStore} router={router} />);
+
+    await formatPromise;
+    expect(await screen.findByText('400x400')).toBeInTheDocument();
+
+    await user.click(getFormatButton('400x400', 'su-download'));
+    expect(click.mock.hrefs).toEqual(['http://localhost/media/400x400/image.jpg?v=1&inline=0']);
+
+    click.mockRestore();
+});
+
+test('Download the original file via the toolbar', () => {
+    const formatStore = require('../../../stores/formatStore');
+    formatStore.loadFormats.mockReturnValue(Promise.resolve());
+
+    const MediaFormats = require('../MediaFormats').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const router = createRouter();
+    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+    resourceStore.data.adminUrl = '/admin/media/1/download/image.jpg?v=1';
+    resourceStore.data.url = '/media/1/download/image.jpg?v=1';
+
+    const click = jest.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function() {
+        click.mock.hrefs.push(this.href);
+    });
+    click.mock.hrefs = [];
+
+    render(<MediaFormats resourceStore={resourceStore} router={router} />);
+
+    const item = getToolbarConfig().items[0];
+    expect(item).toEqual(expect.objectContaining({
+        disabled: false,
+        icon: 'su-download',
+        label: 'sulu_media.download_masterfile',
+    }));
+
+    item.onClick();
+    expect(click.mock.hrefs).toEqual(['http://localhost/admin/media/1/download/image.jpg?v=1&inline=0']);
+
+    click.mockRestore();
+});
+
+test('Disable the original file download in the toolbar if the media has no url', () => {
+    const formatStore = require('../../../stores/formatStore');
+    formatStore.loadFormats.mockReturnValue(Promise.resolve());
+
+    const MediaFormats = require('../MediaFormats').default;
+    const ResourceStore = require('sulu-admin-bundle/stores').ResourceStore;
+    const router = createRouter();
+    const resourceStore = new ResourceStore('media', '1', {locale: observable.box()});
+
+    render(<MediaFormats resourceStore={resourceStore} router={router} />);
+
+    expect(getToolbarConfig().items[0].disabled).toEqual(true);
+});
+
 test('Should change locale via locale chooser', () => {
     const formatStore = require('../../../stores/formatStore');
     formatStore.loadFormats.mockReturnValue(Promise.resolve());
