@@ -20,7 +20,7 @@ use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Gedmo\Tree\Hydrator\ORM\TreeObjectHydrator;
-use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
@@ -71,7 +71,7 @@ final class PageRepository implements PageRepositoryInterface
     private $dimensionContentQueryEnhancer;
 
     /**
-     * @var AccessControlQueryEnhancer
+     * @var AccessControlQueryEnhancerInterface
      */
     private $accessControlQueryEnhancer;
 
@@ -88,7 +88,7 @@ final class PageRepository implements PageRepositoryInterface
     public function __construct(
         EntityManagerInterface $entityManager,
         DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
-        AccessControlQueryEnhancer $accessControlQueryEnhancer
+        AccessControlQueryEnhancerInterface $accessControlQueryEnhancer
     ) {
         $repository = $entityManager->getRepository(PageInterface::class);
         Assert::isInstanceOf($repository, NestedTreeRepository::class);

@@ -14,7 +14,7 @@ namespace Sulu\Page\Infrastructure\Sulu\Sitemap;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\AbstractSitemapProvider;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapAlternateLink;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapUrl;
@@ -61,7 +61,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
         EntityManagerInterface $entityManager,
         private readonly WebspaceManagerInterface $webspaceManager,
         private readonly string $environment,
-        private readonly AccessControlQueryEnhancer $accessControlQueryEnhancer,
+        private readonly AccessControlQueryEnhancerInterface $accessControlQueryEnhancer,
         private readonly ?Security $security,
         private readonly ?array $permissions = null,
     ) {
