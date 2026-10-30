@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -62,7 +62,7 @@ final class NavigationRepository implements NavigationRepositoryInterface
         private ContentAggregatorInterface $contentAggregator,
         private ContentResolverInterface $contentResolver,
         private WebspaceManagerInterface $webspaceManager,
-        private AccessControlQueryEnhancer $accessControlQueryEnhancer,
+        private AccessControlQueryEnhancerInterface $accessControlQueryEnhancer,
         private ?Security $security,
         private array $permissions,
         private bool $audienceTargetingEnabled = false,
