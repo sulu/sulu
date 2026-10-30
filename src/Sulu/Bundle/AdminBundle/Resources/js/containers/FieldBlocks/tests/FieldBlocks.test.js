@@ -33,6 +33,7 @@ jest.mock('../../../components/BlockCollection', () => {
                 aria-disabled={props.disabled}
                 data-add-button-text={props.addButtonText}
                 data-collapsable={String(props.collapsable ?? true)}
+                data-error-counts={JSON.stringify(props.errorCounts)}
                 data-generate-block-ids={typeof props.generateBlockIds}
                 data-max-occurs={String(props.maxOccurs)}
                 data-min-occurs={String(props.minOccurs)}
@@ -586,6 +587,45 @@ test('Render block with schema and error when showing all errors', async() => {
     expect(screen.getByLabelText('field-1-text')).toHaveClass('minLength');
     expect(screen.getByLabelText('field-2-text')).toHaveClass('minLength');
     expect(screen.getByTestId('field-renderer-2')).toHaveAttribute('data-show-all-errors', 'true');
+});
+
+test('Pass the number of errors of every block to the BlockCollection when showing all errors', () => {
+    const formInspector = createFormInspector();
+    const types = getDefaultTypes({text: {label: 'Text', type: 'text_line'}});
+
+    renderFieldBlocks({
+        defaultType: 'editor',
+        error: [
+            undefined,
+            {text: {keyword: 'minLength', parameters: {}}},
+            {
+                text: {keyword: 'minLength', parameters: {}},
+                blocks: [{title: {keyword: 'required', parameters: {}}}, undefined],
+            },
+        ],
+        formInspector,
+        showAllErrors: true,
+        types,
+        value: [{text: 'Test1', type: 'default'}, {text: 'T2', type: 'default'}, {text: 'T3', type: 'default'}],
+    });
+
+    expect(screen.getByTestId('block-collection')).toHaveAttribute('data-error-counts', JSON.stringify([0, 1, 2]));
+});
+
+test('Do not pass the number of errors to the BlockCollection before showing all errors', () => {
+    const formInspector = createFormInspector();
+    const types = getDefaultTypes({text: {label: 'Text', type: 'text_line'}});
+
+    renderFieldBlocks({
+        defaultType: 'editor',
+        error: [{text: {keyword: 'minLength', parameters: {}}}],
+        formInspector,
+        showAllErrors: false,
+        types,
+        value: [{text: 'T1', type: 'default'}],
+    });
+
+    expect(screen.getByTestId('block-collection')).not.toHaveAttribute('data-error-counts');
 });
 
 test('Should correctly pass props to the BlockCollection', () => {
