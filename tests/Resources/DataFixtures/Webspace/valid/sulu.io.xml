@@ -27,6 +27,8 @@
         <excluded-template>template2</excluded-template>
     </excluded-templates>
 
+    <webspace-settings-form>website_settings</webspace-settings-form>
+
     <navigation>
         <contexts>
             <context key="main">
