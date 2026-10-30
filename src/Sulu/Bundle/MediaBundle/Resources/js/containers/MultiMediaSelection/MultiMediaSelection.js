@@ -8,6 +8,7 @@ import {translate} from 'sulu-admin-bundle/utils';
 import {MultiSelectionStore} from 'sulu-admin-bundle/stores';
 import {getIconForDisplayOption, getTranslationForDisplayOption} from '../../utils/MediaSelectionHelper';
 import MultiMediaSelectionOverlay from '../MultiMediaSelectionOverlay';
+import MediaEditOverlay from '../MediaEditOverlay';
 import MimeTypeIndicator from '../../components/MimeTypeIndicator';
 import multiMediaSelectionStyle from './multiMediaSelection.scss';
 import type {DisplayOption, Media} from '../../types';
@@ -17,6 +18,7 @@ import type {Value} from './types';
 type Props = {|
     disabled: boolean,
     displayOptions: Array<DisplayOption>,
+    editable: boolean,
     locale: IObservableValue<string>,
     onChange: (selectedIds: Value) => void,
     onItemClick?: (itemId: number, value: ?Media) => void,
@@ -33,6 +35,7 @@ class MultiMediaSelection extends React.Component<Props> {
     static defaultProps = {
         disabled: false,
         displayOptions: [],
+        editable: false,
         sortable: true,
         types: [],
         value: {displayOption: undefined, ids: []},
@@ -42,6 +45,7 @@ class MultiMediaSelection extends React.Component<Props> {
     changeDisposer: () => *;
 
     @observable overlayOpen: boolean = false;
+    @observable editedMediaId: ?number = undefined;
 
     constructor(props: Props) {
         super(props);
@@ -84,6 +88,14 @@ class MultiMediaSelection extends React.Component<Props> {
         this.overlayOpen = false;
     }
 
+    @action openEditOverlay(mediaId: number) {
+        this.editedMediaId = mediaId;
+    }
+
+    @action closeEditOverlay() {
+        this.editedMediaId = undefined;
+    }
+
     getLabel(itemCount: number) {
         if (itemCount === 1) {
             return `1 ${translate('sulu_media.media_selected_singular')}`;
@@ -121,8 +133,22 @@ class MultiMediaSelection extends React.Component<Props> {
         onChange({...value, displayOption});
     };
 
+    handleEditOverlayClose = () => {
+        this.closeEditOverlay();
+    };
+
+    handleEditOverlayConfirm = () => {
+        this.closeEditOverlay();
+        this.mediaSelectionStore.loadItems(this.mediaSelectionStore.items.map((item) => item.id));
+    };
+
     handleItemClick = (itemId: number, item: ?Media) => {
-        const {onItemClick} = this.props;
+        const {editable, onItemClick} = this.props;
+
+        if (editable) {
+            this.openEditOverlay(itemId);
+            return;
+        }
 
         if (!onItemClick) {
             return;
@@ -132,7 +158,7 @@ class MultiMediaSelection extends React.Component<Props> {
     };
 
     render() {
-        const {locale, disabled, displayOptions, sortable, types, value} = this.props;
+        const {locale, disabled, displayOptions, editable, sortable, types, value} = this.props;
 
         const {loading, items: medias} = this.mediaSelectionStore;
         const label = (loading) ? '' : this.getLabel(medias.length);
@@ -203,6 +229,15 @@ class MultiMediaSelection extends React.Component<Props> {
                     open={this.overlayOpen}
                     types={types}
                 />
+                {editable &&
+                    <MediaEditOverlay
+                        id={this.editedMediaId}
+                        locale={locale}
+                        onClose={this.handleEditOverlayClose}
+                        onConfirm={this.handleEditOverlayConfirm}
+                        open={!!this.editedMediaId}
+                    />
+                }
             </Fragment>
         );
     }

@@ -13,6 +13,18 @@ const mockReact = require('react');
 
 jest.mock('sulu-admin-bundle/utils/Translator');
 
+jest.mock('../../MediaEditOverlay', () => jest.fn((props) => {
+    if (!props.open) {
+        return null;
+    }
+
+    return mockReact.createElement(
+        'button',
+        {onClick: props.onConfirm, type: 'button'},
+        `save media ${props.id} in ${props.locale.get()}`
+    );
+}));
+
 jest.mock('sulu-admin-bundle/components', () => {
     const actual = jest.requireActual('sulu-admin-bundle/components');
 
@@ -493,4 +505,38 @@ test('Should disable the selection if the selection is disabled', () => {
 
     expect(screen.getByRole('button', {name: 'su-image'})).toBeDisabled();
     expect(screen.getByText('Media 1')).toBeInTheDocument();
+});
+
+test('Should open the edit overlay for the clicked item if editable and reload the items on confirm', async() => {
+    const user = userEvent.setup();
+    const loadItemsSpy = jest.fn();
+
+    // $FlowFixMe
+    mockMultiSelectionStoreOnce(function(resourceKey, selectedIds) {
+        this.loadItems = loadItemsSpy;
+        mockExtendObservable(this, {
+            items: selectedIds.map((id) => {
+                return {id, mimeType: 'image/jpeg', thumbnails: {}, title: `Media ${selectedIds.indexOf(id) + 1}`};
+            }),
+        });
+    });
+
+    const itemClickSpy = jest.fn();
+
+    render(
+        <MultiMediaSelection
+            editable={true}
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            onItemClick={itemClickSpy}
+            value={{displayOption: undefined, ids: [55, 99]}}
+        />
+    );
+
+    await user.click(screen.getByRole('button', {name: /Media 2/}));
+    expect(itemClickSpy).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole('button', {name: 'save media 99 in en'}));
+    expect(loadItemsSpy).toHaveBeenLastCalledWith([55, 99]);
+    expect(screen.queryByText('save media 99 in en')).not.toBeInTheDocument();
 });

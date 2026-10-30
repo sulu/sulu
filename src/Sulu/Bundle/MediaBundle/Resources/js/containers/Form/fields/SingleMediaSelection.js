@@ -10,7 +10,6 @@ import {
 } from '../../../utils/MediaSelectionHelper';
 import SingleMediaSelectionComponent from '../../SingleMediaSelection';
 import type {FieldTypeProps} from 'sulu-admin-bundle/types';
-import type {Media} from '../../../types';
 import type {Value} from '../../SingleMediaSelection';
 
 @observer
@@ -65,18 +64,6 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
         onFinish();
     };
 
-    handleItemClick = (itemId: ?number, item: ?Media) => {
-        const {router} = this.props;
-
-        if (!router || !item) {
-            return;
-        }
-
-        const {id, locale} = item;
-
-        router.navigate('sulu_media.form', {id, locale});
-    };
-
     render() {
         const {disabled, error, formInspector, schemaOptions} = this.props;
         const {
@@ -106,9 +93,9 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
             <SingleMediaSelectionComponent
                 disabled={!!disabled}
                 displayOptions={displayOptionValues}
+                editable={true}
                 locale={locale}
                 onChange={this.handleChange}
-                onItemClick={this.handleItemClick}
                 types={mediaTypeValues}
                 valid={!error}
                 value={this.value ? this.value : undefined}

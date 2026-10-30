@@ -48,6 +48,14 @@ function mockSingleMediaSelectionOverlay(props) {
 
 jest.mock('../../../SingleMediaSelectionOverlay', () => jest.fn(mockSingleMediaSelectionOverlay));
 
+jest.mock('../../../MediaEditOverlay', () => jest.fn(function(props) {
+    if (!props.open) {
+        return null;
+    }
+
+    return require('react').createElement('div', {}, `edit media ${props.id} in ${props.locale.get()}`);
+}));
+
 const SingleSelectionStoreMock = (SingleSelectionStore: any);
 
 function getLatestSingleSelectionStore() {
@@ -258,7 +266,7 @@ test('Should call onChange and onFinish if the selection changes', () => {
     expect(finishSpy).toHaveBeenCalled();
 });
 
-test('Should call onItemClick if item is clicked', async() => {
+test('Should open the media edit overlay if item is clicked', async() => {
     const user = userEvent.setup();
     const formInspector = new FormInspector(
         new ResourceFormStore(
@@ -283,9 +291,12 @@ test('Should call onItemClick if item is clicked', async() => {
         />
     );
 
+    expect(screen.queryByText('edit media 6 in en')).not.toBeInTheDocument();
+
     await user.click(screen.getByRole('button', {name: /Test/}));
 
-    expect(router.navigate).toHaveBeenCalledWith('sulu_media.form', {id: 6, locale: 'de'});
+    expect(screen.getByText('edit media 6 in en')).toBeInTheDocument();
+    expect(router.navigate).not.toHaveBeenCalled();
 });
 
 test('Should throw an error if given value is not an object', () => {
