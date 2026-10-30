@@ -10,6 +10,7 @@ import type {Button as ButtonConfig} from './types';
 
 type Props<T, U> = {|
     allowRemoveWhileItemDisabled: boolean,
+    buttons: Array<ButtonConfig<*>>,
     children?: Node,
     className?: string,
     disabled: boolean,
@@ -20,7 +21,6 @@ type Props<T, U> = {|
     loading: boolean,
     onItemClick?: (itemId: T, value: ?U) => void,
     onRemove?: () => void,
-    rightButton?: ButtonConfig<*>,
     valid: boolean,
     value?: U,
 |};
@@ -28,6 +28,7 @@ type Props<T, U> = {|
 export default class SingleItemSelection<T: ?string | number, U> extends React.Component<Props<T, U>> {
     static defaultProps = {
         allowRemoveWhileItemDisabled: false,
+        buttons: [],
         disabled: false,
         itemDisabled: false,
         loading: false,
@@ -45,6 +46,7 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
     render() {
         const {
             allowRemoveWhileItemDisabled,
+            buttons,
             children,
             className,
             disabled,
@@ -54,7 +56,6 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
             loading,
             onItemClick,
             onRemove,
-            rightButton,
             valid,
         } = this.props;
 
@@ -103,13 +104,14 @@ export default class SingleItemSelection<T: ?string | number, U> extends React.C
                         <Loader className={singleItemSelectionStyles.loader} size={14} />
                     }
                 </div>
-                {rightButton &&
+                {buttons.map((button, index) => (
                     <Button
-                        {...rightButton}
-                        disabled={disabled || itemDisabled}
+                        {...button}
+                        disabled={disabled || itemDisabled || button.disabled}
+                        key={index}
                         location="right"
                     />
-                }
+                ))}
             </div>
         );
     }
