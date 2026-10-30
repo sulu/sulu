@@ -15,16 +15,12 @@ namespace Sulu\Content\UserInterface\Controller\Website;
 
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancerInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
-use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentResolver\ContentResolverInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\RoutableInterface;
-use Sulu\Content\Infrastructure\Sulu\Route\Exception\WebspaceUrlNotFoundException;
-use Sulu\Route\Application\Routing\Generator\RouteGeneratorInterface;
-use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
+use Sulu\Route\Application\LanguageSwitcher\LanguageSwitcherProviderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -150,23 +146,18 @@ class ContentController extends AbstractController
         $services['sulu_content.content_resolver'] = ContentResolverInterface::class;
         $services['sulu_http_cache.cache_lifetime.enhancer'] = CacheLifetimeEnhancerInterface::class;
 
-        $services['sulu_route.route_repository'] = RouteRepositoryInterface::class;
-        $services['sulu_route.route_generator'] = RouteGeneratorInterface::class;
-        $services['sulu_core.webspace.webspace_manager'] = WebspaceManagerInterface::class;
+        $services['sulu_route.language_switcher_provider'] = LanguageSwitcherProviderInterface::class;
 
         return $services;
     }
 
     /**
-     * TODO maybe we move this into a content website resolver service, depending on route localization switcher service.
-     *      see https://github.com/sulu/sulu/issues/8175.
-     *
      * @param T $object
      *
      * @return array<string, array{
-     *      url: string,
-     *      locale: string,
-     *      alternate: bool
+     *     url: string,
+     *     locale: string,
+     *     alternate: bool,
      * }>
      */
     private function resolveSuluLocalizations(DimensionContentInterface $object, string $webspaceKey): array
@@ -175,55 +166,12 @@ class ContentController extends AbstractController
             return [];
         }
 
-        $webspaceLocales = $this->container->get('sulu_core.webspace.webspace_manager')
-            ->getWebspaceCollection()
-            ->getWebspace($webspaceKey)
-            ?->getAllLocalizations() ?? [];
-
-        $localizations = [];
-        foreach ($webspaceLocales as $webspaceLocale) {
-            $locale = $webspaceLocale->getLocale(Localization::UNDERSCORE);
-            try {
-                $localizations[$locale] = [
-                    'url' => $this->container->get('sulu_route.route_generator')->generate(
-                        '/',
-                        $locale,
-                        $webspaceKey,
-                    ),
-                    'locale' => $locale,
-                    'alternate' => false,
-                ];
-            } catch (WebspaceUrlNotFoundException) {
-                continue;
-            }
-        }
-
-        $routes = [];
-        foreach ($this->container->get('sulu_route.route_repository')->findBy([
-            'resourceKey' => $object::getResourceKey(),
-            'resourceId' => (string) $object->getResource()->getId(),
-            'locales' => $object->getAvailableLocales() ?? [],
-        ]) as $route) {
-            $routes[] = $route;
-        }
-
-        foreach ($routes as $route) {
-            $locale = $route->getLocale();
-            try {
-                $localizations[$locale] = [
-                    'url' => $this->container->get('sulu_route.route_generator')->generate(
-                        $route->getSlug(),
-                        $route->getLocale(),
-                        $webspaceKey,
-                    ),
-                    'locale' => $locale,
-                    'alternate' => true,
-                ];
-            } catch (WebspaceUrlNotFoundException) {
-                continue;
-            }
-        }
-
-        return $localizations;
+        return $this->container->get('sulu_route.language_switcher_provider')->provide(
+            $object::getResourceKey(),
+            (string) $object->getResource()->getId(),
+            $webspaceKey,
+            $object->getAvailableLocales() ?? [],
+            true,
+        );
     }
 }
