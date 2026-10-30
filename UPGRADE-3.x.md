@@ -229,6 +229,7 @@ $services->set('acme_product.product_localizations_resolver', ProductLocalizatio
   `review`) saying what the current user may do with it. The admin renders the review overlay and the
   banner's cancel action from it, because content without object security, an article or a snippet,
   delivers no `_permissions` of its own.
+- The `RoleController` and the `RoleSettingController` now no longer extend the `AbstractRestController`.
 
 ## 3.0.10
 
