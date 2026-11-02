@@ -57,7 +57,7 @@ class MediaCardAdapter extends React.Component<Props> {
             onDownload: this.handleDownload,
             downloadCopyText: translate('sulu_media.copy_url'),
             downloadUrl: baseURL + adminUrl,
-            downloadText: translate('sulu_media.download_masterfile'),
+            downloadText: translate('sulu_media.download_original'),
         };
     }
 
