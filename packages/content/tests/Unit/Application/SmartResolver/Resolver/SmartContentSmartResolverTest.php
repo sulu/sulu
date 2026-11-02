@@ -78,6 +78,7 @@ class SmartContentSmartResolverTest extends TestCase
         ];
 
         $smartResolvable->getData()->willReturn($data);
+        $smartResolvable->getMetadata()->willReturn(null);
 
         $this->serviceLocator->has('pages')->willReturn(true);
         $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
@@ -174,9 +175,11 @@ class SmartContentSmartResolverTest extends TestCase
         $smartContentProvider->getType()->willReturn('pages');
         $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
 
-        // the currently rendered page is passed through the resolver context (not the filters anymore)
-        $context = ['selfReference' => ['resourceKey' => 'pages', 'id' => 'self-page']];
-        $result = $resolver->resolve($smartResolvable->reveal(), 'en', $context);
+        // the currently rendered page is passed through the "context" metadata of the smart resolvable
+        $smartResolvable->getMetadata()->willReturn([
+            'context' => ['selfReference' => ['resourceKey' => 'pages', 'id' => 'self-page']],
+        ]);
+        $result = $resolver->resolve($smartResolvable->reveal(), 'en');
 
         /** @var array{excluded: list<string>} $view */
         $view = $result->getView();
@@ -258,6 +261,7 @@ class SmartContentSmartResolverTest extends TestCase
         ];
 
         $smartResolvable->getData()->willReturn($data);
+        $smartResolvable->getMetadata()->willReturn(null);
 
         $this->serviceLocator->has('pages')->willReturn(true);
         $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
@@ -326,6 +330,7 @@ class SmartContentSmartResolverTest extends TestCase
         ];
 
         $smartResolvable->getData()->willReturn($data);
+        $smartResolvable->getMetadata()->willReturn(null);
 
         $this->serviceLocator->has('articles')->willReturn(true);
         $this->serviceLocator->get('articles')->willReturn($smartContentProvider->reveal());
@@ -387,6 +392,7 @@ class SmartContentSmartResolverTest extends TestCase
         ];
 
         $smartResolvable->getData()->willReturn($data);
+        $smartResolvable->getMetadata()->willReturn(null);
 
         $this->serviceLocator->has('articles')->willReturn(true);
         $this->serviceLocator->get('articles')->willReturn($smartContentProvider->reveal());

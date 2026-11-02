@@ -18,10 +18,7 @@ use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 
 interface SmartResolverInterface
 {
-    /**
-     * @param array<string, mixed> $context
-     */
-    public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView;
+    public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView;
 
     public static function getType(): string;
 }

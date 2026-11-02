@@ -143,7 +143,7 @@ readonly class ContentResolver implements ContentResolverInterface
         private int $maxDepth,
         private ContentEnhancerInterface $contentEnhancer,
         private ResourceLoaderProvider $resourceLoaderProvider,
-        private ContentDeduplicationTracker $deduplicationTracker
+        private ?ContentDeduplicationTracker $deduplicationTracker = null,
     ) {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
@@ -168,7 +168,7 @@ readonly class ContentResolver implements ContentResolverInterface
 
         // Register the resolved resource itself, so content resolved later in the same request, like a snippet
         // area loaded on this page, excludes it when "exclude_duplicates" is enabled.
-        $this->deduplicationTracker->add($context['selfReference']['resourceKey'], $context['selfReference']['id']);
+        $this->deduplicationTracker?->add($context['selfReference']['resourceKey'], $context['selfReference']['id']);
 
         // Initial resolution to gather ResolvableResources
         /** @var array<int, array<string, array<int, array<int|string, array<string, ResolvableInterface>>>>> $priorityQueue */
@@ -383,7 +383,7 @@ readonly class ContentResolver implements ContentResolverInterface
     {
         \array_walk_recursive($priorityQueue, function(mixed $resource): void {
             if ($resource instanceof ResolvableResource && null !== $resourceKey = $resource->getResourceKey()) {
-                $this->deduplicationTracker->add($resourceKey, $resource->getId());
+                $this->deduplicationTracker?->add($resourceKey, $resource->getId());
             }
         });
     }

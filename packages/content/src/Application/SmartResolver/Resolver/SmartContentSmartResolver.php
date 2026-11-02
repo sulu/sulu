@@ -60,10 +60,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
     ) {
     }
 
-    /**
-     * @param array<string, mixed> $context
-     */
-    public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
+    public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
     {
         /** @var array{
          *     value: array<string, mixed>,
@@ -124,7 +121,8 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $excluded = $filters['excluded'] ?? [];
 
         // Exclude the currently rendered resource (the "own" page) from its own results.
-        $selfReference = $context['selfReference'] ?? null;
+        $context = $resolvable->getMetadata()['context'] ?? null;
+        $selfReference = \is_array($context) ? ($context['selfReference'] ?? null) : null;
         if (\is_array($selfReference)
             && ($selfReference['resourceKey'] ?? null) === $resourceKey
             && \is_string($selfReferenceId = $selfReference['id'] ?? null)
