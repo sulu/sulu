@@ -15,6 +15,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Config\Resource\ResourceInterface;
 
 /**
  * A collection of all webspaces and portals in a specific sulu installation.
@@ -64,7 +65,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns the resources used to build this collection.
      *
-     * @return array The resources build to use this collection
+     * @return array<ResourceInterface> The resources build to use this collection
      */
     public function getResources()
     {
