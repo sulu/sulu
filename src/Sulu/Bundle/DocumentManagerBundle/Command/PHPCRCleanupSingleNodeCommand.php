@@ -271,15 +271,22 @@ class PHPCRCleanupSingleNodeCommand extends Command
             Assert::isInstanceOf($document, UuidBehavior::class);
 
             $node = $this->session->getNodeByIdentifier($document->getUuid());
+            $changedPropertyName = $this->languagePrefix . ':' . $locale . '-changed';
+            $changed = $this->getChanged($node, $changedPropertyName);
+
             $defaultCleanupNode = new CleanupNode($node);
             $this->persist($document, $defaultCleanupNode, $locale);
+            $this->restoreChanged($node, $changedPropertyName, $changed);
 
             $wasPublished = WorkflowStage::PUBLISHED === $workflowStage;
             $liveCleanupNode = null;
             if ($wasPublished) {
                 $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
+                $liveChanged = $this->getChanged($liveNode, $changedPropertyName);
+
                 $liveCleanupNode = new CleanupNode($liveNode);
                 $this->publish($document, $liveCleanupNode, $locale);
+                $this->restoreChanged($liveNode, $changedPropertyName, $liveChanged);
             }
 
             $this->documentManager->clear();
@@ -441,6 +448,21 @@ class PHPCRCleanupSingleNodeCommand extends Command
         $event = new Event\PublishEvent($document, $locale, $options);
         $event->setNode($cleanupNode);
         $this->documentManagerEventDispatcher->dispatch($event, Events::PUBLISH);
+    }
+
+    private function getChanged(NodeInterface $node, string $propertyName): mixed
+    {
+        return $node->hasProperty($propertyName) ? $node->getPropertyValue($propertyName) : null;
+    }
+
+    /**
+     * The cleanup must not count as a content change: persist and publish set the changed date to now.
+     */
+    private function restoreChanged(NodeInterface $node, string $propertyName, mixed $changed): void
+    {
+        if (null !== $changed) {
+            $node->setProperty($propertyName, $changed);
+        }
     }
 
     /**

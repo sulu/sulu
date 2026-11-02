@@ -302,6 +302,7 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
 
         $defaultNode = $this->prophesize(NodeInterface::class);
         $defaultNode->getPath()->willReturn($path);
+        $defaultNode->hasProperty('i18n:en-changed')->willReturn(false);
 
         $nodeType = $this->prophesize(NodeTypeInterface::class);
         $nodeType->getName()->willReturn('sulu:page');
@@ -412,6 +413,7 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
     {
         $node = $this->prophesize(NodeInterface::class);
         $node->getPath()->willReturn('/cmf/sulu_io/contents/page-1');
+        $node->hasProperty('i18n:en-changed')->willReturn(false);
 
         $nodeType = $this->prophesize(NodeTypeInterface::class);
         $nodeType->getName()->willReturn('sulu:page');
@@ -472,5 +474,114 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
 
         $this->assertSame(0, $result);
         $this->assertSame([['en', 'de']], $command->shadowValidationLocales);
+    }
+
+    public function testExecuteKeepsChangedDateOfPublishedDocument(): void
+    {
+        $path = '/cmf/sulu_io/contents/page-1';
+        $draftChanged = new \DateTimeImmutable('2020-01-01 10:00:00');
+        $liveChanged = new \DateTimeImmutable('2020-02-01 10:00:00');
+
+        $nodeType = $this->prophesize(NodeTypeInterface::class);
+        $nodeType->getName()->willReturn('sulu:page');
+
+        $defaultTemplateProp = $this->prophesize(PropertyInterface::class);
+        $defaultTemplateProp->getName()->willReturn('i18n:en-template');
+        $defaultTemplateProp->remove()->shouldBeCalled();
+
+        $defaultNode = $this->prophesize(NodeInterface::class);
+        $defaultNode->getPath()->willReturn($path);
+        $defaultNode->getMixinNodeTypes()->willReturn([$nodeType->reveal()]);
+        $defaultNode->getProperties()->willReturn([$defaultTemplateProp->reveal()]);
+        $defaultNode->hasProperty('i18n:en-changed')->willReturn(true);
+        $defaultNode->getPropertyValue('i18n:en-changed')->willReturn($draftChanged);
+        // Persist and publish set the changed date to now; the cleanup has to put the old one back.
+        $defaultNode->setProperty('i18n:en-changed', $draftChanged)->shouldBeCalled();
+
+        $defaultWorkspace = $this->prophesize(WorkspaceInterface::class);
+        $defaultWorkspace->getName()->willReturn('default');
+        $this->session->getWorkspace()->willReturn($defaultWorkspace->reveal());
+        $defaultNode->getSession()->willReturn($this->session->reveal());
+
+        $liveTemplateProp = $this->prophesize(PropertyInterface::class);
+        $liveTemplateProp->getName()->willReturn('i18n:en-template');
+        $liveTemplateProp->remove()->shouldBeCalled();
+
+        $liveNode = $this->prophesize(NodeInterface::class);
+        $liveNode->getPath()->willReturn($path);
+        $liveNode->getProperties()->willReturn([$liveTemplateProp->reveal()]);
+        $liveNode->getProperties('i18n:en-*')->willReturn([$liveTemplateProp->reveal()]);
+        $liveNode->hasProperty('i18n:en-changed')->willReturn(true);
+        $liveNode->getPropertyValue('i18n:en-changed')->willReturn($liveChanged);
+        $liveNode->setProperty('i18n:en-changed', $liveChanged)->shouldBeCalled();
+
+        $liveWorkspace = $this->prophesize(WorkspaceInterface::class);
+        $liveWorkspace->getName()->willReturn('default_live');
+        $this->liveSession->getWorkspace()->willReturn($liveWorkspace->reveal());
+        $liveNode->getSession()->willReturn($this->liveSession->reveal());
+
+        $this->session->getNodeByIdentifier('uuid-1')->willReturn($defaultNode->reveal());
+        $this->liveSession->getNodeByIdentifier('uuid-1')->willReturn($liveNode->reveal());
+        $this->liveSession->getNode($path)->willReturn($liveNode->reveal());
+        $this->session->save()->shouldBeCalled();
+        $this->liveSession->save()->shouldBeCalled();
+
+        $this->structureMetadataFactory->hasStructuresFor('page')->willReturn(true);
+        $this->webspaceManager->getAllLocalesByWebspaces()->willReturn([
+            'sulu_io' => ['en' => new Localization('en')],
+        ]);
+
+        $document = new class() implements UuidBehavior, WorkflowStageBehavior {
+            public function getUuid()
+            {
+                return 'uuid-1';
+            }
+
+            public function getWorkflowStage(): int
+            {
+                return WorkflowStage::PUBLISHED;
+            }
+
+            public function setWorkflowStage($workflowStage): self
+            {
+                return $this;
+            }
+
+            public function getPublished()
+            {
+                return null;
+            }
+        };
+        $this->documentManager->find('uuid-1', 'en')->willReturn($document);
+
+        $command = new class(
+            $this->liveSession->reveal(),
+            $this->session->reveal(),
+            $this->structureMetadataFactory->reveal(),
+            $this->namespaceRegistry->reveal(),
+            $this->eventDispatcher->reveal(),
+            $this->documentManager->reveal(),
+            [['phpcr_type' => 'sulu:page', 'alias' => 'page']],
+            $this->webspaceManager->reveal(),
+        ) extends PHPCRCleanupSingleNodeCommand {
+            public function removeStaleLocaleProperties(NodeInterface $node, array $staleLocales, bool $dryRun): int
+            {
+                return 0;
+            }
+
+            /**
+             * @param string[] $validLocales
+             */
+            public function cleanInvalidShadowReferences(NodeInterface $node, array $validLocales, bool $dryRun): int
+            {
+                return 0;
+            }
+        };
+
+        $result = $command->run(new ArrayInput([
+            'node' => ['uuid-1'],
+        ]), new BufferedOutput());
+
+        $this->assertSame(0, $result);
     }
 }
