@@ -15,6 +15,10 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\Resolver;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -33,9 +37,72 @@ class SettingsResolverTest extends TestCase
 
     private SettingsResolver $resolver;
 
+    /**
+     * @var ObjectProphecy<MetadataProviderInterface>
+     */
+    private ObjectProphecy $formMetadataProvider;
+
     protected function setUp(): void
     {
-        $this->resolver = new SettingsResolver();
+        $this->formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
+        $this->resolver = new SettingsResolver($this->formMetadataProvider->reveal());
+    }
+
+    public function testResolveTemplateGroup(): void
+    {
+        $exampleDimension = new ExampleDimensionContent(new Example());
+        $exampleDimension->setLocale('en');
+        $exampleDimension->setTemplateKey('default');
+
+        $form = new FormMetadata();
+        $form->setKey('default');
+        $form->setGroup('blog');
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $form);
+        $this->formMetadataProvider->getMetadata('example', 'en', [])->willReturn($typedFormMetadata);
+
+        $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
+        /** @var SettingsData $content */
+        $content = $result->getContent();
+
+        self::assertSame('blog', $content['templateGroup'] ?? null);
+    }
+
+    public function testResolveTemplateGroupWithoutGroupInTemplate(): void
+    {
+        $exampleDimension = new ExampleDimensionContent(new Example());
+        $exampleDimension->setLocale('en');
+        $exampleDimension->setTemplateKey('default');
+
+        $form = new FormMetadata();
+        $form->setKey('default');
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->addForm('default', $form);
+        $this->formMetadataProvider->getMetadata('example', 'en', [])->willReturn($typedFormMetadata);
+
+        $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
+        /** @var SettingsData $content */
+        $content = $result->getContent();
+
+        self::assertNull($content['templateGroup'] ?? null);
+    }
+
+    public function testResolveTemplateGroupWithoutLocale(): void
+    {
+        $exampleDimension = new ExampleDimensionContent(new Example());
+        $exampleDimension->setTemplateKey('default');
+
+        $result = $this->resolver->resolve($exampleDimension);
+        self::assertInstanceOf(ContentView::class, $result);
+
+        /** @var SettingsData $content */
+        $content = $result->getContent();
+
+        self::assertNull($content['templateGroup'] ?? null);
     }
 
     public function testResolveAvailableLocales(): void

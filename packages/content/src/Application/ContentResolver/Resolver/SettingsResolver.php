@@ -13,10 +13,13 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentResolver\Resolver;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Domain\Model\AuthorInterface;
+use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
@@ -33,6 +36,7 @@ use Sulu\Content\Domain\Model\WebspaceInterface;
  *      }>,
  *      mainWebspace?: string|null,
  *      template?: string|null,
+ *      templateGroup?: string|null,
  *      author?: ContentView|null,
  *      authored?: \DateTime|null,
  *      shadowBaseLocale?: string|null,
@@ -41,6 +45,11 @@ use Sulu\Content\Domain\Model\WebspaceInterface;
  */
 readonly class SettingsResolver implements ResolverInterface
 {
+    public function __construct(
+        private MetadataProviderInterface $formMetadataProvider,
+    ) {
+    }
+
     public function resolve(DimensionContentInterface $dimensionContent, ?array $properties = null): ?ContentView
     {
         /** @var SettingsData $result */
@@ -81,14 +90,41 @@ readonly class SettingsResolver implements ResolverInterface
 
     /**
      * @return array{
-     *     template: string|null
+     *     template: string|null,
+     *     templateGroup: string|null
      * }
      */
     protected function getTemplateData(TemplateInterface $dimensionContent): array
     {
         return [
             'template' => $dimensionContent->getTemplateKey(),
+            'templateGroup' => $dimensionContent instanceof DimensionContentInterface
+                ? $this->getTemplateGroup($dimensionContent)
+                : null,
         ];
+    }
+
+    /**
+     * @template T of ContentRichEntityInterface
+     *
+     * @param TemplateInterface&DimensionContentInterface<T> $dimensionContent
+     */
+    private function getTemplateGroup(TemplateInterface&DimensionContentInterface $dimensionContent): ?string
+    {
+        $templateKey = $dimensionContent->getTemplateKey();
+        $locale = $dimensionContent->getLocale();
+        if (null === $templateKey || null === $locale) {
+            return null;
+        }
+
+        /** @var TypedFormMetadata $typedFormMetadata */
+        $typedFormMetadata = $this->formMetadataProvider->getMetadata($dimensionContent::getTemplateType(), $locale, []);
+        $formMetadata = $typedFormMetadata->getForms()[$templateKey] ?? null;
+        if (null === $formMetadata) {
+            return null;
+        }
+
+        return $formMetadata->getGroup();
     }
 
     /**
