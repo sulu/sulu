@@ -96,9 +96,8 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             $smartResolver = $this->smartResolverProvider->getSmartResolver($resourceLoaderKey);
 
             $loadedResources[$id] = $smartResolver->resolve(
-                $smartResource,
+                $smartResource->withContext($context),
                 $locale,
-                $context,
             );
         }
 

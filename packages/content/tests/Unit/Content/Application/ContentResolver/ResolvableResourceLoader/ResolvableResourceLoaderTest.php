@@ -49,7 +49,7 @@ class ResolvableResourceLoaderTest extends TestCase
         };
 
         $smartExampleResolver = new class() implements SmartResolverInterface {
-            public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
+            public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
             {
                 return ContentView::create([
                     'title' => 'Smart Example Resource',
@@ -267,12 +267,11 @@ class ResolvableResourceLoaderTest extends TestCase
         };
 
         $contextAwareSmartResolver = new class() implements SmartResolverInterface {
-            /** @var array<string, mixed> */
-            public array $lastContext = [];
+            public mixed $lastContext = null;
 
-            public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
+            public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
             {
-                $this->lastContext = $context;
+                $this->lastContext = $resolvable->getMetadata()['context'] ?? null;
 
                 return ContentView::create([], []);
             }

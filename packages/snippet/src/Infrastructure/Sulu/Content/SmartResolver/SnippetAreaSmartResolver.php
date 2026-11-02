@@ -40,10 +40,7 @@ class SnippetAreaSmartResolver implements SmartResolverInterface
     ) {
     }
 
-    /**
-     * @param array<string, mixed> $context
-     */
-    public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
+    public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
     {
         /**
          * @var array{
