@@ -2008,6 +2008,33 @@ class PageControllerTest extends SuluTestCase
         $this->assertSame('/a', $route->getSlug());
     }
 
+    public function testCopyLocaleTakesUrlBackFromOwnHistory(): void
+    {
+        $this->purgeDatabase();
+        $this->createHomepage('homepage-uuid-route-history-copy', 'sulu_io');
+
+        $page = $this->createPage('homepage-uuid-route-history-copy', ['url' => '/a']);
+        $uuid = $page->getUuid();
+        self::getEntityManager()->clear();
+
+        foreach (['en' => '/b', 'de' => '/a'] as $locale => $url) {
+            $this->client->request('PUT', '/admin/api/pages/' . $uuid . '?locale=' . $locale . '&force=true', [], [], [], \json_encode([
+                'template' => 'default',
+                'title' => 'Test Page',
+                'url' => $url,
+            ]) ?: null);
+
+            $this->assertHttpStatusCode(200, $this->client->getResponse());
+        }
+
+        $this->client->request('POST', '/admin/api/pages/' . $uuid . '?locale=en&action=copy_locale&src=de&dest=en');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $routeRepository = self::getContainer()->get(RouteRepositoryInterface::class);
+        $route = $routeRepository->getOneBy(['resourceKey' => 'pages', 'resourceId' => $uuid, 'locale' => 'en']);
+        $this->assertSame('/a', $route->getSlug());
+    }
+
     public function testPutWithUrlOfOtherPageReturnsConflict(): void
     {
         $this->purgeDatabase();
