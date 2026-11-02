@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\Exception\ExceptionResponseDataInterface;
+use Sulu\Component\Rest\Exception\FieldErrorsExceptionInterface;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundException;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
@@ -512,5 +513,57 @@ class FlattenExceptionNormalizerTest extends TestCase
             'The keys travel to the frontend as they are.'
         );
         $this->assertSame('Unprocessable Entity', $result['message']);
+    }
+
+    public function testNormalizeFieldErrorsExceptionTranslatesTheTitles(): void
+    {
+        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $normalizer = new FlattenExceptionNormalizer(
+            $decoratedNormalizer->reveal(),
+            $translator->reveal()
+        );
+
+        $exception = new class('Invalid form data', 1109) extends \Exception implements FieldErrorsExceptionInterface {
+            public function getFieldErrors(): array
+            {
+                return [
+                    ['path' => 'name', 'key' => 'sulu_security.name_assigned_to_other_role', 'parameters' => ['name' => 'Editor']],
+                    ['path' => 'blocks/0/key', 'title' => 'Already translated.'],
+                    ['path' => 'blocks/0/key', 'key' => 'sulu_admin.error_required'],
+                ];
+            }
+        };
+
+        $flattenException = FlattenException::createFromThrowable($exception);
+
+        $decoratedNormalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        )->willReturn(['code' => 422, 'message' => 'Unprocessable Entity']);
+
+        $translator->trans('sulu_security.name_assigned_to_other_role', ['{name}' => 'Editor'], 'admin')
+            ->willReturn('The name "Editor" is already assigned to another role.');
+        $translator->trans('sulu_admin.error_required', [], 'admin')
+            ->willReturn('This field must have a value');
+
+        $result = $normalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        );
+
+        $this->assertSame(
+            [
+                ['path' => 'name', 'title' => 'The name "Editor" is already assigned to another role.'],
+                ['path' => 'blocks/0/key', 'title' => 'Already translated.'],
+                ['path' => 'blocks/0/key', 'title' => 'This field must have a value'],
+            ],
+            $result['fieldErrors'],
+            'A path may repeat, one entry per message.'
+        );
+        $this->assertArrayNotHasKey('detail', $result);
     }
 }

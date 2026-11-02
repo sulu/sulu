@@ -73,6 +73,18 @@ test('Display a field with an error', () => {
     expect(container).toMatchSnapshot();
 });
 
+test('Display a field with several errors', () => {
+    render(
+        <Field error={['First error', 'Second error']} label="Testlabel">
+            <div>Test</div>
+        </Field>
+    );
+
+    expect(screen.getByText('First error')).toBeInTheDocument();
+    expect(screen.getByText('Second error')).toBeInTheDocument();
+    expect(screen.getAllByLabelText('su-exclamation-triangle')).toHaveLength(2);
+});
+
 test('Change type of field', async() => {
     const user = userEvent.setup();
     const typeChangeSpy = jest.fn();

@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest;
 
 use Sulu\Component\Rest\Exception\ExceptionResponseDataInterface;
+use Sulu\Component\Rest\Exception\FieldErrorsExceptionInterface;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
@@ -91,17 +92,34 @@ class FlattenExceptionNormalizer implements NormalizerInterface
         if ($contextException instanceof TranslationErrorMessagesExceptionInterface) {
             $messages = [];
             foreach ($contextException->getMessageTranslations() as $translation) {
-                $parameters = [];
-                foreach ($translation['parameters'] as $name => $value) {
-                    $parameters['{' . $name . '}'] = $value;
-                }
-
-                $messages[] = $this->translator->trans($translation['key'], $parameters, 'admin');
+                $messages[] = $this->translator->trans(
+                    $translation['key'],
+                    $this->wrapParameters($translation['parameters']),
+                    'admin'
+                );
             }
 
             if ([] !== $messages) {
                 $data['detail'] = \implode(' ', $messages);
             }
+        }
+
+        if ($contextException instanceof FieldErrorsExceptionInterface) {
+            $fieldErrors = [];
+            foreach ($contextException->getFieldErrors() as $fieldError) {
+                $fieldErrors[] = [
+                    'path' => $fieldError['path'],
+                    'title' => isset($fieldError['title'])
+                        ? $fieldError['title']
+                        : $this->translator->trans(
+                            $fieldError['key'],
+                            $this->wrapParameters($fieldError['parameters'] ?? []),
+                            'admin'
+                        ),
+                ];
+            }
+
+            $data['fieldErrors'] = $fieldErrors;
         }
 
         if ($contextException instanceof ExceptionResponseDataInterface) {
@@ -115,6 +133,21 @@ class FlattenExceptionNormalizer implements NormalizerInterface
         }
 
         return $data;
+    }
+
+    /**
+     * @param array<string, float|int|string> $parameters
+     *
+     * @return array<string, float|int|string>
+     */
+    private function wrapParameters(array $parameters): array
+    {
+        $wrapped = [];
+        foreach ($parameters as $name => $value) {
+            $wrapped['{' . $name . '}'] = $value;
+        }
+
+        return $wrapped;
     }
 
     /**

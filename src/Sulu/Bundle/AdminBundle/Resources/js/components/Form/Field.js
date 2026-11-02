@@ -16,7 +16,7 @@ type Props<T: string | number> = {|
     children: Node,
     colSpan: ColSpan,
     description?: string,
-    error?: string,
+    error?: string | Array<string>,
     id?: string,
     label?: string,
     onTypeChange?: (type: T) => void,
@@ -96,6 +96,7 @@ class Field<T: string | number> extends React.Component<Props<T>> {
         } = this.props;
 
         const {selectedType} = this;
+        const errorMessages = [].concat(error || []);
 
         const fieldClass = classNames(
             fieldStyles.field,
@@ -146,7 +147,12 @@ class Field<T: string | number> extends React.Component<Props<T>> {
                         </div>
                     }
                     <div className={fieldStyles.errorLabel}>
-                        {error}
+                        {errorMessages.map((message, index) => (
+                            <div className={fieldStyles.errorMessage} key={index}>
+                                <Icon className={fieldStyles.errorIcon} name="su-exclamation-triangle" />
+                                {message}
+                            </div>
+                        ))}
                     </div>
                 </div>
             </Grid.Item>

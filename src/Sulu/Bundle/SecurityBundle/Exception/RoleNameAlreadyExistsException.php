@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\SecurityBundle\Exception;
 
+use Sulu\Component\Rest\Exception\FieldErrorsExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 
 /**
  * Exception is thrown when a Role is created or updated with an already existing name.
  */
-class RoleNameAlreadyExistsException extends \Exception implements TranslationErrorMessageExceptionInterface
+class RoleNameAlreadyExistsException extends \Exception implements TranslationErrorMessageExceptionInterface, FieldErrorsExceptionInterface
 {
     /**
      * @param string $name
@@ -44,5 +45,16 @@ class RoleNameAlreadyExistsException extends \Exception implements TranslationEr
     public function getMessageTranslationParameters(): array
     {
         return ['{name}' => $this->name];
+    }
+
+    public function getFieldErrors(): array
+    {
+        return [
+            [
+                'path' => 'name',
+                'key' => $this->getMessageTranslationKey(),
+                'parameters' => ['name' => $this->name],
+            ],
+        ];
     }
 }

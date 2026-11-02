@@ -2251,3 +2251,114 @@ test('Set type to the template value if set', () => {
         expect(resourceFormStore.type).toEqual('footer');
     });
 });
+
+test('Save should show the field errors of the server at their fields and keep them when validating', (done) => {
+    const jsonSchemaPromise = Promise.resolve({type: 'object'});
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const resourceStore = new ResourceStore('roles', '3');
+    const error = {
+        detail: 'Something failed',
+        fieldErrors: [
+            {path: 'name', title: 'The name is taken.'},
+            {path: 'blocks/0/key', title: 'Not an active key.'},
+            {path: 'blocks/0/key', title: 'Must not contain spaces.'},
+            {path: '', title: 'A message for the whole form.'},
+        ],
+    };
+    resourceStore.save.mockReturnValue(Promise.reject({json: jest.fn().mockReturnValue(Promise.resolve(error))}));
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'roles');
+    resourceStore.data = observable({name: 'Editor', blocks: [{key: 'a b'}]});
+
+    when(
+        () => !resourceFormStore.schemaLoading,
+        (): void => {
+            resourceFormStore.save().catch(() => {
+                const expectedErrors = {
+                    name: {messages: ['The name is taken.']},
+                    blocks: [{key: {messages: ['Not an active key.', 'Must not contain spaces.']}}],
+                };
+
+                expect(toJS(resourceFormStore.errors)).toEqual(expectedErrors);
+                expect(resourceFormStore.hasErrors).toEqual(true);
+
+                // a blur validates the schema again and must not wipe the errors of the server
+                expect(resourceFormStore.validate()).toEqual(true);
+                expect(toJS(resourceFormStore.errors)).toEqual(expectedErrors);
+                done();
+            });
+        }
+    );
+});
+
+test('Save should merge the field errors of the server into the errors of the schema', (done) => {
+    const jsonSchemaPromise = Promise.resolve({
+        type: 'object',
+        properties: {title: {type: 'string', minLength: 3}},
+    });
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const resourceStore = new ResourceStore('roles', '3');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'roles');
+    resourceStore.data = observable({title: 'ab', name: 'Editor'});
+
+    when(
+        () => !resourceFormStore.schemaLoading,
+        (): void => {
+            resourceFormStore.setServerErrors([{path: '/name', title: 'The name is taken.'}]);
+
+            expect(resourceFormStore.validate()).toEqual(false);
+            expect(toJS(resourceFormStore.errors)).toEqual({
+                title: {keyword: 'minLength', parameters: {limit: 3}},
+                name: {messages: ['The name is taken.']},
+            });
+            done();
+        }
+    );
+});
+
+test('Changing a field should remove the errors of the server of that field only', () => {
+    const resourceStore = new ResourceStore('roles', '3');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'roles');
+    resourceStore.data = observable({name: 'Editor', key: 'editor', blocks: [{key: 'a'}]});
+
+    resourceFormStore.setServerErrors([
+        {path: 'name', title: 'The name is taken.'},
+        {path: 'key', title: 'The key is taken.'},
+        {path: 'blocks/0/key', title: 'Not an active key.'},
+    ]);
+
+    resourceFormStore.change('/name', 'Other');
+    expect(toJS(resourceFormStore.errors)).toEqual({
+        key: {messages: ['The key is taken.']},
+        blocks: [{key: {messages: ['Not an active key.']}}],
+    });
+
+    resourceFormStore.changeMultiple({'/blocks/0': {key: 'b'}});
+    expect(toJS(resourceFormStore.errors)).toEqual({key: {messages: ['The key is taken.']}});
+});
+
+test('Setting a value from the server or a default should keep the errors of the server', () => {
+    const resourceStore = new ResourceStore('roles', '3');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'roles');
+    resourceStore.data = observable({name: 'Editor'});
+
+    resourceFormStore.setServerErrors([{path: 'name', title: 'The name is taken.'}]);
+    resourceFormStore.change('/name', 'Other', {isServerValue: true});
+    resourceFormStore.changeMultiple({'/name': 'Other'}, {isDefaultValue: true});
+
+    expect(toJS(resourceFormStore.errors)).toEqual({name: {messages: ['The name is taken.']}});
+});
+
+test('A successful save should remove the errors of the server', () => {
+    const resourceStore = new ResourceStore('roles', '3');
+    const resourceFormStore = new ResourceFormStore(resourceStore, 'roles');
+    resourceStore.data = observable({name: 'Editor'});
+
+    resourceFormStore.setServerErrors([{path: 'name', title: 'The name is taken.'}]);
+
+    return resourceFormStore.save().then(() => {
+        expect(toJS(resourceFormStore.errors)).toEqual({});
+        expect(resourceFormStore.hasErrors).toEqual(false);
+    });
+});

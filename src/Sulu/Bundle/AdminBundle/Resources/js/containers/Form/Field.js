@@ -153,6 +153,28 @@ class Field extends React.Component<Props> {
         }
     }
 
+    findErrorMessages(error: ?Error | ErrorCollection): ?Array<string> {
+        if (!error || isArrayLike(error)) {
+            return;
+        }
+
+        if (Array.isArray(error.messages)) {
+            // $FlowFixMe: flow does not narrow the type of a property that can also be a child error
+            return error.messages;
+        }
+
+        if (typeof error.keyword === 'string') {
+            return;
+        }
+
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        for (const childKey in error) {
+            // the first child error with messages is found recursively, like it is done for the keyword
+            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+            return this.findErrorMessages(error[childKey]);
+        }
+    }
+
     @computed.struct get types() {
         return this.props.schema.types;
     }
@@ -221,12 +243,16 @@ class Field extends React.Component<Props> {
         const fieldTypeOptions = fieldRegistry.getOptions(type);
 
         const errorKeyword = this.findErrorKeyword(error);
+        const errorMessages = this.findErrorMessages(error);
 
         return (
             <Form.Field
                 colSpan={schema.colSpan}
                 description={description}
-                error={errorKeyword ? translate('sulu_admin.error_' + errorKeyword.toLowerCase()) : undefined}
+                error={
+                    errorMessages
+                    || (errorKeyword ? translate('sulu_admin.error_' + errorKeyword.toLowerCase()) : undefined)
+                }
                 id={dataPath}
                 label={label}
                 required={required}

@@ -153,7 +153,9 @@ export default class AbstractFormStore
     +locale: ?IObservableValue<string>;
     @observable schema: Schema;
     modifiedFields: Array<string> = [];
-    @observable errors: Object = {};
+    @observable schemaErrors: Object = {};
+    // keyed by the data path of the field, e.g. "/blocks/0/key"
+    @observable serverErrors: {[dataPath: string]: Array<string>} = {};
     validator: ?(data: Object) => boolean;
     pathsByTag: {[tagName: string]: Array<string>} = {};
 
@@ -222,18 +224,77 @@ export default class AbstractFormStore
             }
         }
 
-        this.errors = errors;
+        this.schemaErrors = errors;
 
-        if (this.hasErrors) {
-            log.info('Form validation detected the following errors: ', toJS(this.errors));
+        if (Object.keys(errors).length > 0) {
+            log.info('Form validation detected the following errors: ', toJS(errors));
             return false;
         }
 
         return true;
     }
 
+    // Errors the server named for a field are merged into the ones of the schema, but do not take part in validate():
+    // the server decides again on the next save, so one that went stale must not block the request.
+    @computed get errors(): Object {
+        const errors = toJS(this.schemaErrors);
+
+        Object.keys(this.serverErrors).forEach((dataPath) => {
+            jsonpointer.set(errors, dataPath, {messages: toJS(this.serverErrors[dataPath])});
+        });
+
+        return errors;
+    }
+
     @computed get hasErrors() {
         return Object.keys(this.errors).length > 0;
+    }
+
+    @action setServerErrors(fieldErrors: Array<{path: string, title: string}>) {
+        const serverErrors = {};
+
+        fieldErrors.forEach(({path, title}) => {
+            // an error without a path belongs to the whole form and has no field to be shown at
+            if (!path) {
+                return;
+            }
+
+            const dataPath = path.startsWith('/') ? path : '/' + path;
+            serverErrors[dataPath] = [...(serverErrors[dataPath] || []), title];
+        });
+
+        this.serverErrors = serverErrors;
+    }
+
+    /**
+     * Removes the errors of the server for a field that was changed, or all of them without a data path.
+     * A change inside of a block also removes the errors of the block, and the other way around.
+     */
+    @action clearServerErrors(dataPath?: string) {
+        if (Object.keys(this.serverErrors).length === 0) {
+            return;
+        }
+
+        if (dataPath === undefined) {
+            this.serverErrors = {};
+
+            return;
+        }
+
+        const sanitizedDataPath = dataPath.startsWith('/') ? dataPath : '/' + dataPath;
+        const serverErrors = {};
+
+        Object.keys(this.serverErrors).forEach((errorPath) => {
+            const related = errorPath === sanitizedDataPath
+                || errorPath.startsWith(sanitizedDataPath + '/')
+                || sanitizedDataPath.startsWith(errorPath + '/');
+
+            if (!related) {
+                serverErrors[errorPath] = this.serverErrors[errorPath];
+            }
+        });
+
+        this.serverErrors = serverErrors;
     }
 
     getValueByPath = (dataPath: string): mixed => {

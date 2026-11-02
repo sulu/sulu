@@ -201,6 +201,26 @@ test('Confirming dialog should save the current value and inherit it', async() =
     expect(confirmSpy).toHaveBeenCalledWith();
 });
 
+test('Field errors of the server should be passed to the form store', async() => {
+    const user = userEvent.setup();
+    const fieldErrors = [{path: 'roles/0', title: 'The role is not valid.'}];
+
+    renderPermissionFormOverlay();
+
+    const resourceStore = getLatestResourceStore();
+    resourceStore.save.mockReturnValue(Promise.reject({
+        json: jest.fn().mockReturnValue(Promise.resolve({detail: 'Invalid', fieldErrors})),
+    }));
+    const formStore = getLatestResourceFormStore();
+    formStore.setServerErrors = jest.fn();
+
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.ok'}));
+    await user.click(getLastButtonByName('sulu_admin.ok'));
+
+    expect(formStore.setServerErrors).toHaveBeenCalledWith(fieldErrors);
+    expect(await screen.findByText(/sulu_admin\.form_contains_invalid_values/)).toBeInTheDocument();
+});
+
 test('Cancel inherit dialog should not save anything', async() => {
     const user = userEvent.setup();
     const confirmSpy = jest.fn();

@@ -77,6 +77,18 @@ class FormOverlay extends React.Component<Props> {
                     onConfirm();
                 })
                 .catch(action((error) => {
+                    if (Array.isArray(error.fieldErrors)) {
+                        // the messages are shown at their fields, so only the ones without a field are listed
+                        const formMessages = error.fieldErrors.filter(({path}) => !path).map(({title}) => title);
+                        this.formErrors.push(
+                            ...(formMessages.length
+                                ? formMessages
+                                : [translate('sulu_admin.form_contains_invalid_values')])
+                        );
+
+                        return;
+                    }
+
                     this.formErrors.push(error.detail || error.title || translate('sulu_admin.form_save_server_error'));
                 }));
         } else {

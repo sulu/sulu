@@ -1898,6 +1898,122 @@ test('Should display error message from server if server returns error message w
     });
 });
 
+test('Should display only the messages without a field if server returns field errors', (done) => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/metadataStore');
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const error = {
+        code: 1109,
+        detail: 'URL is already assigned to another page.',
+        fieldErrors: [
+            {path: 'url', title: 'URL is already assigned to another page.'},
+            {path: '', title: 'Another message for the whole form.'},
+        ],
+        message: 'Unprocessable Entity',
+    };
+    const errorPromise = Promise.resolve(error);
+    const putPromise = Promise.reject({json: jest.fn().mockReturnValue(errorPromise)});
+    ResourceRequester.put.mockReturnValue(putPromise);
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+        attributes: {
+            id: 8,
+        },
+    };
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+
+    mockFormContainer.submit().then(() => {
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
+        expect(getToolbarConfig().errors).toEqual(['Another message for the whole form.']);
+        expect(mockFormContainerProps.store.errors).toEqual({
+            url: {messages: ['URL is already assigned to another page.']},
+        });
+        done();
+    });
+});
+
+test('Should display the generic message if server returns field errors only', (done) => {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/metadataStore');
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const error = {
+        code: 1109,
+        detail: 'URL is already assigned to another page.',
+        fieldErrors: [
+            {path: 'url', title: 'URL is already assigned to another page.'},
+        ],
+        message: 'Unprocessable Entity',
+    };
+    const errorPromise = Promise.resolve(error);
+    const putPromise = Promise.reject({json: jest.fn().mockReturnValue(errorPromise)});
+    ResourceRequester.put.mockReturnValue(putPromise);
+
+    const route = {
+        options: {
+            formKey: 'snippets',
+            locales: [],
+            toolbarActions: [],
+        },
+    };
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+        attributes: {
+            id: 8,
+        },
+    };
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+    resourceStore.destroy = jest.fn();
+
+    mockFormContainer.submit().then(() => {
+        expect(resourceStore.destroy).not.toHaveBeenCalled();
+        expect(ResourceRequester.put).toHaveBeenCalledWith('snippets', {value: 'Value'}, {id: 8, locale: 'en'});
+        expect(getToolbarConfig().errors).toEqual(['sulu_admin.form_contains_invalid_values']);
+        done();
+    });
+});
+
 test('Should save form when submitted and redirect to editView with mapped attributes', () => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve());

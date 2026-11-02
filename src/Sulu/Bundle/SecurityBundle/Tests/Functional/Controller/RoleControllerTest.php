@@ -417,9 +417,11 @@ class RoleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertEquals(1101, $response->code);
 
-        /** @var array{detail: string} $body */
+        /** @var array{detail: string, fieldErrors: list<array{path: string, title: string}>} $body */
         $body = \json_decode((string) $this->client->getResponse()->getContent(), true);
         $this->assertStringContainsString('The name "Sulu Administrator"', $body['detail']);
+        $this->assertSame('name', $body['fieldErrors'][0]['path']);
+        $this->assertSame($body['detail'], $body['fieldErrors'][0]['title']);
     }
 
     public function testPutWithExistingKey(): void
@@ -440,9 +442,11 @@ class RoleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertEquals(1101, $response->code);
 
-        /** @var array{detail: string} $body */
+        /** @var array{detail: string, fieldErrors: list<array{path: string, title: string}>} $body */
         $body = \json_decode((string) $this->client->getResponse()->getContent(), true);
         $this->assertStringContainsString('The key "sulu_administrator"', $body['detail']);
+        $this->assertSame('key', $body['fieldErrors'][0]['path']);
+        $this->assertSame($body['detail'], $body['fieldErrors'][0]['title']);
 
         // setting key to 'null' should work although there is another role with the key 'null'
         $this->client->jsonRequest(

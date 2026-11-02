@@ -262,6 +262,12 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         return true;
     }
 
+    setServerErrors(fieldErrors: Array<{path: string, title: string}>) {
+        if (this.innerFormStore) {
+            this.innerFormStore.setServerErrors(fieldErrors);
+        }
+    }
+
     /**
      * @deprecated
      */

@@ -1,5 +1,5 @@
 // @flow
-import {observable} from 'mobx';
+import {observable, toJS} from 'mobx';
 import MemoryFormStore from '../../stores/MemoryFormStore';
 import conditionDataProviderRegistry from '../../registries/conditionDataProviderRegistry';
 
@@ -635,4 +635,23 @@ test('Store slash-named properties with a numeric segment as nested objects and 
     expect(memoryFormStore.errors.attributes[1]).toEqual(
         {keyword: 'maximum', parameters: {comparison: '<=', limit: 10}}
     );
+});
+
+test('Show the errors of the server beside the errors of the schema until the field changes', () => {
+    const jsonSchema = {type: 'object', properties: {title: {type: 'string', minLength: 3}}};
+    const memoryFormStore = new MemoryFormStore({title: 'ab', name: 'Editor'}, {}, jsonSchema);
+
+    memoryFormStore.setServerErrors([
+        {path: 'name', title: 'The name is taken.'},
+        {path: '/name', title: 'Choose another one.'},
+    ]);
+
+    expect(memoryFormStore.validate()).toEqual(false);
+    expect(toJS(memoryFormStore.errors)).toEqual({
+        title: {keyword: 'minLength', parameters: {limit: 3}},
+        name: {messages: ['The name is taken.', 'Choose another one.']},
+    });
+
+    memoryFormStore.change('name', 'Other');
+    expect(toJS(memoryFormStore.errors)).toEqual({title: {keyword: 'minLength', parameters: {limit: 3}}});
 });

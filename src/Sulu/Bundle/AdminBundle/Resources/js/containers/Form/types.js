@@ -32,10 +32,15 @@ export type PropertyError = {
     schema?: mixed,
 };
 
+// a message of the server for a field, which is shown as it is
+export type ServerError = {
+    messages: Array<string>,
+};
+
 export type BlockError = Array<?{[key: string]: Error}>;
 
 // nested errors are built from slash separated property names: objects, plus arrays for numeric segments (blocks)
-export type Error = PropertyError | ErrorCollection | Array<?Error>;
+export type Error = PropertyError | ServerError | ErrorCollection | Array<?Error>;
 
 export type ErrorCollection = {[key: string]: Error};
 
@@ -112,6 +117,7 @@ export interface FormStoreInterface {
     +options: SchemaOptions,
     +resourceKey: ?string,
     +schema: Object,
+    +setServerErrors: (fieldErrors: Array<{path: string, title: string}>) => void,
     +types: {[key: string]: SchemaType},
     +unexpectedError: boolean,
     +validate: () => boolean,

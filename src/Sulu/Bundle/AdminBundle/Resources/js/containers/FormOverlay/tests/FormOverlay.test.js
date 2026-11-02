@@ -348,6 +348,42 @@ test('Should display Snackbar with message from server if an error happens while
     expect(await screen.findByTestId('snackbar')).toHaveTextContent('URL is already assigned to another page.');
 });
 
+test('Should display Snackbar with generic message if the server returns field errors while saving', async() => {
+    const user = userEvent.setup();
+    const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
+    const confirmSpy = jest.fn();
+    formStore.save.mockImplementationOnce(() => Promise.reject({
+        code: 1109,
+        detail: 'The name is taken.',
+        fieldErrors: [{path: 'name', title: 'The name is taken.'}],
+    }));
+
+    renderFormOverlay({
+        formStore,
+        onConfirm: confirmSpy,
+    });
+
+    await user.click(screen.getByLabelText('form-submit'));
+
+    expect(confirmSpy).not.toHaveBeenCalled();
+    expect(await screen.findByTestId('snackbar')).toHaveTextContent('sulu_admin.form_contains_invalid_values');
+});
+
+test('Should display Snackbar with the messages of the server that belong to no field', async() => {
+    const user = userEvent.setup();
+    const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
+    formStore.save.mockImplementationOnce(() => Promise.reject({
+        code: 1109,
+        fieldErrors: [{path: '', title: 'You cannot submit more than 5 entries.'}],
+    }));
+
+    renderFormOverlay({formStore, onConfirm: jest.fn()});
+
+    await user.click(screen.getByLabelText('form-submit'));
+
+    expect(await screen.findByTestId('snackbar')).toHaveTextContent('You cannot submit more than 5 entries.');
+});
+
 test('Should display Snackbar if a form is not valid', async() => {
     const user = userEvent.setup();
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
