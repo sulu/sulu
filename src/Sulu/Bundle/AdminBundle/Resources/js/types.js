@@ -14,6 +14,11 @@ export type Resource = {
     title?: string | null,
 };
 
+export type ReferencingResource = {
+    ...Resource,
+    url?: string | null,
+};
+
 export type DependantResourceBatches = Resource[][];
 
 export type DependantResourcesData = {
@@ -24,7 +29,7 @@ export type DependantResourcesData = {
 };
 
 export type ReferencingResourcesData = {
-    referencingResources: Resource[],
+    referencingResources: ReferencingResource[],
     referencingResourcesCount: number,
     resource: Resource,
 };
