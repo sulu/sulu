@@ -80,6 +80,7 @@ class MediaAdmin extends Admin
             new ToolbarAction('sulu_admin.delete', [
                 'visible_condition' => '(!_permissions || _permissions.delete)',
             ]),
+            new ToolbarAction('sulu_media.download_original'),
         ];
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
