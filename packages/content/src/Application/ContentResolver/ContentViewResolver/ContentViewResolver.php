@@ -78,9 +78,10 @@ class ContentViewResolver implements ContentViewResolverInterface
             $result = $this->resolveContentView($contentView, (string) $name, $depth, $priorityQueue);
             $content = \array_merge($content, $result['content']);
             $view = \array_merge($view, $result['view']);
+            // the accumulated resources go first, so the queue keeps the declaration order
             $resolvableResources = $this->resolvableResourceQueueProcessor->mergeResolvableResources(
-                $resolvableResources,
-                $result['resolvableResources']
+                $result['resolvableResources'],
+                $resolvableResources
             );
         }
 
@@ -149,8 +150,8 @@ class ContentViewResolver implements ContentViewResolverInterface
                     $result['content'][$name] = \array_merge($result['content'][$name] ?? [], $resolvedContentView['content']);
                     $result['view'][$name] = \array_merge($result['view'][$name] ?? [], $resolvedContentView['view']);
                     $resolvableResources = $this->resolvableResourceQueueProcessor->mergeResolvableResources(
-                        $resolvableResources,
-                        $resolvedContentView['resolvableResources']
+                        $resolvedContentView['resolvableResources'],
+                        $resolvableResources
                     );
 
                     continue;

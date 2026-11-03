@@ -73,6 +73,20 @@ class SmartResolvable implements ResolvableInterface
         return $this->metadata;
     }
 
+    /**
+     * Returns a copy carrying the context of the current resolution in its "context" metadata, so the
+     * smart resolvers can read it without a change of their signature.
+     *
+     * @param array<string, mixed> $context
+     */
+    public function withContext(array $context): self
+    {
+        $clone = clone $this;
+        $clone->metadata = [...($this->metadata ?? []), 'context' => $context];
+
+        return $clone;
+    }
+
     public function getMetadataIdentifier(): string
     {
         // TODO do we need a rekursive key sort?
