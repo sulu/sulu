@@ -453,6 +453,46 @@ class RoleControllerTest extends SuluTestCase
         $this->assertStringContainsString('11230', $response->message);
     }
 
+    public function testPostWithExistingName(): void
+    {
+        $this->client->jsonRequest(
+            'POST',
+            '/api/roles',
+            [
+                'name' => 'Sulu Administrator',
+                'key' => 'another_key',
+                'system' => 'Sulu',
+            ]
+        );
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        /** @var array{code: int, detail: string} $body */
+        $body = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame(1101, $body['code']);
+        $this->assertStringContainsString('The name "Sulu Administrator"', $body['detail']);
+    }
+
+    public function testPostWithExistingKey(): void
+    {
+        $this->client->jsonRequest(
+            'POST',
+            '/api/roles',
+            [
+                'name' => 'Another Name',
+                'key' => 'sulu_administrator',
+                'system' => 'Sulu',
+            ]
+        );
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        /** @var array{code: int, detail: string} $body */
+        $body = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame(1101, $body['code']);
+        $this->assertStringContainsString('The key "sulu_administrator"', $body['detail']);
+    }
+
     public function testPutWithExistingName(): void
     {
         $this->client->jsonRequest(
@@ -468,6 +508,10 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertEquals(1101, $response->code);
+
+        /** @var array{detail: string} $body */
+        $body = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertStringContainsString('The name "Sulu Administrator"', $body['detail']);
     }
 
     public function testPutWithExistingKey(): void
@@ -487,6 +531,10 @@ class RoleControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertEquals(1101, $response->code);
+
+        /** @var array{detail: string} $body */
+        $body = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertStringContainsString('The key "sulu_administrator"', $body['detail']);
 
         // setting key to 'null' should work although there is another role with the key 'null'
         $this->client->jsonRequest(
