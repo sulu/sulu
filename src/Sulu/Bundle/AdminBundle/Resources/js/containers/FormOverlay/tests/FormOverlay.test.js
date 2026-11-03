@@ -355,7 +355,7 @@ test('Should display Snackbar with generic message if the server returns field e
     formStore.save.mockImplementationOnce(() => Promise.reject({
         code: 1109,
         detail: 'The name is taken.',
-        fieldErrors: [{path: 'name', title: 'The name is taken.'}],
+        violations: [{propertyPath: 'name', title: 'The name is taken.'}],
     }));
 
     renderFormOverlay({
@@ -374,7 +374,7 @@ test('Should display Snackbar with the messages of the server that belong to no 
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     formStore.save.mockImplementationOnce(() => Promise.reject({
         code: 1109,
-        fieldErrors: [{path: '', title: 'You cannot submit more than 5 entries.'}],
+        violations: [{propertyPath: '', title: 'You cannot submit more than 5 entries.'}],
     }));
 
     renderFormOverlay({formStore, onConfirm: jest.fn()});

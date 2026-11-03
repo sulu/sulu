@@ -51,7 +51,7 @@ class RoleNameAlreadyExistsException extends \Exception implements TranslationEr
     {
         return [
             [
-                'path' => 'name',
+                'propertyPath' => 'name',
                 'key' => $this->getMessageTranslationKey(),
                 'parameters' => ['name' => $this->name],
             ],

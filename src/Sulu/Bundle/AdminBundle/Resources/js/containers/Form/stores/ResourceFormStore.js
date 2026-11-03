@@ -238,8 +238,8 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
             return response;
         }).catch((errorResponse) => {
             return errorResponse.json().then(action((error) => {
-                if (Array.isArray(error.fieldErrors)) {
-                    this.setServerErrors(error.fieldErrors);
+                if (Array.isArray(error.violations)) {
+                    this.setServerErrors(error.violations);
                 }
 
                 return Promise.reject(error);

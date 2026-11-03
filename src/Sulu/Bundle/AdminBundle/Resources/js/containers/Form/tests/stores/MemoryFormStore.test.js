@@ -642,8 +642,8 @@ test('Show the errors of the server beside the errors of the schema until the fi
     const memoryFormStore = new MemoryFormStore({title: 'ab', name: 'Editor'}, {}, jsonSchema);
 
     memoryFormStore.setServerErrors([
-        {path: 'name', title: 'The name is taken.'},
-        {path: '/name', title: 'Choose another one.'},
+        {propertyPath: 'name', title: 'The name is taken.'},
+        {propertyPath: '[name]', title: 'Choose another one.'},
     ]);
 
     expect(memoryFormStore.validate()).toEqual(false);
@@ -654,4 +654,20 @@ test('Show the errors of the server beside the errors of the schema until the fi
 
     memoryFormStore.change('name', 'Other');
     expect(toJS(memoryFormStore.errors)).toEqual({title: {keyword: 'minLength', parameters: {limit: 3}}});
+});
+
+test('Show the errors of the server for the property paths of the Symfony validator', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+
+    memoryFormStore.setServerErrors([
+        {propertyPath: 'blocks[0].items[1].title', title: 'Object notation.'},
+        {propertyPath: '[blocks][0][key]', title: 'Array notation.'},
+        {propertyPath: '[2][amount]', title: 'Collection without a name.'},
+        {propertyPath: '', title: 'No field.'},
+    ]);
+
+    expect(toJS(memoryFormStore.errors)).toEqual({
+        '2': {amount: {messages: ['Collection without a name.']}},
+        blocks: [{items: [undefined, {title: {messages: ['Object notation.']}}], key: {messages: ['Array notation.']}}],
+    });
 });

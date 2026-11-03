@@ -3,9 +3,19 @@ import {action, computed, isArrayLike, observable, set, toJS} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
 import type {IObservableValue} from 'mobx/lib/mobx';
-import type {Schema, SchemaEntry} from '../types';
+import type {Schema, SchemaEntry, Violation} from '../types';
 
 export const SECTION_TYPE = 'section';
+
+/**
+ * Turns the property path of a violation into the data path of the form, e.g. both `blocks[0].key` and
+ * `[blocks][0][key]` become `/blocks/0/key`. Returns an empty string for a violation that belongs to no field.
+ */
+export function propertyPathToDataPath(propertyPath: string): string {
+    const segments = (propertyPath || '').match(/\[[^\]]*\]|[^.[\]]+/g) || [];
+
+    return segments.map((segment) => segment.replace(/^\[|\]$/g, '')).map((segment) => '/' + segment).join('');
+}
 
 function deepMerge(base: Object, override: Object): Object {
     const result = {...base};
@@ -250,16 +260,17 @@ export default class AbstractFormStore
         return Object.keys(this.errors).length > 0;
     }
 
-    @action setServerErrors(fieldErrors: Array<{path: string, title: string}>) {
+    @action setServerErrors(violations: Array<Violation>) {
         const serverErrors = {};
 
-        fieldErrors.forEach(({path, title}) => {
-            // an error without a path belongs to the whole form and has no field to be shown at
-            if (!path) {
+        violations.forEach(({propertyPath, title}) => {
+            const dataPath = propertyPathToDataPath(propertyPath);
+
+            // a violation without a property path belongs to the whole form and has no field to be shown at
+            if (!dataPath) {
                 return;
             }
 
-            const dataPath = path.startsWith('/') ? path : '/' + path;
             serverErrors[dataPath] = [...(serverErrors[dataPath] || []), title];
         });
 

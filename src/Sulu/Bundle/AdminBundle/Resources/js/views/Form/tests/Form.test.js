@@ -1914,9 +1914,9 @@ test('Should display only the messages without a field if server returns field e
     const error = {
         code: 1109,
         detail: 'URL is already assigned to another page.',
-        fieldErrors: [
-            {path: 'url', title: 'URL is already assigned to another page.'},
-            {path: '', title: 'Another message for the whole form.'},
+        violations: [
+            {propertyPath: 'url', title: 'URL is already assigned to another page.'},
+            {propertyPath: '', title: 'Another message for the whole form.'},
         ],
         message: 'Unprocessable Entity',
     };
@@ -1974,8 +1974,8 @@ test('Should display the generic message if server returns field errors only', (
     const error = {
         code: 1109,
         detail: 'URL is already assigned to another page.',
-        fieldErrors: [
-            {path: 'url', title: 'URL is already assigned to another page.'},
+        violations: [
+            {propertyPath: 'url', title: 'URL is already assigned to another page.'},
         ],
         message: 'Unprocessable Entity',
     };

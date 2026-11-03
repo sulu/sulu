@@ -13,18 +13,23 @@ namespace Sulu\Component\Rest\Exception;
 
 /**
  * Lets an exception name the form fields it is about, so the admin shows the message below each field instead of in
- * the toolbar. The response body gets a `fieldErrors` list of `path` and `title`.
+ * the toolbar. The response body gets a `violations` list of `propertyPath` and `title`, like the one the Symfony
+ * serializer creates for the violations of the validator.
  *
- * A `path` is a JSON pointer into the form data without the leading slash, e.g. `title` or `blocks/0/key`, and may
+ * A `propertyPath` is the path to the field in the notation of the validator, e.g. `title` or `blocks[0].key`, and may
  * repeat for a field with several messages. A `title` is either given as translated text or as a translation key of
- * the `admin` domain, which is translated with the given parameters.
+ * the `admin` domain, which is translated with the given parameters. The exception can implement this interface
+ * beside the TranslationErrorMessageExceptionInterface.
+ *
+ * The violations of a `ValidationFailedException`, which is thrown by itself or as previous exception of an HTTP
+ * exception, are added to the response without implementing this interface.
  *
  * @experimental
  */
 interface FieldErrorsExceptionInterface
 {
     /**
-     * @return list<array{path: string, title: string}|array{path: string, key: string, parameters?: array<string, float|int|string>}>
+     * @return list<array{propertyPath: string, title: string}|array{propertyPath: string, key: string, parameters?: array<string, float|int|string>}>
      */
     public function getFieldErrors(): array;
 }

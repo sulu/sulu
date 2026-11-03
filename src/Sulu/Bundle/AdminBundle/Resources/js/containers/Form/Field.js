@@ -249,9 +249,13 @@ class Field extends React.Component<Props> {
             <Form.Field
                 colSpan={schema.colSpan}
                 description={description}
-                error={
+                errors={
                     errorMessages
-                    || (errorKeyword ? translate('sulu_admin.error_' + errorKeyword.toLowerCase()) : undefined)
+                        ? errorMessages.map((message) => ({message}))
+                        : (errorKeyword
+                            ? [{message: translate('sulu_admin.error_' + errorKeyword.toLowerCase())}]
+                            : undefined
+                        )
                 }
                 id={dataPath}
                 label={label}

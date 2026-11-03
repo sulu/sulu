@@ -32,6 +32,12 @@ export type PropertyError = {
     schema?: mixed,
 };
 
+// a violation reported by the server, in the structure of the Symfony validator
+export type Violation = {
+    propertyPath: string,
+    title: string,
+};
+
 // a message of the server for a field, which is shown as it is
 export type ServerError = {
     messages: Array<string>,
@@ -117,7 +123,7 @@ export interface FormStoreInterface {
     +options: SchemaOptions,
     +resourceKey: ?string,
     +schema: Object,
-    +setServerErrors: (fieldErrors: Array<{path: string, title: string}>) => void,
+    +setServerErrors: (violations: Array<Violation>) => void,
     +types: {[key: string]: SchemaType},
     +unexpectedError: boolean,
     +validate: () => boolean,

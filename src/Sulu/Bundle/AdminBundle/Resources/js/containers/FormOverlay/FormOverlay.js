@@ -77,9 +77,11 @@ class FormOverlay extends React.Component<Props> {
                     onConfirm();
                 })
                 .catch(action((error) => {
-                    if (Array.isArray(error.fieldErrors)) {
+                    if (Array.isArray(error.violations)) {
                         // the messages are shown at their fields, so only the ones without a field are listed
-                        const formMessages = error.fieldErrors.filter(({path}) => !path).map(({title}) => title);
+                        const formMessages = error.violations
+                            .filter(({propertyPath}) => !propertyPath)
+                            .map(({title}) => title);
                         this.formErrors.push(
                             ...(formMessages.length
                                 ? formMessages

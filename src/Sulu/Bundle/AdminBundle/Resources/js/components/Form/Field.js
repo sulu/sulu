@@ -10,13 +10,14 @@ import fieldStyles from './field.scss';
 import gridStyles from './grid.scss';
 import type {ColSpan} from '../Grid';
 import type {Node} from 'react';
-import type {FormFieldTypes} from './types';
+import type {FieldError, FormFieldTypes} from './types';
 
 type Props<T: string | number> = {|
     children: Node,
     colSpan: ColSpan,
     description?: string,
-    error?: string | Array<string>,
+    error?: string, // @deprecated use errors instead
+    errors?: Array<FieldError>,
     id?: string,
     label?: string,
     onTypeChange?: (type: T) => void,
@@ -87,6 +88,7 @@ class Field<T: string | number> extends React.Component<Props<T>> {
             colSpan,
             description,
             error,
+            errors,
             id,
             label,
             required,
@@ -96,13 +98,13 @@ class Field<T: string | number> extends React.Component<Props<T>> {
         } = this.props;
 
         const {selectedType} = this;
-        const errorMessages = [].concat(error || []);
+        const errorMessages = errors ? errors.map((fieldError) => fieldError.message) : (error ? [error] : []);
 
         const fieldClass = classNames(
             fieldStyles.field,
             {
                 [fieldStyles[skin]]: !!skin,
-                [fieldStyles.error]: !!error,
+                [fieldStyles.error]: errorMessages.length > 0,
             }
         );
 
