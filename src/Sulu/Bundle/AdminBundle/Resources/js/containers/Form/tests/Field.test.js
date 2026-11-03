@@ -170,6 +170,31 @@ test('Show the not error message for other not errors', () => {
     expect(screen.queryByText('sulu_admin.error_required')).not.toBeInTheDocument();
 });
 
+test('Render the messages of the server as they are', () => {
+    renderField({
+        error: {messages: ['The name is taken.', 'Choose another one.']},
+    });
+
+    expect(screen.getByText('The name is taken.')).toBeInTheDocument();
+    expect(screen.getByText('Choose another one.')).toBeInTheDocument();
+});
+
+test('Render the messages of the server for a field of a nested error collection', () => {
+    renderField({
+        error: {key: {messages: ['Not an active key.']}},
+    });
+
+    expect(screen.getByText('Not an active key.')).toBeInTheDocument();
+});
+
+test('Not render the messages of the children of a block', () => {
+    renderField({
+        error: [{key: {messages: ['Not an active key.']}}],
+    });
+
+    expect(screen.queryByText('Not an active key.')).not.toBeInTheDocument();
+});
+
 test('Render a field with a error collection', () => {
     const error = {
         ids: {

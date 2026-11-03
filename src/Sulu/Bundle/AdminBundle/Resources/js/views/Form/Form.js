@@ -490,6 +490,19 @@ class Form extends React.Component<Props> {
             return;
         }
 
+        if (Array.isArray(error.violations)) {
+            // a transition does not save through the store, so the store learns about the errors here
+            this.resourceFormStore.setServerErrors(error.violations);
+
+            // the messages are shown at their fields, so the toolbar only gets the ones without a field
+            const formMessages = error.violations.filter(({propertyPath}) => !propertyPath).map(({title}) => title);
+            this.errors.push(
+                ...(formMessages.length ? formMessages : [translate('sulu_admin.form_contains_invalid_values')])
+            );
+
+            return;
+        }
+
         this.errors.push(error.detail || error.title || translate('sulu_admin.form_save_server_error'));
     });
 

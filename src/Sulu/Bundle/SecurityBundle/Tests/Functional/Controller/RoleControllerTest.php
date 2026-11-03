@@ -19,6 +19,12 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Util\SortUtils;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 class RoleControllerTest extends SuluTestCase
 {
@@ -417,9 +423,44 @@ class RoleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertEquals(1101, $response->code);
 
-        /** @var array{detail: string} $body */
+        /** @var array{detail: string, violations: list<array{propertyPath: string, title: string}>} $body */
         $body = \json_decode((string) $this->client->getResponse()->getContent(), true);
         $this->assertStringContainsString('The name "Sulu Administrator"', $body['detail']);
+        $this->assertSame('name', $body['violations'][0]['propertyPath']);
+        $this->assertSame($body['detail'], $body['violations'][0]['title']);
+    }
+
+    public function testValidationFailedExceptionIsAnsweredWithViolations(): void
+    {
+        $violations = new ConstraintViolationList([
+            new ConstraintViolation('This value is too short.', null, [], null, 'name', 'a'),
+            new ConstraintViolation('This value is not valid.', null, [], null, 'permissions[0].context', 'x'),
+        ]);
+
+        $this->client->disableReboot();
+        $dispatcher = $this->client->getContainer()->get('event_dispatcher');
+        $dispatcher->addListener(KernelEvents::REQUEST, static function(RequestEvent $event) use ($violations): void {
+            // the sub request which renders the error must not fail again
+            if (!$event->isMainRequest()) {
+                return;
+            }
+
+            throw new UnprocessableEntityHttpException('Invalid', new ValidationFailedException('data', $violations));
+        }, -5);
+
+        $this->client->jsonRequest('GET', '/api/roles');
+
+        $this->assertHttpStatusCode(422, $this->client->getResponse());
+
+        /** @var array{violations: list<array{propertyPath: string, title: string}>} $body */
+        $body = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame(
+            [
+                ['propertyPath' => 'name', 'title' => 'This value is too short.'],
+                ['propertyPath' => 'permissions[0].context', 'title' => 'This value is not valid.'],
+            ],
+            $body['violations']
+        );
     }
 
     public function testPutWithExistingKey(): void
@@ -440,9 +481,11 @@ class RoleControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertEquals(1101, $response->code);
 
-        /** @var array{detail: string} $body */
+        /** @var array{detail: string, violations: list<array{propertyPath: string, title: string}>} $body */
         $body = \json_decode((string) $this->client->getResponse()->getContent(), true);
         $this->assertStringContainsString('The key "sulu_administrator"', $body['detail']);
+        $this->assertSame('key', $body['violations'][0]['propertyPath']);
+        $this->assertSame($body['detail'], $body['violations'][0]['title']);
 
         // setting key to 'null' should work although there is another role with the key 'null'
         $this->client->jsonRequest(

@@ -71,3 +71,13 @@ $errorLabelHeight: 20px;
 .error-label {
     color: $errorLabelColor;
 }
+
+.error-message {
+    display: flex;
+    align-items: flex-start;
+}
+
+.error-icon {
+    flex-shrink: 0;
+    margin: 5px 5px 0 0;
+}

@@ -1,5 +1,5 @@
 // @flow
-import {observable} from 'mobx';
+import {observable, toJS} from 'mobx';
 import MemoryFormStore from '../../stores/MemoryFormStore';
 import conditionDataProviderRegistry from '../../registries/conditionDataProviderRegistry';
 
@@ -635,4 +635,39 @@ test('Store slash-named properties with a numeric segment as nested objects and 
     expect(memoryFormStore.errors.attributes[1]).toEqual(
         {keyword: 'maximum', parameters: {comparison: '<=', limit: 10}}
     );
+});
+
+test('Show the errors of the server beside the errors of the schema until the field changes', () => {
+    const jsonSchema = {type: 'object', properties: {title: {type: 'string', minLength: 3}}};
+    const memoryFormStore = new MemoryFormStore({title: 'ab', name: 'Editor'}, {}, jsonSchema);
+
+    memoryFormStore.setServerErrors([
+        {propertyPath: 'name', title: 'The name is taken.'},
+        {propertyPath: '[name]', title: 'Choose another one.'},
+    ]);
+
+    expect(memoryFormStore.validate()).toEqual(false);
+    expect(toJS(memoryFormStore.errors)).toEqual({
+        title: {keyword: 'minLength', parameters: {limit: 3}},
+        name: {messages: ['The name is taken.', 'Choose another one.']},
+    });
+
+    memoryFormStore.change('name', 'Other');
+    expect(toJS(memoryFormStore.errors)).toEqual({title: {keyword: 'minLength', parameters: {limit: 3}}});
+});
+
+test('Show the errors of the server for the property paths of the Symfony validator', () => {
+    const memoryFormStore = new MemoryFormStore({}, {});
+
+    memoryFormStore.setServerErrors([
+        {propertyPath: 'blocks[0].items[1].title', title: 'Object notation.'},
+        {propertyPath: '[blocks][0][key]', title: 'Array notation.'},
+        {propertyPath: '[2][amount]', title: 'Collection without a name.'},
+        {propertyPath: '', title: 'No field.'},
+    ]);
+
+    expect(toJS(memoryFormStore.errors)).toEqual({
+        '2': {amount: {messages: ['Collection without a name.']}},
+        blocks: [{items: [undefined, {title: {messages: ['Object notation.']}}], key: {messages: ['Array notation.']}}],
+    });
 });

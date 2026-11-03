@@ -184,6 +184,16 @@ $services->set('acme_product.product_localizations_resolver', ProductLocalizatio
     ->tag('sulu_content.content_localizations_resolver', ['resource_key' => 'products']);
 ```
 
+### The error prop of the form field component is deprecated
+
+The `error` prop of the `Form.Field` component (`components/Form/Field.js`) is deprecated. Use `errors` instead, a list of objects with a `message`, so that a field can show several messages:
+
+```js
+<Form.Field errors={[{message: 'The name is taken.'}, {message: 'Choose another one.'}]} label="Name">
+    {/* ... */}
+</Form.Field>
+```
+
 ### BC breaks
 
 - `SnippetDimensionContentInterface` now also extends `Sulu\Content\Domain\Model\ShadowInterface`. A
