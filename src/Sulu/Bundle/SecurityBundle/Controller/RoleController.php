@@ -195,7 +195,7 @@ class RoleController extends AbstractRestController implements SecuredController
 
                 $view = $this->view($this->convertRole($role), 200);
             } catch (UniqueConstraintViolationException $e) {
-                if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
+                if ($this->isNameViolation($e, $role->getName())) {
                     throw new RoleNameAlreadyExistsException($name, $e);
                 } else {
                     // @phpstan-ignore-next-line argument.type
@@ -251,7 +251,7 @@ class RoleController extends AbstractRestController implements SecuredController
         } catch (EntityNotFoundException $enfe) {
             $view = $this->view($enfe->toArray(), 404);
         } catch (UniqueConstraintViolationException $e) {
-            if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
+            if ($this->isNameViolation($e, $role->getName())) {
                 throw new RoleNameAlreadyExistsException($name, $e);
             } else {
                 // @phpstan-ignore-next-line argument.type
@@ -417,5 +417,17 @@ class RoleController extends AbstractRestController implements SecuredController
     public function getSecurityContext()
     {
         return 'sulu.security.roles';
+    }
+
+    /**
+     * The message of the database depends on the platform: `Duplicate entry 'name' for key` on MySQL and
+     * `Key (name)=(name) already exists` on PostgreSQL.
+     */
+    private function isNameViolation(UniqueConstraintViolationException $exception, string $name): bool
+    {
+        $message = $exception->getMessage();
+
+        return \str_contains($message, 'Duplicate entry \'' . $name)
+            || \str_contains($message, 'Key (name)=(' . $name . ')');
     }
 }
