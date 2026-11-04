@@ -149,7 +149,7 @@ class ExampleProfilerWebsiteTest extends SuluTestCase
     {
         $patterns = [];
         foreach ($queries as $query) {
-            \preg_match_all('/(?:FROM|JOIN)\s+([a-z_]+)\s+[a-z0-9_]/i', $query['sql'], $matches);
+            \preg_match_all('/\b(?:FROM|JOIN)\s+([a-z_]+)\s+[a-z0-9_]/i', $query['sql'], $matches);
             $patterns[] = \implode('.', $matches[1]);
         }
 
