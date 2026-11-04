@@ -102,6 +102,9 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu_content.content_resolver', ['type' => 'template']);
 
     $services->set('sulu_content.settings_resolver', SettingsResolver::class)
+        ->args([
+            new Reference('sulu_admin.form_metadata_provider'),
+        ])
         ->tag('sulu_content.content_resolver', ['type' => 'settings']);
 
     $services->set('sulu_content.excerpt_taxonomy_resolver', ExcerptTaxonomyResolver::class)
