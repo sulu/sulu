@@ -281,6 +281,10 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $contentLocales = $config['content_locales'];
         $container->setParameter('sulu_media.content_locales', $contentLocales);
 
+        /** @var bool $validity */
+        $validity = $config['validity'];
+        $container->setParameter('sulu_media.validity', $validity);
+
         // image-formats
         $container->setParameter('sulu_media.image_format_files', $config['image_format_files']);
 
