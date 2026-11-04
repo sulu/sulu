@@ -15,6 +15,7 @@ use Sulu\Article\Infrastructure\Symfony\HttpKernel\SuluArticleBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ExampleTestBundle;
+use Sulu\Redirect\Infrastructure\Symfony\HttpKernel\SuluRedirectBundle;
 use Sulu\Snippet\Infrastructure\Symfony\HttpKernel\SuluSnippetBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -44,6 +45,7 @@ class Kernel extends SuluTestKernel
         $bundles[] = new SuluArticleBundle();
         $bundles[] = new ExampleTestBundle(); // TODO currently required for test content bundle, everybody should setup database by its own
         $bundles[] = new SuluSnippetBundle();
+        $bundles[] = new SuluRedirectBundle();
 
         return $bundles;
     }

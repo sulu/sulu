@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <mapped-superclass name="Sulu\Redirect\Domain\Model\Redirect" table="rd_redirects">
+        <unique-constraints>
+            <unique-constraint name="rd_redirects_source_unique" columns="source,source_host"/>
+        </unique-constraints>
+
+        <id name="id" type="string" column="id" length="36">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="enabled" type="boolean" column="enabled"/>
+        <field name="statusCode" type="integer" column="status_code"/>
+        <field name="source" type="string" column="source" length="191"/>
+        <field name="sourceHost" type="string" column="source_host" length="191" nullable="true"/>
+        <field name="target" type="string" column="target" length="255"/>
+        <field name="created" type="datetime_immutable" column="created"/>
+        <field name="changed" type="datetime_immutable" column="changed"/>
+
+        <many-to-one field="creator" target-entity="Sulu\Component\Security\Authentication\UserInterface">
+            <join-column name="creator_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
+        </many-to-one>
+
+        <many-to-one field="changer" target-entity="Sulu\Component\Security\Authentication\UserInterface">
+            <join-column name="changer_id" referenced-column-name="id" nullable="true" on-delete="SET NULL"/>
+        </many-to-one>
+    </mapped-superclass>
+</doctrine-mapping>
