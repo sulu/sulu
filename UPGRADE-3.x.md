@@ -103,6 +103,16 @@ existing table from 2.x and its rows are kept. Run the new migration to apply th
 bin/console doctrine:migrations:migrate
 ```
 
+### Media validity columns
+
+Media file versions gained the optional `validFrom` and `validTo` dates, which add two nullable date columns to
+`me_file_versions`. The fields only show in the admin with `sulu_media: validity: true`, the API accepts and returns
+them regardless. Run the new migration to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
 ### Text editor configs decide which CKEditor plugins are loaded
 
 Which plugins a `text_editor` property loads now follows from the tags and attributes its text editor config enables.
