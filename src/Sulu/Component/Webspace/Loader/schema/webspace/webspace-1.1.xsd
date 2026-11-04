@@ -21,6 +21,7 @@
             <xs:element type="defaultTemplatesType" name="default-templates" minOccurs="1" maxOccurs="1"/>
             <xs:element type="templatesType" name="templates" minOccurs="0" maxOccurs="1"/>
             <xs:element type="excludedTemplatesType" name="excluded-templates" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="xs:string" name="webspace-settings-form" minOccurs="0" maxOccurs="1"/>
             <xs:element type="navigationType" name="navigation"/>
             <xs:element type="resource-locatorType" name="resource-locator" maxOccurs="1" minOccurs="0"/>
             <xs:element type="portalsType" name="portals"/>
