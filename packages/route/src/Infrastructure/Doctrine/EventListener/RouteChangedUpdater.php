@@ -12,6 +12,7 @@
 namespace Sulu\Route\Infrastructure\Doctrine\EventListener;
 
 use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,6 +21,7 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Sulu\Route\Domain\Exception\RouteSlugNotUniqueException;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -61,7 +63,23 @@ class RouteChangedUpdater implements ResetInterface
             \assert(\is_string($oldWebspace) || \is_null($oldWebspace), 'Webspace is expected to be always a string or null.');
         }
 
-        if ($oldSlug === $route->getSlug()) {
+        $slugChanged = $oldSlug !== $route->getSlug();
+
+        if (!$route->isHistory() && ($slugChanged || $oldWebspace !== $route->getWebspace())) {
+            $objectManager = $args->getObjectManager();
+
+            $this->deleteRoutes(
+                $objectManager->getConnection(),
+                $objectManager->getClassMetadata(Route::class)->getTableName(),
+                $this->findReclaimableHistoryIds($objectManager, $route, $route->getId()),
+            );
+
+            if ($slugChanged) {
+                $this->claimDescendantSlugs($objectManager, $route, $oldSlug);
+            }
+        }
+
+        if (!$slugChanged) {
             return;
         }
 
@@ -77,6 +95,17 @@ class RouteChangedUpdater implements ResetInterface
         $route = $args->getObject();
         if (!$route instanceof Route) {
             return;
+        }
+
+        if (!$route->isHistory()) {
+            // prePersist runs on persist(), outside the flush transaction: a flush failing later keeps the deletion
+            $objectManager = $args->getObjectManager();
+
+            $this->deleteRoutes(
+                $objectManager->getConnection(),
+                $objectManager->getClassMetadata(Route::class)->getTableName(),
+                $this->findReclaimableHistoryIds($objectManager, $route, null),
+            );
         }
 
         if (!$route->hasTemporaryId()) {
@@ -126,48 +155,8 @@ class RouteChangedUpdater implements ResetInterface
             $oldWebspace = $routeChange['oldWebspace'];
             $newSlug = $route->getSlug();
             $locale = $route->getLocale();
-            $webspace = $route->getWebspace();
 
-            // Same-webspace descendants are matched by slug prefix (plain page routes have no
-            // parent_id). A webspace-NULL route (e.g. a page_tree_route article) is matched only
-            // when its parent_id resolves into this webspace, so it follows just its real anchor.
-            $webspaceCondition = \is_string($webspace)
-                ? '(child.webspace = :webspace OR (child.webspace IS NULL AND parent.webspace = :webspace))'
-                : 'child.webspace IS NULL';
-
-            // select all child and grand routes of oldSlug
-            $selectQueryBuilder = $connection->createQueryBuilder()
-                ->from($routesTableName, 'child')
-                ->leftJoin('child', $routesTableName, 'parent', 'parent.id = child.parent_id')
-                ->select('child.id AS id')
-                ->addSelect('child.webspace AS webspace')
-                ->addSelect('child.slug AS slug')
-                ->addSelect('child.resource_key AS resource_key')
-                ->addSelect('child.resource_id AS resource_id')
-                ->andWhere($webspaceCondition)
-                ->andWhere('child.locale = :locale')
-                ->andWhere('child.slug LIKE :oldSlugSlash')
-                ->andWhere('child.resource_key != :historyResourceKey') // never rewrite or re-historize history routes
-                ->andWhere('child.id != :changedRouteId') // never re-process the changed route itself
-                ->setParameter('oldSlugSlash', $oldSlug . '/%', ParameterType::STRING)
-                ->setParameter('locale', $locale, ParameterType::STRING)
-                ->setParameter('historyResourceKey', Route::HISTORY_RESOURCE_KEY, ParameterType::STRING)
-                ->setParameter('changedRouteId', $route->getId(), ParameterType::INTEGER);
-
-            if (\is_string($webspace)) {
-                $selectQueryBuilder->setParameter('webspace', $webspace, ParameterType::STRING);
-            }
-
-            /**
-             * @var array<int, array{
-             *     id: int,
-             *     webspace: string|null,
-             *     slug: string,
-             *     resource_key: string,
-             *     resource_id: string,
-             * }> $childAndGrandChildResult
-             */
-            $childAndGrandChildResult = $selectQueryBuilder->executeQuery()->iterateAssociative();
+            $childAndGrandChildResult = $this->findDescendants($connection, $classMetadata, $route, $oldSlug);
             $childAndGrandChildIds = [];
             $childAndGrandChildHistoryRoutes = [];
             foreach ($childAndGrandChildResult as $childAndGrandChildRow) {
@@ -219,6 +208,188 @@ class RouteChangedUpdater implements ResetInterface
         }
 
         $this->routeChanges = [];
+    }
+
+    /**
+     * Returns the ids of the history routes of the route's own resource which block its slug, so the resource can take
+     * the slug back. A route or history route of another resource in the same webspace is a conflict, which has to
+     * be found before the route is written because a unique constraint violation is no usable error message. Routes
+     * without webspace (e.g. articles) are not covered by the unique constraint and may share a slug.
+     *
+     * @return int[]
+     *
+     * @throws RouteSlugNotUniqueException
+     */
+    private function findReclaimableHistoryIds(EntityManagerInterface $objectManager, Route $route, ?int $excludeRouteId): array
+    {
+        $connection = $objectManager->getConnection();
+        $routesTableName = $objectManager->getClassMetadata(Route::class)->getTableName();
+        $webspace = $route->getWebspace();
+
+        $queryBuilder = $connection->createQueryBuilder()
+            ->select('id', 'resource_key', 'resource_id')
+            ->from($routesTableName)
+            ->andWhere('locale = :locale')
+            ->andWhere('slug = :slug')
+            ->andWhere(null === $webspace ? 'webspace IS NULL' : 'webspace = :webspace')
+            ->setParameter('locale', $route->getLocale(), ParameterType::STRING)
+            ->setParameter('slug', $route->getSlug(), ParameterType::STRING);
+
+        if (null !== $webspace) {
+            $queryBuilder->setParameter('webspace', $webspace, ParameterType::STRING);
+        }
+
+        if (null !== $excludeRouteId) {
+            $queryBuilder
+                ->andWhere('id != :excludeRouteId')
+                ->setParameter('excludeRouteId', $excludeRouteId, ParameterType::INTEGER);
+        }
+
+        /** @var array<int, array{id: int, resource_key: string, resource_id: string}> $rows */
+        $rows = $queryBuilder->executeQuery()->fetchAllAssociative();
+
+        $ownHistoryResourceId = $route->getResourceKey() . '::' . $route->getResourceId();
+        $ownHistoryIds = [];
+        foreach ($rows as $row) {
+            if (Route::HISTORY_RESOURCE_KEY === $row['resource_key'] && $ownHistoryResourceId === $row['resource_id']) {
+                $ownHistoryIds[] = $row['id'];
+
+                continue;
+            }
+
+            if (null === $webspace) {
+                continue;
+            }
+
+            throw new RouteSlugNotUniqueException($route->getSlug(), $route->getLocale(), $webspace);
+        }
+
+        return $ownHistoryIds;
+    }
+
+    /**
+     * Same as findReclaimableHistoryIds for the descendants which are moved by prefix in postFlush, deleting the
+     * reclaimable history routes right away.
+     *
+     * @throws RouteSlugNotUniqueException
+     */
+    private function claimDescendantSlugs(EntityManagerInterface $objectManager, Route $route, string $oldSlug): void
+    {
+        $connection = $objectManager->getConnection();
+        $classMetadata = $objectManager->getClassMetadata(Route::class);
+        $routesTableName = $classMetadata->getTableName();
+        $locale = $route->getLocale();
+
+        $descendants = $this->findDescendants($connection, $classMetadata, $route, $oldSlug);
+
+        $movedIds = \array_flip(\array_column($descendants, 'id'));
+
+        foreach (\array_chunk($descendants, 500) as $chunk) {
+            $newSlugs = [];
+            $descendantsByNewSlug = [];
+            foreach ($chunk as $descendant) {
+                $newSlug = $route->getSlug() . \substr($descendant['slug'], \strlen($oldSlug));
+                $newSlugs[] = $newSlug;
+                $descendantsByNewSlug[($descendant['webspace'] ?? '') . '|' . $newSlug] = $descendant;
+            }
+
+            $queryBuilder = $connection->createQueryBuilder()
+                ->select('id', 'webspace', 'slug', 'resource_key', 'resource_id')
+                ->from($routesTableName)
+                ->andWhere('locale = :locale')
+                ->andWhere('slug IN (:slugs)')
+                ->setParameter('locale', $locale, ParameterType::STRING)
+                ->setParameter('slugs', $newSlugs, ArrayParameterType::STRING);
+
+            /** @var array<int, array{id: int, webspace: string|null, slug: string, resource_key: string, resource_id: string}> $rows */
+            $rows = $queryBuilder->executeQuery()->fetchAllAssociative();
+
+            $ownHistoryIds = [];
+            foreach ($rows as $row) {
+                $descendant = $descendantsByNewSlug[($row['webspace'] ?? '') . '|' . $row['slug']] ?? null;
+                if (null === $descendant || isset($movedIds[$row['id']])) {
+                    continue;
+                }
+
+                if (Route::HISTORY_RESOURCE_KEY === $row['resource_key']
+                    && $descendant['resource_key'] . '::' . $descendant['resource_id'] === $row['resource_id']
+                ) {
+                    $ownHistoryIds[] = $row['id'];
+
+                    continue;
+                }
+
+                if (null === $row['webspace']) {
+                    continue;
+                }
+
+                throw new RouteSlugNotUniqueException($row['slug'], $locale, $row['webspace']);
+            }
+
+            $this->deleteRoutes($connection, $routesTableName, $ownHistoryIds);
+        }
+    }
+
+    /**
+     * @param int[] $ids
+     */
+    private function deleteRoutes(Connection $connection, string $routesTableName, array $ids): void
+    {
+        if ([] === $ids) {
+            return;
+        }
+
+        $connection->createQueryBuilder()
+            ->delete($routesTableName)
+            ->where('id IN (:ids)')
+            ->setParameter('ids', $ids, ArrayParameterType::INTEGER)
+            ->executeStatement();
+    }
+
+    /**
+     * @param ClassMetadata<Route> $classMetadata
+     *
+     * @return array<int, array{id: int, webspace: string|null, slug: string, resource_key: string, resource_id: string}>
+     */
+    private function findDescendants(Connection $connection, ClassMetadata $classMetadata, Route $route, string $oldSlug): array
+    {
+        $routesTableName = $classMetadata->getTableName();
+        $webspace = $route->getWebspace();
+
+        // Same-webspace descendants are matched by slug prefix (plain page routes have no
+        // parent_id). A webspace-NULL route (e.g. a page_tree_route article) is matched only
+        // when its parent_id resolves into this webspace, so it follows just its real anchor.
+        $webspaceCondition = \is_string($webspace)
+            ? '(child.webspace = :webspace OR (child.webspace IS NULL AND parent.webspace = :webspace))'
+            : 'child.webspace IS NULL';
+
+        // select all child and grand routes of oldSlug
+        $queryBuilder = $connection->createQueryBuilder()
+            ->from($routesTableName, 'child')
+            ->leftJoin('child', $routesTableName, 'parent', 'parent.id = child.parent_id')
+            ->select('child.id AS id')
+            ->addSelect('child.webspace AS webspace')
+            ->addSelect('child.slug AS slug')
+            ->addSelect('child.resource_key AS resource_key')
+            ->addSelect('child.resource_id AS resource_id')
+            ->andWhere($webspaceCondition)
+            ->andWhere('child.locale = :locale')
+            ->andWhere('child.slug LIKE :oldSlugSlash')
+            ->andWhere('child.resource_key != :historyResourceKey') // never rewrite or re-historize history routes
+            ->andWhere('child.id != :changedRouteId') // never re-process the changed route itself
+            ->setParameter('oldSlugSlash', $oldSlug . '/%', ParameterType::STRING)
+            ->setParameter('locale', $route->getLocale(), ParameterType::STRING)
+            ->setParameter('historyResourceKey', Route::HISTORY_RESOURCE_KEY, ParameterType::STRING)
+            ->setParameter('changedRouteId', $route->getId(), ParameterType::INTEGER);
+
+        if (\is_string($webspace)) {
+            $queryBuilder->setParameter('webspace', $webspace, ParameterType::STRING);
+        }
+
+        /** @var array<int, array{id: int, webspace: string|null, slug: string, resource_key: string, resource_id: string}> $descendants */
+        $descendants = $queryBuilder->executeQuery()->fetchAllAssociative();
+
+        return $descendants;
     }
 
     /**
