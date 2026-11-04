@@ -47,6 +47,8 @@
                 <option name="default">auto</option>
             </options>
         </field>
+        <field name="validFrom" type="date_immutable" column="validFrom" nullable="true"/>
+        <field name="validTo" type="date_immutable" column="validTo" nullable="true"/>
 
         <one-to-one field="defaultMeta" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta">
             <cascade>

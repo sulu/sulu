@@ -152,6 +152,26 @@
                         </property>
                     </properties>
                 </section>
+                <section name="validity">
+                    <meta>
+                        <title>sulu_media.validity</title>
+                    </meta>
+
+                    <properties>
+                        <property name="validFrom" type="date" colspan="6">
+                            <meta>
+                                <title>sulu_media.valid_from</title>
+                                <info_text>sulu_media.validity_info_text</info_text>
+                            </meta>
+                        </property>
+
+                        <property name="validTo" type="date" colspan="6">
+                            <meta>
+                                <title>sulu_media.valid_to</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </section>
                 <section name="taxonomies">
                     <meta>
                         <title>sulu_media.taxonomies</title>
