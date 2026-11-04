@@ -125,6 +125,26 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderNotHasService('sulu_media.parallel_image_generation.limiter');
     }
 
+    public function testLoadWithoutValidity(): void
+    {
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->load([]);
+
+        $this->assertContainerBuilderHasParameter('sulu_media.validity', false);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument('sulu_media.validity_form_metadata_visitor', 0, '%sulu_media.validity%');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag('sulu_media.validity_form_metadata_visitor', 'sulu_admin.form_metadata_visitor');
+    }
+
+    public function testLoadWithValidity(): void
+    {
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->load(['validity' => true]);
+
+        $this->assertContainerBuilderHasParameter('sulu_media.validity', true);
+    }
+
     public function testConfigureFileValidator(): void
     {
         $this->container->setParameter('kernel.bundles', []);

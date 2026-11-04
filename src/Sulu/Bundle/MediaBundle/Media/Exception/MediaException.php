@@ -191,6 +191,20 @@ class MediaException extends \Exception
      */
     public const EXCEPTION_FORMAT_OPTIONS_MISSING_PARAMETER = 5029;
 
+    /**
+     * The end of the validity is before its start.
+     *
+     * @var int
+     */
+    public const EXCEPTION_INVALID_VALIDITY_RANGE = 5030;
+
+    /**
+     * The start or the end of the validity is not a valid date.
+     *
+     * @var int
+     */
+    public const EXCEPTION_INVALID_VALIDITY_DATE = 5031;
+
     public function toArray()
     {
         return [

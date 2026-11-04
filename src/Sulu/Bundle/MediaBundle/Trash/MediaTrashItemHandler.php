@@ -110,6 +110,8 @@ final class MediaTrashItemHandler implements
                     'aiDisclosureDisabled' => $fileVersion->getAiDisclosureDisabled(),
                     'aiDisclosureIconVariant' => $fileVersion->getAiDisclosureIconVariant(),
                     'contentLocales' => $fileVersion->getContentLocales(),
+                    'validFrom' => $fileVersion->getValidFrom()?->format('Y-m-d'),
+                    'validTo' => $fileVersion->getValidTo()?->format('Y-m-d'),
                     'created' => $file->getCreated()->format('c'),
                     'creatorId' => $creator ? $creator->getId() : null,
                     'meta' => [],
@@ -241,6 +243,8 @@ final class MediaTrashItemHandler implements
                 $fileVersion->setAiDisclosureIconVariant($fileVersionData['aiDisclosureIconVariant'] ?? 'auto');
                 $contentLocales = $fileVersionData['contentLocales'] ?? [];
                 $fileVersion->setContentLocales(\is_array($contentLocales) ? \array_filter($contentLocales, 'is_string') : []);
+                $fileVersion->setValidFrom($this->restoreDate($fileVersionData, 'validFrom'));
+                $fileVersion->setValidTo($this->restoreDate($fileVersionData, 'validTo'));
                 $fileVersion->setCreator($this->findEntity(UserInterface::class, $fileVersionData['creatorId']));
 
                 foreach ($fileVersionData['meta'] as $metaData) {
@@ -347,6 +351,16 @@ final class MediaTrashItemHandler implements
         }
 
         return null;
+    }
+
+    /**
+     * A trash item stored before the validity existed has no such key.
+     */
+    private function restoreDate(mixed $fileVersionData, string $key): ?\DateTimeImmutable
+    {
+        $value = \is_array($fileVersionData) ? ($fileVersionData[$key] ?? null) : null;
+
+        return \is_string($value) ? new \DateTimeImmutable($value) : null;
     }
 
     public function getConfiguration(): RestoreConfiguration
