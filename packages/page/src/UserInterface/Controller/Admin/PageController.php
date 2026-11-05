@@ -68,12 +68,13 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     use HandleTrait;
 
     /**
-     * Actions which change the live content of a page and therefore need the live permission,
-     * which the request method based check of the SuluSecurityListener does not cover.
+     * Permissions the request method based check of the SuluSecurityListener does not cover:
+     * the live actions change the live content, removing the draft only changes the draft.
      */
-    private const LIVE_ACTIONS = [
-        WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH,
-        WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH,
+    private const ACTION_PERMISSIONS = [
+        WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH => PermissionTypes::LIVE,
+        WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH => PermissionTypes::LIVE,
+        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT => PermissionTypes::EDIT,
     ];
 
     /**
@@ -673,11 +674,9 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             return;
         }
 
-        if (WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT === $action) {
-            $permission = PermissionTypes::EDIT;
-        } elseif (\in_array($action, self::LIVE_ACTIONS, true)) {
-            $permission = PermissionTypes::LIVE;
-        } else {
+        $permission = self::ACTION_PERMISSIONS[$action] ?? null;
+
+        if (null === $permission) {
             return;
         }
 
