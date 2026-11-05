@@ -74,7 +74,6 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     private const LIVE_ACTIONS = [
         WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH,
         WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH,
-        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT,
     ];
 
     /**
@@ -674,7 +673,11 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             return;
         }
 
-        if (!\in_array($action, self::LIVE_ACTIONS, true)) {
+        if (WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT === $action) {
+            $permission = PermissionTypes::EDIT;
+        } elseif (\in_array($action, self::LIVE_ACTIONS, true)) {
+            $permission = PermissionTypes::LIVE;
+        } else {
             return;
         }
 
@@ -683,7 +686,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             ? $this->pageRepository->getOneBy(['uuid' => $id])->getSecurityContext()
             : PageAdmin::getPageSecurityContext($request->query->getString('webspace'));
 
-        $this->checkPermission($request, $securityContext, $id, PermissionTypes::LIVE);
+        $this->checkPermission($request, $securityContext, $id, $permission);
     }
 
     private function checkPermission(Request $request, string $securityContext, ?string $id, string $permission): void
