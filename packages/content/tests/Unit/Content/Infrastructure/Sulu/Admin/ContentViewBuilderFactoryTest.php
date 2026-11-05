@@ -255,10 +255,10 @@ class ContentViewBuilderFactoryTest extends TestCase
                     PermissionTypes::DELETE => false,
                 ],
                 [
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type'],
-                    ['sulu_admin.save_with_publishing'],
-                    ['sulu_admin.save_with_publishing'],
-                    ['sulu_admin.save_with_publishing'],
+                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.dropdown'],
+                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     [],
                     [],
                 ],
@@ -282,11 +282,11 @@ class ContentViewBuilderFactoryTest extends TestCase
                     PermissionTypes::DELETE => true,
                 ],
                 [
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete'],
-                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete'],
-                    ['sulu_admin.save_with_publishing'],
-                    ['sulu_admin.save_with_publishing'],
-                    ['sulu_admin.save_with_publishing'],
+                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
+                    ['sulu_admin.save_with_publishing', 'sulu_admin.type', 'sulu_admin.delete', 'sulu_admin.dropdown'],
+                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
+                    ['sulu_admin.save_with_publishing', 'sulu_admin.dropdown'],
                     [],
                     [],
                 ],
@@ -421,7 +421,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         yield 'without live' => [
             [PermissionTypes::ADD => true, PermissionTypes::EDIT => true, PermissionTypes::LIVE => false, PermissionTypes::DELETE => true],
-            ['sulu_admin.copy', 'sulu_admin.copy_locale'],
+            ['sulu_admin.copy', 'sulu_admin.copy_locale', 'sulu_admin.delete_draft'],
             5,
         ];
 
@@ -433,7 +433,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         yield 'without add and live' => [
             [PermissionTypes::ADD => false, PermissionTypes::EDIT => true, PermissionTypes::LIVE => false, PermissionTypes::DELETE => true],
-            ['sulu_admin.copy_locale'],
+            ['sulu_admin.copy_locale', 'sulu_admin.delete_draft'],
             4,
         ];
     }

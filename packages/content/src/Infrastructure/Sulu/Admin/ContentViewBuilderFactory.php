@@ -42,7 +42,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
      */
     private const TOOLBAR_ACTION_PERMISSIONS = [
         'sulu_admin.copy' => PermissionTypes::ADD,
-        'sulu_admin.delete_draft' => PermissionTypes::LIVE,
+        'sulu_admin.delete_draft' => PermissionTypes::EDIT,
         'sulu_admin.set_unpublished' => PermissionTypes::LIVE,
     ];
 
@@ -107,7 +107,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                     new ToolbarAction(
                         'sulu_admin.delete_draft',
                         [
-                            'visible_condition' => '(!_permissions || _permissions.live)',
+                            'visible_condition' => '(!_permissions || _permissions.edit)',
                         ]
                     ),
                     new ToolbarAction(
