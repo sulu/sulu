@@ -3,6 +3,13 @@ This component uses the [CKEditor 5](https://ckeditor.com/ckeditor-5/) to displa
 which is called when the editor loses the focus.
 
 ```javascript
+const linkTypeRegistry = require('../Link/registries/linkTypeRegistry').default;
+const ExternalLinkTypeOverlay = require('../Link/overlays/ExternalLinkTypeOverlay').default;
+
+if (!linkTypeRegistry.getKeys().includes('external')) {
+    linkTypeRegistry.add('external', ExternalLinkTypeOverlay, 'External');
+}
+
 const [value, setValue] = React.useState('');
 
 const handleChange = (newValue) => setValue(newValue);
