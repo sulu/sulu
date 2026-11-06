@@ -16,11 +16,11 @@
 }
 
 .button-open {
-    border-color: $shakespeare;
-    color: $shakespeare;
+    border-color: $mantis;
+    color: $mantis;
 
     .name {
-        color: $shakespeare;
+        color: $mantis;
     }
 }
 
@@ -91,22 +91,22 @@
     cursor: pointer;
 
     &:hover .name {
-        color: $shakespeare;
+        color: $mantis;
     }
 }
 
 .selected {
     .name {
-        color: $shakespeare;
+        color: $mantis;
     }
 
     .variant {
-        color: $shakespeare;
+        color: $mantis;
     }
 }
 
 .check {
     margin-right: 4px;
-    color: $shakespeare;
+    color: $mantis;
     font-size: 12px;
 }
