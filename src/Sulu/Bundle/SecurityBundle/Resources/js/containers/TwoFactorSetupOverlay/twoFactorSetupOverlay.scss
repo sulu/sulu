@@ -42,7 +42,7 @@
     width: 100%;
 
     &:hover:not(:disabled) {
-        border-color: $shakespeare;
+        border-color: $mantis;
     }
 
     &:disabled {
@@ -53,7 +53,7 @@
 
 .method-icon {
     align-self: center;
-    color: $shakespeare;
+    color: $mantis;
     font-size: 20px;
     flex-shrink: 0;
 }
