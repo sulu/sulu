@@ -11,6 +11,7 @@ import type {MediaFormat} from '../../stores/MediaFormatStore';
 import type {SelectionData} from 'sulu-admin-bundle/types';
 
 type Props = {|
+    formats?: Array<string>,
     id: string | number,
     image: string,
     locale: string,
@@ -56,7 +57,11 @@ class CropOverlay extends React.Component<Props> {
             return [];
         }
 
-        return this.rawFormats.filter((format) => !format.internal);
+        const {formats} = this.props;
+
+        return this.rawFormats.filter(
+            (format) => !format.internal && (!formats || formats.length === 0 || formats.includes(format.key))
+        );
     }
 
     @computed get selectedFormat() {
@@ -164,20 +169,23 @@ class CropOverlay extends React.Component<Props> {
             >
                 {availableFormats
                     ? <div className={cropOverlayStyles.cropOverlayContainer}>
-                        <div className={cropOverlayStyles.formatSelect}>
-                            <SingleSelect onChange={this.handleFormatChange} value={this.formatKey}>
-                                {availableFormats.map((format) => (
-                                    <SingleSelect.Option key={format.key} value={format.key}>
-                                        {format.title +
-                                            (mediaFormatStore.getFormatOptions(format.key)
-                                                ? ' (' + translate('sulu_media.cropped') + ')'
-                                                : ''
-                                            )
-                                        }
-                                    </SingleSelect.Option>
-                                ))}
-                            </SingleSelect>
-                        </div>
+                        {this.rawFormats && availableFormats.length === 0
+                            ? <p>{translate('sulu_media.no_crop_formats')}</p>
+                            : <div className={cropOverlayStyles.formatSelect}>
+                                <SingleSelect onChange={this.handleFormatChange} value={this.formatKey}>
+                                    {availableFormats.map((format) => (
+                                        <SingleSelect.Option key={format.key} value={format.key}>
+                                            {format.title +
+                                                (mediaFormatStore.getFormatOptions(format.key)
+                                                    ? ' (' + translate('sulu_media.cropped') + ')'
+                                                    : ''
+                                                )
+                                            }
+                                        </SingleSelect.Option>
+                                    ))}
+                                </SingleSelect>
+                            </div>
+                        }
                         {selectedFormat && !mediaFormatStore.loading &&
                             <Fragment>
                                 <ImageRectangleSelection

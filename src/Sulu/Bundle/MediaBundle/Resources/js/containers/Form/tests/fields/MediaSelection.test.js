@@ -470,3 +470,20 @@ test('Should throw an error if types schemaOption is given but not an array', ()
         />
     )).toThrow(/"types"/);
 });
+
+test('Should throw an error if formats schemaOption is given but not an array', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => render(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={{formats: {name: 'formats', value: 'sulu-400x400'}}}
+        />
+    )).toThrow(/"formats"/);
+});

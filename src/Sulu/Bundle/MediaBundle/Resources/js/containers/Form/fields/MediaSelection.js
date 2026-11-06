@@ -6,6 +6,7 @@ import userStore from 'sulu-admin-bundle/stores/userStore';
 import {computed, isArrayLike, observable} from 'mobx';
 import {
     convertDisplayOptionsFromParams,
+    convertFormatsFromParams,
     convertMediaTypesFromParams,
     validateDisplayOption,
 } from '../../../utils/MediaSelectionHelper';
@@ -96,6 +97,9 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             displayOptions: {
                 value: displayOptions,
             } = {},
+            formats: {
+                value: formats,
+            } = {},
             types: {
                 value: mediaTypes,
             } = {},
@@ -112,6 +116,13 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
         // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
         const displayOptionValues = convertDisplayOptionsFromParams(displayOptions);
 
+        if (formats !== undefined && formats !== null && !isArrayLike(formats)) {
+            throw new Error('The "formats" option has to be an Array if set.');
+        }
+
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        const formatValues = convertFormatsFromParams(formats);
+
         if (mediaTypes !== undefined && mediaTypes !== null && typeof mediaTypes !== 'string') {
             throw new Error('The "types" option has to be a string if set.');
         }
@@ -126,6 +137,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             <MultiMediaSelection
                 disabled={!!disabled}
                 displayOptions={displayOptionValues}
+                formats={formatValues}
                 locale={locale}
                 onChange={this.handleChange}
                 onItemClick={this.handleItemClick}
