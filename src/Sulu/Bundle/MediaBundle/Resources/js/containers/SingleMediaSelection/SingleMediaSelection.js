@@ -139,14 +139,8 @@ class SingleMediaSelection extends React.Component<Props> {
 
         const cropImage = media && MediaCollection.editable ? getCropImageUrl(media, formats) : undefined;
 
-        const buttons = [];
-
-        if (cropImage) {
-            buttons.push({icon: 'su-crop-pen', onClick: this.handleCropOverlayOpen});
-        }
-
-        if (displayOptions.length > 0) {
-            buttons.push({
+        const rightButton = displayOptions.length > 0
+            ? {
                 icon: getIconForDisplayOption(value.displayOption),
                 onClick: this.handleDisplayOptionClick,
                 options: displayOptions.map((displayOption) => ({
@@ -154,13 +148,13 @@ class SingleMediaSelection extends React.Component<Props> {
                     label: getTranslationForDisplayOption(displayOption),
                     value: displayOption,
                 })),
-            });
-        }
+            }
+            : undefined;
 
         return (
             <Fragment>
                 <SingleItemSelection
-                    buttons={buttons}
+                    buttons={cropImage ? [{icon: 'su-crop-pen', onClick: this.handleCropOverlayOpen}] : []}
                     className={className}
                     disabled={disabled}
                     emptyText={translate('sulu_media.select_media_singular')}
@@ -172,6 +166,7 @@ class SingleMediaSelection extends React.Component<Props> {
                     loading={loading}
                     onItemClick={this.handleItemClick}
                     onRemove={media ? this.handleRemove : undefined}
+                    rightButton={rightButton}
                     valid={valid}
                     value={media}
                 >
