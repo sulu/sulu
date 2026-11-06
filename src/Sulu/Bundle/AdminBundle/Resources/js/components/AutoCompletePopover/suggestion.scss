@@ -1,7 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
 $suggestionTextColor: $black;
-$suggestionTextColorActive: $shakespeare;
+$suggestionTextColorActive: $stormGray;
 $suggestionTextColorDisabled: rgba($suggestionTextColor, .3);
 
 .suggestion-item {
