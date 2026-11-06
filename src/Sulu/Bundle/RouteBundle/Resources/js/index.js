@@ -40,6 +40,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
             modeResolver: () => {
                 return Promise.resolve('leaf');
             },
+            generationUrl: routeGenerationUrl,
         }
     );
 });
