@@ -16,11 +16,11 @@
 }
 
 .button-open {
-    border-color: $mantis;
-    color: $mantis;
+    border-color: $stormGray;
+    color: $stormGray;
 
     .name {
-        color: $mantis;
+        color: $stormGray;
     }
 }
 
@@ -91,22 +91,22 @@
     cursor: pointer;
 
     &:hover .name {
-        color: $mantis;
+        color: $stormGray;
     }
 }
 
 .selected {
     .name {
-        color: $mantis;
+        color: $stormGray;
     }
 
     .variant {
-        color: $mantis;
+        color: $stormGray;
     }
 }
 
 .check {
     margin-right: 4px;
-    color: $mantis;
+    color: $stormGray;
     font-size: 12px;
 }
