@@ -9,15 +9,15 @@ As soon as a new type is selected, the type specific overlay is opened and the u
 the external url. Furthermore, it is configurable if setting an `anchor` or a `target` should be possible in the overlay.
 
 The types can be extended by adding new entries to the `linkTypeRegistry`.
-```javascript
+```javascript static
     import linkTypeRegistry from 'sulu-admin-bundle/containers/Link/registries/linkTypeRegistry';
     import {MediaLinkTypeOverlay} from 'sulu-media-bundle/containers/Link';
 
     linkTypeRegistry.add('media', MediaLinkTypeOverlay, translate('sulu_media.media'));
 ```
 
-```javascript
-<LinkContainer
+```javascript static
+<Link
     disabled={false}
     enableAnchor={true}
     enableTarget={true}
