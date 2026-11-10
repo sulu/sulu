@@ -11,8 +11,8 @@ jest.mock('sulu-admin-bundle/utils/Translator', () => ({
         switch (key) {
             case 'sulu_media.copy_url':
                 return 'Copy URL';
-            case 'sulu_media.download_masterfile':
-                return 'Download master file';
+            case 'sulu_media.download_original':
+                return 'Download original file';
         }
     },
 }));
