@@ -39,6 +39,10 @@ class UserLocaleListener implements EventSubscriberInterface
      */
     public function copyUserLocaleToRequest(RequestEvent $event)
     {
+        if (!$event->getRequest()->hasPreviousSession() && null === $event->getRequest()->getUser()) {
+            return;
+        }
+
         $token = $this->tokenStorage->getToken();
         if (!$token) {
             return;

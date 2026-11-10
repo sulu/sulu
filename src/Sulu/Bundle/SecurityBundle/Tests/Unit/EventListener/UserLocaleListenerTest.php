@@ -76,12 +76,38 @@ class UserLocaleListenerTest extends TestCase
 
         $this->token = $this->prophesize(TokenInterface::class);
 
+        $this->request->hasPreviousSession()->willReturn(true);
+
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
 
         $this->translator = $this->prophesize(Translator::class);
 
         $this->userLocaleListener = new UserLocaleListener($this->tokenStorage->reveal(), $this->translator->reveal());
+    }
+
+    public function testCopyUserLocaleToRequestWithoutPreviousSession(): void
+    {
+        $this->request->hasPreviousSession()->willReturn(false);
+        $this->request->getUser()->willReturn(null);
+        $this->tokenStorage->getToken()->shouldNotBeCalled();
+        $this->request->setLocale(Argument::any())->shouldNotBeCalled();
+        $this->translator->setLocale(Argument::any())->shouldNotBeCalled();
+        $this->userLocaleListener->copyUserLocaleToRequest($this->event);
+    }
+
+    public function testCopyUserLocaleToRequestWithHttpBasicAuth(): void
+    {
+        $this->request->hasPreviousSession()->willReturn(false);
+        $this->request->getUser()->willReturn('admin');
+
+        $user = $this->prophesize(UserInterface::class);
+        $user->getLocale()->willReturn('en');
+        $this->token->getUser()->willReturn($user);
+
+        $this->request->setLocale('en')->shouldBeCalled();
+        $this->translator->setLocale('en')->shouldBeCalled();
+        $this->userLocaleListener->copyUserLocaleToRequest($this->event);
     }
 
     public function testCopyUserLocaleToRequestWithoutUser(): void
