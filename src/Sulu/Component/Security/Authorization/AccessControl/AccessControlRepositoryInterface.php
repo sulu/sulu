@@ -22,7 +22,7 @@ interface AccessControlRepositoryInterface
      * Find AccessControl by its entities type and id and the role id.
      *
      * @param string $type The type of the AccessControl
-     * @param int $id The id of the AccessControl
+     * @param int|string $id The id of the AccessControl
      * @param int $roleId The role id of the AccessControl
      *
      * @return AccessControlInterface
@@ -33,7 +33,7 @@ interface AccessControlRepositoryInterface
      * Finds all AccessControls for the given entity type and id.
      *
      * @param string $type The type of the AccessControl
-     * @param int $id The id of the AccessControl
+     * @param int|string $id The id of the AccessControl
      *
      * @return AccessControlInterface[]
      */

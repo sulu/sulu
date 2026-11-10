@@ -141,6 +141,54 @@ class PreviewLinkControllerPermissionTest extends SuluTestCase
         static::assertHttpStatusCode(201, $this->client->getResponse());
     }
 
+    public function testGetDeniedForUserWithoutViewPermission(): void
+    {
+        $resourceId = $this->createTestPage('denied-get')->getUuid();
+
+        $this->createPreviewLink($this->resourceKey, $resourceId, $this->locale, $this->webspaceKey);
+
+        $this->client->jsonRequest(
+            'GET',
+            \sprintf(
+                '/api/preview-links/%s?resourceKey=%s&locale=%s',
+                $resourceId,
+                $this->resourceKey,
+                $this->locale
+            ),
+            [],
+            $this->attackerAuth
+        );
+
+        static::assertHttpStatusCode(403, $this->client->getResponse());
+        static::assertStringNotContainsString('token', (string) $this->client->getResponse()->getContent());
+    }
+
+    public function testGetAllowedForSuperadmin(): void
+    {
+        $resourceId = $this->createTestPage('allowed-get')->getUuid();
+
+        $this->createPreviewLink($this->resourceKey, $resourceId, $this->locale, $this->webspaceKey);
+
+        $this->client->jsonRequest(
+            'GET',
+            \sprintf(
+                '/api/preview-links/%s?resourceKey=%s&locale=%s',
+                $resourceId,
+                $this->resourceKey,
+                $this->locale
+            )
+        );
+
+        static::assertHttpStatusCode(200, $this->client->getResponse());
+    }
+
+    public function testGetAnswersNotFoundForUnknownResourceKey(): void
+    {
+        $this->client->jsonRequest('GET', \sprintf('/api/preview-links/1?resourceKey=unknown&locale=%s', $this->locale));
+
+        static::assertHttpStatusCode(404, $this->client->getResponse());
+    }
+
     private function createTestPage(string $slug): Page
     {
         return static::createPage(

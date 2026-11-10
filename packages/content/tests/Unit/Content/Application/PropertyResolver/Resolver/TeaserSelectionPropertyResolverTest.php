@@ -174,6 +174,41 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $this->assertSame(11, $mergedTeaser->getMediaId());
     }
 
+    public function testResolveWithResourceCallbackDoesNotModifySharedTeaser(): void
+    {
+        $data = [
+            'items' => [
+                ['id' => '123', 'type' => 'pages'],
+                ['id' => '123', 'type' => 'pages', 'title' => 'Overridden Title', 'description' => ''],
+            ],
+        ];
+
+        $contentView = $this->resolver->resolve($data, 'en');
+
+        $content = $contentView->getContent();
+        $this->assertIsArray($content);
+        $this->assertCount(2, $content);
+
+        [$resolvable1, $resolvable2] = $content;
+        $this->assertInstanceOf(ResolvableResource::class, $resolvable1);
+        $this->assertInstanceOf(ResolvableResource::class, $resolvable2);
+
+        $teaser = new Teaser('123', 'pages', 'en', 'Page Title', 'Page Description', '', 'http://example.com', 1);
+        $mergedTeaser1 = $resolvable1->executeResourceCallback($teaser);
+        $mergedTeaser2 = $resolvable2->executeResourceCallback($teaser);
+
+        $this->assertInstanceOf(Teaser::class, $mergedTeaser1);
+        $this->assertSame('Page Title', $mergedTeaser1->getTitle());
+        $this->assertSame('Page Description', $mergedTeaser1->getDescription());
+
+        $this->assertInstanceOf(Teaser::class, $mergedTeaser2);
+        $this->assertSame('Overridden Title', $mergedTeaser2->getTitle());
+        $this->assertSame('', $mergedTeaser2->getDescription());
+
+        $this->assertSame('Page Title', $teaser->getTitle());
+        $this->assertSame('Page Description', $teaser->getDescription());
+    }
+
     public function testGetType(): void
     {
         $this->assertSame('teaser_selection', TeaserSelectionPropertyResolver::getType());

@@ -320,15 +320,23 @@ final class ArticleController implements SecuredControllerInterface
         }
 
         if ('copy_locale' === $action) {
-            $message = new CopyLocaleArticleMessage(
-                ['uuid' => $uuid],
-                (string) ($request->query->get('src') ?: $request->query->get('locale')),
-                (string) $request->query->get('dest'),
-            );
+            $srcLocale = (string) ($request->query->get('src') ?: $request->query->get('locale'));
+            $destLocales = \array_filter(\array_map('trim', \explode(',', (string) $request->query->get('dest'))));
 
-            /** @see \Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler */
-            /** @var ArticleInterface|null */
-            return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+            $result = null;
+            foreach ($destLocales as $destLocale) {
+                $message = new CopyLocaleArticleMessage(
+                    ['uuid' => $uuid],
+                    $srcLocale,
+                    $destLocale,
+                );
+
+                /** @see \Sulu\Article\Application\MessageHandler\CopyLocaleArticleMessageHandler */
+                /** @var ArticleInterface|null */
+                $result = $this->handle(new Envelope($message, [new EnableFlushStamp()]));
+            }
+
+            return $result;
         } elseif ('copy' === $action) {
             $message = new CopyArticleMessage(
                 ['uuid' => $uuid],

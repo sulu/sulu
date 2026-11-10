@@ -34,7 +34,7 @@ class AccessControlRepository extends EntityRepository implements AccessControlR
                 ->andWhere('role.id = :roleId');
 
             $query = $queryBuilder->getQuery()
-                ->setParameter('entityId', $id)
+                ->setParameter('entityId', $this->normalizeEntityId($type, $id))
                 ->setParameter('entityClass', $type)
                 ->setParameter('roleId', $roleId);
 
@@ -57,11 +57,41 @@ class AccessControlRepository extends EntityRepository implements AccessControlR
         }
 
         $queryBuilder
-            ->setParameter('entityId', $id)
+            ->setParameter('entityId', $this->normalizeEntityId($type, $id))
             ->setParameter('entityClass', $type);
 
         /** @var AccessControlInterface[] */
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * The database loads an entity with an integer id by the numeric value of the given id ("04855" loads 4855), while
+     * the permissions are stored with the canonical id, so a non-canonical id would not find them.
+     *
+     * @param string|int|null $id
+     *
+     * @return string|int|null
+     */
+    private function normalizeEntityId(string $type, $id)
+    {
+        if (!\is_string($id) || 1 !== \preg_match('/^\s*\+?\d/', $id)) {
+            return $id;
+        }
+
+        $metadataFactory = $this->getEntityManager()->getMetadataFactory();
+        if (!\class_exists($type) || $metadataFactory->isTransient($type)) {
+            return $id;
+        }
+
+        $metadata = $metadataFactory->getMetadataFor($type);
+        $identifierFieldNames = $metadata->getIdentifierFieldNames();
+        if (1 !== \count($identifierFieldNames)
+            || !\in_array($metadata->getTypeOfField($identifierFieldNames[0]), ['integer', 'smallint', 'bigint'], true)
+        ) {
+            return $id;
+        }
+
+        return (string) (int) $id;
     }
 
     public function findIdsWithGrantedPermissions(

@@ -69,7 +69,8 @@ class TeaserSelectionPropertyResolver implements PropertyResolverInterface
                 resourceLoaderKey: $resourceLoaderKey,
                 priority: -50,
                 resourceCallback: static function(Teaser $resource) use ($itemData): Teaser {
-                    return $resource->merge($itemData);
+                    // the loaded teaser is shared between all items referencing the same resource
+                    return (clone $resource)->merge($itemData);
                 }
             );
 

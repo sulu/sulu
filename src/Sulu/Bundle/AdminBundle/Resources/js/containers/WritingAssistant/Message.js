@@ -2,6 +2,7 @@
 
 import React, {Component, Fragment} from 'react';
 import {observable} from 'mobx';
+import classNames from 'classnames';
 import {Button} from '../../components';
 import {TextEditor} from '../../containers';
 import {translate} from '../../utils';
@@ -153,7 +154,7 @@ class Message extends Component<Props> {
                     onClick={this.handleOnClick}
                     role="button"
                 >
-                    <div className={messageStyles.text}>
+                    <div className={classNames(messageStyles.text, {[messageStyles.selectedText]: index === 0})}>
                         {this.renderTextComponent()}
                     </div>
 

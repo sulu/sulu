@@ -4,12 +4,89 @@ For every update follow the [Upgrade Documentation](https://docs.sulu.io/2.x/upg
 
 ## 2.6.28
 
+### New media storage for league/flysystem 3.x
+
+`league/flysystem` 1.x has no fix for the security advisory `PKSA-w9tt-7782-78jx`, so composer refuses to install it.
+The `S3Storage`, `GoogleCloudStorage`, `AzureBlobStorage` and `FlysystemStorage` stay unchanged and keep working with
+`league/flysystem` 1.x.
+
+To use `league/flysystem` 3.x, the new `FlysystemV3Storage` is configured the same way as the storage of Sulu 3.0, so the
+configuration does not change when you update to Sulu 3.0. Install `league/flysystem` `^3.35.3` and the
+[`league/flysystem-bundle`](https://github.com/thephpleague/flysystem-bundle) with the adapter you use, configure the
+storage there, and reference it in `sulu_media`:
+
+```yaml
+# config/packages/flysystem.yaml
+flysystem:
+    storages:
+        default.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/var/uploads/media'
+
+# config/packages/sulu_media.yaml
+sulu_media:
+    storage:
+        flysystem_service: 'default.storage'
+        segments: 10
+```
+
+Point the flysystem storage at the place of the existing media, so they are found after the switch: the former `path` of
+the `local` storage, or the bucket with its `path_prefix` as `prefix`. Without a `public_url` the adapter builds the URL
+including the `prefix`. If you set a `public_url` on the flysystem storage, for example for a CDN, it has to contain the
+former `path_prefix` too, because flysystem does not add it. The section "Updating to flysystem 3" of the Sulu 3.0
+upgrade guide maps the S3, Google Cloud and Azure settings to the flysystem configuration.
+
+The `sulu_media.storages` configuration is not used with this storage and can be removed.
+
 ### Deprecated instantiating `MediaController` without `$referenceRepository` and `$requestStack`
 
 Instantiating the `MediaController` without the `$referenceRepository` or `$requestStack` argument is
 deprecated. The `$referenceRepository` is used to look up the resources that reference a media before deleting
 it, the `$requestStack` to read the `force` parameter of the request. Without one of them a media is deleted
 without the warning, as before.
+
+### Deleting a trash item requires the delete permission on its resource
+
+Deleting (purging) a trash item now also needs the `delete` permission on the security context of the resource
+the trash item belongs to, in addition to the `delete` permission of the trash context. Roles that only have
+`view`, `add` or `edit` there get a `403` now, so grant `delete` on the resource's context to the roles that should still purge.
+A media also needs the `delete` permission in the permissions of its collection.
+
+### Preview links require the view permission on the resource
+
+Reading a preview link now needs the `view` permission on the security context of the resource, like generating
+and revoking one. For a page the `view` permission of the page's own permissions counts in all three, so a user
+who was denied a page there gets a `403` now.
+
+If you replaced `sulu_preview.preview_link_controller`, pass the `sulu_preview.preview_object_provider_registry`
+and the `sulu_security.security_checker` as the last constructor arguments. Without the registry the controller
+triggers a deprecation, and without either of them reading a preview link is not checked for permissions.
+
+### The activity log follows the permissions of a page for preview links
+
+The activity entries for a generated or revoked preview link contain the public link. For a page they are now
+stored with the `Sulu\Component\Content\Document\Behavior\SecurityBehavior` object type, so a role the page's own
+permissions deny no longer sees them. A role without an entry in the page's permissions does not see them either.
+
+Entries written before the update have no object type and stay visible to every role that can view the activity
+log and the webspace. Run this statement once, and revoke links that are not needed any more:
+
+MySQL:
+
+```sql
+UPDATE ac_activities
+SET resourceSecurityObjectType = 'Sulu\\Component\\Content\\Document\\Behavior\\SecurityBehavior'
+WHERE resourceKey = 'pages' AND type IN ('preview_link_generated', 'preview_link_revoked');
+```
+
+PostgreSQL:
+
+```sql
+UPDATE ac_activities
+SET resourceSecurityObjectType = 'Sulu\Component\Content\Document\Behavior\SecurityBehavior'
+WHERE resourceKey = 'pages' AND type IN ('preview_link_generated', 'preview_link_revoked');
+```
 
 ## 2.6.27
 

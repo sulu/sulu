@@ -531,6 +531,28 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertSame($locale, $reflectionClass->getLocale($request));
     }
 
+    public function testPostTriggerCopyLocaleWithMultipleDestinations(): void
+    {
+        $this->client->request('POST', '/admin/api/snippets?locale=en', [], [], [], \json_encode([
+            'template' => 'snippet',
+            'title' => 'Multiple Destinations',
+        ], \JSON_THROW_ON_ERROR));
+        /** @var array{id: string} $snippet */
+        $snippet = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        $this->client->request('POST', '/admin/api/snippets/' . $snippet['id'] . '?locale=en&action=copy_locale&src=en&dest=de,fr');
+
+        $response = $this->client->getResponse();
+        $this->assertSame(200, $response->getStatusCode(), (string) $response->getContent());
+
+        /** @var array{availableLocales?: string[]} $data */
+        $data = \json_decode((string) $response->getContent(), true);
+        $availableLocales = $data['availableLocales'] ?? [];
+        $this->assertContains('de', $availableLocales);
+        $this->assertContains('fr', $availableLocales);
+        $this->assertContains('en', $availableLocales);
+    }
+
     public static function getLocaleProvider(): \Generator
     {
         yield [

@@ -151,7 +151,7 @@ final class PageTrashItemHandler implements
 
     /**
      * @param array{
-     *     parentId?: string,
+     *     parentUuid?: string,
      * } $restoreFormData
      */
     public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
@@ -168,7 +168,7 @@ final class PageTrashItemHandler implements
             Assert::string($webspaceKey, 'Expected webspaceKey to be a string');
             $page->setWebspaceKey($webspaceKey);
 
-            $parentUuid = $restoreFormData['parentId'] ?? $restoreData['parentUuid'];
+            $parentUuid = $restoreFormData['parentUuid'] ?? $restoreData['parentUuid'];
             if ($parentUuid) {
                 Assert::string($parentUuid, 'Expected parentUuid to be a string');
                 $parent = $this->pageRepository->findOneBy(['uuid' => $parentUuid]);

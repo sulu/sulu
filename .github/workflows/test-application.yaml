@@ -84,6 +84,14 @@ jobs:
               if: ${{ matrix.styleguide }}
               run: npm run styleguide:build
 
+            - name: Test Styleguidist examples
+              if: ${{ matrix.styleguide }}
+              run: |
+                  npm install --no-save playwright-core
+                  python3 -m http.server 8080 --directory styleguide &
+                  sleep 2
+                  node .github/scripts/check-styleguide.js http://localhost:8080/
+
     js-lint:
         name: "Node Lint"
         runs-on: ubuntu-22.04
@@ -181,8 +189,21 @@ jobs:
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, imagick'
+                      tools: 'composer'
+                      env:
+                          SYMFONY_DEPRECATIONS_HELPER: weak
+                          DATABASE_URL: mysql://root:ChangeMe@127.0.0.1:3306/sulu_test?serverVersion=8.4
+                          DATABASE_CHARSET: utf8mb4
+                          DATABASE_COLLATE: utf8mb4_unicode_ci
+
+                    - php-version: '8.6'
+                      database: mysql-84
+                      phpcr-transport: doctrinedbal
+                      dependency-versions: 'highest'
+                      php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:snapshot'
                       composer-stability: 'dev'
+                      composer-options: '--ignore-platform-reqs'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
                           DATABASE_URL: mysql://root:ChangeMe@127.0.0.1:3306/sulu_test?serverVersion=8.4&charset=utf8mb4
