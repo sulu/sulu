@@ -6,6 +6,12 @@ export type Button<T> = {|
     options?: Array<ButtonOption<T>>,
 |};
 
+export type ItemButton = {|
+    disabled?: boolean,
+    icon: string,
+    onClick: () => void,
+|};
+
 type ButtonOption<T> = {|
     icon?: string,
     label: string,

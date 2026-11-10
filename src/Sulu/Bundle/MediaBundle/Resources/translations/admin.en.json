@@ -62,6 +62,7 @@
     "sulu_media.upload_preview_image": "Upload preview image",
     "sulu_media.delete_preview_image": "Delete preview image",
     "sulu_media.cropped": "Cropped",
+    "sulu_media.no_crop_formats": "No crop formats available for this field.",
     "sulu_media.double_click_crop_and_maximize": "A double-click maximizes and centers the area",
     "sulu_media.min_size_notification": "Minimal size reached",
     "sulu_media.left_top": "Left top",
