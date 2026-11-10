@@ -50,6 +50,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: string[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -73,6 +74,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: string[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -250,6 +252,12 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         foreach ($sortBys as $sortBy => $sortMethod) {
             $queryBuilder->orderBy($sortBy, $sortMethod);
             $queryBuilder->addSelect($sortBy);
+        }
+
+        $excluded = $filters['excluded'] ?? [];
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
         }
 
         if ($filters['mimetype'] ?? null) {
