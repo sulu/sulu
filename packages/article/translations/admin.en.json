@@ -15,6 +15,8 @@
     "sulu_article.published": "Published",
     "sulu_article.not_published": "Not Published",
     "sulu_article.route": "Route",
+    "sulu_article.excerpt_priority": "Priority",
+    "sulu_article.excerpt_priority_info": "Used to order articles in a smart content sorted by priority; the publication date is applied as secondary sort criterion.",
     "sulu_article.last_modified_enabled": "Enable last modified date",
     "sulu_article.last_modified_date": "Last modified date",
     "sulu_activity.resource.articles": "Article",

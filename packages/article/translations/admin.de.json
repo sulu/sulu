@@ -15,6 +15,8 @@
     "sulu_article.published": "Veröffentlicht",
     "sulu_article.not_published": "Nicht Veröffentlicht",
     "sulu_article.route": "Route",
+    "sulu_article.excerpt_priority": "Priorität",
+    "sulu_article.excerpt_priority_info": "Dient zur Sortierung von Artikeln in einem Smart Content nach Priorität; das Veröffentlichungsdatum wird als zweites Sortierkriterium verwendet.",
     "sulu_article.last_modified_or_authored": "Zuletzt geändert oder verfasst",
     "sulu_article.last_modified_enabled": "Aktualisierungsdatum aktivieren",
     "sulu_article.last_modified_date": "Datum der Aktualisierung",

@@ -118,6 +118,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
             ->enablePresentAs()
             ->enableSorting(
                 [
+                    ['column' => 'priority', 'title' => 'sulu_article.excerpt_priority'],
                     ['column' => 'published', 'title' => 'sulu_admin.published'],
                     ['column' => 'authored', 'title' => 'sulu_admin.authored'],
                     ['column' => 'created', 'title' => 'sulu_admin.created'],
@@ -180,6 +181,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
     /**
      * @param ArticleSmartContentFilters $filters
      * @param array{
+     *     priority?: 'asc'|'desc',
      *     title?: 'asc'|'desc',
      *     authored?: 'asc'|'desc',
      *     published?: 'asc'|'desc',
@@ -201,6 +203,14 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
 
         $sortBys = $this->mapSortBys($sortBys);
 
+        // The "priority" sort targets the article-specific excerptPriority column and is not part of the
+        // shared DimensionContentQueryEnhancer whitelist, so we extract and apply it on the provider level.
+        $prioritySortOrder = null;
+        if (\array_key_exists('priority', $sortBys)) {
+            $prioritySortOrder = $sortBys['priority'];
+            unset($sortBys['priority']);
+        }
+
         $alias = 'article';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
 
@@ -212,6 +222,12 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
             $sortBys,
         );
         $this->addInternalFilters($queryBuilder, $filters, $alias);
+
+        if (null !== $prioritySortOrder) {
+            // Secondary sort by publication date (newest first) to keep a stable order on equal priorities.
+            $queryBuilder->addOrderBy('filterDimensionContent.excerptPriority', $prioritySortOrder);
+            $queryBuilder->addOrderBy('filterDimensionContent.workflowPublished', 'desc');
+        }
 
         // TODO refactor this part to not use distinct
         // we need the distinct here, because joins due to tags/categories can lead to duplicate results
