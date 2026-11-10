@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\ExcerptInterface;
@@ -21,6 +20,8 @@ use Webmozart\Assert\Assert;
 
 readonly class ExcerptDataMapper implements DataMapperInterface
 {
+    use UnlocalizedPropertiesDataMapperTrait;
+
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
     ) {
@@ -39,33 +40,24 @@ readonly class ExcerptDataMapper implements DataMapperInterface
             $excerptData = $data['excerpt'];
             Assert::isArray($excerptData);
 
-            $validExcerptProperties = $this->getExcerptProperties($localizedDimensionContent); // add support of unlocalized excerpt data in future
+            $unlocalizedExcerptPropertyNames = $unlocalizedDimensionContent instanceof ExcerptInterface
+                ? $this->getUnlocalizedPropertyNames($this->formMetadataProvider, 'content_excerpt', 'excerpt', $localizedDimensionContent)
+                : [];
 
-            $localizedDimensionContent->setExcerptData($excerptData);  // @phpstan-ignore-line argument.type
+            if ([] === $unlocalizedExcerptPropertyNames) {
+                $localizedDimensionContent->setExcerptData($excerptData); // @phpstan-ignore-line argument.type
+
+                return;
+            }
+
+            [$unlocalizedExcerptData, $localizedExcerptData] = $this->splitUnlocalizedData(
+                $excerptData,
+                $unlocalizedDimensionContent->getExcerptData(),
+                $unlocalizedExcerptPropertyNames,
+            );
+
+            $unlocalizedDimensionContent->setExcerptData($unlocalizedExcerptData);
+            $localizedDimensionContent->setExcerptData($localizedExcerptData);
         }
-    }
-
-    /**
-     * @template T of DimensionContentInterface
-     *
-     * @param T $dimensionContent
-     *
-     * @return array<string, mixed>
-     */
-    private function getExcerptProperties(DimensionContentInterface $dimensionContent): array
-    {
-        $locale = $dimensionContent->getLocale();
-        if (!$locale) {
-            return [];
-        }
-
-        /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->formMetadataProvider->getMetadata(
-            'content_excerpt',
-            $locale,
-            ['instanceOf' => $dimensionContent::class],
-        );
-
-        return $formMetadata->getFlatFieldMetadata();
     }
 }

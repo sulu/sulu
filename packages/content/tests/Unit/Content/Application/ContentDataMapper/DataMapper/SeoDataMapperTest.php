@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapp
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\SeoDataMapper;
@@ -32,10 +33,11 @@ class SeoDataMapperTest extends TestCase
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $formMetadata = $this->prophesize(FormMetadata::class);
         $formMetadata->getFlatFieldMetadata()->willReturn([
-            'seo/title' => [],
-            'seo/description' => [],
-            'seo/keywords' => [],
-            'seo/canonicalUrl' => [],
+            'seo/title' => $this->createFieldMetadata('seo/title', true),
+            'seo/description' => $this->createFieldMetadata('seo/description', true),
+            'seo/keywords' => $this->createFieldMetadata('seo/keywords', true),
+            'seo/canonicalUrl' => $this->createFieldMetadata('seo/canonicalUrl', true),
+            'seo/unlocalizedField' => $this->createFieldMetadata('seo/unlocalizedField', false),
         ]);
 
         $formMetadataProvider->getMetadata(
@@ -45,6 +47,14 @@ class SeoDataMapperTest extends TestCase
         )->willReturn($formMetadata->reveal());
 
         return new SeoDataMapper($formMetadataProvider->reveal());
+    }
+
+    private function createFieldMetadata(string $name, bool $multilingual): FieldMetadata
+    {
+        $fieldMetadata = new FieldMetadata($name);
+        $fieldMetadata->setMultilingual($multilingual);
+
+        return $fieldMetadata;
     }
 
     public function testMapNoSeoInterface(): void
@@ -121,6 +131,56 @@ class SeoDataMapperTest extends TestCase
         $this->assertTrue($localizedDimensionContent->getSeoHideInSitemap());
         $this->assertTrue($localizedDimensionContent->getSeoNoFollow());
         $this->assertTrue($localizedDimensionContent->getSeoNoIndex());
+        $this->assertSame([], $unlocalizedDimensionContent->getSeoData());
+    }
+
+    public function testMapWithUnlocalizedSeoProperty(): void
+    {
+        $data = [
+            'seo' => [
+                'title' => 'Seo Title',
+                'unlocalizedField' => 'Unlocalized Value',
+            ],
+            'seoNoIndex' => true,
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setSeoData(['otherField' => 'Other Value']);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+        $localizedDimensionContent->setSeoData(['unlocalizedField' => 'Previously Localized Value']);
+
+        $seoMapper = $this->createSeoDataMapperInstance();
+        $seoMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame(['title' => 'Seo Title'], $localizedDimensionContent->getSeoData());
+        $this->assertSame([
+            'otherField' => 'Other Value',
+            'unlocalizedField' => 'Unlocalized Value',
+        ], $unlocalizedDimensionContent->getSeoData());
+        $this->assertTrue($localizedDimensionContent->getSeoNoIndex());
+    }
+
+    public function testMapWithoutUnlocalizedSeoPropertyKeepsUnlocalizedData(): void
+    {
+        $data = [
+            'seo' => [
+                'title' => 'Seo Title',
+            ],
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setSeoData(['unlocalizedField' => 'Unlocalized Value']);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $seoMapper = $this->createSeoDataMapperInstance();
+        $seoMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame(['title' => 'Seo Title'], $localizedDimensionContent->getSeoData());
+        $this->assertSame(['unlocalizedField' => 'Unlocalized Value'], $unlocalizedDimensionContent->getSeoData());
     }
 
     public function testMapWithInvalidSeoProperty(): void

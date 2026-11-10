@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\ContentDataMapper\DataMapp
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Application\ContentDataMapper\DataMapper\ExcerptDataMapper;
@@ -32,11 +33,12 @@ class ExcerptDataMapperTest extends TestCase
         $formMetadataProvider = $this->prophesize(MetadataProviderInterface::class);
         $formMetadata = $this->prophesize(FormMetadata::class);
         $formMetadata->getFlatFieldMetadata()->willReturn([
-            'excerpt/title' => [],
-            'excerpt/description' => [],
-            'excerpt/more' => [],
-            'excerpt/image' => [],
-            'excerpt/icon' => [],
+            'excerpt/title' => $this->createFieldMetadata('excerpt/title', true),
+            'excerpt/description' => $this->createFieldMetadata('excerpt/description', true),
+            'excerpt/more' => $this->createFieldMetadata('excerpt/more', true),
+            'excerpt/image' => $this->createFieldMetadata('excerpt/image', true),
+            'excerpt/icon' => $this->createFieldMetadata('excerpt/icon', true),
+            'excerpt/unlocalizedField' => $this->createFieldMetadata('excerpt/unlocalizedField', false),
         ]);
 
         $formMetadataProvider->getMetadata(
@@ -46,6 +48,14 @@ class ExcerptDataMapperTest extends TestCase
         )->willReturn($formMetadata->reveal());
 
         return new ExcerptDataMapper($formMetadataProvider->reveal());
+    }
+
+    private function createFieldMetadata(string $name, bool $multilingual): FieldMetadata
+    {
+        $fieldMetadata = new FieldMetadata($name);
+        $fieldMetadata->setMultilingual($multilingual);
+
+        return $fieldMetadata;
     }
 
     public function testMapNoExcerptInterface(): void
@@ -137,6 +147,54 @@ class ExcerptDataMapperTest extends TestCase
         $this->assertSame('Excerpt More', $localizedDimensionContent->getExcerptMore());
         $this->assertSame(['id' => 1], $localizedDimensionContent->getExcerptImage());
         $this->assertSame(['id' => 2], $localizedDimensionContent->getExcerptIcon());
+        $this->assertSame([], $unlocalizedDimensionContent->getExcerptData());
+    }
+
+    public function testMapWithUnlocalizedExcerptProperty(): void
+    {
+        $data = [
+            'excerpt' => [
+                'title' => 'Excerpt Title',
+                'unlocalizedField' => 'Unlocalized Value',
+            ],
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setExcerptData(['otherField' => 'Other Value']);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+        $localizedDimensionContent->setExcerptData(['unlocalizedField' => 'Previously Localized Value']);
+
+        $excerptMapper = $this->createExcerptDataMapperInstance();
+        $excerptMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame(['title' => 'Excerpt Title'], $localizedDimensionContent->getExcerptData());
+        $this->assertSame([
+            'otherField' => 'Other Value',
+            'unlocalizedField' => 'Unlocalized Value',
+        ], $unlocalizedDimensionContent->getExcerptData());
+    }
+
+    public function testMapWithoutUnlocalizedExcerptPropertyKeepsUnlocalizedData(): void
+    {
+        $data = [
+            'excerpt' => [
+                'title' => 'Excerpt Title',
+            ],
+        ];
+
+        $example = new Example();
+        $unlocalizedDimensionContent = new ExampleDimensionContent($example);
+        $unlocalizedDimensionContent->setExcerptData(['unlocalizedField' => 'Unlocalized Value']);
+        $localizedDimensionContent = new ExampleDimensionContent($example);
+        $localizedDimensionContent->setLocale('en');
+
+        $excerptMapper = $this->createExcerptDataMapperInstance();
+        $excerptMapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        $this->assertSame(['title' => 'Excerpt Title'], $localizedDimensionContent->getExcerptData());
+        $this->assertSame(['unlocalizedField' => 'Unlocalized Value'], $unlocalizedDimensionContent->getExcerptData());
     }
 
     public function testMapWithInvalidExcerptProperty(): void
