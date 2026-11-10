@@ -65,7 +65,7 @@ final class SnippetController implements SecuredControllerInterface
     private const ACTION_PERMISSIONS = [
         WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH => PermissionTypes::LIVE,
         WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH => PermissionTypes::LIVE,
-        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT => PermissionTypes::LIVE,
+        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT => PermissionTypes::EDIT,
         'copy' => PermissionTypes::ADD,
     ];
 
