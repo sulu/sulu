@@ -84,6 +84,14 @@ jobs:
               if: ${{ matrix.styleguide }}
               run: npm run styleguide:build
 
+            - name: Test Styleguidist examples
+              if: ${{ matrix.styleguide }}
+              run: |
+                  npm install --no-save playwright-core
+                  python3 -m http.server 8080 --directory styleguide &
+                  sleep 2
+                  node .github/scripts/check-styleguide.js http://localhost:8080/
+
     js-lint:
         name: "Node Lint"
         runs-on: ubuntu-22.04

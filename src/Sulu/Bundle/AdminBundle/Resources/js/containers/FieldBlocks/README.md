@@ -51,6 +51,7 @@ const formInspector = {
     formInspector={formInspector}
     onChange={setValue}
     onFinish={() => alert('Some field in the block lost its focus')}
+    schemaOptions={{}}
     types={types}
     value={value}
 />

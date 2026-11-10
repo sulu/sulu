@@ -116,7 +116,7 @@ export default class CKEditor5 extends React.Component<Props> {
             } = {},
         } = this.props;
 
-        const uiLocale = userStore.systemLocale;
+        const uiLocale = userStore.systemLocale || 'en';
         const languageNames = new (Intl: any).DisplayNames([uiLocale], {type: 'language'});
 
         const defaultConfig = {
