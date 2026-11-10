@@ -201,8 +201,6 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
             return [];
         }
 
-        $sortBys = $this->mapSortBys($sortBys);
-
         // The "priority" sort targets the article-specific excerptPriority column and is not part of the
         // shared DimensionContentQueryEnhancer whitelist, so we extract and apply it on the provider level.
         $prioritySortOrder = null;
@@ -210,6 +208,8 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
             $prioritySortOrder = $sortBys['priority'];
             unset($sortBys['priority']);
         }
+
+        $sortBys = $this->mapSortBys($sortBys);
 
         $alias = 'article';
         $queryBuilder = $this->entityRepository->createQueryBuilder($alias);
