@@ -1,0 +1,43 @@
+{% extends "@ExampleTest/base.html.twig" %}
+{% block content %}
+    <h1>
+        {{ content.title }}
+    </h1>
+
+    <section>
+        <h2>Teasers</h2>
+
+        {% for block in content.blocks %}
+            <div data-block-type="{{ block.type }}">
+                <h3>{{ block.type|title }}</h3>
+
+                {% set teasers =
+                    block.type == 'smart_content' ? block.examples|default([]) :
+                    block.type == 'teaser_selection' ? block.teasers|default([]) :
+                    block.type == 'example_selection' ? block.examples|default([]) :
+                    block.type == 'single_example_selection' ? ( block.example ? [ block.example ] : [] ) :
+                    block.type == 'nested' ? ( block.nested_blocks[0].examples|default([]) ) :
+                    []
+                %}
+
+                <div>
+                    {% for teaser in teasers %}
+                        <article data-teaser-id="{{ teaser.id|default("") }}">
+                            <h4>
+                                <a href="{{ teaser.url|default("") }}">
+                                    {{ teaser.title|default("") }}
+                                </a>
+                            </h4>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                {% if block.type == 'link' %}
+                    <div data-link><a href="{{ block.link|default("") }}">Link</a></div>
+                {% elseif block.type == 'text_editor' %}
+                    <div data-link>{{ block.text|raw }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}
