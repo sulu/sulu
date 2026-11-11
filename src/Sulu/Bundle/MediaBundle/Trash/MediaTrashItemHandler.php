@@ -69,6 +69,7 @@ final class MediaTrashItemHandler implements
         $data = [
             'collectionId' => $media->getCollection()->getId(),
             'type' => $media->getType(),
+            'classification' => $media->getClassification(),
             'previewImageId' => $previewImage ? $previewImage->getId() : null,
             'created' => $media->getCreated()->format('c'),
             'creatorId' => $creator ? $creator->getId() : null,
@@ -196,6 +197,10 @@ final class MediaTrashItemHandler implements
 
         if (\is_string($data['type'])) {
             $media->setType($data['type']);
+        }
+
+        if (\is_string($data['classification'] ?? null)) {
+            $media->setClassification($data['classification']);
         }
 
         $media->setPreviewImage($this->findEntity(MediaInterface::class, $data['previewImageId']));

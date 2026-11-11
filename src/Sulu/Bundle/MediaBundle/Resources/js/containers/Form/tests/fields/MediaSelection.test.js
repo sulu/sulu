@@ -183,6 +183,10 @@ test('Pass correct props for given schema-options to MultiMediaSelection compone
             name: 'types',
             value: 'image,video',
         },
+        classifications: {
+            name: 'classifications',
+            value: 'data_sheet,warranty_certificate',
+        },
         sortable: {
             name: 'sortable',
             value: false,
@@ -219,6 +223,7 @@ test('Pass correct props for given schema-options to MultiMediaSelection compone
     );
 
     expect(getLatestMediaListStoreCall()[4].types).toEqual('image,video');
+    expect(getLatestMediaListStoreCall()[4].classifications).toEqual('data_sheet,warranty_certificate');
     expect(screen.queryByLabelText('su-more')).not.toBeInTheDocument();
 });
 
@@ -486,4 +491,21 @@ test('Should throw an error if formats schemaOption is given but not an array', 
             schemaOptions={{formats: {name: 'formats', value: 'sulu-400x400'}}}
         />
     )).toThrow(/"formats"/);
+});
+
+test('Should throw an error if classifications schemaOption is given but not a string', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => render(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={{classifications: {name: 'classifications', value: true}}}
+        />
+    )).toThrow(/"classifications"/);
 });

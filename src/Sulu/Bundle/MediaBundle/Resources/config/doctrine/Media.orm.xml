@@ -9,6 +9,7 @@
             <index columns="changed"/>
             <index columns="created"/>
             <index columns="type" />
+            <index columns="classification" />
         </indexes>
 
         <id name="id" type="integer" column="id">
@@ -16,6 +17,7 @@
         </id>
 
         <field name="type" column="type" type="string" length="10" nullable="false" />
+        <field name="classification" column="classification" type="string" length="191" nullable="true" />
 
         <one-to-many field="files" target-entity="Sulu\Bundle\MediaBundle\Entity\File" mapped-by="media">
             <cascade>

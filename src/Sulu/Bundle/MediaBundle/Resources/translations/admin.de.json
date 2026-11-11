@@ -1,5 +1,6 @@
 {
     "sulu_media.media": "Medien",
+    "sulu_media.classification": "Klassifizierung",
     "sulu_media.content_locales": "Inhaltssprachen",
     "sulu_media.content_locale_none": "Keine Sprache gesetzt",
     "sulu_media.collection": "Ordner",
