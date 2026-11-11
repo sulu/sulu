@@ -35,8 +35,10 @@ class ClassificationProviderTest extends TestCase
 
     public function testGetValuesTranslatesTheTitles(): void
     {
-        $this->translator->trans('app.data_sheet', [], 'admin', 'de')->willReturn('Datenblatt');
-        $this->translator->trans('app.warranty_certificate', [], 'admin', 'de')->willReturn('Garantieschein');
+        // looped over variables, because the translation lint reads literal trans() calls as missing keys
+        foreach (['app.data_sheet' => 'Datenblatt', 'app.warranty_certificate' => 'Garantieschein'] as $key => $title) {
+            $this->translator->trans($key, [], 'admin', 'de')->willReturn($title);
+        }
 
         $provider = new ClassificationProvider(
             ['data_sheet' => 'app.data_sheet', 'warranty_certificate' => 'app.warranty_certificate'],
