@@ -32,6 +32,7 @@ class LoadDevelopmentOnlyServicesCompilerPass implements CompilerPassInterface
         }
 
         $definition = (new Definition(NotFoundWelcomeListener::class))
+            ->addArgument('%kernel.project_dir%')
             ->addArgument(new Reference('twig'))
             ->addArgument(new Reference(EntityManagerInterface::class))
             ->addTag('kernel.event_listener', ['event' => 'kernel.exception', 'method' => 'renderWelcomePage']);

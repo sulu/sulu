@@ -25,6 +25,7 @@ use Twig\Environment;
 final readonly class NotFoundWelcomeListener
 {
     public function __construct(
+        private string $projectDirectory,
         private Environment $twig,
         private EntityManagerInterface $entityManager,
     ) {
@@ -36,9 +37,13 @@ final readonly class NotFoundWelcomeListener
             return;
         }
 
-        $event->setResponse(new Response($this->twig->render(
+        $template = $this->twig->render(
             '@SuluWebsite/welcome.html.twig',
-        )));
+            [
+                'workingDirectory' => $this->projectDirectory,
+            ]
+        );
+        $event->setResponse(new Response($template));
     }
 
     /**
