@@ -46,6 +46,9 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
 
     getNode() {
         const {
+            options: {
+                warning_text: warningText = 'sulu_page.delete_draft_warning_text',
+            },
             resourceFormStore: {
                 id,
             },
@@ -53,6 +56,10 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
 
         if (!id) {
             return null;
+        }
+
+        if (typeof warningText !== 'string') {
+            throw new Error('The "warning_text" option must be a string!');
         }
 
         return (
@@ -66,7 +73,7 @@ export default class DeleteDraftToolbarAction extends AbstractFormToolbarAction 
                 open={this.showDeleteDraftDialog}
                 title={translate('sulu_page.delete_draft_warning_title')}
             >
-                {translate('sulu_page.delete_draft_warning_text')}
+                {translate(warningText)}
             </Dialog>
         );
     }

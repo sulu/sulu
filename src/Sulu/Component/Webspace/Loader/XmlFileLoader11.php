@@ -36,6 +36,7 @@ class XmlFileLoader11 extends XmlFileLoader10
         }
 
         $this->generateExcludedTemplates($webspace);
+        $this->generateWebspaceSettingsForm($webspace);
 
         return $webspace;
     }
@@ -97,5 +98,14 @@ class XmlFileLoader11 extends XmlFileLoader10
         }
 
         return $webspace;
+    }
+
+    protected function generateWebspaceSettingsForm(Webspace $webspace): void
+    {
+        foreach ($this->xpath->query('/x:webspace/x:webspace-settings-form') ?: [] as $webspaceSettingsFormNode) {
+            $webspaceSettingsForm = \trim((string) $webspaceSettingsFormNode->nodeValue);
+
+            $webspace->setWebspaceSettingsForm('' !== $webspaceSettingsForm ? $webspaceSettingsForm : null);
+        }
     }
 }

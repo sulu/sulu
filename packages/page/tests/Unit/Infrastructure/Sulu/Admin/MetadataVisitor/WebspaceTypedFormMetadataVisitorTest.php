@@ -57,6 +57,26 @@ class WebspaceTypedFormMetadataVisitorTest extends TestCase
         $this->assertSame('homepage', $typedFormMetadata->getDefaultType());
     }
 
+    public function testDefaultTemplateNotSetForOtherTypedForms(): void
+    {
+        $this->webspace->addDefaultTemplate('page', 'homepage');
+        $this->webspace->addExcludedTemplate('overview');
+
+        $typedFormMetadata = new TypedFormMetadata();
+        $typedFormMetadata->setDefaultType('default');
+        $typedFormMetadata->addForm('overview', new FormMetadata());
+
+        $this->webspaceTypedFormMetadataVisitor->visitTypedFormMetadata(
+            $typedFormMetadata,
+            'webspace_settings',
+            'en',
+            ['webspace' => 'example'],
+        );
+
+        $this->assertSame('default', $typedFormMetadata->getDefaultType());
+        $this->assertArrayHasKey('overview', $typedFormMetadata->getForms());
+    }
+
     public function testDefaultTemplateNotSetForNoWebspace(): void
     {
         $this->webspace->addDefaultTemplate('page', 'homepage');
