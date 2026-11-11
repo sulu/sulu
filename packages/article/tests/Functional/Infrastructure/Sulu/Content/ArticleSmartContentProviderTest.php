@@ -39,6 +39,7 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
  *     locale?: string,
  *     excerptCategories?: int[],
  *     excerptTags?: int[],
+ *     excerptPriority?: int,
  *     author?: int|null,
  *     authored?: string|null,
  *     mainWebspace?: string,
@@ -117,6 +118,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             'excerptCategories' => [self::$categories['tech']->getId()],
             'excerptTags' => [self::$tags['mobile'], self::$tags['web']],
             'authored' => '2023-01-15T12:00:00+00:00',
+            'excerptPriority' => 40,
         ]);
 
         self::$articles['tech2'] = self::createArticle([
@@ -136,6 +138,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             'authored' => '2023-03-10T09:15:00+00:00',
             'customizeWebspaceSettings' => true,
             'additionalWebspace' => ['blog'],
+            'excerptPriority' => 30,
         ]);
 
         self::$articles['sports2'] = self::createArticle([
@@ -151,6 +154,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             'excerptCategories' => [self::$categories['health']->getId()],
             'excerptTags' => [self::$tags['fitness']],
             'authored' => '2023-05-12T08:20:00+00:00',
+            'excerptPriority' => 20,
         ]);
 
         self::$articles['health2'] = self::createArticle([
@@ -165,6 +169,7 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             'excerptCategories' => [self::$categories['business']->getId()],
             'excerptTags' => [self::$tags['startup']],
             'authored' => '2023-07-22T10:00:00+00:00',
+            'excerptPriority' => 10,
         ]);
 
         self::$articles['business2'] = self::createArticle([
@@ -668,6 +673,35 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         // First should be newest
         $this->assertSame('Digital Lifestyle', $result[0]['title']);
         // Last should be oldest
+        $this->assertSame('Latest in Tech', $result[14]['title']);
+    }
+
+    public function testSortByPriorityDesc(): void
+    {
+        // Only tech1 (40), sports1 (30), health1 (20) and business1 (10) have a priority; the rest default to 0.
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], [
+            'priority' => 'desc',
+        ]);
+
+        $this->assertCount(15, $result);
+        // Highest priority first.
+        $this->assertSame('Latest in Tech', $result[0]['title']);
+        $this->assertSame('Football Season', $result[1]['title']);
+        $this->assertSame('Fitness Tips', $result[2]['title']);
+        $this->assertSame('Startup News', $result[3]['title']);
+    }
+
+    public function testSortByPriorityAsc(): void
+    {
+        // Articles without a priority (value 0) come first, the prioritized ones last in ascending order.
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), ...['locale' => 'en']], [
+            'priority' => 'asc',
+        ]);
+
+        $this->assertCount(15, $result);
+        $this->assertSame('Startup News', $result[11]['title']);
+        $this->assertSame('Fitness Tips', $result[12]['title']);
+        $this->assertSame('Football Season', $result[13]['title']);
         $this->assertSame('Latest in Tech', $result[14]['title']);
     }
 

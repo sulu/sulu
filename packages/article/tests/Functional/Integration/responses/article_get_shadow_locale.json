@@ -17,6 +17,7 @@
     "description": null,
     "excerptAudienceTargetGroups": [],
     "excerptCategories": [],
+    "excerptPriority": 0,
     "excerptSegment": null,
     "excerptTags": [],
     "ghostLocale": "en",

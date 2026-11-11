@@ -24,6 +24,7 @@
     },
     "excerptAudienceTargetGroups": [],
     "excerptCategories": [],
+    "excerptPriority": 0,
     "excerptSegment": "updated-segment",
     "excerptTags": [
         "@integer@",

@@ -179,6 +179,15 @@
             <filter type="date"/>
         </property>
 
+        <property name="excerptPriority" type="number" visibility="no" translation="sulu_article.excerpt_priority">
+            <field-name>excerptPriority</field-name>
+            <entity-name>dimensionContent</entity-name>
+
+            <joins ref="dimensionContent"/>
+
+            <filter type="number"/>
+        </property>
+
         <property name="created" translation="sulu_admin.created">
             <field-name>created</field-name>
             <entity-name>dimensionContent</entity-name>

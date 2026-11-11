@@ -52,6 +52,8 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
 
     private bool $customizeWebspaceSettings = false;
 
+    private int $excerptPriority = 0;
+
     /**
      * @var Collection<int, ArticleDimensionContentAdditionalWebspace>
      */
@@ -107,6 +109,18 @@ class ArticleDimensionContent implements ArticleDimensionContentInterface
     public function setCustomizeWebspaceSettings(bool $customizeWebspaceSettings): static
     {
         $this->customizeWebspaceSettings = $customizeWebspaceSettings;
+
+        return $this;
+    }
+
+    public function getExcerptPriority(): int
+    {
+        return $this->excerptPriority;
+    }
+
+    public function setExcerptPriority(int $excerptPriority): static
+    {
+        $this->excerptPriority = $excerptPriority;
 
         return $this;
     }
