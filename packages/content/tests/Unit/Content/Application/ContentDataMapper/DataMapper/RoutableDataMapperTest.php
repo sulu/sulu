@@ -163,9 +163,6 @@ class RoutableDataMapperTest extends TestCase
 
     public function testMapNoLocale(): void
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Expected a LocalizedDimensionContent with a locale.');
-
         $data = [];
 
         $example = new Example();
@@ -177,10 +174,15 @@ class RoutableDataMapperTest extends TestCase
         $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
         $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute());
-        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+
+        try {
+            $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+            $this->fail('Mapping a dimension content without a locale should be rejected.');
+        } catch (\RuntimeException $exception) {
+            $this->assertSame('Expected a LocalizedDimensionContent with a locale.', $exception->getMessage());
+        }
 
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
-        $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
         $this->assertNull($localizedDimensionContent->getRoute());
     }
 
@@ -552,9 +554,6 @@ class RoutableDataMapperTest extends TestCase
 
     public function testMapRoutePropertyFalseName(): void
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Expected a property with the name "url" but "route" given.');
-
         $data = [
             'route' => '/test',
         ];
@@ -570,9 +569,15 @@ class RoutableDataMapperTest extends TestCase
         $this->routeRepository->add(Argument::any())->shouldNotBeCalled();
 
         $mapper = $this->createRouteDataMapperInstance($this->createTypedFormMetadataWithRoute('route'));
-        $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
 
-        $this->assertSame('/test', $localizedDimensionContent->getRoute()?->getSlug());
+        try {
+            $mapper->map($unlocalizedDimensionContent, $localizedDimensionContent, $data);
+            $this->fail('Mapping with a misnamed route property should be rejected.');
+        } catch (\RuntimeException $exception) {
+            $this->assertSame('Expected a property with the name "url" but "route" given.', $exception->getMessage());
+        }
+
+        $this->assertNull($localizedDimensionContent->getRoute());
         $this->assertSame([], $localizedDimensionContent->getTemplateData());
     }
 
