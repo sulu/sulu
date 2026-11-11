@@ -9,6 +9,7 @@
             <index columns="size"/>
             <index columns="version"/>
             <index columns="name"/>
+            <index columns="classification"/>
         </indexes>
 
         <id name="id" type="integer" column="id">
@@ -37,6 +38,7 @@
                 <option name="default">unknown</option>
             </options>
         </field>
+        <field name="classification" type="string" column="classification" length="191" nullable="true" />
         <field name="aiDisclosureDisabled" type="boolean" column="aiDisclosureDisabled" nullable="false">
             <options>
                 <option name="default">0</option>

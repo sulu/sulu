@@ -20,56 +20,56 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20261109000000 extends AbstractMigration
 {
-    private const MEDIA_TABLE = 'me_media';
+    private const FILE_VERSION_TABLE = 'me_file_versions';
 
     public function getDescription(): string
     {
-        return 'Add classification column with index to me_media';
+        return 'Add classification column with index to me_file_versions';
     }
 
     public function up(Schema $schema): void
     {
-        if (!$schema->hasTable(self::MEDIA_TABLE)) {
+        if (!$schema->hasTable(self::FILE_VERSION_TABLE)) {
             return;
         }
 
-        $media = $schema->getTable(self::MEDIA_TABLE);
+        $fileVersion = $schema->getTable(self::FILE_VERSION_TABLE);
 
-        if (!$media->hasColumn('classification')) {
-            $media->addColumn('classification', Types::STRING, [
+        if (!$fileVersion->hasColumn('classification')) {
+            $fileVersion->addColumn('classification', Types::STRING, [
                 'length' => 191,
                 'notnull' => false,
             ]);
         }
 
-        if (!$this->hasClassificationIndex($media)) {
+        if (!$this->hasClassificationIndex($fileVersion)) {
             // unnamed, so that Doctrine generates the same name as the entity mapping does
-            $media->addIndex(['classification']);
+            $fileVersion->addIndex(['classification']);
         }
     }
 
     public function down(Schema $schema): void
     {
-        if (!$schema->hasTable(self::MEDIA_TABLE)) {
+        if (!$schema->hasTable(self::FILE_VERSION_TABLE)) {
             return;
         }
 
-        $media = $schema->getTable(self::MEDIA_TABLE);
+        $fileVersion = $schema->getTable(self::FILE_VERSION_TABLE);
 
-        foreach ($media->getIndexes() as $index) {
+        foreach ($fileVersion->getIndexes() as $index) {
             if (!$index->isPrimary() && $index->spansColumns(['classification'])) {
-                $media->dropIndex($index->getName());
+                $fileVersion->dropIndex($index->getName());
             }
         }
 
-        if ($media->hasColumn('classification')) {
-            $media->dropColumn('classification');
+        if ($fileVersion->hasColumn('classification')) {
+            $fileVersion->dropColumn('classification');
         }
     }
 
-    private function hasClassificationIndex(Table $media): bool
+    private function hasClassificationIndex(Table $fileVersion): bool
     {
-        foreach ($media->getIndexes() as $index) {
+        foreach ($fileVersion->getIndexes() as $index) {
             if ($index->spansColumns(['classification'])) {
                 return true;
             }

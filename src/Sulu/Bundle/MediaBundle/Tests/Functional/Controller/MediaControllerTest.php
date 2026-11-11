@@ -658,10 +658,10 @@ class MediaControllerTest extends SuluTestCase
     {
         /** @var Media $dataSheet */
         $dataSheet = $this->createMedia('data-sheet', 'en-gb', 'document');
-        $dataSheet->setClassification('data_sheet');
+        $this->setClassification($dataSheet, 'data_sheet');
         /** @var Media $warranty */
         $warranty = $this->createMedia('warranty', 'en-gb', 'document');
-        $warranty->setClassification('warranty_certificate');
+        $this->setClassification($warranty, 'warranty_certificate');
         $this->createMedia('unclassified', 'en-gb', 'document');
         $this->em->flush();
 
@@ -683,10 +683,10 @@ class MediaControllerTest extends SuluTestCase
     {
         /** @var Media $dataSheet */
         $dataSheet = $this->createMedia('data-sheet', 'en-gb', 'document');
-        $dataSheet->setClassification('data_sheet');
+        $this->setClassification($dataSheet, 'data_sheet');
         /** @var Media $warranty */
         $warranty = $this->createMedia('warranty', 'en-gb', 'document');
-        $warranty->setClassification('warranty_certificate');
+        $this->setClassification($warranty, 'warranty_certificate');
         $this->createMedia('unclassified', 'en-gb', 'document');
         $this->em->flush();
 
@@ -1119,6 +1119,51 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('My credits', $response->credits);
     }
 
+    public function testFileVersionUpdateKeepsClassification(): void
+    {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $this->setClassification($media, 'data_sheet');
+        $this->em->flush();
+
+        $photo = new UploadedFile($this->getImagePath(), 'photo.jpeg', 'image/jpeg');
+
+        $this->client->request(
+            'POST',
+            '/api/media/' . $media->getId() . '?' . \http_build_query([
+                'locale' => 'en-gb',
+                'action' => 'new-version',
+                'collection' => $this->collection->getId(),
+            ]),
+            ['title' => 'New Image Title'],
+            ['fileVersion' => $photo]
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array{version: int, classification: string|null} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame(2, $response['version']);
+        $this->assertSame('data_sheet', $response['classification']);
+
+        $this->client->jsonRequest(
+            'PUT',
+            '/api/media/' . $media->getId() . '?locale=en-gb',
+            ['collection' => $this->collection->getId(), 'classification' => 'warranty_certificate']
+        );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->em->clear();
+        /** @var File $file */
+        $file = $this->em->getRepository(File::class)->findOneBy(['media' => $media->getId()]);
+        /** @var FileVersion $firstVersion */
+        $firstVersion = $file->getFileVersion(1);
+        /** @var FileVersion $secondVersion */
+        $secondVersion = $file->getFileVersion(2);
+        $this->assertSame('data_sheet', $firstVersion->getClassification());
+        $this->assertSame('warranty_certificate', $secondVersion->getClassification());
+    }
+
     public function testFileVersionDelete(): void
     {
         $media = $this->createMedia('photo');
@@ -1327,6 +1372,15 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotEmpty($response->thumbnails);
     }
 
+    private function setClassification(Media $media, ?string $classification): void
+    {
+        /** @var File $file */
+        $file = $media->getFiles()[0];
+        /** @var FileVersion $fileVersion */
+        $fileVersion = $file->getFileVersion(1);
+        $fileVersion->setClassification($classification);
+    }
+
     public function testPutClassification(): void
     {
         /** @var Media $media */
@@ -1355,7 +1409,7 @@ class MediaControllerTest extends SuluTestCase
     {
         /** @var Media $media */
         $media = $this->createMedia('photo');
-        $media->setClassification('data_sheet');
+        $this->setClassification($media, 'data_sheet');
         $this->em->flush();
 
         $this->client->jsonRequest(

@@ -76,6 +76,8 @@ class FileVersion implements AuditableInterface
 
     private string $origin = 'unknown';
 
+    private ?string $classification = null;
+
     private bool $aiDisclosureDisabled = false;
 
     private string $aiDisclosureIconVariant = 'auto';
@@ -468,6 +470,18 @@ class FileVersion implements AuditableInterface
     public function setOrigin(string $origin): static
     {
         $this->origin = $origin;
+
+        return $this;
+    }
+
+    public function getClassification(): ?string
+    {
+        return $this->classification;
+    }
+
+    public function setClassification(?string $classification): static
+    {
+        $this->classification = $classification;
 
         return $this;
     }

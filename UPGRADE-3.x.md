@@ -115,9 +115,10 @@ bin/console doctrine:migrations:migrate
 
 ### Media classifications
 
-A media can be assigned to a classification, which is stored in the new nullable `classification` column of
-`me_media`. The classifications are configured with a translation key as title and are selectable in the media
-details when at least one is configured:
+A media can be assigned to a classification, which is stored per file version in the new nullable
+`classification` column of `me_file_versions`, so a new version starts with the classification of the previous one
+and old versions keep theirs. The classifications are configured with a translation key as title and are selectable in
+the media details when at least one is configured:
 
 ```yaml
 sulu_media:
@@ -219,9 +220,6 @@ $services->set('acme_product.product_localizations_resolver', ProductLocalizatio
 
 ### BC breaks
 
-- `MediaInterface` gained `setClassification()` and `getClassification()`. A project with its own implementation
-  of the interface (rather than extending the shipped `Media` entity) must implement them and map a nullable
-  `classification` column.
 - `SnippetDimensionContentInterface` now also extends `Sulu\Content\Domain\Model\ShadowInterface`. A
   project with its own implementation of the interface (rather than extending the shipped
   `SnippetDimensionContent`) must implement the `ShadowInterface` methods, most simply by applying
