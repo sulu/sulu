@@ -55,7 +55,8 @@ class MediaSelectionOverlay extends React.Component<Props> {
         collectionId: IObservableValue<?string | number>,
         excludedIds: IObservableValue<?Array<number>>,
         locale: IObservableValue<string>,
-        types: ?Array<string>
+        types: ?Array<string>,
+        classifications: ?Array<string>
     ) {
         const options = {};
 
@@ -75,6 +76,12 @@ class MediaSelectionOverlay extends React.Component<Props> {
         if (isArrayLike(types) && types.length > 0) {
             // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
             options.types = types.join(',');
+        }
+
+        // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+        if (isArrayLike(classifications) && classifications.length > 0) {
+            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+            options.classifications = classifications.join(',');
         }
 
         return new ListStore(

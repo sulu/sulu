@@ -584,6 +584,25 @@ class Media extends ApiWrapper
         return $this;
     }
 
+    public function setClassification(?string $classification): static
+    {
+        /** @var MediaInterface $entity */
+        $entity = $this->entity;
+        $entity->setClassification($classification);
+
+        return $this;
+    }
+
+    #[VirtualProperty]
+    #[SerializedName('classification')]
+    public function getClassification(): ?string
+    {
+        /** @var MediaInterface $entity */
+        $entity = $this->entity;
+
+        return $entity->getClassification();
+    }
+
     /**
      * @param string $type
      *

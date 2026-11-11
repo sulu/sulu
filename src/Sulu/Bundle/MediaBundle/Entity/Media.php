@@ -33,6 +33,8 @@ class Media implements MediaInterface
 
     protected string $type;
 
+    protected ?string $classification = null;
+
     protected ?MediaInterface $previewImage = null;
 
     /**
@@ -94,6 +96,18 @@ class Media implements MediaInterface
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function setClassification(?string $classification): static
+    {
+        $this->classification = $classification;
+
+        return $this;
+    }
+
+    public function getClassification(): ?string
+    {
+        return $this->classification;
     }
 
     public function setPreviewImage(?MediaInterface $previewImage = null): static

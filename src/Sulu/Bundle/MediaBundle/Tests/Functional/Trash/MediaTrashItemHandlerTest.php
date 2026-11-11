@@ -101,6 +101,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $media1 = new Media();
         $media1->setType(MediaInterface::TYPE_IMAGE);
         $media1->setCollection($collection1);
+        $media1->setClassification('data_sheet');
         $media1->setPreviewImage($previewImageMedia);
 
         $media1File1 = new File();
@@ -225,6 +226,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertCount(2, $this->entityManager->getRepository(MediaInterface::class)->findAll());
         static::assertSame($originalMediaId, $restoredMedia->getId());
         static::assertSame($collection2->getId(), $restoredMedia->getCollection()->getId());
+        static::assertSame('data_sheet', $restoredMedia->getClassification());
         static::assertTrue($this->filesystem->exists($this->storage->getPath($file1StorageOptions)));
         static::assertTrue($this->filesystem->exists($this->storage->getPath($file2StorageOptions)));
 

@@ -156,6 +156,29 @@
                     "tags": [],
                     "label": "Origin"
                 },
+                "classification": {
+                    "disabledCondition": null,
+                    "visibleCondition": "false",
+                    "type": "single_select",
+                    "colSpan": 12,
+                    "options": {
+                        "values": {
+                            "name": "values",
+                            "type": "expression",
+                            "value": []
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Classification"
+                },
                 "aiDisclosure": {
                     "disabledCondition": null,
                     "visibleCondition": "origin == 'ai_generated' || origin == 'ai_modified'",

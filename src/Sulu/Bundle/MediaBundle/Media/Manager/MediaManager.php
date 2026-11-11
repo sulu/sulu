@@ -471,6 +471,7 @@ class MediaManager implements MediaManagerInterface
                 || 'focusPointX' === $attribute
                 || 'focusPointY' === $attribute
                 || 'type' === $attribute
+                || 'classification' === $attribute
                 || 'origin' === $attribute
                 || 'aiDisclosureDisabled' === $attribute
                 || 'aiDisclosureText' === $attribute
@@ -579,6 +580,9 @@ class MediaManager implements MediaManagerInterface
                         break;
                     case 'focusPointY':
                         $media->setFocusPointY($value);
+                        break;
+                    case 'classification':
+                        $media->setClassification(\is_string($value) && '' !== $value ? $value : null);
                         break;
                     case 'origin':
                         $media->setOrigin($value ?? 'unknown');

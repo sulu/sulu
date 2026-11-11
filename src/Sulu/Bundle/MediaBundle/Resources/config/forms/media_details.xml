@@ -74,6 +74,16 @@
                     </params>
                 </property>
 
+                <property name="classification" type="single_select">
+                    <meta>
+                        <title>sulu_media.classification</title>
+                    </meta>
+
+                    <params>
+                        <param name="values" type="expression" value="service('sulu_media.classification_provider').getValues(locale)"/>
+                    </params>
+                </property>
+
                 <section name="aiDisclosure" visibleCondition="origin == 'ai_generated' || origin == 'ai_modified'">
                     <meta>
                         <title>sulu_media.ai_disclosure</title>

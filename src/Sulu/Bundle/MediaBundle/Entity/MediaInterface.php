@@ -47,6 +47,10 @@ interface MediaInterface extends AuditableInterface
 
     public function getType(): string;
 
+    public function setClassification(?string $classification): static;
+
+    public function getClassification(): ?string;
+
     public function setPreviewImage(?self $previewImage = null): static;
 
     public function getPreviewImage(): ?self;

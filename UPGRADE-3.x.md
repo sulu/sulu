@@ -113,6 +113,29 @@ them regardless. Run the new migration to apply the schema change:
 bin/console doctrine:migrations:migrate
 ```
 
+### Media classifications
+
+A media can be assigned to a classification, which is stored in the new nullable `classification` column of
+`me_media`. The classifications are configured with a translation key as title and are selectable in the media
+details when at least one is configured:
+
+```yaml
+sulu_media:
+    classifications:
+        data_sheet: app.data_sheet
+        warranty_certificate: app.warranty_certificate
+```
+
+The keys may consist of letters, digits, `_` and `-`. Run the new migration to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
+The `classifications` parameter of the `media_selection` and `single_media_selection` fields and the
+`classifications` query parameter of the media list API restrict the media to the given classifications,
+several of them separated by commas.
+
 ### Text editor configs decide which CKEditor plugins are loaded
 
 Which plugins a `text_editor` property loads now follows from the tags and attributes its text editor config enables.
@@ -196,6 +219,9 @@ $services->set('acme_product.product_localizations_resolver', ProductLocalizatio
 
 ### BC breaks
 
+- `MediaInterface` gained `setClassification()` and `getClassification()`. A project with its own implementation
+  of the interface (rather than extending the shipped `Media` entity) must implement them and map a nullable
+  `classification` column.
 - `SnippetDimensionContentInterface` now also extends `Sulu\Content\Domain\Model\ShadowInterface`. A
   project with its own implementation of the interface (rather than extending the shipped
   `SnippetDimensionContent`) must implement the `ShadowInterface` methods, most simply by applying

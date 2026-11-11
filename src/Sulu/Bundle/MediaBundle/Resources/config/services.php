@@ -44,6 +44,7 @@ use Sulu\Bundle\MediaBundle\EventListener\CacheInvalidationListener;
 use Sulu\Bundle\MediaBundle\FileInspector\SvgFileInspector;
 use Sulu\Bundle\MediaBundle\FileInspector\SvgSanitizerFactory;
 use Sulu\Bundle\MediaBundle\FileInspector\UploadFileSubscriber;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Admin\ClassificationFormMetadataVisitor;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\SmartContent\MediaSmartContentProvider;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\Visitor\MediaSmartContentFiltersVisitor;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\ListBuilder\ContentLocaleFilterType;
@@ -52,6 +53,7 @@ use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminCollectionReindexPro
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaIndexListener;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Search\AdminMediaReindexProvider;
 use Sulu\Bundle\MediaBundle\Markup\Link\MediaLinkProvider;
+use Sulu\Bundle\MediaBundle\Media\Classification\ClassificationProvider;
 use Sulu\Bundle\MediaBundle\Media\ContentLocale\ContentLocaleProvider;
 use Sulu\Bundle\MediaBundle\Media\DispositionType\DispositionTypeResolver;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidator;
@@ -551,6 +553,19 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_media.validity_form_metadata_visitor', MediaValidityFormMetadataVisitor::class)
         ->args(['%sulu_media.validity%'])
+        ->tag('sulu_admin.form_metadata_visitor');
+
+    $services->set('sulu_media.classification_provider', ClassificationProvider::class)
+        ->public()
+        ->args([
+            '%sulu_media.classifications%',
+            new Reference('translator'),
+        ]);
+
+    $services->set('sulu_media.classification_form_metadata_visitor', ClassificationFormMetadataVisitor::class)
+        ->args([
+            new Reference('sulu_media.classification_provider'),
+        ])
         ->tag('sulu_admin.form_metadata_visitor');
 
     $services->set('sulu_media.content_locale_filter_type', ContentLocaleFilterType::class)
