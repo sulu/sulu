@@ -586,9 +586,7 @@ class Media extends ApiWrapper
 
     public function setClassification(?string $classification): static
     {
-        /** @var MediaInterface $entity */
-        $entity = $this->entity;
-        $entity->setClassification($classification);
+        $this->getFileVersion()->setClassification($classification);
 
         return $this;
     }
@@ -597,10 +595,7 @@ class Media extends ApiWrapper
     #[SerializedName('classification')]
     public function getClassification(): ?string
     {
-        /** @var MediaInterface $entity */
-        $entity = $this->entity;
-
-        return $entity->getClassification();
+        return $this->getFileVersion()->getClassification();
     }
 
     /**

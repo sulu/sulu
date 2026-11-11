@@ -127,7 +127,9 @@
 
         <property name="classification" translation="sulu_media.classification" visibility="never">
             <field-name>classification</field-name>
-            <entity-name>%sulu.model.media.class%</entity-name>
+            <entity-name>Sulu\Bundle\MediaBundle\Entity\FileVersion</entity-name>
+
+            <joins ref="fileVersion"/>
         </property>
 
         <property name="type" translation="sulu_media.type" visibility="always">
