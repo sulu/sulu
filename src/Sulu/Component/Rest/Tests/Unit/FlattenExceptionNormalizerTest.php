@@ -11,17 +11,23 @@
 
 namespace Sulu\Component\Rest\Tests\Unit;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\Exception\ExceptionResponseDataInterface;
+use Sulu\Component\Rest\Exception\FieldErrorsExceptionInterface;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundException;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessagesExceptionInterface;
 use Sulu\Component\Rest\FlattenExceptionNormalizer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FlattenExceptionNormalizerTest extends TestCase
@@ -512,5 +518,138 @@ class FlattenExceptionNormalizerTest extends TestCase
             'The keys travel to the frontend as they are.'
         );
         $this->assertSame('Unprocessable Entity', $result['message']);
+    }
+
+    public function testNormalizeFieldErrorsExceptionTranslatesTheTitles(): void
+    {
+        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $normalizer = new FlattenExceptionNormalizer(
+            $decoratedNormalizer->reveal(),
+            $translator->reveal()
+        );
+
+        $exception = new class('Invalid form data', 1109) extends \Exception implements FieldErrorsExceptionInterface {
+            public function getFieldErrors(): array
+            {
+                return [
+                    ['propertyPath' => 'name', 'key' => 'sulu_security.name_assigned_to_other_role', 'parameters' => ['name' => 'Editor']],
+                    ['propertyPath' => 'blocks[0].key', 'title' => 'Already translated.'],
+                    ['propertyPath' => 'blocks[0].key', 'key' => 'sulu_admin.error_required'],
+                ];
+            }
+        };
+
+        $flattenException = FlattenException::createFromThrowable($exception);
+
+        $decoratedNormalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        )->willReturn(['code' => 422, 'message' => 'Unprocessable Entity']);
+
+        $translator->trans('sulu_security.name_assigned_to_other_role', ['{name}' => 'Editor'], 'admin')
+            ->willReturn('The name "Editor" is already assigned to another role.');
+        $translator->trans('sulu_admin.error_required', [], 'admin')
+            ->willReturn('This field must have a value');
+
+        $result = $normalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        );
+
+        $this->assertSame(
+            [
+                ['propertyPath' => 'name', 'title' => 'The name "Editor" is already assigned to another role.'],
+                ['propertyPath' => 'blocks[0].key', 'title' => 'Already translated.'],
+                ['propertyPath' => 'blocks[0].key', 'title' => 'This field must have a value'],
+            ],
+            $result['violations'],
+            'A property path may repeat, one entry per message.'
+        );
+        $this->assertArrayNotHasKey('detail', $result);
+    }
+
+    /**
+     * @return iterable<string, array{0: \Throwable}>
+     */
+    public static function provideValidationFailedException(): iterable
+    {
+        $violations = new ConstraintViolationList([
+            new ConstraintViolation('This value is too short.', null, [], null, 'title', 'ab'),
+            new ConstraintViolation('This value is not valid.', null, [], null, 'blocks[0].key', 'a b'),
+            new ConstraintViolation('The form is not valid.', null, [], null, '', null),
+        ]);
+
+        yield 'thrown by itself' => [new ValidationFailedException('data', $violations)];
+        yield 'previous exception of an http exception' => [
+            new UnprocessableEntityHttpException('Invalid', new ValidationFailedException('data', $violations)),
+        ];
+    }
+
+    #[DataProvider('provideValidationFailedException')]
+    public function testNormalizeValidationFailedExceptionAddsTheViolations(\Throwable $exception): void
+    {
+        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $normalizer = new FlattenExceptionNormalizer(
+            $decoratedNormalizer->reveal(),
+            $translator->reveal()
+        );
+
+        $flattenException = FlattenException::createFromThrowable($exception);
+
+        $decoratedNormalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        )->willReturn(['code' => 0, 'message' => 'Unprocessable Entity']);
+
+        $result = $normalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        );
+
+        $this->assertSame(
+            [
+                ['propertyPath' => 'title', 'title' => 'This value is too short.'],
+                ['propertyPath' => 'blocks[0].key', 'title' => 'This value is not valid.'],
+                ['propertyPath' => '', 'title' => 'The form is not valid.'],
+            ],
+            $result['violations'],
+            'The property paths are not changed, the admin reads the notation of the validator.'
+        );
+    }
+
+    public function testNormalizeWithoutViolationsHasNoViolationsKey(): void
+    {
+        $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
+        $translator = $this->prophesize(TranslatorInterface::class);
+
+        $normalizer = new FlattenExceptionNormalizer(
+            $decoratedNormalizer->reveal(),
+            $translator->reveal()
+        );
+
+        $exception = new UnprocessableEntityHttpException('Invalid', new \RuntimeException('Something else'));
+        $flattenException = FlattenException::createFromThrowable($exception);
+
+        $decoratedNormalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        )->willReturn(['code' => 0, 'message' => 'Unprocessable Entity']);
+
+        $result = $normalizer->normalize(
+            $flattenException,
+            'json',
+            ['exception' => $exception, 'debug' => false]
+        );
+
+        $this->assertArrayNotHasKey('violations', $result);
     }
 }

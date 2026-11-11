@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\SecurityBundle\Exception;
 
+use Sulu\Component\Rest\Exception\FieldErrorsExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 
 /**
  * Exception is thrown when a Role is created or updated with an already existing key.
  */
-class RoleKeyAlreadyExistsException extends \Exception implements TranslationErrorMessageExceptionInterface
+class RoleKeyAlreadyExistsException extends \Exception implements TranslationErrorMessageExceptionInterface, FieldErrorsExceptionInterface
 {
     /**
      * @param string $key
@@ -44,5 +45,16 @@ class RoleKeyAlreadyExistsException extends \Exception implements TranslationErr
     public function getMessageTranslationParameters(): array
     {
         return ['{key}' => $this->key];
+    }
+
+    public function getFieldErrors(): array
+    {
+        return [
+            [
+                'propertyPath' => 'key',
+                'key' => $this->getMessageTranslationKey(),
+                'parameters' => ['key' => $this->key],
+            ],
+        ];
     }
 }

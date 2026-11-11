@@ -71,6 +71,7 @@ test('Should return the id from the ResourceFormStore', () => {
 
 test('Should return the errors from the ResourceFormStore', () => {
     const formStore = new ResourceFormStore(new ResourceStore('test', 3), 'test');
+    // $FlowFixMe: the errors are a getter of the real store
     formStore.errors = {};
     const formInspector = new FormInspector(formStore);
 

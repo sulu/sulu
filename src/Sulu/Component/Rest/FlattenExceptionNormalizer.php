@@ -12,12 +12,14 @@
 namespace Sulu\Component\Rest;
 
 use Sulu\Component\Rest\Exception\ExceptionResponseDataInterface;
+use Sulu\Component\Rest\Exception\FieldErrorsExceptionInterface;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessagesExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -91,17 +93,21 @@ class FlattenExceptionNormalizer implements NormalizerInterface
         if ($contextException instanceof TranslationErrorMessagesExceptionInterface) {
             $messages = [];
             foreach ($contextException->getMessageTranslations() as $translation) {
-                $parameters = [];
-                foreach ($translation['parameters'] as $name => $value) {
-                    $parameters['{' . $name . '}'] = $value;
-                }
-
-                $messages[] = $this->translator->trans($translation['key'], $parameters, 'admin');
+                $messages[] = $this->translator->trans(
+                    $translation['key'],
+                    $this->wrapParameters($translation['parameters']),
+                    'admin'
+                );
             }
 
             if ([] !== $messages) {
                 $data['detail'] = \implode(' ', $messages);
             }
+        }
+
+        $violations = $this->getViolations($contextException);
+        if ([] !== $violations) {
+            $data['violations'] = $violations;
         }
 
         if ($contextException instanceof ExceptionResponseDataInterface) {
@@ -115,6 +121,63 @@ class FlattenExceptionNormalizer implements NormalizerInterface
         }
 
         return $data;
+    }
+
+    /**
+     * Collects the violations in the structure of the Symfony serializer, from an exception implementing the
+     * FieldErrorsExceptionInterface and from the ValidationFailedException of the validator, which is either the
+     * exception itself or the previous exception of an HTTP exception.
+     *
+     * @return list<array{propertyPath: string, title: string}>
+     */
+    private function getViolations(mixed $exception): array
+    {
+        $violations = [];
+
+        if ($exception instanceof FieldErrorsExceptionInterface) {
+            foreach ($exception->getFieldErrors() as $fieldError) {
+                $violations[] = [
+                    'propertyPath' => $fieldError['propertyPath'],
+                    'title' => isset($fieldError['title'])
+                        ? $fieldError['title']
+                        : $this->translator->trans(
+                            $fieldError['key'],
+                            $this->wrapParameters($fieldError['parameters'] ?? []),
+                            'admin'
+                        ),
+                ];
+            }
+        }
+
+        if ($exception instanceof \Throwable && !$exception instanceof ValidationFailedException) {
+            $exception = $exception->getPrevious();
+        }
+
+        if ($exception instanceof ValidationFailedException) {
+            foreach ($exception->getViolations() as $violation) {
+                $violations[] = [
+                    'propertyPath' => $violation->getPropertyPath(),
+                    'title' => (string) $violation->getMessage(),
+                ];
+            }
+        }
+
+        return $violations;
+    }
+
+    /**
+     * @param array<string, float|int|string> $parameters
+     *
+     * @return array<string, float|int|string>
+     */
+    private function wrapParameters(array $parameters): array
+    {
+        $wrapped = [];
+        foreach ($parameters as $name => $value) {
+            $wrapped['{' . $name . '}'] = $value;
+        }
+
+        return $wrapped;
     }
 
     /**

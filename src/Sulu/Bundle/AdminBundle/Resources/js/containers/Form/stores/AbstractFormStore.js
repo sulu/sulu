@@ -3,9 +3,19 @@ import {action, computed, isArrayLike, observable, set, toJS} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
 import type {IObservableValue} from 'mobx/lib/mobx';
-import type {Schema, SchemaEntry} from '../types';
+import type {Schema, SchemaEntry, Violation} from '../types';
 
 export const SECTION_TYPE = 'section';
+
+/**
+ * Turns the property path of a violation into the data path of the form, e.g. both `blocks[0].key` and
+ * `[blocks][0][key]` become `/blocks/0/key`. Returns an empty string for a violation that belongs to no field.
+ */
+export function propertyPathToDataPath(propertyPath: string): string {
+    const segments = (propertyPath || '').match(/\[[^\]]*\]|[^.[\]]+/g) || [];
+
+    return segments.map((segment) => segment.replace(/^\[|\]$/g, '')).map((segment) => '/' + segment).join('');
+}
 
 function deepMerge(base: Object, override: Object): Object {
     const result = {...base};
@@ -153,7 +163,9 @@ export default class AbstractFormStore
     +locale: ?IObservableValue<string>;
     @observable schema: Schema;
     modifiedFields: Array<string> = [];
-    @observable errors: Object = {};
+    @observable schemaErrors: Object = {};
+    // keyed by the data path of the field, e.g. "/blocks/0/key"
+    @observable serverErrors: {[dataPath: string]: Array<string>} = {};
     validator: ?(data: Object) => boolean;
     pathsByTag: {[tagName: string]: Array<string>} = {};
 
@@ -222,18 +234,78 @@ export default class AbstractFormStore
             }
         }
 
-        this.errors = errors;
+        this.schemaErrors = errors;
 
-        if (this.hasErrors) {
-            log.info('Form validation detected the following errors: ', toJS(this.errors));
+        if (Object.keys(errors).length > 0) {
+            log.info('Form validation detected the following errors: ', toJS(errors));
             return false;
         }
 
         return true;
     }
 
+    // Errors the server named for a field are merged into the ones of the schema, but do not take part in validate():
+    // the server decides again on the next save, so one that went stale must not block the request.
+    @computed get errors(): Object {
+        const errors = toJS(this.schemaErrors);
+
+        Object.keys(this.serverErrors).forEach((dataPath) => {
+            jsonpointer.set(errors, dataPath, {messages: toJS(this.serverErrors[dataPath])});
+        });
+
+        return errors;
+    }
+
     @computed get hasErrors() {
         return Object.keys(this.errors).length > 0;
+    }
+
+    @action setServerErrors(violations: Array<Violation>) {
+        const serverErrors = {};
+
+        violations.forEach(({propertyPath, title}) => {
+            const dataPath = propertyPathToDataPath(propertyPath);
+
+            // a violation without a property path belongs to the whole form and has no field to be shown at
+            if (!dataPath) {
+                return;
+            }
+
+            serverErrors[dataPath] = [...(serverErrors[dataPath] || []), title];
+        });
+
+        this.serverErrors = serverErrors;
+    }
+
+    /**
+     * Removes the errors of the server for a field that was changed, or all of them without a data path.
+     * A change inside of a block also removes the errors of the block, and the other way around.
+     */
+    @action clearServerErrors(dataPath?: string) {
+        if (Object.keys(this.serverErrors).length === 0) {
+            return;
+        }
+
+        if (dataPath === undefined) {
+            this.serverErrors = {};
+
+            return;
+        }
+
+        const sanitizedDataPath = dataPath.startsWith('/') ? dataPath : '/' + dataPath;
+        const serverErrors = {};
+
+        Object.keys(this.serverErrors).forEach((errorPath) => {
+            const related = errorPath === sanitizedDataPath
+                || errorPath.startsWith(sanitizedDataPath + '/')
+                || sanitizedDataPath.startsWith(errorPath + '/');
+
+            if (!related) {
+                serverErrors[errorPath] = this.serverErrors[errorPath];
+            }
+        });
+
+        this.serverErrors = serverErrors;
     }
 
     getValueByPath = (dataPath: string): mixed => {

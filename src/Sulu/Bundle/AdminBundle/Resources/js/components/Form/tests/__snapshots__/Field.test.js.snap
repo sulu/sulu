@@ -44,7 +44,15 @@ exports[`Display a field with an error 1`] = `
       <div
         class="errorLabel"
       >
-        Error! Help!
+        <div
+          class="errorMessage"
+        >
+          <span
+            aria-label="su-exclamation-triangle"
+            class="su-exclamation-triangle errorIcon"
+          />
+          Error! Help!
+        </div>
       </div>
     </div>
   </div>
