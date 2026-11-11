@@ -69,7 +69,6 @@ final class MediaTrashItemHandler implements
         $data = [
             'collectionId' => $media->getCollection()->getId(),
             'type' => $media->getType(),
-            'classification' => $media->getClassification(),
             'previewImageId' => $previewImage ? $previewImage->getId() : null,
             'created' => $media->getCreated()->format('c'),
             'creatorId' => $creator ? $creator->getId() : null,
@@ -108,6 +107,7 @@ final class MediaTrashItemHandler implements
                     'focusPointX' => $fileVersion->getFocusPointX(),
                     'focusPointY' => $fileVersion->getFocusPointY(),
                     'origin' => $fileVersion->getOrigin(),
+                    'classification' => $fileVersion->getClassification(),
                     'aiDisclosureDisabled' => $fileVersion->getAiDisclosureDisabled(),
                     'aiDisclosureIconVariant' => $fileVersion->getAiDisclosureIconVariant(),
                     'contentLocales' => $fileVersion->getContentLocales(),
@@ -199,10 +199,6 @@ final class MediaTrashItemHandler implements
             $media->setType($data['type']);
         }
 
-        if (\is_string($data['classification'] ?? null)) {
-            $media->setClassification($data['classification']);
-        }
-
         $media->setPreviewImage($this->findEntity(MediaInterface::class, $data['previewImageId']));
         $media->setCreated(new \DateTimeImmutable($data['created']));
         $media->setCreator($this->findEntity(UserInterface::class, $data['creatorId']));
@@ -244,6 +240,9 @@ final class MediaTrashItemHandler implements
                 $fileVersion->setFocusPointY($focusPointY);
                 $fileVersion->setCreated(new \DateTimeImmutable($fileVersionData['created']));
                 $fileVersion->setOrigin($fileVersionData['origin'] ?? 'unknown');
+                /** @var string|null $classification */
+                $classification = $fileVersionData['classification'] ?? null;
+                $fileVersion->setClassification($classification);
                 $fileVersion->setAiDisclosureDisabled($fileVersionData['aiDisclosureDisabled'] ?? false);
                 $fileVersion->setAiDisclosureIconVariant($fileVersionData['aiDisclosureIconVariant'] ?? 'auto');
                 $contentLocales = $fileVersionData['contentLocales'] ?? [];
