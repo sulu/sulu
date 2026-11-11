@@ -76,9 +76,15 @@ class FileVersion implements AuditableInterface
 
     private string $origin = 'unknown';
 
+    private ?string $classification = null;
+
     private bool $aiDisclosureDisabled = false;
 
     private string $aiDisclosureIconVariant = 'auto';
+
+    private ?\DateTimeImmutable $validFrom = null;
+
+    private ?\DateTimeImmutable $validTo = null;
 
     public function __construct()
     {
@@ -468,6 +474,18 @@ class FileVersion implements AuditableInterface
         return $this;
     }
 
+    public function getClassification(): ?string
+    {
+        return $this->classification;
+    }
+
+    public function setClassification(?string $classification): static
+    {
+        $this->classification = $classification;
+
+        return $this;
+    }
+
     public function getAiDisclosureDisabled(): bool
     {
         return $this->aiDisclosureDisabled;
@@ -488,6 +506,30 @@ class FileVersion implements AuditableInterface
     public function setAiDisclosureIconVariant(string $aiDisclosureIconVariant): static
     {
         $this->aiDisclosureIconVariant = $aiDisclosureIconVariant;
+
+        return $this;
+    }
+
+    public function getValidFrom(): ?\DateTimeImmutable
+    {
+        return $this->validFrom;
+    }
+
+    public function setValidFrom(?\DateTimeImmutable $validFrom): static
+    {
+        $this->validFrom = $validFrom;
+
+        return $this;
+    }
+
+    public function getValidTo(): ?\DateTimeImmutable
+    {
+        return $this->validTo;
+    }
+
+    public function setValidTo(?\DateTimeImmutable $validTo): static
+    {
+        $this->validTo = $validTo;
 
         return $this;
     }

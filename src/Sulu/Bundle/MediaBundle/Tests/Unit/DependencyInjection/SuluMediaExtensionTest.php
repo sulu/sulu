@@ -17,6 +17,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\DependencyInjection\SuluMediaExtension;
 use Sulu\Bundle\MediaBundle\EventListener\ParallelImageGenerationLimiter;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Semaphore\SemaphoreFactory;
@@ -41,6 +42,36 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         return [
             new SuluMediaExtension($this->executableFinder->reveal()),
         ];
+    }
+
+    public function testLoadClassifications(): void
+    {
+        $this->executableFinder->find(Argument::any())->willReturn(true);
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->load(['classifications' => ['data_sheet' => 'app.data_sheet']]);
+
+        $this->assertContainerBuilderHasParameter('sulu_media.classifications', ['data_sheet' => 'app.data_sheet']);
+    }
+
+    public function testLoadWithoutClassifications(): void
+    {
+        $this->executableFinder->find(Argument::any())->willReturn(true);
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->load();
+
+        $this->assertContainerBuilderHasParameter('sulu_media.classifications', []);
+    }
+
+    public function testLoadInvalidClassificationKey(): void
+    {
+        $this->executableFinder->find(Argument::any())->willReturn(true);
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->expectException(InvalidConfigurationException::class);
+
+        $this->load(['classifications' => ['data,sheet' => 'app.data_sheet']]);
     }
 
     public function testLoad(): void
@@ -123,6 +154,26 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->load([]);
 
         $this->assertContainerBuilderNotHasService('sulu_media.parallel_image_generation.limiter');
+    }
+
+    public function testLoadWithoutValidity(): void
+    {
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->load([]);
+
+        $this->assertContainerBuilderHasParameter('sulu_media.validity', false);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument('sulu_media.validity_form_metadata_visitor', 0, '%sulu_media.validity%');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag('sulu_media.validity_form_metadata_visitor', 'sulu_admin.form_metadata_visitor');
+    }
+
+    public function testLoadWithValidity(): void
+    {
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->load(['validity' => true]);
+
+        $this->assertContainerBuilderHasParameter('sulu_media.validity', true);
     }
 
     public function testConfigureFileValidator(): void

@@ -142,6 +142,7 @@ class MediaController extends AbstractMediaController implements
         /** @var UserInterface $user */
         $user = $this->getUser();
         $types = \array_filter(\explode(',', $request->query->getString('types', '')));
+        $classifications = \array_filter(\explode(',', $request->query->getString('classifications', '')));
 
         $collectionId = $request->query->get('collection');
         $collectionId = $collectionId ? (int) $collectionId : null;
@@ -157,7 +158,8 @@ class MediaController extends AbstractMediaController implements
             $user,
             $types,
             !$request->query->get('sortBy'),
-            $collectionId
+            $collectionId,
+            $classifications
         );
 
         $listRepresentation = $this->mediaListRepresentationFactory->getListRepresentation(

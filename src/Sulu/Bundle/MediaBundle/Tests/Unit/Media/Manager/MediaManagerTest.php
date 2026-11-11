@@ -36,6 +36,8 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidValidityDateException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidValidityRangeException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
@@ -744,6 +746,205 @@ class MediaManagerTest extends TestCase
         $this->assertSame('dark', $fileVersion->getAiDisclosureIconVariant());
         $this->assertSame('Generated with AI', $fileVersionMeta->getAiDisclosureText());
         $this->assertSame(0, $fileVersion->getSubVersion());
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideValidity')]
+    public function testSaveWithValidity(
+        ?string $currentValidFrom,
+        ?string $currentValidTo,
+        array $data,
+        ?string $expectedValidFrom,
+        ?string $expectedValidTo,
+    ): void {
+        $fileVersion = $this->saveWithValidity($currentValidFrom, $currentValidTo, $data);
+
+        $this->assertSame($expectedValidFrom, $fileVersion->getValidFrom()?->format('Y-m-d'));
+        $this->assertSame($expectedValidTo, $fileVersion->getValidTo()?->format('Y-m-d'));
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInvalidValidityRange')]
+    public function testSaveWithInvalidValidityRange(?string $currentValidFrom, ?string $currentValidTo, array $data): void
+    {
+        $this->expectException(InvalidValidityRangeException::class);
+
+        $this->saveWithValidity($currentValidFrom, $currentValidTo, $data);
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInvalidValidityDate')]
+    public function testSaveWithInvalidValidityDate(string $attribute, string $value): void
+    {
+        $this->expectException(InvalidValidityDateException::class);
+
+        $this->saveWithValidity(null, null, [$attribute => $value]);
+    }
+
+    public function testCreateWithInvalidValidityRangeStoresNoFile(): void
+    {
+        $uploadedFile = $this->prophesizeUploadedFile('image/jpeg');
+
+        $this->storage->save(Argument::cetera())->shouldNotBeCalled();
+        $this->mediaRepository->createNew()->shouldNotBeCalled();
+
+        $this->expectException(InvalidValidityRangeException::class);
+
+        $this->mediaManager->save(
+            $uploadedFile->reveal(),
+            ['locale' => 'en', 'title' => 'test', 'validFrom' => '2026-05-02', 'validTo' => '2026-05-01'],
+            null,
+        );
+    }
+
+    public function testCreateWithInvalidValidityDateStoresNoFile(): void
+    {
+        $uploadedFile = $this->prophesizeUploadedFile('image/jpeg');
+
+        $this->storage->save(Argument::cetera())->shouldNotBeCalled();
+        $this->mediaRepository->createNew()->shouldNotBeCalled();
+
+        $this->expectException(InvalidValidityDateException::class);
+
+        $this->mediaManager->save(
+            $uploadedFile->reveal(),
+            ['locale' => 'en', 'title' => 'test', 'validFrom' => 'not-a-date'],
+            null,
+        );
+    }
+
+    public function testNewVersionWithInvalidValidityRangeStoresNoFile(): void
+    {
+        $uploadedFile = $this->prophesizeUploadedFile('image/jpeg');
+        $this->typeManager->getMediaType('image/jpeg')->willReturn(MediaInterface::TYPE_IMAGE);
+
+        $media = new Media();
+        static::setPrivateProperty($media, 'id', 1);
+        $file = new File();
+        $file->setVersion(1);
+        $file->setMedia($media);
+        $media->addFile($file);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setName('test');
+        $fileVersion->setVersion(1);
+        $fileVersion->setMimeType('image/jpeg');
+        $fileVersion->setValidFrom(new \DateTimeImmutable('2026-05-02'));
+        $fileVersion->setFile($file);
+        $file->addFileVersion($fileVersion);
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+
+        $this->storage->save(Argument::cetera())->shouldNotBeCalled();
+
+        try {
+            $this->mediaManager->save($uploadedFile->reveal(), ['id' => 1, 'locale' => 'en', 'validTo' => '2026-05-01'], null);
+            $this->fail('The invalid validity range was not rejected.');
+        } catch (InvalidValidityRangeException) {
+        }
+
+        $this->assertCount(1, $file->getFileVersions());
+        $this->assertSame(1, $file->getVersion());
+    }
+
+    /**
+     * @return ObjectProphecy<UploadedFile>
+     */
+    private function prophesizeUploadedFile(string $mimeType): ObjectProphecy
+    {
+        /** @var ObjectProphecy<UploadedFile> $uploadedFile */
+        $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . \DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
+        $uploadedFile->getClientOriginalName()->willReturn('test.jpg');
+        $uploadedFile->getPathname()->willReturn('');
+        $uploadedFile->getSize()->willReturn('123');
+        $uploadedFile->getMimeType()->willReturn($mimeType);
+
+        return $uploadedFile;
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function saveWithValidity(?string $currentValidFrom, ?string $currentValidTo, array $data): FileVersion
+    {
+        $media = new Media();
+        static::setPrivateProperty($media, 'id', 1);
+
+        $file = new File();
+        $file->setVersion(1);
+        $file->setMedia($media);
+        $media->addFile($file);
+
+        $fileVersion = new FileVersion();
+        $fileVersion->setName('test');
+        $fileVersion->setVersion(1);
+        $fileVersion->setMimeType('image/jpeg');
+        $fileVersion->setValidFrom($currentValidFrom ? new \DateTimeImmutable($currentValidFrom) : null);
+        $fileVersion->setValidTo($currentValidTo ? new \DateTimeImmutable($currentValidTo) : null);
+        $fileVersion->setFile($file);
+        $file->addFileVersion($fileVersion);
+
+        $fileVersionMeta = new FileVersionMeta();
+        $fileVersionMeta->setLocale('en');
+        $fileVersionMeta->setTitle('test');
+        $fileVersionMeta->setFileVersion($fileVersion);
+        $fileVersion->addMeta($fileVersionMeta);
+        $fileVersion->setDefaultMeta($fileVersionMeta);
+
+        $this->mediaRepository->findMediaById(1)->willReturn($media);
+        $this->formatManager->getFormats(Argument::cetera())->willReturn([]);
+
+        $this->domainEventCollector->collect(Argument::type(MediaModifiedEvent::class));
+
+        $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', ...$data], 1);
+
+        return $fileVersion;
+    }
+
+    /**
+     * @return iterable<string, array{?string, ?string, array<string, mixed>, ?string, ?string}>
+     */
+    public static function provideValidity(): iterable
+    {
+        yield 'both' => [null, null, ['validFrom' => '2026-01-15', 'validTo' => '2026-12-31'], '2026-01-15', '2026-12-31'];
+        yield 'only from' => [null, null, ['validFrom' => '2026-01-15'], '2026-01-15', null];
+        yield 'only to' => [null, null, ['validTo' => '2026-12-31'], null, '2026-12-31'];
+        yield 'datetime string from the admin' => [null, null, ['validFrom' => '2026-01-15T00:00:00'], '2026-01-15', null];
+        yield 'clear from with null' => ['2026-01-15', '2026-12-31', ['validFrom' => null], null, '2026-12-31'];
+        yield 'clear to with empty string' => ['2026-01-15', '2026-12-31', ['validTo' => ''], '2026-01-15', null];
+        yield 'absent keys keep the values' => ['2026-01-15', '2026-12-31', ['title' => 'other'], '2026-01-15', '2026-12-31'];
+        yield 'same day' => [null, null, ['validFrom' => '2026-05-01', 'validTo' => '2026-05-01'], '2026-05-01', '2026-05-01'];
+        yield 'same day with an end time before the start time' => [null, null, ['validFrom' => '2026-05-01T10:00:00', 'validTo' => '2026-05-01T09:00:00'], '2026-05-01', '2026-05-01'];
+        yield 'same day with an offset' => [null, null, ['validFrom' => '2026-05-01', 'validTo' => '2026-05-01T00:00:00+05:00'], '2026-05-01', '2026-05-01'];
+        yield 'datetime with a space' => [null, null, ['validTo' => '2026-05-01 23:59:59'], null, '2026-05-01'];
+        yield 'unrelated save keeps an invalid range untouched' => ['2026-12-31', '2026-01-01', ['title' => 'other'], '2026-12-31', '2026-01-01'];
+    }
+
+    /**
+     * @return iterable<string, array{?string, ?string, array<string, mixed>}>
+     */
+    public static function provideInvalidValidityRange(): iterable
+    {
+        yield 'to before from' => [null, null, ['validFrom' => '2026-05-02', 'validTo' => '2026-05-01']];
+        yield 'to before the current from' => ['2026-05-02', null, ['validTo' => '2026-05-01']];
+        yield 'from after the current to' => [null, '2026-05-01', ['validFrom' => '2026-05-02']];
+    }
+
+    /**
+     * @return iterable<string, array{string, string}>
+     */
+    public static function provideInvalidValidityDate(): iterable
+    {
+        foreach (['validFrom', 'validTo'] as $attribute) {
+            yield $attribute . ' not a date' => [$attribute, 'not-a-date'];
+            yield $attribute . ' relative expression' => [$attribute, 'tomorrow'];
+            yield $attribute . ' day rolling over' => [$attribute, '2026-02-30'];
+            yield $attribute . ' other format' => [$attribute, '01.05.2026'];
+            yield $attribute . ' date with trailing garbage' => [$attribute, '2026-05-01 garbage'];
+        }
     }
 
     public function testMediaPropertiesProvider(): void

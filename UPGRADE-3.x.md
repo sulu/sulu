@@ -103,6 +103,40 @@ existing table from 2.x and its rows are kept. Run the new migration to apply th
 bin/console doctrine:migrations:migrate
 ```
 
+### Media validity columns
+
+Media file versions gained the optional `validFrom` and `validTo` dates, which add two nullable date columns to
+`me_file_versions`. The fields only show in the admin with `sulu_media: validity: true`, the API accepts and returns
+them regardless. Run the new migration to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
+### Media classifications
+
+A media can be assigned to a classification, which is stored per file version in the new nullable
+`classification` column of `me_file_versions`, so a new version starts with the classification of the previous one
+and old versions keep theirs. The classifications are configured with a translation key as title and are selectable in
+the media details when at least one is configured:
+
+```yaml
+sulu_media:
+    classifications:
+        data_sheet: app.data_sheet
+        warranty_certificate: app.warranty_certificate
+```
+
+The keys may consist of letters, digits, `_` and `-`. Run the new migration to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
+The `classifications` parameter of the `media_selection` and `single_media_selection` fields and the
+`classifications` query parameter of the media list API restrict the media to the given classifications,
+several of them separated by commas.
+
 ### Text editor configs decide which CKEditor plugins are loaded
 
 Which plugins a `text_editor` property loads now follows from the tags and attributes its text editor config enables.

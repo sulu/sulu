@@ -39,12 +39,16 @@ class MediaListBuilderFactory
     ) {
     }
 
+    /**
+     * @param string[] $classifications
+     */
     public function getListBuilder(
         array $fieldDescriptors,
         UserInterface $user,
         array $types = [],
         bool $sortByDefault = true,
-        ?int $collectionId = null
+        ?int $collectionId = null,
+        array $classifications = [],
     ): DoctrineListBuilder {
         $listBuilder = $this->doctrineListBuilderFactory->create($this->mediaClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
@@ -79,6 +83,12 @@ class MediaListBuilderFactory
         // set the types
         if (\count($types)) {
             $listBuilder->in($fieldDescriptors['type'], $types);
+        }
+
+        if (\count($classifications)) {
+            /** @var DoctrineFieldDescriptor $classificationFieldDescriptor */
+            $classificationFieldDescriptor = $fieldDescriptors['classification'];
+            $listBuilder->in($classificationFieldDescriptor, $classifications);
         }
 
         if (!$this->securityChecker->hasPermission('sulu.media.system_collections', PermissionTypes::VIEW)) {

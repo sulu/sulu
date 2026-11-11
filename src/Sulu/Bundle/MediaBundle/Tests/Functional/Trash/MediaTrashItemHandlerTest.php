@@ -119,6 +119,7 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $media1File1Version1->setMimeType('mime-type-1');
         $media1File1Version1->setFocusPointX(101);
         $media1File1Version1->setFocusPointY(202);
+        $media1File1Version1->setClassification('warranty_certificate');
 
         $media1File1Version1Meta1 = new FileVersionMeta();
         $media1File1Version1->addMeta($media1File1Version1Meta1);
@@ -140,8 +141,11 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         $media1File1Version2->setFocusPointX(35);
         $media1File1Version2->setFocusPointY(45);
         $media1File1Version2->setOrigin('ai_generated');
+        $media1File1Version2->setClassification('data_sheet');
         $media1File1Version2->setAiDisclosureDisabled(true);
         $media1File1Version2->setAiDisclosureIconVariant('dark');
+        $media1File1Version2->setValidFrom(new \DateTimeImmutable('2026-01-15'));
+        $media1File1Version2->setValidTo(new \DateTimeImmutable('2026-12-31'));
         $media1File1Version2->setContentLocales(['de', 'fr']);
 
         $media1File1Version2->addTag($tag1);
@@ -243,8 +247,11 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertSame(101, $restoredFile1Version1->getFocusPointX());
         static::assertSame(202, $restoredFile1Version1->getFocusPointY());
         static::assertSame('unknown', $restoredFile1Version1->getOrigin());
+        static::assertSame('warranty_certificate', $restoredFile1Version1->getClassification());
         static::assertFalse($restoredFile1Version1->getAiDisclosureDisabled());
         static::assertSame('auto', $restoredFile1Version1->getAiDisclosureIconVariant());
+        static::assertNull($restoredFile1Version1->getValidFrom());
+        static::assertNull($restoredFile1Version1->getValidTo());
         static::assertSame([], $restoredFile1Version1->getContentLocales());
         static::assertSame('de', $restoredFile1Version1->getDefaultMeta()?->getLocale());
         static::assertCount(0, $restoredFile1Version1->getTags());
@@ -270,8 +277,11 @@ class MediaTrashItemHandlerTest extends SuluTestCase
         static::assertSame(35, $restoredFile1Version2->getFocusPointX());
         static::assertSame(45, $restoredFile1Version2->getFocusPointY());
         static::assertSame('ai_generated', $restoredFile1Version2->getOrigin());
+        static::assertSame('data_sheet', $restoredFile1Version2->getClassification());
         static::assertTrue($restoredFile1Version2->getAiDisclosureDisabled());
         static::assertSame('dark', $restoredFile1Version2->getAiDisclosureIconVariant());
+        static::assertSame('2026-01-15', $restoredFile1Version2->getValidFrom()?->format('Y-m-d'));
+        static::assertSame('2026-12-31', $restoredFile1Version2->getValidTo()?->format('Y-m-d'));
         static::assertSame(['de', 'fr'], $restoredFile1Version2->getContentLocales());
         static::assertCount(2, $restoredFile1Version2->getMeta());
         static::assertSame('de', $restoredFile1Version2->getDefaultMeta()?->getLocale());

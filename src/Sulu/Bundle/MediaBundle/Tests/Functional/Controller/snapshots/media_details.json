@@ -156,6 +156,29 @@
                     "tags": [],
                     "label": "Origin"
                 },
+                "classification": {
+                    "disabledCondition": null,
+                    "visibleCondition": "false",
+                    "type": "single_select",
+                    "colSpan": 12,
+                    "options": {
+                        "values": {
+                            "name": "values",
+                            "type": "expression",
+                            "value": []
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Classification"
+                },
                 "aiDisclosure": {
                     "disabledCondition": null,
                     "visibleCondition": "origin == 'ai_generated' || origin == 'ai_modified'",
@@ -300,6 +323,50 @@
                         }
                     },
                     "label": "License"
+                },
+                "validity": {
+                    "disabledCondition": null,
+                    "visibleCondition": "false",
+                    "type": "section",
+                    "colSpan": 12,
+                    "items": {
+                        "validFrom": {
+                            "disabledCondition": null,
+                            "visibleCondition": null,
+                            "type": "date",
+                            "colSpan": 6,
+                            "options": [],
+                            "types": [],
+                            "defaultType": null,
+                            "required": false,
+                            "multilingual": true,
+                            "spaceAfter": null,
+                            "minOccurs": null,
+                            "maxOccurs": null,
+                            "onInvalid": null,
+                            "tags": [],
+                            "label": "Validity From",
+                            "description": "The validity is for information only. It has no effect on how long this media is available."
+                        },
+                        "validTo": {
+                            "disabledCondition": null,
+                            "visibleCondition": null,
+                            "type": "date",
+                            "colSpan": 6,
+                            "options": [],
+                            "types": [],
+                            "defaultType": null,
+                            "required": false,
+                            "multilingual": true,
+                            "spaceAfter": null,
+                            "minOccurs": null,
+                            "maxOccurs": null,
+                            "onInvalid": null,
+                            "tags": [],
+                            "label": "Validity To"
+                        }
+                    },
+                    "label": "Validity"
                 },
                 "taxonomies": {
                     "disabledCondition": null,
