@@ -21,6 +21,9 @@ return static function(ContainerConfigurator $container) {
     $services = $container->services();
 
     $services->set('sulu.persistence.event_subscriber.orm.timestampable', TimestampableSubscriber::class)
+        ->args([
+            new Reference('clock'),
+        ])
         ->tag('doctrine.event_listener', ['event' => 'loadClassMetadata'])
         ->tag('doctrine.event_listener', ['event' => 'preUpdate'])
         ->tag('doctrine.event_listener', ['event' => 'prePersist']);
