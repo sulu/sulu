@@ -125,6 +125,11 @@
 
         <property name="adminUrl" visibility="never"/>
 
+        <property name="classification" translation="sulu_media.classification" visibility="never">
+            <field-name>classification</field-name>
+            <entity-name>%sulu.model.media.class%</entity-name>
+        </property>
+
         <property name="type" translation="sulu_media.type" visibility="always">
             <field-name>type</field-name>
             <entity-name>%sulu.model.media.class%</entity-name>

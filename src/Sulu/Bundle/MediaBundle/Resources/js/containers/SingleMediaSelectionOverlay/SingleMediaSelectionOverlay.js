@@ -7,6 +7,7 @@ import MediaSelectionOverlay from '../MediaSelectionOverlay';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
 type Props = {|
+    classifications: Array<string>,
     excludedIds: Array<number>,
     locale: IObservableValue<string>,
     onClose: () => void,
@@ -18,6 +19,7 @@ type Props = {|
 @observer
 class SingleMediaSelectionOverlay extends React.Component<Props> {
     static defaultProps = {
+        classifications: [],
         excludedIds: [],
         types: [],
     };
@@ -41,7 +43,8 @@ class SingleMediaSelectionOverlay extends React.Component<Props> {
             this.collectionId,
             excludedIds,
             this.props.locale,
-            this.props.types
+            this.props.types,
+            this.props.classifications
         );
         this.collectionListStore = MediaSelectionOverlay.createCollectionListStore(
             this.collectionId,

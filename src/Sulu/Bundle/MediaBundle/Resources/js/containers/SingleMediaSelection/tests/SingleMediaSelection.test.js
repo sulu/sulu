@@ -173,6 +173,19 @@ test('Component should pass types to SingleMediaSelectionOverlay', () => {
     expect(mockSingleMediaSelectionOverlayProps.types).toEqual(['image', 'video']);
 });
 
+test('Component should pass classifications to SingleMediaSelectionOverlay', () => {
+    render(
+        <SingleMediaSelection
+            classifications={['data_sheet', 'warranty_certificate']}
+            locale={observable.box('en')}
+            onChange={jest.fn()}
+            value={undefined}
+        />
+    );
+
+    expect(mockSingleMediaSelectionOverlayProps.classifications).toEqual(['data_sheet', 'warranty_certificate']);
+});
+
 test('Click on media-button should open an overlay', async() => {
     const user = userEvent.setup();
 
