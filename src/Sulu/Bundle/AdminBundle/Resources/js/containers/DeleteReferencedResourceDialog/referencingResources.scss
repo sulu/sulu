@@ -1,3 +1,10 @@
+@import '../Application/colors.scss';
+
+.link {
+    color: $shakespeare;
+    text-decoration: underline;
+}
+
 .multiple {
     text-align: left;
 

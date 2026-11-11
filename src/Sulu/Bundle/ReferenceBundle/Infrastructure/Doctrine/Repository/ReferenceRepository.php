@@ -130,6 +130,7 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
          *     referenceTitle?: string,
          *     referenceResourceKey?: string,
          *     referenceResourceId?: string,
+         *     referenceLocale?: string,
          *     referenceRouterAttributes?: array<string, string>,
          *     referenceContext?: string,
          *     referenceProperty?: string,

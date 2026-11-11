@@ -1464,11 +1464,100 @@ class MediaControllerTest extends SuluTestCase
         $this->assertSame(['page-uuid-1', 'page-uuid-2'], $referencingIds);
     }
 
+    public function testDeleteByIdWithReferencesReturnsUrlOfReferencingResource(): void
+    {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $mediaId = (int) $media->getId();
+        $this->createMediaReference($mediaId, 'Team', 'page-uuid-1', 'en', 'pages', ['locale' => 'en', 'webspace' => 'sulu_io']);
+        $this->createMediaReference($mediaId, 'Photo of a media', '42', 'en', MediaInterface::RESOURCE_KEY, ['locale' => 'en']);
+
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId);
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        /** @var array{referencingResources: array<int, array{id: string, resourceKey: string, url: string|null}>} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $urls = [];
+        foreach ($response['referencingResources'] as $referencingResource) {
+            $urls[$referencingResource['resourceKey']] = $referencingResource['url'];
+        }
+
+        $this->assertSame('/admin/#/webspaces/sulu_io/pages/en/page-uuid-1', $urls['pages']);
+        $this->assertSame('/admin/#/media/en/42', $urls['media']);
+    }
+
+    public function testDeleteByIdWithReferencesReturnsUrlInRequestLocale(): void
+    {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $mediaId = (int) $media->getId();
+        $this->createMediaReference($mediaId, 'Team', 'page-uuid-1', 'en', 'pages', ['locale' => 'en', 'webspace' => 'sulu_io']);
+        $this->createMediaReference($mediaId, 'Team (Deutsch)', 'page-uuid-1', 'de', 'pages', ['locale' => 'de', 'webspace' => 'sulu_io']);
+
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId . '?locale=de');
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        /** @var array{referencingResources: array<int, array{title: string, url: string|null}>} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertCount(1, $response['referencingResources']);
+        $this->assertSame('Team (Deutsch)', $response['referencingResources'][0]['title']);
+        $this->assertSame('/admin/#/webspaces/sulu_io/pages/de/page-uuid-1', $response['referencingResources'][0]['url']);
+    }
+
+    public function testDeleteByIdWithReferencesReturnsNoUrlIfNotResolvable(): void
+    {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $mediaId = (int) $media->getId();
+        $this->createMediaReference($mediaId, 'Unknown', 'unknown-1', 'en', 'unknown_resource');
+        $this->createMediaReference($mediaId, 'Team', 'page-uuid-1', 'en', 'pages');
+
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId);
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        /** @var array{referencingResources: array<int, array{resourceKey: string, url: string|null}>} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertCount(2, $response['referencingResources']);
+        foreach ($response['referencingResources'] as $referencingResource) {
+            $this->assertNull($referencingResource['url']);
+        }
+    }
+
+    public function testDeleteByIdWithManyReferencesListsOnlyTheFirstOnes(): void
+    {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $mediaId = (int) $media->getId();
+        for ($i = 1; $i <= 7; ++$i) {
+            $this->createMediaReference($mediaId, 'Team ' . $i, 'page-uuid-' . $i);
+        }
+
+        $this->client->jsonRequest('DELETE', '/api/media/' . $mediaId);
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+
+        /** @var array{referencingResources: array<int, array{title: string}>, referencingResourcesCount: int} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame(7, $response['referencingResourcesCount']);
+        $this->assertSame(
+            ['Team 1', 'Team 2', 'Team 3', 'Team 4', 'Team 5'],
+            \array_column($response['referencingResources'], 'title'),
+        );
+    }
+
+    /**
+     * @param array<string, string> $routerAttributes
+     */
     private function createMediaReference(
         int $mediaId,
         string $title,
         string $referenceResourceId = 'page-uuid-1',
         string $locale = 'en',
+        string $referenceResourceKey = 'pages',
+        array $routerAttributes = [],
     ): void {
         /** @var ReferenceRepositoryInterface $referenceRepository */
         $referenceRepository = $this->getContainer()->get('sulu_reference.reference_repository');
@@ -1476,12 +1565,13 @@ class MediaControllerTest extends SuluTestCase
         $reference = $referenceRepository->create(
             MediaInterface::RESOURCE_KEY,
             (string) $mediaId,
-            'pages',
+            $referenceResourceKey,
             $referenceResourceId,
             $locale,
             $title,
             'default',
-            'image'
+            'image',
+            $routerAttributes
         );
         $referenceRepository->add($reference);
         $referenceRepository->flush();
