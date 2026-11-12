@@ -1,8 +1,7 @@
 // @flow
-import {FormatValidator} from 'ajv';
 import idnEmailValidator from './idnEmailValidator';
 
-const formats: {[string]: typeof FormatValidator} = {
+const formats: {[string]: (data: string) => boolean} = {
     'idn-email': idnEmailValidator,
 };
 
