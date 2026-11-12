@@ -24,7 +24,10 @@ jest.mock('sulu-admin-bundle/services/initializer', () => ({
 jest.mock('../containers/Form/fields/PageTreeRoute', () => jest.fn());
 
 test('Register the route and page_tree_route field types with the url to generate routes', () => {
-    (resourceRouteRegistry.getUrl: any).mockReturnValue('/admin/api/routes?action=generate');
+    (resourceRouteRegistry.getUrl: any).mockImplementation((type, resourceKey, {action, resolveConflicts}) => {
+        return '/admin/api/routes?action=' + action
+            + (resolveConflicts === undefined ? '' : '&resolveConflicts=' + String(resolveConflicts));
+    });
     require('../index');
 
     const [configKey, updateConfigHook] = (initializer.addUpdateConfigHook: any).mock.calls[0];
@@ -33,6 +36,8 @@ test('Register the route and page_tree_route field types with the url to generat
     updateConfigHook({}, false);
 
     expect(resourceRouteRegistry.getUrl).toHaveBeenCalledWith('list', 'routes', {action: 'generate'});
+    expect(resourceRouteRegistry.getUrl)
+        .toHaveBeenCalledWith('list', 'routes', {action: 'generate', resolveConflicts: false});
     expect(fieldRegistry.add).toHaveBeenCalledWith(
         'route',
         ResourceLocator,
@@ -41,6 +46,6 @@ test('Register the route and page_tree_route field types with the url to generat
     expect(fieldRegistry.add).toHaveBeenCalledWith(
         'page_tree_route',
         PageTreeRoute,
-        expect.objectContaining({generationUrl: '/admin/api/routes?action=generate'})
+        expect.objectContaining({generationUrl: '/admin/api/routes?action=generate&resolveConflicts=false'})
     );
 });
