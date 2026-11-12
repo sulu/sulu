@@ -90,41 +90,49 @@ exports[`Render Item with data as form 1`] = `
             Description
           </textarea>
         </div>
+        <div
+          class="buttons"
+        >
+          <button
+            class="button link hasText"
+            type="button"
+          >
+            <span
+              aria-label="su-sync"
+              class="su-sync buttonIcon"
+            />
+            <span
+              class="buttonText"
+            >
+              sulu_admin.reset
+            </span>
+          </button>
+          <div
+            class="actions"
+          >
+            <button
+              class="button secondary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.cancel
+              </span>
+            </button>
+            <button
+              class="button primary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                sulu_admin.apply
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-    <div
-      class="buttons"
-    >
-      <button
-        class="button secondary hasText"
-        type="button"
-      >
-        <span
-          class="buttonText"
-        >
-          sulu_admin.cancel
-        </span>
-      </button>
-      <button
-        class="button link hasText"
-        type="button"
-      >
-        <span
-          class="buttonText"
-        >
-          sulu_admin.reset
-        </span>
-      </button>
-      <button
-        class="button primary hasText"
-        type="button"
-      >
-        <span
-          class="buttonText"
-        >
-          sulu_admin.apply
-        </span>
-      </button>
     </div>
   </div>
 </DocumentFragment>
