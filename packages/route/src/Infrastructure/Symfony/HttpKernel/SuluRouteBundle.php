@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Route\Infrastructure\Symfony\HttpKernel;
 
+use Sulu\Route\Application\LanguageSwitcher\LanguageSwitcherProvider;
+use Sulu\Route\Application\LanguageSwitcher\LanguageSwitcherProviderInterface;
+use Sulu\Route\Application\LanguageSwitcher\SiteLocaleProviderInterface;
 use Sulu\Route\Application\MessageHandler\RemoveRouteHistoryMessageHandler;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanup;
 use Sulu\Route\Application\ResourceLocator\PathCleanup\PathCleanupInterface;
@@ -133,6 +136,24 @@ final class SuluRouteBundle extends AbstractBundle
 
         $services->alias(RouteSchemaEvaluatorInterface::class, 'sulu_route.route_schema_evaluator')
             ->public();
+
+        $services->set('sulu_route.site_locale_provider')
+            ->class(KernelSiteLocaleProvider::class)
+            ->args([
+                '%kernel.enabled_locales%',
+            ]);
+
+        $services->alias(SiteLocaleProviderInterface::class, 'sulu_route.site_locale_provider');
+
+        $services->set('sulu_route.language_switcher_provider')
+            ->class(LanguageSwitcherProvider::class)
+            ->args([
+                new Reference('sulu_route.route_repository'),
+                new Reference('sulu_route.route_generator'),
+                new Reference('sulu_route.site_locale_provider'),
+            ]);
+
+        $services->alias(LanguageSwitcherProviderInterface::class, 'sulu_route.language_switcher_provider');
 
         $services->alias(RouteGeneratorInterface::class, 'sulu_route.route_generator')
             ->public();
