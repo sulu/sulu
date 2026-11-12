@@ -18,6 +18,11 @@ $teaserSelectionMediaWidth: 25px;
     margin-right: 10px;
 }
 
+.form-column {
+    flex: 1;
+    min-width: 0;
+}
+
 .media-button {
     position: relative;
     border: 0;
