@@ -15,6 +15,7 @@ $optionTextDarkColorActive: $white;
         &:active,
         &:focus {
             color: $optionTextLightColorActive;
+            font-weight: bold;
         }
 
         &:disabled {

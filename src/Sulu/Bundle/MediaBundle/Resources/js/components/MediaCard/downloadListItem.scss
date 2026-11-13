@@ -17,6 +17,7 @@ $itemTextColorActive: $blueZodiac;
 
         &:hover {
             color: $itemTextColorActive;
+            font-weight: bold;
 
             .copy-text {
                 opacity: 1;

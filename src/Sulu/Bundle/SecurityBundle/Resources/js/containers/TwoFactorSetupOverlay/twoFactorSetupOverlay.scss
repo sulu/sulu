@@ -42,7 +42,15 @@
     width: 100%;
 
     &:hover:not(:disabled) {
+        background: $blueZodiac;
         border-color: $blueZodiac;
+
+        .method-icon,
+        .method-title,
+        .method-description,
+        .method-arrow {
+            color: $white;
+        }
     }
 
     &:disabled {
