@@ -631,24 +631,22 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * The validity columns hold dates, so only the date of a datetime string from the admin is used.
-     *
      * @throws InvalidValidityDateException
      */
     private function parseValidityDate(mixed $value): ?\DateTimeImmutable
     {
-        if (!\is_string($value) || '' === $value) {
+        if (null === $value || '' === $value) {
             return null;
         }
 
-        if (!\preg_match('/^(\d{4}-\d{2}-\d{2})(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/', $value, $matches)) {
+        if (!\is_string($value)) {
             throw new InvalidValidityDateException();
         }
 
-        $date = \DateTimeImmutable::createFromFormat('!Y-m-d', $matches[1]);
+        $date = \DateTimeImmutable::createFromFormat('!Y-m-d', $value);
 
         // a rolled over date like 2026-02-30 formats differently than it was given
-        if (!$date || $date->format('Y-m-d') !== $matches[1]) {
+        if (!$date || $date->format('Y-m-d') !== $value) {
             throw new InvalidValidityDateException();
         }
 
