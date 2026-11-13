@@ -777,7 +777,7 @@ class MediaManagerTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('provideInvalidValidityDate')]
-    public function testSaveWithInvalidValidityDate(string $attribute, string $value): void
+    public function testSaveWithInvalidValidityDate(string $attribute, mixed $value): void
     {
         $this->expectException(InvalidValidityDateException::class);
 
@@ -912,14 +912,10 @@ class MediaManagerTest extends TestCase
         yield 'both' => [null, null, ['validFrom' => '2026-01-15', 'validTo' => '2026-12-31'], '2026-01-15', '2026-12-31'];
         yield 'only from' => [null, null, ['validFrom' => '2026-01-15'], '2026-01-15', null];
         yield 'only to' => [null, null, ['validTo' => '2026-12-31'], null, '2026-12-31'];
-        yield 'datetime string from the admin' => [null, null, ['validFrom' => '2026-01-15T00:00:00'], '2026-01-15', null];
         yield 'clear from with null' => ['2026-01-15', '2026-12-31', ['validFrom' => null], null, '2026-12-31'];
         yield 'clear to with empty string' => ['2026-01-15', '2026-12-31', ['validTo' => ''], '2026-01-15', null];
         yield 'absent keys keep the values' => ['2026-01-15', '2026-12-31', ['title' => 'other'], '2026-01-15', '2026-12-31'];
         yield 'same day' => [null, null, ['validFrom' => '2026-05-01', 'validTo' => '2026-05-01'], '2026-05-01', '2026-05-01'];
-        yield 'same day with an end time before the start time' => [null, null, ['validFrom' => '2026-05-01T10:00:00', 'validTo' => '2026-05-01T09:00:00'], '2026-05-01', '2026-05-01'];
-        yield 'same day with an offset' => [null, null, ['validFrom' => '2026-05-01', 'validTo' => '2026-05-01T00:00:00+05:00'], '2026-05-01', '2026-05-01'];
-        yield 'datetime with a space' => [null, null, ['validTo' => '2026-05-01 23:59:59'], null, '2026-05-01'];
         yield 'unrelated save keeps an invalid range untouched' => ['2026-12-31', '2026-01-01', ['title' => 'other'], '2026-12-31', '2026-01-01'];
     }
 
@@ -934,7 +930,7 @@ class MediaManagerTest extends TestCase
     }
 
     /**
-     * @return iterable<string, array{string, string}>
+     * @return iterable<string, array{string, mixed}>
      */
     public static function provideInvalidValidityDate(): iterable
     {
@@ -944,6 +940,13 @@ class MediaManagerTest extends TestCase
             yield $attribute . ' day rolling over' => [$attribute, '2026-02-30'];
             yield $attribute . ' other format' => [$attribute, '01.05.2026'];
             yield $attribute . ' date with trailing garbage' => [$attribute, '2026-05-01 garbage'];
+            yield $attribute . ' datetime' => [$attribute, '2026-05-01T00:00:00'];
+            yield $attribute . ' datetime with an offset' => [$attribute, '2025-12-31T23:00:00Z'];
+            yield $attribute . ' datetime with an invalid time' => [$attribute, '2026-01-01T25:99'];
+            yield $attribute . ' single digit month and day' => [$attribute, '2026-5-1'];
+            yield $attribute . ' integer' => [$attribute, 20260115];
+            yield $attribute . ' boolean' => [$attribute, true];
+            yield $attribute . ' array' => [$attribute, ['x']];
         }
     }
 

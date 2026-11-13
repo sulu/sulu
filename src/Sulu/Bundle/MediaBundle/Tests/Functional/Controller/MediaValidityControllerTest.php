@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\TestWith;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -110,20 +111,34 @@ class MediaValidityControllerTest extends SuluTestCase
         self::assertSame('2026-12-31', $fileVersion->getValidTo()?->format('Y-m-d'));
     }
 
-    public function testPutRejectsAnInvalidDate(): void
+    #[TestWith(['not-a-date'])]
+    #[TestWith([20260115])]
+    #[TestWith([true])]
+    #[TestWith([['x']])]
+    #[TestWith(['2025-12-31T23:00:00Z'])]
+    #[TestWith(['2026-01-01T25:99'])]
+    public function testPutRejectsAnInvalidDate(mixed $validFrom): void
     {
         $media = $this->createDocument();
+        $this->putValidity($media, ['validFrom' => '2026-01-15']);
 
         $this->client->jsonRequest(
             'PUT',
             '/api/media/' . $media->getId() . '?locale=en',
-            ['collection' => $this->collection->getId(), 'title' => 'datasheet', 'validFrom' => 'not-a-date']
+            ['collection' => $this->collection->getId(), 'title' => 'datasheet', 'validFrom' => $validFrom]
         );
 
         $this->assertHttpStatusCode(400, $this->client->getResponse());
         $data = $this->getResponseData();
         self::assertSame(5031, $data['code']);
         self::assertSame('The validity start and end must be valid dates.', $data['detail']);
+
+        $this->entityManager->clear();
+        $file = $this->entityManager->find(Media::class, $media->getId())?->getFiles()[0];
+        self::assertInstanceOf(File::class, $file);
+        $fileVersion = $file->getFileVersion(1);
+        self::assertInstanceOf(FileVersion::class, $fileVersion);
+        self::assertSame('2026-01-15', $fileVersion->getValidFrom()?->format('Y-m-d'));
     }
 
     public function testNewVersionKeepsTheValidity(): void
