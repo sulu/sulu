@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Api;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as CategoryEntity;
@@ -341,6 +342,36 @@ class Media extends ApiWrapper
     public function getOrigin(): string
     {
         return $this->getFileVersion()->getOrigin();
+    }
+
+    public function setValidFrom(?\DateTimeImmutable $validFrom): static
+    {
+        $this->getFileVersion()->setValidFrom($validFrom);
+
+        return $this;
+    }
+
+    #[VirtualProperty]
+    #[SerializedName('validFrom')]
+    #[Type("DateTimeImmutable<'Y-m-d'>")]
+    public function getValidFrom(): ?\DateTimeImmutable
+    {
+        return $this->getFileVersion()->getValidFrom();
+    }
+
+    public function setValidTo(?\DateTimeImmutable $validTo): static
+    {
+        $this->getFileVersion()->setValidTo($validTo);
+
+        return $this;
+    }
+
+    #[VirtualProperty]
+    #[SerializedName('validTo')]
+    #[Type("DateTimeImmutable<'Y-m-d'>")]
+    public function getValidTo(): ?\DateTimeImmutable
+    {
+        return $this->getFileVersion()->getValidTo();
     }
 
     /**
