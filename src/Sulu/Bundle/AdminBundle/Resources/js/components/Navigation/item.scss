@@ -4,7 +4,7 @@ $color: $wildSand;
 $activeColor: $white;
 $activeBorderColor: $white;
 $activeBackgroundColor: $ebonyClay;
-$hoverColor: $stormGray;
+$hoverBackgroundColor: $ebonyClay;
 
 .item {
     font-size: 14px;
@@ -35,7 +35,7 @@ $hoverColor: $stormGray;
 
         &:hover,
         &:focus {
-            color: $hoverColor;
+            background-color: $hoverBackgroundColor;
         }
 
         .icon {
@@ -57,10 +57,7 @@ $hoverColor: $stormGray;
     }
 
     &.active > .title {
-        &:hover,
-        &:focus {
-            color: $activeColor;
-        }
+        color: $activeColor;
     }
 
     /* Child */
