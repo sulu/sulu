@@ -164,6 +164,34 @@ class RouteControllerTest extends SuluTestCase
         $this->assertSame('/prefix/2019/test-1', $result['resourcelocator']);
     }
 
+    public function testGenerateWithConflictNotResolved(): void
+    {
+        $this->createRoute('/prefix/2019/test');
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $this->client->request(
+            'POST',
+            '/api/routes?action=generate&resolveConflicts=false',
+            [
+                'locale' => self::TEST_LOCALE,
+                'resourceKey' => self::TEST_RESOURCE_KEY,
+                'parts' => [
+                    'title' => 'test',
+                    'year' => '2019',
+                ],
+            ]
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $content = $this->client->getResponse()->getContent();
+        $this->assertIsString($content);
+        /** @var array{resourcelocator: string} $result */
+        $result = \json_decode($content, true);
+
+        $this->assertSame('/prefix/2019/test', $result['resourcelocator']);
+    }
+
     public function testGenerateWithConflictSameEntity(): void
     {
         $this->createRoute('/prefix/2019/test');
