@@ -1,7 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
 $itemColor: $black;
-$itemColorHover: $shakespeare;
+$itemColorHover: $blueZodiac;
 $disabledColor: $silver;
 
 .item {
@@ -26,6 +26,7 @@ $disabledColor: $silver;
 
     &:hover:not([disabled]) {
         color: $itemColorHover;
+        font-weight: bold;
     }
 
     &:disabled {

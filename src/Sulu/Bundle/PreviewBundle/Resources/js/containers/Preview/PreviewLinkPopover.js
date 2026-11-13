@@ -124,7 +124,7 @@ class PreviewLinkPopover extends React.Component<Props> {
                                     className={previewLinkStyles.copyButton}
                                     loading={this.copying}
                                     onClick={this.handleCopyClick}
-                                    skin="primary"
+                                    skin="secondary"
                                 >
                                     {translate('sulu_preview.copy')}
                                 </Button>
@@ -146,7 +146,7 @@ class PreviewLinkPopover extends React.Component<Props> {
                         <Button
                             loading={this.generating}
                             onClick={this.handleGenerateClick}
-                            skin="primary"
+                            skin="secondary"
                         >
                             {translate('sulu_preview.generate_link')}
                         </Button>

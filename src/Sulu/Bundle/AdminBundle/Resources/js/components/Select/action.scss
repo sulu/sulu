@@ -1,6 +1,6 @@
 @import '../../containers/Application/colors.scss';
 
-$focusColor: $shakespeare;
+$focusColor: $blueZodiac;
 $fontColor: $black;
 
 .action {
@@ -17,5 +17,6 @@ $fontColor: $black;
 
     &:focus {
         color: $focusColor;
+        font-weight: bold;
     }
 }

@@ -1,7 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
-$chainExpertColor: $blueZodiac;
-$chainUserColor: $shakespeare;
+$chainExpertColor: $stormGray;
+$chainUserColor: $blueZodiac;
 $chainSuccessColor: #2da44e;
 $chainSystemColor: $dustyGray;
 $chainToolColor: $stormGray;
@@ -276,7 +276,7 @@ $chainToolColor: $stormGray;
     padding: 0;
     border: none;
     background: none;
-    color: $shakespeare;
+    color: $blueZodiac;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;

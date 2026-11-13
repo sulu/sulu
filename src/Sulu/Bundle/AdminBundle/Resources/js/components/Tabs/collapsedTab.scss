@@ -1,7 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
 $collapsedTabTextColor: $black;
-$collapsedTabTextColorActive: $shakespeare;
+$collapsedTabTextColorActive: $blueZodiac;
 
 .collapsed-tab {
     position: relative;
@@ -23,6 +23,7 @@ $collapsedTabTextColorActive: $shakespeare;
         &:focus {
             cursor: pointer;
             color: $collapsedTabTextColorActive;
+            font-weight: bold;
         }
     }
 }
