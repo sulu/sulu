@@ -1,7 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
-$color: $white;
-$hoverBackgroundColor: $mirage;
+$color: $silver;
+$hoverColor: $white;
 $lightColor: $silver;
 $menuButtonHoverColor: $white;
 
@@ -23,7 +23,7 @@ $menuButtonHoverColor: $white;
 
     &:hover,
     &:focus {
-        background-color: $hoverBackgroundColor;
+        color: $hoverColor;
     }
 
     &.active {
