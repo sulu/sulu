@@ -183,8 +183,11 @@ class RouteControllerTest extends SuluTestCase
             ]
         );
 
-        $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $content = $this->client->getResponse()->getContent();
+        $this->assertIsString($content);
+        /** @var array{resourcelocator: string} $result */
+        $result = \json_decode($content, true);
 
         $this->assertSame('/prefix/2019/test', $result['resourcelocator']);
     }
