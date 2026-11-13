@@ -17,6 +17,7 @@ $disabledColor: $silver;
 
     &:hover {
         color: $hoverColor;
+        font-weight: bold;
     }
 
     &:last-child {

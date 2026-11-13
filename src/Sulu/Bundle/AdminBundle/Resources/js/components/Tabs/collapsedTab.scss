@@ -23,6 +23,7 @@ $collapsedTabTextColorActive: $blueZodiac;
         &:focus {
             cursor: pointer;
             color: $collapsedTabTextColorActive;
+            font-weight: bold;
         }
     }
 }

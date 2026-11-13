@@ -18,6 +18,7 @@ $fontSize: 12px;
 
     &:not(:disabled):focus {
         color: $focusColor;
+        font-weight: bold;
     }
 
     &:disabled {

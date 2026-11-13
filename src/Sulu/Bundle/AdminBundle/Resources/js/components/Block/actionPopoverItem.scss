@@ -20,5 +20,6 @@ $actionTextColorActive: $blueZodiac;
     &:hover,
     &:focus {
         color: $actionTextColorActive;
+        font-weight: bold;
     }
 }

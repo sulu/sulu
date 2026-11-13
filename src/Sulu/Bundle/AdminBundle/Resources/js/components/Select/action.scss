@@ -17,5 +17,6 @@ $fontColor: $black;
 
     &:focus {
         color: $focusColor;
+        font-weight: bold;
     }
 }
