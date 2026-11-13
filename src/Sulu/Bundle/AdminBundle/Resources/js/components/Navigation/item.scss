@@ -1,6 +1,7 @@
 @import '../../containers/Application/colors.scss';
 
 $color: $wildSand;
+$activeColor: $white;
 $activeBorderColor: $white;
 $activeBackgroundColor: $ebonyClay;
 $hoverColor: $stormGray;
@@ -52,6 +53,13 @@ $hoverColor: $stormGray;
         .children-indicator {
             flex: 0 0 auto;
             margin-left: 20px;
+        }
+    }
+
+    &.active > .title {
+        &:hover,
+        &:focus {
+            color: $activeColor;
         }
     }
 
