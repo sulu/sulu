@@ -325,7 +325,7 @@ test('Resetting the item while editing should call the onApply callback with onl
         />
     );
 
-    await user.click(screen.getByRole('button', {name: 'su-sync sulu_admin.reset'}));
+    await user.click(screen.getByRole('button', {name: /sulu_admin.reset/}));
 
     expect(applySpy).toHaveBeenCalledWith({
         id: 5,
