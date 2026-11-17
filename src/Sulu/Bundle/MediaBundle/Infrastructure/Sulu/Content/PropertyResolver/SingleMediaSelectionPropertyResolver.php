@@ -51,7 +51,7 @@ class SingleMediaSelectionPropertyResolver implements PropertyResolverInterface
         $resourceLoaderKey = $params['resourceLoader'] ?? MediaResourceLoader::getKey();
         $id = (int) $data['id'];
 
-        $this->deduplicationStore?->add((string) $id, MediaInterface::RESOURCE_KEY);
+        $this->deduplicationStore?->add(MediaInterface::RESOURCE_KEY, $id);
 
         return ContentView::createResolvableWithReferences(
             id: $id,

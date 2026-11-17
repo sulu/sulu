@@ -91,7 +91,7 @@ class ContactAccountSelectionPropertyResolver implements PropertyResolverInterfa
                 resourceKey: $reference->getResourceKey(),
             );
             $references[] = $reference;
-            $this->deduplicationStore?->add((string) $id, $reference->getResourceKey());
+            $this->deduplicationStore?->add($reference->getResourceKey(), $id);
         }
 
         return ContentView::createWithReferences(

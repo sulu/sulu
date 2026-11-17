@@ -43,7 +43,7 @@ class SingleAccountSelectionPropertyResolver implements PropertyResolverInterfac
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? AccountResourceLoader::getKey();
 
-        $this->deduplicationStore?->add((string) $data, AccountInterface::RESOURCE_KEY);
+        $this->deduplicationStore?->add(AccountInterface::RESOURCE_KEY, (int) $data);
 
         return ContentView::createResolvableWithReferences(
             (int) $data,

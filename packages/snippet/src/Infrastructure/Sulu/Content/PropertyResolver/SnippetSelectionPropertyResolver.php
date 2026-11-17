@@ -72,11 +72,7 @@ class SnippetSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? SnippetResourceLoader::getKey();
 
-        foreach ($identifiers as $id) {
-            if ('' !== (string) $id) {
-                $this->deduplicationStore?->add((string) $id, SnippetInterface::RESOURCE_KEY);
-            }
-        }
+        $this->deduplicationStore?->add(SnippetInterface::RESOURCE_KEY, ...$identifiers);
 
         return ContentView::createResolvablesWithReferences(
             ids: $identifiers,

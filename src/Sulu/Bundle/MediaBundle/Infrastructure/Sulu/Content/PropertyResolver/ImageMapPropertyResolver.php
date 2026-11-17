@@ -88,7 +88,7 @@ class ImageMapPropertyResolver implements PropertyResolverMetadataAwareInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? MediaResourceLoader::getKey();
         $imageId = (int) $data['imageId'];
-        $this->deduplicationStore?->add((string) $imageId, MediaInterface::RESOURCE_KEY);
+        $this->deduplicationStore?->add(MediaInterface::RESOURCE_KEY, $imageId);
 
         return ContentView::create(
             [

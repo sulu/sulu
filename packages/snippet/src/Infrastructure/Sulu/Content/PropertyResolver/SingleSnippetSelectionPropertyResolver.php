@@ -58,9 +58,7 @@ class SingleSnippetSelectionPropertyResolver implements PropertyResolverInterfac
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? SnippetResourceLoader::getKey();
 
-        if ('' !== (string) $data) {
-            $this->deduplicationStore?->add((string) $data, SnippetInterface::RESOURCE_KEY);
-        }
+        $this->deduplicationStore?->add(SnippetInterface::RESOURCE_KEY, $data);
 
         return ContentView::createResolvableWithReferences(
             id: $data,

@@ -47,9 +47,7 @@ class SingleArticleSelectionPropertyResolver implements PropertyResolverInterfac
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? ArticleResourceLoader::getKey();
 
-        if ('' !== (string) $data) {
-            $this->deduplicationStore?->add((string) $data, ArticleInterface::RESOURCE_KEY);
-        }
+        $this->deduplicationStore?->add(ArticleInterface::RESOURCE_KEY, $data);
 
         return ContentView::createResolvableWithReferences(
             id: $data,

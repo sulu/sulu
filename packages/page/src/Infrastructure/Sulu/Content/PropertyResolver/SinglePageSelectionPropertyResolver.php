@@ -47,9 +47,7 @@ class SinglePageSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? PageResourceLoader::getKey();
 
-        if ('' !== (string) $data) {
-            $this->deduplicationStore?->add((string) $data, PageInterface::RESOURCE_KEY);
-        }
+        $this->deduplicationStore?->add(PageInterface::RESOURCE_KEY, $data);
 
         return ContentView::createResolvableWithReferences(
             id: $data,

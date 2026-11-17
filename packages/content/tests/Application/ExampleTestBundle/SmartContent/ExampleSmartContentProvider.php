@@ -189,9 +189,7 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
             $queryResult
         );
 
-        foreach ($result as $item) {
-            $this->deduplicationStore?->add($item['id'], Example::RESOURCE_KEY);
-        }
+        $this->deduplicationStore?->add(Example::RESOURCE_KEY, ...\array_column($result, 'id'));
 
         return $result;
     }
@@ -319,7 +317,7 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
     {
         $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates'] ?? false) {
-            $excluded = \array_values(\array_unique([...$excluded, ...($this->deduplicationStore?->getIds(Example::RESOURCE_KEY) ?? [])]));
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(Example::RESOURCE_KEY) ?? [])];
         }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')

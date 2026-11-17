@@ -209,9 +209,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         /** @var array<array{id: string, title: string}> $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
-        foreach ($queryResult as $item) {
-            $this->deduplicationStore?->add((string) $item['id'], MediaInterface::RESOURCE_KEY);
-        }
+        $this->deduplicationStore?->add(MediaInterface::RESOURCE_KEY, ...\array_column($queryResult, 'id'));
 
         return \array_map(
             function(array $item) {
@@ -283,7 +281,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
 
         $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates']) {
-            $excluded = \array_values(\array_unique([...$excluded, ...($this->deduplicationStore?->getIds(MediaInterface::RESOURCE_KEY) ?? [])]));
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(MediaInterface::RESOURCE_KEY) ?? [])];
         }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')
