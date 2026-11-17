@@ -17,8 +17,8 @@ Selection property resolvers add the ids they show, smart content providers excl
   key of its resources.
 - The rendered page is now always excluded from its own smart contents, also without `exclude_duplicates`.
 - The existing selection property resolvers and smart content providers take the store as an optional last
-  constructor argument. Projects that extend them or define their own service need to pass
-  `sulu_content.deduplication_store` to benefit from it.
+  constructor argument. Instantiating them without it is deprecated. Projects that extend them or define their own
+  service need to pass `sulu_content.deduplication_store`.
 
 ## 3.0.10
 

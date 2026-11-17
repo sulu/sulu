@@ -122,6 +122,10 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         private ?array $permissions = null,
         private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', 'Instantiating PageSmartContentProvider without the $deduplicationStore argument is deprecated.');
+        }
+
         $this->entityRepository = $entityManager->getRepository(PageInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
         $this->pageDimensionContentClassName = $this->entityDimensionContentRepository->getClassName();
