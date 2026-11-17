@@ -218,7 +218,7 @@ class SnippetSmartContentProviderTest extends SuluTestCase
         $this->assertNotEmpty($allIds);
 
         $store->reset();
-        $store->add($allIds[0], SnippetInterface::RESOURCE_KEY);
+        $store->add(SnippetInterface::RESOURCE_KEY, $allIds[0]);
 
         $filters['excludeDuplicates'] = true;
         $this->assertSame(\count($allIds) - 1, $this->smartContentProvider->countBy($filters));
@@ -236,7 +236,7 @@ class SnippetSmartContentProviderTest extends SuluTestCase
         $allIds = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
 
         $store->reset();
-        $store->add($allIds[0], SnippetInterface::RESOURCE_KEY);
+        $store->add(SnippetInterface::RESOURCE_KEY, $allIds[0]);
 
         $ids = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
 

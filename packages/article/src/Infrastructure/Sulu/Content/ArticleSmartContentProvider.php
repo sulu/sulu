@@ -231,9 +231,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         /** @var array{id: string, title: string}[] $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
 
-        foreach ($result as $item) {
-            $this->deduplicationStore?->add((string) $item['id'], ArticleInterface::RESOURCE_KEY);
-        }
+        $this->deduplicationStore?->add(ArticleInterface::RESOURCE_KEY, ...\array_column($result, 'id'));
 
         return $result;
     }
@@ -414,7 +412,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
     {
         $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates'] ?? false) {
-            $excluded = \array_values(\array_unique([...$excluded, ...($this->deduplicationStore?->getIds(ArticleInterface::RESOURCE_KEY) ?? [])]));
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(ArticleInterface::RESOURCE_KEY) ?? [])];
         }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')

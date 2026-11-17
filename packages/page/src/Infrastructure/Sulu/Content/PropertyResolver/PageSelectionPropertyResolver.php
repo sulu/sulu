@@ -53,11 +53,7 @@ class PageSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string[] $ids */
         $ids = $data;
 
-        foreach ($ids as $id) {
-            if ('' !== (string) $id) {
-                $this->deduplicationStore?->add((string) $id, PageInterface::RESOURCE_KEY);
-            }
-        }
+        $this->deduplicationStore?->add(PageInterface::RESOURCE_KEY, ...$ids);
 
         return ContentView::createResolvablesWithReferences(
             ids: $ids,

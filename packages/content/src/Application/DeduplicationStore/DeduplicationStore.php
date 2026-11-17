@@ -18,13 +18,17 @@ use Symfony\Contracts\Service\ResetInterface;
 class DeduplicationStore implements DeduplicationStoreInterface, ResetInterface
 {
     /**
-     * @var array<string, array<string, true>>
+     * @var array<string, array<int|string, true>>
      */
     private array $ids = [];
 
-    public function add(string $id, string $resourceKey): void
+    public function add(string $resourceKey, string|int ...$ids): void
     {
-        $this->ids[$resourceKey][$id] = true;
+        foreach ($ids as $id) {
+            if ('' !== $id) {
+                $this->ids[$resourceKey][$id] = true;
+            }
+        }
     }
 
     public function getIds(string $resourceKey): array

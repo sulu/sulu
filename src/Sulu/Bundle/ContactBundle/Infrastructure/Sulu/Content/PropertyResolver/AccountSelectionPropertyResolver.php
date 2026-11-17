@@ -49,9 +49,7 @@ class AccountSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? AccountResourceLoader::getKey();
 
-        foreach ($ids as $id) {
-            $this->deduplicationStore?->add((string) $id, AccountInterface::RESOURCE_KEY);
-        }
+        $this->deduplicationStore?->add(AccountInterface::RESOURCE_KEY, ...$ids);
 
         return ContentView::createResolvablesWithReferences(
             $ids,

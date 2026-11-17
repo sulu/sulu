@@ -49,9 +49,7 @@ class ContactSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? ContactResourceLoader::getKey();
 
-        foreach ($ids as $id) {
-            $this->deduplicationStore?->add((string) $id, ContactInterface::RESOURCE_KEY);
-        }
+        $this->deduplicationStore?->add(ContactInterface::RESOURCE_KEY, ...$ids);
 
         return ContentView::createResolvablesWithReferences(
             $ids,

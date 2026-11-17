@@ -21,7 +21,10 @@ namespace Sulu\Content\Application\DeduplicationStore;
  */
 interface DeduplicationStoreInterface
 {
-    public function add(string $id, string $resourceKey): void;
+    /**
+     * Empty ids are skipped.
+     */
+    public function add(string $resourceKey, string|int ...$ids): void;
 
     /**
      * @return string[]

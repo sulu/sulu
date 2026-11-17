@@ -18,13 +18,12 @@ use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 
 class DeduplicationStoreTest extends TestCase
 {
-    public function testGetIdsReturnsTheIdsOfTheResourceKeyOnce(): void
+    public function testGetIdsReturnsTheNonEmptyIdsOfTheResourceKeyOnce(): void
     {
         $store = new DeduplicationStore();
-        $store->add('1', 'media');
-        $store->add('a-uuid', 'pages');
-        $store->add('1', 'media');
-        $store->add('2', 'media');
+        $store->add('media', '1', 2);
+        $store->add('pages', 'a-uuid', '');
+        $store->add('media', 1);
 
         self::assertSame(['1', '2'], $store->getIds('media'));
         self::assertSame(['a-uuid'], $store->getIds('pages'));
@@ -34,7 +33,7 @@ class DeduplicationStoreTest extends TestCase
     public function testResetRemovesAllIds(): void
     {
         $store = new DeduplicationStore();
-        $store->add('1', 'media');
+        $store->add('media', '1');
 
         $store->reset();
 

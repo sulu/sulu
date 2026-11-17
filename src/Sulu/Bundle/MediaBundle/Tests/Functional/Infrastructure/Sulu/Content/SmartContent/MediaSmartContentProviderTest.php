@@ -1002,7 +1002,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
         $this->assertNotEmpty($allIds);
 
         $store->reset();
-        $store->add($allIds[0], MediaInterface::RESOURCE_KEY);
+        $store->add(MediaInterface::RESOURCE_KEY, $allIds[0]);
 
         $filters['excludeDuplicates'] = true;
         $this->assertSame(\count($allIds) - 1, $this->smartContentProvider->countBy($filters));
@@ -1020,7 +1020,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
         $allIds = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
 
         $store->reset();
-        $store->add($allIds[0], MediaInterface::RESOURCE_KEY);
+        $store->add(MediaInterface::RESOURCE_KEY, $allIds[0]);
 
         $ids = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
 

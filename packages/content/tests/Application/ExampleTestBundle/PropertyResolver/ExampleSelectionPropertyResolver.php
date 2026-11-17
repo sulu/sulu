@@ -45,11 +45,7 @@ class ExampleSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string[] $ids */
         $ids = $data;
 
-        foreach ($ids as $id) {
-            if ('' !== (string) $id) {
-                $this->deduplicationStore?->add((string) $id, Example::RESOURCE_KEY);
-            }
-        }
+        $this->deduplicationStore?->add(Example::RESOURCE_KEY, ...$ids);
 
         return ContentView::createResolvablesWithReferences(
             ids: $ids,

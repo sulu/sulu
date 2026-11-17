@@ -250,9 +250,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         /** @var array{id: string, title: string, webspace: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
-        foreach ($queryResult as $item) {
-            $this->deduplicationStore?->add((string) $item['id'], PageInterface::RESOURCE_KEY);
-        }
+        $this->deduplicationStore?->add(PageInterface::RESOURCE_KEY, ...\array_column($queryResult, 'id'));
 
         return $queryResult;
     }
@@ -413,7 +411,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
     {
         $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates'] ?? false) {
-            $excluded = \array_values(\array_unique([...$excluded, ...($this->deduplicationStore?->getIds(PageInterface::RESOURCE_KEY) ?? [])]));
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(PageInterface::RESOURCE_KEY) ?? [])];
         }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')

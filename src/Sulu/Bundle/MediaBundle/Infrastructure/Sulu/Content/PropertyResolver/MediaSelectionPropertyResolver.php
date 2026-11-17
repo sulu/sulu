@@ -55,9 +55,7 @@ class MediaSelectionPropertyResolver implements PropertyResolverInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? MediaResourceLoader::getKey();
 
-        foreach ($ids as $id) {
-            $this->deduplicationStore?->add((string) $id, MediaInterface::RESOURCE_KEY);
-        }
+        $this->deduplicationStore?->add(MediaInterface::RESOURCE_KEY, ...$ids);
 
         return ContentView::createResolvablesWithReferences(
             ids: $ids,

@@ -121,9 +121,7 @@ readonly class AccountSmartContentProvider implements SmartContentProviderInterf
         /** @var array<array{id: string, title: string}> $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
 
-        foreach ($result as $item) {
-            $this->deduplicationStore?->add((string) $item['id'], AccountInterface::RESOURCE_KEY);
-        }
+        $this->deduplicationStore?->add(AccountInterface::RESOURCE_KEY, ...\array_column($result, 'id'));
 
         return $result;
     }
@@ -144,7 +142,7 @@ readonly class AccountSmartContentProvider implements SmartContentProviderInterf
 
         $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates']) {
-            $excluded = \array_values(\array_unique([...$excluded, ...($this->deduplicationStore?->getIds(AccountInterface::RESOURCE_KEY) ?? [])]));
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(AccountInterface::RESOURCE_KEY) ?? [])];
         }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')
