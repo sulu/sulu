@@ -31,13 +31,6 @@ exports[`The component should not render the footer where there is no onConfirm 
               tabindex="0"
             />
           </header>
-          <article
-            class="article"
-          >
-            <p>
-              My overlay content
-            </p>
-          </article>
           <div
             class="snackbar"
           >
@@ -60,6 +53,13 @@ exports[`The component should not render the footer where there is no onConfirm 
               </div>
             </div>
           </div>
+          <article
+            class="article"
+          >
+            <p>
+              My overlay content
+            </p>
+          </article>
         </section>
       </div>
     </div>
@@ -98,6 +98,28 @@ exports[`The component should render in body when open 1`] = `
               tabindex="0"
             />
           </header>
+          <div
+            class="snackbar"
+          >
+            <div
+              class="snackbar error"
+              role="button"
+            >
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
+            </div>
+          </div>
           <article
             class="article"
           >
@@ -143,28 +165,6 @@ exports[`The component should render in body when open 1`] = `
               </span>
             </button>
           </footer>
-          <div
-            class="snackbar"
-          >
-            <div
-              class="snackbar error"
-              role="button"
-            >
-              <span
-                aria-label="su-exclamation-triangle"
-                class="su-exclamation-triangle icon"
-              />
-              <div
-                class="text"
-              >
-                <strong>
-                  sulu_admin.error
-                </strong>
-                 - 
-                
-              </div>
-            </div>
-          </div>
         </section>
       </div>
     </div>

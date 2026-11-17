@@ -10,6 +10,7 @@ import Button from '../Button';
 import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
 import Snackbar, {type SnackbarType} from '../Snackbar';
+import ToolbarButton from '../Toolbar/Button';
 import Actions from './Actions';
 import overlayStyles from './overlay.scss';
 import type {Action, Size} from './types';
@@ -19,6 +20,7 @@ type Props = {
     actions: Array<Action>,
     children: Node,
     closable: boolean,
+    closeSuccessMessage?: string,
     confirmDisabled: boolean,
     confirmLoading: boolean,
     confirmText?: string,
@@ -36,6 +38,7 @@ type Props = {
 };
 
 const CLOSE_ICON = 'su-times';
+const SUCCESS_ICON = 'su-check';
 const CLOSE_OVERLAY_KEY = 'esc';
 
 @observer
@@ -112,6 +115,7 @@ class Overlay extends React.Component<Props> {
             actions,
             children,
             closable,
+            closeSuccessMessage,
             confirmDisabled,
             confirmLoading,
             confirmText,
@@ -154,25 +158,59 @@ class Overlay extends React.Component<Props> {
                             onTransitionEnd={this.handleTransitionEnd}
                         >
                             <div className={overlayClass}>
-                                <section className={overlayStyles.content}>
-                                    <header
-                                        className={classNames(
-                                            overlayStyles.header,
-                                            {[overlayStyles.headerWithToolbar]: toolbar}
-                                        )}
-                                    >
-                                        <h2>{title}</h2>
-                                        {closable &&
-                                            <Icon
-                                                className={overlayStyles.icon}
-                                                name={CLOSE_ICON}
-                                                onClick={this.handleIconClick}
-                                            />
-                                        }
-                                    </header>
-                                    {toolbar &&
-                                        <div className={overlayStyles.toolbar}>{toolbar}</div>
+                                <section
+                                    aria-label={toolbar ? title : undefined}
+                                    className={classNames(
+                                        overlayStyles.content,
+                                        {[overlayStyles.withToolbar]: toolbar}
+                                    )}
+                                    role={toolbar ? 'dialog' : undefined}
+                                >
+                                    {toolbar
+                                        ? (
+                                            <div className={overlayStyles.toolbar}>
+                                                <div className={overlayStyles.toolbarActions}>{toolbar}</div>
+                                                {closable &&
+                                                    <div
+                                                        className={classNames(
+                                                            overlayStyles.closeButton,
+                                                            {[overlayStyles.closeButtonSuccess]: closeSuccessMessage}
+                                                        )}
+                                                    >
+                                                        <ToolbarButton
+                                                            icon={closeSuccessMessage ? SUCCESS_ICON : CLOSE_ICON}
+                                                            onClick={this.handleIconClick}
+                                                            success={!!closeSuccessMessage}
+                                                        />
+                                                    </div>
+                                                }
+                                                <span className={overlayStyles.liveRegion} role="status">
+                                                    {closeSuccessMessage}
+                                                </span>
+                                            </div>
+                                        )
+                                        : (
+                                            <header className={overlayStyles.header}>
+                                                <h2>{title}</h2>
+                                                {closable &&
+                                                    <Icon
+                                                        className={overlayStyles.icon}
+                                                        name={CLOSE_ICON}
+                                                        onClick={this.handleIconClick}
+                                                    />
+                                                }
+                                            </header>
+                                        )
                                     }
+                                    <div className={overlayStyles.snackbar}>
+                                        <Snackbar
+                                            message={snackbarMessage || ''}
+                                            onClick={onSnackbarClick}
+                                            onCloseClick={onSnackbarCloseClick}
+                                            type={snackbarType}
+                                            visible={!!snackbarMessage}
+                                        />
+                                    </div>
                                     <article className={overlayStyles.article}>{children}</article>
                                     {footerVisible &&
                                         <footer className={overlayStyles.footer}>
@@ -195,15 +233,6 @@ class Overlay extends React.Component<Props> {
                                             )}
                                         </footer>
                                     }
-                                    <div className={overlayStyles.snackbar}>
-                                        <Snackbar
-                                            message={snackbarMessage || ''}
-                                            onClick={onSnackbarClick}
-                                            onCloseClick={onSnackbarCloseClick}
-                                            type={snackbarType}
-                                            visible={!!snackbarMessage}
-                                        />
-                                    </div>
                                 </section>
                             </div>
                         </div>

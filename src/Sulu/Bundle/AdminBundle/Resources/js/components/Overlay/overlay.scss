@@ -3,7 +3,9 @@
 
 $primaryBackground: $concrete;
 $secondaryBackground: $white;
-$toolbarBackground: $alabaster;
+$toolbarBackground: $white;
+$toolbarContentBackground: $wildSand;
+$closeSuccessBackground: #1f883d;
 $borderRadius: 3px;
 $overlayBorderColor: $silver;
 
@@ -82,32 +84,54 @@ $transitionDuration: 300ms;
         }
     }
 
-    /* the toolbar continues the header, so the single separator sits below the actions */
-    .header-with-toolbar {
-        border-bottom: 0;
+    .toolbar {
+        display: flex;
+        background: $toolbarBackground;
     }
 
-    .toolbar {
-        background: $toolbarBackground;
-        border-bottom: 1px solid $overlayBorderColor;
+    .toolbar-actions {
+        flex: 1;
+        min-width: 0;
 
-        /* the application toolbar paints its own bar, in here it continues the header */
+        /* the application toolbar paints its own bar and shadow, in here it is the plain top row */
         nav {
             background: transparent;
             box-shadow: none;
         }
 
-        /* the item list is the only one in the toolbar, its bar spans the full line instead */
         ul {
             background: transparent;
             border: 0;
         }
     }
 
+    .close-button {
+        border-left: 1px solid $overlayBorderColor;
+    }
+
+    /* the contrast of white on the default success green is too low, see the toolbar actions design */
+    .close-button-success button,
+    .close-button-success button:hover {
+        background-color: $closeSuccessBackground;
+    }
+
+    .live-region {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
     .article {
         max-height: $overlayContentMaxHeight;
         overflow: auto;
         background: $primaryBackground;
+    }
+
+    &.with-toolbar .article {
+        background: $toolbarContentBackground;
     }
 
     .footer {
@@ -135,10 +159,9 @@ $transitionDuration: 300ms;
     }
 }
 
-/* the snackbar takes the first row instead of covering the header; it collapses to no height
-   while hidden, so its own margin transition pushes the overlay down as it appears */
+/* the snackbar sits directly under the header or toolbar; it collapses to no height while hidden,
+   so its own margin transition pushes the content down as it appears */
 .snackbar {
-    order: -1;
     display: flex;
     flex-direction: column;
 }
