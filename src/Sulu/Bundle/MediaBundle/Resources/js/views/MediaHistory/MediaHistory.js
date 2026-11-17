@@ -2,6 +2,7 @@
 import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import log from 'loglevel';
 import {Dialog, Loader, Table} from 'sulu-admin-bundle/components';
 import {withToolbar} from 'sulu-admin-bundle/containers';
 import {ResourceStore} from 'sulu-admin-bundle/stores';
@@ -18,6 +19,9 @@ type Props = ViewProps & {
     title?: string,
 };
 
+/**
+ * @deprecated
+ */
 @observer
 class MediaHistory extends React.Component<Props> {
     @observable deleteId: ?string | number = undefined;
@@ -26,6 +30,11 @@ class MediaHistory extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
+
+        log.warn(
+            'The "sulu_media.history" view is deprecated since 3.1 and will be removed. ' +
+            'The media history tab is a "sulu_admin.list" view of the "media_versions" list.'
+        );
 
         const {
             router,

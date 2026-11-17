@@ -18739,6 +18739,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Admin/MediaAdmin.php
 
 		-
+			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ViewBuilderFactoryInterface\:\:createListViewBuilder\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Admin/MediaAdmin.php
+
+		-
 			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ViewBuilderFactoryInterface\:\:createResourceTabViewBuilder\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -18747,7 +18753,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$name of method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ViewBuilderFactoryInterface\:\:createViewBuilder\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Admin/MediaAdmin.php
 
 		-

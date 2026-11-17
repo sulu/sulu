@@ -208,6 +208,31 @@ $services->set('acme_product.product_localizations_resolver', ProductLocalizatio
     ->tag('sulu_content.content_localizations_resolver', ['resource_key' => 'products']);
 ```
 
+### The media history tab is a list
+
+The `sulu_media.form.history` view is a `sulu_admin.list` view of the new `media_versions` list, loaded from
+`GET /admin/api/media/{id}/versions`, instead of the `sulu_media.history` view type. Its rows open and delete a version
+through the `sulu_media.show_version` and `sulu_media.delete_version` list item actions.
+
+A project that added columns by registering its own `sulu_media.history` view should drop that view and add the columns
+with a `config/lists/media_versions.xml` of its own, which is merged into the core list:
+
+```xml
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>media_versions</key>
+
+    <properties>
+        <property name="mimeType" translation="sulu_media.mime_type" visibility="yes">
+            <field-name>mimeType</field-name>
+            <entity-name>Sulu\Bundle\MediaBundle\Entity\FileVersion</entity-name>
+        </property>
+    </properties>
+</list>
+```
+
+The `sulu_media.history` view type and its `MediaHistory` component are deprecated and will be removed.
+
 ### BC breaks
 
 - `SnippetDimensionContentInterface` now also extends `Sulu\Content\Domain\Model\ShadowInterface`. A

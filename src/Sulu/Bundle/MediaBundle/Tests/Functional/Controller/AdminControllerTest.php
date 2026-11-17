@@ -53,6 +53,18 @@ class AdminControllerTest extends SuluTestCase
         $this->assertSnapshot('media_details.json', $client->getResponse()->getContent() ?: '');
     }
 
+    public function testMediaVersionsListMetadataAction(): void
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->jsonRequest('GET', '/admin/metadata/list/media_versions');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $response = \json_decode($client->getResponse()->getContent() ?: '', true);
+        $this->assertIsArray($response);
+        $this->assertSame(['id', 'mediaId', 'version', 'name', 'created'], \array_keys($response));
+    }
+
     public function testImagesFormMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
