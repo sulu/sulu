@@ -26,6 +26,8 @@ class MetadataTest extends KernelTestCase
         $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
         $classMetadata = $entityManager->getClassMetadata(Route::class);
 
+        // doctrine/orm 3.8 types the indexes with its local IndexMapping alias, which PHPStan cannot resolve here.
+        /** @var array{indexes?: array<string, mixed>, uniqueConstraints?: array<string, mixed>} $tableDefinition */
         $tableDefinition = $classMetadata->table;
 
         Assert::true(isset($tableDefinition['indexes']), 'We expect that the table definition contains indexes.');
@@ -63,6 +65,7 @@ class MetadataTest extends KernelTestCase
         $entityManager = self::getContainer()->get('doctrine.orm.entity_manager');
         $classMetadata = $entityManager->getClassMetadata(Route::class);
 
+        /** @var array{indexes?: array<string, mixed>, uniqueConstraints?: array<string, mixed>} $tableDefinition */
         $tableDefinition = $classMetadata->table;
 
         Assert::true(isset($tableDefinition['uniqueConstraints']), 'We expect that the table definition contains uniqueConstraints.');
