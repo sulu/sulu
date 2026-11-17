@@ -34,6 +34,10 @@ interface ArticleDimensionContentInterface extends DimensionContentInterface, Ex
 
     public function setCustomizeWebspaceSettings(bool $customizeWebspaceSettings): static;
 
+    public function getExcerptPriority(): int;
+
+    public function setExcerptPriority(int $excerptPriority): static;
+
     /**
      * @return string[]
      */

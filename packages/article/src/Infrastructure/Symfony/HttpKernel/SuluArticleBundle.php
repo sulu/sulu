@@ -45,7 +45,9 @@ use Sulu\Article\Infrastructure\Sulu\Content\ArticleLinkProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleSmartContentProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\ArticleTeaserProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\DataMapper\AdditionalWebspacesDataMapper;
+use Sulu\Article\Infrastructure\Sulu\Content\DataMapper\ExcerptPriorityDataMapper;
 use Sulu\Article\Infrastructure\Sulu\Content\Merger\AdditionalWebspacesMerger;
+use Sulu\Article\Infrastructure\Sulu\Content\Merger\ExcerptPriorityMerger;
 use Sulu\Article\Infrastructure\Sulu\Content\PageTreeArticleSmartContentProvider;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPropertyResolver;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
@@ -258,8 +260,16 @@ final class SuluArticleBundle extends AbstractBundle
             ])
             ->tag('sulu_content.data_mapper');
 
+        $services->set('sulu_article.excerpt_priority_data_mapper')
+            ->class(ExcerptPriorityDataMapper::class)
+            ->tag('sulu_content.data_mapper');
+
         $services->set('sulu_article.additional_webspaces_merger')
             ->class(AdditionalWebspacesMerger::class)
+            ->tag('sulu_content.merger', ['priority' => 12]);
+
+        $services->set('sulu_article.excerpt_priority_merger')
+            ->class(ExcerptPriorityMerger::class)
             ->tag('sulu_content.merger', ['priority' => 12]);
 
         $services->set('sulu_article.webspace_settings_configuration_resolver')
