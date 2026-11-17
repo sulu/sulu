@@ -54,7 +54,14 @@ export type WorkflowTransitionRequestPermissions = {|
     review: boolean,
 |};
 
+export type WorkflowTransitionRequestAction = {|
+    key: string,
+    label: string,
+|};
+
 export type WorkflowTransitionRequestData = {|
+    /** Added by bundles: the footer of the review overlay shows them next to the actions of the core. */
+    actions?: Array<WorkflowTransitionRequestAction>,
     approvalProgress: ApprovalProgress,
     approvals: Array<WorkflowTransitionRequestApproval>,
     checks: Array<WorkflowTransitionRequestCheck>,
