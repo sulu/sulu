@@ -11,3 +11,8 @@ highest priority.
 | locales       | The locales in which the given type of entity is available in.
 | resourceKey   | The resourceKey for the type of entity which will be managed by the given tabs.                     |
 | titleProperty | The property of the object in the ResourceStore being used in the headline of the tab.              |
+
+Besides the options listed above, `tabBadges` works like in the [`Tabs`](#tabs) view. The `tabCondition` option of a
+child route is a JEXL expression evaluated with the data of the loaded resource, the tab is hidden if it is falsy. If
+`locales` is set, a `locale` router attribute is bound to the `ResourceStore`. The `locales`, the `resourceStore` and
+the `title` (value of the `titleProperty` in the resource) are passed to the view of the selected tab.

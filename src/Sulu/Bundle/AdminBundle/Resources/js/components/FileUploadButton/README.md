@@ -22,3 +22,18 @@ const handleUpload = (file) => {
     Upload something
 </FileUploadButton>
 ```
+
+The `accept` prop restricts the selectable MIME type, `disabled` disables the button:
+
+```javascript
+<div>
+    <div style={{marginBottom: '10px'}}>
+        <FileUploadButton accept="image/png" onUpload={() => {}}>
+            Upload PNG
+        </FileUploadButton>
+    </div>
+    <FileUploadButton disabled={true} onUpload={() => {}}>
+        Disabled
+    </FileUploadButton>
+</div>
+```

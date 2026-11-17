@@ -83,3 +83,27 @@ const handleNavigationClick = (value) => {
     </Navigation>
 </div>
 ```
+
+With `pinned` and `onPinToggle` the navigation shows a pin button to keep it expanded.
+
+```javascript
+const [pinned, setPinned] = React.useState(false);
+
+<div style={{height: '500px'}}>
+    <Navigation
+        title="sulu.io"
+        username="John Travolta"
+        userImage={null}
+        appVersion={null}
+        onItemClick={() => {}}
+        onLogoutClick={() => {}}
+        onProfileClick={() => {}}
+        onPinToggle={() => setPinned(!pinned)}
+        pinned={pinned}
+        suluVersion="2.0.0"
+        suluVersionLink="http://link.com"
+    >
+        <Navigation.Item value="search" title="Search" icon="su-search" />
+    </Navigation>
+</div>
+```

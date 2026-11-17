@@ -4,4 +4,12 @@ versions in a new window.
 
 | Option  | Description                                                             |
 |---------|-------------------------------------------------------------------------|
-| locales | Defines which locales are available in the locale chooser of this form. |
+| locales | Defines which locales are available in the locale chooser of this view.  |
+
+```json static
+{
+    "name": "sulu_media.history",
+    "type": "sulu_media.history",
+    "options": {"locales": ["en", "de"]}
+}
+```

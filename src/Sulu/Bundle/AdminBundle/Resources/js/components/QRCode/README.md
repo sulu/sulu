@@ -13,3 +13,12 @@ const [value, setValue] = React.useState('');
 
 <QRCode icon="fa-key" type="password" placeholder="Password" value={value} onChange={setValue} />
 ```
+
+The `valid` and `disabled` props are passed to the input as well.
+
+```javascript
+<div>
+    <QRCode disabled={true} value="disabled" onChange={() => {}} />
+    <QRCode valid={false} value="invalid" onChange={() => {}} />
+</div>
+```

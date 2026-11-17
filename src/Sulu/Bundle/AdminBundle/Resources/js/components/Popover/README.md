@@ -37,3 +37,35 @@ const handleOpen = (event) => {
     </Popover>
 </div>
 ```
+
+The `backdrop` prop (default `true`) toggles the transparent backdrop that catches outside clicks. The
+`horizontalAnchorMode` (`left` or `center`) aligns the popover to the anchor, `horizontalOffset` and `verticalOffset`
+move it in pixels, and `centerChildElement` names the child that is centered on the anchor. `popoverChildRef` receives
+the popover node.
+
+```javascript
+const Menu = require('../Menu').default;
+const [open, setOpen] = React.useState(false);
+const [anchorElement, setAnchorElement] = React.useState(null);
+
+<div>
+    <button onClick={(event) => {setOpen(true); setAnchorElement(event.currentTarget);}}>Open centered popover</button>
+    <Popover
+        anchorElement={anchorElement}
+        backdrop={false}
+        horizontalAnchorMode="center"
+        horizontalOffset={10}
+        onClose={() => setOpen(false)}
+        open={open}
+        verticalOffset={5}
+    >
+        {
+            (setPopoverRef, styles) => (
+                <Menu menuRef={setPopoverRef} style={styles}>
+                    <li onClick={() => setOpen(false)}>Close me</li>
+                </Menu>
+            )
+        }
+    </Popover>
+</div>
+```

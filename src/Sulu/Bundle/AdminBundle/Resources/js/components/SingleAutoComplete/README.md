@@ -65,3 +65,17 @@ const handleChange = (value) => {
     value={value}
 />
 ```
+
+A `disabled` auto complete cannot be edited, and `onFinish` is called when the user leaves the field.
+
+```javascript
+<SingleAutoComplete
+    disabled={true}
+    displayProperty="name"
+    onChange={() => {}}
+    onSearch={() => {}}
+    searchProperties={['name']}
+    suggestions={[]}
+    value={{id: 1, name: 'Donald Duck'}}
+/>
+```

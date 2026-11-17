@@ -10,3 +10,19 @@ when the page is being changed. The callback also receives the new page.
             totalPages={10}
         />
     </div>
+
+While `loading` is `true` the pagination is shown in its loading state. Without `currentPage` and `totalPages` the
+controls stay empty.
+
+```javascript
+<div style={{height: '40px'}}>
+    <Pagination
+        currentLimit={10}
+        currentPage={1}
+        loading={true}
+        onLimitChange={() => {}}
+        onPageChange={() => {}}
+        totalPages={3}
+    />
+</div>
+```

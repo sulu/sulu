@@ -4,4 +4,12 @@ each image format as well as copying the URL to this image format.
 
 | Option  | Description                                                             |
 |---------|-------------------------------------------------------------------------|
-| locales | Defines which locales are available in the locale chooser of this form. |
+| locales | Defines which locales are available in the locale chooser of this view.  |
+
+```json static
+{
+    "name": "sulu_media.formats",
+    "type": "sulu_media.formats",
+    "options": {"locales": ["en", "de"]}
+}
+```
