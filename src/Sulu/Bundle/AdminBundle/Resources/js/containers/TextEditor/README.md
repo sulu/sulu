@@ -6,6 +6,13 @@ decides which `TextEditor` should be used.
 const CKEditor5 = require('../CKEditor5').default;
 require('../CKEditor5').registerCKEditor5Plugins();
 
+const linkTypeRegistry = require('../Link/registries/linkTypeRegistry').default;
+const ExternalLinkTypeOverlay = require('../Link/overlays/ExternalLinkTypeOverlay').default;
+
+if (!linkTypeRegistry.getKeys().includes('external')) {
+    linkTypeRegistry.add('external', ExternalLinkTypeOverlay, 'External');
+}
+
 const [value, setValue] = React.useState('');
 
 const textEditorRegistry = require('./registries/textEditorRegistry').default;
