@@ -12,23 +12,17 @@ escaped from the exception listener and turned the `404` into a `500`.
 
 Projects with their own `RouteDefaultsProviderInterface` should throw a `ResourceNotFoundException` as well.
 
-### Smart content supports `exclude_duplicates`
+### The rendered page is excluded from its own smart contents
 
-The `exclude_duplicates` parameter of smart content works again. The request scoped
-`DeduplicationStoreInterface` (`sulu_content.deduplication_store`) holds the ids shown on the page per resource key.
-Selection property resolvers add the ids they show, smart content providers exclude the stored ids when
-`excludeDuplicates` is set and add their own results.
+A smart content no longer lists the page it is rendered on, also without `exclude_duplicates`. Custom smart content
+providers need to apply the `excluded` filter (`NOT IN`), otherwise they keep listing the page.
 
-- A custom smart content provider has to apply the `excluded` filter (`NOT IN`) to support it, the resolver passes
-  the ids to exclude there. To support `exclude_duplicates` it can take the `DeduplicationStoreInterface` as an
-  optional last constructor argument, merge `getIds($resourceKey)` into the excluded ids when `excludeDuplicates` is
-  true and call `add($id, $resourceKey)` for every result of `findFlatBy`.
-- A custom selection property resolver should call `add($id, $resourceKey)` for the ids it shows, with the resource
-  key of its resources.
-- The rendered page is now always excluded from its own smart contents, also without `exclude_duplicates`.
-- The existing selection property resolvers and smart content providers take the store as an optional last
-  constructor argument. Instantiating them without it is deprecated. Projects that extend them or define their own
-  service need to pass `sulu_content.deduplication_store`.
+### New constructor argument for the selection property resolvers and smart content providers
+
+The selection property resolvers, `TeaserSelectionPropertyResolver`, `ImageMapPropertyResolver` and the smart content
+providers take the `sulu_content.deduplication_store` as their last argument. Projects that extend one of these classes
+or define their own service for it need to pass it, otherwise `exclude_duplicates` has no effect for them. Leaving it
+out triggers a deprecation.
 
 ## 3.0.10
 
