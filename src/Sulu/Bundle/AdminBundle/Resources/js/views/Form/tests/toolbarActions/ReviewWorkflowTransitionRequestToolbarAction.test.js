@@ -225,6 +225,20 @@ test('Retry a validator and reload the resource afterwards', async() => {
     expect(toolbarAction.resourceFormStore.resourceStore.reload).toHaveBeenCalled();
 });
 
+test('Run an action of a bundle by its key and reload the resource afterwards', async() => {
+    const toolbarAction = createReviewToolbarAction();
+    toolbarAction.resourceFormStore.resourceStore.data.activeWorkflowTransitionRequest = request;
+
+    await toolbarAction.handleAction('schedule');
+
+    expect(ResourceRequester.post).toHaveBeenCalledWith(
+        'workflow_transition_requests',
+        {},
+        {id: 'request-1', action: 'schedule'}
+    );
+    expect(toolbarAction.resourceFormStore.resourceStore.reload).toHaveBeenCalled();
+});
+
 test('Return no item config and no node without an active request', () => {
     const toolbarAction = createReviewToolbarAction();
 
