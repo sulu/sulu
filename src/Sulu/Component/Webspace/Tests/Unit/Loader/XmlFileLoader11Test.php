@@ -417,9 +417,11 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('en', $localizations[0]->getChildren()[0]->getLanguage());
         $this->assertEquals('ca', $localizations[0]->getChildren()[0]->getCountry());
         $this->assertEquals(null, $localizations[0]->getChildren()[0]->getShadow());
-        $this->assertEquals('en', $localizations[0]->getChildren()[0]->getParent()->getLanguage());
-        $this->assertEquals('us', $localizations[0]->getChildren()[0]->getParent()->getCountry());
-        $this->assertEquals('auto', $localizations[0]->getChildren()[0]->getParent()->getShadow());
+        $parent = $localizations[0]->getChildren()[0]->getParent();
+        $this->assertNotNull($parent);
+        $this->assertEquals('en', $parent->getLanguage());
+        $this->assertEquals('us', $parent->getCountry());
+        $this->assertEquals('auto', $parent->getShadow());
 
         $this->assertEquals('fr', $localizations[1]->getLanguage());
         $this->assertEquals('ca', $localizations[1]->getCountry());
