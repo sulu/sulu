@@ -84,6 +84,11 @@ services:
         tags:
             - { name: 'sulu_content.property_resolver', alias: 'example_selection' }
 
+    example_test.single_example_selection_property_resolver:
+        class: Sulu\Content\Tests\Application\ExampleTestBundle\PropertyResolver\ExampleSingleSelectionPropertyResolver
+        tags:
+            - { name: 'sulu_content.property_resolver', alias: 'single_example_selection' }
+
     example_test.example_resource_loader:
         class: Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResourceLoader
         arguments:
