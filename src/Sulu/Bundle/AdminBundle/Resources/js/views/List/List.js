@@ -81,7 +81,7 @@ class List extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {locale, router} = this.props;
+        const {locale, resourceStore, router} = this.props;
         const {
             attributes,
             route: {
@@ -112,7 +112,8 @@ class List extends React.Component<Props> {
             throw new Error('The route does not define the mandatory "adapters" option');
         }
 
-        this.locale = locale ? locale : observable.box();
+        // A list inside resource tabs shares the locale of their resource, so switching it updates the tabs as well.
+        this.locale = locale || resourceStore?.locale || observable.box();
 
         const observableOptions = {};
 
