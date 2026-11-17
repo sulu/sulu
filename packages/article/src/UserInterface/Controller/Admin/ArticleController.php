@@ -477,11 +477,14 @@ final class ArticleController implements SecuredControllerInterface
             /** @var ArticleInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
+        /** @var array<string, mixed> $workflowTransitionRequestData */
+        $workflowTransitionRequestData = $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY);
+
         $message = new ApplyWorkflowTransitionArticleMessage(
             ['uuid' => $uuid],
             $this->getLocale($request),
             $action,
-            $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY),
+            $workflowTransitionRequestData,
         );
 
         /** @see \Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler */

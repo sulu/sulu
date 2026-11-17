@@ -450,11 +450,14 @@ final class SnippetController implements SecuredControllerInterface
             /** @var SnippetInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } else {
+            /** @var array<string, mixed> $workflowTransitionRequestData */
+            $workflowTransitionRequestData = $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY);
+
             $message = new ApplyWorkflowTransitionSnippetMessage(
                 ['uuid' => $uuid],
                 $this->getLocale($request),
                 $action,
-                $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY),
+                $workflowTransitionRequestData,
             );
 
             /** @see \Sulu\Snippet\Application\MessageHandler\ApplyWorkflowTransitionSnippetMessageHandler */

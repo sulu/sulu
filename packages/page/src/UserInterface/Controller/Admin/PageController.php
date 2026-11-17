@@ -391,11 +391,14 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
 
+        /** @var array<string, mixed> $workflowTransitionRequestData */
+        $workflowTransitionRequestData = $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY);
+
         $message = new ApplyWorkflowTransitionPageMessage(
             ['uuid' => $uuid],
             $this->getLocale($request),
             $action,
-            $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY),
+            $workflowTransitionRequestData,
         );
 
         /** @see \Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler */

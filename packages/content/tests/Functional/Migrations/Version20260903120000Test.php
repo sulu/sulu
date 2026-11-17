@@ -18,6 +18,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Migrations\Version20260903120000;
+use Sulu\Content\Migrations\Version20261117120000;
 
 class Version20260903120000Test extends SuluTestCase
 {
@@ -65,15 +66,31 @@ class Version20260903120000Test extends SuluTestCase
     }
 
     /**
+     * The data column belongs to the mapping of the tables as well, so the later migration runs after
+     * the first one on the way up and before it on the way down.
+     *
      * @param 'down'|'up' $direction
      */
     private function runMigration(string $direction): void
+    {
+        $migrations = [Version20260903120000::class, Version20261117120000::class];
+
+        foreach ('up' === $direction ? $migrations : \array_reverse($migrations) as $migrationClass) {
+            $this->runSingleMigration($migrationClass, $direction);
+        }
+    }
+
+    /**
+     * @param class-string<Version20260903120000|Version20261117120000> $migrationClass
+     * @param 'down'|'up' $direction
+     */
+    private function runSingleMigration(string $migrationClass, string $direction): void
     {
         $schemaManager = $this->connection->createSchemaManager();
         $fromSchema = $schemaManager->introspectSchema();
         $toSchema = $schemaManager->introspectSchema();
 
-        $migration = new Version20260903120000($this->connection, new NullLogger());
+        $migration = new $migrationClass($this->connection, new NullLogger());
         $migration->$direction($toSchema);
 
         $platform = $this->connection->getDatabasePlatform();
