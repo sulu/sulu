@@ -12,3 +12,18 @@ const onChange = (value) => setValue(value);
     Value: {value}
 </div>
 ```
+
+The `disabled` prop disables the input, `placeholder` sets the text shown while empty, `valid` marks the field as
+valid or invalid independent of the format check, and `onBlur` is called when the input loses focus.
+
+```javascript
+const [value, setValue] = React.useState('DE89370400440532013000');
+
+<div>
+    <Iban onChange={setValue} placeholder="Enter a value" value={value} />
+    <br />
+    <Iban disabled={true} onChange={setValue} value={value} />
+    <br />
+    <Iban onChange={setValue} valid={false} value={value} />
+</div>
+```

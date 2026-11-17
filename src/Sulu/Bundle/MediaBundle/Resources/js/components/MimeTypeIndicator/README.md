@@ -1,4 +1,5 @@
-The `MimeTypeIndicator` component serves as a replacement for uploaded files which does not offer a thumbnail. It offers predefined colors for common file-types.
+The `MimeTypeIndicator` component serves as a replacement for uploaded files which does not offer a thumbnail. It offers predefined colors for common file-types. The `width` and `height` props define the size of the box, and
+`iconSize` the size of the icon inside of it (defaults to `52`).
 
 ```javascript
 const box = {

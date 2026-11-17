@@ -118,3 +118,18 @@ const handleChange = (value) => {
     value={value}
 />
 ```
+
+A `disabled` auto complete cannot be edited, and `onFinish` is called when the user leaves the field.
+
+```javascript
+<MultiAutoComplete
+    disabled={true}
+    displayProperty="name"
+    idProperty="id"
+    onChange={() => {}}
+    onSearch={() => {}}
+    searchProperties={['name']}
+    suggestions={[]}
+    value={[{id: 1, name: 'Donald Duck'}, {id: 2, name: 'Mickey Mouse'}]}
+/>
+```

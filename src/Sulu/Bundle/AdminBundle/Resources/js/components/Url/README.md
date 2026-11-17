@@ -36,3 +36,31 @@ const protocols = ['http://', 'https://'];
     <p>Returned URL: {value}</p>
 </div>
 ```
+
+The `defaultProtocol` preselects a protocol while the value is empty, and `onProtocolChange` is called with the new
+protocol when the user changes it.
+
+```javascript
+const [value, setValue] = React.useState(undefined);
+const [protocol, setProtocol] = React.useState('https://');
+
+<div>
+    <Url
+        defaultProtocol="https://"
+        onChange={setValue}
+        onProtocolChange={setProtocol}
+        protocols={['http://', 'https://', 'ftp://']}
+        value={value}
+    />
+    <p>Protocol: {protocol}</p>
+</div>
+```
+
+The `disabled` prop disables the field, `valid={false}` forces the error state, and `onBlur` is called on blur.
+
+```javascript
+<div>
+    <Url disabled={true} onChange={() => {}} protocols={['http://', 'https://']} value="https://sulu.io" />
+    <Url valid={false} onChange={() => {}} protocols={['http://', 'https://']} value="https://sulu.io" />
+</div>
+```

@@ -12,3 +12,9 @@ import Toggler from '../Toggler';
     <Toggler />
 </Heading>
 ```
+
+Only the `label` is required for a minimal heading; `icon`, `description` and children are optional.
+
+```javascript
+<Heading label="Only a label" />
+```

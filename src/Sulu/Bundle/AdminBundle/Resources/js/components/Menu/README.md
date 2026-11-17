@@ -10,3 +10,13 @@ Example:
     <li>Item 3</li>
 </Menu>
 ```
+
+A `Menu.Divider` separates groups of items, and `menuRef` receives the DOM node of the list.
+
+```javascript
+<Menu style={{maxWidth: '200px'}} menuRef={(ref) => console.log('menu node', ref)}>
+    <li>Item 1</li>
+    <Menu.Divider />
+    <li>Item 2</li>
+</Menu>
+```

@@ -9,3 +9,12 @@ const onChange = (newValue) => {
 
 <PasswordConfirmation onChange={onChange} />
 ```
+
+The `disabled` prop disables both fields, and `valid={false}` marks them as erroneous.
+
+```javascript
+<div>
+    <PasswordConfirmation disabled={true} onChange={() => {}} />
+    <PasswordConfirmation valid={false} onChange={() => {}} />
+</div>
+```

@@ -79,3 +79,26 @@ const onChange = (value) => setSelectedValue(value);
     <Option value="su-umbrella"><Icon name="su-umbrella"/> su-umbrella</Option>
 </SingleSelect>
 ```
+
+The `skin` prop switches between `default`, `flat` and `dark`, `icon` shows an icon in front of the value and
+`disabled` blocks the select.
+
+```javascript
+const Option = SingleSelect.Option;
+
+<div>
+    <SingleSelect skin="flat" icon="su-plus" value="1" onChange={() => {}}>
+        <Option value="1">Flat with icon</Option>
+        <Option value="2">Other</Option>
+    </SingleSelect>
+    <div style={{background: '#333', padding: '10px'}}>
+        <SingleSelect skin="dark" value="1" onChange={() => {}}>
+            <Option value="1">Dark skin</Option>
+            <Option value="2">Other</Option>
+        </SingleSelect>
+    </div>
+    <SingleSelect disabled={true} value="1" onChange={() => {}}>
+        <Option value="1">Disabled</Option>
+    </SingleSelect>
+</div>
+```
