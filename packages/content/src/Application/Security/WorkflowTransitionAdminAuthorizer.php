@@ -67,7 +67,7 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
         return [
             // Withdrawing a request frees the content for editing again, so it takes EDIT.
             'cancel' => $edit,
-            'publish' => $this->isPublishGranted($condition, $resourceKey, $resourceId, $locale, null),
+            'publish' => $this->isPublishGranted($condition, $resourceKey, $resourceId, $locale),
             // Re-running a check is part of fixing the content, not a verdict on it.
             'retry' => $edit,
             'review' => $this->securityChecker->hasPermission($condition, PermissionTypes::REVIEW),
@@ -143,7 +143,7 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
         string $resourceKey,
         string $resourceId,
         string $locale,
-        ?UserInterface $user,
+        ?UserInterface $user = null,
     ): bool {
         // Asked first and alone, so the live permission answers without looking up the request.
         if ($this->hasPermission($condition, PermissionTypes::LIVE, $user)) {
@@ -158,7 +158,7 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
      * Without a user the current token decides. With one, its roles decide, because a console run has
      * no token, and the access control manager grants everything while no system is set.
      */
-    private function hasPermission(SecurityCondition $condition, string $permission, ?UserInterface $user): bool
+    private function hasPermission(SecurityCondition $condition, string $permission, ?UserInterface $user = null): bool
     {
         if (null === $user) {
             return $this->securityChecker->hasPermission($condition, $permission);

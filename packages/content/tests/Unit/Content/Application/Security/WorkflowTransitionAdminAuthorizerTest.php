@@ -398,7 +398,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $securityChecker->hasPermission(Argument::cetera())->shouldNotBeCalled();
 
-        $this->createAuthorizerForUser($securityChecker, $accessControlManager, null)
+        $this->createAuthorizerForUser($securityChecker, $accessControlManager)
             ->assertCanPublish(Example::RESOURCE_KEY, '1', 'en', $user);
     }
 
@@ -412,7 +412,6 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
         $authorizer = $this->createAuthorizerForUser(
             $this->prophesize(SecurityCheckerInterface::class),
             $accessControlManager,
-            null,
         );
 
         $this->expectException(AccessDeniedException::class);
@@ -449,7 +448,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $securityChecker->hasPermission(Argument::cetera())->shouldNotBeCalled();
 
-        $authorizer = $this->createAuthorizerForUser($securityChecker, $accessControlManager, null, true);
+        $authorizer = $this->createAuthorizerForUser($securityChecker, $accessControlManager, withToken: true);
 
         $this->expectException(AccessDeniedException::class);
 
@@ -507,7 +506,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
     private function createAuthorizerForUser(
         \Prophecy\Prophecy\ObjectProphecy $securityChecker,
         \Prophecy\Prophecy\ObjectProphecy $accessControlManager,
-        ?WorkflowTransitionRequest $activeRequest,
+        ?WorkflowTransitionRequest $activeRequest = null,
         bool $withToken = false,
     ): WorkflowTransitionAdminAuthorizer {
         $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
