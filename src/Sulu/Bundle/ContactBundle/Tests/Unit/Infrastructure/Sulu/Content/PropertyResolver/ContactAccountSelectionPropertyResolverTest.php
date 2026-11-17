@@ -152,4 +152,22 @@ class ContactAccountSelectionPropertyResolverTest extends TestCase
 
         $this->assertSame([], $store->getIds(ContactInterface::RESOURCE_KEY));
     }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new ContactAccountSelectionPropertyResolver();
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ContactAccountSelectionPropertyResolver without the $deduplicationStore argument is deprecated.'], $deprecations);
+    }
 }

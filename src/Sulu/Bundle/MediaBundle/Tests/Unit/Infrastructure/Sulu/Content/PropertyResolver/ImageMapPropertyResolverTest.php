@@ -447,4 +447,22 @@ class ImageMapPropertyResolverTest extends TestCase
 
         return $fieldMetadata;
     }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new ImageMapPropertyResolver($this->logger, new MetadataProviderRegistry($this->container));
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ImageMapPropertyResolver without the $deduplicationStore argument is deprecated.'], $deprecations);
+    }
 }

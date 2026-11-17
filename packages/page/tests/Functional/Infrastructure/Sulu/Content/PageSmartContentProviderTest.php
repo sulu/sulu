@@ -28,6 +28,7 @@ use Sulu\Page\Application\Message\CreatePageMessage;
 use Sulu\Page\Application\Message\ModifyPageMessage;
 use Sulu\Page\Application\MessageHandler\CreatePageMessageHandler;
 use Sulu\Page\Domain\Model\PageInterface;
+use Sulu\Page\Infrastructure\Sulu\Content\PageSmartContentProvider;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
@@ -1614,5 +1615,35 @@ class PageSmartContentProviderTest extends SuluTestCase
         $store->reset();
 
         return $store;
+    }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $container = self::getContainer();
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new PageSmartContentProvider(
+                $container->get('sulu_content.dimension_content_query_enhancer'),
+                $container->get('sulu_admin.form_metadata_provider'),
+                $container->get('sulu_admin.smart_content_query_enhancer'),
+                $container->get('security.token_storage'),
+                $container->get('doctrine.orm.entity_manager'),
+                $container->getParameter('kernel.bundles'),
+                $container->get('sulu_core.webspace.webspace_manager'),
+                $container->get('sulu_security.access_control_query_enhancer'),
+                $container->get('security.helper'),
+                $container->getParameter('sulu_security.permissions'),
+            );
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating PageSmartContentProvider without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }
