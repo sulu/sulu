@@ -231,4 +231,22 @@ class TeaserSelectionPropertyResolverTest extends TestCase
     {
         $this->assertSame('teaser_selection', TeaserSelectionPropertyResolver::getType());
     }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new TeaserSelectionPropertyResolver();
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating TeaserSelectionPropertyResolver without the $deduplicationStore argument is deprecated.'], $deprecations);
+    }
 }

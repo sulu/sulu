@@ -217,4 +217,22 @@ class SingleSnippetSelectionPropertyResolverTest extends TestCase
 
         $this->assertSame([], $store->getIds(SnippetInterface::RESOURCE_KEY));
     }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new SingleSnippetSelectionPropertyResolver();
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating SingleSnippetSelectionPropertyResolver without the $deduplicationStore argument is deprecated.'], $deprecations);
+    }
 }

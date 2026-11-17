@@ -19,6 +19,7 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\SmartContent\MediaSmartContentProvider;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
@@ -1046,5 +1047,31 @@ class MediaSmartContentProviderTest extends SuluTestCase
         $store->reset();
 
         return $store;
+    }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $container = self::getContainer();
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new MediaSmartContentProvider(
+                $container->get('doctrine.orm.entity_manager'),
+                $container->get('sulu_admin.smart_content_query_enhancer'),
+                $container->get('translator'),
+                $container->get('sulu_core.webspace.webspace_manager'),
+                $container->get('sulu_security.access_control_query_enhancer'),
+                $container->get('security.helper'),
+            );
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating MediaSmartContentProvider without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }

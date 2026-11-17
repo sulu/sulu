@@ -557,4 +557,28 @@ class PageTreeArticleSmartContentProviderTest extends SuluTestCase
 
         return $store;
     }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $container = self::getContainer();
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new PageTreeArticleSmartContentProvider(
+                $container->get('sulu_content.dimension_content_query_enhancer'),
+                $container->get('sulu_admin.smart_content_query_enhancer'),
+                $container->get('doctrine.orm.entity_manager'),
+                $container->get('sulu_admin.metadata_group_provider'),
+            );
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ' . PageTreeArticleSmartContentProvider::class . ' without the $deduplicationStore argument is deprecated.'], $deprecations);
+    }
 }
