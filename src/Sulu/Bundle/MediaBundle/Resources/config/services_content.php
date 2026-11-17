@@ -37,6 +37,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('logger'),
             new Reference('sulu_admin.metadata_provider_registry'),
             '%kernel.debug%',
+            new Reference('sulu_content.deduplication_store'),
         ])
         ->call('setMetadataResolver', [new Reference('sulu_content.metadata_resolver')])
         ->tag('sulu_content.property_resolver');
