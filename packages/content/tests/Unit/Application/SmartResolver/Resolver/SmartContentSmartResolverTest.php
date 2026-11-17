@@ -19,7 +19,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfiguration;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
-use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver;
@@ -41,7 +40,6 @@ class SmartContentSmartResolverTest extends TestCase
 
         $this->smartResolver = new SmartContentSmartResolver(
             $this->serviceLocator->reveal(),
-            new ContentDeduplicationTracker(),
         );
     }
 
@@ -119,77 +117,108 @@ class SmartContentSmartResolverTest extends TestCase
         $this->assertSame(5, $view['total']); // min(limit (5), fullTotal (10)) = 5
     }
 
-    public function testResolveExcludesDuplicatesAndRegistersResolvedIds(): void
+    public function testResolveExcludesTheSelfReferenceOfTheProviderType(): void
     {
-        $tracker = new ContentDeduplicationTracker();
-        // ids resolved by a previous smart content block of the same resource key
-        $tracker->add('pages', 'page-1');
-        $tracker->add('pages', 'page-2');
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->countBy(Argument::cetera())->willReturn(0);
+        $smartContentProvider->findFlatBy(
+            Argument::that(static fn (array $filters): bool => ['self-page'] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn([])->shouldBeCalled();
 
-        /** @var ObjectProphecy<ServiceLocator<SmartContentProviderInterface>> $serviceLocator */
-        $serviceLocator = $this->prophesize(ServiceLocator::class);
-        $smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
-
-        $resolver = new SmartContentSmartResolver(
-            $serviceLocator->reveal(),
-            $tracker,
+        $result = $this->smartResolver->resolve(
+            $this->createResolvable(['resourceKey' => 'pages', 'id' => 'self-page']),
+            'en',
         );
 
-        $smartResolvable = $this->prophesize(SmartResolvable::class);
-        $data = [
-            'value' => [],
-            'filters' => [
-                'dataSource' => 'root',
-                'includeSubFolders' => true,
-                'categories' => [],
-                'categoryOperator' => 'OR',
-                'tagOperator' => 'OR',
-                'types' => [],
-                'typesOperator' => 'OR',
-                'websiteCategories' => [],
-                'websiteCategoryOperator' => 'OR',
-                'websiteTags' => [],
-                'websiteTagOperator' => 'OR',
-                'limit' => null,
-                'page' => 1,
-                'excludeDuplicates' => true,
-            ],
-            'sortBys' => [],
-            'parameters' => ['provider' => 'pages'],
-        ];
+        $this->assertSame(['self-page'], $result->getView()['excluded']);
+    }
 
-        $smartResolvable->getData()->willReturn($data);
-
-        $serviceLocator->has('pages')->willReturn(true);
-        $serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
-
-        // the provider must receive the self id merged with the already resolved ids
+    public function testResolveIgnoresTheSelfReferenceOfAnotherResourceKey(): void
+    {
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->countBy(Argument::cetera())->willReturn(0);
         $smartContentProvider->findFlatBy(
-            Argument::that(function(array $filters): bool {
-                return ['self-page', 'page-1', 'page-2'] === ($filters['excluded'] ?? []);
-            }),
+            Argument::that(static fn (array $filters): bool => [] === $filters['excluded']),
             Argument::cetera(),
-        )->willReturn([['id' => 'page-3'], ['id' => 'page-4']]);
-        $smartContentProvider->countBy(Argument::cetera())->willReturn(2);
+        )->willReturn([])->shouldBeCalled();
+
+        $result = $this->smartResolver->resolve(
+            $this->createResolvable(['resourceKey' => 'articles', 'id' => 'self-article']),
+            'en',
+        );
+
+        $this->assertSame([], $result->getView()['excluded']);
+    }
+
+    public function testResolveCountsBeforeItFindsTheItems(): void
+    {
+        $calls = [];
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->countBy(Argument::cetera())->will(function() use (&$calls): int {
+            $calls[] = 'countBy';
+
+            return 0;
+        });
+        $smartContentProvider->findFlatBy(Argument::cetera())->will(function() use (&$calls): array {
+            $calls[] = 'findFlatBy';
+
+            return [];
+        });
+
+        $this->smartResolver->resolve($this->createResolvable(), 'en');
+
+        $this->assertSame(['countBy', 'findFlatBy'], $calls);
+    }
+
+    /**
+     * @return ObjectProphecy<SmartContentProviderInterface>
+     */
+    private function prophesizeProvider(): ObjectProphecy
+    {
+        $smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
         $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
         $smartContentProvider->getType()->willReturn('pages');
         $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
 
-        // the currently rendered page is passed through the "context" metadata of the smart resolvable
-        $smartResolvable->getMetadata()->willReturn([
-            'context' => ['selfReference' => ['resourceKey' => 'pages', 'id' => 'self-page']],
-        ]);
-        $result = $resolver->resolve($smartResolvable->reveal(), 'en');
+        $this->serviceLocator->has('pages')->willReturn(true);
+        $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
 
-        /** @var array{excluded: list<string>} $view */
-        $view = $result->getView();
-        $this->assertSame(['self-page', 'page-1', 'page-2'], $view['excluded']);
+        return $smartContentProvider;
+    }
 
-        // newly resolved ids must be registered so following blocks exclude them too
-        $this->assertSame(
-            ['page-1', 'page-2', 'page-3', 'page-4'],
-            $tracker->getAll('pages'),
+    /**
+     * @param array<string, mixed>|null $selfReference
+     */
+    private function createResolvable(?array $selfReference = null): SmartResolvable
+    {
+        $resolvable = new SmartResolvable(
+            [
+                'value' => [],
+                'filters' => [
+                    'dataSource' => 'root',
+                    'includeSubFolders' => true,
+                    'categories' => [],
+                    'categoryOperator' => 'OR',
+                    'tagOperator' => 'OR',
+                    'types' => [],
+                    'typesOperator' => 'OR',
+                    'websiteCategories' => [],
+                    'websiteCategoryOperator' => 'OR',
+                    'websiteTags' => [],
+                    'websiteTagOperator' => 'OR',
+                    'limit' => null,
+                    'page' => 1,
+                    'excludeDuplicates' => true,
+                ],
+                'sortBys' => [],
+                'parameters' => ['provider' => 'pages'],
+            ],
+            'smart_content',
+            100,
         );
+
+        return null === $selfReference ? $resolvable : $resolvable->withContext(['selfReference' => $selfReference]);
     }
 
     public function testResolveWithInvalidProvider(): void

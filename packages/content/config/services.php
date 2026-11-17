@@ -33,6 +33,8 @@ use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\PublishTransitionSubscriber;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\RemoveDraftTransitionSubscriber;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\UnpublishTransitionSubscriber;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Application\DimensionContentCollectionFactory\DimensionContentCollectionFactory;
 use Sulu\Content\Domain\Factory\DimensionContentCollectionFactoryInterface;
 use Sulu\Content\Infrastructure\Doctrine\CategoryFactory;
@@ -79,6 +81,11 @@ return static function(ContainerConfigurator $container) {
         ]);
 
     $services->alias(ContentMergerInterface::class, 'sulu_content.content_merger');
+
+    $services->set('sulu_content.deduplication_store', DeduplicationStore::class)
+        ->tag('kernel.reset', ['method' => 'reset']);
+
+    $services->alias(DeduplicationStoreInterface::class, 'sulu_content.deduplication_store');
 
     $services->set('sulu_content.tag_factory', TagFactory::class)
         ->public()
