@@ -2,6 +2,8 @@
 import React, {Fragment} from 'react';
 import {action, autorun, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import classNames from 'classnames';
+import Dialog from '../../components/Dialog';
 import Overlay from '../../components/Overlay';
 import PublishIndicator from '../../components/PublishIndicator';
 import {translate} from '../../utils';
@@ -50,6 +52,7 @@ class FormOverlay extends React.Component<Props> {
     @observable warnings: Array<ToolbarErrorType> = [];
     @observable successMessage: string | void = undefined;
     @observable toolbarActions: Array<OverlayToolbarAction> = [];
+    @observable showDirtyWarning: boolean = false;
 
     @computed get confirmLoading() {
         const {confirmLoading, formStore} = this.props;
@@ -86,6 +89,7 @@ class FormOverlay extends React.Component<Props> {
             this.errors = [];
             this.warnings = [];
             this.successMessage = undefined;
+            this.showDirtyWarning = false;
         }
     }
 
@@ -156,7 +160,8 @@ class FormOverlay extends React.Component<Props> {
         }), SHOW_SUCCESS_DURATION);
     };
 
-    // The Overlay shows a single snackbar, so the three sources are ranked instead of stacked.
+    // The Overlay shows a single snackbar, so errors and warnings are ranked instead of stacked.
+    // A success is not a snackbar, it turns the close button of the toolbar into a check.
     @computed get snackbar(): ?{message: string, type: SnackbarType} {
         const error = this.errors[this.errors.length - 1];
         if (error !== undefined) {
@@ -166,10 +171,6 @@ class FormOverlay extends React.Component<Props> {
         const warning = this.warnings[this.warnings.length - 1];
         if (warning !== undefined) {
             return {message: typeof warning === 'object' ? warning.message : warning, type: 'warning'};
-        }
-
-        if (this.successMessage !== undefined) {
-            return {message: this.successMessage, type: 'success'};
         }
 
         return undefined;
@@ -225,11 +226,30 @@ class FormOverlay extends React.Component<Props> {
 
         if (this.warnings.length > 0) {
             this.warnings.pop();
+        }
+    };
+
+    @action handleClose = () => {
+        const {formStore, onClose, toolbarActionsProvider} = this.props;
+
+        if (toolbarActionsProvider && formStore.dirty) {
+            this.showDirtyWarning = true;
 
             return;
         }
 
-        this.successMessage = undefined;
+        onClose();
+    };
+
+    @action handleDirtyWarningCancel = () => {
+        this.showDirtyWarning = false;
+    };
+
+    @action handleDirtyWarningConfirm = () => {
+        const {onClose} = this.props;
+
+        this.showDirtyWarning = false;
+        onClose();
     };
 
     handleFieldFinish = (dataPath: string, schemaPath: string) => {
@@ -275,33 +295,53 @@ class FormOverlay extends React.Component<Props> {
         const snackbar = this.snackbar;
 
         return (
-            <Overlay
-                confirmDisabled={confirmDisabled}
-                confirmLoading={this.confirmLoading}
-                confirmText={confirmText}
-                onClose={onClose}
-                // The toolbar owns submission when actions are configured, so a footer Save would
-                // be a second button doing the same thing.
-                onConfirm={toolbarActionsProvider ? undefined : this.handleOverlayConfirm}
-                onSnackbarCloseClick={this.handleSnackbarCloseClick}
-                open={open}
-                size={size}
-                snackbarMessage={snackbar ? snackbar.message : undefined}
-                snackbarType={snackbar ? snackbar.type : 'error'}
-                title={title}
-                toolbar={this.renderToolbar()}
-            >
-                <div className={formOverlayStyles.form}>
-                    <Form
-                        onError={this.handleFormError}
-                        onFieldFinish={this.handleFieldFinish}
-                        onSubmit={this.handleFormSubmit}
-                        ref={this.setFormRef}
-                        router={router}
-                        store={formStore}
-                    />
-                </div>
-            </Overlay>
+            <Fragment>
+                <Overlay
+                    closeSuccessMessage={this.successMessage}
+                    confirmDisabled={confirmDisabled}
+                    confirmLoading={this.confirmLoading}
+                    confirmText={confirmText}
+                    onClose={toolbarActionsProvider ? this.handleClose : onClose}
+                    // The toolbar owns submission when actions are configured, so a footer Save would
+                    // be a second button doing the same thing.
+                    onConfirm={toolbarActionsProvider ? undefined : this.handleOverlayConfirm}
+                    onSnackbarCloseClick={this.handleSnackbarCloseClick}
+                    open={open}
+                    size={size}
+                    snackbarMessage={snackbar ? snackbar.message : undefined}
+                    snackbarType={snackbar ? snackbar.type : 'error'}
+                    title={title}
+                    toolbar={this.renderToolbar()}
+                >
+                    <div
+                        className={classNames(
+                            formOverlayStyles.form,
+                            {[formOverlayStyles.withToolbar]: toolbarActionsProvider}
+                        )}
+                    >
+                        <Form
+                            onError={this.handleFormError}
+                            onFieldFinish={this.handleFieldFinish}
+                            onSubmit={this.handleFormSubmit}
+                            ref={this.setFormRef}
+                            router={router}
+                            store={formStore}
+                        />
+                    </div>
+                </Overlay>
+                {toolbarActionsProvider &&
+                    <Dialog
+                        cancelText={translate('sulu_admin.cancel')}
+                        confirmText={translate('sulu_admin.confirm')}
+                        onCancel={this.handleDirtyWarningCancel}
+                        onConfirm={this.handleDirtyWarningConfirm}
+                        open={this.showDirtyWarning}
+                        title={translate('sulu_admin.dirty_warning_dialog_title')}
+                    >
+                        {translate('sulu_admin.dirty_warning_dialog_text')}
+                    </Dialog>
+                }
+            </Fragment>
         );
     }
 }

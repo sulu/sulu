@@ -1,9 +1,10 @@
 // @flow
 import mockReact from 'react';
-import {fireEvent, render, screen, within} from '@testing-library/react';
+import {act, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {extendObservable as mockExtendObservable} from 'mobx';
 import FormOverlay from '../FormOverlay';
+import {SHOW_SUCCESS_DURATION} from '../../Toolbar/stores/ToolbarStore';
 import ResourceStore from '../../../stores/ResourceStore';
 import MemoryFormStore from '../../../containers/Form/stores/MemoryFormStore';
 import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore';
@@ -104,6 +105,15 @@ function createToolbarAction(label: string, onClick: () => void) {
     };
 }
 
+// the hidden snackbar has a close icon of its own, the toolbar one sits in a button
+function getCloseIcon() {
+    return screen.getByLabelText('su-times', {selector: 'button > span'});
+}
+
+function queryCloseIcon() {
+    return screen.queryByLabelText('su-times', {selector: 'button > span'});
+}
+
 test('Should render a toolbar and hide the footer confirm when toolbar actions are given', () => {
     const action = createToolbarAction('Save', jest.fn());
 
@@ -133,7 +143,7 @@ test('Should mount with toolbar actions while the overlay is still closed', () =
     expect(screen.queryByRole('heading', {name: 'overlay-title'})).not.toBeInTheDocument();
 });
 
-test('Should show a success snackbar instead of confirming when toolbar actions are given', async() => {
+test('Should show a check on the close button instead of confirming when toolbar actions are given', async() => {
     const user = userEvent.setup();
     const formStore = new ResourceFormStore(new ResourceStore('test'), 'test');
     const confirmSpy = jest.fn();
@@ -146,13 +156,17 @@ test('Should show a success snackbar instead of confirming when toolbar actions 
         toolbarStoreKey: 'form-overlay-save-test',
     });
 
+    expect(getCloseIcon()).toBeInTheDocument();
+
     await user.click(screen.getByRole('button', {name: 'Save'}));
 
-    expect(await screen.findByRole('button', {name: /sulu_admin.success/i})).toBeInTheDocument();
+    expect(await screen.findByLabelText('su-check')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('sulu_admin.success');
+    expect(queryCloseIcon()).not.toBeInTheDocument();
     expect(confirmSpy).not.toHaveBeenCalled();
 });
 
-test('Should let a pending error take precedence over a success message', async() => {
+test('Should show a success as check on the close button and an error as snackbar at the same time', async() => {
     const user = userEvent.setup();
 
     renderFormOverlay({
@@ -164,12 +178,13 @@ test('Should let a pending error take precedence over a success message', async(
     });
 
     await user.click(screen.getByRole('button', {name: 'Succeed'}));
-    expect(screen.getByRole('button', {name: /sulu_admin.success/i})).toBeInTheDocument();
+    expect(screen.getByLabelText('su-check')).toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: /sulu_admin.success/i})).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', {name: 'Fail'}));
 
     expect(screen.getByText(/Boom/)).toBeInTheDocument();
-    expect(screen.queryByRole('button', {name: /sulu_admin.success/i})).not.toBeInTheDocument();
+    expect(screen.getByLabelText('su-check')).toBeInTheDocument();
 });
 
 test('Should pass submit options through to the form store save', async() => {
@@ -231,22 +246,80 @@ test('Should show a warning pushed by a toolbar action when no error is pending'
     expect(screen.queryByText(/Request failed/)).not.toBeInTheDocument();
 });
 
-test('Should dismiss the success snackbar when its close button is clicked', async() => {
+test('Should turn the check back into the close button after the success duration', async() => {
+    jest.useFakeTimers();
+    const user = userEvent.setup({advanceTimers: jest.advanceTimersByTime});
+
+    try {
+        renderFormOverlay({
+            toolbarActionsProvider: (form) => [
+                createToolbarAction('Succeed', () => form.showSuccessSnackbar()),
+            ],
+            toolbarStoreKey: 'form-overlay-dismiss-test',
+        });
+
+        await user.click(screen.getByRole('button', {name: 'Succeed'}));
+        expect(screen.getByLabelText('su-check')).toBeInTheDocument();
+
+        act(() => {
+            jest.advanceTimersByTime(SHOW_SUCCESS_DURATION);
+        });
+
+        expect(getCloseIcon()).toBeInTheDocument();
+        expect(screen.queryByLabelText('su-check')).not.toBeInTheDocument();
+    } finally {
+        jest.useRealTimers();
+    }
+});
+
+test('Should ask before closing when the form has unsaved changes', async() => {
     const user = userEvent.setup();
+    const closeSpy = jest.fn();
+    const formStore = new MemoryFormStore({}, {}, undefined, undefined);
+    formStore.dirty = true;
 
     renderFormOverlay({
-        toolbarActionsProvider: (form) => [
-            createToolbarAction('Succeed', () => form.showSuccessSnackbar()),
-        ],
-        toolbarStoreKey: 'form-overlay-dismiss-test',
+        formStore,
+        onClose: closeSpy,
+        toolbarActionsProvider: () => [],
+        toolbarStoreKey: 'form-overlay-dirty-test',
     });
 
-    await user.click(screen.getByRole('button', {name: 'Succeed'}));
-    expect(screen.getByRole('button', {name: /sulu_admin.success/i})).toBeInTheDocument();
+    await user.click(getCloseIcon());
 
-    const successSnackbar = screen.getByRole('button', {name: /sulu_admin.success/i});
-    await user.click(within(successSnackbar).getByRole('button', {name: 'su-times'}));
-    fireEvent.transitionEnd(successSnackbar);
+    expect(closeSpy).not.toHaveBeenCalled();
+    expect(screen.getByText('sulu_admin.dirty_warning_dialog_title')).toBeInTheDocument();
 
-    expect(screen.queryByRole('button', {name: /sulu_admin.success/i})).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.cancel'}));
+    expect(closeSpy).not.toHaveBeenCalled();
+
+    await user.click(getCloseIcon());
+    await user.click(screen.getByRole('button', {name: 'sulu_admin.confirm'}));
+    expect(closeSpy).toHaveBeenCalledTimes(1);
+});
+
+test('Should close without asking when the form has no unsaved changes', async() => {
+    const user = userEvent.setup();
+    const closeSpy = jest.fn();
+
+    renderFormOverlay({
+        onClose: closeSpy,
+        toolbarActionsProvider: () => [],
+        toolbarStoreKey: 'form-overlay-clean-test',
+    });
+
+    await user.click(getCloseIcon());
+
+    expect(closeSpy).toHaveBeenCalledTimes(1);
+});
+
+test('Should name the dialog by the title when toolbar actions are given', () => {
+    renderFormOverlay({
+        title: 'my-overlay-title',
+        toolbarActionsProvider: () => [],
+        toolbarStoreKey: 'form-overlay-dialog-test',
+    });
+
+    expect(screen.getByRole('dialog', {name: 'my-overlay-title'})).toBeInTheDocument();
+    expect(screen.queryByRole('heading', {name: 'my-overlay-title'})).not.toBeInTheDocument();
 });
