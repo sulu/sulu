@@ -88,7 +88,7 @@ class Localization implements \Stringable, \JsonSerializable, ArrayableInterface
     /**
      * The parent localization.
      *
-     * @var Localization
+     * @var Localization|null
      */
     #[Groups(['frontend', 'Default'])]
     private $parent;
@@ -276,7 +276,7 @@ class Localization implements \Stringable, \JsonSerializable, ArrayableInterface
     /**
      * Returns the parent of this localization.
      *
-     * @return Localization
+     * @return Localization|null
      */
     public function getParent()
     {

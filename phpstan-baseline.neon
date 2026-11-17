@@ -62557,27 +62557,9 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/ErrorStructure.php
 
 		-
-			message: '#^Loose comparison using \!\= between null and Sulu\\Component\\Localization\\Localization will always evaluate to true\.$#'
-			identifier: notEqual.alwaysTrue
-			count: 1
-			path: src/Sulu/Component/Content/Compat/LocalizationFinder.php
-
-		-
 			message: '#^Method Sulu\\Component\\Content\\Compat\\LocalizationFinder\:\:findAvailableLocale\(\) should return string but returns null\.$#'
 			identifier: return.type
 			count: 4
-			path: src/Sulu/Component/Content/Compat/LocalizationFinder.php
-
-		-
-			message: '#^Method Sulu\\Component\\Content\\Compat\\LocalizationFinder\:\:findAvailableParentLocalization\(\) never returns null so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: src/Sulu/Component/Content/Compat/LocalizationFinder.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 1
 			path: src/Sulu/Component/Content/Compat/LocalizationFinder.php
 
 		-
