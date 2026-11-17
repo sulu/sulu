@@ -2527,7 +2527,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/CollaborationControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function array_values expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/CollaborationControllerTest.php
@@ -8035,7 +8035,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function usort expects TArray of array, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function usort expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 15
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/CategoryControllerTest.php
@@ -8389,7 +8389,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function usort expects TArray of array, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function usort expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
@@ -16123,7 +16123,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function usort expects TArray of array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function usort expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
@@ -16207,7 +16207,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$callback of function usort expects callable\(T, T\)\: int, mixed given\.$#'
+			message: '#^Parameter \#2 \$callback of function usort expects callable\(mixed, mixed\)\: int, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
@@ -17149,7 +17149,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function usort expects TArray of array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function usort expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
@@ -17275,7 +17275,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$callback of function usort expects callable\(T, T\)\: int, mixed given\.$#'
+			message: '#^Parameter \#2 \$callback of function usort expects callable\(mixed, mixed\)\: int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
@@ -27475,7 +27475,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function array_values expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
@@ -41629,7 +41629,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function array_values expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
@@ -44767,7 +44767,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Admin/PageAdminTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function array_values expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Admin/PageAdminTest.php
@@ -54859,7 +54859,7 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Admin/SnippetAdminTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function array_values expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Admin/SnippetAdminTest.php
@@ -60133,7 +60133,7 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Routing/ContentRouteProviderTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function array_values expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Routing/ContentRouteProviderTest.php
@@ -60775,7 +60775,7 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapGeneratorTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function array_values expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapGeneratorTest.php
@@ -70507,7 +70507,7 @@ parameters:
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function array_values expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
@@ -81805,7 +81805,7 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function array_values expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
@@ -89713,7 +89713,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_values expects array\<T\>, mixed given\.$#'
+			message: '#^Parameter \#1 \$array of function array_values expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
