@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Content\Application\ContentResolver\Resolver;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
@@ -122,10 +123,22 @@ class RoutableTemplateResolverTest extends TestCase
         $this->assertSame('https://example.com', $urlView->getContent());
     }
 
-    public function testResolvePageTreeRouteFieldRunsThroughPropertyResolver(): void
+    /**
+     * @return iterable<string, array{string, string, string}>
+     */
+    public static function providePageTreeRoutes(): iterable
     {
-        $parentRoute = new Route('pages', 'parent-uuid', 'en', '/parent');
-        $route = new Route('pages', 'child-uuid', 'en', '/parent/child', null, $parentRoute);
+        yield 'below the parent' => ['/parent', '/parent/child', '/parent/child'];
+        yield 'below the homepage' => ['/', '/child', '/child'];
+        yield 'outside the parent' => ['/parent', '/elsewhere/child', '/elsewhere/child'];
+        yield 'sharing the prefix of the parent' => ['/parent', '/parent-other/child', '/parent-other/child'];
+    }
+
+    #[DataProvider('providePageTreeRoutes')]
+    public function testResolvePageTreeRouteFieldRunsThroughPropertyResolver(string $parentSlug, string $slug, string $expectedUrl): void
+    {
+        $parentRoute = new Route('pages', 'parent-uuid', 'en', $parentSlug);
+        $route = new Route('pages', 'child-uuid', 'en', $slug, null, $parentRoute);
 
         $dimensionContent = $this->createDimensionContent('en', 'default', $route);
         $dimensionContent->setTemplateData([]);
@@ -151,7 +164,7 @@ class RoutableTemplateResolverTest extends TestCase
 
         $urlView = $content['url'];
         $this->assertInstanceOf(ContentView::class, $urlView);
-        $this->assertSame('/parent/child', $urlView->getContent());
+        $this->assertSame($expectedUrl, $urlView->getContent());
     }
 
     public function testResolveHonoursPropertiesFilter(): void
