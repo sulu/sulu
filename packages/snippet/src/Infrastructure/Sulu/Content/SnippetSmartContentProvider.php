@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
@@ -93,6 +94,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
         $this->entityRepository = $entityManager->getRepository(SnippetInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(SnippetDimensionContentInterface::class);
@@ -206,6 +208,10 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
             ],
             $queryResult
         );
+
+        foreach ($result as $item) {
+            $this->deduplicationStore?->add((string) $item['id'], SnippetInterface::RESOURCE_KEY);
+        }
 
         return $result;
     }
@@ -339,12 +345,16 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *     websiteCategoryOperator: 'AND'|'OR',
      *     websiteTags: string[],
      *     websiteTagOperator: 'AND'|'OR',
+     *     excludeDuplicates?: bool,
      *     excluded?: string[],
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
         $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates'] ?? false) {
+            $excluded = \array_values(\array_unique([...$excluded, ...($this->deduplicationStore?->getIds(SnippetInterface::RESOURCE_KEY) ?? [])]));
+        }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')
                 ->setParameter('excluded', $excluded);

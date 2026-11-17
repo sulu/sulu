@@ -12,12 +12,18 @@
 namespace Sulu\Content\Tests\Application\ExampleTestBundle\PropertyResolver;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResourceLoader;
 
 class ExampleSelectionPropertyResolver implements PropertyResolverInterface
 {
+    public function __construct(
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
+    ) {
+    }
+
     /**
      * @param array{
      *     resourceLoader?: string,
@@ -38,6 +44,12 @@ class ExampleSelectionPropertyResolver implements PropertyResolverInterface
 
         /** @var string[] $ids */
         $ids = $data;
+
+        foreach ($ids as $id) {
+            if ('' !== (string) $id) {
+                $this->deduplicationStore?->add((string) $id, Example::RESOURCE_KEY);
+            }
+        }
 
         return ContentView::createResolvablesWithReferences(
             ids: $ids,

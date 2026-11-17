@@ -312,10 +312,16 @@ final class SuluArticleBundle extends AbstractBundle
 
         $services->set('sulu_article.single_article_selection_property_resolver')
             ->class(SingleArticleSelectionPropertyResolver::class)
+            ->args([
+                new Reference('sulu_content.deduplication_store'),
+            ])
             ->tag('sulu_content.property_resolver');
 
         $services->set('sulu_article.article_selection_property_resolver')
             ->class(ArticleSelectionPropertyResolver::class)
+            ->args([
+                new Reference('sulu_content.deduplication_store'),
+            ])
             ->tag('sulu_content.property_resolver');
 
         $services->set('sulu_article.article_resource_loader')
@@ -371,6 +377,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_admin.smart_content_query_enhancer'),
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_admin.metadata_group_provider'),
+                new Reference('sulu_content.deduplication_store'),
             ])
         ->tag('sulu_content.smart_content_provider', ['type' => ArticleInterface::RESOURCE_KEY]);
 
@@ -381,6 +388,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_admin.smart_content_query_enhancer'),
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_admin.metadata_group_provider'),
+                new Reference('sulu_content.deduplication_store'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => PageTreeArticleSmartContentProvider::PROVIDER_TYPE]);
 

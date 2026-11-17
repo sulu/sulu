@@ -16,6 +16,7 @@ namespace Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\PropertyResolver
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\ContactResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 
 /**
@@ -25,6 +26,11 @@ use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface
  */
 class SingleContactSelectionPropertyResolver implements PropertyResolverInterface
 {
+    public function __construct(
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
+    ) {
+    }
+
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
         if (!\is_numeric($data)) {
@@ -33,6 +39,8 @@ class SingleContactSelectionPropertyResolver implements PropertyResolverInterfac
 
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? ContactResourceLoader::getKey();
+
+        $this->deduplicationStore?->add((string) $data, ContactInterface::RESOURCE_KEY);
 
         return ContentView::createResolvableWithReferences(
             (int) $data,

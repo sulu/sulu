@@ -343,10 +343,16 @@ final class SuluSnippetBundle extends AbstractBundle
         // PropertyResolver services
         $services->set('sulu_snippet.single_snippet_selection_property_resolver')
             ->class(SingleSnippetSelectionPropertyResolver::class)
+            ->args([
+                new Reference('sulu_content.deduplication_store'),
+            ])
             ->tag('sulu_content.property_resolver');
 
         $services->set('sulu_snippet.snippet_selection_property_resolver')
             ->class(SnippetSelectionPropertyResolver::class)
+            ->args([
+                new Reference('sulu_content.deduplication_store'),
+            ])
             ->tag('sulu_content.property_resolver');
 
         // SmartResolver services
@@ -379,6 +385,7 @@ final class SuluSnippetBundle extends AbstractBundle
                 new Reference('sulu_content.dimension_content_query_enhancer'),
                 new Reference('sulu_admin.smart_content_query_enhancer'),
                 new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_content.deduplication_store'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => SnippetInterface::RESOURCE_KEY]);
 

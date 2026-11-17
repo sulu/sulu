@@ -25,9 +25,11 @@ return static function(ContainerConfigurator $container) {
     $services = $container->services();
 
     $services->set('sulu_media.media_selection_property_resolver', MediaSelectionPropertyResolver::class)
+        ->args([new Reference('sulu_content.deduplication_store')])
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_media.single_media_selection_property_resolver', SingleMediaSelectionPropertyResolver::class)
+        ->args([new Reference('sulu_content.deduplication_store')])
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_media.image_map_property_resolver', ImageMapPropertyResolver::class)

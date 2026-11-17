@@ -16,6 +16,7 @@ namespace Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\PropertyResolver;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 
 /**
@@ -25,6 +26,11 @@ use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface
  */
 class MediaSelectionPropertyResolver implements PropertyResolverInterface
 {
+    public function __construct(
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
+    ) {
+    }
+
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
         $displayOption = (\is_array($data) && isset($data['displayOption']) && \is_string($data['displayOption']))
@@ -45,6 +51,10 @@ class MediaSelectionPropertyResolver implements PropertyResolverInterface
 
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? MediaResourceLoader::getKey();
+
+        foreach ($ids as $id) {
+            $this->deduplicationStore?->add((string) $id, MediaInterface::RESOURCE_KEY);
+        }
 
         return ContentView::createResolvablesWithReferences(
             ids: $ids,

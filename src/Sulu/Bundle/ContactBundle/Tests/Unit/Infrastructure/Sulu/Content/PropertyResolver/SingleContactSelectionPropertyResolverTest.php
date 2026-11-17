@@ -14,8 +14,10 @@ namespace Sulu\Bundle\ContactBundle\Tests\Unit\Infrastructure\Sulu\Content\Prope
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\PropertyResolver\SingleContactSelectionPropertyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 
 #[CoversClass(SingleContactSelectionPropertyResolver::class)]
 class SingleContactSelectionPropertyResolverTest extends TestCase
@@ -101,5 +103,25 @@ class SingleContactSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $content);
         $this->assertSame(1, $content->getId());
         $this->assertSame('custom_contact', $content->getResourceLoaderKey());
+    }
+
+    public function testResolveAddsTheIdsToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new SingleContactSelectionPropertyResolver($store);
+
+        $resolver->resolve(1, 'en');
+
+        $this->assertSame(['1'], $store->getIds(ContactInterface::RESOURCE_KEY));
+    }
+
+    public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new SingleContactSelectionPropertyResolver($store);
+
+        $resolver->resolve(null, 'en');
+
+        $this->assertSame([], $store->getIds(ContactInterface::RESOURCE_KEY));
     }
 }
