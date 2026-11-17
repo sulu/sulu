@@ -96,6 +96,10 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         EntityManagerInterface $entityManager,
         private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', 'Instantiating SnippetSmartContentProvider without the $deduplicationStore argument is deprecated.');
+        }
+
         $this->entityRepository = $entityManager->getRepository(SnippetInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(SnippetDimensionContentInterface::class);
         $this->snippetDimensionContentClassName = $this->entityDimensionContentRepository->getClassName();

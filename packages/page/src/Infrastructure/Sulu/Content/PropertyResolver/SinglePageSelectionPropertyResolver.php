@@ -27,6 +27,9 @@ class SinglePageSelectionPropertyResolver implements PropertyResolverInterface
     public function __construct(
         private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', 'Instantiating SinglePageSelectionPropertyResolver without the $deduplicationStore argument is deprecated.');
+        }
     }
 
     /**

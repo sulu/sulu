@@ -100,6 +100,9 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         private ?array $permissions = null,
         private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', 'Instantiating MediaSmartContentProvider without the $deduplicationStore argument is deprecated.');
+        }
     }
 
     public function getConfiguration(): ProviderConfigurationInterface
