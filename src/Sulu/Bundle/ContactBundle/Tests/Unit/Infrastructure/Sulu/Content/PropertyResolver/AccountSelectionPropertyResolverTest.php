@@ -14,8 +14,10 @@ namespace Sulu\Bundle\ContactBundle\Tests\Unit\Infrastructure\Sulu\Content\Prope
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\PropertyResolver\AccountSelectionPropertyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 
 #[CoversClass(AccountSelectionPropertyResolver::class)]
 class AccountSelectionPropertyResolverTest extends TestCase
@@ -110,5 +112,25 @@ class AccountSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $resolvable);
         $this->assertSame(1, $resolvable->getId());
         $this->assertSame('custom_account', $resolvable->getResourceLoaderKey());
+    }
+
+    public function testResolveAddsTheIdsToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new AccountSelectionPropertyResolver($store);
+
+        $resolver->resolve([1, 2], 'en');
+
+        $this->assertSame(['1', '2'], $store->getIds(AccountInterface::RESOURCE_KEY));
+    }
+
+    public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new AccountSelectionPropertyResolver($store);
+
+        $resolver->resolve([], 'en');
+
+        $this->assertSame([], $store->getIds(AccountInterface::RESOURCE_KEY));
     }
 }

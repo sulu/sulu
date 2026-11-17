@@ -19,6 +19,8 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Content\PropertyResolver\SnippetSelectionPropertyResolver;
 
 #[CoversClass(SnippetSelectionPropertyResolver::class)]
@@ -208,5 +210,25 @@ class SnippetSelectionPropertyResolverTest extends TestCase
 
         $this->assertEmpty($contentView->getContent());
         $this->assertSame(['ids' => []], $contentView->getView());
+    }
+
+    public function testResolveAddsTheIdsToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new SnippetSelectionPropertyResolver($store);
+
+        $resolver->resolve(['snippet-1', '', 'snippet-2'], 'en');
+
+        $this->assertSame(['snippet-1', 'snippet-2'], $store->getIds(SnippetInterface::RESOURCE_KEY));
+    }
+
+    public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new SnippetSelectionPropertyResolver($store);
+
+        $resolver->resolve([], 'en');
+
+        $this->assertSame([], $store->getIds(SnippetInterface::RESOURCE_KEY));
     }
 }

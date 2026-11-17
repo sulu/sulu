@@ -19,6 +19,7 @@ use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Bundle\AdminBundle\Metadata\GroupProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Route\Domain\Model\Route;
@@ -32,12 +33,14 @@ readonly class PageTreeArticleSmartContentProvider extends ArticleSmartContentPr
         SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
         GroupProviderInterface $groupProvider,
+        ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
         parent::__construct(
             $dimensionContentQueryEnhancer,
             $smartContentQueryEnhancer,
             $entityManager,
             $groupProvider,
+            $deduplicationStore,
         );
     }
 

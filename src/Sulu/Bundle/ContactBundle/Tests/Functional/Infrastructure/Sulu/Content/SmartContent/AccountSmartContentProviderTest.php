@@ -20,6 +20,7 @@ use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 use Sulu\Content\Tests\Traits\CreateCategoryTrait;
 use Sulu\Content\Tests\Traits\CreateTagTrait;
 
@@ -478,5 +479,60 @@ class AccountSmartContentProviderTest extends SuluTestCase
         foreach ($expectedKeys as $key) {
             $this->assertContains(self::$accounts[$key]->getId(), $resultIds, "Account '" . $key . "' should be in the result");
         }
+    }
+
+    public function testFindFlatByExcludesTheStoredIdsWithExcludeDuplicates(): void
+    {
+        $store = $this->createDeduplicationStore();
+        $filters = [...$this->getDefaultFilters(), 'locale' => 'en'];
+
+        $allIds = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
+        $this->assertNotEmpty($allIds);
+
+        $store->reset();
+        $store->add($allIds[0], AccountInterface::RESOURCE_KEY);
+
+        $filters['excludeDuplicates'] = true;
+        $this->assertSame(\count($allIds) - 1, $this->smartContentProvider->countBy($filters));
+        $ids = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
+
+        $this->assertNotContains($allIds[0], $ids);
+        $this->assertCount(\count($allIds) - 1, $ids);
+    }
+
+    public function testFindFlatByKeepsTheStoredIdsWithoutExcludeDuplicates(): void
+    {
+        $store = $this->createDeduplicationStore();
+        $filters = [...$this->getDefaultFilters(), 'locale' => 'en', 'excludeDuplicates' => false];
+
+        $allIds = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
+
+        $store->reset();
+        $store->add($allIds[0], AccountInterface::RESOURCE_KEY);
+
+        $ids = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
+
+        $this->assertContains($allIds[0], $ids);
+        $this->assertCount(\count($allIds), $ids);
+        $this->assertSame(\count($allIds), $this->smartContentProvider->countBy($filters));
+    }
+
+    public function testFindFlatByAddsTheResultsToTheDeduplicationStore(): void
+    {
+        $store = $this->createDeduplicationStore();
+
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), 'locale' => 'en'], []);
+
+        $ids = \array_map(fn (array $item) => (string) $item['id'], $result);
+        $this->assertNotEmpty($ids);
+        $this->assertEqualsCanonicalizing($ids, $store->getIds(AccountInterface::RESOURCE_KEY));
+    }
+
+    private function createDeduplicationStore(): DeduplicationStore
+    {
+        $store = self::getContainer()->get('sulu_content.deduplication_store');
+        $store->reset();
+
+        return $store;
     }
 }

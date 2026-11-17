@@ -20,6 +20,7 @@ use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\SingleArticleSelectionPropertyResolver;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 
 #[CoversClass(SingleArticleSelectionPropertyResolver::class)]
 class SingleArticleSelectionPropertyResolverTest extends TestCase
@@ -185,5 +186,25 @@ class SingleArticleSelectionPropertyResolverTest extends TestCase
         $this->assertCount(1, $references);
         $this->assertSame('1', $references[0]->getResourceId());
         $this->assertSame(ArticleInterface::RESOURCE_KEY, $references[0]->getResourceKey());
+    }
+
+    public function testResolveAddsTheIdsToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new SingleArticleSelectionPropertyResolver($store);
+
+        $resolver->resolve('article-1', 'en');
+
+        $this->assertSame(['article-1'], $store->getIds(ArticleInterface::RESOURCE_KEY));
+    }
+
+    public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new SingleArticleSelectionPropertyResolver($store);
+
+        $resolver->resolve(null, 'en');
+
+        $this->assertSame([], $store->getIds(ArticleInterface::RESOURCE_KEY));
     }
 }

@@ -29,6 +29,7 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -97,6 +98,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         private ?Security $security,
         private bool $hasAudienceTargeting = false,
         private ?array $permissions = null,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
     }
 
@@ -204,6 +206,10 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         /** @var array<array{id: string, title: string}> $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
+        foreach ($queryResult as $item) {
+            $this->deduplicationStore?->add((string) $item['id'], MediaInterface::RESOURCE_KEY);
+        }
+
         return \array_map(
             function(array $item) {
                 // TODO image
@@ -273,6 +279,9 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         }
 
         $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates']) {
+            $excluded = \array_values(\array_unique([...$excluded, ...($this->deduplicationStore?->getIds(MediaInterface::RESOURCE_KEY) ?? [])]));
+        }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')
                 ->setParameter('excluded', $excluded);

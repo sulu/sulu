@@ -14,6 +14,7 @@ namespace Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver;
 use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\ResourceLoader\ArticleResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 
 /**
@@ -23,6 +24,11 @@ use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface
  */
 class SingleArticleSelectionPropertyResolver implements PropertyResolverInterface
 {
+    public function __construct(
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
+    ) {
+    }
+
     /**
      * @param array{
      *     resourceLoader?: string,
@@ -37,6 +43,10 @@ class SingleArticleSelectionPropertyResolver implements PropertyResolverInterfac
 
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? ArticleResourceLoader::getKey();
+
+        if ('' !== (string) $data) {
+            $this->deduplicationStore?->add((string) $data, ArticleInterface::RESOURCE_KEY);
+        }
 
         return ContentView::createResolvableWithReferences(
             id: $data,

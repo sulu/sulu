@@ -20,6 +20,7 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Contact
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 
 /**
@@ -32,6 +33,11 @@ class ContactAccountSelectionPropertyResolver implements PropertyResolverInterfa
     public const PREFIX_CONTACT = 'c';
 
     public const PREFIX_ACCOUNT = 'a';
+
+    public function __construct(
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
+    ) {
+    }
 
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
@@ -82,6 +88,7 @@ class ContactAccountSelectionPropertyResolver implements PropertyResolverInterfa
                 resourceKey: $reference->getResourceKey(),
             );
             $references[] = $reference;
+            $this->deduplicationStore?->add((string) $id, $reference->getResourceKey());
         }
 
         return ContentView::createWithReferences(

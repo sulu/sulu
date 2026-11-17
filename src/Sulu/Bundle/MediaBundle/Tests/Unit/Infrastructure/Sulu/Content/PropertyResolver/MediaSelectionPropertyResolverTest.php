@@ -14,8 +14,10 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Infrastructure\Sulu\Content\Propert
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\PropertyResolver\MediaSelectionPropertyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 
 #[CoversClass(MediaSelectionPropertyResolver::class)]
 class MediaSelectionPropertyResolverTest extends TestCase
@@ -126,5 +128,25 @@ class MediaSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $resolvable);
         $this->assertSame(1, $resolvable->getId());
         $this->assertSame('custom_media', $resolvable->getResourceLoaderKey());
+    }
+
+    public function testResolveAddsTheIdsToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new MediaSelectionPropertyResolver($store);
+
+        $resolver->resolve(['ids' => [1, 2]], 'en');
+
+        $this->assertSame(['1', '2'], $store->getIds(MediaInterface::RESOURCE_KEY));
+    }
+
+    public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new MediaSelectionPropertyResolver($store);
+
+        $resolver->resolve([], 'en');
+
+        $this->assertSame([], $store->getIds(MediaInterface::RESOURCE_KEY));
     }
 }

@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\AccountResourceLoader;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 
 /**
  * @phpstan-type AccountSmartContentFilters array{
@@ -65,6 +66,7 @@ readonly class AccountSmartContentProvider implements SmartContentProviderInterf
     public function __construct(
         private EntityManagerInterface $entityManager,
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
     }
 
@@ -116,6 +118,10 @@ readonly class AccountSmartContentProvider implements SmartContentProviderInterf
         /** @var array<array{id: string, title: string}> $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
 
+        foreach ($result as $item) {
+            $this->deduplicationStore?->add((string) $item['id'], AccountInterface::RESOURCE_KEY);
+        }
+
         return $result;
     }
 
@@ -134,6 +140,9 @@ readonly class AccountSmartContentProvider implements SmartContentProviderInterf
         }
 
         $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates']) {
+            $excluded = \array_values(\array_unique([...$excluded, ...($this->deduplicationStore?->getIds(AccountInterface::RESOURCE_KEY) ?? [])]));
+        }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')
                 ->setParameter('excluded', $excluded);

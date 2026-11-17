@@ -28,6 +28,7 @@ use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\Page;
@@ -119,6 +120,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         private AccessControlQueryEnhancer $accessControlQueryEnhancer,
         private ?Security $security,
         private ?array $permissions = null,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
         $this->entityRepository = $entityManager->getRepository(PageInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
@@ -243,6 +245,10 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
 
         /** @var array{id: string, title: string, webspace: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
+
+        foreach ($queryResult as $item) {
+            $this->deduplicationStore?->add((string) $item['id'], PageInterface::RESOURCE_KEY);
+        }
 
         return $queryResult;
     }
@@ -395,12 +401,16 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      *     websiteCategoryOperator: 'AND'|'OR',
      *     websiteTags: string[],
      *     websiteTagOperator: 'AND'|'OR',
+     *     excludeDuplicates?: bool,
      *     excluded?: string[],
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
         $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates'] ?? false) {
+            $excluded = \array_values(\array_unique([...$excluded, ...($this->deduplicationStore?->getIds(PageInterface::RESOURCE_KEY) ?? [])]));
+        }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')
                 ->setParameter('excluded', $excluded);
