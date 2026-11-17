@@ -19,6 +19,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
+use Sulu\Content\Tests\Application\ExampleTestBundle\RequestWorkflow\ExampleWorkflowTransitionRequestAction;
 use Sulu\Content\Tests\Traits\WorkflowTransitionRequestTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -345,6 +346,53 @@ class WorkflowTransitionRequestControllerTest extends SuluTestCase
         );
 
         $this->assertSame(400, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testActionOfABundleRunsWithTheBodyOfTheRequest(): void
+    {
+        ExampleWorkflowTransitionRequestAction::$executed = [];
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/workflow-transition-requests/%s.json?action=example_note', $workflowTransitionRequest->getId()),
+            [],
+            [],
+            [],
+            (string) \json_encode(['note' => 'hello']),
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame([['note' => 'hello']], ExampleWorkflowTransitionRequestAction::$executed);
+    }
+
+    public function testActionOfABundleOnAClosedRequestReturns409(): void
+    {
+        ExampleWorkflowTransitionRequestAction::$executed = [];
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+        $workflowTransitionRequest->cancel();
+        static::getEntityManager()->flush();
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/workflow-transition-requests/%s.json?action=example_note', $workflowTransitionRequest->getId()),
+        );
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+        $this->assertSame([], ExampleWorkflowTransitionRequestAction::$executed);
+    }
+
+    public function testGetListsTheActionsOfBundlesOfAnOpenRequest(): void
+    {
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+
+        $this->client->request('GET', \sprintf('/admin/api/workflow-transition-requests/%s.json', $workflowTransitionRequest->getId()));
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array{actions: list<array{key: string, label: string}>} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame([['key' => 'example_note', 'label' => 'example_test.note']], $content['actions']);
     }
 
     public function testActionOnMissingIdReturns404(): void
