@@ -24,6 +24,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\PropertyResolver\ImageMapPropertyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\PropertyResolverProvider;
 use Sulu\Content\Application\PropertyResolver\Resolver\DefaultPropertyResolver;
@@ -38,6 +39,8 @@ class ImageMapPropertyResolverTest extends TestCase
     private BufferingLogger $logger;
 
     private Container $container;
+
+    private DeduplicationStore $deduplicationStore;
 
     public function setUp(): void
     {
@@ -55,6 +58,7 @@ class ImageMapPropertyResolverTest extends TestCase
             $this->logger,
             $metadataProviderRegistry,
             debug: false,
+            deduplicationStore: $this->deduplicationStore = new DeduplicationStore(),
         );
         $metadataResolverProperty = new PropertyResolverProvider([
             'default' => new DefaultPropertyResolver(),
@@ -77,6 +81,20 @@ class ImageMapPropertyResolverTest extends TestCase
 
         $this->assertSame(['imageId' => null], $contentView->getView());
         $this->assertCount(0, $this->logger->cleanLogs());
+    }
+
+    public function testResolveAddsTheImageToTheDeduplicationStore(): void
+    {
+        $this->resolver->resolve(['imageId' => 5, 'hotspots' => []], 'en', [], $this->createMetadata());
+
+        $this->assertSame(['5'], $this->deduplicationStore->getIds(MediaInterface::RESOURCE_KEY));
+    }
+
+    public function testResolveWithoutImageAddsNothingToTheDeduplicationStore(): void
+    {
+        $this->resolver->resolve(null, 'en', [], $this->createMetadata());
+
+        $this->assertSame([], $this->deduplicationStore->getIds(MediaInterface::RESOURCE_KEY));
     }
 
     public function testResolveParams(): void
