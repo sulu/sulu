@@ -111,7 +111,7 @@ export default class ReviewWorkflowTransitionRequestToolbarAction extends Abstra
 
     handlePublish = () => {
         this.handleClose();
-        this.form.trigger('publish');
+        this.form.trigger?.('publish');
     };
 
     getNode(index: ?number) {

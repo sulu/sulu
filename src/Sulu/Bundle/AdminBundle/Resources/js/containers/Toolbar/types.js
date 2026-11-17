@@ -40,6 +40,8 @@ export interface ToolbarActionFormInterface {
     errors: Array<ToolbarErrorType>,
     +showSuccessSnackbar: () => void,
     +submit: (options?: Object) => void,
+    // only the Form view runs workflow transitions, the FormOverlay has none
+    +trigger?: (transition: string) => mixed,
     warnings: Array<ToolbarErrorType>,
 }
 
