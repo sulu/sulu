@@ -125,7 +125,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('doctrine.orm.entity_manager'),
             new Reference('sulu_admin.smart_content_query_enhancer'),
-            new Reference('sulu_content.deduplication_store'),
+            new Reference('sulu_content.deduplication_store', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('sulu_content.smart_content_provider', ['type' => 'contacts']);
 
@@ -133,7 +133,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('doctrine.orm.entity_manager'),
             new Reference('sulu_admin.smart_content_query_enhancer'),
-            new Reference('sulu_content.deduplication_store'),
+            new Reference('sulu_content.deduplication_store', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('sulu_content.smart_content_provider', ['type' => 'accounts']);
 
