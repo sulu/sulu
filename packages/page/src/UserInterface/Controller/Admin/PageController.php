@@ -31,6 +31,7 @@ use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
@@ -311,6 +312,8 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             unset($data['_hash']);
         }
 
+        unset($data[ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY]);
+
         return $data;
     }
 
@@ -388,7 +391,12 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
 
-        $message = new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $this->getLocale($request), $action);
+        $message = new ApplyWorkflowTransitionPageMessage(
+            ['uuid' => $uuid],
+            $this->getLocale($request),
+            $action,
+            $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY),
+        );
 
         /** @see \Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler */
         /** @var PageInterface|null */

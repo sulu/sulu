@@ -48,7 +48,8 @@ final class ApplyWorkflowTransitionArticleMessageHandler
         $this->contentWorkflow->apply(
             $article,
             ['locale' => $locale],
-            $message->getTransitionName()
+            $message->getTransitionName(),
+            $message->getWorkflowTransitionRequestData(),
         );
 
         $this->domainEventCollector->collect(new ArticleWorkflowTransitionAppliedEvent($article, $message->getTransitionName(), $locale));

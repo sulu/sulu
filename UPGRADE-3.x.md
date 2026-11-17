@@ -93,6 +93,11 @@ migration to apply the schema change:
 bin/console doctrine:migrations:migrate
 ```
 
+### ContentWorkflowInterface::apply() takes the workflow transition request data
+
+`ContentWorkflowInterface::apply()` gained a fourth argument, `array $workflowTransitionRequestData = []`.
+Implementations of the interface must add it, callers can omit it.
+
 ### Media content locales table
 
 Media files can record the locales their content is in, which are stored in the

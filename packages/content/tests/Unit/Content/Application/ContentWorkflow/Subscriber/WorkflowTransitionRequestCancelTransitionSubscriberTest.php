@@ -20,10 +20,12 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionRequestCancelTransitionSubscriber;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestCancelledEvent;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Workflow\Event\TransitionEvent;
 use Symfony\Component\Workflow\Marking;
 
@@ -59,10 +61,26 @@ class WorkflowTransitionRequestCancelTransitionSubscriberTest extends TestCase
         $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
         $provider->findForContent(Argument::any())->willReturn($request);
 
-        $subscriber = new WorkflowTransitionRequestCancelTransitionSubscriber($provider->reveal());
+        $request->setData(['publishAt' => '2026-12-01T10:00:00+00:00']);
+
+        $dispatched = [];
+        $eventDispatcher = new EventDispatcher();
+        $eventDispatcher->addListener(
+            WorkflowTransitionRequestCancelledEvent::class,
+            static function(WorkflowTransitionRequestCancelledEvent $event) use (&$dispatched): void {
+                $dispatched[] = $event;
+            },
+        );
+
+        $subscriber = new WorkflowTransitionRequestCancelTransitionSubscriber($provider->reveal(), $eventDispatcher);
         $subscriber->onLeaveReview(new TransitionEvent($this->createDimensionContent(), new Marking()));
 
         $this->assertFalse($request->isOpen());
+        $this->assertCount(1, $dispatched);
+        $this->assertSame(Example::RESOURCE_KEY, $dispatched[0]->getResourceKey());
+        $this->assertSame('1', $dispatched[0]->getResourceId());
+        $this->assertSame('en', $dispatched[0]->getLocale());
+        $this->assertSame(['publishAt' => '2026-12-01T10:00:00+00:00'], $dispatched[0]->getData());
     }
 
     public function testOnLeaveReviewDoesNothingWithoutAnActiveRequest(): void
@@ -70,7 +88,8 @@ class WorkflowTransitionRequestCancelTransitionSubscriberTest extends TestCase
         $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
         $provider->findForContent(Argument::any())->willReturn(null)->shouldBeCalledOnce();
 
-        $subscriber = new WorkflowTransitionRequestCancelTransitionSubscriber($provider->reveal());
+        $eventDispatcher = new EventDispatcher();
+        $subscriber = new WorkflowTransitionRequestCancelTransitionSubscriber($provider->reveal(), $eventDispatcher);
         $subscriber->onLeaveReview(new TransitionEvent($this->createDimensionContent(), new Marking()));
     }
 
@@ -79,7 +98,8 @@ class WorkflowTransitionRequestCancelTransitionSubscriberTest extends TestCase
         $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
         $provider->findForContent(Argument::cetera())->shouldNotBeCalled();
 
-        $subscriber = new WorkflowTransitionRequestCancelTransitionSubscriber($provider->reveal());
+        $eventDispatcher = new EventDispatcher();
+        $subscriber = new WorkflowTransitionRequestCancelTransitionSubscriber($provider->reveal(), $eventDispatcher);
         $subscriber->onLeaveReview(new TransitionEvent(new \stdClass(), new Marking()));
     }
 

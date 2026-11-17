@@ -43,6 +43,14 @@ class WorkflowTransitionRequest implements AuditableInterface
     private string $workflowName;
 
     /**
+     * What the requester filled into the request form. The core stores it as it comes and reads
+     * nothing from it, so a bundle that extends the form owns its keys.
+     *
+     * @var array<string, mixed>|null
+     */
+    private ?array $data = null;
+
+    /**
      * @var Collection<int, WorkflowTransitionRequestDecision>
      */
     private Collection $decisions;
@@ -78,6 +86,22 @@ class WorkflowTransitionRequest implements AuditableInterface
     public function getLocale(): string
     {
         return $this->locale;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getData(): array
+    {
+        return $this->data ?? [];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function setData(array $data): void
+    {
+        $this->data = [] === $data ? null : $data;
     }
 
     public function isOpen(): bool

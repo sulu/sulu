@@ -58,7 +58,8 @@ class ContentWorkflow implements ContentWorkflowInterface
     public function apply(
         ContentRichEntityInterface $contentRichEntity,
         array $dimensionAttributes,
-        string $transitionName
+        string $transitionName,
+        array $workflowTransitionRequestData = []
     ): DimensionContentInterface {
         /*
          * Transition should always be applied to the STAGE_DRAFT content-dimension of the given $dimensionAttributes.
@@ -99,6 +100,7 @@ class ContentWorkflow implements ContentWorkflowInterface
                 ContentWorkflowInterface::CONTENT_RICH_ENTITY_CONTEXT_KEY => $contentRichEntity,
                 ContentWorkflowInterface::DIMENSION_CONTENT_COLLECTION_CONTEXT_KEY => $dimensionContentCollection,
                 ContentWorkflowInterface::DIMENSION_ATTRIBUTES_CONTEXT_KEY => $dimensionAttributes,
+                ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_CONTEXT_KEY => $workflowTransitionRequestData,
             ]);
         } catch (UndefinedTransitionException $e) {
             throw new UnknownContentTransitionException($e->getMessage(), $e->getCode(), $e);

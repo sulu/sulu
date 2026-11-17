@@ -37,6 +37,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
@@ -398,6 +399,8 @@ final class ArticleController implements SecuredControllerInterface
             unset($data['_hash']);
         }
 
+        unset($data[ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY]);
+
         return $data;
     }
 
@@ -474,7 +477,12 @@ final class ArticleController implements SecuredControllerInterface
             /** @var ArticleInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
-        $message = new ApplyWorkflowTransitionArticleMessage(['uuid' => $uuid], $this->getLocale($request), $action);
+        $message = new ApplyWorkflowTransitionArticleMessage(
+            ['uuid' => $uuid],
+            $this->getLocale($request),
+            $action,
+            $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY),
+        );
 
         /** @see \Sulu\Article\Application\MessageHandler\ApplyWorkflowTransitionArticleMessageHandler */
         /** @var null */
