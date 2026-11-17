@@ -1077,6 +1077,40 @@ test('Should propagate errors to toolbar', () => {
     expect(screen.getByRole('button', {name: new RegExp(error)})).toBeInTheDocument();
 });
 
+test('Should show success in the toolbar if an item action calls showSuccessSnackbar', () => {
+    const List = require('../List').default;
+    const listItemActionRegistry = require('../registries/listItemActionRegistry').default;
+
+    const ItemActionMock = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(null);
+        this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-trash-alt'});
+    });
+    listItemActionRegistry.add('mock', ItemActionMock);
+
+    const router = {
+        bind: jest.fn(),
+        restore: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                backView: 'backView',
+                listKey: 'test',
+                resourceKey: 'test',
+                itemActions: [{type: 'mock', options: {}}],
+            },
+        },
+    };
+
+    renderListElement(<List router={router} />);
+
+    expect(within(getViewToolbar()).getByRole('button', {name: 'su-angle-left'})).toBeInTheDocument();
+
+    const listView = ItemActionMock.mock.calls[0][1];
+    act(() => listView.showSuccessSnackbar());
+
+    expect(within(getViewToolbar()).getByRole('button', {name: 'su-check'})).toBeInTheDocument();
+});
+
 test('Should show the error of a failed copy in the toolbar', async() => {
     const user = userEvent.setup();
     const List = require('../List').default;

@@ -40,6 +40,7 @@ class List extends React.Component<Props> {
     @observable toolbarActions: Array<AbstractListToolbarAction> = [];
     @observable itemActions: Array<AbstractListItemAction> = [];
     @observable errors = [];
+    showSuccess: IObservableValue<boolean> = observable.box(false);
 
     static remountViewOnLogin = true;
 
@@ -352,6 +353,10 @@ class List extends React.Component<Props> {
         this.listStore.reload();
     };
 
+    @action showSuccessSnackbar = () => {
+        this.showSuccess.set(true);
+    };
+
     setListRef = (list: ?ElementRef<typeof ListContainer>) => {
         this.list = list;
     };
@@ -424,7 +429,7 @@ class List extends React.Component<Props> {
 }
 
 export default withToolbar(List, function() {
-    const {errors} = this;
+    const {errors, showSuccess} = this;
     const {router} = this.props;
 
     const {
@@ -480,5 +485,6 @@ export default withToolbar(List, function() {
         errors,
         locale,
         items,
+        showSuccess,
     };
 });
