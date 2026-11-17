@@ -15,8 +15,8 @@ namespace Sulu\Content\Tests\Unit\Content\Application\PropertyResolver\Resolver;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Teaser\Teaser;
-use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 use Sulu\Content\Application\PropertyResolver\Resolver\TeaserSelectionPropertyResolver;
 
 class TeaserSelectionPropertyResolverTest extends TestCase
@@ -212,8 +212,8 @@ class TeaserSelectionPropertyResolverTest extends TestCase
 
     public function testResolveRegistersTheTeasersForDeduplication(): void
     {
-        $deduplicationTracker = new ContentDeduplicationTracker();
-        $resolver = new TeaserSelectionPropertyResolver($deduplicationTracker);
+        $deduplicationStore = new DeduplicationStore();
+        $resolver = new TeaserSelectionPropertyResolver($deduplicationStore);
 
         $resolver->resolve([
             'items' => [
@@ -223,9 +223,8 @@ class TeaserSelectionPropertyResolverTest extends TestCase
             ],
         ], 'en');
 
-        // the resolvables use a "<type>::<id>" id and no resource key, so the content resolver cannot register them
-        self::assertSame(['page-1'], $deduplicationTracker->getAll('pages'));
-        self::assertSame(['article-1'], $deduplicationTracker->getAll('articles'));
+        self::assertSame(['page-1'], $deduplicationStore->getIds('pages'));
+        self::assertSame(['article-1'], $deduplicationStore->getIds('articles'));
     }
 
     public function testGetType(): void

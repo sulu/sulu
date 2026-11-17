@@ -16,7 +16,6 @@ namespace Sulu\Content\Application\SmartResolver\Resolver;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
@@ -56,7 +55,6 @@ class SmartContentSmartResolver implements SmartResolverInterface
      */
     public function __construct(
         private ServiceLocator $smartContentProviders,
-        private ContentDeduplicationTracker $deduplicationTracker,
     ) {
     }
 
@@ -112,28 +110,16 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
         $filters['limit'] = $maxPerPage ?? $limit;
 
-        // Smart content deduplication is keyed by the provider's resource key, which is shared with the
-        // regular selections and with the currently rendered resource.
-        $resourceKey = $smartContentProvider->getType();
-
-        // Preserve any explicit exclusions already present in the filters.
+        // Exclude the currently rendered resource (the "own" page) from its own results.
         /** @var string[] $excluded */
         $excluded = $filters['excluded'] ?? [];
-
-        // Exclude the currently rendered resource (the "own" page) from its own results.
         $context = $resolvable->getMetadata()['context'] ?? null;
         $selfReference = \is_array($context) ? ($context['selfReference'] ?? null) : null;
         if (\is_array($selfReference)
-            && ($selfReference['resourceKey'] ?? null) === $resourceKey
+            && ($selfReference['resourceKey'] ?? null) === $smartContentProvider->getType()
             && \is_string($selfReferenceId = $selfReference['id'] ?? null)
         ) {
             $excluded[] = $selfReferenceId;
-        }
-
-        // When "exclude_duplicates" is enabled, also exclude the resources already referenced by earlier
-        // selections or smart content blocks of the same resource key.
-        if ($filters['excludeDuplicates']) {
-            $excluded = [...$excluded, ...$this->deduplicationTracker->getAll($resourceKey)];
         }
 
         $excluded = \array_values(\array_unique($excluded));
@@ -143,15 +129,11 @@ class SmartContentSmartResolver implements SmartResolverInterface
         unset($countByFilters['offset']);
 
         $params = ['value' => $value, ...$parameters];
-        $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
 
-        // Always register the resolved ids so that following blocks can deduplicate against them, even
-        // when this block has "exclude_duplicates" disabled.
-        foreach ($result as $item) {
-            $this->deduplicationTracker->add($resourceKey, $item['id']);
-        }
-
+        // count first: with "exclude_duplicates" the provider excludes the ids of the deduplication store,
+        // and findFlatBy adds its own results to it
         $fullTotal = $smartContentProvider->countBy($countByFilters, $params);
+        $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
         $total = $limit ? \min($limit, $fullTotal) : $fullTotal;
 
         /** @var array<int|string> $valueTags */

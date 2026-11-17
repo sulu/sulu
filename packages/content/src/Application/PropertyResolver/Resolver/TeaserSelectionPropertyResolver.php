@@ -14,16 +14,16 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\PropertyResolver\Resolver;
 
 use Sulu\Bundle\AdminBundle\Teaser\Teaser;
-use Sulu\Content\Application\ContentResolver\ContentDeduplicationTracker;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\TeaserResourceLoader;
 
 class TeaserSelectionPropertyResolver implements PropertyResolverInterface
 {
     public function __construct(
-        private ?ContentDeduplicationTracker $deduplicationTracker = null,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
     }
 
@@ -83,10 +83,7 @@ class TeaserSelectionPropertyResolver implements PropertyResolverInterface
             // the teaser "type" is the provider alias, which matches the resource key of the referenced resource
             if ('' !== $id && '' !== $type) {
                 $references[] = new Reference($id, $type);
-
-                // the resolvable above has a "<type>::<id>" id and no resource key, so the content resolver
-                // cannot register it for the smart content "exclude_duplicates" option
-                $this->deduplicationTracker?->add($type, $id);
+                $this->deduplicationStore?->add($id, $type);
             }
         }
 
