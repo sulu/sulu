@@ -1,5 +1,25 @@
 # Upgrade
 
+## 3.0.12
+
+### Smart content supports `exclude_duplicates`
+
+The `exclude_duplicates` parameter of smart content works again. The request scoped
+`DeduplicationStoreInterface` (`sulu_content.deduplication_store`) holds the ids shown on the page per resource key.
+Selection property resolvers add the ids they show, smart content providers exclude the stored ids when
+`excludeDuplicates` is set and add their own results.
+
+- A custom smart content provider has to apply the `excluded` filter (`NOT IN`) to support it, the resolver passes
+  the ids to exclude there. To support `exclude_duplicates` it can take the `DeduplicationStoreInterface` as an
+  optional last constructor argument, merge `getIds($resourceKey)` into the excluded ids when `excludeDuplicates` is
+  true and call `add($id, $resourceKey)` for every result of `findFlatBy`.
+- A custom selection property resolver should call `add($id, $resourceKey)` for the ids it shows, with the resource
+  key of its resources.
+- The rendered page is now always excluded from its own smart contents, also without `exclude_duplicates`.
+- The existing selection property resolvers and smart content providers take the store as an optional last
+  constructor argument. Projects that extend them or define their own service need to pass
+  `sulu_content.deduplication_store` to benefit from it.
+
 ## 3.0.10
 
 ### The target group select of the preview follows the audience targeting permission
