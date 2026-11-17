@@ -408,7 +408,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             expr('container.hasParameter(\'sulu_audience_targeting.enabled\')'),
             '%sulu_security.permissions%',
-            new Reference('sulu_content.deduplication_store'),
+            new Reference('sulu_content.deduplication_store', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('sulu_content.smart_content_provider', ['type' => 'media']);
 
