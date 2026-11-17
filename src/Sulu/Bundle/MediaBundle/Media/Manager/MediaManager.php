@@ -38,6 +38,8 @@ use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidValidityDateException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidValidityRangeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
@@ -223,6 +225,8 @@ class MediaManager implements MediaManagerInterface
             throw new FileVersionNotFoundException($mediaEntity->getId(), $version);
         }
 
+        $this->validateValidity($data, $currentFileVersion);
+
         $shouldEmitModifiedEvent = true;
         $fileVersion = null;
 
@@ -359,6 +363,7 @@ class MediaManager implements MediaManagerInterface
         }
 
         $this->validator->validate($uploadedFile);
+        $this->validateValidity($data, null);
 
         /** @var string $locale */
         $locale = $data['locale'] ?? 'en';
@@ -471,6 +476,8 @@ class MediaManager implements MediaManagerInterface
                 || 'aiDisclosureText' === $attribute
                 || 'aiDisclosureIconVariant' === $attribute
                 || 'contentLocales' === $attribute
+                || 'validFrom' === $attribute
+                || 'validTo' === $attribute
             ) {
                 switch ($attribute) {
                     case 'size':
@@ -588,11 +595,62 @@ class MediaManager implements MediaManagerInterface
                     case 'contentLocales':
                         $media->setContentLocales(\is_array($value) ? \array_filter($value, 'is_string') : []);
                         break;
+                    case 'validFrom':
+                        $media->setValidFrom($this->parseValidityDate($value));
+                        break;
+                    case 'validTo':
+                        $media->setValidTo($this->parseValidityDate($value));
+                        break;
                 }
             }
         }
 
         return $media;
+    }
+
+    /**
+     * Rejects an invalid validity before the entity is touched or a file is stored.
+     *
+     * @param array<mixed> $data
+     *
+     * @throws InvalidValidityDateException
+     * @throws InvalidValidityRangeException
+     */
+    private function validateValidity(array $data, ?FileVersion $currentFileVersion): void
+    {
+        if (!\array_key_exists('validFrom', $data) && !\array_key_exists('validTo', $data)) {
+            return;
+        }
+
+        $validFrom = \array_key_exists('validFrom', $data) ? $this->parseValidityDate($data['validFrom']) : $currentFileVersion?->getValidFrom();
+        $validTo = \array_key_exists('validTo', $data) ? $this->parseValidityDate($data['validTo']) : $currentFileVersion?->getValidTo();
+
+        if ($validFrom && $validTo && $validTo < $validFrom) {
+            throw new InvalidValidityRangeException();
+        }
+    }
+
+    /**
+     * @throws InvalidValidityDateException
+     */
+    private function parseValidityDate(mixed $value): ?\DateTimeImmutable
+    {
+        if (null === $value || '' === $value) {
+            return null;
+        }
+
+        if (!\is_string($value)) {
+            throw new InvalidValidityDateException();
+        }
+
+        $date = \DateTimeImmutable::createFromFormat('!Y-m-d', $value);
+
+        // a rolled over date like 2026-02-30 formats differently than it was given
+        if (!$date || $date->format('Y-m-d') !== $value) {
+            throw new InvalidValidityDateException();
+        }
+
+        return $date;
     }
 
     /**

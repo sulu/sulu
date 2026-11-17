@@ -38,6 +38,19 @@
                     </params>
                 </property>
 
+                <property name="validFrom" type="date" colspan="6">
+                    <meta>
+                        <title>sulu_media.valid_from</title>
+                        <info_text>sulu_media.validity_info_text</info_text>
+                    </meta>
+                </property>
+
+                <property name="validTo" type="date" colspan="6">
+                    <meta>
+                        <title>sulu_media.valid_to</title>
+                    </meta>
+                </property>
+
                 <property name="origin" type="single_select">
                     <meta>
                         <title>sulu_media.origin</title>

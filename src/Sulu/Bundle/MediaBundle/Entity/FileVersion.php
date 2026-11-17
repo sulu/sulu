@@ -80,6 +80,10 @@ class FileVersion implements AuditableInterface
 
     private string $aiDisclosureIconVariant = 'auto';
 
+    private ?\DateTimeImmutable $validFrom = null;
+
+    private ?\DateTimeImmutable $validTo = null;
+
     public function __construct()
     {
         $this->meta = new ArrayCollection();
@@ -488,6 +492,30 @@ class FileVersion implements AuditableInterface
     public function setAiDisclosureIconVariant(string $aiDisclosureIconVariant): static
     {
         $this->aiDisclosureIconVariant = $aiDisclosureIconVariant;
+
+        return $this;
+    }
+
+    public function getValidFrom(): ?\DateTimeImmutable
+    {
+        return $this->validFrom;
+    }
+
+    public function setValidFrom(?\DateTimeImmutable $validFrom): static
+    {
+        $this->validFrom = $validFrom;
+
+        return $this;
+    }
+
+    public function getValidTo(): ?\DateTimeImmutable
+    {
+        return $this->validTo;
+    }
+
+    public function setValidTo(?\DateTimeImmutable $validTo): static
+    {
+        $this->validTo = $validTo;
 
         return $this;
     }
