@@ -18,16 +18,23 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflow;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowRegistryInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\RequestWorkflowValidatorInterface;
 use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionRegistryInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\WorkflowTransitionRequestViewFactory;
+use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionStatusEnum;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
+use Sulu\Content\Tests\Unit\Content\Application\WorkflowTransitionRequest\Action\StubWorkflowTransitionRequestAction;
 
 #[CoversClass(WorkflowTransitionRequestViewFactory::class)]
 class WorkflowTransitionRequestViewFactoryTest extends TestCase
@@ -77,6 +84,54 @@ class WorkflowTransitionRequestViewFactoryTest extends TestCase
         $this->assertNotNull($approvals[0]['decidedAt']);
     }
 
+    public function testViewListsTheActionsThatFitAndThatTheUserMayTake(): void
+    {
+        $view = $this->createFactory(
+            actions: [new StubWorkflowTransitionRequestAction()],
+        )->build($this->createRequest());
+
+        $this->assertSame([['key' => 'stub', 'label' => 'acme.stub']], $view['actions']);
+    }
+
+    public function testViewOmitsAnActionThatDoesNotFitTheRequest(): void
+    {
+        $view = $this->createFactory(
+            actions: [new StubWorkflowTransitionRequestAction(available: false)],
+        )->build($this->createRequest());
+
+        $this->assertSame([], $view['actions']);
+    }
+
+    public function testViewOmitsAnActionTheUserMayNotTake(): void
+    {
+        $view = $this->createFactory(
+            actions: [new StubWorkflowTransitionRequestAction(permission: PermissionTypes::LIVE)],
+            grantedPermissions: [PermissionTypes::EDIT],
+        )->build($this->createRequest());
+
+        $this->assertSame([], $view['actions']);
+    }
+
+    public function testViewOffersNoActionsOnAClosedRequest(): void
+    {
+        $request = $this->createRequest();
+        $request->cancel();
+
+        $view = $this->createFactory(actions: [new StubWorkflowTransitionRequestAction()])->build($request);
+
+        $this->assertSame([], $view['actions']);
+    }
+
+    public function testViewOffersNoActionsWhenTheSecurityContextCannotBeResolved(): void
+    {
+        $view = $this->createFactory(
+            actions: [new StubWorkflowTransitionRequestAction()],
+            resolvable: false,
+        )->build($this->createRequest());
+
+        $this->assertSame([], $view['actions']);
+    }
+
     public function testPendingCheckCarriesNoDecision(): void
     {
         $request = $this->createRequest();
@@ -111,11 +166,16 @@ class WorkflowTransitionRequestViewFactoryTest extends TestCase
     /**
      * @param list<string> $requiredValidatorKeys
      * @param array{cancel: bool, publish: bool, retry: bool, review: bool}|null $permissions
+     * @param list<StubWorkflowTransitionRequestAction> $actions
+     * @param list<string> $grantedPermissions
      */
     private function createFactory(
         int $requiredUserApprovals = 1,
         array $requiredValidatorKeys = [],
         ?array $permissions = null,
+        array $actions = [],
+        array $grantedPermissions = [PermissionTypes::LIVE],
+        bool $resolvable = true,
     ): WorkflowTransitionRequestViewFactory {
         $registry = $this->prophesize(RequestWorkflowRegistryInterface::class);
         $registry->has(WorkflowTransitionRequest::DEFAULT_WORKFLOW_NAME)->willReturn(true);
@@ -133,10 +193,30 @@ class WorkflowTransitionRequestViewFactoryTest extends TestCase
         $authorizer->getPermissions('pages', Argument::type('string'), 'en')
             ->willReturn($permissions ?? ['cancel' => true, 'publish' => true, 'retry' => true, 'review' => true]);
 
+        $actionRegistry = $this->prophesize(WorkflowTransitionRequestActionRegistryInterface::class);
+        $actionRegistry->all()->willReturn($actions);
+
+        $condition = new SecurityCondition('sulu.pages', 'en');
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission($condition, Argument::type('string'))->will(
+            static fn (array $args): bool => \in_array($args[1], $grantedPermissions, true),
+        );
+
+        $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
+        if ($resolvable) {
+            $securityContextResolver->resolve('pages', Argument::type('string'), 'en')->willReturn($condition);
+        } else {
+            $securityContextResolver->resolve('pages', Argument::type('string'), 'en')
+                ->willThrow(new UnresolvableSecurityContextException('no context'));
+        }
+
         return new WorkflowTransitionRequestViewFactory(
             $registry->reveal(),
             $statusResolver->reveal(),
             $authorizer->reveal(),
+            $actionRegistry->reveal(),
+            $securityChecker->reveal(),
+            $securityContextResolver->reveal(),
         );
     }
 

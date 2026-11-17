@@ -21,6 +21,7 @@ use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionReques
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionRequestPublishTransitionSubscriber;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionRequestTransitionSubscriber;
 use Sulu\Content\Application\MessageHandler\ApproveWorkflowTransitionRequestMessageHandler;
+use Sulu\Content\Application\MessageHandler\ExecuteWorkflowTransitionRequestActionMessageHandler;
 use Sulu\Content\Application\MessageHandler\RejectWorkflowTransitionRequestMessageHandler;
 use Sulu\Content\Application\MessageHandler\RetryWorkflowTransitionRequestValidationMessageHandler;
 use Sulu\Content\Application\MessageHandler\ValidateWorkflowTransitionRequestFailureListener;
@@ -38,6 +39,8 @@ use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusReso
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizer;
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionRegistry;
+use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionRegistryInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProvider;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\WorkflowTransitionRequestViewFactory;
@@ -107,11 +110,22 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->alias(WorkflowTransitionRequestStatusResolverInterface::class, 'sulu_content.workflow_transition_request_status_resolver');
+    $services->set('sulu_content.workflow_transition_request_action_registry', WorkflowTransitionRequestActionRegistry::class)
+        ->args([
+            tagged_locator('sulu_content.workflow_transition_request_action', indexAttribute: 'key', defaultIndexMethod: 'getKey'),
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->alias(WorkflowTransitionRequestActionRegistryInterface::class, 'sulu_content.workflow_transition_request_action_registry');
+
     $services->set('sulu_content.workflow_transition_request_view_factory', WorkflowTransitionRequestViewFactory::class)
         ->args([
             new Reference('sulu_content.request_workflow_registry'),
             new Reference('sulu_content.workflow_transition_request_status_resolver'),
             new Reference('sulu_content.workflow_transition_admin_authorizer'),
+            new Reference('sulu_content.workflow_transition_request_action_registry'),
+            new Reference('sulu_security.security_checker'),
+            new Reference('sulu_content.workflow_transition_request_security_context_resolver'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
@@ -172,6 +186,14 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_content.workflow_transition_request_repository'),
             new Reference('sulu_message_bus'),
             new Reference('event_dispatcher'),
+        ])
+        ->tag('messenger.message_handler')
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_content.execute_workflow_transition_request_action_handler', ExecuteWorkflowTransitionRequestActionMessageHandler::class)
+        ->args([
+            new Reference('sulu_content.workflow_transition_request_repository'),
+            new Reference('sulu_content.workflow_transition_request_action_registry'),
         ])
         ->tag('messenger.message_handler')
         ->tag('sulu.context', ['context' => 'admin']);

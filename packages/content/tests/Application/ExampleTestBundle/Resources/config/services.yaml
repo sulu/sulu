@@ -139,6 +139,10 @@ services:
         class: Sulu\Content\Tests\Application\ExampleTestBundle\RequestWorkflow\ConfiguredResultValidator
         autoconfigure: true
 
+    example_test.workflow_transition_request_action:
+        class: Sulu\Content\Tests\Application\ExampleTestBundle\RequestWorkflow\ExampleWorkflowTransitionRequestAction
+        autoconfigure: true
+
     example_test.workflow_transition_request_subscriber:
         class: Sulu\Content\Tests\Application\ExampleTestBundle\Activity\ExampleWorkflowTransitionRequestSubscriber
         arguments:

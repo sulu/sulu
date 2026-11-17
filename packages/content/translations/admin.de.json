@@ -62,6 +62,7 @@
     "sulu_content.workflow_transition_request.cancel_not_allowed": "Zum Abbrechen einer Freigabe-Anfrage wird die Bearbeiten-Berechtigung benötigt.",
     "sulu_content.workflow_transition_request.cancel_request_action": "Abbrechen",
     "sulu_content.workflow_transition_request.closed": "Diese Veröffentlichungsanfrage ist bereits abgeschlossen und kann nicht mehr bearbeitet werden.",
+    "sulu_content.workflow_transition_request.action_not_available": "Die Aktion \"{actionKey}\" ist für diese Anfrage nicht verfügbar.",
     "sulu_content.workflow_transition_request.duplicate_active": "Für diesen Inhalt existiert bereits eine aktive Veröffentlichungsanfrage.",
     "sulu_content.workflow_transition_request.excerpt_required.missing": "Excerpt-Felder fehlen noch: {fields}.",
     "sulu_content.workflow_transition_request.publish_required.missing": "Zum Veröffentlichen fehlen noch Felder: {fields}.",
