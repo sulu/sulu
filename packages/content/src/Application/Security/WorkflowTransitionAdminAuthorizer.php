@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\Security;
 
+use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Component\HttpKernel\SuluKernel;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
@@ -40,6 +43,7 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
         private readonly TokenStorageInterface $tokenStorage,
         private readonly WorkflowTransitionRequestStatusResolverInterface $statusResolver,
         private readonly string $suluContext,
+        private readonly AccessControlManagerInterface $accessControlManager,
     ) {
     }
 
@@ -63,22 +67,22 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
         return [
             // Withdrawing a request frees the content for editing again, so it takes EDIT.
             'cancel' => $edit,
-            'publish' => $this->isPublishGranted($condition, $resourceKey, $resourceId, $locale),
+            'publish' => $this->isPublishGranted($condition, $resourceKey, $resourceId, $locale, null),
             // Re-running a check is part of fixing the content, not a verdict on it.
             'retry' => $edit,
             'review' => $this->securityChecker->hasPermission($condition, PermissionTypes::REVIEW),
         ];
     }
 
-    public function assertCanPublish(string $resourceKey, string $resourceId, string $locale): void
+    public function assertCanPublish(string $resourceKey, string $resourceId, string $locale, ?UserInterface $user = null): void
     {
-        if (!$this->isAuthorizedAdminCall()) {
+        if (!$this->isAuthorizedAdminCall($user)) {
             return;
         }
 
         $condition = $this->securityContextResolver->resolve($resourceKey, $resourceId, $locale);
 
-        if ($this->isPublishGranted($condition, $resourceKey, $resourceId, $locale)) {
+        if ($this->isPublishGranted($condition, $resourceKey, $resourceId, $locale, $user)) {
             return;
         }
 
@@ -139,27 +143,53 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
         string $resourceKey,
         string $resourceId,
         string $locale,
+        ?UserInterface $user,
     ): bool {
         // Asked first and alone, so the live permission answers without looking up the request.
-        if ($this->securityChecker->hasPermission($condition, PermissionTypes::LIVE)) {
+        if ($this->hasPermission($condition, PermissionTypes::LIVE, $user)) {
             return true;
         }
 
-        return $this->securityChecker->hasPermission($condition, PermissionTypes::EDIT)
+        return $this->hasPermission($condition, PermissionTypes::EDIT, $user)
             && $this->hasApprovedRequest($resourceKey, $resourceId, $locale);
     }
 
     /**
-     * A call without a token, a command, a fixture, a consumer, has nobody to check and is let
-     * through. Any token is checked, including one whose user is not Sulu's, which the voters deny.
+     * Without a user the current token decides. With one, its roles decide, because a console run has
+     * no token, and the access control manager grants everything while no system is set.
+     */
+    private function hasPermission(SecurityCondition $condition, string $permission, ?UserInterface $user): bool
+    {
+        if (null === $user) {
+            return $this->securityChecker->hasPermission($condition, $permission);
+        }
+
+        $permissions = $this->accessControlManager->getUserPermissions(
+            new SecurityCondition(
+                $condition->getSecurityContext(),
+                $condition->getLocale(),
+                $condition->getObjectType(),
+                $condition->getObjectId(),
+                $condition->getSystem() ?: Admin::SULU_ADMIN_SECURITY_SYSTEM,
+            ),
+            $user,
+        );
+
+        return true === ($permissions[$permission] ?? false);
+    }
+
+    /**
+     * A call without a token and without a user, a command, a fixture, a consumer, has nobody to check
+     * and is let through. Any token is checked, including one whose user is not Sulu's, which the
+     * voters deny. A call that names its user is always checked.
      *
      * The context is asked as well, so the class refuses to authorize anywhere its security contexts
      * are not registered rather than answering from half a container.
      */
-    private function isAuthorizedAdminCall(): bool
+    private function isAuthorizedAdminCall(?UserInterface $user = null): bool
     {
         return SuluKernel::CONTEXT_ADMIN === $this->suluContext
-            && null !== $this->tokenStorage->getToken();
+            && (null !== $user || null !== $this->tokenStorage->getToken());
     }
 
     private function hasApprovedRequest(string $resourceKey, string $resourceId, string $locale): bool

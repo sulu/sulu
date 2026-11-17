@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\Security;
 
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -30,10 +31,13 @@ interface WorkflowTransitionAdminAuthorizerInterface
     public function getPermissions(string $resourceKey, string $resourceId, string $locale): array;
 
     /**
+     * Without a user the current token is checked. A caller that runs without one, such as a console
+     * command, passes the user it acts for.
+     *
      * @throws AccessDeniedException when the user holds neither the LIVE permission nor the EDIT
      *                               permission together with an approved active request
      */
-    public function assertCanPublish(string $resourceKey, string $resourceId, string $locale): void;
+    public function assertCanPublish(string $resourceKey, string $resourceId, string $locale, ?UserInterface $user = null): void;
 
     /**
      * Covers every reviewer verdict: the content-level `reject` transition as well as approving or

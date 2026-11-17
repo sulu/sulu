@@ -234,6 +234,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('security.token_storage'),
             new Reference('sulu_content.workflow_transition_request_status_resolver'),
             '%sulu.context%',
+            new Reference('sulu_security.access_control_manager'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
