@@ -2,6 +2,19 @@ This component allows to assign different kind of contact details. This includes
 websites, faxes and social media profiles.
 
 ```javascript
+const Email = require('./Email').default;
+const Fax = require('./Fax').default;
+const Phone = require('./Phone').default;
+const SocialMedia = require('./SocialMedia').default;
+const Website = require('./Website').default;
+
+const types = [{label: 'Work', value: 1}, {label: 'Private', value: 2}];
+Email.types = types;
+Fax.types = types;
+Phone.types = types;
+SocialMedia.types = types;
+Website.types = types;
+
 const [value, setValue] = React.useState({
     emails: [{email: undefined, emailType: 1}],
     faxes: [{fax: undefined, faxType: 1}],
@@ -15,4 +28,33 @@ const changeHandler = (value) => {
 };
 
 <ContactDetails onChange={changeHandler} value={value} />
+```
+
+The `onBlur` prop is called when one of the inputs loses focus. The `value` consists of the `emails`, `faxes`, `phones`,
+`socialMedia` and `websites` arrays, each entry holding the actual value and its type id. Existing entries are shown
+with their type selects and can be removed:
+
+```javascript
+const Email = require('./Email').default;
+const Fax = require('./Fax').default;
+const Phone = require('./Phone').default;
+const SocialMedia = require('./SocialMedia').default;
+const Website = require('./Website').default;
+
+const types = [{label: 'Work', value: 1}, {label: 'Private', value: 2}];
+Email.types = types;
+Fax.types = types;
+Phone.types = types;
+SocialMedia.types = types;
+Website.types = types;
+
+const [value, setValue] = React.useState({
+    emails: [{email: 'hello@sulu.io', emailType: 1}],
+    faxes: [],
+    phones: [{phone: '+43 123 456', phoneType: 1}, {phone: '+43 789 012', phoneType: 2}],
+    socialMedia: [{username: 'sulu', socialMediaType: 1}],
+    websites: [{website: 'https://sulu.io', websiteType: 1}],
+});
+
+<ContactDetails onBlur={() => {}} onChange={setValue} value={value} />
 ```

@@ -155,3 +155,30 @@ const handleRemove = () => {
     Test item
 </SingleItemSelection>
 ```
+
+The `loading` prop shows a loading state, `itemDisabled` disables the item and `allowRemoveWhileItemDisabled` keeps
+the remove button usable then. `id` and `value` are passed to `onItemClick` when the item is clicked.
+
+```javascript
+const leftButton = {icon: 'su-document', onClick: () => {}};
+
+<div>
+    <SingleItemSelection leftButton={leftButton} loading={true} />
+    <SingleItemSelection
+        allowRemoveWhileItemDisabled={true}
+        itemDisabled={true}
+        leftButton={leftButton}
+        onRemove={() => alert('Removed')}
+    >
+        Disabled item
+    </SingleItemSelection>
+    <SingleItemSelection
+        id={5}
+        leftButton={leftButton}
+        onItemClick={(id, value) => alert('Clicked ' + id + ' with value ' + value)}
+        value="my-value"
+    >
+        Clickable item
+    </SingleItemSelection>
+</div>
+```

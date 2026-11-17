@@ -38,3 +38,17 @@ const [value, setValue] = React.useState('1');
     <Radio value="3">Radio 3</Radio>
 </RadioGroup>
 ```
+
+The `disabled` prop on a `Radio` or on the whole `RadioGroup` blocks interaction. The `name` prop is passed to the input.
+
+```javascript
+const RadioGroup = require('./RadioGroup').default;
+
+<div>
+    <Radio checked={true} disabled={true}>Disabled radio</Radio>
+    <RadioGroup disabled={true} value="1">
+        <Radio value="1">Disabled group 1</Radio>
+        <Radio value="2">Disabled group 2</Radio>
+    </RadioGroup>
+</div>
+```

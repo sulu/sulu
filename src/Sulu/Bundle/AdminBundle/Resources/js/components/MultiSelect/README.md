@@ -26,3 +26,20 @@ const onChange = (contributors) => setContributors(contributors);
     </MultiSelect>
 </div>
 ```
+
+The `skin` (`default`, `flat`, `dark`), `icon` and `disabled` props configure the button.
+
+```javascript
+const Option = MultiSelect.Option;
+
+<div>
+    <MultiSelect skin="flat" icon="su-plus" values={['1']} onChange={() => {}}>
+        <Option value="1">Flat with icon</Option>
+        <Option value="2">Other</Option>
+    </MultiSelect>
+    <MultiSelect disabled={true} values={['1']} onChange={() => {}}>
+        <Option value="1">Disabled</Option>
+        <Option value="2">Other</Option>
+    </MultiSelect>
+</div>
+```

@@ -10,3 +10,12 @@ const [checked2, setChecked2] = React.useState(true);
     <Toggler value="2" checked={checked2} onChange={setChecked2}>Night mode</Toggler>
 </div>
 ```
+
+A `disabled` toggler cannot be changed by the user.
+
+```javascript
+<div>
+    <Toggler value="1" checked={false} disabled={true}>Disabled off</Toggler>
+    <Toggler value="2" checked={true} disabled={true}>Disabled on</Toggler>
+</div>
+```

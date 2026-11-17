@@ -20,3 +20,21 @@ const PageWithSidebar = withSidebar(Page, function() {
     };
 });
 ``` 
+
+| Prop        | Description                                                                                  |
+|-------------|----------------------------------------------------------------------------------------------|
+| `router`    | The `Router`, used to read the attributes (locale, webspace, ...) for the preview URL.       |
+| `formStore` | `ResourceFormStore` of the edited resource; changes of its data are sent to the preview and rendered. |
+
+The `sizes` passed to `withSidebar` define the widths the sidebar can have, `medium` and `large` in the example above.
+The preview renders the page in an iframe, with a dropdown for the device (`auto`, `desktop`, `tablet`,
+`smartphone`), buttons for the preview URL and the preview link, so it needs a running backend and cannot be rendered in this
+documentation.
+
+The behavior is configured with static properties of the `Preview` class:
+
+| Static              | Description                                                         |
+|---------------------|---------------------------------------------------------------------|
+| `mode`              | When the preview starts: `auto` (immediately), `on_request` (after the user starts it) or `off`. |
+| `debounceDelay`     | Milliseconds to wait after a change before the preview is updated.  |
+| `audienceTargeting` | Shows the audience targeting group selection if `true`.             |

@@ -5,3 +5,31 @@ not the selection of the `List` should be cleared after the `Overlay` has been c
 
 The component mainly serves as base for the [`SingleListOverlay`](#singlelistoverlay) and
 [`MultiListOverlay`](#multilistoverlay) components.
+
+| Prop                            | Description                                                                           |
+|---------------------------------|---------------------------------------------------------------------------------------|
+| `listStore`                     | The `ListStore` of the displayed list.                                                |
+| `adapter`                       | List adapter used inside of the overlay.                                              |
+| `open`, `onClose`, `onConfirm`  | Visibility and callbacks for closing and confirming.                                  |
+| `title`                         | Title of the overlay.                                                                 |
+| `overlayType`                   | `overlay` (default) or `dialog`.                                                      |
+| `confirmLoading`                | Shows a loader on the confirm button.                                                 |
+| `preSelectedItems`              | Items selected when the overlay opens.                                                |
+| `disabledIds`                   | IDs which cannot be selected.                                                         |
+| `itemDisabledCondition`         | JEXL expression, evaluated per item, which disables it.                               |
+| `allowActivateForDisabledItems` | Whether disabled items can still be activated in a tree. Defaults to `true`.          |
+| `clearSelectionOnClose`         | Clears the selection when the overlay closes. Defaults to `false`.                    |
+| `reloadOnOpen`                  | Reloads the list every time the overlay opens. Defaults to `false`.                   |
+
+```javascript static
+const store = new ListStore('contacts', 'contacts', 'contacts', {page: observable.box(1)});
+
+<ListOverlay
+    adapter="table"
+    listStore={store}
+    onClose={handleClose}
+    onConfirm={handleConfirm}
+    open={open}
+    title="Select contacts"
+/>
+```

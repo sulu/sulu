@@ -11,3 +11,18 @@ const onChange = (value) => setValue(value);
     <ColorPicker value={value} onChange={onChange} />
 </div>
 ```
+
+The `placeholder`, `disabled` and `valid` props behave like in the [`Input`](#input). `valid={false}` marks the field as
+erroneous.
+
+```javascript
+<div>
+    <div style={{paddingBottom: '10px'}}>
+        <ColorPicker onChange={() => {}} placeholder="Choose a color" value={undefined} />
+    </div>
+    <div style={{paddingBottom: '10px'}}>
+        <ColorPicker disabled={true} onChange={() => {}} value="#ff0000" />
+    </div>
+    <ColorPicker onChange={() => {}} valid={false} value="#00ff00" />
+</div>
+```

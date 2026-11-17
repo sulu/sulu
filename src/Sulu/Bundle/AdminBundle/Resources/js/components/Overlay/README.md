@@ -63,3 +63,36 @@ const snackbarMessage = snackbarType === 'error'
     </Overlay>
 </div>
 ```
+
+The `size` prop is `small` or `large`. With `closable={false}` the close button is hidden, `confirmDisabled` disables
+and `confirmLoading` shows a spinner on the confirm button. A `snackbarMessage` of a `snackbarType` (`error`,
+`warning`, `info`, `success`) is shown on top, with `onSnackbarClick` and `onSnackbarCloseClick` as callbacks.
+
+```javascript
+const [open, setOpen] = React.useState(false);
+const [loading, setLoading] = React.useState(false);
+
+<div>
+    <button onClick={() => setOpen(true)}>Open overlay</button>
+    <Overlay
+        closable={false}
+        confirmDisabled={false}
+        confirmLoading={loading}
+        confirmText="Save"
+        onClose={() => setOpen(false)}
+        onConfirm={() => {
+            setLoading(true);
+            setTimeout(() => {setLoading(false); setOpen(false);}, 1000);
+        }}
+        onSnackbarClick={() => console.log('snackbar clicked')}
+        onSnackbarCloseClick={() => console.log('snackbar closed')}
+        open={open}
+        size="small"
+        snackbarMessage="Something needs your attention"
+        snackbarType="warning"
+        title="Small overlay"
+    >
+        <div style={{padding: '20px'}}>Content of a small, non closable overlay.</div>
+    </Overlay>
+</div>
+```

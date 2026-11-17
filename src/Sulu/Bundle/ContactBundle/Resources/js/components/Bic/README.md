@@ -12,3 +12,18 @@ const onChange = (value) => setValue(value);
     Value: {value}
 </div>
 ```
+
+The `disabled` prop disables the input, `placeholder` sets the text shown while empty, `valid` marks the field as
+valid or invalid independent of the format check, and `onBlur` is called when the input loses focus.
+
+```javascript
+const [value, setValue] = React.useState('COBADEFFXXX');
+
+<div>
+    <Bic onChange={setValue} placeholder="Enter a value" value={value} />
+    <br />
+    <Bic disabled={true} onChange={setValue} value={value} />
+    <br />
+    <Bic onChange={setValue} valid={false} value={value} />
+</div>
+```
