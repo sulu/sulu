@@ -235,7 +235,7 @@ final class NavigationRepository implements NavigationRepositoryInterface
     }
 
     /**
-     * @param string[] $fields
+     * @param list<string> $fields
      *
      * @return array<string, int|string>|null
      */
