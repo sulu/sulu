@@ -120,6 +120,18 @@ test('counts the passed checks separately from the approvals', () => {
     )).toBeInTheDocument();
 });
 
+test('shows the message of the requester to the reviewer', () => {
+    renderOverlay({request: createRequest({data: {message: 'Please look at the second paragraph.'}})});
+
+    expect(screen.getByText('Please look at the second paragraph.')).toBeInTheDocument();
+});
+
+test('shows no message when the requester wrote none', () => {
+    renderOverlay({request: createRequest({data: {message: '  '}})});
+
+    expect(document.querySelector('[class*="request-message"], [class*="requestMessage"]')).toBeNull();
+});
+
 test('omits the check card when the workflow configured no validators', () => {
     const request = createRequest({
         approvalProgress: {approved: 0, rejected: 0, required: 1},

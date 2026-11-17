@@ -6,5 +6,10 @@
     <key>workflow_transition_request_details</key>
 
     <properties>
+        <property name="message" type="text_area">
+            <meta>
+                <title>sulu_content.workflow_transition_request.message_to_reviewer</title>
+            </meta>
+        </property>
     </properties>
 </form>

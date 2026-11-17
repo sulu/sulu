@@ -320,9 +320,15 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
         const requestedByName = request.createdBy
             ? request.createdBy.fullName
             : translate('sulu_admin.unknown_user');
+        const requestMessage = request.data?.message;
 
         return (
             <div className={workflowCheckCardStyles.body}>
+                {typeof requestMessage === 'string' && requestMessage.trim() !== '' && (
+                    <p className={workflowTransitionRequestReviewOverlayStyles.requestMessage}>
+                        {requestMessage}
+                    </p>
+                )}
                 {checkRows.length > 0 && (
                     <WorkflowCheckCard
                         headerCount={translate(

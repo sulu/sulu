@@ -28,6 +28,15 @@ $overlayContentHeight: 436px;
     }
 }
 
+.request-message {
+    color: $scorpion;
+    font-size: 14px;
+    line-height: 20px;
+    margin: 0;
+    padding: 12px 20px;
+    white-space: pre-wrap;
+}
+
 .notice {
     color: $doveGray;
     font-size: 13px;
