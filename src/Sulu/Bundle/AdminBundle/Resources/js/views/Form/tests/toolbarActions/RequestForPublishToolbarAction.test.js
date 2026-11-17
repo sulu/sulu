@@ -1,9 +1,18 @@
 // @flow
 import {ResourceFormStore} from '../../../../containers/Form';
+import memoryFormStoreFactory from '../../../../containers/Form/stores/memoryFormStoreFactory';
 import ResourceStore from '../../../../stores/ResourceStore';
 import Router from '../../../../services/Router';
 import Form from '../../../../views/Form';
 import RequestForPublishToolbarAction from '../../toolbarActions/RequestForPublishToolbarAction';
+
+jest.mock('../../../../containers/Form/stores/memoryFormStoreFactory', () => ({
+    createFromFormKey: jest.fn(() => ({
+        data: {},
+        loading: false,
+        schema: {},
+    })),
+}));
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -20,6 +29,8 @@ jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
         constructor(resourceStore) {
             this.resourceStore = resourceStore;
         }
+
+        change = jest.fn();
 
         get dirty() {
             return this.resourceStore.dirty;
@@ -78,6 +89,7 @@ test.each([
 
     toolbarItemConfig.onClick();
 
+    expect(toolbarAction.resourceFormStore.change).toHaveBeenCalledWith('workflowTransitionRequestData', {});
     expect(toolbarAction.form.submit).toHaveBeenCalledWith({action: transition});
 });
 
@@ -165,4 +177,79 @@ test('Offer nothing for saved content that no workflow covers', () => {
     toolbarAction.resourceFormStore.resourceStore.data.workflowPlace = 'draft';
 
     expect(toolbarAction.getToolbarItemConfig()).toBeUndefined();
+});
+
+test('Open the overlay instead of submitting when the request form has fields', () => {
+    memoryFormStoreFactory.createFromFormKey.mockReturnValueOnce({
+        data: {},
+        loading: false,
+        schema: {publishAt: {}},
+    });
+
+    const toolbarAction = createRequestForPublishToolbarAction();
+    toolbarAction.resourceFormStore.resourceStore.data.workflowTransitionRequestEnabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.workflowPlace = 'draft';
+
+    const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
+
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    toolbarItemConfig.onClick();
+
+    expect(toolbarAction.open).toBe(true);
+    expect(toolbarAction.form.submit).not.toHaveBeenCalled();
+});
+
+test('Submit the transition with the data of the request form when the overlay is confirmed', () => {
+    memoryFormStoreFactory.createFromFormKey.mockReturnValueOnce({
+        data: {publishAt: '2026-12-01T10:00:00+00:00'},
+        loading: false,
+        schema: {publishAt: {}},
+    });
+
+    const toolbarAction = createRequestForPublishToolbarAction();
+    toolbarAction.resourceFormStore.resourceStore.data.workflowTransitionRequestEnabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.workflowPlace = 'draft';
+
+    const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
+
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    toolbarItemConfig.onClick();
+    toolbarAction.handleConfirm();
+
+    expect(toolbarAction.open).toBe(false);
+    expect(toolbarAction.resourceFormStore.change).toHaveBeenCalledWith(
+        'workflowTransitionRequestData',
+        {publishAt: '2026-12-01T10:00:00+00:00'}
+    );
+    expect(toolbarAction.form.submit).toHaveBeenCalledWith({action: 'request_for_review_draft'});
+});
+
+test('Submit nothing when the overlay is closed', () => {
+    memoryFormStoreFactory.createFromFormKey.mockReturnValueOnce({
+        data: {},
+        loading: false,
+        schema: {publishAt: {}},
+    });
+
+    const toolbarAction = createRequestForPublishToolbarAction();
+    toolbarAction.resourceFormStore.resourceStore.data.workflowTransitionRequestEnabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.workflowPlace = 'draft';
+
+    const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
+
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    toolbarItemConfig.onClick();
+    toolbarAction.handleClose();
+
+    expect(toolbarAction.open).toBe(false);
+    expect(toolbarAction.form.submit).not.toHaveBeenCalled();
 });
