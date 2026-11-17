@@ -26,6 +26,8 @@ const mediaUploadStore = {
     uploading: false,
     downloadUrl: '#',
     getThumbnail: () => 'https://unsplash.it/400/400',
+    update: () => Promise.resolve(),
+    delete: () => Promise.resolve(),
 };
 
 <div style={{width: 300}}>
@@ -43,6 +45,7 @@ const mediaUploadStore = {
     progress: 0,
     uploading: false,
     getThumbnail: () => undefined,
+    create: () => Promise.resolve(),
 };
 
 <div style={{width: 200}}>
@@ -65,6 +68,8 @@ const mediaUploadStore = {
     progress: 0,
     uploading: false,
     getThumbnail: () => 'https://unsplash.it/400/400',
+    update: () => Promise.resolve(),
+    delete: () => Promise.resolve(),
 };
 
 <div style={{width: 300}}>

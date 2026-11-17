@@ -12,7 +12,7 @@ contains the `CacheClearToolbarAction` of the webspace.
 ```json static
 {
     "name": "sulu_snippet.snippet_areas",
-    "view": "sulu_snippet.snippet_areas",
+    "type": "sulu_snippet.snippet_areas",
     "path": "/snippet-areas",
     "options": {"snippetEditView": "sulu_snippet.edit_form"}
 }

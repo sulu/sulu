@@ -9,7 +9,7 @@ versions in a new window.
 ```json static
 {
     "name": "sulu_media.history",
-    "view": "sulu_media.history",
+    "type": "sulu_media.history",
     "options": {"locales": ["en", "de"]}
 }
 ```

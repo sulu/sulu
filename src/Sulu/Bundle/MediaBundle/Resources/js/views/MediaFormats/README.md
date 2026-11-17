@@ -9,7 +9,7 @@ each image format as well as copying the URL to this image format.
 ```json static
 {
     "name": "sulu_media.formats",
-    "view": "sulu_media.formats",
+    "type": "sulu_media.formats",
     "options": {"locales": ["en", "de"]}
 }
 ```

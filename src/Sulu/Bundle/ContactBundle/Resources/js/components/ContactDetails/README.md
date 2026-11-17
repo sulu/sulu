@@ -2,6 +2,19 @@ This component allows to assign different kind of contact details. This includes
 websites, faxes and social media profiles.
 
 ```javascript
+const Email = require('./Email').default;
+const Fax = require('./Fax').default;
+const Phone = require('./Phone').default;
+const SocialMedia = require('./SocialMedia').default;
+const Website = require('./Website').default;
+
+const types = [{label: 'Work', value: 1}, {label: 'Private', value: 2}];
+Email.types = types;
+Fax.types = types;
+Phone.types = types;
+SocialMedia.types = types;
+Website.types = types;
+
 const [value, setValue] = React.useState({
     emails: [{email: undefined, emailType: 1}],
     faxes: [{fax: undefined, faxType: 1}],
@@ -22,6 +35,19 @@ The `onBlur` prop is called when one of the inputs loses focus. The `value` cons
 with their type selects and can be removed:
 
 ```javascript
+const Email = require('./Email').default;
+const Fax = require('./Fax').default;
+const Phone = require('./Phone').default;
+const SocialMedia = require('./SocialMedia').default;
+const Website = require('./Website').default;
+
+const types = [{label: 'Work', value: 1}, {label: 'Private', value: 2}];
+Email.types = types;
+Fax.types = types;
+Phone.types = types;
+SocialMedia.types = types;
+Website.types = types;
+
 const [value, setValue] = React.useState({
     emails: [{email: 'hello@sulu.io', emailType: 1}],
     faxes: [],

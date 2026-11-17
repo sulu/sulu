@@ -8,7 +8,7 @@ input field and the `idProperty` defines which property is used as value.
 | `resourceKey`       | Resource whose items are listed.                                                         |
 | `value`, `onChange` | Selected value (`idProperty` of an item) and callback receiving the new one.             |
 | `displayProperty`   | Property shown as label of an item.                                                      |
-| `idProperty`        | Property used as value of an item. The default of the container is `id`.                 |
+| `idProperty`        | Required. Property used as value of an item, e.g. `id`.                                    |
 | `requestParameters` | Additional parameters of the request loading the items.                                  |
 | `disabled`          | Disables the select.                                                                     |
 | `editable`          | Adds an action to the select that opens an overlay to edit the items of the resource.    |
@@ -20,6 +20,7 @@ As it loads data from the server, the example is not executed.
 <ResourceSingleSelect
     displayProperty="name"
     editable={true}
+    idProperty="id"
     onChange={setValue}
     overlayTitle="Edit types"
     requestParameters={{locale: 'en'}}

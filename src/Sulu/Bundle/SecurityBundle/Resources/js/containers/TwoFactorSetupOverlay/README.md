@@ -7,12 +7,17 @@ It is configured through static properties, set by the bundle on initialization:
 
 | Static             | Description                                                              |
 |--------------------|--------------------------------------------------------------------------|
-| `endpoints`        | Map of the method name to the endpoint used to set it up and verify it.  |
+| `endpoints`        | Map of the operation (`twoFactorSetup`, `twoFactorConfirm`, `twoFactorBackupCodes`) to its endpoint. The chosen method is sent in the request body. |
 | `methods`          | Names of the available two-factor methods.                               |
 | `backupCodesEnabled` | Offers the backup codes after the setup if `true`.                     |
 
 ```jsx static
-TwoFactorSetupOverlay.endpoints = {totp: '/admin/api/two-factor/totp'};
+// the bundle sets `endpoints` from the `sulu_security` config; the URLs below are placeholders
+TwoFactorSetupOverlay.endpoints = {
+    twoFactorSetup: '/admin/api/two-factor/setup',
+    twoFactorConfirm: '/admin/api/two-factor/confirm',
+    twoFactorBackupCodes: '/admin/api/two-factor/backup-codes',
+};
 TwoFactorSetupOverlay.methods = ['totp'];
 TwoFactorSetupOverlay.backupCodesEnabled = true;
 

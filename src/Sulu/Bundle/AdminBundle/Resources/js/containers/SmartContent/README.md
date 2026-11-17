@@ -17,6 +17,10 @@ criteria are offered is defined by the config of the store's `provider`, which i
 ```javascript static
 const store = new SmartContentStore('pages', {}, locale, 'pages', undefined, {}, 'sulu_io');
 
+// the store only loads its items after `start()` was called
+store.start();
+// ... and has to be cleaned up with `store.destroy()` when the owning component unmounts
+
 <SmartContent
     defaultValue={{includeSubFolders: false, limitResult: 5}}
     fieldLabel="Pages"

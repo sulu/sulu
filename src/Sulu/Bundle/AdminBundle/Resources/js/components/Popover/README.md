@@ -44,6 +44,7 @@ move it in pixels, and `centerChildElement` names the child that is centered on 
 the popover node.
 
 ```javascript
+const Menu = require('../Menu').default;
 const [open, setOpen] = React.useState(false);
 const [anchorElement, setAnchorElement] = React.useState(null);
 
