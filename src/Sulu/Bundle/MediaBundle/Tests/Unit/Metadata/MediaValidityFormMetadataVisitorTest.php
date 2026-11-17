@@ -19,34 +19,38 @@ use Sulu\Bundle\MediaBundle\Metadata\MediaValidityFormMetadataVisitor;
 
 class MediaValidityFormMetadataVisitorTest extends TestCase
 {
-    public function testVisitHidesValiditySectionWhenDisabled(): void
+    public function testVisitHidesValidityFieldsWhenDisabled(): void
     {
-        [$formMetadata, $validitySection] = $this->createFormMetadata('media_details');
+        [$formMetadata, $validFrom, $validTo, $title] = $this->createFormMetadata('media_details');
 
         (new MediaValidityFormMetadataVisitor(false))->visitFormMetadata($formMetadata, 'en');
 
-        $this->assertSame('false', $validitySection->getVisibleCondition());
+        $this->assertSame('false', $validFrom->getVisibleCondition());
+        $this->assertSame('false', $validTo->getVisibleCondition());
+        $this->assertNull($title->getVisibleCondition());
     }
 
-    public function testVisitKeepsValiditySectionWhenEnabled(): void
+    public function testVisitKeepsValidityFieldsWhenEnabled(): void
     {
-        [$formMetadata, $validitySection] = $this->createFormMetadata('media_details');
+        [$formMetadata, $validFrom, $validTo] = $this->createFormMetadata('media_details');
 
         (new MediaValidityFormMetadataVisitor(true))->visitFormMetadata($formMetadata, 'en');
 
-        $this->assertNull($validitySection->getVisibleCondition());
+        $this->assertNull($validFrom->getVisibleCondition());
+        $this->assertNull($validTo->getVisibleCondition());
     }
 
     public function testVisitIgnoresOtherForms(): void
     {
-        [$formMetadata, $validitySection] = $this->createFormMetadata('collection_details');
+        [$formMetadata, $validFrom, $validTo] = $this->createFormMetadata('collection_details');
 
         (new MediaValidityFormMetadataVisitor(false))->visitFormMetadata($formMetadata, 'en');
 
-        $this->assertNull($validitySection->getVisibleCondition());
+        $this->assertNull($validFrom->getVisibleCondition());
+        $this->assertNull($validTo->getVisibleCondition());
     }
 
-    public function testVisitWithoutValiditySection(): void
+    public function testVisitWithoutValidityFields(): void
     {
         $detailsSection = new SectionMetadata('media_details');
         $formMetadata = new FormMetadata();
@@ -59,21 +63,23 @@ class MediaValidityFormMetadataVisitorTest extends TestCase
     }
 
     /**
-     * @return array{FormMetadata, SectionMetadata}
+     * @return array{FormMetadata, FieldMetadata, FieldMetadata, FieldMetadata}
      */
     private function createFormMetadata(string $key): array
     {
-        $validitySection = new SectionMetadata('validity');
-        $validitySection->addItem(new FieldMetadata('validFrom'));
-        $validitySection->addItem(new FieldMetadata('validTo'));
+        $title = new FieldMetadata('title');
+        $validFrom = new FieldMetadata('validFrom');
+        $validTo = new FieldMetadata('validTo');
 
         $detailsSection = new SectionMetadata('media_details');
-        $detailsSection->addItem($validitySection);
+        $detailsSection->addItem($title);
+        $detailsSection->addItem($validFrom);
+        $detailsSection->addItem($validTo);
 
         $formMetadata = new FormMetadata();
         $formMetadata->setKey($key);
         $formMetadata->addItem($detailsSection);
 
-        return [$formMetadata, $validitySection];
+        return [$formMetadata, $validFrom, $validTo, $title];
     }
 }

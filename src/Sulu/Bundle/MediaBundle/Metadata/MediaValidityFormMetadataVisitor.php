@@ -31,8 +31,13 @@ class MediaValidityFormMetadataVisitor implements FormMetadataVisitorInterface
         }
 
         $detailsSection = $formMetadata->getItems()['media_details'] ?? null;
-        $validitySection = $detailsSection instanceof SectionMetadata ? ($detailsSection->getItems()['validity'] ?? null) : null;
+        if (!$detailsSection instanceof SectionMetadata) {
+            return;
+        }
 
-        $validitySection?->setVisibleCondition('false');
+        $items = $detailsSection->getItems();
+        foreach (['validFrom', 'validTo'] as $name) {
+            ($items[$name] ?? null)?->setVisibleCondition('false');
+        }
     }
 }

@@ -47,7 +47,6 @@
     "sulu_media.license": "License",
     "sulu_media.copyright": "Copyright Information",
     "sulu_media.credits": "Credits",
-    "sulu_media.validity": "Validity",
     "sulu_media.valid_from": "Validity From",
     "sulu_media.valid_to": "Validity To",
     "sulu_media.validity_info_text": "The validity is for information only. It has no effect on how long this media is available.",
