@@ -67,6 +67,7 @@
     "sulu_content.content_in_review": "Dieser Inhalt befindet sich in Prüfung und kann nicht bearbeitet werden. Bitte veröffentlichen, ablehnen oder brechen Sie die Prüfung ab, bevor Sie Änderungen speichern.",
     "sulu_content.workflow_transition_request.missing_authenticated_user": "Sie müssen angemeldet sein, um diese Aktion auszuführen.",
     "sulu_content.workflow_transition_request.request_for_publish": "Speichern und Veröffentlichung anfragen",
+    "sulu_content.workflow_transition_request.request_details": "Details der Anfrage",
     "sulu_content.workflow_transition_request.message_to_reviewer": "Nachricht an den Reviewer",
     "sulu_content.workflow_transition_request.review_action": "Prüfen",
     "sulu_content.workflow_transition_request.requested_a_review": "hat eine Prüfung angefragt",

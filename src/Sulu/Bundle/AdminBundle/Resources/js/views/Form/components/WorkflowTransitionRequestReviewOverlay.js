@@ -10,6 +10,7 @@ import userStore from '../../../stores/userStore';
 import {approverName, validatorName} from './reviewers';
 import {renderMessages} from './decisionMessages';
 import WorkflowCheckCard from './WorkflowCheckCard';
+import WorkflowTransitionRequestDetailsCard from './WorkflowTransitionRequestDetailsCard';
 import workflowCheckCardStyles from './workflowCheckCard.scss';
 import workflowTransitionRequestReviewOverlayStyles from './workflowTransitionRequestReviewOverlay.scss';
 import type {ApprovalStatus, CheckStatus, WorkflowTransitionRequestData} from './types';
@@ -320,15 +321,10 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
         const requestedByName = request.createdBy
             ? request.createdBy.fullName
             : translate('sulu_admin.unknown_user');
-        const requestMessage = request.data?.message;
 
         return (
             <div className={workflowCheckCardStyles.body}>
-                {typeof requestMessage === 'string' && requestMessage.trim() !== '' && (
-                    <p className={workflowTransitionRequestReviewOverlayStyles.requestMessage}>
-                        {requestMessage}
-                    </p>
-                )}
+                {request.data && <WorkflowTransitionRequestDetailsCard data={request.data} />}
                 {checkRows.length > 0 && (
                     <WorkflowCheckCard
                         headerCount={translate(

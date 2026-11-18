@@ -67,6 +67,7 @@
     "sulu_content.content_in_review": "This content is in review and cannot be edited. Publish, reject or cancel the review before saving changes.",
     "sulu_content.workflow_transition_request.missing_authenticated_user": "You must be signed in to perform this action.",
     "sulu_content.workflow_transition_request.request_for_publish": "Save and request for publish",
+    "sulu_content.workflow_transition_request.request_details": "Request details",
     "sulu_content.workflow_transition_request.message_to_reviewer": "Message to the reviewer",
     "sulu_content.workflow_transition_request.review_action": "Review",
     "sulu_content.workflow_transition_request.requested_a_review": "requested a review",
