@@ -39,6 +39,14 @@ interface WorkflowTransitionRequestActionInterface
     public function getLabel(): string;
 
     /**
+     * The values for the placeholders of the label, for example the date a request names. The admin passes
+     * them to the translation of {@see getLabel()}. Return an empty array when the label has none.
+     *
+     * @return array<string, string>
+     */
+    public function getLabelParameters(WorkflowTransitionRequest $request): array;
+
+    /**
      * The permission, one of {@see \Sulu\Component\Security\Authorization\PermissionTypes}, that the user
      * needs on the content of the request to see and to take the action.
      */
