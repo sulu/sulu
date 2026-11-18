@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed} from 'mobx';
+import {computed, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import {createMemoryHistory} from 'history';
 import Overlay from '../../components/Overlay';
@@ -8,7 +8,7 @@ import Router, {Route} from '../../services/Router';
 import {translate} from '../../utils/Translator';
 import Toolbar, {ToolbarSnackbars} from '../Toolbar';
 import toolbarStorePool from '../Toolbar/stores/toolbarStorePool';
-import ViewRenderer from '../ViewRenderer';
+import ViewRenderer, {updateRouterAttributesFromView} from '../ViewRenderer';
 import type {Size} from '../../components/Overlay/types';
 import type {AttributeMap} from '../../services/Router/types';
 
@@ -44,8 +44,38 @@ class ViewOverlay extends React.Component<Props> {
         }
 
         this.router = new Router(createMemoryHistory());
+        this.router.addUpdateAttributesHook(updateRouterAttributesFromView);
+        this.router.addUpdateAttributesHook(this.getLocaleAttributes);
+        this.router.addUpdateRouteHook(this.closeOnNavigationToBackView);
         this.router.navigate(route, attributes);
     }
+
+    // The main router fills in an omitted locale from the content locale of the user. The overlay has its own
+    // locale, so views navigating without one (e.g. after creating a copy) keep the one of the overlay.
+    getLocaleAttributes = (route: Route): AttributeMap => {
+        const locale = this.router.attributes && this.router.attributes.locale;
+        const locales = toJS(route.options.locales);
+
+        if (!locale || !route.availableAttributes.includes('locale') || (locales && !locales.includes(locale))) {
+            return {};
+        }
+
+        return {locale};
+    };
+
+    // Actions like delete leave the form for its list with the back view. The overlay has no place for the list,
+    // so it closes instead.
+    closeOnNavigationToBackView = (newRoute: ?Route): boolean => {
+        const {route} = this.router;
+
+        if (route && newRoute && route.options.backView && newRoute.name === route.options.backView) {
+            this.props.onClose();
+
+            return false;
+        }
+
+        return true;
+    };
 
     componentWillUnmount() {
         this.router.destroy();

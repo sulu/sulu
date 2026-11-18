@@ -20,7 +20,15 @@ const showSuccess = observable.box(false);
 const errors = observable.array([]);
 let mockUpdateRouteHook = jest.fn().mockReturnValue(true);
 
+let mockRouter: Router;
+
 class TestView extends React.Component<*> {
+    constructor(props: *) {
+        super(props);
+
+        mockRouter = props.router;
+    }
+
     componentDidMount() {
         this.props.router.addUpdateRouteHook(mockUpdateRouteHook, 2048);
     }
@@ -52,7 +60,9 @@ beforeEach(() => {
     routeRegistry.clear();
     viewRegistry.clear();
     routeRegistry.addCollection([
-        {name: 'test_form', path: '/test/:id', type: 'test_view'},
+        {name: 'test_form', options: {backView: 'test_list'}, path: '/test/:id', type: 'test_view'},
+        {name: 'test_localized', path: '/localized/:locale/:id', type: 'test_view'},
+        {name: 'test_list', path: '/tests', type: 'test_view'},
     ]);
     viewRegistry.add('test_view', TestViewWithToolbar);
     showSuccess.set(false);
@@ -103,6 +113,29 @@ test('Show the errors of the view below the toolbar inside the overlay', () => {
     expect(screen.getByRole('dialog', {name: 'Edit'})).toContainElement(message);
     expect(screen.getByLabelText('su-save').compareDocumentPosition(message))
         .toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+});
+
+test('Keep the locale of the overlay if a view navigates without one', () => {
+    render(<ViewOverlay attributes={{id: 5, locale: 'de'}} onClose={jest.fn()} route="test_localized" title="Edit" />);
+
+    act(() => {
+        mockRouter.navigate('test_localized', {id: 6});
+    });
+
+    expect(screen.getByRole('heading', {name: 'test_localized 6'})).toBeInTheDocument();
+    expect(mockRouter.attributes.locale).toEqual('de');
+});
+
+test('Close the overlay instead of rendering the back view of the view', () => {
+    const onClose = jest.fn();
+    render(<ViewOverlay attributes={{id: 5}} onClose={onClose} route="test_form" title="Edit" />);
+
+    act(() => {
+        mockRouter.restore('test_list', {});
+    });
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('heading', {name: 'test_form 5'})).toBeInTheDocument();
 });
 
 test('Close the overlay if no view vetoes it', async() => {
