@@ -5,6 +5,7 @@ import {
     listAdapterRegistry,
     listFieldFilterTypeRegistry,
     fieldRegistry,
+    listFieldTransformerRegistry,
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
 import {listItemActionRegistry} from 'sulu-admin-bundle/views';
@@ -23,6 +24,7 @@ import MediaHistory from './views/MediaHistory';
 import MediaFormats from './views/MediaFormats';
 import DeleteVersionItemAction from './views/List/itemActions/DeleteVersionItemAction';
 import ShowVersionItemAction from './views/List/itemActions/ShowVersionItemAction';
+import MediaVersionTransformer from './containers/List/fieldTransformers/MediaVersionTransformer';
 import {MediaLinkTypeOverlay} from './containers/Link';
 
 const FIELD_TYPE_MEDIA_SELECTION = 'media_selection';
@@ -49,6 +51,7 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
 
     listItemActionRegistry.add('sulu_media.show_version', ShowVersionItemAction);
     listItemActionRegistry.add('sulu_media.delete_version', DeleteVersionItemAction);
+    listFieldTransformerRegistry.add('media_version', new MediaVersionTransformer());
 
     listAdapterRegistry.add('media_card_overview', MediaCardOverviewAdapter);
     listAdapterRegistry.add('media_card_selection', MediaCardSelectionAdapter);

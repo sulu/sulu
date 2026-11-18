@@ -25,6 +25,8 @@
         <property name="version" translation="sulu_media.version" visibility="always">
             <field-name>version</field-name>
             <entity-name>Sulu\Bundle\MediaBundle\Entity\FileVersion</entity-name>
+
+            <transformer type="media_version"/>
         </property>
 
         <property name="name" translation="sulu_admin.name" visibility="no">
