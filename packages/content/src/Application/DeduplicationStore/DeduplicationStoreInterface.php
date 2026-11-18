@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\DeduplicationStore;
 
+use Symfony\Contracts\Service\ResetInterface;
+
 /**
  * Holds the ids of the resources shown in the current request, grouped by resource key.
  */
-interface DeduplicationStoreInterface
+interface DeduplicationStoreInterface extends ResetInterface
 {
     public function add(string $resourceKey, string|int ...$ids): void;
 

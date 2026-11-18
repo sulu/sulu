@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\DeduplicationStore;
 
-use Symfony\Contracts\Service\ResetInterface;
-
-class DeduplicationStore implements DeduplicationStoreInterface, ResetInterface
+class DeduplicationStore implements DeduplicationStoreInterface
 {
     /**
      * @var array<string, array<int|string, string>>
