@@ -233,16 +233,66 @@ test('The component should call the callback when the snackbar is clicked', asyn
     expect(onSnackbarClick).toHaveBeenCalled();
 });
 
-test('The component should render the toolbar between the header and the content', () => {
+test('The component should render the toolbar instead of the header', () => {
     renderOverlay({
         toolbar: <div data-testid="overlay-toolbar">toolbar content</div>,
     });
 
     expect(screen.getByTestId('overlay-toolbar')).toBeInTheDocument();
+    expect(screen.queryByRole('heading', {name: 'My overlay title'})).not.toBeInTheDocument();
 });
 
-test('The component should not render a toolbar container when no toolbar is passed', () => {
+test('The component should use the title as accessible name of the dialog when a toolbar is passed', () => {
+    renderOverlay({
+        toolbar: <div>toolbar content</div>,
+    });
+
+    expect(screen.getByRole('dialog', {name: 'My overlay title'})).toBeInTheDocument();
+});
+
+test('The component should render no dialog role and keep the header when no toolbar is passed', () => {
     renderOverlay();
 
     expect(screen.queryByTestId('overlay-toolbar')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'My overlay title'})).toBeInTheDocument();
+});
+
+test('The component should close from the close button of the toolbar', async() => {
+    const user = userEvent.setup();
+    const onClose = jest.fn();
+
+    renderOverlay({
+        onClose,
+        toolbar: <div>toolbar content</div>,
+    });
+
+    await user.click(screen.getByLabelText('su-times', {selector: 'button > span'}));
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test('The component should show a check and announce the message when a close success message is passed', () => {
+    renderOverlay({
+        closeSuccessMessage: 'Changes saved',
+        toolbar: <div>toolbar content</div>,
+    });
+
+    expect(screen.getByLabelText('su-check')).toBeInTheDocument();
+    expect(screen.queryByLabelText('su-times', {selector: 'button > span'})).not.toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('Changes saved');
+});
+
+test('The component should render the snackbar between the toolbar and the content', () => {
+    renderOverlay({
+        snackbarMessage: 'Something went wrong',
+        toolbar: <div data-testid="overlay-toolbar">toolbar content</div>,
+    });
+
+    const toolbar = screen.getByTestId('overlay-toolbar');
+    const snackbar = screen.getByRole('button', {name: /sulu_admin.error/i});
+    const content = screen.getByText('My overlay content');
+
+    expect(toolbar.compareDocumentPosition(snackbar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(snackbar.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 });
