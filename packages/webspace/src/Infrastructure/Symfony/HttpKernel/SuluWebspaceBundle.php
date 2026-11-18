@@ -31,6 +31,7 @@ use Sulu\Webspace\Domain\Model\WebspaceSettingDimensionContentInterface;
 use Sulu\Webspace\Domain\Model\WebspaceSettingInterface;
 use Sulu\Webspace\Domain\Repository\WebspaceSettingRepositoryInterface;
 use Sulu\Webspace\Infrastructure\Doctrine\Repository\WebspaceSettingRepository;
+use Sulu\Webspace\Infrastructure\Sulu\Activity\WebspaceSettingWorkflowTransitionRequestSubscriber;
 use Sulu\Webspace\Infrastructure\Sulu\Admin\MetadataLoader\WebspaceSettingsFormMetadataLoader;
 use Sulu\Webspace\Infrastructure\Sulu\Admin\WebspaceSettingAdmin;
 use Sulu\Webspace\Infrastructure\Sulu\HttpCache\EventSubscriber\WebspaceSettingCacheInvalidationSubscriber;
@@ -218,6 +219,15 @@ final class SuluWebspaceBundle extends AbstractBundle
             ])
             ->tag('kernel.event_subscriber');
 
+        $services->set('sulu_webspace.webspace_setting_workflow_transition_request_subscriber')
+            ->class(WebspaceSettingWorkflowTransitionRequestSubscriber::class)
+            ->args([
+                new Reference('sulu_webspace.webspace_setting_repository'),
+                new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_activity.domain_event_dispatcher'),
+            ])
+            ->tag('kernel.event_subscriber');
+
         $services->set('sulu_webspace.webspace_setting_reference_refresher')
             ->class(WebspaceSettingReferenceRefresher::class)
             ->args([
@@ -241,6 +251,7 @@ final class SuluWebspaceBundle extends AbstractBundle
             ->class(AdminWebspaceSettingReindexProvider::class)
             ->args([
                 new Reference('doctrine.orm.entity_manager'),
+                new Reference('sulu_core.webspace.webspace_manager'),
             ])
             ->tag('cmsig_seal.reindex_provider');
     }

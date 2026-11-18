@@ -272,6 +272,11 @@ final class WebspaceSettingController implements SecuredControllerInterface
 
     private function checkActionPermission(Request $request): void
     {
+        if ('copy_locale' === $request->query->getString('action')) {
+            // the security listener checks only the request locale, a role can be limited to other ones
+            $this->checkCopyLocalePermission($request);
+        }
+
         $permission = self::ACTION_PERMISSIONS[$request->query->getString('action')] ?? null;
 
         if (null === $permission) {
@@ -282,5 +287,20 @@ final class WebspaceSettingController implements SecuredControllerInterface
             new SecurityCondition($this->getSecurityContext(), $this->getLocale($request)),
             $permission,
         );
+    }
+
+    private function checkCopyLocalePermission(Request $request): void
+    {
+        $locales = [
+            $request->query->getString('src') ?: $this->getLocale($request),
+            ...\array_map('trim', \explode(',', $request->query->getString('dest'))),
+        ];
+
+        foreach (\array_unique(\array_filter($locales)) as $locale) {
+            $this->securityChecker->checkPermission(
+                new SecurityCondition($this->getSecurityContext(), $locale),
+                PermissionTypes::EDIT,
+            );
+        }
     }
 }

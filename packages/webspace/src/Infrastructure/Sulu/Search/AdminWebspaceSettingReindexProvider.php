@@ -17,6 +17,7 @@ use CmsIg\Seal\Reindex\ReindexConfig;
 use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Webspace\Domain\Model\WebspaceSettingDimensionContentInterface;
 use Sulu\Webspace\Domain\Model\WebspaceSettingInterface;
@@ -40,8 +41,10 @@ final class AdminWebspaceSettingReindexProvider implements ReindexProviderInterf
      */
     private EntityRepository $dimensionContentRepository;
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        private WebspaceManagerInterface $webspaceManager,
+    ) {
         $this->dimensionContentRepository = $entityManager->getRepository(WebspaceSettingDimensionContentInterface::class);
     }
 
@@ -59,7 +62,7 @@ final class AdminWebspaceSettingReindexProvider implements ReindexProviderInterf
                 'resourceId' => $webspaceSetting['webspaceKey'],
                 'changedAt' => $webspaceSetting['changed']->format('c'),
                 'createdAt' => $webspaceSetting['created']->format('c'),
-                'title' => $webspaceSetting['webspaceKey'],
+                'title' => $this->webspaceManager->findWebspaceByKey($webspaceSetting['webspaceKey'])?->getName() ?? $webspaceSetting['webspaceKey'],
                 'locale' => $webspaceSetting['locale'],
                 'metadata' => [
                     'webspaceKey' => $webspaceSetting['webspaceKey'],

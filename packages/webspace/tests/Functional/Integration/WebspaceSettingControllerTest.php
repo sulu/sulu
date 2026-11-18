@@ -15,7 +15,9 @@ namespace Sulu\Webspace\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\TestWith;
+use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Webspace\Infrastructure\Sulu\HttpCache\EventSubscriber\WebspaceSettingCacheInvalidationSubscriber;
 use Sulu\Webspace\Tests\Traits\CreateWebspaceSettingTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -102,6 +104,20 @@ class WebspaceSettingControllerTest extends SuluTestCase
         $this->client->request('PUT', '/admin/api/webspace-settings/blog?locale=en', [], [], [], (string) \json_encode(['companyName' => 'Blog']));
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
+        /** @var numeric-string $settingsCount */
+        $settingsCount = self::getEntityManager()->getConnection()->fetchOne('SELECT COUNT(*) FROM we_webspace_settings');
+        $this->assertSame(0, (int) $settingsCount);
+    }
+
+    public function testPutPublishInvalidatesTheCacheOfTheWebspace(): void
+    {
+        $cacheManager = $this->createMock(CacheManagerInterface::class);
+        $cacheManager->expects($this->once())->method('invalidateReference')->with('webspace_settings', 'sulu-io');
+        // the test application has no http cache, so the subscriber is created with a cache manager
+        self::getContainer()->set('sulu_webspace.webspace_setting_cache_invalidation_subscriber', new WebspaceSettingCacheInvalidationSubscriber($cacheManager));
+        $this->client->disableReboot();
+
+        $this->request('PUT', '/admin/api/webspace-settings/sulu-io?locale=en&action=publish', ['companyName' => 'Sulu GmbH']);
     }
 
     public function testPutPublish(): void

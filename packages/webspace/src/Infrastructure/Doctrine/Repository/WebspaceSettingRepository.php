@@ -16,7 +16,6 @@ namespace Sulu\Webspace\Infrastructure\Doctrine\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Webspace\Domain\Exception\WebspaceSettingNotFoundException;
@@ -74,17 +73,9 @@ final class WebspaceSettingRepository implements WebspaceSettingRepositoryInterf
 
     public function findOneBy(array $filters, array $selects = []): ?WebspaceSettingInterface
     {
-        $query = $this->createQueryBuilder($filters, $selects)->getQuery();
-
-        if ($selects[self::SELECT_WEBSPACE_SETTING_CONTENT] ?? false) {
-            // The settings of a webspace are loaded once for each locale and stage. Without the refresh, the contents
-            // of the first query stay on the already loaded entity and the following ones would not find their own.
-            $query->setHint(Query::HINT_REFRESH, true);
-        }
-
         try {
             /** @var WebspaceSettingInterface */
-            return $query->getSingleResult();
+            return $this->createQueryBuilder($filters, $selects)->getQuery()->getSingleResult();
         } catch (NoResultException) {
             return null;
         }

@@ -16,5 +16,9 @@
     "sulu_activity.description.webspace_settings.workflow_transition.reject": "{userFullName} hat das Review der Webspace-Einstellung \"{resourceTitle}\" abgelehnt",
     "sulu_activity.description.webspace_settings.workflow_transition.reject_draft": "{userFullName} hat das Review des Entwurfs der Webspace-Einstellung \"{resourceTitle}\" abgelehnt",
     "sulu_activity.description.webspace_settings.translation_copied": "{userFullName} hat die Sprachvariante für \"{context_sourceLocale}\" der Webspace-Einstellung \"{resourceTitle}\" nach \"{resourceLocale}\" kopiert",
-    "sulu_activity.description.webspace_settings.version_restored": "{userFullName} hat die Version \"{context_version}\" der Webspace-Einstellung \"{resourceTitle}\" wiederhergestellt"
+    "sulu_activity.description.webspace_settings.version_restored": "{userFullName} hat die Version \"{context_version}\" der Webspace-Einstellung \"{resourceTitle}\" wiederhergestellt",
+    "sulu_activity.description.webspace_settings.workflow_transition_request.approved": "{userFullName} hat die Änderungen an der Webspace-Einstellung \"{resourceTitle}\" freigegeben",
+    "sulu_activity.description.webspace_settings.workflow_transition_request.rejected": "{userFullName} hat die Änderungen an der Webspace-Einstellung \"{resourceTitle}\" abgelehnt: \"{context_comment}\"",
+    "sulu_activity.description.webspace_settings.workflow_transition_request.validation_retried": "{userFullName} hat die Prüfung \"{context_validatorKey}\" für die Webspace-Einstellung \"{resourceTitle}\" erneut gestartet",
+    "sulu_activity.description.webspace_settings.workflow_transition_request.validated": "Die automatischen Prüfungen für die Webspace-Einstellung \"{resourceTitle}\" sind abgeschlossen: {context_approved} bestanden, {context_rejected} nicht bestanden"
 }
