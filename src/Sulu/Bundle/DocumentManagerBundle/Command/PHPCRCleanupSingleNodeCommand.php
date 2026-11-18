@@ -253,9 +253,11 @@ class PHPCRCleanupSingleNodeCommand extends Command
         $defaultSessionModified = $shadowCleanupResult['defaultSessionModified'];
         $liveSessionModified = $shadowCleanupResult['liveSessionModified'];
 
-        // Only save now if there are no active locales to process (the per-locale loop saves after each locale)
-        if (!$dryRun && [] === $activeLocales) {
+        // Save before the per-locale loop: its DocumentManager::clear() refreshes the session and discards unsaved changes
+        if (!$dryRun) {
             $this->saveModifiedSessions($defaultSessionModified, $liveSessionModified);
+            $defaultSessionModified = false;
+            $liveSessionModified = false;
         }
 
         foreach ($activeLocales as $locale) {
