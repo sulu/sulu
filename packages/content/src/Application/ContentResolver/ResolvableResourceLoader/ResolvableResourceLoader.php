@@ -32,11 +32,6 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
 
     public function loadResources(array $resourcesPerLoader, ?string $locale, array $context = []): array
     {
-        // the self reference is only meant for the smart resolvers: resource loaders put their params in their
-        // cache key, so the same resource would be loaded again for every page it appears on
-        $resourceLoaderContext = $context;
-        unset($resourceLoaderContext['selfReference']);
-
         $loadedResources = [];
         foreach ($resourcesPerLoader as $loaderKey => $resourcesToLoad) {
             if (!$loaderKey) {
@@ -60,7 +55,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             }
 
             if (\count($smartResolvableResources) > 0) {
-                $result = $this->loadSmartResolvableResources($smartResolvableResources, $locale, $context);
+                $result = $this->loadSmartResolvableResources($smartResolvableResources, $locale);
                 foreach ($result as $id => $loadedResource) {
                     foreach ($metadataIdentifiersPerResourceId[$id] as $metadataIdentifier) {
                         $loadedResources[$loaderKey][$id][$metadataIdentifier] = $loadedResource;
@@ -69,7 +64,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             }
 
             if (\count($resolvableResources) > 0) {
-                $result = $this->loadResolvableResources($resolvableResources, $loaderKey, $locale, $resourceLoaderContext);
+                $result = $this->loadResolvableResources($resolvableResources, $loaderKey, $locale, $context);
                 foreach ($result as $id => $loadedResource) {
                     foreach ($metadataIdentifiersPerResourceId[$id] as $metadataIdentifier) {
                         $loadedResources[$loaderKey][$id][$metadataIdentifier] = $loadedResource;
@@ -83,11 +78,10 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
 
     /**
      * @param array<SmartResolvable> $smartResources
-     * @param array<string, mixed> $context
      *
      * @return array<mixed>
      */
-    private function loadSmartResolvableResources(array $smartResources, ?string $locale, array $context = []): array
+    private function loadSmartResolvableResources(array $smartResources, ?string $locale): array
     {
         $loadedResources = [];
 
@@ -96,7 +90,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             $smartResolver = $this->smartResolverProvider->getSmartResolver($resourceLoaderKey);
 
             $loadedResources[$id] = $smartResolver->resolve(
-                $smartResource->withContext($context),
+                $smartResource,
                 $locale,
             );
         }
