@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\WebsiteBundle\EventListener;
 
+use Doctrine\DBAL\ConnectionException as DBALConnectionException;
+use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +27,10 @@ use Twig\Environment;
  */
 final readonly class NotFoundWelcomeListener
 {
+    public const STATE_DATABASE_MISSING = 'DATABASE_MISSING';
+    public const STATE_FIXTURES_MISSING = 'DATABASE_FIXTURES_MISSING';
+    public const STATE_DATABASE_LOADED = 'DATABASE_FIXTURES_LOADED';
+
     public function __construct(
         private string $projectDirectory,
         private Environment $twig,
@@ -33,24 +40,81 @@ final readonly class NotFoundWelcomeListener
 
     public function renderWelcomePage(ExceptionEvent $event): void
     {
-        if ($this->isFixturesLoaded()) {
+        $throwable = $event->getThrowable();
+
+        $state = match (true) {
+            $throwable instanceof DBALConnectionException => self::STATE_DATABASE_MISSING,
+            $throwable instanceof ConnectionException => self::STATE_DATABASE_MISSING,
+            $throwable instanceof TableNotFoundException && \str_contains($throwable->getMessage(), 'ro_routes') => self::STATE_FIXTURES_MISSING,
+            default => $this->getFixturesState(),
+        };
+
+        if (self::STATE_DATABASE_LOADED === $state) {
             return;
         }
 
         $template = $this->twig->render(
             '@SuluWebsite/welcome.html.twig',
             [
+                'steps' => $this->getSteps($state),
                 'workingDirectory' => $this->projectDirectory,
             ]
         );
+
         $event->setResponse(new Response($template));
     }
 
-    /**
-     * Check if the fixtures are loaded by checking if there are collection types in the database.
-     */
-    public function isFixturesLoaded(): bool
+    public function getFixturesState(): string
     {
-        return 0 !== $this->entityManager->getRepository(CollectionType::class)->count([]);
+        try {
+            $fixturesCount = $this->entityManager->getRepository(CollectionType::class)->count([]);
+
+            return match ($fixturesCount) {
+                0 => self::STATE_FIXTURES_MISSING,
+                default => self::STATE_DATABASE_LOADED,
+            };
+        } catch (\Exception $e) {
+            return self::STATE_DATABASE_MISSING;
+        }
+    }
+
+    /**
+     * @return iterable<int,array<string,mixed>>
+     */
+    private function getSteps(string $state): iterable
+    {
+        yield [
+            'headline' => 'Sulu installed',
+            'status' => 'Done',
+            'badge' => 'checked',
+        ];
+
+        $isActive = true;
+        if (self::STATE_DATABASE_MISSING === $state) {
+            yield [
+                'headline' => 'Database configuration invalid',
+                'status' => "Check the .env file for the correct connection string\nMake sure the docker container is running with `docker compose up`",
+                'badge' => 'active',
+            ];
+            $isActive = false;
+        } else {
+            yield [
+                'headline' => 'Database connected',
+                'status' => 'Done',
+                'badge' => 'checked',
+            ];
+        }
+
+        yield [
+            'headline' => 'Load the inital data',
+            'status' => 'Copy the command on the right',
+            'badge' => $isActive ? 'active' : 'empty',
+        ];
+
+        yield [
+            'headline' => 'Open the admin',
+            'status' => 'After the next reload',
+            'badge' => 'empty',
+        ];
     }
 }
