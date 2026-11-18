@@ -20,7 +20,11 @@ export default function withToolbar<P: ViewProps, C: Class<Component<P>>>(
         static contextType = viewRendererContext;
 
         updateRouteHookDisposer: () => void;
-        withToolbarStoreKey: string;
+        withToolbarDisposer: ?() => void;
+
+        get withToolbarStoreKey(): string {
+            return toolbarStoreKey || this.context.toolbarStoreKey || DEFAULT_STORE_KEY;
+        }
 
         componentDidMount() {
             if (super.componentDidMount) {
@@ -28,10 +32,9 @@ export default function withToolbar<P: ViewProps, C: Class<Component<P>>>(
             }
 
             const {router} = this.props;
-            const storeKey = toolbarStoreKey || this.context.toolbarStoreKey || DEFAULT_STORE_KEY;
-            this.withToolbarStoreKey = storeKey;
+            const storeKey = this.withToolbarStoreKey;
 
-            const toolbarDisposer = autorun(() => {
+            const toolbarDisposer = this.withToolbarDisposer = autorun(() => {
                 const toolbarConfig = toolbar.call(this);
                 toolbarStorePool.setToolbarConfig(storeKey, toolbarConfig);
                 log.info(
@@ -56,11 +59,11 @@ export default function withToolbar<P: ViewProps, C: Class<Component<P>>>(
             }
 
             this.updateRouteHookDisposer();
-
-            // the container owning a store other than the default one may already have destroyed it
-            if (toolbarStorePool.hasStore(this.withToolbarStoreKey)) {
-                toolbarStorePool.setToolbarConfig(this.withToolbarStoreKey, {});
+            if (this.withToolbarDisposer) {
+                this.withToolbarDisposer();
             }
+
+            toolbarStorePool.setToolbarConfig(this.withToolbarStoreKey, {});
         }
     };
 

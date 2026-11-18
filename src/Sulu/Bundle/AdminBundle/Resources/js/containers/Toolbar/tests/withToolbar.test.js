@@ -8,7 +8,6 @@ import withToolbar from '../withToolbar';
 
 jest.mock('../stores/toolbarStorePool', () => ({
     DEFAULT_STORE_KEY: 'default',
-    hasStore: jest.fn().mockReturnValue(true),
     setToolbarConfig: jest.fn(),
 }));
 
@@ -220,17 +219,17 @@ test('Use the default toolbar store key if neither the view renderer nor the cal
     expect(toolbarStorePool.setToolbarConfig).toHaveBeenCalledWith(DEFAULT_STORE_KEY, {items: []});
 });
 
-test('Do not reset the toolbar config on unmount if its store was already destroyed', () => {
+test('Stop configuring the toolbar after being unmounted', () => {
     const Component = class Component extends React.Component<*> {
         render = jest.fn();
     };
 
-    const ComponentWithToolbar = withToolbar(Component, () => ({items: []}), 'overlay');
+    const items = observable([]);
+    const ComponentWithToolbar = withToolbar(Component, () => ({items: items.slice()}), 'overlay');
 
     const {unmount} = render(<ComponentWithToolbar router={createRouter()} />);
-
-    (toolbarStorePool.hasStore: any).mockReturnValueOnce(false);
     unmount();
 
-    expect(toolbarStorePool.setToolbarConfig).not.toHaveBeenCalledWith('overlay', {});
+    items.push({});
+    expect(toolbarStorePool.setToolbarConfig).not.toHaveBeenCalledWith('overlay', {items: [{}]});
 });
