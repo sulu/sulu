@@ -15,6 +15,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command;
 
 use PHPCR\NodeInterface;
 use PHPCR\NodeType\NodeTypeInterface;
+use PHPCR\PathNotFoundException;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
@@ -583,5 +584,83 @@ class PHPCRCleanupSingleNodeCommandTest extends TestCase
         ]), new BufferedOutput());
 
         $this->assertSame(0, $result);
+    }
+
+    public function testExecuteSavesStaleLocaleRemovalBeforeProcessingActiveLocales(): void
+    {
+        $path = '/cmf/sulu_io/contents/page-1';
+        $calls = [];
+
+        $nodeType = $this->prophesize(NodeTypeInterface::class);
+        $nodeType->getName()->willReturn('sulu:page');
+
+        $activeProperty = $this->prophesize(PropertyInterface::class);
+        $activeProperty->getName()->willReturn('i18n:en-template');
+        $activeProperty->remove()->willReturn(null);
+
+        $staleProperty = $this->prophesize(PropertyInterface::class);
+        $staleProperty->getName()->willReturn('i18n:sv-template');
+        $staleProperty->remove()->will(function() use (&$calls) {
+            $calls[] = 'remove stale';
+        })->shouldBeCalledOnce();
+
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getPath()->willReturn($path);
+        $node->getMixinNodeTypes()->willReturn([$nodeType->reveal()]);
+        $node->getProperties()->willReturn([$activeProperty->reveal(), $staleProperty->reveal()]);
+        $node->hasProperty('i18n:en-changed')->willReturn(false);
+
+        $workspace = $this->prophesize(WorkspaceInterface::class);
+        $workspace->getName()->willReturn('default');
+        $this->session->getWorkspace()->willReturn($workspace->reveal());
+        $node->getSession()->willReturn($this->session->reveal());
+
+        $this->session->getNodeByIdentifier('uuid-1')->willReturn($node->reveal());
+        $this->liveSession->getNode($path)->willThrow(PathNotFoundException::class);
+        $this->session->save()->will(function() use (&$calls) {
+            $calls[] = 'save';
+        });
+        $this->documentManager->clear()->will(function() use (&$calls) {
+            $calls[] = 'clear';
+        });
+
+        $this->structureMetadataFactory->hasStructuresFor('page')->willReturn(true);
+        $this->webspaceManager->getAllLocalesByWebspaces()->willReturn([
+            'sulu_io' => ['en' => new Localization('en')],
+        ]);
+
+        $document = new class() implements UuidBehavior {
+            public function getUuid()
+            {
+                return 'uuid-1';
+            }
+        };
+        $this->documentManager->find('uuid-1', 'en')->willReturn($document);
+
+        $command = new class(
+            $this->liveSession->reveal(),
+            $this->session->reveal(),
+            $this->structureMetadataFactory->reveal(),
+            $this->namespaceRegistry->reveal(),
+            $this->eventDispatcher->reveal(),
+            $this->documentManager->reveal(),
+            [['phpcr_type' => 'sulu:page', 'alias' => 'page']],
+            $this->webspaceManager->reveal(),
+        ) extends PHPCRCleanupSingleNodeCommand {
+            /**
+             * @param string[] $validLocales
+             */
+            public function cleanInvalidShadowReferences(NodeInterface $node, array $validLocales, bool $dryRun): int
+            {
+                return 0;
+            }
+        };
+
+        $result = $command->run(new ArrayInput([
+            'node' => ['uuid-1'],
+        ]), new BufferedOutput());
+
+        $this->assertSame(0, $result);
+        $this->assertSame(['remove stale', 'save', 'clear'], \array_slice($calls, 0, 3));
     }
 }
