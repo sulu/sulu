@@ -127,8 +127,9 @@ class SmartContentSmartResolverTest extends TestCase
         )->willReturn([])->shouldBeCalled();
 
         $result = $this->smartResolver->resolve(
-            $this->createResolvable(['resourceKey' => 'pages', 'id' => 'self-page']),
+            $this->createResolvable(),
             'en',
+            ['selfReference' => ['resourceKey' => 'pages', 'id' => 'self-page']],
         );
 
         $this->assertSame(['self-page'], $result->getView()['excluded']);
@@ -144,8 +145,9 @@ class SmartContentSmartResolverTest extends TestCase
         )->willReturn([])->shouldBeCalled();
 
         $result = $this->smartResolver->resolve(
-            $this->createResolvable(['resourceKey' => 'articles', 'id' => 'self-article']),
+            $this->createResolvable(),
             'en',
+            ['selfReference' => ['resourceKey' => 'articles', 'id' => 'self-article']],
         );
 
         $this->assertSame([], $result->getView()['excluded']);
@@ -187,12 +189,9 @@ class SmartContentSmartResolverTest extends TestCase
         return $smartContentProvider;
     }
 
-    /**
-     * @param array<string, mixed>|null $selfReference
-     */
-    private function createResolvable(?array $selfReference = null): SmartResolvable
+    private function createResolvable(): SmartResolvable
     {
-        $resolvable = new SmartResolvable(
+        return new SmartResolvable(
             [
                 'value' => [],
                 'filters' => [
@@ -217,8 +216,6 @@ class SmartContentSmartResolverTest extends TestCase
             'smart_content',
             100,
         );
-
-        return null === $selfReference ? $resolvable : $resolvable->withContext(['selfReference' => $selfReference]);
     }
 
     public function testResolveWithInvalidProvider(): void

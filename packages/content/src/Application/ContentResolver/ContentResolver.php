@@ -22,7 +22,6 @@ use Sulu\Content\Application\ContentResolver\ResolvableResourceQueue\ResolvableR
 use Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\ResolvableResourceReplacerInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableInterface;
-use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
 use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -159,9 +158,11 @@ readonly class ContentResolver implements ContentResolverInterface
         }
 
         // Smart content blocks exclude the resolved resource from their own results.
-        $selfReference = [
-            'resourceKey' => $dimensionContent::getResourceKey(),
-            'id' => (string) $dimensionContent->getResource()->getId(),
+        $smartResolverContext = [
+            'selfReference' => [
+                'resourceKey' => $dimensionContent::getResourceKey(),
+                'id' => (string) $dimensionContent->getResource()->getId(),
+            ],
         ];
 
         // Initial resolution to gather ResolvableResources
@@ -179,11 +180,11 @@ readonly class ContentResolver implements ContentResolverInterface
                 $this->maxDepth
             );
 
-            $resourcesToLoad = $this->addSelfReference($extractedResources['resourcesToLoad'], $selfReference);
+            $resourcesToLoad = $extractedResources['resourcesToLoad'];
             $loaderIdDepths = $extractedResources['loaderIdDepths'];
 
             // Load resources at this priority level
-            $loadedResources = $this->resolvableResourceLoader->loadResources($resourcesToLoad, $locale, $context);
+            $loadedResources = $this->resolvableResourceLoader->loadResources($resourcesToLoad, $locale, $context, $smartResolverContext);
 
             // Process loaded resources
             foreach ($loadedResources as $loaderKey => $resources) {
@@ -360,27 +361,6 @@ readonly class ContentResolver implements ContentResolverInterface
         }
 
         return $normalizedContentData;
-    }
-
-    /**
-     * @param array<string, array<int|string, array<string, ResolvableInterface>>> $resourcesToLoad
-     * @param array{resourceKey: string, id: string} $selfReference
-     *
-     * @return array<string, array<int|string, array<string, ResolvableInterface>>>
-     */
-    private function addSelfReference(array $resourcesToLoad, array $selfReference): array
-    {
-        foreach ($resourcesToLoad as $loaderKey => $resources) {
-            foreach ($resources as $id => $resourcePerMetadataIdentifier) {
-                foreach ($resourcePerMetadataIdentifier as $metadataIdentifier => $resource) {
-                    if ($resource instanceof SmartResolvable) {
-                        $resourcesToLoad[$loaderKey][$id][$metadataIdentifier] = $resource->withContext(['selfReference' => $selfReference]);
-                    }
-                }
-            }
-        }
-
-        return $resourcesToLoad;
     }
 
     /**
