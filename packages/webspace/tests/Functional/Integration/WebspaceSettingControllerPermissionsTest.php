@@ -15,12 +15,15 @@ namespace Sulu\Webspace\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
+use Sulu\Webspace\Domain\Model\WebspaceSettingInterface;
 use Sulu\Webspace\Infrastructure\Sulu\Admin\WebspaceSettingAdmin;
 use Sulu\Webspace\Tests\Traits\CreateWebspaceSettingTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -212,6 +215,71 @@ class WebspaceSettingControllerPermissionsTest extends SuluTestCase
         $this->assertSame('unpublished', $content['workflowPlace']);
     }
 
+    public function testApproveStoresAnActivityOfTheSettings(): void
+    {
+        self::purgeDatabase();
+        self::createWebspaceSetting('sulu-io', ['en' => ['draft' => ['companyName' => 'Sulu GmbH']]]);
+        $this->createUserWithPermissions('editor', [WebspaceSettingAdmin::getSecurityContext('sulu-io') => self::VIEW_EDIT]);
+        $this->createUserWithPermissions('reviewer', [WebspaceSettingAdmin::getSecurityContext('sulu-io') => self::VIEW_EDIT_REVIEW]);
+        self::ensureKernelShutdown();
+
+        $this->requestReview($this->createClientForUser('editor'));
+        self::ensureKernelShutdown();
+
+        $client = $this->createClientForUser('reviewer');
+        $request = self::getContainer()->get(WorkflowTransitionRequestRepositoryInterface::class)->getOneBy([
+            'resourceKey' => WebspaceSettingInterface::RESOURCE_KEY,
+            'resourceId' => 'sulu-io',
+            'active' => true,
+        ]);
+        $client->request('POST', \sprintf('/admin/api/workflow-transition-requests/%s.json?action=approve', $request->getId()));
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        self::getEntityManager()->clear();
+        $activities = self::getEntityManager()->getRepository(ActivityInterface::class)->findBy([
+            'resourceKey' => WebspaceSettingInterface::RESOURCE_KEY,
+            'resourceId' => 'sulu-io',
+            'type' => 'workflow_transition_request.approved',
+        ]);
+        $this->assertCount(1, $activities);
+    }
+
+    #[DataProvider('provideCopyLocaleOutsideTheLocalesOfTheRole')]
+    public function testCopyLocaleOutsideTheLocalesOfTheRoleIsForbidden(string $query): void
+    {
+        self::purgeDatabase();
+        self::createWebspaceSetting('sulu-io', ['en' => ['draft' => ['companyName' => 'Sulu GmbH']], 'de' => ['draft' => ['companyName' => 'Sulu AG']]]);
+        $this->createUserWithPermissions('editor', [WebspaceSettingAdmin::getSecurityContext('sulu-io') => self::VIEW_EDIT]);
+        self::ensureKernelShutdown();
+
+        $client = $this->createClientForUser('editor');
+        $client->request('POST', '/admin/api/webspace-settings/sulu-io' . $query);
+
+        $this->assertHttpStatusCode(403, $client->getResponse());
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideCopyLocaleOutsideTheLocalesOfTheRole(): iterable
+    {
+        yield 'destination' => ['?locale=en&action=copy_locale&src=en&dest=de'];
+        yield 'source' => ['?locale=en&action=copy_locale&src=de&dest=en'];
+    }
+
+    public function testCopyLocaleWithinTheLocalesOfTheRoleIsAllowed(): void
+    {
+        self::purgeDatabase();
+        self::createWebspaceSetting('sulu-io', ['en' => ['draft' => ['companyName' => 'Sulu GmbH']]]);
+        $this->createUserWithPermissions('editor', [WebspaceSettingAdmin::getSecurityContext('sulu-io') => self::VIEW_EDIT], ['en', 'de']);
+        self::ensureKernelShutdown();
+
+        $client = $this->createClientForUser('editor');
+        $client->request('POST', '/admin/api/webspace-settings/sulu-io?locale=en&action=copy_locale&src=en&dest=de');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+    }
+
     public function testPublishWithLivePermissionIsAllowed(): void
     {
         self::purgeDatabase();
@@ -237,13 +305,14 @@ class WebspaceSettingControllerPermissionsTest extends SuluTestCase
 
     /**
      * @param array<string, int> $permissionsByContext
+     * @param string[] $locales
      */
-    private function createUserWithPermissions(string $username, array $permissionsByContext): void
+    private function createUserWithPermissions(string $username, array $permissionsByContext, array $locales = ['en']): void
     {
         $entityManager = self::getEntityManager();
 
         $role = new Role();
-        $role->setName('Limited Role');
+        $role->setName('Limited Role ' . $username);
         $role->setSystem('Sulu');
         $entityManager->persist($role);
 
@@ -272,7 +341,7 @@ class WebspaceSettingControllerPermissionsTest extends SuluTestCase
         $userRole = new UserRole();
         $userRole->setRole($role);
         $userRole->setUser($user);
-        $userRole->setLocale((string) \json_encode(['en']));
+        $userRole->setLocale((string) \json_encode($locales));
         $user->addUserRole($userRole);
         $entityManager->persist($userRole);
 

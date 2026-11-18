@@ -82,14 +82,27 @@ class Tabs<T> extends React.Component<Props<T>> {
             });
     }
 
-    redirectToRouteWithHighestPriority = (): void => {
+    // the child of this view the active route belongs to, which is the active route itself or one of its parents
+    @computed get activeChildRoute(): ?Route {
         const {route, router} = this.props;
 
-        if (!route.children.includes(router.route) && router.route !== route) {
+        let activeRoute = router.route;
+        while (activeRoute && !route.children.includes(activeRoute)) {
+            activeRoute = activeRoute.parent;
+        }
+
+        return activeRoute;
+    }
+
+    redirectToRouteWithHighestPriority = (): void => {
+        const {route, router} = this.props;
+        const {activeChildRoute} = this;
+
+        if (!activeChildRoute && router.route !== route) {
             return;
         }
 
-        if (this.sortedTabRoutes.includes(router.route)) {
+        if (activeChildRoute && this.sortedTabRoutes.includes(activeChildRoute)) {
             return;
         }
 

@@ -82,7 +82,7 @@ class WebspaceSettingIntegrationTest extends SuluTestCase
 
         $this->assertCount(1, $documents);
         $this->assertSame('webspace_settings__sulu-io__en', $documents[0]['id']);
-        $this->assertSame('sulu-io', $documents[0]['title']);
+        $this->assertSame('Sulu CMF', $documents[0]['title'], 'the name of the webspace is searchable, not only its key');
         $this->assertSame(['webspaceKey' => 'sulu-io'], $documents[0]['metadata']);
         $this->assertSame('sulu.webspaces.sulu-io.webspace-settings', $documents[0]['securityContext']);
 
