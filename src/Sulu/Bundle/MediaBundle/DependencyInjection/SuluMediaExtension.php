@@ -174,6 +174,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                         ],
                         'media_versions' => [
                             'routes' => [
+                                'list' => 'sulu_media.get_media_versions',
                                 'detail' => 'sulu_media.delete_media_version',
                             ],
                         ],
