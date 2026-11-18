@@ -11,6 +11,12 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
     }
 
     const routeGenerationUrl = resourceRouteRegistry.getUrl('list', 'routes', {action: 'generate'});
+    // The suffix of a page_tree_route is only unique once prefixed with the page path, which happens on save
+    const pageTreeRouteGenerationUrl = resourceRouteRegistry.getUrl(
+        'list',
+        'routes',
+        {action: 'generate', resolveConflicts: false}
+    );
 
     fieldRegistry.add(
         'route',
@@ -40,6 +46,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
             modeResolver: () => {
                 return Promise.resolve('leaf');
             },
+            generationUrl: pageTreeRouteGenerationUrl,
         }
     );
 });

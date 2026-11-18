@@ -179,7 +179,8 @@ class RouteController extends AbstractRestController implements ClassResourceInt
 
             $route = $this->routeGenerator->generate(new ResourceLocatorParts($parts), $options);
 
-            if ($this->conflictResolver) {
+            // a page_tree_route only generates the suffix: its conflicts are resolved on the full path when saving
+            if ($this->conflictResolver && $request->query->getBoolean('resolveConflicts', true)) {
                 // create temporary route that is not persisted to resolve possible conflicts with existing routes
                 $tempRouteEntity = $this->routeRepository->createNew()
                     ->setPath($route)
