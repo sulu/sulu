@@ -18,7 +18,7 @@ namespace Sulu\Component\Security\Authorization;
 class MaskConverter implements MaskConverterInterface
 {
     /**
-     * @param mixed[] $permissions
+     * @param array<string, int> $permissions
      */
     public function __construct(
         /**
@@ -43,15 +43,10 @@ class MaskConverter implements MaskConverterInterface
 
     public function convertPermissionsToArray($permissions)
     {
-        $permissionsData = [
-            PermissionTypes::VIEW => (bool) ($permissions & $this->permissions[PermissionTypes::VIEW]),
-            PermissionTypes::ADD => (bool) ($permissions & $this->permissions[PermissionTypes::ADD]),
-            PermissionTypes::EDIT => (bool) ($permissions & $this->permissions[PermissionTypes::EDIT]),
-            PermissionTypes::DELETE => (bool) ($permissions & $this->permissions[PermissionTypes::DELETE]),
-            PermissionTypes::ARCHIVE => (bool) ($permissions & $this->permissions[PermissionTypes::ARCHIVE]),
-            PermissionTypes::LIVE => (bool) ($permissions & $this->permissions[PermissionTypes::LIVE]),
-            PermissionTypes::SECURITY => (bool) ($permissions & $this->permissions[PermissionTypes::SECURITY]),
-        ];
+        $permissionsData = [];
+        foreach ($this->permissions as $key => $permissionValue) {
+            $permissionsData[$key] = (bool) ($permissions & $permissionValue);
+        }
 
         return $permissionsData;
     }
