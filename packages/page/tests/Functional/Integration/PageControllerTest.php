@@ -1983,4 +1983,59 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('fr', $content['contentLocales']);
         $this->assertContains('en', $content['contentLocales']);
     }
+
+    public function testRestoreWithUrlTakenByOtherPage(): void
+    {
+        $this->purgeDatabase();
+        $homepage = $this->createHomepage('homepage-uuid-restore-taken-url', 'sulu-io');
+
+        $page = $this->createPage('homepage-uuid-restore-taken-url', ['url' => '/a']);
+        $uuid = $page->getUuid();
+        self::getEntityManager()->clear();
+
+        $this->client->request('DELETE', '/admin/api/pages/' . $uuid . '?locale=en&force=true');
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/pages?locale=en&parentId=%s&webspace=sulu-io', $homepage->getId()),
+            [],
+            [],
+            [],
+            \json_encode([
+                'template' => 'default',
+                'title' => 'Other Page',
+                'url' => '/a',
+            ], \JSON_THROW_ON_ERROR),
+        );
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        /** @var array{id: string} $otherPage */
+        $otherPage = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $otherUuid = $otherPage['id'];
+
+        $trashItem = self::getContainer()->get(TrashItemRepositoryInterface::class)->findOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $uuid,
+        ]);
+        $this->assertNotNull($trashItem);
+
+        $this->client->request('POST', '/admin/api/trash-items/' . $trashItem->getId() . '?action=restore');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $routeRepository = self::getContainer()->get(RouteRepositoryInterface::class);
+        $route = $routeRepository->getOneBy(['resourceKey' => 'pages', 'resourceId' => $uuid, 'locale' => 'en']);
+        $this->assertSame('/a-1', $route->getSlug());
+
+        $otherRoute = $routeRepository->getOneBy(['resourceKey' => 'pages', 'resourceId' => $otherUuid, 'locale' => 'en']);
+        $this->assertSame('/a', $otherRoute->getSlug());
+
+        $this->client->request('GET', '/admin/api/pages/' . $uuid . '?locale=en');
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array{url: string} $content */
+        $content = \json_decode((string) $response->getContent(), true);
+        $this->assertSame('/a-1', $content['url']);
+    }
 }

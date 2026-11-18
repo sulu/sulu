@@ -33,6 +33,8 @@ use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
+use Sulu\Route\Application\ResourceLocator\ResourceLocatorGeneratorInterface;
+use Sulu\Route\Application\ResourceLocator\ResourceLocatorRequest;
 use Webmozart\Assert\Assert;
 
 /**
@@ -53,6 +55,7 @@ final class PageTrashItemHandler implements
         private ContentMergerInterface $contentMerger,
         private iterable $pageMappers,
         private DomainEventCollectorInterface $domainEventCollector,
+        private ResourceLocatorGeneratorInterface $resourceLocatorGenerator,
     ) {
     }
 
@@ -194,6 +197,8 @@ final class PageTrashItemHandler implements
                 $allLocales[] = $dimensionContentData['locale'];
             }
 
+            $dimensionContentData = $this->withUniqueUrl($page, $dimensionContentData);
+
             foreach ($this->pageMappers as $pageMapper) {
                 $pageMapper->mapPageData($page, $dimensionContentData);
             }
@@ -223,6 +228,35 @@ final class PageTrashItemHandler implements
         ));
 
         return $page;
+    }
+
+    /**
+     * Another page can have taken the url while this one was in the trash.
+     *
+     * @param array<mixed> $dimensionContentData
+     *
+     * @return array<mixed>
+     */
+    private function withUniqueUrl(PageInterface $page, array $dimensionContentData): array
+    {
+        $url = $dimensionContentData['url'] ?? null;
+        $locale = $dimensionContentData['locale'] ?? null;
+        if (!\is_string($url) || '' === $url || !\is_string($locale)) {
+            return $dimensionContentData;
+        }
+
+        $dimensionContentData['url'] = $this->resourceLocatorGenerator->generate(new ResourceLocatorRequest(
+            parts: [],
+            locale: $locale,
+            webspace: $page->getWebspaceKey(),
+            resourceKey: PageInterface::RESOURCE_KEY,
+            resourceId: $page->getUuid(),
+            parentResourceId: null,
+            parentResourceKey: null,
+            routeSchema: $url,
+        ));
+
+        return $dimensionContentData;
     }
 
     public function getConfiguration(): RestoreConfiguration

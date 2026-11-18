@@ -991,4 +991,47 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertContains('fr', $availableLocales);
         $this->assertContains('en', $availableLocales);
     }
+
+    public function testRestoreWithUrlTakenByOtherArticle(): void
+    {
+        self::purgeDatabase();
+
+        $uuid = $this->postArticle('/a');
+
+        $this->client->request('DELETE', '/admin/api/articles/' . $uuid . '?locale=en');
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $otherUuid = $this->postArticle('/a');
+
+        $trashItem = self::getContainer()->get(TrashItemRepositoryInterface::class)->findOneBy([
+            'resourceKey' => ArticleInterface::RESOURCE_KEY,
+            'resourceId' => $uuid,
+        ]);
+        $this->assertNotNull($trashItem);
+
+        $this->client->request('POST', '/admin/api/trash-items/' . $trashItem->getId() . '?action=restore');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $routeRepository = self::getContainer()->get(RouteRepositoryInterface::class);
+        $route = $routeRepository->getOneBy(['resourceKey' => 'articles', 'resourceId' => $uuid, 'locale' => 'en']);
+        $this->assertSame('/a-1', $route->getSlug());
+
+        $otherRoute = $routeRepository->getOneBy(['resourceKey' => 'articles', 'resourceId' => $otherUuid, 'locale' => 'en']);
+        $this->assertSame('/a', $otherRoute->getSlug());
+    }
+
+    private function postArticle(string $url): string
+    {
+        $this->client->request('POST', '/admin/api/articles?locale=en', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'Test Article',
+            'url' => $url,
+        ], \JSON_THROW_ON_ERROR));
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        return $content['id'];
+    }
 }
