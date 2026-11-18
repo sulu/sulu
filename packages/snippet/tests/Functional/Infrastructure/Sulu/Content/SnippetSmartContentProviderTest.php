@@ -285,6 +285,6 @@ class SnippetSmartContentProviderTest extends SuluTestCase
             \restore_error_handler();
         }
 
-        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating SnippetSmartContentProvider without the $deduplicationStore argument is deprecated.'], $deprecations);
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ' . SnippetSmartContentProvider::class . ' without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }

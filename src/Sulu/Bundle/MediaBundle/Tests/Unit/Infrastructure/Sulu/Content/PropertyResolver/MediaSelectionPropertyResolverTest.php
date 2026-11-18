@@ -165,6 +165,6 @@ class MediaSelectionPropertyResolverTest extends TestCase
             \restore_error_handler();
         }
 
-        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating MediaSelectionPropertyResolver without the $deduplicationStore argument is deprecated.'], $deprecations);
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ' . MediaSelectionPropertyResolver::class . ' without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }

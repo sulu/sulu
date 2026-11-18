@@ -239,6 +239,6 @@ class PageSelectionPropertyResolverTest extends TestCase
             \restore_error_handler();
         }
 
-        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating PageSelectionPropertyResolver without the $deduplicationStore argument is deprecated.'], $deprecations);
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ' . PageSelectionPropertyResolver::class . ' without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }

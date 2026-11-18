@@ -149,6 +149,6 @@ class ContactSelectionPropertyResolverTest extends TestCase
             \restore_error_handler();
         }
 
-        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ContactSelectionPropertyResolver without the $deduplicationStore argument is deprecated.'], $deprecations);
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ' . ContactSelectionPropertyResolver::class . ' without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }
