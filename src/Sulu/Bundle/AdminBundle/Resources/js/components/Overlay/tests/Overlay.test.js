@@ -296,3 +296,20 @@ test('The component should render the snackbar between the toolbar and the conte
     expect(toolbar.compareDocumentPosition(snackbar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(snackbar.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 });
+
+test('The overlay below gets the esc key back when the overlay on top of it is closed', () => {
+    const onCloseBelow = jest.fn();
+    const onCloseAbove = jest.fn();
+
+    render(<Overlay onClose={onCloseBelow} open={true} title="Below">Below</Overlay>);
+    const {unmount} = render(<Overlay onClose={onCloseAbove} open={true} title="Above">Above</Overlay>);
+
+    Mousetrap.trigger('esc');
+    expect(onCloseAbove).toHaveBeenCalledTimes(1);
+    expect(onCloseBelow).not.toHaveBeenCalled();
+
+    unmount();
+
+    Mousetrap.trigger('esc');
+    expect(onCloseBelow).toHaveBeenCalledTimes(1);
+});
