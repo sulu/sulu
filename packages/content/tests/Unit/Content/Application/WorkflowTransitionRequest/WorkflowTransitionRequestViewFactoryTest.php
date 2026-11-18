@@ -105,6 +105,44 @@ class WorkflowTransitionRequestViewFactoryTest extends TestCase
         );
     }
 
+    public function testViewHidesThePublishPermissionWhileAnActionHasTakenItOver(): void
+    {
+        $view = $this->createFactory(
+            permissions: ['cancel' => true, 'publish' => true, 'retry' => true, 'review' => true],
+            actions: [new StubWorkflowTransitionRequestAction(replacesPublish: true)],
+        )->build($this->createRequest());
+
+        $this->assertSame(['cancel' => true, 'publish' => false, 'retry' => true, 'review' => true], $view['permissions']);
+    }
+
+    public function testViewCarriesTheStatusMessageOfAnAction(): void
+    {
+        $message = ['message' => 'app.scheduled', 'parameters' => ['date' => '25.11.2026 10:00']];
+
+        $view = $this->createFactory(
+            actions: [new StubWorkflowTransitionRequestAction(), new StubWorkflowTransitionRequestAction(statusMessage: $message)],
+        )->build($this->createRequest());
+
+        $this->assertSame($message, $view['statusMessage']);
+    }
+
+    public function testViewHasNoStatusMessageWhenNoActionAnswers(): void
+    {
+        $view = $this->createFactory(actions: [new StubWorkflowTransitionRequestAction()])->build($this->createRequest());
+
+        $this->assertArrayNotHasKey('statusMessage', $view);
+    }
+
+    public function testViewKeepsThePublishPermissionWhenNoActionTakesItOver(): void
+    {
+        $view = $this->createFactory(
+            permissions: ['cancel' => true, 'publish' => true, 'retry' => true, 'review' => true],
+            actions: [new StubWorkflowTransitionRequestAction()],
+        )->build($this->createRequest());
+
+        $this->assertSame(['cancel' => true, 'publish' => true, 'retry' => true, 'review' => true], $view['permissions']);
+    }
+
     public function testViewOmitsAnActionThatDoesNotFitTheRequest(): void
     {
         $view = $this->createFactory(

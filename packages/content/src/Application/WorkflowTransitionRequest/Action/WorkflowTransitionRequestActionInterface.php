@@ -59,6 +59,22 @@ interface WorkflowTransitionRequestActionInterface
     public function isAvailable(WorkflowTransitionRequest $request): bool;
 
     /**
+     * A message for the banner of the form while the request is open, which replaces the one of the core, for example
+     * to tell that the publish is scheduled. The message is a translation key, the parameters fill its placeholders.
+     * The first action that answers wins, and it is asked whether the action is available or not.
+     *
+     * @return array{message: string, parameters: array<string, string>}|null
+     */
+    public function getStatusMessage(WorkflowTransitionRequest $request): ?array;
+
+    /**
+     * Whether the content may only be published through this action while the request is open, for example
+     * because the request names a date. The admin then hides the plain publish button, and the content workflow
+     * refuses a publish by a user. A publish without a user, like the one of a scheduled task, stays possible.
+     */
+    public function replacesPublish(WorkflowTransitionRequest $request): bool;
+
+    /**
      * Runs inside the request that sent it and is flushed with it, so it can change the request and
      * the entities of the application. Throw an exception to refuse.
      *

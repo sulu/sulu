@@ -18,6 +18,7 @@ use Sulu\Content\Application\ContentWorkflow\Subscriber\ContentReviewLockSubscri
 use Sulu\Content\Application\ContentWorkflow\Subscriber\RequestWorkflowPreValidationSubscriber;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionAuthorizationSubscriber;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionRequestCancelTransitionSubscriber;
+use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionRequestPublishReplacementSubscriber;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionRequestPublishTransitionSubscriber;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionRequestTransitionSubscriber;
 use Sulu\Content\Application\MessageHandler\ApproveWorkflowTransitionRequestMessageHandler;
@@ -260,6 +261,15 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->alias(WorkflowTransitionAdminAuthorizerInterface::class, 'sulu_content.workflow_transition_admin_authorizer');
+
+    $services->set('sulu_content.workflow_transition_request_publish_replacement_subscriber', WorkflowTransitionRequestPublishReplacementSubscriber::class)
+        ->args([
+            new Reference('sulu_content.active_workflow_transition_request_provider'),
+            new Reference('sulu_content.workflow_transition_request_action_registry'),
+            new Reference('security.token_storage'),
+        ])
+        ->tag('kernel.event_subscriber')
+        ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_content.workflow_transition_authorization_subscriber', WorkflowTransitionAuthorizationSubscriber::class)
         ->args([
