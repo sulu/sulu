@@ -11,6 +11,13 @@ $overlayBorderColor: $silver;
 
 $iconFontSize: 14px;
 
+$languageSwitcherWidth: 80px;
+$languageSwitcherHorizontalPadding: 20px;
+$languageSwitcherGap: 6px;
+$viewPaddingTop: 32px;
+$viewPaddingBottom: 48px;
+$viewPaddingHorizontal: 40px;
+
 $confirmBackground: $shakespeare;
 $confirmColor: $white;
 
@@ -125,8 +132,35 @@ $transitionDuration: 300ms;
         background: $primaryBackground;
     }
 
-    &.with-toolbar .article {
-        background: $toolbarContentBackground;
+    &.with-toolbar {
+        .article {
+            background: $toolbarContentBackground;
+        }
+
+        /* the toolbar actions are plain items on the white bar, without the grey group background and its borders */
+        .toolbar-actions ul {
+            background: transparent;
+            border: 0;
+        }
+
+        /* the language switcher shows the locale and the arrow in one line, as in the design */
+        .toolbar-actions [class*='locale--'] button {
+            display: flex;
+            align-items: center;
+            width: $languageSwitcherWidth;
+            max-width: none;
+            padding: 0 $languageSwitcherHorizontalPadding;
+
+            [class*='dropdown-icon--'] {
+                position: static;
+                margin: 0 0 0 $languageSwitcherGap;
+                font-size: 12px;
+            }
+        }
+
+        .article > [class*='view--'] {
+            padding: $viewPaddingTop $viewPaddingHorizontal $viewPaddingBottom;
+        }
     }
 
     .footer {

@@ -75,7 +75,7 @@ class ViewOverlayList extends React.Component<ViewProps> {
                         attributes={openedOverlay.attributes}
                         onClose={this.handleOverlayClose}
                         route={openedOverlay.view}
-                        size={overlaySize || 'large'}
+                        size={overlaySize || 'small'}
                         title={openedOverlay.title}
                     />
                 }

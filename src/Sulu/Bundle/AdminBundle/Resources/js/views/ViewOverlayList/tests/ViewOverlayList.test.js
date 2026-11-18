@@ -102,7 +102,7 @@ test('Open the edit view with the id and locale of the clicked item in an overla
     }));
 });
 
-test('Open the add view with the locale and the parent in a large overlay', async() => {
+test('Open the add view with the locale and the parent in a small overlay', async() => {
     renderViewOverlayList({addOverlayView: 'test_add'});
 
     expect(screen.queryByText('click-item')).not.toBeInTheDocument();
@@ -112,7 +112,7 @@ test('Open the add view with the locale and the parent in a large overlay', asyn
     expect(getViewOverlayProps()).toEqual(expect.objectContaining({
         attributes: {locale: 'de', parentId: 'parent-id'},
         route: 'test_add',
-        size: 'large',
+        size: 'small',
         title: 'sulu_admin.create',
     }));
 });
