@@ -15,6 +15,7 @@ namespace Sulu\Content\Infrastructure\Sulu\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
+use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
  * Adds entries to the dropdown of the save button of a content form, for example a bundle that offers one more way to
@@ -30,7 +31,9 @@ use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 interface SaveToolbarActionProviderInterface
 {
     /**
-     * @param class-string<ContentRichEntityInterface> $contentRichEntityClass
+     * @template T of DimensionContentInterface
+     *
+     * @param class-string<ContentRichEntityInterface<T>> $contentRichEntityClass
      *
      * @return list<ToolbarAction>
      */

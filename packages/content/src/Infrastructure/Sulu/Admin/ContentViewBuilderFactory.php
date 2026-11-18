@@ -161,7 +161,9 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
      * An entry that names a permission also gets the condition of the caller for it, because a caller like the page
      * admin decides on the permissions of the webspace, which the condition of a provider cannot know.
      *
-     * @param class-string<ContentRichEntityInterface> $contentRichEntityClass
+     * @template T of DimensionContentInterface
+     *
+     * @param class-string<ContentRichEntityInterface<T>> $contentRichEntityClass
      *
      * @return list<ToolbarAction>
      */

@@ -62,6 +62,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
     /**
      * @param array<string, array{instanceOf: class-string}> $settingsForms
+     * @param iterable<SaveToolbarActionProviderInterface> $saveToolbarActionProviders
      */
     protected function createContentViewBuilder(
         ContentMetadataInspectorInterface $contentMetadataInspector,
@@ -491,9 +492,12 @@ class ContentViewBuilderFactoryTest extends TestCase
 
         $save = $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(Example::class)['save'];
 
+        /** @var list<ToolbarAction> $entries */
+        $entries = $save->getOptions()['toolbarActions'];
+
         $this->assertSame(
             ['sulu_admin.save', 'sulu_content.request_for_publish', 'sulu_admin.save', 'sulu_admin.publish', 'app.publish_at'],
-            \array_map(static fn (ToolbarAction $toolbarAction) => $toolbarAction->getType(), $save->getOptions()['toolbarActions']),
+            \array_map(static fn (ToolbarAction $toolbarAction) => $toolbarAction->getType(), $entries),
         );
     }
 
@@ -521,7 +525,9 @@ class ContentViewBuilderFactoryTest extends TestCase
             'liveCondition',
         )['save'];
 
-        $entries = \array_slice($save->getOptions()['toolbarActions'], 4);
+        /** @var list<ToolbarAction> $allEntries */
+        $allEntries = $save->getOptions()['toolbarActions'];
+        $entries = \array_slice($allEntries, 4);
 
         $this->assertSame('(liveCondition) && (!active)', $entries[0]->getOptions()['visible_condition']);
         $this->assertSame(PermissionTypes::LIVE, $entries[0]->getOptions()['permission']);
