@@ -18,7 +18,7 @@ use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 
 /**
  * Implement this interface for smart resolvers that need the context of the current resolution, such as the
- * resolved resource in "selfReference".
+ * resolved resource in "resource".
  */
 interface SmartResolverContextAwareInterface extends SmartResolverInterface
 {

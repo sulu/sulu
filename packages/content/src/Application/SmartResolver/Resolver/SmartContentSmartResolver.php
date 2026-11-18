@@ -113,12 +113,12 @@ class SmartContentSmartResolver implements SmartResolverContextAwareInterface
         // Exclude the currently rendered resource (the "own" page) from its own results.
         /** @var string[] $excluded */
         $excluded = $filters['excluded'] ?? [];
-        $selfReference = $context['selfReference'] ?? null;
-        if (\is_array($selfReference)
-            && ($selfReference['resourceKey'] ?? null) === $smartContentProvider->getType()
-            && \is_string($selfReferenceId = $selfReference['id'] ?? null)
+        $resource = $context['resource'] ?? null;
+        if (\is_array($resource)
+            && ($resource['resourceKey'] ?? null) === $smartContentProvider->getType()
+            && \is_string($resourceId = $resource['id'] ?? null)
         ) {
-            $excluded[] = $selfReferenceId;
+            $excluded[] = $resourceId;
         }
 
         $excluded = \array_values(\array_unique($excluded));

@@ -182,15 +182,13 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => $highPriorityResource]]],
             'en',
-            [],
-            $this->smartResolverContext($example),
+            $this->context($example),
         )->willReturn(['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => 'High Priority Result']]]);
 
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => $lowPriorityResource]]],
             'en',
-            [],
-            $this->smartResolverContext($example),
+            $this->context($example),
         )->willReturn(['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => 'Low Priority Result']]]);
 
         $result = $this->contentResolver->resolve($dimensionContent);
@@ -255,8 +253,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => $singleResource]]],
             'en',
-            [],
-            $this->smartResolverContext($example),
+            $this->context($example),
         )->willReturn(
             ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => ['id' => 'single-1', 'title' => 'Single Title']]]]
         );
@@ -300,8 +297,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            [],
-            $this->smartResolverContext($example),
+            $this->context($example),
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );
@@ -345,8 +341,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            [],
-            $this->smartResolverContext($example),
+            $this->context($example),
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );
@@ -393,8 +388,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            [],
-            $this->smartResolverContext($example),
+            $this->context($example),
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );
@@ -412,7 +406,7 @@ class ContentResolverTest extends TestCase
         );
     }
 
-    public function testResolvePassesTheSelfReferenceToTheSmartResolvers(): void
+    public function testResolvePassesTheResolvedResourceInTheContext(): void
     {
         $example = new TestExample();
         $example->id = 446;
@@ -430,8 +424,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['smart_example' => [$smartResolvable->getId() => [$smartResolvable->getMetadataIdentifier() => $smartResolvable]]],
             'en',
-            [],
-            ['selfReference' => ['resourceKey' => TestExample::RESOURCE_KEY, 'id' => '446']],
+            ['resource' => ['resourceKey' => TestExample::RESOURCE_KEY, 'id' => '446']],
         )->shouldBeCalledOnce()->willReturn([]);
 
         $this->contentResolver->resolve($dimensionContent);
@@ -440,9 +433,9 @@ class ContentResolverTest extends TestCase
     /**
      * @return array<string, mixed>
      */
-    private function smartResolverContext(TestExample $example): array
+    private function context(TestExample $example): array
     {
-        return ['selfReference' => ['resourceKey' => TestExample::RESOURCE_KEY, 'id' => (string) $example->getId()]];
+        return ['resource' => ['resourceKey' => TestExample::RESOURCE_KEY, 'id' => (string) $example->getId()]];
     }
 }
 

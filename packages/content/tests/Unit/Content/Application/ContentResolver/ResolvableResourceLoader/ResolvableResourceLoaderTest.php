@@ -248,7 +248,7 @@ class ResolvableResourceLoaderTest extends TestCase
         self::assertSame('de', $contextAwareLoader->lastParams['_shadowLocale']);
     }
 
-    public function testLoadResourcesPassesTheSmartResolverContextToContextAwareSmartResolversOnly(): void
+    public function testLoadResourcesPassesTheContextToContextAwareSmartResolvers(): void
     {
         $contextAwareLoader = new class() implements ResourceLoaderInterface {
             /** @var array<mixed> */
@@ -307,7 +307,7 @@ class ResolvableResourceLoaderTest extends TestCase
 
         $resolvable = new ResolvableResource('1', 'context_test', 1);
         $smartResolvable = new SmartResolvable(['value' => []], 'smart_example', 1);
-        $smartResolverContext = ['selfReference' => ['resourceKey' => 'pages', 'id' => '123']];
+        $context = ['_shadowLocale' => 'de', 'resource' => ['resourceKey' => 'pages', 'id' => '123']];
 
         $loader->loadResources(
             [
@@ -315,12 +315,11 @@ class ResolvableResourceLoaderTest extends TestCase
                 'smart_example' => ['smart-1' => ['default' => $smartResolvable]],
             ],
             'de_li',
-            ['_shadowLocale' => 'de'],
-            $smartResolverContext,
+            $context,
         );
 
-        self::assertSame(['_shadowLocale' => 'de'], $contextAwareLoader->lastParams);
-        self::assertSame($smartResolverContext, $contextAwareSmartResolver->lastContext);
+        self::assertSame($context, $contextAwareLoader->lastParams);
+        self::assertSame($context, $contextAwareSmartResolver->lastContext);
     }
 
     public function testLoadResourcesWithInvalidLoaderKey(): void
