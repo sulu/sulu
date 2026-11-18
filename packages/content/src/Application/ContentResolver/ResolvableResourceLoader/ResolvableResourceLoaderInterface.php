@@ -26,8 +26,9 @@ interface ResolvableResourceLoaderInterface
      *
      * @param array<string, array<string|int, array<string, ResolvableInterface>>> $resourcesPerLoader Resource loaders and their associated resources to load
      * @param array<string, mixed> $context Additional context passed to resource loaders (e.g. _shadowLocale)
+     * @param array<string, mixed> $smartResolverContext Context passed to context aware smart resolvers (e.g. selfReference), kept apart because resource loaders cache by their params
      *
      * @return array<string, array<string|int, array<string, mixed>>> Resolved resources organized by resource loader key
      */
-    public function loadResources(array $resourcesPerLoader, ?string $locale, array $context = []): array;
+    public function loadResources(array $resourcesPerLoader, ?string $locale, array $context = [], array $smartResolverContext = []): array;
 }

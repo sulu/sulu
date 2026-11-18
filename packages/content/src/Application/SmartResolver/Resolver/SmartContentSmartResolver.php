@@ -48,7 +48,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  *       offset?: int,
  *   }
  */
-class SmartContentSmartResolver implements SmartResolverInterface
+class SmartContentSmartResolver implements SmartResolverContextAwareInterface
 {
     /**
      * @param ServiceLocator<SmartContentProviderInterface> $smartContentProviders
@@ -58,7 +58,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
     ) {
     }
 
-    public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
+    public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
     {
         /** @var array{
          *     value: array<string, mixed>,
@@ -113,8 +113,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
         // Exclude the currently rendered resource (the "own" page) from its own results.
         /** @var string[] $excluded */
         $excluded = $filters['excluded'] ?? [];
-        $context = $resolvable->getMetadata()['context'] ?? null;
-        $selfReference = \is_array($context) ? ($context['selfReference'] ?? null) : null;
+        $selfReference = $context['selfReference'] ?? null;
         if (\is_array($selfReference)
             && ($selfReference['resourceKey'] ?? null) === $smartContentProvider->getType()
             && \is_string($selfReferenceId = $selfReference['id'] ?? null)

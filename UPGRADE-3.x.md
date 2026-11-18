@@ -24,6 +24,12 @@ providers take the `sulu_content.deduplication_store` as their last argument. Pr
 or define their own service for it need to pass it, otherwise `exclude_duplicates` has no effect for them. Leaving it
 out triggers a deprecation.
 
+### SmartContentSmartResolver::resolve has a new context argument
+
+`SmartContentSmartResolver` implements the new `SmartResolverContextAwareInterface` and its `resolve()` method takes
+the context of the current resolution as third argument. Projects that extend it and override `resolve()` need to add
+`array $context = []`.
+
 ## 3.0.10
 
 ### The target group select of the preview follows the audience targeting permission
