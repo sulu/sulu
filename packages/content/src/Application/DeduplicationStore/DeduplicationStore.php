@@ -18,7 +18,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class DeduplicationStore implements DeduplicationStoreInterface, ResetInterface
 {
     /**
-     * @var array<string, array<int|string, true>>
+     * @var array<string, array<int|string, string>>
      */
     private array $ids = [];
 
@@ -26,15 +26,14 @@ class DeduplicationStore implements DeduplicationStoreInterface, ResetInterface
     {
         foreach ($ids as $id) {
             if ('' !== $id) {
-                $this->ids[$resourceKey][$id] = true;
+                $this->ids[$resourceKey][$id] = (string) $id;
             }
         }
     }
 
     public function getIds(string $resourceKey): array
     {
-        // array keys turn numeric strings into integers
-        return \array_map(\strval(...), \array_keys($this->ids[$resourceKey] ?? []));
+        return \array_values($this->ids[$resourceKey] ?? []);
     }
 
     public function reset(): void
