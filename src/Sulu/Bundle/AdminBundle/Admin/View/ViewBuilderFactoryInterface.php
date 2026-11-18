@@ -21,6 +21,8 @@ interface ViewBuilderFactoryInterface
 
     /**
      * @experimental
+     *
+     * TODO discuss this BC break: every implementation of this interface has to add this method
      */
     public function createViewOverlayListViewBuilder(string $name, string $path): ViewOverlayListViewBuilderInterface;
 
