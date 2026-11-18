@@ -2,6 +2,7 @@
 import type {Localization} from 'sulu-admin-bundle/stores';
 
 export type Webspace = {
+    _contextPermissions?: {[securityContextSuffix: string]: {[permission: string]: boolean}},
     _permissions: {[permission: string]: boolean},
     allLocalizations: Array<LocalizationItem>,
     customUrls: Array<CustomUrl>,
@@ -15,6 +16,7 @@ export type Webspace = {
     security: Security | typeof undefined,
     segments: Array<Segment>,
     urls: Array<Url>,
+    webspaceSettingsForm?: ?string,
 };
 
 export type ResourceLocatorStrategy = {
