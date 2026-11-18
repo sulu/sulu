@@ -76,6 +76,8 @@ class Login extends React.Component<Props> {
     };
 
     @action handleChangeToLoginForm = () => {
+        // the login method decides between username and password step, so going back starts at the username step
+        userStore.setLoginMethod('');
         this.props.router.reset();
         this.visibleForm = 'login';
     };
@@ -86,15 +88,15 @@ class Login extends React.Component<Props> {
 
     handleLoginFormSubmit = (data: LoginFormData) => {
         userStore.login(data).then(() => {
-            if (userStore.loginMethod === 'json_login') {
-                return;
-            }
-
             if (userStore.twoFactorMethods && userStore.twoFactorMethods.length > 0) {
                 action(() => {
                     this.visibleForm = 'two-factor';
                 })();
 
+                return;
+            }
+
+            if (userStore.loginMethod === 'json_login') {
                 return;
             }
 
