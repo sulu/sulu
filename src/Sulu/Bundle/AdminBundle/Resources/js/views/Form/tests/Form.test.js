@@ -2506,8 +2506,14 @@ test('Should title the locked banner so an approved request does not read as a w
 
     expect(banner).toEqual(expect.objectContaining({
         message: 'sulu_content.workflow_transition_request.banner_approved',
-        title: 'sulu_content.workflow_transition_request.banner_title',
+        title: 'sulu_content.workflow_transition_request.banner_title_approved',
     }));
+});
+
+test('Should title the banner of a request that is still open as a review', () => {
+    const banner = renderLockedReviewForm({createdBy: {id: 7}, status: 'open'});
+
+    expect(banner.title).toBe('sulu_content.workflow_transition_request.banner_title');
 });
 
 function renderPreValidationForm(resourceStore, route) {
