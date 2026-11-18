@@ -31,7 +31,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
     ) {
     }
 
-    public function loadResources(array $resourcesPerLoader, ?string $locale, array $context = [], array $smartResolverContext = []): array
+    public function loadResources(array $resourcesPerLoader, ?string $locale, array $context = []): array
     {
         $loadedResources = [];
         foreach ($resourcesPerLoader as $loaderKey => $resourcesToLoad) {
@@ -56,7 +56,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             }
 
             if (\count($smartResolvableResources) > 0) {
-                $result = $this->loadSmartResolvableResources($smartResolvableResources, $locale, $smartResolverContext);
+                $result = $this->loadSmartResolvableResources($smartResolvableResources, $locale, $context);
                 foreach ($result as $id => $loadedResource) {
                     foreach ($metadataIdentifiersPerResourceId[$id] as $metadataIdentifier) {
                         $loadedResources[$loaderKey][$id][$metadataIdentifier] = $loadedResource;

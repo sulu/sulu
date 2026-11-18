@@ -129,7 +129,7 @@ class SmartContentSmartResolverTest extends TestCase
         $result = $this->smartResolver->resolve(
             $this->createResolvable(),
             'en',
-            ['selfReference' => ['resourceKey' => 'pages', 'id' => 'self-page']],
+            ['resource' => ['resourceKey' => 'pages', 'id' => 'self-page']],
         );
 
         $this->assertSame(['self-page'], $result->getView()['excluded']);
@@ -147,7 +147,7 @@ class SmartContentSmartResolverTest extends TestCase
         $result = $this->smartResolver->resolve(
             $this->createResolvable(),
             'en',
-            ['selfReference' => ['resourceKey' => 'articles', 'id' => 'self-article']],
+            ['resource' => ['resourceKey' => 'articles', 'id' => 'self-article']],
         );
 
         $this->assertSame([], $result->getView()['excluded']);

@@ -377,32 +377,30 @@ class ContentViewResolverTest extends TestCase
     public function testResolveContentViewsQueuesResolvablesInDeclarationOrder(): void
     {
         $contentViews = [
-            'first' => ContentView::create(new ResolvableResource('a', 'smart', 1), []),
-            'second' => ContentView::create(new ResolvableResource('b', 'smart', 1), []),
-            'third' => ContentView::create(new ResolvableResource('c', 'smart', 1), []),
+            'first' => ContentView::create(new ResolvableResource('a', 'example', 1), []),
+            'second' => ContentView::create(new ResolvableResource('b', 'example', 1), []),
+            'third' => ContentView::create(new ResolvableResource('c', 'example', 1), []),
         ];
 
         $result = $this->contentViewResolver->resolveContentViews($contentViews, 0);
 
-        // Smart content blocks deduplicate against the blocks resolved before them, so the queue must keep
-        // the template order: the first block is resolved first.
-        self::assertSame(['a', 'b', 'c'], \array_keys($result['resolvableResources'][1]['smart'][0]));
+        self::assertSame(['a', 'b', 'c'], \array_keys($result['resolvableResources'][1]['example'][0]));
     }
 
     public function testResolveContentViewWithMixedContentQueuesResolvablesInDeclarationOrder(): void
     {
         $contentView = ContentView::create(
             [
-                'first' => ContentView::create(new ResolvableResource('a', 'smart', 1), []),
+                'first' => ContentView::create(new ResolvableResource('a', 'example', 1), []),
                 'title' => 'Not a content view',
-                'second' => ContentView::create(new ResolvableResource('b', 'smart', 1), []),
-                'third' => ContentView::create(new ResolvableResource('c', 'smart', 1), []),
+                'second' => ContentView::create(new ResolvableResource('b', 'example', 1), []),
+                'third' => ContentView::create(new ResolvableResource('c', 'example', 1), []),
             ],
             []
         );
 
         $result = $this->contentViewResolver->resolveContentView($contentView, 'blocks', 0);
 
-        self::assertSame(['a', 'b', 'c'], \array_keys($result['resolvableResources'][1]['smart'][0]));
+        self::assertSame(['a', 'b', 'c'], \array_keys($result['resolvableResources'][1]['example'][0]));
     }
 }

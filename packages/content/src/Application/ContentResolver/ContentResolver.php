@@ -157,12 +157,9 @@ readonly class ContentResolver implements ContentResolverInterface
             $context['_shadowLocale'] = $dimensionContent->getShadowLocale();
         }
 
-        // Smart content blocks exclude the resolved resource from their own results.
-        $smartResolverContext = [
-            'selfReference' => [
-                'resourceKey' => $dimensionContent::getResourceKey(),
-                'id' => (string) $dimensionContent->getResource()->getId(),
-            ],
+        $context['resource'] = [
+            'resourceKey' => $dimensionContent::getResourceKey(),
+            'id' => (string) $dimensionContent->getResource()->getId(),
         ];
 
         // Initial resolution to gather ResolvableResources
@@ -184,7 +181,7 @@ readonly class ContentResolver implements ContentResolverInterface
             $loaderIdDepths = $extractedResources['loaderIdDepths'];
 
             // Load resources at this priority level
-            $loadedResources = $this->resolvableResourceLoader->loadResources($resourcesToLoad, $locale, $context, $smartResolverContext);
+            $loadedResources = $this->resolvableResourceLoader->loadResources($resourcesToLoad, $locale, $context);
 
             // Process loaded resources
             foreach ($loadedResources as $loaderKey => $resources) {
