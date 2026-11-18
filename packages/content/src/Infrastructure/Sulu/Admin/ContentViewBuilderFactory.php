@@ -54,6 +54,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
      * @param array<string, array{instanceOf: class-string}> $settingsForms
      * @param array<string, array{instanceOf: class-string}> $excerptForms
      * @param array<string, array{instanceOf: class-string}> $seoForms
+     * @param iterable<SaveToolbarActionProviderInterface> $saveToolbarActionProviders
      */
     public function __construct(
         private ViewBuilderFactoryInterface $viewBuilderFactory,
@@ -65,6 +66,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
         private array $settingsForms,
         private array $excerptForms = [],
         private array $seoForms = [],
+        private iterable $saveToolbarActionProviders = [],
     ) {
     }
 
@@ -122,6 +124,7 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                             'visible_condition' => '(' . $publishVisibleCondition . ') && ' . $noActiveRequest,
                         ]
                     ),
+                    ...$this->getProvidedSaveToolbarActions($contentRichEntityClass, $saveVisibleCondition, $publishVisibleCondition),
                 ]
             ),
             'approval' => new ToolbarAction(
@@ -152,6 +155,44 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
             $dimensionContentClass::getResourceKey(),
             $dimensionContentClass::getTemplateType(),
         );
+    }
+
+    /**
+     * An entry that names a permission also gets the condition of the caller for it, because a caller like the page
+     * admin decides on the permissions of the webspace, which the condition of a provider cannot know.
+     *
+     * @param class-string<ContentRichEntityInterface> $contentRichEntityClass
+     *
+     * @return list<ToolbarAction>
+     */
+    private function getProvidedSaveToolbarActions(
+        string $contentRichEntityClass,
+        string $saveVisibleCondition,
+        string $publishVisibleCondition,
+    ): array {
+        $conditions = [
+            PermissionTypes::EDIT => $saveVisibleCondition,
+            PermissionTypes::LIVE => $publishVisibleCondition,
+        ];
+
+        $toolbarActions = [];
+        foreach ($this->saveToolbarActionProviders as $provider) {
+            foreach ($provider->getToolbarActions($contentRichEntityClass) as $toolbarAction) {
+                $options = $toolbarAction->getOptions();
+                $permission = $options['permission'] ?? null;
+
+                if (\is_string($permission) && isset($conditions[$permission])) {
+                    $own = $options['visible_condition'] ?? null;
+                    $options['visible_condition'] = '(' . $conditions[$permission] . ')'
+                        . (\is_string($own) && '' !== $own ? ' && (' . $own . ')' : '');
+                    $toolbarAction = new ToolbarAction($toolbarAction->getType(), $options);
+                }
+
+                $toolbarActions[] = $toolbarAction;
+            }
+        }
+
+        return $toolbarActions;
     }
 
     public function getDefaultToolbarActions(
@@ -600,9 +641,12 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
 
     private function isToolbarActionPermitted(ToolbarAction $toolbarAction, ?string $securityContext): bool
     {
-        $permission = self::TOOLBAR_ACTION_PERMISSIONS[$toolbarAction->getType()] ?? null;
+        // An entry of a provider names its own permission, because the core does not know its type.
+        $permission = self::TOOLBAR_ACTION_PERMISSIONS[$toolbarAction->getType()]
+            ?? $toolbarAction->getOptions()['permission']
+            ?? null;
 
-        return null === $permission || $this->hasPermission($securityContext, $permission);
+        return !\is_string($permission) || $this->hasPermission($securityContext, $permission);
     }
 
     /**

@@ -66,6 +66,7 @@ return static function(ContainerConfigurator $container) {
             '%sulu_content.content_settings_forms%',
             '%sulu_content.content_excerpt_forms%',
             '%sulu_content.content_seo_forms%',
+            tagged_iterator('sulu_content.save_toolbar_action_provider'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 
