@@ -27,6 +27,7 @@ export type TogglerItemConfig = {|
 export type ToolbarItemConfig<T> = ButtonItemConfig | DropdownItemConfig | SelectItemConfig<T> | TogglerItemConfig;
 
 export type ToolbarProps = {
+    hideBackButton?: boolean,
     navigationOpen?: boolean,
     onNavigationButtonClick?: () => void,
     storeKey?: string,

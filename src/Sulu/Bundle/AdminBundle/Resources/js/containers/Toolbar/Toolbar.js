@@ -101,7 +101,7 @@ class Toolbar extends React.Component<ToolbarProps> {
     }
 
     render() {
-        const {onNavigationButtonClick, navigationOpen} = this.props;
+        const {hideBackButton, onNavigationButtonClick, navigationOpen} = this.props;
         const {errors, showSuccess, warnings} = this.toolbarStore;
         const lastError = errors[errors.length - 1];
         const lastWarning = warnings[warnings.length - 1];
@@ -144,7 +144,7 @@ class Toolbar extends React.Component<ToolbarProps> {
                                 success={showSuccess}
                             />
                         }
-                        {!!this.backButtonConfig &&
+                        {!hideBackButton && !!this.backButtonConfig &&
                             <ToolbarComponent.Button
                                 {...this.backButtonConfig}
                                 icon={!onNavigationButtonClick && showSuccess ? SUCCESS_ICON : 'su-angle-left'}

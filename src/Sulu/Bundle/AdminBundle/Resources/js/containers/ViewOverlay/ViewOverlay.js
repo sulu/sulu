@@ -77,7 +77,7 @@ class ViewOverlay extends React.Component<Props> {
                 open={true}
                 size={size}
                 title={title}
-                toolbar={<Toolbar storeKey={this.toolbarStoreKey} />}
+                toolbar={<Toolbar hideBackButton={true} storeKey={this.toolbarStoreKey} />}
             >
                 {!!this.router.route &&
                     <ViewRenderer

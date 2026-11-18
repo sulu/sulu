@@ -32,6 +32,7 @@ class TestView extends React.Component<*> {
 }
 
 const TestViewWithToolbar = withToolbar(TestView, () => ({
+    backButton: {onClick: jest.fn()},
     items: [{icon: 'su-save', label: 'Save', onClick: jest.fn(), type: 'button'}],
     showSuccess,
 }));
@@ -72,6 +73,7 @@ test('Render the toolbar of the view in the overlay instead of the page toolbar'
     render(<ViewOverlay attributes={{id: 5}} onClose={jest.fn()} route="test_form" title="Edit" />);
 
     expect(screen.getByRole('dialog', {name: 'Edit'})).toContainElement(screen.getByRole('button', {name: /Save/}));
+    expect(screen.queryByLabelText('su-angle-left')).not.toBeInTheDocument();
     expect(pageToolbarStore.getItemsConfig()).toEqual([]);
 });
 
