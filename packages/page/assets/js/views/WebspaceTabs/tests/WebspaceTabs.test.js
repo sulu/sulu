@@ -115,7 +115,7 @@ test('Show only the tabs whose tabCondition matches the selected webspace', () =
     const settingsRoute = createRoute(
         {
             tabTitle: 'Settings',
-            tabCondition: 'webspaceSettingsForm && settingsPermissions && settingsPermissions.view',
+            tabCondition: 'webspaceSettingsForm && _contextPermissions["webspace-settings"].view',
         },
         {},
         [],
@@ -129,7 +129,12 @@ test('Show only the tabs whose tabCondition matches the selected webspace', () =
 
     webspaceStore.getWebspace.mockImplementation((key) => {
         if (key === 'sulu') {
-            return {key: 'sulu', localizations: [], webspaceSettingsForm: 'footer', settingsPermissions: {view: true}};
+            return {
+                key: 'sulu',
+                localizations: [],
+                webspaceSettingsForm: 'footer',
+                _contextPermissions: {'webspace-settings': {view: true}},
+            };
         }
 
         if (key === 'sulu_blog') {
@@ -141,7 +146,7 @@ test('Show only the tabs whose tabCondition matches the selected webspace', () =
                 key: 'sulu_shop',
                 localizations: [],
                 webspaceSettingsForm: 'footer',
-                settingsPermissions: {view: false},
+                _contextPermissions: {'webspace-settings': {view: false}},
             };
         }
     });
