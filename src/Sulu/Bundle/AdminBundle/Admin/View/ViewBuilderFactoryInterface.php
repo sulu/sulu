@@ -19,6 +19,11 @@ interface ViewBuilderFactoryInterface
 
     public function createFormOverlayListViewBuilder(string $name, string $path): FormOverlayListViewBuilderInterface;
 
+    /**
+     * @experimental
+     */
+    public function createViewOverlayListViewBuilder(string $name, string $path): ViewOverlayListViewBuilderInterface;
+
     public function createFormViewBuilder(string $name, string $path): FormViewBuilderInterface;
 
     public function createPreviewFormViewBuilder(string $name, string $path): PreviewFormViewBuilderInterface;

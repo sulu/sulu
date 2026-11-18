@@ -133,6 +133,7 @@ import {navigationRegistry} from './containers/Navigation';
 import {smartContentConfigStore} from './containers/SmartContent';
 import PreviewForm from './views/PreviewForm';
 import FormOverlayList from './views/FormOverlayList';
+import ViewOverlayList from './views/ViewOverlayList';
 import Subscription from './views/Subscription';
 import {setSubscriptionConfig} from './views/Subscription/subscriptionConfig';
 import RequestLog from './views/RequestLog';
@@ -219,6 +220,7 @@ function registerViews() {
     viewRegistry.add('sulu_admin.preview_form', PreviewForm);
     viewRegistry.add('sulu_admin.list', List);
     viewRegistry.add('sulu_admin.form_overlay_list', FormOverlayList);
+    viewRegistry.add('sulu_admin.view_overlay_list', ViewOverlayList);
     viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs, {disableDefaultSpacing: true});
     viewRegistry.add('sulu_admin.tabs', Tabs, {disableDefaultSpacing: true});
     viewRegistry.add(
