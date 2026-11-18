@@ -121,16 +121,18 @@ export default class Router {
     updateRouteHooks: {[priority: number]: Array<UpdateRouteHook>} = {};
     updateAttributesHooks: Array<UpdateAttributesHook> = [];
     redirectFlag: boolean = false;
+    historyListenerDisposer: () => void;
+    historySyncDisposer: () => void;
 
     constructor(history: Object) {
         this.history = history;
 
-        this.history.listen(({location}) => {
+        this.historyListenerDisposer = this.history.listen(({location}) => {
             log.info('URL was changed to "' + location.pathname + location.search + '"');
             this.match(location.pathname, location.search);
         });
 
-        autorun(() => {
+        this.historySyncDisposer = autorun(() => {
             const {pathname, search} = this.history.location;
             const currentUrl = this.url;
             const historyUrl = pathname + search;
@@ -144,12 +146,20 @@ export default class Router {
             }
         });
 
-        window.addEventListener('beforeunload', (event) => {
-            if (this.sortedUpdateRouteHooks.some((updateRouteHook) => updateRouteHook() === false)) {
-                event.preventDefault();
-                event.returnValue = true;
-            }
-        });
+        window.addEventListener('beforeunload', this.handleBeforeUnload);
+    }
+
+    handleBeforeUnload = (event: Object) => {
+        if (this.sortedUpdateRouteHooks.some((updateRouteHook) => updateRouteHook() === false)) {
+            event.preventDefault();
+            event.returnValue = true;
+        }
+    };
+
+    destroy() {
+        this.historyListenerDisposer();
+        this.historySyncDisposer();
+        window.removeEventListener('beforeunload', this.handleBeforeUnload);
     }
 
     @computed get sortedUpdateRouteHooks() {
