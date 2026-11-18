@@ -3,6 +3,7 @@ import {autorun} from 'mobx';
 import log from 'loglevel';
 import {getViewKeyFromRoute} from '../../services/Router';
 import {buildHocDisplayName} from '../../utils/react';
+import viewRendererContext from '../ViewRenderer/viewRendererContext';
 import sidebarStore from './stores/sidebarStore';
 import type {ViewProps} from '../index';
 import type {SidebarConfig} from './types';
@@ -15,11 +16,17 @@ export default function withSidebar<P: ViewProps, C: Class<Component<P>>>(
     sidebar: () => ?SidebarConfig
 ): C {
     const WithSidebarComponent = class extends Component {
+        static contextType = viewRendererContext;
+
         updateRouteHookDisposer: () => void;
 
         componentDidMount() {
             if (super.componentDidMount) {
                 super.componentDidMount();
+            }
+
+            if (!this.context.sidebarAvailable) {
+                return;
             }
 
             const {router} = this.props;
@@ -50,6 +57,10 @@ export default function withSidebar<P: ViewProps, C: Class<Component<P>>>(
         componentWillUnmount() {
             if (super.componentWillUnmount) {
                 super.componentWillUnmount();
+            }
+
+            if (!this.context.sidebarAvailable) {
+                return;
             }
 
             this.updateRouteHookDisposer();

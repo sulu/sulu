@@ -3,9 +3,12 @@ import React from 'react';
 import {extendObservable, observable} from 'mobx';
 import {render, screen} from '@testing-library/react';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from '../stores/toolbarStorePool';
+import viewRendererContext from '../../ViewRenderer/viewRendererContext';
 import withToolbar from '../withToolbar';
 
 jest.mock('../stores/toolbarStorePool', () => ({
+    DEFAULT_STORE_KEY: 'default',
+    hasStore: jest.fn().mockReturnValue(true),
     setToolbarConfig: jest.fn(),
 }));
 
@@ -170,4 +173,64 @@ test('Recall toolbar-function when changing observable', () => {
     expect(toolbarStorePool.setToolbarConfig).toHaveBeenCalledWith(DEFAULT_STORE_KEY, {
         disableAll: false,
     });
+});
+
+test('Use the toolbar store key of the view renderer if none is passed', () => {
+    const Component = class Component extends React.Component<*> {
+        render = jest.fn();
+    };
+
+    const ComponentWithToolbar = withToolbar(Component, () => ({items: []}));
+
+    render(
+        <viewRendererContext.Provider value={{sidebarAvailable: false, toolbarStoreKey: 'overlay'}}>
+            <ComponentWithToolbar router={createRouter()} />
+        </viewRendererContext.Provider>
+    );
+
+    expect(toolbarStorePool.setToolbarConfig).toHaveBeenCalledWith('overlay', {items: []});
+});
+
+test('Prefer the passed toolbar store key over the one of the view renderer', () => {
+    const Component = class Component extends React.Component<*> {
+        render = jest.fn();
+    };
+
+    const ComponentWithToolbar = withToolbar(Component, () => ({items: []}), 'passed');
+
+    render(
+        <viewRendererContext.Provider value={{sidebarAvailable: false, toolbarStoreKey: 'overlay'}}>
+            <ComponentWithToolbar router={createRouter()} />
+        </viewRendererContext.Provider>
+    );
+
+    expect(toolbarStorePool.setToolbarConfig).toHaveBeenCalledWith('passed', {items: []});
+    expect(toolbarStorePool.setToolbarConfig).not.toHaveBeenCalledWith('overlay', expect.anything());
+});
+
+test('Use the default toolbar store key if neither the view renderer nor the caller passes one', () => {
+    const Component = class Component extends React.Component<*> {
+        render = jest.fn();
+    };
+
+    const ComponentWithToolbar = withToolbar(Component, () => ({items: []}));
+
+    render(<ComponentWithToolbar router={createRouter()} />);
+
+    expect(toolbarStorePool.setToolbarConfig).toHaveBeenCalledWith(DEFAULT_STORE_KEY, {items: []});
+});
+
+test('Do not reset the toolbar config on unmount if its store was already destroyed', () => {
+    const Component = class Component extends React.Component<*> {
+        render = jest.fn();
+    };
+
+    const ComponentWithToolbar = withToolbar(Component, () => ({items: []}), 'overlay');
+
+    const {unmount} = render(<ComponentWithToolbar router={createRouter()} />);
+
+    (toolbarStorePool.hasStore: any).mockReturnValueOnce(false);
+    unmount();
+
+    expect(toolbarStorePool.setToolbarConfig).not.toHaveBeenCalledWith('overlay', {});
 });
