@@ -15,6 +15,7 @@ use Sulu\Bundle\PageBundle\Search\EventListener\HitListener;
 use Sulu\Bundle\PageBundle\Search\EventSubscriber\BlameTimestampSubscriber;
 use Sulu\Bundle\PageBundle\Search\EventSubscriber\StructureSubscriber;
 use Sulu\Bundle\PageBundle\Search\Reindex\StructureProvider;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 return static function(ContainerConfigurator $container) {
@@ -32,6 +33,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_page.structure.factory'),
             new Reference('sulu_page.extension.manager'),
             '%sulu_page.search.mapping%',
+            new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('massive_search.metadata.provider');
 

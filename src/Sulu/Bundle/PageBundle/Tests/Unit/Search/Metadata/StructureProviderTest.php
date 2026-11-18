@@ -14,13 +14,18 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Search\Metadata;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\PageBundle\Search\Metadata\StructureProvider;
+use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
+use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
@@ -131,5 +136,47 @@ class StructureProviderTest extends TestCase
             $nestedMapping,
             'The searchable field nested inside the global block section was not indexed.'
         );
+    }
+
+    /**
+     * @return iterable<string, array{bool}>
+     */
+    public static function provideMissingStructure(): iterable
+    {
+        yield 'factory returns null' => [false];
+        yield 'factory throws StructureTypeNotFoundException' => [true];
+    }
+
+    #[DataProvider('provideMissingStructure')]
+    public function testGetMetadataForObjectReturnsNullAndLogsWarningForMissingStructure(bool $throws): void
+    {
+        $logger = $this->prophesize(LoggerInterface::class);
+        $provider = new StructureProvider(
+            new Factory(),
+            $this->metadataFactory->reveal(),
+            $this->structureFactory->reveal(),
+            $this->extensionManager->reveal(),
+            [],
+            $logger->reveal()
+        );
+
+        $document = $this->prophesize(StructureBehavior::class);
+        $document->getStructureType()->willReturn('removed_template');
+        $document->getLocale()->willReturn('de');
+
+        $documentMetadata = $this->prophesize(Metadata::class);
+        $documentMetadata->getAlias()->willReturn('page');
+        $this->metadataFactory->getMetadataForClass(Argument::any())->willReturn($documentMetadata->reveal());
+
+        $structureMetadata = $this->structureFactory->getStructureMetadata('page', 'removed_template');
+        if ($throws) {
+            $structureMetadata->willThrow(new StructureTypeNotFoundException('Could not load structure type "removed_template"'));
+        } else {
+            $structureMetadata->willReturn(null);
+        }
+
+        $logger->warning(Argument::containingString('Structure "removed_template" of type "page" not found'))->shouldBeCalled();
+
+        $this->assertNull($provider->getMetadataForObject($document->reveal()));
     }
 }

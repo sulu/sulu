@@ -38433,7 +38433,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$structure of method Sulu\\Bundle\\PageBundle\\Search\\Metadata\\StructureProvider\:\:getMetadata\(\) expects Sulu\\Component\\Content\\Metadata\\StructureMetadata, Sulu\\Component\\Content\\Metadata\\StructureMetadata\|null given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Search/Metadata/StructureProvider.php
 
 		-
