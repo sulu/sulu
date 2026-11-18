@@ -69,7 +69,7 @@ readonly class AccountSmartContentProvider implements SmartContentProviderInterf
         private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
         if (null === $this->deduplicationStore) {
-            @trigger_deprecation('sulu/sulu', '3.0.12', 'Instantiating AccountSmartContentProvider without the $deduplicationStore argument is deprecated.');
+            @trigger_deprecation('sulu/sulu', '3.0.12', \sprintf('Instantiating %s without the $deduplicationStore argument is deprecated.', static::class));
         }
     }
 

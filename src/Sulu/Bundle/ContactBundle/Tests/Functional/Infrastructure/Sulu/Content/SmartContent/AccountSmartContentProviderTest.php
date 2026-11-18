@@ -492,6 +492,6 @@ class AccountSmartContentProviderTest extends SuluTestCase
             \restore_error_handler();
         }
 
-        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating AccountSmartContentProvider without the $deduplicationStore argument is deprecated.'], $deprecations);
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ' . AccountSmartContentProvider::class . ' without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }

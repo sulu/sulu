@@ -41,7 +41,7 @@ class ImageMapPropertyResolver implements PropertyResolverMetadataAwareInterface
         private readonly ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
         if (null === $this->deduplicationStore) {
-            @trigger_deprecation('sulu/sulu', '3.0.12', 'Instantiating ImageMapPropertyResolver without the $deduplicationStore argument is deprecated.');
+            @trigger_deprecation('sulu/sulu', '3.0.12', \sprintf('Instantiating %s without the $deduplicationStore argument is deprecated.', static::class));
         }
     }
 
