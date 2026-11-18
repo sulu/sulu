@@ -33,6 +33,8 @@ use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Route\Application\ResourceLocator\ResourceLocatorGeneratorInterface;
+use Sulu\Route\Application\ResourceLocator\ResourceLocatorRequest;
 use Webmozart\Assert\Assert;
 
 /**
@@ -53,6 +55,7 @@ final class ArticleTrashItemHandler implements
         private ContentMergerInterface $contentMerger,
         private iterable $articleMappers,
         private DomainEventCollectorInterface $domainEventCollector,
+        private ResourceLocatorGeneratorInterface $resourceLocatorGenerator,
     ) {
     }
 
@@ -183,6 +186,8 @@ final class ArticleTrashItemHandler implements
                 $allLocales[] = $dimensionContentData['locale'];
             }
 
+            $dimensionContentData = $this->withUniqueUrl($article, $dimensionContentData);
+
             foreach ($this->articleMappers as $articleMapper) {
                 $articleMapper->mapArticleData($article, $dimensionContentData);
             }
@@ -210,6 +215,64 @@ final class ArticleTrashItemHandler implements
         ));
 
         return $article;
+    }
+
+    /**
+     * Another article can have taken the url while this one was in the trash.
+     *
+     * @param array<string, mixed> $dimensionContentData
+     *
+     * @return array<string, mixed>
+     */
+    private function withUniqueUrl(ArticleInterface $article, array $dimensionContentData): array
+    {
+        $url = $dimensionContentData['url'] ?? null;
+        $locale = $dimensionContentData['locale'] ?? null;
+        if (!\is_string($locale)) {
+            return $dimensionContentData;
+        }
+
+        if (\is_string($url) && '' !== $url) {
+            $dimensionContentData['url'] = $this->resourceLocatorGenerator->generate(new ResourceLocatorRequest(
+                parts: [],
+                locale: $locale,
+                webspace: null,
+                resourceKey: ArticleInterface::RESOURCE_KEY,
+                resourceId: $article->getUuid(),
+                parentResourceId: null,
+                parentResourceKey: null,
+                routeSchema: $url,
+            ));
+
+            return $dimensionContentData;
+        }
+
+        // a page_tree_route url only stores the suffix below the selected page
+        $parentUuid = \is_array($url) && \is_array($url['page'] ?? null) ? ($url['page']['uuid'] ?? null) : null;
+        $suffix = \is_array($url) ? ($url['suffix'] ?? null) : null;
+        if (!\is_array($url) || !\is_string($parentUuid) || '' === $parentUuid || !\is_string($suffix) || '' === $suffix) {
+            return $dimensionContentData;
+        }
+
+        $suffix = '/' . \ltrim($suffix, '/');
+        $uniqueSuffix = $this->resourceLocatorGenerator->generate(new ResourceLocatorRequest(
+            parts: [],
+            locale: $locale,
+            webspace: null,
+            resourceKey: ArticleInterface::RESOURCE_KEY,
+            resourceId: $article->getUuid(),
+            parentResourceId: $parentUuid,
+            parentResourceKey: 'pages',
+            routeSchema: $suffix,
+            relative: true,
+        ));
+
+        if ($uniqueSuffix !== $suffix) {
+            $url['suffix'] = $uniqueSuffix;
+            $dimensionContentData['url'] = $url;
+        }
+
+        return $dimensionContentData;
     }
 
     public function getConfiguration(): RestoreConfiguration
