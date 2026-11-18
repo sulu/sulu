@@ -611,6 +611,7 @@ final class SuluPageBundle extends AbstractBundle
                     new Reference('sulu_content.content_merger'),
                     tagged_iterator('sulu_page.page_mapper'),
                     new Reference('sulu_activity.domain_event_collector'),
+                    new Reference('sulu_route.resource_locator_generator'),
                 ])
                 ->tag('sulu_trash.store_trash_item_handler')
                 ->tag('sulu_trash.restore_trash_item_handler')
