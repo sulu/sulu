@@ -24,7 +24,8 @@ type Props = {|
 // e.g. the form with its dirty warning, which then calls the passed method to close after all.
 const CLOSE_ROUTE = new Route({name: 'sulu_admin.view_overlay_close', path: '', type: ''});
 
-let overlayCount = 0;
+// Overlays are modal, so each nesting depth has one open at a time and reuses the toolbar store of that depth.
+let openOverlayCount = 0;
 
 @observer
 class ViewOverlay extends React.Component<Props> {
@@ -36,9 +37,11 @@ class ViewOverlay extends React.Component<Props> {
 
         const {attributes, route} = this.props;
 
-        overlayCount++;
-        this.toolbarStoreKey = 'sulu_admin.view_overlay_' + overlayCount;
-        toolbarStorePool.createStore(this.toolbarStoreKey);
+        openOverlayCount++;
+        this.toolbarStoreKey = 'sulu_admin.view_overlay_' + openOverlayCount;
+        if (!toolbarStorePool.hasStore(this.toolbarStoreKey)) {
+            toolbarStorePool.createStore(this.toolbarStoreKey);
+        }
 
         this.router = new Router(createMemoryHistory());
         this.router.navigate(route, attributes);
@@ -46,7 +49,7 @@ class ViewOverlay extends React.Component<Props> {
 
     componentWillUnmount() {
         this.router.destroy();
-        toolbarStorePool.destroyStore(this.toolbarStoreKey);
+        openOverlayCount--;
     }
 
     @computed get closeSuccessMessage(): string | void {

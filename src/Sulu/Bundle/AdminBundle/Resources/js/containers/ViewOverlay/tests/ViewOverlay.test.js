@@ -111,14 +111,32 @@ test('Keep the overlay open if a view vetoes the close, until it closes it itsel
     expect(onClose).toHaveBeenCalledTimes(1);
 });
 
-test('Destroy the own router and toolbar store when unmounted', () => {
+test('Destroy the own router when unmounted', () => {
     const destroySpy = jest.spyOn(Router.prototype, 'destroy');
     const {unmount} = render(<ViewOverlay attributes={{id: 5}} onClose={jest.fn()} route="test_form" title="Edit" />);
-    const storeKeys = Object.keys(toolbarStorePool.stores).filter((key) => toolbarStorePool.hasStore(key));
 
     unmount();
 
     expect(destroySpy).toHaveBeenCalledTimes(1);
-    expect(Object.keys(toolbarStorePool.stores).filter((key) => toolbarStorePool.hasStore(key)))
-        .toHaveLength(storeKeys.length - 1);
+});
+
+test('Reuse the toolbar store of a depth and give a nested overlay its own', () => {
+    const storeKeys = () => Object.keys(toolbarStorePool.stores).filter((key) => key.includes('view_overlay'));
+
+    const {unmount: unmountFirst} = render(
+        <ViewOverlay attributes={{id: 5}} onClose={jest.fn()} route="test_form" title="First" />
+    );
+    unmountFirst();
+    const storeKeysAfterFirst = storeKeys();
+    expect(storeKeysAfterFirst).toContain('sulu_admin.view_overlay_1');
+
+    const {unmount: unmountSecond} = render(
+        <ViewOverlay attributes={{id: 6}} onClose={jest.fn()} route="test_form" title="Second" />
+    );
+    expect(storeKeys()).toEqual(storeKeysAfterFirst);
+
+    render(<ViewOverlay attributes={{id: 7}} onClose={jest.fn()} route="test_form" title="Nested" />);
+    expect(storeKeys()).toContain('sulu_admin.view_overlay_2');
+
+    unmountSecond();
 });
