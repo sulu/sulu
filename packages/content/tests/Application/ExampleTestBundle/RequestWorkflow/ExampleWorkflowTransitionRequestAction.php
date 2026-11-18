@@ -47,6 +47,16 @@ class ExampleWorkflowTransitionRequestAction implements WorkflowTransitionReques
         return PermissionTypes::EDIT;
     }
 
+    public function getStatusMessage(WorkflowTransitionRequest $request): ?array
+    {
+        return null;
+    }
+
+    public function replacesPublish(WorkflowTransitionRequest $request): bool
+    {
+        return false;
+    }
+
     public function isAvailable(WorkflowTransitionRequest $request): bool
     {
         return true;

@@ -722,9 +722,15 @@ export default withToolbar(Form, function() {
         const activeWorkflowTransitionRequest = formData.activeWorkflowTransitionRequest;
         const status = activeWorkflowTransitionRequest && activeWorkflowTransitionRequest.status;
 
-        const message = status === 'approved'
-            ? translate('sulu_content.workflow_transition_request.banner_approved')
-            : translate('sulu_content.workflow_transition_request.banner_pending');
+        const statusMessage = activeWorkflowTransitionRequest?.statusMessage;
+        let message;
+        if (statusMessage) {
+            message = translate(statusMessage.message, statusMessage.parameters);
+        } else if (status === 'approved') {
+            message = translate('sulu_content.workflow_transition_request.banner_approved');
+        } else {
+            message = translate('sulu_content.workflow_transition_request.banner_pending');
+        }
 
         // Cancelling takes the edit permission, which the request answers for content without
         // object security.

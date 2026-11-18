@@ -26,11 +26,14 @@ class StubWorkflowTransitionRequestAction implements WorkflowTransitionRequestAc
 
     /**
      * @param array<string, string> $labelParameters
+     * @param array{message: string, parameters: array<string, string>}|null $statusMessage
      */
     public function __construct(
         private readonly bool $available = true,
         private readonly string $permission = PermissionTypes::LIVE,
         private readonly array $labelParameters = [],
+        private readonly bool $replacesPublish = false,
+        private readonly ?array $statusMessage = null,
     ) {
     }
 
@@ -52,6 +55,16 @@ class StubWorkflowTransitionRequestAction implements WorkflowTransitionRequestAc
     public function getPermission(): string
     {
         return $this->permission;
+    }
+
+    public function getStatusMessage(WorkflowTransitionRequest $request): ?array
+    {
+        return $this->statusMessage;
+    }
+
+    public function replacesPublish(WorkflowTransitionRequest $request): bool
+    {
+        return $this->replacesPublish;
     }
 
     public function isAvailable(WorkflowTransitionRequest $request): bool

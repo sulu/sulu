@@ -75,6 +75,8 @@ export type WorkflowTransitionRequestData = {|
     resourceId: string,
     resourceKey: string,
     status: WorkflowTransitionRequestStatus,
+    /** Added by bundles: replaces the message of the banner, e.g. to tell that the publish is scheduled. */
+    statusMessage?: {message: string, parameters?: {[string]: string}},
 |};
 
 export type PreValidationResult = {|
