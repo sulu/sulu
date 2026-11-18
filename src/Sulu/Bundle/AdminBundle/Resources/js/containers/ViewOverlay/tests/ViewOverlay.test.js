@@ -17,6 +17,7 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 const showSuccess = observable.box(false);
+const errors = observable.array([]);
 let mockUpdateRouteHook = jest.fn().mockReturnValue(true);
 
 class TestView extends React.Component<*> {
@@ -33,6 +34,7 @@ class TestView extends React.Component<*> {
 
 const TestViewWithToolbar = withToolbar(TestView, () => ({
     backButton: {onClick: jest.fn()},
+    errors,
     items: [{icon: 'su-save', label: 'Save', onClick: jest.fn(), type: 'button'}],
     showSuccess,
 }));
@@ -54,6 +56,7 @@ beforeEach(() => {
     ]);
     viewRegistry.add('test_view', TestViewWithToolbar);
     showSuccess.set(false);
+    errors.clear();
     mockUpdateRouteHook = jest.fn().mockReturnValue(true);
     window.location.hash = '#/page';
 });
@@ -87,6 +90,19 @@ test('Turn the close button into a check while the view shows its success', () =
     });
 
     expect(screen.getByRole('status')).toHaveTextContent('sulu_admin.success');
+});
+
+test('Show the errors of the view below the toolbar inside the overlay', () => {
+    render(<ViewOverlay attributes={{id: 5}} onClose={jest.fn()} route="test_form" title="Edit" />);
+
+    act(() => {
+        errors.push('Save failed');
+    });
+
+    const message = screen.getByText(/Save failed/);
+    expect(screen.getByRole('dialog', {name: 'Edit'})).toContainElement(message);
+    expect(screen.getByLabelText('su-save').compareDocumentPosition(message))
+        .toBe(Node.DOCUMENT_POSITION_FOLLOWING);
 });
 
 test('Close the overlay if no view vetoes it', async() => {

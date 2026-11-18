@@ -325,3 +325,13 @@ test('Hide the back button if asked to', () => {
 
     expect(mockToolbarButtonProps).toEqual([]);
 });
+
+test('Do not render the snackbars if asked to', () => {
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getBackButtonConfig.mockReturnValue(undefined);
+    toolbarStoreMock.errors.push('Something went wrong');
+
+    renderToolbar({hideSnackbars: true});
+
+    expect(screen.queryByTestId('error-snackbar')).not.toBeInTheDocument();
+});

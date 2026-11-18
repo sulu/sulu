@@ -31,6 +31,7 @@ type Props = {
     onSnackbarCloseClick?: () => void,
     open: boolean,
     size?: Size,
+    snackbar?: Node,
     snackbarMessage?: string,
     snackbarType: SnackbarType,
     title: string,
@@ -124,6 +125,7 @@ class Overlay extends React.Component<Props> {
             onSnackbarClick,
             onSnackbarCloseClick,
             size,
+            snackbar,
             snackbarMessage,
             snackbarType,
             title,
@@ -210,6 +212,7 @@ class Overlay extends React.Component<Props> {
                                             type={snackbarType}
                                             visible={!!snackbarMessage}
                                         />
+                                        {snackbar}
                                     </div>
                                     <article className={overlayStyles.article}>{children}</article>
                                     {footerVisible &&

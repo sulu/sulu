@@ -6,7 +6,7 @@ import {createMemoryHistory} from 'history';
 import Overlay from '../../components/Overlay';
 import Router, {Route} from '../../services/Router';
 import {translate} from '../../utils/Translator';
-import Toolbar from '../Toolbar';
+import Toolbar, {ToolbarSnackbars} from '../Toolbar';
 import toolbarStorePool from '../Toolbar/stores/toolbarStorePool';
 import ViewRenderer from '../ViewRenderer';
 import type {Size} from '../../components/Overlay/types';
@@ -69,6 +69,7 @@ class ViewOverlay extends React.Component<Props> {
 
     render() {
         const {size, title} = this.props;
+        const toolbarStore = toolbarStorePool.getStore(this.toolbarStoreKey);
 
         return (
             <Overlay
@@ -76,8 +77,9 @@ class ViewOverlay extends React.Component<Props> {
                 onClose={this.handleClose}
                 open={true}
                 size={size}
+                snackbar={<ToolbarSnackbars toolbarStore={toolbarStore} />}
                 title={title}
-                toolbar={<Toolbar hideBackButton={true} storeKey={this.toolbarStoreKey} />}
+                toolbar={<Toolbar hideBackButton={true} hideSnackbars={true} storeKey={this.toolbarStoreKey} />}
             >
                 {!!this.router.route &&
                     <ViewRenderer
