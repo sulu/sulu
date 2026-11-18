@@ -174,10 +174,24 @@ The `CKEditor5` container component replaced its `formats` and `options` props w
 resolved text editor config. Applications that render the component directly, rather than through the `TextEditor`
 container, have to pass it.
 
-### Webspace settings tables
+### Webspace settings
 
-The webspace settings are stored in the new `pa_webspace_settings` and `pa_webspace_setting_contents` tables.
-Run the new migration to apply the schema change:
+The webspace settings are provided by the new `SuluWebspaceBundle`, which has to be registered in `config/bundles.php`:
+
+```php
+    Sulu\Webspace\Infrastructure\Symfony\HttpKernel\SuluWebspaceBundle::class => ['all' => true],
+```
+
+Its admin API routes have to be imported in `config/routes/sulu_admin.yaml`:
+
+```yaml
+sulu_webspace_api:
+    resource: "@SuluWebspaceBundle/config/routing_admin_api.yaml"
+    prefix: /admin/api
+```
+
+The settings are stored in the new `we_webspace_settings` and `we_webspace_setting_contents` tables. Run the new
+migration to apply the schema change:
 
 ```bash
 bin/console doctrine:migrations:migrate

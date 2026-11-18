@@ -39,8 +39,8 @@ class WebspaceTabs extends React.Component<ViewProps> {
         const {route} = this.props;
         const webspace = toJS(this.webspace);
 
-        return route.children.filter(({options: {webspaceCondition}}) => {
-            return !webspaceCondition || (!!webspace && jexl.evalSync(webspaceCondition, webspace));
+        return route.children.filter(({options: {tabCondition}}) => {
+            return !tabCondition || (!!webspace && jexl.evalSync(tabCondition, webspace));
         });
     }
 

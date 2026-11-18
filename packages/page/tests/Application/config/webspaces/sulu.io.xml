@@ -26,8 +26,6 @@
         <template type="search">search/search</template>
     </templates>
 
-    <webspace-settings-form>webspace_settings_sulu_io</webspace-settings-form>
-
     <navigation>
         <contexts>
             <context key="main">
