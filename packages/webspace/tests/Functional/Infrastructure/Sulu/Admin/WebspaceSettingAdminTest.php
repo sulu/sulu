@@ -54,7 +54,7 @@ class WebspaceSettingAdminTest extends SuluTestCase
 
         $this->assertSame(PageAdmin::WEBSPACE_TABS_VIEW, $tabsView->getParent());
         $this->assertSame(4096, $tabsView->getOption('tabOrder'));
-        $this->assertSame('webspaceSettingsForm && settingsPermissions && settingsPermissions.view', $tabsView->getOption('tabCondition'));
+        $this->assertSame('webspaceSettingsForm && _contextPermissions["webspace-settings"].view', $tabsView->getOption('tabCondition'));
         $this->assertSame('sulu_page.page_tabs', $tabsView->getType());
         $this->assertTrue($tabsView->getOption('idFromWebspace'));
     }

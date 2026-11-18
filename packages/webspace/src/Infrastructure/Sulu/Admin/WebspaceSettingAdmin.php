@@ -85,7 +85,7 @@ class WebspaceSettingAdmin extends Admin
                 ->setOption('tabTitle', 'sulu_webspace.webspace_settings_tab')
                 ->setOption('tabOrder', 4096)
                 // evaluated against the selected webspace by the webspace tabs
-                ->setOption('tabCondition', 'webspaceSettingsForm && settingsPermissions && settingsPermissions.view')
+                ->setOption('tabCondition', 'webspaceSettingsForm && _contextPermissions["webspace-settings"].view')
                 ->setAttributeDefault('locale', $webspace->getDefaultLocalization()->getLocale())
                 ->addRerenderAttribute('webspace')
                 ->setParent(PageAdmin::WEBSPACE_TABS_VIEW),

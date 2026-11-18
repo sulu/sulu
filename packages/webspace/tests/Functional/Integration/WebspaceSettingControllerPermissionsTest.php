@@ -51,14 +51,14 @@ class WebspaceSettingControllerPermissionsTest extends SuluTestCase
         $client->request('GET', '/admin/config');
         $this->assertHttpStatusCode(200, $client->getResponse());
 
-        /** @var array{sulu_page: array{webspaces: array<string, array{settingsPermissions?: array<string, bool>, _permissions: array<string, bool>}>}} $config */
+        /** @var array{sulu_page: array{webspaces: array<string, array{_contextPermissions: array<string, array<string, bool>>, _permissions: array<string, bool>}>}} $config */
         $config = \json_decode((string) $client->getResponse()->getContent(), true);
         $webspaces = $config['sulu_page']['webspaces'];
 
-        $this->assertTrue($webspaces['sulu-io']['settingsPermissions']['view'] ?? null);
-        $this->assertFalse($webspaces['sulu-io']['settingsPermissions']['edit'] ?? null, 'the permissions of the pages do not leak into the settings');
+        $this->assertTrue($webspaces['sulu-io']['_contextPermissions']['webspace-settings']['view'] ?? null);
+        $this->assertFalse($webspaces['sulu-io']['_contextPermissions']['webspace-settings']['edit'] ?? null, 'the permissions of the pages do not leak into the settings');
         $this->assertTrue($webspaces['sulu-io']['_permissions']['edit']);
-        $this->assertArrayNotHasKey('settingsPermissions', $webspaces['blog'], 'a webspace without settings form has no settings permissions');
+        $this->assertFalse($webspaces['blog']['_contextPermissions']['webspace-settings']['view'] ?? false, 'the permissions are granted per webspace');
     }
 
     public function testGetWithoutPermissionIsForbidden(): void

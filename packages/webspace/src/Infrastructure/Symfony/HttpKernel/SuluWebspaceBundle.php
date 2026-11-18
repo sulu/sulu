@@ -31,7 +31,6 @@ use Sulu\Webspace\Domain\Model\WebspaceSettingDimensionContentInterface;
 use Sulu\Webspace\Domain\Model\WebspaceSettingInterface;
 use Sulu\Webspace\Domain\Repository\WebspaceSettingRepositoryInterface;
 use Sulu\Webspace\Infrastructure\Doctrine\Repository\WebspaceSettingRepository;
-use Sulu\Webspace\Infrastructure\JMS\Serializer\WebspaceSettingSerializeEventSubscriber;
 use Sulu\Webspace\Infrastructure\Sulu\Admin\MetadataLoader\WebspaceSettingsFormMetadataLoader;
 use Sulu\Webspace\Infrastructure\Sulu\Admin\WebspaceSettingAdmin;
 use Sulu\Webspace\Infrastructure\Sulu\HttpCache\EventSubscriber\WebspaceSettingCacheInvalidationSubscriber;
@@ -181,14 +180,6 @@ final class SuluWebspaceBundle extends AbstractBundle
                 new Reference('sulu_admin.xml_form_metadata_loader'),
             ])
             ->tag('sulu_admin.form_metadata_loader', ['priority' => 256]);
-
-        $services->set('sulu_webspace.webspace_setting_serialize_event_subscriber')
-            ->class(WebspaceSettingSerializeEventSubscriber::class)
-            ->args([
-                new Reference('sulu_security.access_control_manager'),
-                new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
-            ])
-            ->tag('jms_serializer.event_subscriber');
 
         $services->set('sulu_webspace.admin_webspace_setting_controller')
             ->class(WebspaceSettingController::class)
