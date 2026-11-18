@@ -24,9 +24,13 @@ class StubWorkflowTransitionRequestAction implements WorkflowTransitionRequestAc
      */
     public array $executed = [];
 
+    /**
+     * @param array<string, string> $labelParameters
+     */
     public function __construct(
         private readonly bool $available = true,
         private readonly string $permission = PermissionTypes::LIVE,
+        private readonly array $labelParameters = [],
     ) {
     }
 
@@ -38,6 +42,11 @@ class StubWorkflowTransitionRequestAction implements WorkflowTransitionRequestAc
     public function getLabel(): string
     {
         return 'acme.stub';
+    }
+
+    public function getLabelParameters(WorkflowTransitionRequest $request): array
+    {
+        return $this->labelParameters;
     }
 
     public function getPermission(): string

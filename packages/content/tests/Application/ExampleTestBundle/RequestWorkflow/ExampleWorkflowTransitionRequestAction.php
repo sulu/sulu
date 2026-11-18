@@ -37,6 +37,11 @@ class ExampleWorkflowTransitionRequestAction implements WorkflowTransitionReques
         return 'example_test.note';
     }
 
+    public function getLabelParameters(WorkflowTransitionRequest $request): array
+    {
+        return [];
+    }
+
     public function getPermission(): string
     {
         return PermissionTypes::EDIT;

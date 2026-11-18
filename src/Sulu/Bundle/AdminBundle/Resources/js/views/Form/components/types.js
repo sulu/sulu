@@ -57,6 +57,8 @@ export type WorkflowTransitionRequestPermissions = {|
 export type WorkflowTransitionRequestAction = {|
     key: string,
     label: string,
+    /** Values for the placeholders of the translated label, for example a date. */
+    labelParameters?: {[string]: string},
 |};
 
 export type WorkflowTransitionRequestData = {|

@@ -93,7 +93,7 @@ final class WorkflowTransitionRequestViewFactory implements WorkflowTransitionRe
      * The actions of bundles that fit the request and that the user may take, for the footer of the
      * review overlay. The label travels untranslated like the messages do.
      *
-     * @return list<array{key: string, label: string}>
+     * @return list<array{key: string, label: string, labelParameters?: array<string, string>}>
      */
     private function buildActions(WorkflowTransitionRequest $request): array
     {
@@ -118,7 +118,13 @@ final class WorkflowTransitionRequestViewFactory implements WorkflowTransitionRe
                 continue;
             }
 
-            $actions[] = ['key' => $action::getKey(), 'label' => $action->getLabel()];
+            $entry = ['key' => $action::getKey(), 'label' => $action->getLabel()];
+            $labelParameters = $action->getLabelParameters($request);
+            if ([] !== $labelParameters) {
+                $entry['labelParameters'] = $labelParameters;
+            }
+
+            $actions[] = $entry;
         }
 
         return $actions;

@@ -134,6 +134,17 @@ test('shows the actions of bundles in the footer and runs one by its key', async
     expect(onAction).toHaveBeenCalledWith('schedule');
 });
 
+test('translates the label of an action with its parameters', () => {
+    renderOverlay({
+        onAction: jest.fn(),
+        request: createRequest({
+            actions: [{key: 'schedule', label: 'acme.schedule', labelParameters: {date: '25.11.2026 10:00'}}],
+        }),
+    });
+
+    expect(screen.getByText('acme.schedule:{"date":"25.11.2026 10:00"}')).toBeInTheDocument();
+});
+
 test('shows the actions of bundles to someone who cannot decide, too', () => {
     renderOverlay({
         canAct: false,

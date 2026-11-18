@@ -93,6 +93,18 @@ class WorkflowTransitionRequestViewFactoryTest extends TestCase
         $this->assertSame([['key' => 'stub', 'label' => 'acme.stub']], $view['actions']);
     }
 
+    public function testViewCarriesTheLabelParametersOfAnAction(): void
+    {
+        $view = $this->createFactory(
+            actions: [new StubWorkflowTransitionRequestAction(labelParameters: ['date' => '25.11.2026 10:00'])],
+        )->build($this->createRequest());
+
+        $this->assertSame(
+            [['key' => 'stub', 'label' => 'acme.stub', 'labelParameters' => ['date' => '25.11.2026 10:00']]],
+            $view['actions'],
+        );
+    }
+
     public function testViewOmitsAnActionThatDoesNotFitTheRequest(): void
     {
         $view = $this->createFactory(

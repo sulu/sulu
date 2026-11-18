@@ -283,7 +283,7 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
             <RequestActionButton
                 actionKey={action.key}
                 key={`action-${action.key}`}
-                label={translate(action.label)}
+                label={translate(action.label, action.labelParameters)}
                 loading={this.submitting}
                 onClick={this.handleActionClick}
             />
