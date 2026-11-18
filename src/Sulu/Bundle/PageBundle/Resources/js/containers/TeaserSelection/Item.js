@@ -136,12 +136,18 @@ class Item extends React.Component<Props> {
                                         value={this.description}
                                     />
                                 </div>
+                                <div className={itemStyles.buttons}>
+                                    <Button icon="su-sync" onClick={this.handleReset} skin="link">
+                                        {translate('sulu_admin.reset')}
+                                    </Button>
+                                    <div className={itemStyles.actions}>
+                                        <Button onClick={this.handleCancel}>{translate('sulu_admin.cancel')}</Button>
+                                        <Button onClick={this.handleApply} skin="primary">
+                                            {translate('sulu_admin.apply')}
+                                        </Button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div className={itemStyles.buttons}>
-                            <Button onClick={this.handleCancel}>{translate('sulu_admin.cancel')}</Button>
-                            <Button onClick={this.handleReset} skin="link">{translate('sulu_admin.reset')}</Button>
-                            <Button onClick={this.handleApply} skin="primary">{translate('sulu_admin.apply')}</Button>
                         </div>
                     </div>
                     <SingleMediaSelectionOverlay

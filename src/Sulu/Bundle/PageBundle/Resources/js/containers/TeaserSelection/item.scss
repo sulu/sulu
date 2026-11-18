@@ -18,6 +18,11 @@ $teaserSelectionMediaWidth: 25px;
     margin-right: 10px;
 }
 
+.form-column {
+    flex: 1;
+    min-width: 0;
+}
+
 .media-button {
     position: relative;
     border: 0;
@@ -58,8 +63,18 @@ $teaserSelectionMediaWidth: 25px;
 
 .buttons {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    flex-basis: 100%;
+    align-items: center;
+    gap: 10px;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-left: auto;
 }
 
 .item {
