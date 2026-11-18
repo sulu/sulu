@@ -114,7 +114,7 @@ test('Open the dialog when the entry is clicked and close it on cancel', () => {
     getOnClick(saveAndCreateToolbarAction)();
     expect(saveAndCreateToolbarAction.getNode().props.open).toEqual(true);
 
-    saveAndCreateToolbarAction.getNode().props.onCancel();
+    (saveAndCreateToolbarAction: any).getNode().props.onCancel();
     expect(saveAndCreateToolbarAction.getNode().props.open).toEqual(false);
 });
 
@@ -156,7 +156,7 @@ test('Name the parameters of the content as the options say', () => {
 
 test('Create nothing when the save did not succeed', () => {
     const saveAndCreateToolbarAction = createAction();
-    saveAndCreateToolbarAction.form.save.mockReturnValue(Promise.resolve(undefined));
+    (saveAndCreateToolbarAction.form: any).save.mockReturnValue(Promise.resolve(undefined));
 
     return saveAndCreateToolbarAction.handleSubmit().then(() => {
         expect(ResourceRequester.post).not.toHaveBeenCalled();
