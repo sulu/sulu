@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>form_with_tab_sections</key>
+
+    <properties>
+        <section name="tabs" layout="tabs">
+            <properties>
+                <property name="title" type="text_line" />
+                <section name="content">
+                    <meta>
+                        <title lang="en">Content</title>
+                    </meta>
+                    <properties>
+                        <property name="text" type="text_editor" />
+                    </properties>
+                </section>
+                <section name="settings" layout="default">
+                    <meta>
+                        <title lang="en">Settings</title>
+                    </meta>
+                    <properties>
+                        <property name="anchor" type="text_line" />
+                    </properties>
+                </section>
+            </properties>
+        </section>
+    </properties>
+</form>

@@ -55,6 +55,7 @@ export type SchemaEntry = {
     disabledCondition?: string,
     items?: Schema,
     label?: string,
+    layout?: 'default' | 'tabs',
     maxOccurs?: number,
     minOccurs?: number,
     onInvalid?: string,
