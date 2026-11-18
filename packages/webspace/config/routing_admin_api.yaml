@@ -1,0 +1,23 @@
+sulu_webspace.get_webspace_setting:
+    path: /webspace-settings/{id}.{_format}
+    methods: GET
+    controller: sulu_webspace.admin_webspace_setting_controller::getAction
+    format: json
+
+sulu_webspace.put_webspace_setting:
+    path: /webspace-settings/{id}.{_format}
+    methods: PUT
+    controller: sulu_webspace.admin_webspace_setting_controller::putAction
+    format: json
+
+sulu_webspace.post_webspace_setting_trigger:
+    path: /webspace-settings/{id}.{_format}
+    methods: POST
+    controller: sulu_webspace.admin_webspace_setting_controller::postTriggerAction
+    format: json
+
+sulu_webspace.get_webspace_setting_versions:
+    path: /webspace-settings/{id}/versions.{_format}
+    methods: GET
+    controller: sulu_webspace.admin_webspace_setting_controller::getVersionsAction
+    format: json

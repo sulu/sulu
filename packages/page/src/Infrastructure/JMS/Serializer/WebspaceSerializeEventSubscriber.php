@@ -24,7 +24,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url\WebspaceUrlProviderInterface;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Page\Infrastructure\Sulu\Admin\WebspaceSettingAdmin;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -218,23 +217,15 @@ final class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         Context $context,
         SerializationVisitorInterface $visitor
     ) {
-        $securityContexts = ['_permissions' => 'sulu.webspaces.' . $webspace->getKey()];
+        $permissions = $this->accessControlManager->getUserPermissions(
+            new SecurityCondition('sulu.webspaces.' . $webspace->getKey()),
+            $this->tokenStorage->getToken()->getUser()
+        );
 
-        if (null !== $webspace->getWebspaceSettingsForm()) {
-            // the settings of a webspace have a security context of their own, which the tab of the settings is shown by
-            $securityContexts['settingsPermissions'] = WebspaceSettingAdmin::getSecurityContext($webspace->getKey());
-        }
-
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        foreach ($securityContexts as $propertyName => $securityContext) {
-            $permissions = $this->accessControlManager->getUserPermissions(new SecurityCondition($securityContext), $user);
-
-            $permissions = $context->getNavigator()->accept($permissions);
-            $visitor->visitProperty(
-                new StaticPropertyMetadata('', $propertyName, $permissions),
-                $permissions
-            );
-        }
+        $permissions = $context->getNavigator()->accept($permissions);
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', '_permissions', $permissions),
+            $permissions
+        );
     }
 }

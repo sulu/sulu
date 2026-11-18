@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="{{ app.request.locale|replace({'_': '-'}) }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    {% include "@SuluWebsite/Extension/seo.html.twig" with {
+        "seo": extension.seo|default([]),
+        "content": content|default([]),
+        "localizations": localizations|default([]),
+        "shadowBaseLocale": shadowBaseLocale|default(),
+    } %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>

@@ -191,6 +191,7 @@
         "sulu/test-bundle": "self.version",
         "sulu/search-bundle": "self.version",
         "sulu/security-bundle": "self.version",
+        "sulu/webspace-bundle": "self.version",
         "sulu/website-bundle": "self.version",
         "sulu/admin-bundle": "self.version",
         "sulu/contact-bundle": "self.version",
@@ -223,7 +224,8 @@
             "Sulu\\Search\\": "packages/search/src",
             "Sulu\\Content\\": "packages/content/src",
             "Sulu\\CustomUrl\\": "packages/custom-url/src",
-            "Sulu\\Notifier\\": "packages/notifier/src"
+            "Sulu\\Notifier\\": "packages/notifier/src",
+            "Sulu\\Webspace\\": "packages/webspace/src"
         },
         "exclude-from-classmap": [
             "src/Sulu/Component/*/Tests/",
@@ -245,7 +247,9 @@
             "Sulu\\Content\\Tests\\": "packages/content/tests",
             "Sulu\\Content\\Migrations\\": "packages/content/migrations",
             "Sulu\\CustomUrl\\Tests\\": "packages/custom-url/tests",
-            "Sulu\\Notifier\\Tests\\": "packages/notifier/tests"
+            "Sulu\\Notifier\\Tests\\": "packages/notifier/tests",
+            "Sulu\\Webspace\\Tests\\": "packages/webspace/tests",
+            "Sulu\\Webspace\\Migrations\\": "packages/webspace/migrations"
         }
     },
     "scripts": {

@@ -108,14 +108,14 @@ test('Should bind router attributes and dispose the updateRouteHook and webspace
     expect(userStore.setPersistentSetting).not.toHaveBeenCalled();
 });
 
-test('Show only the tabs whose webspaceCondition matches the selected webspace', () => {
+test('Show only the tabs whose tabCondition matches the selected webspace', () => {
     const router = new Router({});
 
     const pagesRoute = createRoute({tabTitle: 'Pages'}, {}, [], {name: 'pages'});
     const settingsRoute = createRoute(
         {
             tabTitle: 'Settings',
-            webspaceCondition: 'webspaceSettingsForm && settingsPermissions && settingsPermissions.view',
+            tabCondition: 'webspaceSettingsForm && settingsPermissions && settingsPermissions.view',
         },
         {},
         [],

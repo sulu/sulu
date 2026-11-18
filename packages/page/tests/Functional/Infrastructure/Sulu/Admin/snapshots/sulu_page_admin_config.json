@@ -130,7 +130,7 @@
                     "default": false
                 }
             ],
-            "webspaceSettingsForm": "webspace_settings_sulu_io",
+            "webspaceSettingsForm": null,
             "theme": "default",
             "security": {
                 "system": "Website",
@@ -169,16 +169,6 @@
                 "inputType": "leaf"
             },
             "_permissions": {
-                "view": false,
-                "add": false,
-                "edit": false,
-                "delete": false,
-                "archive": false,
-                "live": false,
-                "review": false,
-                "security": false
-            },
-            "settingsPermissions": {
                 "view": false,
                 "add": false,
                 "edit": false,

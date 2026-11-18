@@ -71,6 +71,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\ReferenceBundle\SuluReferenceBundle(),
             new \Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle(),
             new \Sulu\Page\Infrastructure\Symfony\HttpKernel\SuluPageBundle(),
+            new \Sulu\Webspace\Infrastructure\Symfony\HttpKernel\SuluWebspaceBundle(),
             new \Sulu\Search\Infrastructure\Symfony\HttpKernel\SuluSearchBundle(),
         ];
 
