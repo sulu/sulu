@@ -359,6 +359,15 @@ final class SnippetController implements SecuredControllerInterface
     /**
      * @return array<string, mixed>
      */
+    private function getWorkflowTransitionRequestData(Request $request): array
+    {
+        /** @var array<string, mixed> */
+        return $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     private function getData(Request $request): array
     {
         $data = \array_replace(
@@ -372,6 +381,8 @@ final class SnippetController implements SecuredControllerInterface
             unset($data['_hash']);
         }
 
+        // read here as well, so a malformed value is refused with a 400 before anything is saved
+        $this->getWorkflowTransitionRequestData($request);
         unset($data[ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY]);
 
         return $data;
@@ -450,8 +461,7 @@ final class SnippetController implements SecuredControllerInterface
             /** @var SnippetInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } else {
-            /** @var array<string, mixed> $workflowTransitionRequestData */
-            $workflowTransitionRequestData = $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY);
+            $workflowTransitionRequestData = $this->getWorkflowTransitionRequestData($request);
 
             $message = new ApplyWorkflowTransitionSnippetMessage(
                 ['uuid' => $uuid],

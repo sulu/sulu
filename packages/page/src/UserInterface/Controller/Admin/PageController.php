@@ -297,6 +297,15 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    private function getWorkflowTransitionRequestData(Request $request): array
+    {
+        /** @var array<string, mixed> */
+        return $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY);
+    }
+
+    /**
      * @return mixed[]
      */
     private function getData(Request $request): array
@@ -312,6 +321,8 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             unset($data['_hash']);
         }
 
+        // read here as well, so a malformed value is refused with a 400 before anything is saved
+        $this->getWorkflowTransitionRequestData($request);
         unset($data[ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY]);
 
         return $data;
@@ -391,8 +402,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
 
-        /** @var array<string, mixed> $workflowTransitionRequestData */
-        $workflowTransitionRequestData = $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY);
+        $workflowTransitionRequestData = $this->getWorkflowTransitionRequestData($request);
 
         $message = new ApplyWorkflowTransitionPageMessage(
             ['uuid' => $uuid],

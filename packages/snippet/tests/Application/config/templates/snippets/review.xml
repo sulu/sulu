@@ -26,5 +26,8 @@
             <tag name="sulu.rlp.part"/>
             <tag name="sulu.search.field" role="title"/>
         </property>
+
+        <!-- Shares its name with the request body key, so it only stays empty while the controller strips that key. -->
+        <property name="workflowTransitionRequestData" type="text_line"/>
     </properties>
 </template>

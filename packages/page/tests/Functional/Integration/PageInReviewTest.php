@@ -25,6 +25,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Exception\ContentInReviewException;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Model\PageInterface;
@@ -488,6 +489,69 @@ class PageInReviewTest extends SuluTestCase
 
         $this->put($id, ['action' => 'draft'], 'Edited Normally');
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+    }
+
+    public function testRequestFormDataIsStoredOnTheRequestAndNotOnTheContent(): void
+    {
+        $id = $this->createPage();
+
+        $this->putWithRequestData($id, ['message' => 'Please check', 'tags' => ['a', 'b']], 'Requested');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('review', $content['workflowPlace']);
+        $this->assertEmpty($content['workflowTransitionRequestData'] ?? null);
+
+        $request = self::getContainer()->get(WorkflowTransitionRequestRepositoryInterface::class)->getOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $id,
+            'active' => true,
+        ]);
+        $this->assertSame(['message' => 'Please check', 'tags' => ['a', 'b']], $request->getData());
+
+        $page = self::getContainer()->get(PageRepositoryInterface::class)->getOneBy(['uuid' => $id]);
+        $draftContent = self::getContainer()->get(ContentManagerInterface::class)->resolve(
+            $page,
+            ['stage' => DimensionContentInterface::STAGE_DRAFT, 'locale' => 'en'],
+        );
+        $this->assertSame('Requested', $draftContent->getTemplateData()['title'] ?? null);
+        $this->assertEmpty($draftContent->getTemplateData()['workflowTransitionRequestData'] ?? null);
+    }
+
+    public function testMalformedRequestFormDataIsRefusedBeforeAnythingIsSaved(): void
+    {
+        $id = $this->createPage();
+
+        $this->putWithRequestData($id, 'not an array', 'Should Not Be Saved');
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+
+        $this->client->request('GET', \sprintf('/admin/api/pages/%s?%s', $id, \http_build_query(['webspace' => 'sulu-io', 'locale' => 'en'])));
+
+        /** @var array{title: string, workflowPlace: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('Page In Review', $content['title']);
+        $this->assertNotSame('review', $content['workflowPlace']);
+    }
+
+    /**
+     * @param mixed $workflowTransitionRequestData
+     */
+    private function putWithRequestData(string $id, $workflowTransitionRequestData, string $title): void
+    {
+        $this->client->request(
+            'PUT',
+            \sprintf('/admin/api/pages/%s?%s', $id, \http_build_query(['webspace' => 'sulu-io', 'action' => 'request_for_review', 'locale' => 'en'])),
+            [],
+            [],
+            [],
+            (string) \json_encode([
+                'template' => 'review',
+                'title' => $title,
+                'url' => '/page-in-review',
+                'workflowTransitionRequestData' => $workflowTransitionRequestData,
+            ]),
+        );
     }
 
     private function trigger(string $id, string $action): void

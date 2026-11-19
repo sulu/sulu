@@ -22,6 +22,8 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
+use Sulu\Snippet\Domain\Model\SnippetInterface;
 use Sulu\Snippet\Domain\Repository\SnippetRepositoryInterface;
 use Sulu\Snippet\Infrastructure\Sulu\Admin\SnippetAdmin;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -207,6 +209,68 @@ class SnippetInReviewTest extends SuluTestCase
         $this->assertNotEmpty($version, 'Publishing has to leave a version behind for the restore.');
 
         return $version;
+    }
+
+    public function testRequestFormDataIsStoredOnTheRequestAndNotOnTheContent(): void
+    {
+        $id = $this->createSnippet();
+
+        $this->putWithRequestData($id, ['message' => 'Please check', 'tags' => ['a', 'b']], 'Requested');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('review', $content['workflowPlace']);
+        $this->assertEmpty($content['workflowTransitionRequestData'] ?? null);
+
+        $request = self::getContainer()->get(WorkflowTransitionRequestRepositoryInterface::class)->getOneBy([
+            'resourceKey' => SnippetInterface::RESOURCE_KEY,
+            'resourceId' => $id,
+            'active' => true,
+        ]);
+        $this->assertSame(['message' => 'Please check', 'tags' => ['a', 'b']], $request->getData());
+
+        $snippet = self::getContainer()->get(SnippetRepositoryInterface::class)->getOneBy(['uuid' => $id]);
+        $draftContent = self::getContainer()->get(ContentManagerInterface::class)->resolve(
+            $snippet,
+            ['stage' => DimensionContentInterface::STAGE_DRAFT, 'locale' => 'en'],
+        );
+        $this->assertSame('Requested', $draftContent->getTemplateData()['title'] ?? null);
+        $this->assertEmpty($draftContent->getTemplateData()['workflowTransitionRequestData'] ?? null);
+    }
+
+    public function testMalformedRequestFormDataIsRefusedBeforeAnythingIsSaved(): void
+    {
+        $id = $this->createSnippet();
+
+        $this->putWithRequestData($id, 'not an array', 'Should Not Be Saved');
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+
+        $this->client->request('GET', \sprintf('/admin/api/snippets/%s?%s', $id, \http_build_query(['locale' => 'en'])));
+
+        /** @var array{title: string, workflowPlace: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('Snippet In Review', $content['title']);
+        $this->assertNotSame('review', $content['workflowPlace']);
+    }
+
+    /**
+     * @param mixed $workflowTransitionRequestData
+     */
+    private function putWithRequestData(string $id, $workflowTransitionRequestData, string $title): void
+    {
+        $this->client->request(
+            'PUT',
+            \sprintf('/admin/api/snippets/%s?%s', $id, \http_build_query(['action' => 'request_for_review', 'locale' => 'en'])),
+            [],
+            [],
+            [],
+            (string) \json_encode([
+                'template' => 'review',
+                'title' => $title,
+                'workflowTransitionRequestData' => $workflowTransitionRequestData,
+            ]),
+        );
     }
 
     private function trigger(string $id, string $action): void
