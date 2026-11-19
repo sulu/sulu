@@ -19,6 +19,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\Field\Value;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
 use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
+use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
@@ -31,11 +32,13 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
+use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
 
@@ -58,6 +61,7 @@ class StructureProvider implements ProviderInterface
         private StructureMetadataFactoryInterface $structureFactory,
         private ExtensionManagerInterface $extensionManager,
         private array $mapping = [],
+        private ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -75,10 +79,26 @@ class StructureProvider implements ProviderInterface
         }
 
         $documentMetadata = $this->metadataFactory->getMetadataForClass(\get_class($object));
-        $structure = $this->structureFactory->getStructureMetadata(
-            $documentMetadata->getAlias(),
-            $object->getStructureType()
-        );
+        try {
+            $structure = $this->structureFactory->getStructureMetadata(
+                $documentMetadata->getAlias(),
+                $object->getStructureType()
+            );
+        } catch (StructureTypeNotFoundException) {
+            $structure = null;
+        }
+
+        if (null === $structure) {
+            $this->logger?->warning(\sprintf(
+                'Structure "%s" of type "%s" not found, skipping search indexing of document "%s" in locale "%s".',
+                $object->getStructureType(),
+                $documentMetadata->getAlias(),
+                $object instanceof UuidBehavior ? $object->getUuid() : '',
+                $object->getLocale(),
+            ));
+
+            return null;
+        }
 
         return $this->getMetadata($documentMetadata, $structure);
     }
