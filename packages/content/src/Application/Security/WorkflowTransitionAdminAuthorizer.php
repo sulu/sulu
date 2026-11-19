@@ -118,6 +118,23 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
         }
     }
 
+    public function assertHasPermission(string $resourceKey, string $resourceId, string $locale, string $permission): void
+    {
+        if (!$this->isAuthorizedAdminCall()) {
+            return;
+        }
+
+        $condition = $this->securityContextResolver->resolve($resourceKey, $resourceId, $locale);
+
+        if (!$this->securityChecker->hasPermission($condition, $permission)) {
+            throw new AccessDeniedException(\sprintf(
+                'This action requires the "%s" permission on "%s".',
+                $permission,
+                $condition->getSecurityContext(),
+            ));
+        }
+    }
+
     public function assertCanCancelReview(string $resourceKey, string $resourceId, string $locale): void
     {
         if (!$this->isAuthorizedAdminCall()) {

@@ -415,6 +415,24 @@ class WorkflowTransitionRequestControllerTest extends SuluTestCase
         $this->assertSame([], ExampleWorkflowTransitionRequestAction::$executed);
     }
 
+    public function testActionOfABundleWithoutItsPermissionReturns403(): void
+    {
+        ExampleWorkflowTransitionRequestAction::$executed = [];
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+        $this->grantTestUserNoPermissions();
+        $this->renameTestUserTo('action_no_permission');
+        $this->client->setServerParameter('PHP_AUTH_USER', 'action_no_permission');
+        $this->client->setServerParameter('PHP_AUTH_PW', 'test');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/workflow-transition-requests/%s.json?action=example_note', $workflowTransitionRequest->getId()),
+        );
+
+        $this->assertHttpStatusCode(403, $this->client->getResponse());
+        $this->assertSame([], ExampleWorkflowTransitionRequestAction::$executed);
+    }
+
     public function testGetListsTheActionsOfBundlesOfAnOpenRequest(): void
     {
         $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');

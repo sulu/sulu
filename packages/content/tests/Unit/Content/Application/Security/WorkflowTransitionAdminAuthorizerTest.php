@@ -169,6 +169,29 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
         );
     }
 
+    public function testAssertHasPermissionPassesWithThePermission(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(Argument::any(), PermissionTypes::VIEW)->willReturn(true);
+
+        $this->createAuthorizer($securityChecker, $this->activeRequest(null))
+            ->assertHasPermission(Example::RESOURCE_KEY, '1', 'en', PermissionTypes::VIEW);
+
+        $this->expectNotToPerformAssertions();
+    }
+
+    public function testAssertHasPermissionRefusesWithoutThePermission(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(Argument::any(), PermissionTypes::VIEW)->willReturn(false);
+
+        $authorizer = $this->createAuthorizer($securityChecker, $this->activeRequest(null));
+
+        $this->expectException(AccessDeniedException::class);
+
+        $authorizer->assertHasPermission(Example::RESOURCE_KEY, '1', 'en', PermissionTypes::VIEW);
+    }
+
     public function testCanRejectWithTheReviewPermission(): void
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);

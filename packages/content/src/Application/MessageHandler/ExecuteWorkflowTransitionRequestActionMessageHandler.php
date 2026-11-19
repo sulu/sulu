@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\MessageHandler;
 
 use Sulu\Content\Application\Message\ExecuteWorkflowTransitionRequestActionMessage;
+use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionRegistryInterface;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestActionNotAvailableException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
@@ -28,6 +29,7 @@ final class ExecuteWorkflowTransitionRequestActionMessageHandler
     public function __construct(
         private readonly WorkflowTransitionRequestRepositoryInterface $workflowTransitionRequestRepository,
         private readonly WorkflowTransitionRequestActionRegistryInterface $actionRegistry,
+        private readonly WorkflowTransitionAdminAuthorizerInterface $workflowTransitionAdminAuthorizer,
     ) {
     }
 
@@ -47,6 +49,14 @@ final class ExecuteWorkflowTransitionRequestActionMessageHandler
         if (null === $action || !$action->isAvailable($workflowTransitionRequest)) {
             throw new WorkflowTransitionRequestActionNotAvailableException($workflowTransitionRequest, $message->getActionKey());
         }
+
+        // Asked here and not only where the controller dispatches this: the message is on the public bus.
+        $this->workflowTransitionAdminAuthorizer->assertHasPermission(
+            $workflowTransitionRequest->getResourceKey(),
+            $workflowTransitionRequest->getResourceId(),
+            $workflowTransitionRequest->getLocale(),
+            $action->getPermission(),
+        );
 
         $action->execute($workflowTransitionRequest);
 
