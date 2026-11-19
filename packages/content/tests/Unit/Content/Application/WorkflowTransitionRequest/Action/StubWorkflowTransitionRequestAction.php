@@ -20,7 +20,7 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionReques
 class StubWorkflowTransitionRequestAction implements WorkflowTransitionRequestActionInterface
 {
     /**
-     * @var list<array{WorkflowTransitionRequest, array<string, mixed>}>
+     * @var list<WorkflowTransitionRequest>
      */
     public array $executed = [];
 
@@ -72,8 +72,8 @@ class StubWorkflowTransitionRequestAction implements WorkflowTransitionRequestAc
         return $this->available;
     }
 
-    public function execute(WorkflowTransitionRequest $request, array $data): void
+    public function execute(WorkflowTransitionRequest $request): void
     {
-        $this->executed[] = [$request, $data];
+        $this->executed[] = $request;
     }
 }

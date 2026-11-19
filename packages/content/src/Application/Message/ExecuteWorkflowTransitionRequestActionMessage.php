@@ -15,13 +15,9 @@ namespace Sulu\Content\Application\Message;
 
 final class ExecuteWorkflowTransitionRequestActionMessage
 {
-    /**
-     * @param array<string, mixed> $data
-     */
     public function __construct(
         private readonly string $workflowTransitionRequestId,
         private readonly string $actionKey,
-        private readonly array $data = [],
     ) {
     }
 
@@ -33,13 +29,5 @@ final class ExecuteWorkflowTransitionRequestActionMessage
     public function getActionKey(): string
     {
         return $this->actionKey;
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
     }
 }

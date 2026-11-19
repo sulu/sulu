@@ -30,17 +30,17 @@ class ExecuteWorkflowTransitionRequestActionMessageHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testExecutesTheActionWithTheDataOfTheMessage(): void
+    public function testExecutesTheActionOnTheRequest(): void
     {
         $request = new WorkflowTransitionRequest('pages', '1', 'en', 'default');
         $action = new StubWorkflowTransitionRequestAction();
 
         $result = $this->createHandler($request, $action)(
-            new ExecuteWorkflowTransitionRequestActionMessage($request->getId(), 'stub', ['note' => 'hi']),
+            new ExecuteWorkflowTransitionRequestActionMessage($request->getId(), 'stub'),
         );
 
         $this->assertSame($request, $result);
-        $this->assertSame([[$request, ['note' => 'hi']]], $action->executed);
+        $this->assertSame([$request], $action->executed);
     }
 
     public function testRefusesAClosedRequest(): void
