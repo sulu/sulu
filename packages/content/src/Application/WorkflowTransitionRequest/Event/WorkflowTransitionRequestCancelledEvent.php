@@ -16,11 +16,8 @@ namespace Sulu\Content\Application\WorkflowTransitionRequest\Event;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 
 /**
- * Dispatched while a cancel or reject transition runs, after the request is cancelled and before the
- * workflow writes its marking and the changes are flushed. It is not dispatched when the request is
- * deleted with its content or locale. A bundle that extended the request form reads its data here and
- * undoes what it set up. The event is not an activity, the cancellation itself is logged as a content
- * transition.
+ * Dispatched during a cancel or reject transition, before the marking is written and flushed, and not when the
+ * request is deleted with its content or locale. A bundle that extended the request form undoes its setup here.
  *
  * @experimental This is an experimental feature and may change in future releases.
  */

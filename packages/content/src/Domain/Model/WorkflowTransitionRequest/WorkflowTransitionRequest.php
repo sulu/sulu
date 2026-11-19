@@ -89,6 +89,8 @@ class WorkflowTransitionRequest implements AuditableInterface
     }
 
     /**
+     * @experimental This is an experimental feature and may change in future releases.
+     *
      * @return array<string, mixed>
      */
     public function getData(): array

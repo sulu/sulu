@@ -19,9 +19,7 @@ type Props = {|
 |};
 
 /**
- * The values the requester entered in the form of the request, as plain text. The reviewer reads them and
- * changes nothing, so no form is rendered. A field without a value is left out, and so is the whole card
- * when no field has one.
+ * Shows the values the requester entered as read-only text, leaving out empty fields, and the card if all are empty.
  */
 @observer
 class WorkflowTransitionRequestDetailsCard extends React.Component<Props> {
