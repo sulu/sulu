@@ -187,6 +187,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_content.workflow_transition_request_repository'),
             new Reference('sulu_message_bus'),
             new Reference('event_dispatcher'),
+            new Reference('sulu_content.workflow_transition_admin_authorizer'),
         ])
         ->tag('messenger.message_handler')
         ->tag('sulu.context', ['context' => 'admin']);
@@ -195,6 +196,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_content.workflow_transition_request_repository'),
             new Reference('sulu_content.workflow_transition_request_action_registry'),
+            new Reference('sulu_content.workflow_transition_admin_authorizer'),
         ])
         ->tag('messenger.message_handler')
         ->tag('sulu.context', ['context' => 'admin']);

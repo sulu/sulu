@@ -44,6 +44,14 @@ interface WorkflowTransitionAdminAuthorizerInterface
     public function assertCanReview(string $resourceKey, string $resourceId, string $locale): void;
 
     /**
+     * For the actions that take one permission of their own, like retrying a check or an action of a bundle.
+     * Asked in the handler as well as in the controller, because the message is on the public bus.
+     *
+     * @throws AccessDeniedException when the user lacks the permission for the resolved context
+     */
+    public function assertHasPermission(string $resourceKey, string $resourceId, string $locale, string $permission): void;
+
+    /**
      * @throws WorkflowTransitionRequestCancelNotAllowedException when an active request covers the
      *                                                            content and the user lacks EDIT
      */

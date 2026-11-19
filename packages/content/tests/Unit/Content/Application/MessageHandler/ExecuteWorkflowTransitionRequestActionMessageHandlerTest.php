@@ -18,12 +18,15 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Content\Application\Message\ExecuteWorkflowTransitionRequestActionMessage;
 use Sulu\Content\Application\MessageHandler\ExecuteWorkflowTransitionRequestActionMessageHandler;
+use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionRegistryInterface;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestActionNotAvailableException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Tests\Unit\Content\Application\WorkflowTransitionRequest\Action\StubWorkflowTransitionRequestAction;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[CoversClass(ExecuteWorkflowTransitionRequestActionMessageHandler::class)]
 class ExecuteWorkflowTransitionRequestActionMessageHandlerTest extends TestCase
@@ -85,9 +88,33 @@ class ExecuteWorkflowTransitionRequestActionMessageHandlerTest extends TestCase
         );
     }
 
+    /**
+     * The message is on the public bus, so code that dispatches it skips the controller's check.
+     */
+    public function testRefusesAUserWithoutThePermissionOfTheAction(): void
+    {
+        $request = new WorkflowTransitionRequest('pages', '1', 'en', 'default');
+        $action = new StubWorkflowTransitionRequestAction(permission: PermissionTypes::LIVE);
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
+        $authorizer->assertHasPermission('pages', '1', 'en', PermissionTypes::LIVE)->willThrow(new AccessDeniedException('no'));
+
+        try {
+            $this->createHandler($request, $action, $authorizer)(
+                new ExecuteWorkflowTransitionRequestActionMessage($request->getId(), 'stub'),
+            );
+            $this->fail('A user without the permission of the action must not run it.');
+        } catch (AccessDeniedException) {
+            $this->assertSame([], $action->executed);
+        }
+    }
+
+    /**
+     * @param \Prophecy\Prophecy\ObjectProphecy<WorkflowTransitionAdminAuthorizerInterface>|null $authorizer
+     */
     private function createHandler(
         WorkflowTransitionRequest $request,
         ?StubWorkflowTransitionRequestAction $action,
+        $authorizer = null,
     ): ExecuteWorkflowTransitionRequestActionMessageHandler {
         $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
         $repository->getOneBy(['id' => $request->getId()])->willReturn($request);
@@ -96,6 +123,10 @@ class ExecuteWorkflowTransitionRequestActionMessageHandlerTest extends TestCase
         $registry->get('stub')->willReturn($action);
         $registry->get('unknown')->willReturn(null);
 
-        return new ExecuteWorkflowTransitionRequestActionMessageHandler($repository->reveal(), $registry->reveal());
+        return new ExecuteWorkflowTransitionRequestActionMessageHandler(
+            $repository->reveal(),
+            $registry->reveal(),
+            ($authorizer ?? $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class))->reveal(),
+        );
     }
 }
