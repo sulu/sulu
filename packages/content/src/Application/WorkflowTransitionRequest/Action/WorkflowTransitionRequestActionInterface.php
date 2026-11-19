@@ -76,9 +76,8 @@ interface WorkflowTransitionRequestActionInterface
 
     /**
      * Runs inside the request that sent it and is flushed with it, so it can change the request and
-     * the entities of the application. Throw an exception to refuse.
-     *
-     * @param array<string, mixed> $data the body of the request that sent the action
+     * the entities of the application. Throw an exception to refuse. The click carries no data, so the
+     * action works on what the request and the content already hold.
      */
-    public function execute(WorkflowTransitionRequest $request, array $data): void;
+    public function execute(WorkflowTransitionRequest $request): void;
 }

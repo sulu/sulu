@@ -348,7 +348,24 @@ class WorkflowTransitionRequestControllerTest extends SuluTestCase
         $this->assertSame(400, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testActionOfABundleRunsWithTheBodyOfTheRequest(): void
+    public function testActionOfABundleRunsOnTheRequest(): void
+    {
+        ExampleWorkflowTransitionRequestAction::$executed = [];
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/workflow-transition-requests/%s.json?action=example_note', $workflowTransitionRequest->getId()),
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame([$workflowTransitionRequest->getId()], ExampleWorkflowTransitionRequestAction::$executed);
+    }
+
+    /**
+     * Only approving and rejecting read the comment, so a body meant for nobody must not break an action of a bundle.
+     */
+    public function testActionOfABundleIgnoresACommentOfTheWrongType(): void
     {
         ExampleWorkflowTransitionRequestAction::$executed = [];
         $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
@@ -359,11 +376,27 @@ class WorkflowTransitionRequestControllerTest extends SuluTestCase
             [],
             [],
             [],
-            (string) \json_encode(['note' => 'hello']),
+            (string) \json_encode(['comment' => 1]),
         );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertSame([['note' => 'hello']], ExampleWorkflowTransitionRequestAction::$executed);
+        $this->assertSame([$workflowTransitionRequest->getId()], ExampleWorkflowTransitionRequestAction::$executed);
+    }
+
+    public function testApproveWithACommentOfTheWrongTypeReturns400(): void
+    {
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/workflow-transition-requests/%s.json?action=approve', $workflowTransitionRequest->getId()),
+            [],
+            [],
+            [],
+            (string) \json_encode(['comment' => 1]),
+        );
+
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
     public function testActionOfABundleOnAClosedRequestReturns409(): void

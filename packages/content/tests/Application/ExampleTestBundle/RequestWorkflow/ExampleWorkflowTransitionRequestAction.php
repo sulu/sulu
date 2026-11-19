@@ -18,12 +18,12 @@ use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransition
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 
 /**
- * An action of a bundle for the tests, which records what it was sent.
+ * An action of a bundle for the tests, which records the requests it ran on.
  */
 class ExampleWorkflowTransitionRequestAction implements WorkflowTransitionRequestActionInterface
 {
     /**
-     * @var list<array<string, mixed>>
+     * @var list<string> the ids of the requests the action ran on
      */
     public static array $executed = [];
 
@@ -62,8 +62,8 @@ class ExampleWorkflowTransitionRequestAction implements WorkflowTransitionReques
         return true;
     }
 
-    public function execute(WorkflowTransitionRequest $request, array $data): void
+    public function execute(WorkflowTransitionRequest $request): void
     {
-        self::$executed[] = $data;
+        self::$executed[] = $request->getId();
     }
 }

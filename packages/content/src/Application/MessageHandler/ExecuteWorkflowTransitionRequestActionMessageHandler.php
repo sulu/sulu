@@ -48,7 +48,7 @@ final class ExecuteWorkflowTransitionRequestActionMessageHandler
             throw new WorkflowTransitionRequestActionNotAvailableException($workflowTransitionRequest, $message->getActionKey());
         }
 
-        $action->execute($workflowTransitionRequest, $message->getData());
+        $action->execute($workflowTransitionRequest);
 
         return $workflowTransitionRequest;
     }
