@@ -156,8 +156,6 @@ class SmartContentSmartResolver implements SmartResolverContextAwareInterface
             'maxPage' => null !== $maxPerPage ? (int) \ceil($total / $maxPerPage) : null,
             'limit' => $limit,
             'maxPerPage' => $maxPerPage,
-
-            'excluded' => $filters['excluded'] ?? [],
         ];
 
         $configuration = $smartContentProvider->getConfiguration();
