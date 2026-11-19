@@ -84,6 +84,29 @@ class Category extends ApiEntityWrapper
     }
 
     /**
+     * Returns the names of all ancestors and of the category itself joined with " > ", e.g. "Shop > Shirts".
+     *
+     * Every name falls back to the default locale of its own category, like getName() does.
+     * Only in "fullCategory", because contacts and accounts serialize their categories with
+     * "partialCategory" and should not walk the parents.
+     */
+    #[VirtualProperty]
+    #[SerializedName('breadcrumb')]
+    #[Groups(['fullCategory'])]
+    public function getBreadcrumb(): string
+    {
+        $names = [];
+        for ($category = $this; null !== $category; $category = $category->getParent()) {
+            $names[] = $category->getName();
+        }
+
+        // getName() is null for a category without any translation
+        $names = \array_filter($names, static fn (?string $name): bool => null !== $name);
+
+        return \implode(' > ', \array_reverse($names));
+    }
+
+    /**
      * Returns the description of the Category dependent on the locale.
      */
     #[VirtualProperty]
