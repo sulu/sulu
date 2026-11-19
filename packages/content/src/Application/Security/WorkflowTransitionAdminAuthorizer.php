@@ -21,6 +21,8 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionRegistryInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
 use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
@@ -42,6 +44,7 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
         private readonly ActiveWorkflowTransitionRequestProviderInterface $activeWorkflowTransitionRequestProvider,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly WorkflowTransitionRequestStatusResolverInterface $statusResolver,
+        private readonly WorkflowTransitionRequestActionRegistryInterface $actionRegistry,
         private readonly string $suluContext,
         private readonly AccessControlManagerInterface $accessControlManager,
     ) {
@@ -89,6 +92,14 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
 
         if ($this->isPublishGranted($condition, $resourceKey, $resourceId, $locale, $user)) {
             return;
+        }
+
+        $replacement = $this->findPublishReplacement($resourceKey, $resourceId, $locale);
+        if (null !== $replacement) {
+            throw new AccessDeniedException(\sprintf(
+                'The request has taken over the publish. Use its action "%s" to publish.',
+                $replacement::getKey(),
+            ));
         }
 
         throw new AccessDeniedException(\sprintf(
@@ -159,6 +170,10 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
     /**
      * An approval delegates the publish right for that one request, so EDIT carries it out while the
      * approved request is the active one.
+     *
+     * An action of a bundle may take the publish over while its request is open, for example because the
+     * request names a date. Then nobody publishes by hand, not even with the live permission. A call
+     * without a token still can, because the action itself publishes that way, like a scheduled task.
      */
     private function isPublishGranted(
         SecurityCondition $condition,
@@ -167,6 +182,10 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
         string $locale,
         ?UserInterface $user = null,
     ): bool {
+        if (null !== $this->findPublishReplacement($resourceKey, $resourceId, $locale)) {
+            return false;
+        }
+
         // Asked first and alone, so the live permission answers without looking up the request.
         if ($this->hasPermission($condition, PermissionTypes::LIVE, $user)) {
             return true;
@@ -174,6 +193,22 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
 
         return $this->hasPermission($condition, PermissionTypes::EDIT, $user)
             && $this->hasApprovedRequest($resourceKey, $resourceId, $locale);
+    }
+
+    private function findPublishReplacement(string $resourceKey, string $resourceId, string $locale): ?WorkflowTransitionRequestActionInterface
+    {
+        $request = $this->activeWorkflowTransitionRequestProvider->find($resourceKey, $resourceId, $locale);
+        if (null === $request) {
+            return null;
+        }
+
+        foreach ($this->actionRegistry->all() as $action) {
+            if ($action->replacesPublish($request)) {
+                return $action;
+            }
+        }
+
+        return null;
     }
 
     /**

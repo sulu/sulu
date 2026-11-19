@@ -27,6 +27,11 @@ class ExampleWorkflowTransitionRequestAction implements WorkflowTransitionReques
      */
     public static array $executed = [];
 
+    /**
+     * Lets a test switch on the takeover of the publish, which the action of a bundle may ask for.
+     */
+    public static bool $replacesPublish = false;
+
     public static function getKey(): string
     {
         return 'example_note';
@@ -54,7 +59,7 @@ class ExampleWorkflowTransitionRequestAction implements WorkflowTransitionReques
 
     public function replacesPublish(WorkflowTransitionRequest $request): bool
     {
-        return false;
+        return self::$replacesPublish;
     }
 
     public function isAvailable(WorkflowTransitionRequest $request): bool

@@ -22,6 +22,10 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionReques
  * The admin lists the actions that are available for a request and that the current user may take.
  * A click sends the action's key to the request, and {@see execute()} runs it.
  *
+ * The actions receive the {@see WorkflowTransitionRequest}, which is internal. They may call only the getters
+ * that are marked `@experimental` on it: `getId()`, `getResourceKey()`, `getResourceId()`, `getLocale()`,
+ * `getWorkflowName()` and `isOpen()`.
+ *
  * @experimental This is an experimental feature and may change in future releases.
  */
 interface WorkflowTransitionRequestActionInterface
@@ -49,6 +53,10 @@ interface WorkflowTransitionRequestActionInterface
     /**
      * The permission, one of {@see \Sulu\Component\Security\Authorization\PermissionTypes}, that the user
      * needs on the content of the request to see and to take the action.
+     *
+     * The admin opens the review overlay only for a user with the `review`, `edit` or `live` permission. An
+     * action is listed in the API for any permission, but the button to take it needs one of these three, so
+     * return one of them.
      */
     public function getPermission(): string;
 

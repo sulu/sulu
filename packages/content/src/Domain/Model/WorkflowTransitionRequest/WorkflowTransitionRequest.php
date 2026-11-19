@@ -26,7 +26,8 @@ use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionReques
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @internal
+ * @internal except the getters marked `@experimental`, which an action of a bundle may call, see
+ *           {@see \Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionInterface}
  */
 class WorkflowTransitionRequest implements AuditableInterface
 {
@@ -60,26 +61,41 @@ class WorkflowTransitionRequest implements AuditableInterface
         $this->syncActiveKey();
     }
 
+    /**
+     * @experimental This is an experimental feature and may change in future releases.
+     */
     public function getId(): string
     {
         return $this->id;
     }
 
+    /**
+     * @experimental This is an experimental feature and may change in future releases.
+     */
     public function getResourceKey(): string
     {
         return $this->resourceKey;
     }
 
+    /**
+     * @experimental This is an experimental feature and may change in future releases.
+     */
     public function getResourceId(): string
     {
         return $this->resourceId;
     }
 
+    /**
+     * @experimental This is an experimental feature and may change in future releases.
+     */
     public function getLocale(): string
     {
         return $this->locale;
     }
 
+    /**
+     * @experimental This is an experimental feature and may change in future releases.
+     */
     public function isOpen(): bool
     {
         return $this->place->isOpen();
@@ -167,6 +183,9 @@ class WorkflowTransitionRequest implements AuditableInterface
         return $this->activeKey;
     }
 
+    /**
+     * @experimental This is an experimental feature and may change in future releases.
+     */
     public function getWorkflowName(): string
     {
         return $this->workflowName;
