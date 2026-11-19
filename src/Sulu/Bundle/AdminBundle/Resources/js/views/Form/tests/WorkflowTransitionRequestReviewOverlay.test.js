@@ -67,6 +67,7 @@ function renderOverlay(props?: Object = {}) {
             canPublish={props.canPublish}
             canRetry={props.canRetry ?? true}
             mode={props.mode}
+            onAction={props.onAction}
             onApprove={props.onApprove ?? jest.fn()}
             onClose={props.onClose ?? jest.fn()}
             onPublish={props.onPublish}
@@ -118,6 +119,55 @@ test('counts the passed checks separately from the approvals', () => {
     expect(screen.getByText(
         'sulu_content.workflow_transition_request.n_of_m_checks_passed:{"passed":1,"total":2}'
     )).toBeInTheDocument();
+});
+
+test('shows the actions of bundles in the footer and runs one by its key', async() => {
+    const user = userEvent.setup();
+    const onAction = jest.fn(() => Promise.resolve());
+    renderOverlay({
+        onAction,
+        request: createRequest({actions: [{key: 'schedule', label: 'acme.schedule'}]}),
+    });
+
+    await user.click(screen.getByText('acme.schedule'));
+
+    expect(onAction).toHaveBeenCalledWith('schedule');
+});
+
+test('translates the label of an action with its parameters', () => {
+    renderOverlay({
+        onAction: jest.fn(),
+        request: createRequest({
+            actions: [{key: 'schedule', label: 'acme.schedule', labelParameters: {date: '25.11.2026 10:00'}}],
+        }),
+    });
+
+    expect(screen.getByText('acme.schedule:{"date":"25.11.2026 10:00"}')).toBeInTheDocument();
+});
+
+test('shows the actions of bundles to someone who cannot decide, too', () => {
+    renderOverlay({
+        canAct: false,
+        onAction: jest.fn(),
+        request: createRequest({actions: [{key: 'schedule', label: 'acme.schedule'}]}),
+    });
+
+    expect(screen.getByText('acme.schedule')).toBeInTheDocument();
+});
+
+test('shows no actions of bundles on a closed request', () => {
+    renderOverlay({
+        onAction: jest.fn(),
+        request: createRequest({actions: [{key: 'schedule', label: 'acme.schedule'}], status: 'published'}),
+    });
+
+    expect(screen.queryByText('acme.schedule')).not.toBeInTheDocument();
+});
+
+test('shows no actions of bundles without a handler for them', () => {
+    renderOverlay({request: createRequest({actions: [{key: 'schedule', label: 'acme.schedule'}]})});
+
+    expect(screen.queryByText('acme.schedule')).not.toBeInTheDocument();
 });
 
 test('omits the check card when the workflow configured no validators', () => {

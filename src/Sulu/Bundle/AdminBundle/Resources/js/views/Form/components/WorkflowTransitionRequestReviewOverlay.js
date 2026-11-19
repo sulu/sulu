@@ -93,6 +93,33 @@ function buildApprovalRows(request: WorkflowTransitionRequestData): Array<CheckR
     return rows;
 }
 
+type RequestActionButtonProps = {|
+    actionKey: string,
+    label: string,
+    loading: boolean,
+    onClick: (key: string) => void,
+|};
+
+/** Hands its key back on click, so the footer can pass one bound handler for all actions of bundles. */
+class RequestActionButton extends React.Component<RequestActionButtonProps> {
+    handleClick = () => {
+        this.props.onClick(this.props.actionKey);
+    };
+
+    render() {
+        return (
+            <Button
+                className={workflowTransitionRequestReviewOverlayStyles.rejectButton}
+                loading={this.props.loading}
+                onClick={this.handleClick}
+                skin="secondary"
+            >
+                {this.props.label}
+            </Button>
+        );
+    }
+}
+
 type Props = {|
     canAct: boolean,
     /** Publishing at all: the approved request the reviewers signed off, or past an open one. */
@@ -100,6 +127,8 @@ type Props = {|
     /** Re-running a check takes the edit permission, not the reviewer's, so it is its own answer. */
     canRetry?: boolean,
     mode?: 'review' | 'view',
+    /** Runs an action of a bundle from the footer, by its key. */
+    onAction?: (key: string) => Promise<mixed>,
     onApprove?: (comment: ?string) => Promise<mixed>,
     onClose: () => void,
     onPublish?: () => void,
@@ -158,6 +187,10 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
                 : this.props.onApprove?.(comment || null),
             this.step === 'approve'
         );
+    };
+
+    handleActionClick = (key: string) => {
+        void this.send(this.props.onAction?.(key), true);
     };
 
     handleRetryClick = (validatorKey: ?string) => {
@@ -236,6 +269,27 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
         ];
     }
 
+    /**
+     * The server lists only the actions that fit the request and that the user may take.
+     */
+    renderActionButtons(): Array<Node> {
+        const {onAction, request} = this.props;
+
+        if (isClosed(request) || !onAction) {
+            return [];
+        }
+
+        return (request.actions || []).map((action) => (
+            <RequestActionButton
+                actionKey={action.key}
+                key={`action-${action.key}`}
+                label={translate(action.label, action.labelParameters)}
+                loading={this.submitting}
+                onClick={this.handleActionClick}
+            />
+        ));
+    }
+
     renderFooter() {
         const {canAct, mode = 'review', request, userDecision} = this.props;
 
@@ -244,10 +298,13 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
         }
 
         const publishButtons = this.renderPublishButtons();
+        const actionButtons = this.renderActionButtons();
 
         if (!canAct) {
             // An editor who may publish an approved request still needs its button.
-            return publishButtons.length > 0 ? this.renderFooterButtons(publishButtons) : undefined;
+            const buttons = [...publishButtons, ...actionButtons];
+
+            return buttons.length > 0 ? this.renderFooterButtons(buttons) : undefined;
         }
 
         if (this.step !== 'list') {
@@ -289,6 +346,7 @@ class WorkflowTransitionRequestReviewOverlay extends React.Component<Props> {
                     : translate('sulu_content.approve')}
             </Button>,
             ...publishButtons,
+            ...actionButtons,
         ]);
     }
 

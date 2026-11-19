@@ -22,6 +22,7 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionReques
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
+use Sulu\Content\Tests\Application\ExampleTestBundle\RequestWorkflow\ExampleWorkflowTransitionRequestAction;
 use Sulu\Content\Tests\Traits\WorkflowTransitionRequestTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -46,6 +47,9 @@ class WorkflowTransitionRequestLockAndPublishWithoutReviewTest extends SuluTestC
             [],
             ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'],
         );
+        // The services below come from the booted container. A reboot between requests would leave
+        // them on a shut down kernel, which the direct call without a token still uses.
+        $this->client->disableReboot();
 
         self::purgeDatabase();
 
@@ -53,6 +57,64 @@ class WorkflowTransitionRequestLockAndPublishWithoutReviewTest extends SuluTestC
         $this->workflowTransitionRequestRepository = static::getContainer()->get(WorkflowTransitionRequestRepositoryInterface::class);
 
         $this->authenticateAsRequestCreator();
+    }
+
+    protected function tearDown(): void
+    {
+        ExampleWorkflowTransitionRequestAction::$replacesPublish = false;
+
+        parent::tearDown();
+    }
+
+    /**
+     * An action of a bundle can take the publish over, for example because the request names a date. A
+     * user is then refused even with the live permission, the API reports it, and a call without a
+     * token, like the scheduled task, still publishes.
+     */
+    public function testAnActionThatReplacesThePublishRefusesAUserAndLetsASystemCallThrough(): void
+    {
+        $example = $this->createExampleAtDraft();
+        $dimensionAttributes = ['stage' => DimensionContentInterface::STAGE_DRAFT, 'locale' => 'en'];
+
+        $this->contentManager->applyTransition(
+            $example,
+            $dimensionAttributes,
+            WorkflowInterface::WORKFLOW_TRANSITION_REQUEST_FOR_REVIEW_DRAFT,
+        );
+        static::getEntityManager()->flush();
+
+        $request = $this->workflowTransitionRequestRepository->getOneBy([
+            'resourceKey' => Example::RESOURCE_KEY,
+            'resourceId' => (string) $example->getId(),
+            'locale' => 'en',
+            'active' => true,
+        ]);
+
+        ExampleWorkflowTransitionRequestAction::$replacesPublish = true;
+
+        // The test user holds every permission, the live permission among them.
+        $this->client->request('POST', \sprintf('/admin/api/examples/%d?action=publish&locale=en', $example->getId()));
+        $this->assertHttpStatusCode(403, $this->client->getResponse());
+
+        $this->client->request('GET', \sprintf('/admin/api/workflow-transition-requests/%s.json', $request->getId()));
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array{permissions: array{publish: bool}} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertFalse($content['permissions']['publish']);
+
+        static::getContainer()->get('security.token_storage')->setToken(null);
+        $this->contentManager->applyTransition(
+            $example,
+            $dimensionAttributes,
+            WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH,
+        );
+        static::getEntityManager()->flush();
+
+        $this->assertSame(
+            WorkflowTransitionRequestStatusEnum::PUBLISHED,
+            $this->resolveRequestStatus($this->workflowTransitionRequestRepository->getOneBy(['id' => $request->getId()])),
+        );
     }
 
     public function testSaveDraftBlockedWhenActiveRequestExists(): void

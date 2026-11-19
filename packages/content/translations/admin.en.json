@@ -61,6 +61,7 @@
     "sulu_content.workflow_transition_request.cancel_not_allowed": "Cancelling a request for publishing requires the edit permission.",
     "sulu_content.workflow_transition_request.cancel_request_action": "Cancel request for publish",
     "sulu_content.workflow_transition_request.closed": "This workflow transition request has already been closed and cannot be modified.",
+    "sulu_content.workflow_transition_request.action_not_available": "The action \"{actionKey}\" is not available for this workflow transition request.",
     "sulu_content.workflow_transition_request.duplicate_active": "An active workflow transition request already exists for this content.",
     "sulu_content.workflow_transition_request.excerpt_required.missing": "Excerpt fields are still missing: {fields}.",
     "sulu_content.workflow_transition_request.publish_required.missing": "Fields are still missing for publishing: {fields}.",

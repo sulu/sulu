@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\MessageHandler;
 
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Content\Application\Message\RetryWorkflowTransitionRequestValidationMessage;
 use Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage;
+use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
@@ -33,6 +35,7 @@ final class RetryWorkflowTransitionRequestValidationMessageHandler
         private readonly WorkflowTransitionRequestRepositoryInterface $workflowTransitionRequestRepository,
         private readonly MessageBusInterface $messageBus,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly WorkflowTransitionAdminAuthorizerInterface $workflowTransitionAdminAuthorizer,
     ) {
     }
 
@@ -41,6 +44,14 @@ final class RetryWorkflowTransitionRequestValidationMessageHandler
         $workflowTransitionRequest = $this->workflowTransitionRequestRepository->getOneBy([
             'id' => $message->getWorkflowTransitionRequestId(),
         ]);
+
+        // Asked here and not only where the controller dispatches this: the message is on the public bus.
+        $this->workflowTransitionAdminAuthorizer->assertHasPermission(
+            $workflowTransitionRequest->getResourceKey(),
+            $workflowTransitionRequest->getResourceId(),
+            $workflowTransitionRequest->getLocale(),
+            PermissionTypes::EDIT,
+        );
 
         if (!$workflowTransitionRequest->isOpen()) {
             // Re-running a check on a closed request would wipe the verdict it answered with, and the

@@ -25,6 +25,7 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizer;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionRegistryInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
 use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
@@ -32,6 +33,7 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionReques
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecisionMessage;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
+use Sulu\Content\Tests\Unit\Content\Application\WorkflowTransitionRequest\Action\StubWorkflowTransitionRequestAction;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -46,12 +48,11 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
     {
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $securityChecker->hasPermission(Argument::any(), PermissionTypes::LIVE)->willReturn(true);
-        // The live permission answers on its own, the request is never looked up.
-        $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
-        $provider->findForContent(Argument::any())->shouldNotBeCalled();
 
-        $this->createAuthorizer($securityChecker, $provider)
+        $this->createAuthorizer($securityChecker, $this->activeRequest(null))
             ->assertCanPublish(Example::RESOURCE_KEY, '1', 'en');
+
+        $this->expectNotToPerformAssertions();
     }
 
     public function testCanPublishWithTheEditPermissionAndAnApprovedRequest(): void
@@ -95,10 +96,8 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
     public function testCannotPublishWithoutTheEditPermission(): void
     {
         $securityChecker = $this->securityChecker(live: false, edit: false);
-        $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
-        $provider->findForContent(Argument::any())->shouldNotBeCalled();
 
-        $authorizer = $this->createAuthorizer($securityChecker, $provider);
+        $authorizer = $this->createAuthorizer($securityChecker, $this->activeRequest(null));
 
         $this->expectException(AccessDeniedException::class);
 
@@ -150,6 +149,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
             $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class)->reveal(),
             $this->authenticatedTokenStorage(),
             $this->statusResolver(),
+            $this->actionRegistry([]),
             SuluKernel::CONTEXT_ADMIN,
         );
 
@@ -158,6 +158,81 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
             $authorizer->getPermissions(Example::RESOURCE_KEY, '1', 'en'),
             'A broken setup hides the buttons instead of failing the form load.',
         );
+    }
+
+    public function testCannotPublishWithTheLivePermissionWhileAnActionHasTakenThePublishOver(): void
+    {
+        $authorizer = $this->createAuthorizer(
+            $this->securityChecker(live: true, edit: true),
+            $this->activeRequest($this->openRequest()),
+            [new StubWorkflowTransitionRequestAction(replacesPublish: true)],
+        );
+
+        try {
+            $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en');
+            $this->fail('A publish by hand must be refused.');
+        } catch (AccessDeniedException $exception) {
+            $this->assertStringContainsString('"stub"', $exception->getMessage());
+        }
+    }
+
+    public function testPermissionsHidePublishWhileAnActionHasTakenTheOpenRequestsPublishOver(): void
+    {
+        $securityChecker = $this->securityChecker(live: true, edit: true);
+        $securityChecker->hasPermission(Argument::any(), PermissionTypes::REVIEW)->willReturn(true);
+
+        $permissions = $this->createAuthorizer(
+            $securityChecker,
+            $this->activeRequest($this->openRequest()),
+            [new StubWorkflowTransitionRequestAction(replacesPublish: true)],
+        )->getPermissions(Example::RESOURCE_KEY, '1', 'en');
+
+        $this->assertSame(['cancel' => true, 'publish' => false, 'retry' => true, 'review' => true], $permissions);
+    }
+
+    public function testCanPublishWithTheLivePermissionWhenNoActionTakesTheRequestOver(): void
+    {
+        $this->createAuthorizer(
+            $this->securityChecker(live: true, edit: true),
+            $this->activeRequest($this->openRequest()),
+            [new StubWorkflowTransitionRequestAction()],
+        )->assertCanPublish(Example::RESOURCE_KEY, '1', 'en');
+
+        $this->expectNotToPerformAssertions();
+    }
+
+    public function testCanPublishWithTheLivePermissionWithoutAnOpenRequest(): void
+    {
+        $this->createAuthorizer(
+            $this->securityChecker(live: true, edit: true),
+            $this->activeRequest(null),
+            [new StubWorkflowTransitionRequestAction(replacesPublish: true)],
+        )->assertCanPublish(Example::RESOURCE_KEY, '1', 'en');
+
+        $this->expectNotToPerformAssertions();
+    }
+
+    public function testAssertHasPermissionPassesWithThePermission(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(Argument::any(), PermissionTypes::VIEW)->willReturn(true);
+
+        $this->createAuthorizer($securityChecker, $this->activeRequest(null))
+            ->assertHasPermission(Example::RESOURCE_KEY, '1', 'en', PermissionTypes::VIEW);
+
+        $this->expectNotToPerformAssertions();
+    }
+
+    public function testAssertHasPermissionRefusesWithoutThePermission(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission(Argument::any(), PermissionTypes::VIEW)->willReturn(false);
+
+        $authorizer = $this->createAuthorizer($securityChecker, $this->activeRequest(null));
+
+        $this->expectException(AccessDeniedException::class);
+
+        $authorizer->assertHasPermission(Example::RESOURCE_KEY, '1', 'en', PermissionTypes::VIEW);
     }
 
     public function testCanRejectWithTheReviewPermission(): void
@@ -248,6 +323,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
             $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class)->reveal(),
             $tokenStorage->reveal(),
             $this->statusResolver(),
+            $this->actionRegistry([]),
             SuluKernel::CONTEXT_ADMIN,
         );
 
@@ -277,6 +353,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
             $this->activeRequest(null)->reveal(),
             $tokenStorage->reveal(),
             $this->statusResolver(),
+            $this->actionRegistry([]),
             SuluKernel::CONTEXT_ADMIN,
         );
 
@@ -304,6 +381,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
             $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class)->reveal(),
             $this->authenticatedTokenStorage(),
             $this->statusResolver(),
+            $this->actionRegistry([]),
             SuluKernel::CONTEXT_WEBSITE,
         );
 
@@ -374,8 +452,9 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
     /**
      * @param \Prophecy\Prophecy\ObjectProphecy<SecurityCheckerInterface> $securityChecker
      * @param \Prophecy\Prophecy\ObjectProphecy<ActiveWorkflowTransitionRequestProviderInterface> $provider
+     * @param list<StubWorkflowTransitionRequestAction> $actions
      */
-    private function createAuthorizer($securityChecker, $provider): WorkflowTransitionAdminAuthorizer
+    private function createAuthorizer($securityChecker, $provider, array $actions = []): WorkflowTransitionAdminAuthorizer
     {
         $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
         $securityContextResolver->resolve(Example::RESOURCE_KEY, '1', 'en')
@@ -387,8 +466,20 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
             $provider->reveal(),
             $this->authenticatedTokenStorage(),
             $this->statusResolver(),
+            $this->actionRegistry($actions),
             SuluKernel::CONTEXT_ADMIN,
         );
+    }
+
+    /**
+     * @param list<StubWorkflowTransitionRequestAction> $actions
+     */
+    private function actionRegistry(array $actions): WorkflowTransitionRequestActionRegistryInterface
+    {
+        $registry = $this->prophesize(WorkflowTransitionRequestActionRegistryInterface::class);
+        $registry->all()->willReturn($actions);
+
+        return $registry->reveal();
     }
 
     private function authenticatedTokenStorage(): TokenStorageInterface

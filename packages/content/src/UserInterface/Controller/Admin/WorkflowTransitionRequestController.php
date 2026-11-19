@@ -20,10 +20,12 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Content\Application\Message\ApproveWorkflowTransitionRequestMessage;
+use Sulu\Content\Application\Message\ExecuteWorkflowTransitionRequestActionMessage;
 use Sulu\Content\Application\Message\RejectWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\Message\RetryWorkflowTransitionRequestValidationMessage;
 use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
 use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionRegistryInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\WorkflowTransitionRequestViewFactoryInterface;
 use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestNotFoundException;
@@ -52,6 +54,7 @@ final class WorkflowTransitionRequestController extends AbstractRestController
         private readonly WorkflowTransitionRequestSecurityContextResolverInterface $securityContextResolver,
         private readonly WorkflowTransitionRequestViewFactoryInterface $viewFactory,
         private readonly WorkflowTransitionRequestStatusResolverInterface $statusResolver,
+        private readonly WorkflowTransitionRequestActionRegistryInterface $actionRegistry,
         MessageBusInterface $messageBus,
         ViewHandlerInterface $viewHandler,
         ?TokenStorageInterface $tokenStorage = null,
@@ -136,24 +139,25 @@ final class WorkflowTransitionRequestController extends AbstractRestController
         $permission = match ($action) {
             'approve', 'reject' => PermissionTypes::REVIEW,
             'retry' => PermissionTypes::EDIT,
-            default => throw new BadRequestHttpException(\sprintf('Unrecognized action "%s".', $action)),
+            default => $this->actionRegistry->get($action)?->getPermission()
+                ?? throw new BadRequestHttpException(\sprintf('Unrecognized action "%s".', $action)),
         };
 
         $this->securityChecker->checkPermission($this->securityCondition($workflowTransitionRequest), $permission);
 
-        $comment = $this->getComment($request);
-
         // Cancelling runs as the `cancel_review` content transition, because it moves the content's workflow place too.
         $message = match ($action) {
-            'approve' => new ApproveWorkflowTransitionRequestMessage($id, $comment),
+            'approve' => new ApproveWorkflowTransitionRequestMessage($id, $this->getComment($request)),
             'reject' => new RejectWorkflowTransitionRequestMessage(
                 $id,
-                $comment ?? throw new BadRequestHttpException('A rejection requires a "comment".'),
+                $this->getComment($request) ?? throw new BadRequestHttpException('A rejection requires a "comment".'),
             ),
             'retry' => new RetryWorkflowTransitionRequestValidationMessage(
                 $id,
                 $this->getValidatorKey($request, $workflowTransitionRequest),
             ),
+            // An action of a bundle, which the permission match above has already resolved.
+            default => new ExecuteWorkflowTransitionRequestActionMessage($id, $action),
         };
 
         /** @var WorkflowTransitionRequest $workflowTransitionRequest */
@@ -199,8 +203,10 @@ final class WorkflowTransitionRequestController extends AbstractRestController
 
     private function getComment(Request $request): ?string
     {
-        /** @var string|null $comment */
         $comment = $request->request->get('comment');
+        if (null !== $comment && !\is_string($comment)) {
+            throw new BadRequestHttpException('The "comment" must be a string.');
+        }
 
         return null === $comment || '' === \trim($comment) ? null : $comment;
     }
