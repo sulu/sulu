@@ -110,7 +110,6 @@ class SmartContentSmartResolver implements SmartResolverContextAwareInterface
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
         $filters['limit'] = $maxPerPage ?? $limit;
 
-        // Exclude the currently rendered resource (the "own" page) from its own results.
         /** @var string[] $excluded */
         $excluded = $filters['excluded'] ?? [];
         $resource = $context['resource'] ?? null;

@@ -88,7 +88,7 @@ class SmartContentSmartResolverTest extends TestCase
         unset($expectedFilters['limit']);
         $expectedFilters['offset'] = 0; // page 1 with offset 0
         $expectedFilters['limit'] = 5; // from original limit
-        $expectedFilters['excluded'] = []; // no self/duplicate exclusion in this scenario
+        $expectedFilters['excluded'] = [];
 
         $countByFilters = $expectedFilters;
         unset($countByFilters['offset']);
@@ -298,7 +298,7 @@ class SmartContentSmartResolverTest extends TestCase
         unset($expectedFilters['limit']);
         $expectedFilters['offset'] = 0;
         $expectedFilters['limit'] = 3; // from original limit
-        $expectedFilters['excluded'] = []; // no self/duplicate exclusion in this scenario
+        $expectedFilters['excluded'] = [];
 
         $countByFilters = $expectedFilters;
         unset($countByFilters['offset']);
