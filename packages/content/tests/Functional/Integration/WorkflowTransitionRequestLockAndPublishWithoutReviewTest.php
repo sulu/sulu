@@ -47,6 +47,9 @@ class WorkflowTransitionRequestLockAndPublishWithoutReviewTest extends SuluTestC
             [],
             ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'],
         );
+        // The services below come from the booted container. A reboot between requests would leave
+        // them on a shut down kernel, which the direct call without a token still uses.
+        $this->client->disableReboot();
 
         self::purgeDatabase();
 
