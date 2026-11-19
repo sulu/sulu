@@ -14,8 +14,10 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentWorkflow\Subscriber;
 
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestSettledEvent;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Workflow\Event\TransitionEvent;
 
@@ -28,6 +30,7 @@ class WorkflowTransitionRequestPublishTransitionSubscriber implements EventSubsc
 {
     public function __construct(
         private readonly ActiveWorkflowTransitionRequestProviderInterface $activeWorkflowTransitionRequestProvider,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -46,7 +49,13 @@ class WorkflowTransitionRequestPublishTransitionSubscriber implements EventSubsc
 
         $workflowTransitionRequest = $this->activeWorkflowTransitionRequestProvider->findForContent($dimensionContent);
 
-        $workflowTransitionRequest?->publish();
+        if (null === $workflowTransitionRequest) {
+            return;
+        }
+
+        $workflowTransitionRequest->publish();
+
+        $this->eventDispatcher->dispatch(new WorkflowTransitionRequestSettledEvent($workflowTransitionRequest));
     }
 
     public static function getSubscribedEvents(): array

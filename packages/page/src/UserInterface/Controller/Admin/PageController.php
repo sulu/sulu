@@ -31,6 +31,7 @@ use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
@@ -296,6 +297,15 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    private function getWorkflowTransitionRequestData(Request $request): array
+    {
+        /** @var array<string, mixed> */
+        return $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY);
+    }
+
+    /**
      * @return mixed[]
      */
     private function getData(Request $request): array
@@ -310,6 +320,10 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
         if ($request->query->getBoolean('force', false)) {
             unset($data['_hash']);
         }
+
+        // read here as well, so a malformed value is refused with a 400 before anything is saved
+        $this->getWorkflowTransitionRequestData($request);
+        unset($data[ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY]);
 
         return $data;
     }
@@ -388,7 +402,14 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         }
 
-        $message = new ApplyWorkflowTransitionPageMessage(['uuid' => $uuid], $this->getLocale($request), $action);
+        $workflowTransitionRequestData = $this->getWorkflowTransitionRequestData($request);
+
+        $message = new ApplyWorkflowTransitionPageMessage(
+            ['uuid' => $uuid],
+            $this->getLocale($request),
+            $action,
+            $workflowTransitionRequestData,
+        );
 
         /** @see \Sulu\Page\Application\MessageHandler\ApplyWorkflowTransitionPageMessageHandler */
         /** @var PageInterface|null */

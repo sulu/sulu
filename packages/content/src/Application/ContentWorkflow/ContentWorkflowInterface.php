@@ -23,6 +23,17 @@ interface ContentWorkflowInterface
     public const DIMENSION_ATTRIBUTES_CONTEXT_KEY = 'dimensionAttributes';
 
     /**
+     * The key of the request body that carries what the requester filled into the request form.
+     * The content controllers take it out of the content data and hand it to the workflow.
+     */
+    public const WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY = 'workflowTransitionRequestData';
+
+    /**
+     * What the requester filled into the request form, for the transitions that create a request.
+     */
+    public const WORKFLOW_TRANSITION_REQUEST_DATA_CONTEXT_KEY = 'workflowTransitionRequestData';
+
+    /**
      * A guard listener that refuses a transition for its own reason blocks it with this code and
      * puts the exception to report under {@see BLOCKER_EXCEPTION_PARAMETER}, so the caller sees that
      * reason instead of a generic "transition not enabled".
@@ -36,12 +47,14 @@ interface ContentWorkflowInterface
      *
      * @param ContentRichEntityInterface<T> $contentRichEntity
      * @param mixed[] $dimensionAttributes
+     * @param array<string, mixed> $workflowTransitionRequestData
      *
      * @return T
      */
     public function apply(
         ContentRichEntityInterface $contentRichEntity,
         array $dimensionAttributes,
-        string $transitionName
+        string $transitionName,
+        array $workflowTransitionRequestData = []
     ): DimensionContentInterface;
 }

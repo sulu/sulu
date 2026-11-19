@@ -25,15 +25,22 @@ class ApplyWorkflowTransitionArticleMessage
     private string $transitionName;
 
     /**
+     * @var array<string, mixed>
+     */
+    private array $workflowTransitionRequestData;
+
+    /**
      * @param array{
      *     uuid?: string
      * } $identifier
+     * @param array<string, mixed> $workflowTransitionRequestData
      */
-    public function __construct(array $identifier, string $locale, string $transitionName)
+    public function __construct(array $identifier, string $locale, string $transitionName, array $workflowTransitionRequestData = [])
     {
         $this->identifier = $identifier;
         $this->locale = $locale;
         $this->transitionName = $transitionName;
+        $this->workflowTransitionRequestData = $workflowTransitionRequestData;
     }
 
     /**
@@ -54,5 +61,13 @@ class ApplyWorkflowTransitionArticleMessage
     public function getTransitionName(): string
     {
         return $this->transitionName;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getWorkflowTransitionRequestData(): array
+    {
+        return $this->workflowTransitionRequestData;
     }
 }

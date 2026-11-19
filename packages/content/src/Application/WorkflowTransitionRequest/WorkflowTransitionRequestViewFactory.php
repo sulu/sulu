@@ -52,6 +52,7 @@ final class WorkflowTransitionRequestViewFactory implements WorkflowTransitionRe
             ),
             'requestedAt' => $request->getCreated()->format(\DATE_ATOM),
             'createdBy' => $this->serializeUser($request->getCreator()),
+            'data' => $request->getData(),
             'approvalProgress' => [
                 'required' => $workflow?->getRequiredUserApprovals() ?? 0,
                 'approved' => $request->countUserApprovals(),
