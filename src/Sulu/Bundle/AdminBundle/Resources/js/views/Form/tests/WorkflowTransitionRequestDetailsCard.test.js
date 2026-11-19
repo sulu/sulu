@@ -87,3 +87,83 @@ test('renders nothing when no field has a value', () => {
 
     expect(container).toBeEmptyDOMElement();
 });
+
+test('shows the fields inside a section, whose values sit at the top level of the data', () => {
+    mockStore(false, {
+        details: {
+            label: 'Details',
+            type: 'section',
+            items: {
+                message: {label: 'Message to the reviewer', type: 'text_area'},
+                nested: {label: 'Nested', type: 'section', items: {note: {label: 'Note', type: 'text_line'}}},
+            },
+        },
+    });
+
+    render(<WorkflowTransitionRequestDetailsCard data={{message: 'Hello', note: 'Deep'}} />);
+
+    expect(screen.getAllByRole('term').map((element) => element.textContent))
+        .toEqual(['Message to the reviewer', 'Note']);
+    expect(screen.getByText('Hello')).toBeInTheDocument();
+    expect(screen.getByText('Deep')).toBeInTheDocument();
+});
+
+test('leaves out the fields of a section that its condition hides', () => {
+    mockStore(false, {
+        details: {
+            type: 'section',
+            visibleCondition: 'show == true',
+            items: {message: {label: 'Message to the reviewer', type: 'text_area'}},
+        },
+    });
+
+    const {container} = render(<WorkflowTransitionRequestDetailsCard data={{message: 'Hello', show: false}} />);
+
+    expect(container).toBeEmptyDOMElement();
+});
+
+test('shows the title of the chosen option of a select instead of its key', () => {
+    const values = {value: [{name: 'high', title: 'High priority'}, {name: 'low', title: 'Low priority'}]};
+    mockStore(false, {priority: {label: 'Priority', type: 'single_select', options: {values}}});
+
+    render(<WorkflowTransitionRequestDetailsCard data={{priority: 'high'}} />);
+
+    expect(screen.getByText('High priority')).toBeInTheDocument();
+    expect(screen.queryByText('high')).not.toBeInTheDocument();
+});
+
+test('shows the titles of all chosen options of a multi select', () => {
+    const values = {value: [{name: 'a', title: 'Alpha'}, {name: 'b', title: 'Beta'}, {name: 'c', title: 'Gamma'}]};
+    mockStore(false, {channels: {label: 'Channels', type: 'select', options: {values}}});
+
+    render(<WorkflowTransitionRequestDetailsCard data={{channels: ['a', 'c']}} />);
+
+    expect(screen.getByText('Alpha, Gamma')).toBeInTheDocument();
+});
+
+test('shows the key of an option that the form does not know any more', () => {
+    const values = {value: [{name: 'a', title: 'Alpha'}]};
+    mockStore(false, {channels: {label: 'Channels', type: 'select', options: {values}}});
+
+    render(<WorkflowTransitionRequestDetailsCard data={{channels: ['a', 'gone']}} />);
+
+    expect(screen.getByText('Alpha, gone')).toBeInTheDocument();
+});
+
+test('leaves out a multi select without a choice', () => {
+    const values = {value: [{name: 'a', title: 'Alpha'}]};
+    mockStore(false, {channels: {label: 'Channels', type: 'select', options: {values}}});
+
+    const {container} = render(<WorkflowTransitionRequestDetailsCard data={{channels: []}} />);
+
+    expect(container).toBeEmptyDOMElement();
+});
+
+test('shows a date as the same local day, also west of UTC', () => {
+    mockStore(false, {day: {label: 'Day', type: 'date'}});
+    const expected = new Intl.DateTimeFormat(undefined, {dateStyle: 'medium'}).format(new Date(2026, 10, 25));
+
+    render(<WorkflowTransitionRequestDetailsCard data={{day: '2026-11-25'}} />);
+
+    expect(screen.getByText(expected)).toBeInTheDocument();
+});

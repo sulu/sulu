@@ -355,7 +355,7 @@ class Form extends React.Component<Props> {
         if (!this.form) {
             throw new Error('The form ref has not been set! This should not happen and is likely a bug.');
         }
-        this.form.submit(options);
+        return this.form.submit(options);
     };
 
     handleSubmit = (options: ?string | {[string]: any}) => {

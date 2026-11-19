@@ -253,3 +253,60 @@ test('Submit nothing when the overlay is closed', () => {
     expect(toolbarAction.open).toBe(false);
     expect(toolbarAction.form.submit).not.toHaveBeenCalled();
 });
+
+function createActionWithRequestForm(data) {
+    memoryFormStoreFactory.createFromFormKey.mockReturnValueOnce({data, loading: false, schema: {message: {}}});
+
+    const toolbarAction = createRequestForPublishToolbarAction();
+    toolbarAction.resourceFormStore.resourceStore.data.workflowTransitionRequestEnabled = true;
+    toolbarAction.resourceFormStore.resourceStore.data.workflowPlace = 'draft';
+
+    const toolbarItemConfig = toolbarAction.getToolbarItemConfig();
+
+    if (!toolbarItemConfig) {
+        throw new Error('The toolbarItemConfig should be a value!');
+    }
+
+    toolbarItemConfig.onClick();
+
+    return toolbarAction;
+}
+
+test('Keep the entered values while the save is running and when it fails', async() => {
+    const toolbarAction = createActionWithRequestForm({message: 'Please check'});
+    (toolbarAction.form.submit: any).mockReturnValue(Promise.resolve(undefined));
+
+    toolbarAction.handleConfirm();
+    await Promise.resolve();
+
+    expect(toolbarAction.open).toBe(false);
+    expect(toolbarAction.requestFormStore.data).toEqual({message: 'Please check'});
+});
+
+test('Keep the entered values when the form refuses to submit', () => {
+    const toolbarAction = createActionWithRequestForm({message: 'Please check'});
+    (toolbarAction.form.submit: any).mockReturnValue(undefined);
+
+    toolbarAction.handleConfirm();
+
+    expect(toolbarAction.requestFormStore.data).toEqual({message: 'Please check'});
+});
+
+test('Start with an empty request form after the save succeeded', async() => {
+    const toolbarAction = createActionWithRequestForm({message: 'Please check'});
+    (toolbarAction.form.submit: any).mockReturnValue(Promise.resolve({id: 'saved-id'}));
+
+    toolbarAction.handleConfirm();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(toolbarAction.requestFormStore.data).toEqual({});
+});
+
+test('Drop the entered values when the overlay is closed without confirming', () => {
+    const toolbarAction = createActionWithRequestForm({message: 'Please check'});
+
+    toolbarAction.handleClose();
+
+    expect(toolbarAction.requestFormStore.data).toEqual({});
+});

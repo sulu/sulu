@@ -95,14 +95,30 @@ export default class RequestForPublishToolbarAction extends AbstractFormToolbarA
     // The data travels in the body of the save, which the server takes out of the content again.
     submit(transition: string, data: Object) {
         this.resourceFormStore.change(REQUEST_DATA_KEY, data);
-        this.form.submit({action: transition});
+
+        const submitted = this.form.submit({action: transition});
+
+        // A failed save resolves without a response. The entered values stay in the store then, so the
+        // overlay shows them again on the next try.
+        if (submitted && typeof submitted.then === 'function') {
+            submitted.then((response) => {
+                if (response !== undefined) {
+                    this.resetRequestFormStore();
+                }
+            });
+        }
+    }
+
+    @action resetRequestFormStore() {
+        this.requestFormStore = MemoryFormStoreFactory.createFromFormKey(REQUEST_FORM_KEY);
     }
 
     @action handleConfirm = () => {
         const transition = this.pendingTransition;
         const data = toJS(this.requestFormStore.data);
 
-        this.handleClose();
+        this.open = false;
+        this.pendingTransition = undefined;
 
         if (transition) {
             this.submit(transition, data);
@@ -112,7 +128,7 @@ export default class RequestForPublishToolbarAction extends AbstractFormToolbarA
     @action handleClose = () => {
         this.open = false;
         this.pendingTransition = undefined;
-        this.requestFormStore = MemoryFormStoreFactory.createFromFormKey(REQUEST_FORM_KEY);
+        this.resetRequestFormStore();
     };
 
     getNode(index: ?number) {
