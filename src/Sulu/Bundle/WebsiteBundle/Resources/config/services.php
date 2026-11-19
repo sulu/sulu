@@ -20,6 +20,7 @@ use Sulu\Bundle\WebsiteBundle\Controller\ErrorController;
 use Sulu\Bundle\WebsiteBundle\Controller\RedirectController;
 use Sulu\Bundle\WebsiteBundle\Controller\SegmentController;
 use Sulu\Bundle\WebsiteBundle\Controller\SitemapController;
+use Sulu\Bundle\WebsiteBundle\EventListener\ErrorPageCacheClearEventSubscriber;
 use Sulu\Bundle\WebsiteBundle\EventListener\RouterListener;
 use Sulu\Bundle\WebsiteBundle\EventListener\TranslatorListener;
 use Sulu\Bundle\WebsiteBundle\EventSubscriber\DomainEventEventSubscriber;
@@ -118,6 +119,7 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_website.resolver.template_attribute'),
             new Reference('twig'),
             '%kernel.debug%',
+            new Reference('sulu_website.error_page_cache', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('sulu.context', ['context' => 'website']);
 
@@ -173,5 +175,11 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_core.webspace.request_analyzer'),
         ])
         ->tag('sulu.context', ['context' => 'website'])
+        ->tag('kernel.event_subscriber');
+
+    $services->set('sulu_website.error_page_cache_clear_subscriber', ErrorPageCacheClearEventSubscriber::class)
+        ->args([
+            new Reference('sulu_website.error_page_cache'),
+        ])
         ->tag('kernel.event_subscriber');
 };
