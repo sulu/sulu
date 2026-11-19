@@ -105,16 +105,6 @@ class WorkflowTransitionRequestViewFactoryTest extends TestCase
         );
     }
 
-    public function testViewHidesThePublishPermissionWhileAnActionHasTakenItOver(): void
-    {
-        $view = $this->createFactory(
-            permissions: ['cancel' => true, 'publish' => true, 'retry' => true, 'review' => true],
-            actions: [new StubWorkflowTransitionRequestAction(replacesPublish: true)],
-        )->build($this->createRequest());
-
-        $this->assertSame(['cancel' => true, 'publish' => false, 'retry' => true, 'review' => true], $view['permissions']);
-    }
-
     public function testViewCarriesTheStatusMessageOfAnAction(): void
     {
         $message = ['message' => 'app.scheduled', 'parameters' => ['date' => '25.11.2026 10:00']];

@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\MessageHandler;
 
-use Sulu\Content\Application\Message\RetryWorkflowTransitionRequestValidationMessage;
 use Sulu\Component\Security\Authorization\PermissionTypes;
+use Sulu\Content\Application\Message\RetryWorkflowTransitionRequestValidationMessage;
 use Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;

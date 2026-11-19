@@ -52,7 +52,11 @@ final class WorkflowTransitionRequestViewFactory implements WorkflowTransitionRe
             'locale' => $request->getLocale(),
             'status' => $this->statusResolver->resolve($request)->value,
             // The admin gates its buttons on these, so the rules live on the server alone.
-            'permissions' => $this->buildPermissions($request),
+            'permissions' => $this->authorizer->getPermissions(
+                $request->getResourceKey(),
+                $request->getResourceId(),
+                $request->getLocale(),
+            ),
             'actions' => $this->buildActions($request),
             ...$this->buildStatusMessage($request),
             'requestedAt' => $request->getCreated()->format(\DATE_ATOM),
@@ -87,25 +91,6 @@ final class WorkflowTransitionRequestViewFactory implements WorkflowTransitionRe
     }
 
     /**
-     * @return array{cancel: bool, publish: bool, retry: bool, review: bool}
-     */
-    private function buildPermissions(WorkflowTransitionRequest $request): array
-    {
-        $permissions = $this->authorizer->getPermissions(
-            $request->getResourceKey(),
-            $request->getResourceId(),
-            $request->getLocale(),
-        );
-
-        // The server refuses the publish as well, see WorkflowTransitionRequestPublishReplacementSubscriber.
-        if ($request->isOpen() && $this->replacesPublish($request)) {
-            $permissions['publish'] = false;
-        }
-
-        return $permissions;
-    }
-
-    /**
      * @return array{statusMessage?: array{message: string, parameters: array<string, string>}}
      */
     private function buildStatusMessage(WorkflowTransitionRequest $request): array
@@ -118,17 +103,6 @@ final class WorkflowTransitionRequestViewFactory implements WorkflowTransitionRe
         }
 
         return [];
-    }
-
-    private function replacesPublish(WorkflowTransitionRequest $request): bool
-    {
-        foreach ($this->actionRegistry->all() as $action) {
-            if ($action->replacesPublish($request)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
