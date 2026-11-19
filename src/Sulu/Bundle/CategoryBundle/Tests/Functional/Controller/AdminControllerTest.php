@@ -35,4 +35,13 @@ class AdminControllerTest extends SuluTestCase
 
         $this->assertEquals(['name'], $schema->required);
     }
+
+    public function testSingleCategorySelectionDisplaysBreadcrumb(): void
+    {
+        $registry = $this->getContainer()->get('sulu_admin.field_type_option_registry');
+        $options = $registry->toArray()['single_selection']['single_category_selection'];
+        $this->assertIsArray($options['types']);
+        $this->assertIsArray($options['types']['list_overlay']);
+        $this->assertSame(['breadcrumb'], $options['types']['list_overlay']['display_properties']);
+    }
 }

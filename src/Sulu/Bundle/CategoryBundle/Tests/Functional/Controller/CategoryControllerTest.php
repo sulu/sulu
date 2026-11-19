@@ -166,6 +166,43 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('EN-US', $response->name);
     }
 
+    public function testGetByIdBreadcrumb(): void
+    {
+        $shop = $this->createCategory('shop', 'en');
+        $this->createCategoryTranslation($shop, 'en', 'Shop');
+        $shirts = $this->createCategory('shirts', 'en', $shop);
+        $this->createCategoryTranslation($shirts, 'en', 'Shirts');
+        $polo = $this->createCategory('polo', 'en', $shirts);
+        $this->createCategoryTranslation($polo, 'en', 'Polo');
+
+        $this->em->flush();
+        $this->em->clear();
+
+        $this->assertSame('Shop', $this->getBreadcrumb($shop, 'en'));
+        $this->assertSame('Shop > Shirts', $this->getBreadcrumb($shirts, 'en'));
+        $this->assertSame('Shop > Shirts > Polo', $this->getBreadcrumb($polo, 'en'));
+    }
+
+    public function testGetByIdBreadcrumbLocaleFallback(): void
+    {
+        $shop = $this->createCategory('shop', 'en');
+        $this->createCategoryTranslation($shop, 'en', 'Shop');
+        $this->createCategoryTranslation($shop, 'de', 'Laden');
+        $shirts = $this->createCategory('shirts', 'en', $shop);
+        $this->createCategoryTranslation($shirts, 'en', 'Shirts');
+        $polo = $this->createCategory('polo', 'en', $shirts);
+        $this->createCategoryTranslation($polo, 'en', 'Polo');
+        $this->createCategoryTranslation($polo, 'de', 'Polohemd');
+
+        $this->em->flush();
+        $this->em->clear();
+
+        // "Shirts" has no german translation and falls back on its own default locale
+        $this->assertSame('Laden > Shirts > Polohemd', $this->getBreadcrumb($polo, 'de'));
+        // no category has a french translation
+        $this->assertSame('Shop > Shirts > Polo', $this->getBreadcrumb($polo, 'fr'));
+    }
+
     public function testCGet(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
@@ -1636,6 +1673,18 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent() ?: '', true);
         $this->assertArrayNotHasKey('parent', $response);
+    }
+
+    private function getBreadcrumb(CategoryInterface $category, string $locale): mixed
+    {
+        $this->em->clear();
+
+        $this->client->jsonRequest('GET', '/api/categories/' . $category->getId() . '?locale=' . $locale);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = \json_decode($this->client->getResponse()->getContent() ?: '', true);
+        $this->assertIsArray($response);
+
+        return $response['breadcrumb'];
     }
 
     private function createCategory(
