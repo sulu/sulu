@@ -16,9 +16,11 @@ namespace Sulu\Content\Application\WorkflowTransitionRequest\Event;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 
 /**
- * Dispatched when the publish of an approved request went through, so the request is settled. A bundle
- * that extended the request form reads its data here and acts on it. The event is not an activity,
- * the publish itself is logged as a content transition.
+ * Dispatched while the publish transition of an approved request runs, after the request is marked as
+ * published. The workflow has not written its marking yet and nothing is flushed, so the publish is not
+ * stored when a listener runs. If the publish fails later, the request is not settled after all.
+ * A bundle that extended the request form reads its data here and acts on it. The event is not an
+ * activity, the publish itself is logged as a content transition.
  *
  * @experimental This is an experimental feature and may change in future releases.
  */
