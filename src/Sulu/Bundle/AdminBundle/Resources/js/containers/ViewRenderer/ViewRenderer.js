@@ -6,16 +6,23 @@ import Router, {getViewKeyFromRoute, Route} from '../../services/Router';
 import userStore from '../../stores/userStore';
 import View from '../../components/View';
 import viewRegistry from './registries/viewRegistry';
+import viewRendererContext from './viewRendererContext';
 import type {Element} from 'react';
 
 type Props = {
     router: Router,
+    sidebarAvailable: boolean,
+    toolbarStoreKey?: string,
 };
 
 const UPDATE_ROUTE_HOOK_PRIORITY = 1024;
 
 @observer
 class ViewRenderer extends React.Component<Props> {
+    static defaultProps = {
+        sidebarAvailable: true,
+    };
+
     @observable loginCount: number = 0;
     @observable userChangeCount: number = 0;
 
@@ -110,7 +117,13 @@ class ViewRenderer extends React.Component<Props> {
     }
 
     render() {
-        return this.renderView(this.props.router.route);
+        const {router, sidebarAvailable, toolbarStoreKey} = this.props;
+
+        return (
+            <viewRendererContext.Provider value={{sidebarAvailable, toolbarStoreKey}}>
+                {this.renderView(router.route)}
+            </viewRendererContext.Provider>
+        );
     }
 }
 

@@ -1,0 +1,193 @@
+// @flow
+import React from 'react';
+import {observable} from 'mobx';
+import {act, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import Router, {routeRegistry} from '../../../services/Router';
+import toolbarStorePool, {DEFAULT_STORE_KEY} from '../../Toolbar/stores/toolbarStorePool';
+import {withToolbar} from '../../Toolbar';
+import {viewRegistry} from '../../ViewRenderer';
+import {mockResizeObserver} from '../../../utils/TestHelper';
+import ViewOverlay from '../ViewOverlay';
+
+mockResizeObserver();
+
+jest.mock('../../../utils/Translator', () => ({
+    translate: jest.fn((key) => key),
+}));
+
+const showSuccess = observable.box(false);
+const errors = observable.array([]);
+let mockUpdateRouteHook = jest.fn().mockReturnValue(true);
+
+let mockRouter: Router;
+
+class TestView extends React.Component<*> {
+    constructor(props: *) {
+        super(props);
+
+        mockRouter = props.router;
+    }
+
+    componentDidMount() {
+        this.props.router.addUpdateRouteHook(mockUpdateRouteHook, 2048);
+    }
+
+    render() {
+        const {router} = this.props;
+
+        return <h1>{router.route.name + ' ' + router.attributes.id}</h1>;
+    }
+}
+
+const TestViewWithToolbar = withToolbar(TestView, () => ({
+    backButton: {onClick: jest.fn()},
+    errors,
+    items: [{icon: 'su-save', label: 'Save', onClick: jest.fn(), type: 'button'}],
+    showSuccess,
+}));
+
+function getCloseButton() {
+    const closeButton = document.querySelector('.closeButton button');
+    if (!closeButton) {
+        throw new Error('The close button of the overlay is missing.');
+    }
+
+    return closeButton;
+}
+
+beforeEach(() => {
+    routeRegistry.clear();
+    viewRegistry.clear();
+    routeRegistry.addCollection([
+        {name: 'test_form', options: {backView: 'test_list'}, path: '/test/:id', type: 'test_view'},
+        {name: 'test_localized', path: '/localized/:locale/:id', type: 'test_view'},
+        {name: 'test_list', path: '/tests', type: 'test_view'},
+    ]);
+    viewRegistry.add('test_view', TestViewWithToolbar);
+    showSuccess.set(false);
+    errors.clear();
+    mockUpdateRouteHook = jest.fn().mockReturnValue(true);
+    window.location.hash = '#/page';
+});
+
+test('Render the view of the route with the own router and leave the browser url alone', () => {
+    render(<ViewOverlay attributes={{id: 5}} onClose={jest.fn()} route="test_form" title="Edit" />);
+
+    expect(screen.getByRole('heading', {name: 'test_form 5'})).toBeInTheDocument();
+    expect(window.location.hash).toEqual('#/page');
+});
+
+test('Render the toolbar of the view in the overlay instead of the page toolbar', () => {
+    const pageToolbarStore = toolbarStorePool.hasStore(DEFAULT_STORE_KEY)
+        ? toolbarStorePool.getStore(DEFAULT_STORE_KEY)
+        : toolbarStorePool.createStore(DEFAULT_STORE_KEY);
+
+    render(<ViewOverlay attributes={{id: 5}} onClose={jest.fn()} route="test_form" title="Edit" />);
+
+    expect(screen.getByRole('dialog', {name: 'Edit'})).toContainElement(screen.getByRole('button', {name: /Save/}));
+    expect(screen.queryByLabelText('su-angle-left')).not.toBeInTheDocument();
+    expect(pageToolbarStore.getItemsConfig()).toEqual([]);
+});
+
+test('Turn the close button into a check while the view shows its success', () => {
+    render(<ViewOverlay attributes={{id: 5}} onClose={jest.fn()} route="test_form" title="Edit" />);
+
+    expect(screen.queryByRole('status')).toBeEmptyDOMElement();
+
+    act(() => {
+        showSuccess.set(true);
+    });
+
+    expect(screen.getByRole('status')).toHaveTextContent('sulu_admin.success');
+});
+
+test('Show the errors of the view below the toolbar inside the overlay', () => {
+    render(<ViewOverlay attributes={{id: 5}} onClose={jest.fn()} route="test_form" title="Edit" />);
+
+    act(() => {
+        errors.push('Save failed');
+    });
+
+    const message = screen.getByText(/Save failed/);
+    expect(screen.getByRole('dialog', {name: 'Edit'})).toContainElement(message);
+    expect(screen.getByLabelText('su-save').compareDocumentPosition(message))
+        .toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+});
+
+test('Keep the locale of the overlay if a view navigates without one', () => {
+    render(<ViewOverlay attributes={{id: 5, locale: 'de'}} onClose={jest.fn()} route="test_localized" title="Edit" />);
+
+    act(() => {
+        mockRouter.navigate('test_localized', {id: 6});
+    });
+
+    expect(screen.getByRole('heading', {name: 'test_localized 6'})).toBeInTheDocument();
+    expect(mockRouter.attributes.locale).toEqual('de');
+});
+
+test('Close the overlay instead of rendering the back view of the view', () => {
+    const onClose = jest.fn();
+    render(<ViewOverlay attributes={{id: 5}} onClose={onClose} route="test_form" title="Edit" />);
+
+    act(() => {
+        mockRouter.restore('test_list', {});
+    });
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('heading', {name: 'test_form 5'})).toBeInTheDocument();
+});
+
+test('Close the overlay if no view vetoes it', async() => {
+    const onClose = jest.fn();
+    render(<ViewOverlay attributes={{id: 5}} onClose={onClose} route="test_form" title="Edit" />);
+
+    await userEvent.click(getCloseButton());
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test('Keep the overlay open if a view vetoes the close, until it closes it itself', async() => {
+    mockUpdateRouteHook.mockReturnValue(false);
+    const onClose = jest.fn();
+    render(<ViewOverlay attributes={{id: 5}} onClose={onClose} route="test_form" title="Edit" />);
+
+    await userEvent.click(getCloseButton());
+
+    expect(onClose).not.toHaveBeenCalled();
+    const [closeRoute, , closeOverlay] = mockUpdateRouteHook.mock.calls[0];
+    expect(closeRoute.name).toEqual('sulu_admin.view_overlay_close');
+
+    closeOverlay(closeRoute.name, {});
+    expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test('Destroy the own router when unmounted', () => {
+    const destroySpy = jest.spyOn(Router.prototype, 'destroy');
+    const {unmount} = render(<ViewOverlay attributes={{id: 5}} onClose={jest.fn()} route="test_form" title="Edit" />);
+
+    unmount();
+
+    expect(destroySpy).toHaveBeenCalledTimes(1);
+});
+
+test('Reuse the toolbar store of a depth and give a nested overlay its own', () => {
+    const storeKeys = () => Object.keys(toolbarStorePool.stores).filter((key) => key.includes('view_overlay'));
+
+    const {unmount: unmountFirst} = render(
+        <ViewOverlay attributes={{id: 5}} onClose={jest.fn()} route="test_form" title="First" />
+    );
+    unmountFirst();
+    const storeKeysAfterFirst = storeKeys();
+    expect(storeKeysAfterFirst).toContain('sulu_admin.view_overlay_1');
+
+    const {unmount: unmountSecond} = render(
+        <ViewOverlay attributes={{id: 6}} onClose={jest.fn()} route="test_form" title="Second" />
+    );
+    expect(storeKeys()).toEqual(storeKeysAfterFirst);
+
+    render(<ViewOverlay attributes={{id: 7}} onClose={jest.fn()} route="test_form" title="Nested" />);
+    expect(storeKeys()).toContain('sulu_admin.view_overlay_2');
+
+    unmountSecond();
+});

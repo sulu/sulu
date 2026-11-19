@@ -2,6 +2,14 @@
 
 ## 3.1.0
 
+### ViewBuilderFactoryInterface gained createViewOverlayListViewBuilder
+
+A class implementing `ViewBuilderFactoryInterface` must add the new method:
+
+```php
+public function createViewOverlayListViewBuilder(string $name, string $path): ViewOverlayListViewBuilderInterface;
+```
+
 ### Content resolvers declare their type and output path on the interface
 
 `ResolverInterface` gained two methods that every implementation must now provide:

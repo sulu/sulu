@@ -316,3 +316,22 @@ test('Remove last error if close button on snackbar is clicked', async() => {
 
     expect(toolbarStoreMock.errors).toHaveLength(0);
 });
+
+test('Hide the back button if asked to', () => {
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getBackButtonConfig.mockReturnValue({});
+
+    renderToolbar({hideBackButton: true});
+
+    expect(mockToolbarButtonProps).toEqual([]);
+});
+
+test('Do not render the snackbars if asked to', () => {
+    toolbarStoreMock.getLocaleConfig.mockReturnValue(undefined);
+    toolbarStoreMock.getBackButtonConfig.mockReturnValue(undefined);
+    toolbarStoreMock.errors.push('Something went wrong');
+
+    renderToolbar({hideSnackbars: true});
+
+    expect(screen.queryByTestId('error-snackbar')).not.toBeInTheDocument();
+});

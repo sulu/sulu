@@ -1,9 +1,9 @@
 // @flow
 import {observer} from 'mobx-react';
-import {action, computed, toJS} from 'mobx';
+import {computed, toJS} from 'mobx';
 import React, {Fragment} from 'react';
 import ToolbarComponent from '../../components/Toolbar';
-import Snackbar from '../../components/Snackbar';
+import ToolbarSnackbars from './ToolbarSnackbars';
 import ToolbarStore from './stores/ToolbarStore';
 import toolbarStorePool, {DEFAULT_STORE_KEY} from './stores/toolbarStorePool';
 import toolbarStyles from './toolbar.scss';
@@ -65,10 +65,6 @@ class Toolbar extends React.Component<ToolbarProps> {
         }
     };
 
-    @action handleErrorSnackbarCloseClick = () => {
-        this.toolbarStore.errors.pop();
-    };
-
     @computed get disableAllButtons() {
         const loadingItems = this.toolbarStore.getItemsConfig().filter((item) => item.loading);
         return this.toolbarStore.disableAll || loadingItems.length > 0;
@@ -101,10 +97,8 @@ class Toolbar extends React.Component<ToolbarProps> {
     }
 
     render() {
-        const {onNavigationButtonClick, navigationOpen} = this.props;
-        const {errors, showSuccess, warnings} = this.toolbarStore;
-        const lastError = errors[errors.length - 1];
-        const lastWarning = warnings[warnings.length - 1];
+        const {hideBackButton, hideSnackbars, onNavigationButtonClick, navigationOpen} = this.props;
+        const {showSuccess} = this.toolbarStore;
 
         const iconsConfig = this.toolbarStore.getIconsConfig();
         const itemsConfig = this.toolbarStore.getItemsConfig();
@@ -112,22 +106,7 @@ class Toolbar extends React.Component<ToolbarProps> {
 
         return (
             <Fragment>
-                <Snackbar
-                    actions={typeof lastError === 'object' ? lastError.actions : undefined}
-                    message={typeof lastError === 'object' ? lastError.message : lastError}
-                    onCloseClick={this.handleErrorSnackbarCloseClick}
-                    title={typeof lastError === 'object' ? lastError.title : undefined}
-                    type="error"
-                    visible={errors.length > 0}
-                />
-                <Snackbar
-                    actions={typeof lastWarning === 'object' ? lastWarning.actions : undefined}
-                    message={typeof lastWarning === 'object' ? lastWarning.message : lastWarning}
-                    onCloseClick={this.toolbarStore.config?.onWarningCloseClick}
-                    title={typeof lastWarning === 'object' ? lastWarning.title : undefined}
-                    type="warning"
-                    visible={warnings.length > 0}
-                />
+                {!hideSnackbars && <ToolbarSnackbars toolbarStore={this.toolbarStore} />}
                 <ToolbarComponent>
                     <ToolbarComponent.Controls grow={true}>
                         {!!onNavigationButtonClick &&
@@ -144,7 +123,7 @@ class Toolbar extends React.Component<ToolbarProps> {
                                 success={showSuccess}
                             />
                         }
-                        {!!this.backButtonConfig &&
+                        {!hideBackButton && !!this.backButtonConfig &&
                             <ToolbarComponent.Button
                                 {...this.backButtonConfig}
                                 icon={!onNavigationButtonClick && showSuccess ? SUCCESS_ICON : 'su-angle-left'}
