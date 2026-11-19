@@ -80,6 +80,11 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
             return;
         }
 
+        // The token path refuses these users when it loads them, so a named user gets no more.
+        if (null !== $user && (!$user->getEnabled() || $user->getLocked())) {
+            throw new AccessDeniedException('A disabled or locked user cannot publish.');
+        }
+
         $condition = $this->securityContextResolver->resolve($resourceKey, $resourceId, $locale);
 
         if ($this->isPublishGranted($condition, $resourceKey, $resourceId, $locale, $user)) {

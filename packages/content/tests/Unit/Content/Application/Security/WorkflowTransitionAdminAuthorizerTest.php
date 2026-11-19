@@ -279,7 +279,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
 
         $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
         $securityContextResolver->resolve(Example::RESOURCE_KEY, '1', 'en')
-            ->willReturn(new SecurityCondition('sulu.example', 'en'));
+            ->willReturn(new SecurityCondition('sulu.example', 'en', Example::RESOURCE_KEY, '1'));
 
         $authorizer = new WorkflowTransitionAdminAuthorizer(
             $securityContextResolver->reveal(),
@@ -383,16 +383,28 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
         return $provider;
     }
 
+    private function activeUser(bool $enabled = true, bool $locked = false): UserInterface
+    {
+        $user = $this->prophesize(UserInterface::class);
+        $user->getEnabled()->willReturn($enabled);
+        $user->getLocked()->willReturn($locked);
+
+        return $user->reveal();
+    }
+
     /**
      * A console run has no token, so the permissions come from the roles of the user it acts for.
      */
     public function testChecksTheGivenUserWithoutAToken(): void
     {
-        $user = $this->prophesize(UserInterface::class)->reveal();
+        $user = $this->activeUser();
         $accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
         $accessControlManager->getUserPermissions(Argument::that(
             static fn (SecurityCondition $condition): bool => 'Sulu' === $condition->getSystem()
-                && 'sulu.example' === $condition->getSecurityContext(),
+                && 'sulu.example' === $condition->getSecurityContext()
+                && 'en' === $condition->getLocale()
+                && Example::RESOURCE_KEY === $condition->getObjectType()
+                && '1' === $condition->getObjectId(),
         ), $user)->willReturn([PermissionTypes::LIVE => true, PermissionTypes::EDIT => true]);
 
         $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
@@ -404,7 +416,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
 
     public function testCannotPublishAsAGivenUserWithoutTheLivePermission(): void
     {
-        $user = $this->prophesize(UserInterface::class)->reveal();
+        $user = $this->activeUser();
         $accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
         $accessControlManager->getUserPermissions(Argument::cetera())
             ->willReturn([PermissionTypes::LIVE => false, PermissionTypes::EDIT => false]);
@@ -421,7 +433,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
 
     public function testCanPublishAsAGivenUserWithEditAndAnApprovedRequest(): void
     {
-        $user = $this->prophesize(UserInterface::class)->reveal();
+        $user = $this->activeUser();
         $accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
         $accessControlManager->getUserPermissions(Argument::cetera())
             ->willReturn([PermissionTypes::LIVE => false, PermissionTypes::EDIT => true]);
@@ -440,7 +452,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
      */
     public function testTheGivenUserWinsOverTheToken(): void
     {
-        $user = $this->prophesize(UserInterface::class)->reveal();
+        $user = $this->activeUser();
         $accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
         $accessControlManager->getUserPermissions(Argument::cetera(), $user)
             ->willReturn([PermissionTypes::LIVE => false, PermissionTypes::EDIT => false]);
@@ -449,6 +461,57 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
         $securityChecker->hasPermission(Argument::cetera())->shouldNotBeCalled();
 
         $authorizer = $this->createAuthorizerForUser($securityChecker, $accessControlManager, withToken: true);
+
+        $this->expectException(AccessDeniedException::class);
+
+        $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en', $user);
+    }
+
+    public function testCannotPublishAsADisabledUser(): void
+    {
+        $accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
+        $accessControlManager->getUserPermissions(Argument::cetera())->shouldNotBeCalled();
+
+        $authorizer = $this->createAuthorizerForUser(
+            $this->prophesize(SecurityCheckerInterface::class),
+            $accessControlManager,
+        );
+
+        $this->expectException(AccessDeniedException::class);
+
+        $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en', $this->activeUser(enabled: false));
+    }
+
+    public function testCannotPublishAsALockedUser(): void
+    {
+        $accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
+        $accessControlManager->getUserPermissions(Argument::cetera())->shouldNotBeCalled();
+
+        $authorizer = $this->createAuthorizerForUser(
+            $this->prophesize(SecurityCheckerInterface::class),
+            $accessControlManager,
+        );
+
+        $this->expectException(AccessDeniedException::class);
+
+        $authorizer->assertCanPublish(Example::RESOURCE_KEY, '1', 'en', $this->activeUser(locked: true));
+    }
+
+    /**
+     * The manager returns no permissions for a user whose roles sit in another system, so only the
+     * fallback denies.
+     */
+    public function testCannotPublishAsAUserWhoseRolesSitInAnotherSystem(): void
+    {
+        $user = $this->activeUser();
+        $accessControlManager = $this->prophesize(AccessControlManagerInterface::class);
+        $accessControlManager->getUserPermissions(Argument::cetera())->willReturn([]);
+
+        $authorizer = $this->createAuthorizerForUser(
+            $this->prophesize(SecurityCheckerInterface::class),
+            $accessControlManager,
+            $this->approvedRequest(),
+        );
 
         $this->expectException(AccessDeniedException::class);
 
@@ -479,7 +542,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
 
         $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
         $securityContextResolver->resolve(Example::RESOURCE_KEY, '1', 'en')
-            ->willReturn(new SecurityCondition('sulu.example', 'en'));
+            ->willReturn(new SecurityCondition('sulu.example', 'en', Example::RESOURCE_KEY, '1'));
 
         $tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $tokenStorage->getToken()->willReturn(null);
@@ -511,7 +574,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
     ): WorkflowTransitionAdminAuthorizer {
         $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
         $securityContextResolver->resolve(Example::RESOURCE_KEY, '1', 'en')
-            ->willReturn(new SecurityCondition('sulu.example', 'en'));
+            ->willReturn(new SecurityCondition('sulu.example', 'en', Example::RESOURCE_KEY, '1'));
 
         $tokenStorage = $this->prophesize(TokenStorageInterface::class);
         $tokenStorage->getToken()->willReturn($withToken ? $this->prophesize(TokenInterface::class)->reveal() : null);
@@ -535,7 +598,7 @@ class WorkflowTransitionAdminAuthorizerTest extends TestCase
     {
         $securityContextResolver = $this->prophesize(WorkflowTransitionRequestSecurityContextResolverInterface::class);
         $securityContextResolver->resolve(Example::RESOURCE_KEY, '1', 'en')
-            ->willReturn(new SecurityCondition('sulu.example', 'en'));
+            ->willReturn(new SecurityCondition('sulu.example', 'en', Example::RESOURCE_KEY, '1'));
 
         return new WorkflowTransitionAdminAuthorizer(
             $securityContextResolver->reveal(),

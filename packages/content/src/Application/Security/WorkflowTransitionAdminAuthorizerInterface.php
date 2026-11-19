@@ -32,9 +32,9 @@ interface WorkflowTransitionAdminAuthorizerInterface
 
     /**
      * Without a user the current token is checked. A caller that runs without one, such as a console
-     * command, passes the user it acts for.
+     * command, passes the user it acts for. A disabled or locked user is refused, as the token path refuses it.
      *
-     * @throws AccessDeniedException when the user holds neither the LIVE permission nor the EDIT
+     * @throws AccessDeniedException when the user is disabled or locked, or holds neither the LIVE permission nor the EDIT
      *                               permission together with an approved active request
      */
     public function assertCanPublish(string $resourceKey, string $resourceId, string $locale, ?UserInterface $user = null): void;
