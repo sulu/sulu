@@ -197,4 +197,19 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function findAncestorCategories(CategoryInterface $category): array
+    {
+        /** @var CategoryInterface[] */
+        return $this->createQueryBuilder('category')
+            ->addSelect('categoryTranslations')
+            ->leftJoin('category.translations', 'categoryTranslations')
+            ->where('category.lft < :lft')
+            ->andWhere('category.rgt > :rgt')
+            ->orderBy('category.lft', 'ASC')
+            ->setParameter('lft', $category->getLft())
+            ->setParameter('rgt', $category->getRgt())
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -25,6 +25,7 @@ use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRestoredEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryTranslationAddedEvent;
 use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search\AdminCategoryIndexListener;
 use Sulu\Bundle\CategoryBundle\Infrastructure\Sulu\Search\AdminCategoryReindexProvider;
+use Sulu\Bundle\CategoryBundle\Serializer\Subscriber\CategoryBreadcrumbSubscriber;
 use Sulu\Bundle\CategoryBundle\Twig\CategoryTwigExtension;
 use Sulu\Component\Category\Request\CategoryRequestHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -121,4 +122,11 @@ return static function(ContainerConfigurator $container) {
             tagged_iterator('sulu_category.admin_category_reindex_provider_enhancer'),
         ])
         ->tag('cmsig_seal.reindex_provider');
+
+    $services->set('sulu_category.serializer.breadcrumb', CategoryBreadcrumbSubscriber::class)
+        ->args([
+            new Reference('sulu.repository.category'),
+        ])
+        ->tag('jms_serializer.event_subscriber')
+        ->tag('sulu.context', ['context' => 'admin']);
 };
