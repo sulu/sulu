@@ -18,6 +18,8 @@ use PHPUnit\Framework\TestCase;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\ExcerptRequiredPreValidator;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\SeoRequiredPreValidator;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ValidateRequestWorkflowsPass;
+use Sulu\Content\Tests\Unit\Content\Application\WorkflowTransitionRequest\Action\ReservedKeyWorkflowTransitionRequestAction;
+use Sulu\Content\Tests\Unit\Content\Application\WorkflowTransitionRequest\Action\StubWorkflowTransitionRequestAction;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Filesystem\Filesystem;
@@ -137,6 +139,50 @@ class ValidateRequestWorkflowsPassTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function testAnActionUnderAKeyOfTheCoreIsReported(): void
+    {
+        $container = $this->createContainer([]);
+        $this->registerAction($container, 'app.approve_action', ReservedKeyWorkflowTransitionRequestAction::class);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The workflow transition request action key "approve" belongs to the core and is registered by: app.approve_action');
+
+        (new ValidateRequestWorkflowsPass())->process($container);
+    }
+
+    public function testAnActionUnderAReservedKeyOfItsTagIsReported(): void
+    {
+        $container = $this->createContainer([]);
+        $this->registerAction($container, 'app.stub_action', StubWorkflowTransitionRequestAction::class, 'publish');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The workflow transition request action key "publish" belongs to the core');
+
+        (new ValidateRequestWorkflowsPass())->process($container);
+    }
+
+    public function testTwoActionsSharingAKeyAreReported(): void
+    {
+        $container = $this->createContainer([]);
+        $this->registerAction($container, 'app.first', StubWorkflowTransitionRequestAction::class);
+        $this->registerAction($container, 'app.second', StubWorkflowTransitionRequestAction::class);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The workflow transition request action key "stub" is registered by several services: app.first, app.second');
+
+        (new ValidateRequestWorkflowsPass())->process($container);
+    }
+
+    public function testActionsUnderTheirOwnKeysPass(): void
+    {
+        $container = $this->createContainer([]);
+        $this->registerAction($container, 'app.stub_action', StubWorkflowTransitionRequestAction::class);
+
+        (new ValidateRequestWorkflowsPass())->process($container);
+
+        $this->addToAssertionCount(1);
+    }
+
     public function testWebsiteContainerIsNotChecked(): void
     {
         $container = $this->createContainer(['seo' => ['pre_validators' => ['does_not_exist' => null]]]);
@@ -167,6 +213,17 @@ class ValidateRequestWorkflowsPassTest extends TestCase
     {
         $definition = new Definition($class);
         $definition->addTag('sulu_content.request_workflow_pre_validator', null !== $key ? ['key' => $key] : []);
+
+        $container->setDefinition($id, $definition);
+    }
+
+    /**
+     * @param class-string $class
+     */
+    private function registerAction(ContainerBuilder $container, string $id, string $class, ?string $key = null): void
+    {
+        $definition = new Definition($class);
+        $definition->addTag('sulu_content.workflow_transition_request_action', null !== $key ? ['key' => $key] : []);
 
         $container->setDefinition($id, $definition);
     }

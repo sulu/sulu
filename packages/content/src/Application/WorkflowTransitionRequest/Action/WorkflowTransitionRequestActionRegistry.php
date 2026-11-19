@@ -21,8 +21,10 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 final class WorkflowTransitionRequestActionRegistry implements WorkflowTransitionRequestActionRegistryInterface
 {
     /**
-     * The actions of the core, which the request controller handles itself, so a bundle's action under
-     * one of these keys would never be reached.
+     * The five keys are reserved for the core. The request controller handles approve, reject and retry,
+     * and cancel and publish run as transitions of the content, so the controller answers 400 to them.
+     * An action of a bundle under one of these keys would never be reached, and the compiler pass
+     * {@see \Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ValidateRequestWorkflowsPass} refuses it.
      */
     public const RESERVED_KEYS = ['approve', 'reject', 'retry', 'cancel', 'publish'];
 
@@ -56,17 +58,6 @@ final class WorkflowTransitionRequestActionRegistry implements WorkflowTransitio
 
     private function load(string $key): WorkflowTransitionRequestActionInterface
     {
-        $action = $this->actions->get($key);
-
-        if (\in_array($key, self::RESERVED_KEYS, true)) {
-            throw new \LogicException(\sprintf(
-                'The workflow transition request action "%s" uses the key "%s", which belongs to the core. Reserved keys: %s.',
-                $action::class,
-                $key,
-                \implode(', ', self::RESERVED_KEYS),
-            ));
-        }
-
-        return $action;
+        return $this->actions->get($key);
     }
 }
