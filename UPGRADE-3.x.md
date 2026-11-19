@@ -8,6 +8,11 @@ A smart content no longer lists the page, article or snippet it is rendered on, 
 smart content providers get the rendered resource in the `resource` filter (`resourceKey` and `id`) and exclude it when
 the resource key is their own. Custom smart content providers keep listing it unless they do the same.
 
+### The excluded key is removed from the smart content view
+
+The view of a smart content no longer contains `excluded`. It was always an empty array, so templates reading it need
+to drop that.
+
 ### New constructor argument for the selection property resolvers and smart content providers
 
 The selection property resolvers, `TeaserSelectionPropertyResolver`, `ImageMapPropertyResolver` and the smart content
