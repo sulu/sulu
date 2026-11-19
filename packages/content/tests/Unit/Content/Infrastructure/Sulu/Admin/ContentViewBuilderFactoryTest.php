@@ -510,7 +510,9 @@ class ContentViewBuilderFactoryTest extends TestCase
         $provider = $this->prophesize(SaveToolbarActionProviderInterface::class);
         $provider->getToolbarActions(Example::class)->willReturn([
             new ToolbarAction('app.publish_at', ['permission' => PermissionTypes::LIVE, 'visible_condition' => '!active']),
+            new ToolbarAction('app.save_as', ['permission' => PermissionTypes::EDIT]),
             new ToolbarAction('app.other'),
+            new ToolbarAction('app.own', ['visible_condition' => 'own']),
         ]);
 
         $contentViewBuilder = $this->createContentViewBuilder(
@@ -529,9 +531,38 @@ class ContentViewBuilderFactoryTest extends TestCase
         $allEntries = $save->getOptions()['toolbarActions'];
         $entries = \array_slice($allEntries, 4);
 
-        $this->assertSame('(liveCondition) && (!active)', $entries[0]->getOptions()['visible_condition']);
+        $this->assertSame('(liveCondition) && (!active) && !activeWorkflowTransitionRequest', $entries[0]->getOptions()['visible_condition']);
         $this->assertSame(PermissionTypes::LIVE, $entries[0]->getOptions()['permission']);
-        $this->assertSame([], $entries[1]->getOptions(), 'An entry without a permission stays as it is.');
+        $this->assertSame('(saveCondition) && !activeWorkflowTransitionRequest', $entries[1]->getOptions()['visible_condition']);
+        $this->assertSame(
+            ['visible_condition' => '!activeWorkflowTransitionRequest'],
+            $entries[2]->getOptions(),
+            'An entry without a permission is still hidden while a request is open.',
+        );
+        $this->assertSame('(own) && !activeWorkflowTransitionRequest', $entries[3]->getOptions()['visible_condition']);
+    }
+
+    public function testAnEntryOfAProviderWithAnUnsupportedPermissionThrows(): void
+    {
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $provider = $this->prophesize(SaveToolbarActionProviderInterface::class);
+        $provider->getToolbarActions(Example::class)->willReturn([
+            new ToolbarAction('app.delete_all', ['permission' => PermissionTypes::DELETE]),
+        ]);
+
+        $contentViewBuilder = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
+            saveToolbarActionProviders: [$provider->reveal()],
+        );
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('names the permission "delete", but only "edit", "live" are supported');
+
+        $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(Example::class);
     }
 
     public function testCreateViewsDropsAnEntryOfAProviderWhoseNamedPermissionTheUserLacks(): void

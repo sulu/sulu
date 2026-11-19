@@ -27,6 +27,7 @@ use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Infrastructure\Doctrine\MetadataLoader;
 use Sulu\Content\Infrastructure\Doctrine\Repository\WorkflowTransitionRequestRepository;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
+use Sulu\Content\Infrastructure\Sulu\Admin\SaveToolbarActionProviderInterface;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\SuluContentBundle;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
@@ -68,6 +69,17 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
         $this->assertSame(
             5,
             \count($passConfig->getPasses()) - $beforeCount
+        );
+    }
+
+    public function testSaveToolbarActionProviderIsAutoconfiguredWithItsTag(): void
+    {
+        $containerBuilder = new ContainerBuilder();
+        $this->getContentBundle()->build($containerBuilder);
+
+        $this->assertSame(
+            ['sulu_content.save_toolbar_action_provider' => [[]]],
+            $containerBuilder->getAutoconfiguredInstanceof()[SaveToolbarActionProviderInterface::class]->getTags(),
         );
     }
 

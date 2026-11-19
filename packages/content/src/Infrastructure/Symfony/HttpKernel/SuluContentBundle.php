@@ -30,6 +30,7 @@ use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedExcep
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestPreValidationFailedException;
 use Sulu\Content\Infrastructure\Doctrine\EventListener\RouteCleanupListener;
+use Sulu\Content\Infrastructure\Sulu\Admin\SaveToolbarActionProviderInterface;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ExcerptFormPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\ResourceLoaderCacheCompilerPass;
 use Sulu\Content\Infrastructure\Symfony\HttpKernel\Compiler\SeoFormPass;
@@ -261,5 +262,8 @@ final class SuluContentBundle extends AbstractBundle
 
         $container->registerForAutoconfiguration(RequestWorkflowPreValidatorInterface::class)
             ->addTag('sulu_content.request_workflow_pre_validator');
+
+        $container->registerForAutoconfiguration(SaveToolbarActionProviderInterface::class)
+            ->addTag('sulu_content.save_toolbar_action_provider');
     }
 }

@@ -19,11 +19,12 @@ use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
  * Adds entries to the dropdown of the save button of a content form, for example a bundle that offers one more way to
- * publish. Tag the service with `sulu_content.save_toolbar_action_provider`.
+ * publish. A service implementing this interface is tagged with `sulu_content.save_toolbar_action_provider` by
+ * autoconfiguration.
  *
  * The entries are appended behind the ones of the core. A provider decides itself for which content it answers. An entry
- * carries its own `visible_condition`. The option `permission` names a permission the user needs on the content, `edit`
- * or `live`: the core then adds the condition its caller uses for that permission to the one of the entry, and drops the
+ * carries its own `visible_condition`. The core hides every entry while a request for publishing is open. The option `permission` names a permission the user needs on the content, `edit`
+ * or `live`, any other value throws: the core then adds the condition its caller uses for that permission to the one of the entry, and drops the
  * entry for users without the permission where it knows the security context.
  *
  * @experimental

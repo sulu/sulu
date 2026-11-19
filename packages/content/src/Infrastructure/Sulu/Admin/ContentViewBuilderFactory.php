@@ -158,14 +158,17 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
     }
 
     /**
-     * An entry that names a permission also gets the condition of the caller for it, because a caller like the page
-     * admin decides on the permissions of the webspace, which the condition of a provider cannot know.
+     * Every entry is hidden while a request is open, like the entries of the core. An entry that names a permission also
+     * gets the condition of the caller for it, because a caller like the page admin decides on the permissions of the
+     * webspace, which the condition of a provider cannot know.
      *
      * @template T of DimensionContentInterface
      *
      * @param class-string<ContentRichEntityInterface<T>> $contentRichEntityClass
      *
      * @return list<ToolbarAction>
+     *
+     * @throws \InvalidArgumentException when an entry names a permission other than `edit` or `live`
      */
     private function getProvidedSaveToolbarActions(
         string $contentRichEntityClass,
@@ -183,12 +186,28 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                 $options = $toolbarAction->getOptions();
                 $permission = $options['permission'] ?? null;
 
-                if (\is_string($permission) && isset($conditions[$permission])) {
-                    $own = $options['visible_condition'] ?? null;
-                    $options['visible_condition'] = '(' . $conditions[$permission] . ')'
-                        . (\is_string($own) && '' !== $own ? ' && (' . $own . ')' : '');
-                    $toolbarAction = new ToolbarAction($toolbarAction->getType(), $options);
+                if (null !== $permission && (!\is_string($permission) || !isset($conditions[$permission]))) {
+                    throw new \InvalidArgumentException(\sprintf(
+                        'The entry "%s" of the save toolbar action provider "%s" names the permission "%s", but only "%s" are supported.',
+                        $toolbarAction->getType(),
+                        $provider::class,
+                        \is_string($permission) ? $permission : \get_debug_type($permission),
+                        \implode('", "', \array_keys($conditions)),
+                    ));
                 }
+
+                $own = $options['visible_condition'] ?? null;
+                $parts = [];
+                if (null !== $permission) {
+                    $parts[] = '(' . $conditions[$permission] . ')';
+                }
+                if (\is_string($own) && '' !== $own) {
+                    $parts[] = '(' . $own . ')';
+                }
+                $parts[] = '!activeWorkflowTransitionRequest';
+
+                $options['visible_condition'] = \implode(' && ', $parts);
+                $toolbarAction = new ToolbarAction($toolbarAction->getType(), $options);
 
                 $toolbarActions[] = $toolbarAction;
             }
