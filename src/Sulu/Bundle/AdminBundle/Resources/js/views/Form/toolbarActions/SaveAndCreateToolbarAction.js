@@ -18,12 +18,18 @@ import type {ElementRef} from 'react';
  * Saves the form as a draft and then creates an item of another resource, with the values a dialog form asks for. A
  * bundle uses it to schedule something for the saved content, for example a publish at a date.
  *
+ * The content is submitted through the validation of the form. The item is created after the save succeeded, also
+ * after a has-changed conflict was confirmed. A failed creation shows an error, and the entry stays disabled while the
+ * request is running.
+ *
  * Options: `formKey` of the dialog form, `resourceKey` of the resource to create, `title` of the dialog, `label` of the
  * entry (both translation keys), `data` and `parameters` that are sent along. The id and the locale of the saved
- * content are sent as the parameters named by `idParameter` and `localeParameter`.
+ * content are sent as the query parameters named by `idParameter` (required, never "id") and `localeParameter`
+ * (default "locale"). They must not be named like a placeholder of the detail route, or they end up in the path.
  */
 export default class SaveAndCreateToolbarAction extends AbstractFormToolbarAction {
     @observable showDialog: boolean = false;
+    @observable creating: boolean = false;
     dialogForm: ?FormContainer;
     dialogFormStore: FormStoreInterface;
 
@@ -47,6 +53,14 @@ export default class SaveAndCreateToolbarAction extends AbstractFormToolbarActio
             throw new Error('The "resourceKey" option of the SaveAndCreateToolbarAction must be a string!');
         }
 
+        // The resource is created on its collection route. A parameter named like the route placeholder ("id")
+        // would end up in the path of the detail URL, which does not accept a POST.
+        if (typeof options.idParameter !== 'string' || options.idParameter === 'id') {
+            throw new Error(
+                'The "idParameter" option of the SaveAndCreateToolbarAction must be a string other than "id"!'
+            );
+        }
+
         this.dialogFormStore = memoryFormStoreFactory.createFromFormKey(formKey);
     }
 
@@ -63,39 +77,58 @@ export default class SaveAndCreateToolbarAction extends AbstractFormToolbarActio
     };
 
     @action handleSubmit = () => {
-        const {
-            data = {},
-            idParameter = 'id',
-            localeParameter = 'locale',
-            parameters = {},
-            resourceKey,
-        } = this.options;
-        const dialogData = {...(data: any), ...this.dialogFormStore.data};
+        const dialogData = {...(this.options.data: any), ...this.dialogFormStore.data};
         this.showDialog = false;
 
-        // The item belongs to the saved content, so the content is stored first. A content that is new has no id yet.
-        return this.form.save({action: 'draft'}).then((response) => {
-            if (!response) {
-                return;
-            }
-
-            const {id, locale} = this.resourceFormStore;
-
-            return ResourceRequester.post(
-                String(resourceKey),
-                dialogData,
-                {
-                    ...(parameters: any),
-                    [String(idParameter)]: id,
-                    [String(localeParameter)]: locale ? locale.get() : undefined,
-                }
-            ).then(() => {
-                this.form.showSuccessSnackbar();
-            });
-        }).catch((error) => {
-            log.error('The item could not be created.', error);
-        });
+        // The item belongs to the saved content, so the content is stored first, through the validation of the form.
+        // The creation runs as the continuation of the save, so it also runs after the has-changed dialog was
+        // confirmed and the save was repeated. A content that is new has no id before the save.
+        return this.form.submitAndContinue({action: 'draft'}, () => this.createItem(dialogData));
     };
+
+    @action setCreating(creating: boolean) {
+        this.creating = creating;
+    }
+
+    createItem(dialogData: Object) {
+        const {idParameter, localeParameter = 'locale', parameters = {}, resourceKey} = this.options;
+        const {id, locale} = this.resourceFormStore;
+
+        this.setCreating(true);
+
+        return ResourceRequester.post(
+            String(resourceKey),
+            dialogData,
+            {
+                ...(parameters: any),
+                [String(idParameter)]: id,
+                [String(localeParameter)]: locale ? locale.get() : undefined,
+            }
+        ).then(() => {
+            this.setCreating(false);
+            this.form.showSuccessSnackbar();
+        }).catch((error) => {
+            this.setCreating(false);
+            log.error('The item could not be created.', error);
+
+            return this.showError(error);
+        });
+    }
+
+    showError(error: mixed) {
+        const fallback = translate('sulu_admin.form_save_server_error');
+
+        if (!error || typeof (error: any).json !== 'function') {
+            this.form.errors.push(fallback);
+
+            return;
+        }
+
+        return (error: any).json().then(
+            (data) => this.form.errors.push(data.detail || data.title || fallback),
+            () => this.form.errors.push(fallback)
+        );
+    }
 
     setDialogFormRef = (dialogForm: ?ElementRef<typeof FormContainer>) => {
         this.dialogForm = dialogForm;
@@ -131,7 +164,7 @@ export default class SaveAndCreateToolbarAction extends AbstractFormToolbarActio
         }
 
         return {
-            disabled: this.resourceFormStore.saving,
+            disabled: this.resourceFormStore.saving || this.creating,
             label: typeof label === 'string' ? translate(label) : '',
             onClick: action(() => {
                 this.showDialog = true;

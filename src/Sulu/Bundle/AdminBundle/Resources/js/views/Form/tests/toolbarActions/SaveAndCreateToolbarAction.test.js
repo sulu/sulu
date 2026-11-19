@@ -43,13 +43,17 @@ jest.mock('../../../../services/ResourceRequester', () => ({post: jest.fn(() => 
 jest.mock('../../../../services/Router', () => jest.fn());
 
 jest.mock('../../../../views/Form', () => jest.fn(function() {
-    this.save = jest.fn(() => Promise.resolve({id: 'content-id'}));
+    this.errors = [];
+    this.submitAndContinue = jest.fn((options, continuation) => {
+        return Promise.resolve({id: 'content-id'}).then((response) => continuation(response));
+    });
     this.showSuccessSnackbar = jest.fn();
 }));
 
 const OPTIONS = {
     data: {handlerClass: 'Handler'},
     formKey: 'dialog_form',
+    idParameter: 'entityId',
     label: 'app.publish_at',
     parameters: {entityClass: 'Entity'},
     resourceKey: 'tasks',
@@ -128,38 +132,90 @@ test('Submit the dialog form when the dialog is confirmed', () => {
     expect(submit).toHaveBeenCalledWith();
 });
 
-test('Save the form and create the item with the data of the dialog and the id of the content', () => {
+test('Submit the form as a draft and create the item with the data of the dialog and the id of the content', () => {
     const saveAndCreateToolbarAction = createAction();
 
     return saveAndCreateToolbarAction.handleSubmit().then(() => {
-        expect(saveAndCreateToolbarAction.form.save).toHaveBeenCalledWith({action: 'draft'});
+        expect(saveAndCreateToolbarAction.form.submitAndContinue)
+            .toHaveBeenCalledWith({action: 'draft'}, expect.any(Function));
         expect(ResourceRequester.post).toHaveBeenCalledWith(
             'tasks',
             {handlerClass: 'Handler', schedule: '2026-11-25T10:00:00+00:00'},
-            {entityClass: 'Entity', id: 'content-id', locale: 'en'}
+            {entityClass: 'Entity', entityId: 'content-id', locale: 'en'}
         );
         expect(saveAndCreateToolbarAction.form.showSuccessSnackbar).toHaveBeenCalledWith();
     });
 });
 
 test('Name the parameters of the content as the options say', () => {
-    const saveAndCreateToolbarAction = createAction({...OPTIONS, idParameter: 'entityId', localeParameter: 'lang'});
+    const saveAndCreateToolbarAction = createAction({...OPTIONS, idParameter: 'contentId', localeParameter: 'lang'});
 
     return saveAndCreateToolbarAction.handleSubmit().then(() => {
         expect(ResourceRequester.post).toHaveBeenCalledWith(
             'tasks',
             expect.anything(),
-            {entityClass: 'Entity', entityId: 'content-id', lang: 'en'}
+            {entityClass: 'Entity', contentId: 'content-id', lang: 'en'}
         );
     });
 });
 
-test('Create nothing when the save did not succeed', () => {
+test('Throw an error if no idParameter is passed', () => {
+    const {idParameter, ...options} = OPTIONS;
+
+    expect(() => createAction(options)).toThrow(/"idParameter"/);
+});
+
+test('Throw an error if the idParameter would end up in the path of the detail URL', () => {
+    expect(() => createAction({...OPTIONS, idParameter: 'id'})).toThrow(/"idParameter"/);
+});
+
+test('Create nothing while the continuation has not run, as with an invalid form or a pending conflict', () => {
     const saveAndCreateToolbarAction = createAction();
-    (saveAndCreateToolbarAction.form: any).save.mockReturnValue(Promise.resolve(undefined));
+    (saveAndCreateToolbarAction.form: any).submitAndContinue.mockReturnValue(Promise.resolve(undefined));
 
     return saveAndCreateToolbarAction.handleSubmit().then(() => {
         expect(ResourceRequester.post).not.toHaveBeenCalled();
+    });
+});
+
+test('Show the error of the server and no success snackbar when the creation failed', () => {
+    const saveAndCreateToolbarAction = createAction();
+    ResourceRequester.post.mockReturnValueOnce(Promise.reject({json: () => Promise.resolve({detail: 'Not allowed'})}));
+
+    return saveAndCreateToolbarAction.handleSubmit().then(() => {
+        expect(saveAndCreateToolbarAction.form.errors).toEqual(['Not allowed']);
+        expect(saveAndCreateToolbarAction.form.showSuccessSnackbar).not.toHaveBeenCalled();
+        expect(saveAndCreateToolbarAction.creating).toEqual(false);
+    });
+});
+
+test('Show a generic error when the failure carries no response', () => {
+    const saveAndCreateToolbarAction = createAction();
+    ResourceRequester.post.mockReturnValueOnce(Promise.reject(new Error('network')));
+
+    return saveAndCreateToolbarAction.handleSubmit().then(() => {
+        expect(saveAndCreateToolbarAction.form.errors).toEqual(['sulu_admin.form_save_server_error']);
+    });
+});
+
+test('Disable the entry while the creation is running', () => {
+    const saveAndCreateToolbarAction = createAction();
+    let resolvePost;
+    ResourceRequester.post.mockReturnValueOnce(new Promise((resolve) => {
+        resolvePost = resolve;
+    }));
+
+    expect(saveAndCreateToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({disabled: false}));
+
+    const promise = saveAndCreateToolbarAction.handleSubmit();
+
+    return Promise.resolve().then(() => {
+        expect(saveAndCreateToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({disabled: true}));
+        resolvePost({});
+
+        return promise;
+    }).then(() => {
+        expect(saveAndCreateToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({disabled: false}));
     });
 });
 
