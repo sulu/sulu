@@ -18,14 +18,12 @@ use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 
 /**
- * Adds entries to the dropdown of the save button of a content form, for example a bundle that offers one more way to
- * publish. A service implementing this interface is tagged with `sulu_content.save_toolbar_action_provider` by
- * autoconfiguration.
+ * Adds entries to the dropdown of the save button of a content form, for example one more way to publish.
+ * Autoconfigured with the tag `sulu_content.save_toolbar_action_provider`.
  *
- * The entries are appended behind the ones of the core. A provider decides itself for which content it answers. An entry
- * carries its own `visible_condition`. The core hides every entry while a request for publishing is open. The option `permission` names a permission the user needs on the content, `edit`
- * or `live`, any other value throws: the core then adds the condition its caller uses for that permission to the one of the entry, and drops the
- * entry for users without the permission where it knows the security context.
+ * The entries are appended behind the core's and hidden while a request is open. The option `permission`, `edit` or
+ * `live`, adds the caller's condition for it and drops the entry for users without it where the security context is
+ * known; any other value throws.
  *
  * @experimental
  */

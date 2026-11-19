@@ -158,9 +158,8 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
     }
 
     /**
-     * Every entry is hidden while a request is open, like the entries of the core. An entry that names a permission also
-     * gets the condition of the caller for it, because a caller like the page admin decides on the permissions of the
-     * webspace, which the condition of a provider cannot know.
+     * Every entry is hidden while a request is open. An entry that names a permission also gets the caller's condition
+     * for it, because only the caller, like the page admin, knows the permissions of the webspace.
      *
      * @template T of DimensionContentInterface
      *
