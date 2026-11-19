@@ -167,6 +167,10 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_admin.collaboration_interval', $config['collaboration']['interval']);
         $container->setParameter('sulu_admin.collaboration_threshold', $config['collaboration']['threshold']);
 
+        /** @var array{default_limit: int} $smartContent */
+        $smartContent = $config['smart_content'];
+        $container->setParameter('sulu_admin.smart_content.default_limit', $smartContent['default_limit']);
+
         /** @var array{content_locales: list<string>} $textEditor */
         $textEditor = $config['text_editor'];
         $container->setParameter(

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Tests\Unit\Application\SmartResolver\Resolver;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -330,5 +331,68 @@ class SmartContentSmartResolverTest extends TestCase
         $this->assertCount(2, $view['categories']);
         $this->assertSame('category', $view['categories'][0]->getResourceLoaderKey());
         $this->assertSame('category', $view['categories'][1]->getResourceLoaderKey());
+    }
+
+    /**
+     * @return array<string, array{0: int|null, 1: int|null, 2: int, 3: int, 4?: int}>
+     */
+    public static function limitProvider(): array
+    {
+        return [
+            'default_limit' => [null, null, SmartContentProviderInterface::DEFAULT_LIMIT, SmartContentProviderInterface::DEFAULT_LIMIT],
+            'limit_above_default' => [150, null, 150, 150],
+            'paginated_without_limit' => [null, 10, 10, 250],
+            'configured_default_limit' => [null, null, 20, 20, 20],
+        ];
+    }
+
+    #[DataProvider('limitProvider')]
+    public function testResolveLimit(?int $limit, ?int $maxPerPage, int $expectedQueryLimit, int $expectedTotal, ?int $defaultLimit = null): void
+    {
+        if (null !== $defaultLimit) {
+            $this->smartResolver = new SmartContentSmartResolver($this->serviceLocator->reveal(), $defaultLimit);
+        }
+
+        $smartResolvable = $this->prophesize(SmartResolvable::class);
+        $smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
+
+        $smartResolvable->getData()->willReturn([
+            'value' => [],
+            'filters' => [
+                'dataSource' => null,
+                'includeSubFolders' => false,
+                'categories' => [],
+                'categoryOperator' => 'OR',
+                'tagOperator' => 'OR',
+                'types' => [],
+                'typesOperator' => 'OR',
+                'websiteCategories' => [],
+                'websiteCategoryOperator' => 'OR',
+                'websiteTags' => [],
+                'websiteTagOperator' => 'OR',
+                'limit' => $limit,
+                'maxPerPage' => $maxPerPage,
+                'page' => 1,
+            ],
+            'sortBys' => [],
+            'parameters' => ['provider' => 'articles'],
+        ]);
+
+        $this->serviceLocator->has('articles')->willReturn(true);
+        $this->serviceLocator->get('articles')->willReturn($smartContentProvider->reveal());
+
+        $smartContentProvider->findFlatBy(
+            Argument::that(fn (array $filters) => $expectedQueryLimit === $filters['limit']),
+            Argument::cetera(),
+        )->willReturn([])->shouldBeCalled();
+        $smartContentProvider->countBy(Argument::cetera())->willReturn(250);
+        $smartContentProvider->getResourceLoaderKey()->willReturn('articles');
+        $smartContentProvider->getType()->willReturn('articles');
+        $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
+
+        $view = $this->smartResolver->resolve($smartResolvable->reveal(), 'en')->getView();
+
+        $this->assertSame($expectedTotal, $view['total']);
+        $this->assertSame($limit, $view['limit']);
     }
 }

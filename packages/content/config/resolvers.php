@@ -181,6 +181,7 @@ return static function(ContainerConfigurator $container) {
     $services->set('sulu_content.smart_content_smart_resolver', SmartContentSmartResolver::class)
         ->args([
             tagged_locator('sulu_content.smart_content_provider', indexAttribute: 'type', defaultIndexMethod: 'getType'),
+            '%sulu_admin.smart_content.default_limit%',
         ])
         ->tag('sulu_content.smart_resolver', ['type' => 'smart_content']);
 };

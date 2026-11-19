@@ -423,6 +423,7 @@ return static function(ContainerConfigurator $container) {
             tagged_locator('sulu_content.smart_content_provider', indexAttribute: 'type', defaultIndexMethod: 'getType'),
             new Reference('fos_rest.view_handler'),
             new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            '%sulu_admin.smart_content.default_limit%',
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 

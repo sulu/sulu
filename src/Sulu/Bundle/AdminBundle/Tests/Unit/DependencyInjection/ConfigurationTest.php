@@ -44,4 +44,31 @@ class ConfigurationTest extends TestCase
             ['text_editor' => ['content_locales' => ['en', 'de_at']]],
         ]);
     }
+
+    public function testSmartContentDefaultLimitDefaultsTo100(): void
+    {
+        /** @var array{smart_content: array{default_limit: int}} $config */
+        $config = (new Processor())->processConfiguration(new Configuration(false), []);
+
+        $this->assertSame(100, $config['smart_content']['default_limit']);
+    }
+
+    public function testSmartContentDefaultLimit(): void
+    {
+        /** @var array{smart_content: array{default_limit: int}} $config */
+        $config = (new Processor())->processConfiguration(new Configuration(false), [
+            ['smart_content' => ['default_limit' => 250]],
+        ]);
+
+        $this->assertSame(250, $config['smart_content']['default_limit']);
+    }
+
+    public function testSmartContentDefaultLimitBelowOne(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+
+        (new Processor())->processConfiguration(new Configuration(false), [
+            ['smart_content' => ['default_limit' => 0]],
+        ]);
+    }
 }
