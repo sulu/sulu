@@ -361,8 +361,7 @@ class Form extends React.Component<Props> {
     };
 
     /**
-     * Submits the form through its validation, like the save button does, and runs the continuation after the save
-     * succeeded. The continuation also runs when the has-changed dialog was confirmed and the forced save succeeded.
+     * Submits the form through its validation and runs the continuation after the save, also after a forced one.
      */
     submitAndContinue = (options: {[string]: any}, continuation: (response: Object) => mixed) => {
         if (!this.form) {

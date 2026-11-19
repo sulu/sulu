@@ -21,11 +21,6 @@ import type {ElementRef} from 'react';
  * The content is submitted through the validation of the form. The item is created after the save succeeded, also
  * after a has-changed conflict was confirmed. A failed creation shows an error, and the entry stays disabled while the
  * request is running.
- *
- * Options: `formKey` of the dialog form, `resourceKey` of the resource to create, `title` of the dialog, `label` of the
- * entry (both translation keys), `data` and `parameters` that are sent along. The id and the locale of the saved
- * content are sent as the query parameters named by `idParameter` (required, never "id") and `localeParameter`
- * (default "locale"). They must not be named like a placeholder of the detail route, or they end up in the path.
  */
 export default class SaveAndCreateToolbarAction extends AbstractFormToolbarAction {
     @observable showDialog: boolean = false;
@@ -53,8 +48,7 @@ export default class SaveAndCreateToolbarAction extends AbstractFormToolbarActio
             throw new Error('The "resourceKey" option of the SaveAndCreateToolbarAction must be a string!');
         }
 
-        // The resource is created on its collection route. A parameter named like the route placeholder ("id")
-        // would end up in the path of the detail URL, which does not accept a POST.
+        // A parameter named "id" would land in the path of the detail URL, which takes no POST.
         if (typeof options.idParameter !== 'string' || options.idParameter === 'id') {
             throw new Error(
                 'The "idParameter" option of the SaveAndCreateToolbarAction must be a string other than "id"!'
@@ -80,9 +74,7 @@ export default class SaveAndCreateToolbarAction extends AbstractFormToolbarActio
         const dialogData = {...(this.options.data: any), ...this.dialogFormStore.data};
         this.showDialog = false;
 
-        // The item belongs to the saved content, so the content is stored first, through the validation of the form.
-        // The creation runs as the continuation of the save, so it also runs after the has-changed dialog was
-        // confirmed and the save was repeated. A content that is new has no id before the save.
+        // A new content has no id before its save, so the item is created after the save.
         return this.form.submitAndContinue({action: 'draft'}, () => this.createItem(dialogData));
     };
 
