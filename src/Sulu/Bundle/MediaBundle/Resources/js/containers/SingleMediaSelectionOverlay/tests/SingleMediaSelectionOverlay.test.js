@@ -41,6 +41,7 @@ test('Should create list-stores with correct locale and excluded-ids', () => {
         expect.anything(),
         expect.anything(),
         locale,
+        [],
         []
     );
     expect(MediaSelectionOverlayMock.createMediaListStore.mock.calls[0][1].get()).toEqual([66, 55]);
@@ -62,6 +63,7 @@ test('Should create list-stores without excluded-ids', () => {
         expect.anything(),
         expect.anything(),
         locale,
+        [],
         []
     );
     expect(MediaSelectionOverlayMock.createMediaListStore.mock.calls[0][1].get()).toEqual(undefined);
@@ -84,7 +86,31 @@ test('Should create list-stores with types', () => {
         expect.anything(),
         expect.anything(),
         locale,
-        ['image', 'video']
+        ['image', 'video'],
+        []
+    );
+    expect(MediaSelectionOverlayMock.createMediaListStore.mock.calls[0][1].get()).toEqual(undefined);
+    expect(MediaSelectionOverlayMock.createCollectionListStore).toHaveBeenCalledWith(expect.anything(), locale);
+});
+
+test('Should create list-stores with classifications', () => {
+    const locale = mockObservable.box('en');
+    render(
+        <SingleMediaSelectionOverlay
+            classifications={['data_sheet', 'warranty_certificate']}
+            locale={locale}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
+
+    expect(MediaSelectionOverlayMock.createMediaListStore).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        locale,
+        [],
+        ['data_sheet', 'warranty_certificate']
     );
     expect(MediaSelectionOverlayMock.createMediaListStore.mock.calls[0][1].get()).toEqual(undefined);
     expect(MediaSelectionOverlayMock.createCollectionListStore).toHaveBeenCalledWith(expect.anything(), locale);

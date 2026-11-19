@@ -15,6 +15,7 @@ import type {IObservableValue} from 'mobx/lib/mobx';
 import type {Value} from './types';
 
 type Props = {|
+    classifications: Array<string>,
     disabled: boolean,
     displayOptions: Array<DisplayOption>,
     locale: IObservableValue<string>,
@@ -31,6 +32,7 @@ const THUMBNAIL_SIZE = 'sulu-25x25';
 @observer
 class MultiMediaSelection extends React.Component<Props> {
     static defaultProps = {
+        classifications: [],
         disabled: false,
         displayOptions: [],
         sortable: true,
@@ -132,7 +134,7 @@ class MultiMediaSelection extends React.Component<Props> {
     };
 
     render() {
-        const {locale, disabled, displayOptions, sortable, types, value} = this.props;
+        const {classifications, locale, disabled, displayOptions, sortable, types, value} = this.props;
 
         const {loading, items: medias} = this.mediaSelectionStore;
         const label = (loading) ? '' : this.getLabel(medias.length);
@@ -196,6 +198,7 @@ class MultiMediaSelection extends React.Component<Props> {
                     })}
                 </MultiItemSelection>
                 <MultiMediaSelectionOverlay
+                    classifications={classifications}
                     excludedIds={medias.map((media) => media.id)}
                     locale={locale}
                     onClose={this.handleOverlayClose}

@@ -71,38 +71,6 @@
                     "tags": [],
                     "label": "Description"
                 },
-                "contentLocales": {
-                    "disabledCondition": null,
-                    "visibleCondition": null,
-                    "type": "select",
-                    "colSpan": 12,
-                    "options": {
-                        "values": {
-                            "name": "values",
-                            "type": "expression",
-                            "value": [
-                                {
-                                    "name": "de_at",
-                                    "title": "German (Austria)"
-                                },
-                                {
-                                    "name": "de",
-                                    "title": "German"
-                                }
-                            ]
-                        }
-                    },
-                    "types": [],
-                    "defaultType": null,
-                    "required": false,
-                    "multilingual": true,
-                    "spaceAfter": null,
-                    "minOccurs": null,
-                    "maxOccurs": null,
-                    "onInvalid": null,
-                    "tags": [],
-                    "label": "Content languages"
-                },
                 "validFrom": {
                     "disabledCondition": null,
                     "visibleCondition": "false",
@@ -137,6 +105,61 @@
                     "onInvalid": null,
                     "tags": [],
                     "label": "Validity To"
+                },
+                "contentLocales": {
+                    "disabledCondition": null,
+                    "visibleCondition": null,
+                    "type": "select",
+                    "colSpan": 12,
+                    "options": {
+                        "values": {
+                            "name": "values",
+                            "type": "expression",
+                            "value": [
+                                {
+                                    "name": "de_at",
+                                    "title": "German (Austria)"
+                                },
+                                {
+                                    "name": "de",
+                                    "title": "German"
+                                }
+                            ]
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Content languages"
+                },
+                "classification": {
+                    "disabledCondition": null,
+                    "visibleCondition": "false",
+                    "type": "single_select",
+                    "colSpan": 6,
+                    "options": {
+                        "values": {
+                            "name": "values",
+                            "type": "expression",
+                            "value": []
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Classification"
                 },
                 "origin": {
                     "disabledCondition": null,
