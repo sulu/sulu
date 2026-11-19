@@ -74,6 +74,16 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
+    /**
+     * @param ToolbarAction[] $toolbarActions
+     */
+    public function addOverlayToolbarActions(array $toolbarActions): FormOverlayListViewBuilderInterface
+    {
+        $this->addToolbarActionsToView($this->view, $toolbarActions, 'overlayToolbarActions');
+
+        return $this;
+    }
+
     public function setTabTitle(string $tabTitle): FormOverlayListViewBuilderInterface
     {
         $this->setTabTitleToView($this->view, $tabTitle);

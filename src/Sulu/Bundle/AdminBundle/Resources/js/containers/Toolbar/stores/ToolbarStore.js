@@ -4,7 +4,7 @@ import log from 'loglevel';
 import type {Node} from 'react';
 import type {Button, Select, ToolbarConfig, ToolbarItemConfig} from '../types';
 
-const SHOW_SUCCESS_DURATION = 1500;
+export const SHOW_SUCCESS_DURATION = 1500;
 
 export default class ToolbarStore {
     @observable config: ToolbarConfig = {};

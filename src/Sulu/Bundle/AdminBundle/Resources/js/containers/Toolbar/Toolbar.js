@@ -41,6 +41,7 @@ function getItemComponentByType(itemConfig, key) {
 class Toolbar extends React.Component<ToolbarProps> {
     static defaultProps = {
         navigationOpen: false,
+        showSnackbars: true,
     };
 
     toolbarStore: ToolbarStore;
@@ -101,7 +102,7 @@ class Toolbar extends React.Component<ToolbarProps> {
     }
 
     render() {
-        const {onNavigationButtonClick, navigationOpen} = this.props;
+        const {onNavigationButtonClick, navigationOpen, showSnackbars} = this.props;
         const {errors, showSuccess, warnings} = this.toolbarStore;
         const lastError = errors[errors.length - 1];
         const lastWarning = warnings[warnings.length - 1];
@@ -112,22 +113,22 @@ class Toolbar extends React.Component<ToolbarProps> {
 
         return (
             <Fragment>
-                <Snackbar
+                {showSnackbars && <Snackbar
                     actions={typeof lastError === 'object' ? lastError.actions : undefined}
                     message={typeof lastError === 'object' ? lastError.message : lastError}
                     onCloseClick={this.handleErrorSnackbarCloseClick}
                     title={typeof lastError === 'object' ? lastError.title : undefined}
                     type="error"
                     visible={errors.length > 0}
-                />
-                <Snackbar
+                />}
+                {showSnackbars && <Snackbar
                     actions={typeof lastWarning === 'object' ? lastWarning.actions : undefined}
                     message={typeof lastWarning === 'object' ? lastWarning.message : lastWarning}
                     onCloseClick={this.toolbarStore.config?.onWarningCloseClick}
                     title={typeof lastWarning === 'object' ? lastWarning.title : undefined}
                     type="warning"
                     visible={warnings.length > 0}
-                />
+                />}
                 <ToolbarComponent>
                     <ToolbarComponent.Controls grow={true}>
                         {!!onNavigationButtonClick &&

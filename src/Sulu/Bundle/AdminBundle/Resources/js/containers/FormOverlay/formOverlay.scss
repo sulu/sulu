@@ -6,3 +6,8 @@
      * see also: https://github.com/sulu/sulu/pull/5129/files#r913270661 */
     padding: $viewPaddingVertical $viewPaddingHorizontal;
 }
+
+/* the overlay with a toolbar has a tighter content area */
+.with-toolbar {
+    padding: 32px 40px;
+}
