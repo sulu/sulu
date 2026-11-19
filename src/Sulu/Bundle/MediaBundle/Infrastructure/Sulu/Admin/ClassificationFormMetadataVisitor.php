@@ -20,7 +20,8 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\MediaBundle\Media\Classification\ClassificationProvider;
 
 /**
- * Hides the classification field of the media details when no classifications are configured.
+ * Hides the classification field of the media details when no classifications are configured,
+ * and widens the content locales field that shares its row.
  *
  * @internal
  */
@@ -49,6 +50,8 @@ class ClassificationFormMetadataVisitor implements FormMetadataVisitorInterface
                 $this->hideClassification($item->getItems());
             } elseif ('classification' === $item->getName()) {
                 $item->setVisibleCondition('false');
+            } elseif ('contentLocales' === $item->getName()) {
+                $item->setColSpan(12);
             }
         }
     }
