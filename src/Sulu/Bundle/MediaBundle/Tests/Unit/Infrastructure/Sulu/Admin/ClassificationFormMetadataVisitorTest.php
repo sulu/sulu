@@ -26,13 +26,14 @@ class ClassificationFormMetadataVisitorTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testHidesTheFieldWithoutClassifications(): void
+    public function testHidesTheFieldAndWidensContentLocalesWithoutClassifications(): void
     {
         $formMetadata = $this->createFormMetadata('media_details');
 
         $this->createVisitor([])->visitFormMetadata($formMetadata, 'en');
 
-        $this->assertSame('false', $this->getClassificationField($formMetadata)->getVisibleCondition());
+        $this->assertSame('false', $this->getField($formMetadata, 'classification')->getVisibleCondition());
+        $this->assertSame(12, $this->getField($formMetadata, 'contentLocales')->getColSpan());
     }
 
     public function testKeepsTheFieldWithClassifications(): void
@@ -41,7 +42,8 @@ class ClassificationFormMetadataVisitorTest extends TestCase
 
         $this->createVisitor(['data_sheet' => 'app.data_sheet'])->visitFormMetadata($formMetadata, 'en');
 
-        $this->assertNull($this->getClassificationField($formMetadata)->getVisibleCondition());
+        $this->assertNull($this->getField($formMetadata, 'classification')->getVisibleCondition());
+        $this->assertSame(6, $this->getField($formMetadata, 'contentLocales')->getColSpan());
     }
 
     public function testIgnoresOtherForms(): void
@@ -50,7 +52,8 @@ class ClassificationFormMetadataVisitorTest extends TestCase
 
         $this->createVisitor([])->visitFormMetadata($formMetadata, 'en');
 
-        $this->assertNull($this->getClassificationField($formMetadata)->getVisibleCondition());
+        $this->assertNull($this->getField($formMetadata, 'classification')->getVisibleCondition());
+        $this->assertSame(6, $this->getField($formMetadata, 'contentLocales')->getColSpan());
     }
 
     /**
@@ -65,8 +68,14 @@ class ClassificationFormMetadataVisitorTest extends TestCase
 
     private function createFormMetadata(string $key): FormMetadata
     {
+        $contentLocales = new FieldMetadata('contentLocales');
+        $contentLocales->setColSpan(6);
+        $classification = new FieldMetadata('classification');
+        $classification->setColSpan(6);
+
         $section = new SectionMetadata('details');
-        $section->addItem(new FieldMetadata('classification'));
+        $section->addItem($contentLocales);
+        $section->addItem($classification);
 
         $formMetadata = new FormMetadata();
         $formMetadata->setKey($key);
@@ -75,11 +84,11 @@ class ClassificationFormMetadataVisitorTest extends TestCase
         return $formMetadata;
     }
 
-    private function getClassificationField(FormMetadata $formMetadata): FieldMetadata
+    private function getField(FormMetadata $formMetadata, string $name): FieldMetadata
     {
         $section = $formMetadata->getItems()['details'];
         \assert($section instanceof SectionMetadata);
-        $field = $section->getItems()['classification'];
+        $field = $section->getItems()[$name];
         \assert($field instanceof FieldMetadata);
 
         return $field;
