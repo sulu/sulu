@@ -1,6 +1,6 @@
 @import '../../containers/Application/colors.scss';
 
-$hoverColor: $shakespeare;
+$hoverColor: $blueZodiac;
 $fontColor: $black;
 $disabledColor: $silver;
 
@@ -17,6 +17,7 @@ $disabledColor: $silver;
 
     &:hover {
         color: $hoverColor;
+        font-weight: bold;
     }
 
     &:last-child {

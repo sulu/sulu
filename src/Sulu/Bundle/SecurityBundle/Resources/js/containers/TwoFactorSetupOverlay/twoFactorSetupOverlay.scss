@@ -42,7 +42,15 @@
     width: 100%;
 
     &:hover:not(:disabled) {
-        border-color: $shakespeare;
+        background: $blueZodiac;
+        border-color: $blueZodiac;
+
+        .method-icon,
+        .method-title,
+        .method-description,
+        .method-arrow {
+            color: $white;
+        }
     }
 
     &:disabled {
@@ -53,7 +61,7 @@
 
 .method-icon {
     align-self: center;
-    color: $shakespeare;
+    color: $blueZodiac;
     font-size: 20px;
     flex-shrink: 0;
 }

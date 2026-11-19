@@ -4,7 +4,7 @@ $optionTextLightColor: $blueZodiac;
 $optionTextDarkColor: $white;
 $optionTextLightColorDisabled: $silver;
 $optionTextDarkColorDisabled: $stormGray;
-$optionTextLightColorActive: $shakespeare;
+$optionTextLightColorActive: $blueZodiac;
 $optionTextDarkColorActive: $white;
 
 .light {
@@ -15,6 +15,7 @@ $optionTextDarkColorActive: $white;
         &:active,
         &:focus {
             color: $optionTextLightColorActive;
+            font-weight: bold;
         }
 
         &:disabled {

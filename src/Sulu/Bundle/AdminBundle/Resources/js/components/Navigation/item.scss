@@ -1,9 +1,10 @@
 @import '../../containers/Application/colors.scss';
 
-$color: $wildSand;
-$activeBorderColor: $shakespeare;
+$color: $frenchGray;
+$activeColor: $white;
+$activeBorderColor: $white;
 $activeBackgroundColor: $ebonyClay;
-$hoverColor: $shakespeare;
+$hoverColor: $white;
 
 .item {
     font-size: 14px;
@@ -53,6 +54,10 @@ $hoverColor: $shakespeare;
             flex: 0 0 auto;
             margin-left: 20px;
         }
+    }
+
+    &.active > .title {
+        color: $activeColor;
     }
 
     /* Child */
