@@ -51,6 +51,8 @@ return static function(ContainerConfigurator $container) {
             new Reference('sulu_page.structure.factory'),
             new Reference('sulu_document_manager.document_inspector'),
             '%sulu.context%',
+            new Reference('sulu_document_manager.property_encoder'),
+            new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('massive_search.reindex.provider', ['id' => 'sulu_structure']);
 
