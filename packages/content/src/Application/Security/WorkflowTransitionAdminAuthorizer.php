@@ -184,9 +184,8 @@ final class WorkflowTransitionAdminAuthorizer implements WorkflowTransitionAdmin
     }
 
     /**
-     * A call without a token and without a user, a command, a fixture, a consumer, has nobody to check
-     * and is let through. Any token is checked, including one whose user is not Sulu's, which the
-     * voters deny. A call that names its user is always checked.
+     * A call without a token or a user, such as a command or a consumer, has nobody to check and is
+     * let through.
      *
      * The context is asked as well, so the class refuses to authorize anywhere its security contexts
      * are not registered rather than answering from half a container.
