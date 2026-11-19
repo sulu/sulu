@@ -47,6 +47,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
  *       excluded?: string[],
+ *       resource?: array{resourceKey: string, id: string},
  *       audienceTargeting?: bool,
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
@@ -71,6 +72,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *        includeSubFolders: bool,
  *        excludeDuplicates: bool,
  *        excluded?: string[],
+ *        resource?: array{resourceKey: string, id: string},
  *        audienceTargeting?: bool,
  *        audienceTargeting?: bool,
  *        targetGroupId?: int,
@@ -273,6 +275,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
      *         excluded?: string[],
+     *         resource?: array{resourceKey: string, id: string},
      *         audienceTargeting?: bool,
      *         webspaceKey?: string
      *     }
@@ -406,6 +409,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *     webspaceKey?: string,
      *     excludeDuplicates?: bool,
      *     excluded?: string[],
+     *     resource?: array{resourceKey: string, id: string},
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
@@ -413,6 +417,10 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates'] ?? false) {
             $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(ArticleInterface::RESOURCE_KEY) ?? [])];
+        }
+        $resource = $filters['resource'] ?? null;
+        if (null !== $resource && ArticleInterface::RESOURCE_KEY === $resource['resourceKey']) {
+            $excluded[] = $resource['id'];
         }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')

@@ -88,7 +88,6 @@ class SmartContentSmartResolverTest extends TestCase
         unset($expectedFilters['limit']);
         $expectedFilters['offset'] = 0; // page 1 with offset 0
         $expectedFilters['limit'] = 5; // from original limit
-        $expectedFilters['excluded'] = [];
 
         $countByFilters = $expectedFilters;
         unset($countByFilters['offset']);
@@ -117,40 +116,32 @@ class SmartContentSmartResolverTest extends TestCase
         $this->assertSame(5, $view['total']); // min(limit (5), fullTotal (10)) = 5
     }
 
-    public function testResolveExcludesTheSelfReferenceOfTheProviderType(): void
+    public function testResolvePassesTheResourceToTheProvider(): void
     {
+        $resource = ['resourceKey' => 'pages', 'id' => 'self-page'];
         $smartContentProvider = $this->prophesizeProvider();
-        $smartContentProvider->countBy(Argument::cetera())->willReturn(0);
+        $smartContentProvider->countBy(
+            Argument::that(static fn (array $filters): bool => $resource === $filters['resource']),
+            Argument::cetera(),
+        )->willReturn(0)->shouldBeCalled();
         $smartContentProvider->findFlatBy(
-            Argument::that(static fn (array $filters): bool => ['self-page'] === $filters['excluded']),
+            Argument::that(static fn (array $filters): bool => $resource === $filters['resource']),
             Argument::cetera(),
         )->willReturn([])->shouldBeCalled();
 
-        $result = $this->smartResolver->resolve(
-            $this->createResolvable(),
-            'en',
-            ['resource' => ['resourceKey' => 'pages', 'id' => 'self-page']],
-        );
-
-        $this->assertSame(['self-page'], $result->getView()['excluded']);
+        $this->smartResolver->resolve($this->createResolvable(), 'en', ['resource' => $resource]);
     }
 
-    public function testResolveIgnoresTheSelfReferenceOfAnotherResourceKey(): void
+    public function testResolveWithoutResourcePassesNoResource(): void
     {
         $smartContentProvider = $this->prophesizeProvider();
         $smartContentProvider->countBy(Argument::cetera())->willReturn(0);
         $smartContentProvider->findFlatBy(
-            Argument::that(static fn (array $filters): bool => [] === $filters['excluded']),
+            Argument::that(static fn (array $filters): bool => !\array_key_exists('resource', $filters)),
             Argument::cetera(),
         )->willReturn([])->shouldBeCalled();
 
-        $result = $this->smartResolver->resolve(
-            $this->createResolvable(),
-            'en',
-            ['resource' => ['resourceKey' => 'articles', 'id' => 'self-article']],
-        );
-
-        $this->assertSame([], $result->getView()['excluded']);
+        $this->smartResolver->resolve($this->createResolvable(), 'en');
     }
 
     public function testResolveCountsBeforeItFindsTheItems(): void
@@ -298,7 +289,6 @@ class SmartContentSmartResolverTest extends TestCase
         unset($expectedFilters['limit']);
         $expectedFilters['offset'] = 0;
         $expectedFilters['limit'] = 3; // from original limit
-        $expectedFilters['excluded'] = [];
 
         $countByFilters = $expectedFilters;
         unset($countByFilters['offset']);

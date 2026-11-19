@@ -43,6 +43,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
  *       excluded?: string[],
+ *       resource?: array{resourceKey: string, id: string},
  *       audienceTargeting?: bool,
  *       targetGroupId?: string,
  *       offset?: int,
@@ -110,18 +111,10 @@ class SmartContentSmartResolver implements SmartResolverContextAwareInterface
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
         $filters['limit'] = $maxPerPage ?? $limit;
 
-        /** @var string[] $excluded */
-        $excluded = $filters['excluded'] ?? [];
         $resource = $context['resource'] ?? null;
-        if (\is_array($resource)
-            && ($resource['resourceKey'] ?? null) === $smartContentProvider->getType()
-            && \is_string($resourceId = $resource['id'] ?? null)
-        ) {
-            $excluded[] = $resourceId;
+        if (\is_array($resource) && \is_string($resource['resourceKey'] ?? null) && \is_string($resource['id'] ?? null)) {
+            $filters['resource'] = ['resourceKey' => $resource['resourceKey'], 'id' => $resource['id']];
         }
-
-        $excluded = \array_values(\array_unique($excluded));
-        $filters['excluded'] = $excluded;
 
         $countByFilters = $filters;
         unset($countByFilters['offset']);
@@ -164,7 +157,7 @@ class SmartContentSmartResolver implements SmartResolverContextAwareInterface
             'limit' => $limit,
             'maxPerPage' => $maxPerPage,
 
-            'excluded' => $excluded,
+            'excluded' => $filters['excluded'] ?? [],
         ];
 
         $configuration = $smartContentProvider->getConfiguration();
