@@ -17,6 +17,8 @@ use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\RequestWorkflowPreValidatorInterface;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflow;
 use Sulu\Content\Application\RequestWorkflow\Validator\RequestWorkflowValidatorInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionRegistry;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Config\Util\Exception\XmlParsingException;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -54,8 +56,12 @@ final class ValidateRequestWorkflowsPass implements CompilerPassInterface
         $validators = $this->collectKeys($container, 'sulu_content.request_workflow_validator', RequestWorkflowValidatorInterface::class);
         $preValidators = $this->collectKeys($container, 'sulu_content.request_workflow_pre_validator', RequestWorkflowPreValidatorInterface::class);
 
+        $actions = $this->collectKeys($container, 'sulu_content.workflow_transition_request_action', WorkflowTransitionRequestActionInterface::class);
+
         $this->collectDuplicateKeyErrors($validators, 'validator', $errors);
         $this->collectDuplicateKeyErrors($preValidators, 'pre_validator', $errors);
+        $this->collectDuplicateKeyErrors($actions, 'workflow transition request action', $errors);
+        $this->collectReservedKeyErrors($actions, $errors);
 
         foreach ($workflows as $name => $workflowConfig) {
             $this->collectUnknownKeyErrors($name, \array_keys($workflowConfig['validators'] ?? []), $validators, 'validator', $errors);
@@ -73,7 +79,7 @@ final class ValidateRequestWorkflowsPass implements CompilerPassInterface
     }
 
     /**
-     * @param class-string<RequestWorkflowValidatorInterface>|class-string<RequestWorkflowPreValidatorInterface> $interface
+     * @param class-string<RequestWorkflowValidatorInterface>|class-string<RequestWorkflowPreValidatorInterface>|class-string<WorkflowTransitionRequestActionInterface> $interface
      *
      * @return array<string, list<string>> key => service ids registering it
      */
@@ -154,6 +160,26 @@ final class ValidateRequestWorkflowsPass implements CompilerPassInterface
         foreach ($keys as $key => $ids) {
             if (\count($ids) > 1) {
                 $errors[] = \sprintf('- The %s key "%s" is registered by several services: %s', $type, $key, \implode(', ', $ids));
+            }
+        }
+    }
+
+    /**
+     * The request controller answers the reserved keys itself or refuses them, so an action under one would never run.
+     *
+     * @param array<string, list<string>> $keys
+     * @param list<string> $errors
+     */
+    private function collectReservedKeyErrors(array $keys, array &$errors): void
+    {
+        foreach ($keys as $key => $ids) {
+            if (\in_array($key, WorkflowTransitionRequestActionRegistry::RESERVED_KEYS, true)) {
+                $errors[] = \sprintf(
+                    '- The workflow transition request action key "%s" belongs to the core and is registered by: %s. Reserved keys: %s',
+                    $key,
+                    \implode(', ', $ids),
+                    \implode(', ', WorkflowTransitionRequestActionRegistry::RESERVED_KEYS),
+                );
             }
         }
     }

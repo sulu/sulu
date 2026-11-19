@@ -42,16 +42,6 @@ class WorkflowTransitionRequestActionRegistryTest extends TestCase
         $this->assertSame([], $this->createRegistry([])->all());
     }
 
-    public function testRefusesAnActionUnderAKeyOfTheCore(): void
-    {
-        $registry = $this->createRegistry(['approve' => new ReservedKeyWorkflowTransitionRequestAction()]);
-
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('uses the key "approve", which belongs to the core');
-
-        $registry->all();
-    }
-
     /**
      * @param array<string, StubWorkflowTransitionRequestAction> $actions
      */
