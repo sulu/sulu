@@ -7,6 +7,7 @@ import {
     fieldRegistry,
     viewRegistry,
 } from 'sulu-admin-bundle/containers';
+import {formToolbarActionRegistry} from 'sulu-admin-bundle/views';
 import {TeaserSelection} from 'sulu-page-bundle/containers';
 import linkOverlayRegistry from 'sulu-admin-bundle/containers/Link/registries/linkOverlayRegistry';
 import {SelectFieldFilterType} from 'sulu-admin-bundle/containers/List';
@@ -21,6 +22,7 @@ import MediaOverview from './views/MediaOverview';
 import MediaHistory from './views/MediaHistory';
 import MediaFormats from './views/MediaFormats';
 import {MediaLinkTypeOverlay} from './containers/Link';
+import DownloadOriginalToolbarAction from './views/Form/toolbarActions/DownloadOriginalToolbarAction';
 
 const FIELD_TYPE_MEDIA_SELECTION = 'media_selection';
 const FIELD_TYPE_SINGLE_MEDIA_SELECTION = 'single_media_selection';
@@ -42,6 +44,8 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     viewRegistry.add('sulu_media.overview', MediaOverview);
     viewRegistry.add('sulu_media.formats', MediaFormats);
     viewRegistry.add('sulu_media.history', MediaHistory);
+
+    formToolbarActionRegistry.add('sulu_media.download_original', DownloadOriginalToolbarAction);
 
     listAdapterRegistry.add('media_card_overview', MediaCardOverviewAdapter);
     listAdapterRegistry.add('media_card_selection', MediaCardSelectionAdapter);
