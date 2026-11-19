@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\WorkflowTransitionRequest\Action;
 
+use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 
 /**
@@ -24,7 +25,10 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionReques
  *
  * The actions receive the {@see WorkflowTransitionRequest}, which is internal. They may call only the getters
  * that are marked `@experimental` on it: `getId()`, `getResourceKey()`, `getResourceId()`, `getLocale()`,
- * `getWorkflowName()` and `isOpen()`.
+ * `getWorkflowName()` and `isOpen()`. Once the request data of the request form exists, `getData()` joins
+ * them.
+ *
+ * To check the status of a request, an action uses {@see WorkflowTransitionRequestStatusResolverInterface::resolve()}.
  *
  * @experimental This is an experimental feature and may change in future releases.
  */
