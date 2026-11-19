@@ -140,6 +140,16 @@ final class SuluArticleBundle extends AbstractBundle
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('smart_content')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->integerNode('default_limit')
+                            ->defaultValue(ArticleSmartContentProvider::DEFAULT_LIMIT)
+                            ->min(1)
+                            ->info('The maximum number of articles a smart content returns when it sets neither a limit nor a page size')
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
     }
 
@@ -160,6 +170,9 @@ final class SuluArticleBundle extends AbstractBundle
         $defaultAdditionalWebspaces = $config['default_additional_webspaces'] ?? [];
         $builder->setParameter('sulu_article.default_main_webspace', $defaultMainWebspace);
         $builder->setParameter('sulu_article.default_additional_webspaces', $defaultAdditionalWebspaces);
+        /** @var array{default_limit: int} $smartContent */
+        $smartContent = $config['smart_content'];
+        $builder->setParameter('sulu_article.smart_content.default_limit', $smartContent['default_limit']);
 
         $services = $container->services();
 
@@ -371,6 +384,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_admin.smart_content_query_enhancer'),
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_admin.metadata_group_provider'),
+                '%sulu_article.smart_content.default_limit%',
             ])
         ->tag('sulu_content.smart_content_provider', ['type' => ArticleInterface::RESOURCE_KEY]);
 
@@ -381,6 +395,7 @@ final class SuluArticleBundle extends AbstractBundle
                 new Reference('sulu_admin.smart_content_query_enhancer'),
                 new Reference('doctrine.orm.entity_manager'),
                 new Reference('sulu_admin.metadata_group_provider'),
+                '%sulu_article.smart_content.default_limit%',
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => PageTreeArticleSmartContentProvider::PROVIDER_TYPE]);
 

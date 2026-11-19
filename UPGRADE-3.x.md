@@ -2,6 +2,17 @@
 
 ## 3.0.12
 
+### Article smart content is limited to 100 items by default
+
+An article smart content that sets neither a limit nor `max_per_page` returned every matching article. Like in
+Sulu 2, it now returns at most 100, also in the admin preview. Raise the limit in the configuration if you need more:
+
+```yaml
+sulu_article:
+    smart_content:
+        default_limit: 500
+```
+
 ### Route defaults providers throw a ResourceNotFoundException
 
 `PageRouteDefaultsProvider` and `ArticleRouteDefaultsProvider` throw a `ResourceNotFoundException` instead of a

@@ -32,12 +32,14 @@ readonly class PageTreeArticleSmartContentProvider extends ArticleSmartContentPr
         SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
         GroupProviderInterface $groupProvider,
+        int $defaultLimit = self::DEFAULT_LIMIT,
     ) {
         parent::__construct(
             $dimensionContentQueryEnhancer,
             $smartContentQueryEnhancer,
             $entityManager,
             $groupProvider,
+            $defaultLimit,
         );
     }
 

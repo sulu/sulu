@@ -78,6 +78,11 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 readonly class ArticleSmartContentProvider implements SmartContentProviderInterface
 {
     /**
+     * Default of the `sulu_article.smart_content.default_limit` config, applied when neither a limit nor a page size is set.
+     */
+    public const DEFAULT_LIMIT = 100;
+
+    /**
      * @var EntityRepository<ArticleInterface>
      */
     private EntityRepository $entityRepository;
@@ -97,6 +102,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
         private GroupProviderInterface $groupProvider,
+        private int $defaultLimit = self::DEFAULT_LIMIT,
     ) {
         $this->entityRepository = $entityManager->getRepository(ArticleInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
@@ -173,8 +179,9 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         $this->addInternalFilters($queryBuilder, $filters, $alias);
 
         $queryBuilder->select('COUNT(DISTINCT article.uuid)');
+        $count = (int) $queryBuilder->getQuery()->getSingleScalarResult();
 
-        return (int) $queryBuilder->getQuery()->getSingleScalarResult();
+        return null === ($filters['limit'] ?? null) ? \min($count, $this->defaultLimit) : $count;
     }
 
     /**
@@ -218,7 +225,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         $queryBuilder->select('DISTINCT ' . $alias . '.uuid as id');
         $queryBuilder->addSelect('filterDimensionContent.title');
         $this->smartContentQueryEnhancer->addOrderBySelects($queryBuilder);
-        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['offset'] ?? 0, $filters['limit']);
+        $this->smartContentQueryEnhancer->addPagination($queryBuilder, $filters['offset'] ?? 0, $filters['limit'] ?? $this->defaultLimit);
 
         /** @var array{id: string, title: string}[] $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
