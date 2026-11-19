@@ -14,8 +14,9 @@ Projects with their own `RouteDefaultsProviderInterface` should throw a `Resourc
 
 ### The rendered page is excluded from its own smart contents
 
-A smart content no longer lists the page it is rendered on, also without `exclude_duplicates`. Custom smart content
-providers need to apply the `excluded` filter (`NOT IN`), otherwise they keep listing the page.
+A smart content no longer lists the page, article or snippet it is rendered on, also without `exclude_duplicates`. The
+smart content providers get the rendered resource in the `resource` filter (`resourceKey` and `id`) and exclude it when
+the resource key is their own. Custom smart content providers keep listing it unless they do the same.
 
 ### New constructor argument for the selection property resolvers and smart content providers
 

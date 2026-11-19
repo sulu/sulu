@@ -59,6 +59,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
  *       excluded?: string[],
+ *       resource?: array{resourceKey: string, id: string},
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -82,6 +83,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
  *       excluded?: string[],
+ *       resource?: array{resourceKey: string, id: string},
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -277,6 +279,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      *        includeSubFolders: bool,
      *        excludeDuplicates: bool,
      *        excluded?: string[],
+     *        resource?: array{resourceKey: string, id: string},
      *        audienceTargeting?: bool,
      *        targetGroupId?: int,
      *        segmentKey?: string,
@@ -405,6 +408,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      *     websiteTagOperator: 'AND'|'OR',
      *     excludeDuplicates?: bool,
      *     excluded?: string[],
+     *     resource?: array{resourceKey: string, id: string},
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
@@ -412,6 +416,10 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates'] ?? false) {
             $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(PageInterface::RESOURCE_KEY) ?? [])];
+        }
+        $resource = $filters['resource'] ?? null;
+        if (null !== $resource && PageInterface::RESOURCE_KEY === $resource['resourceKey']) {
+            $excluded[] = $resource['id'];
         }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')
