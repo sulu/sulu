@@ -16,6 +16,7 @@ namespace Sulu\Content\Application\ContentResolver\ResolvableResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
+use Sulu\Content\Application\SmartResolver\Resolver\SmartResolverContextAwareInterface;
 use Sulu\Content\Application\SmartResolver\SmartResolverProviderInterface;
 
 /**
@@ -55,7 +56,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             }
 
             if (\count($smartResolvableResources) > 0) {
-                $result = $this->loadSmartResolvableResources($smartResolvableResources, $locale);
+                $result = $this->loadSmartResolvableResources($smartResolvableResources, $locale, $context);
                 foreach ($result as $id => $loadedResource) {
                     foreach ($metadataIdentifiersPerResourceId[$id] as $metadataIdentifier) {
                         $loadedResources[$loaderKey][$id][$metadataIdentifier] = $loadedResource;
@@ -78,10 +79,11 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
 
     /**
      * @param array<SmartResolvable> $smartResources
+     * @param array<string, mixed> $context
      *
      * @return array<mixed>
      */
-    private function loadSmartResolvableResources(array $smartResources, ?string $locale): array
+    private function loadSmartResolvableResources(array $smartResources, ?string $locale, array $context): array
     {
         $loadedResources = [];
 
@@ -89,10 +91,9 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             $resourceLoaderKey = $smartResource->getResourceLoaderKey();
             $smartResolver = $this->smartResolverProvider->getSmartResolver($resourceLoaderKey);
 
-            $loadedResources[$id] = $smartResolver->resolve(
-                $smartResource,
-                $locale,
-            );
+            $loadedResources[$id] = $smartResolver instanceof SmartResolverContextAwareInterface
+                ? $smartResolver->resolve($smartResource, $locale, $context)
+                : $smartResolver->resolve($smartResource, $locale);
         }
 
         return $loadedResources;

@@ -1,5 +1,31 @@
 # Upgrade
 
+## 3.0.12
+
+### The rendered page is excluded from its own smart contents
+
+A smart content no longer lists the page, article or snippet it is rendered on, also without `exclude_duplicates`. The
+smart content providers get the rendered resource in the `resource` filter (`resourceKey` and `id`) and exclude it when
+the resource key is their own. Custom smart content providers keep listing it unless they do the same.
+
+### The excluded key is removed from the smart content view
+
+The view of a smart content no longer contains `excluded`. It was always an empty array, so templates reading it need
+to drop that.
+
+### New constructor argument for the selection property resolvers and smart content providers
+
+The selection property resolvers, `TeaserSelectionPropertyResolver`, `ImageMapPropertyResolver` and the smart content
+providers take the `sulu_content.deduplication_store` as their last argument. Projects that extend one of these classes
+or define their own service for it need to pass it, otherwise `exclude_duplicates` has no effect for them. Leaving it
+out triggers a deprecation.
+
+### SmartContentSmartResolver::resolve has a new context argument
+
+`SmartContentSmartResolver` implements the new `SmartResolverContextAwareInterface` and its `resolve()` method takes
+the context of the current resolution as third argument. Projects that extend it and override `resolve()` need to add
+`array $context = []`.
+
 ## 3.0.10
 
 ### The target group select of the preview follows the audience targeting permission

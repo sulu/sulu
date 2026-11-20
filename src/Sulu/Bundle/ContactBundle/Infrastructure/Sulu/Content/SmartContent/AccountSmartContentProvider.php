@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\AccountResourceLoader;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 
 /**
  * @phpstan-type AccountSmartContentFilters array{
@@ -39,6 +40,7 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Account
  *      offset: int,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
+ *      excluded?: string[],
  *  }
  * @phpstan-type AccountSmartContentCountFilters array{
  *      categories: int[],
@@ -56,6 +58,7 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Account
  *      limit: int|null,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
+ *      excluded?: string[],
  *  }
  */
 readonly class AccountSmartContentProvider implements SmartContentProviderInterface
@@ -63,7 +66,11 @@ readonly class AccountSmartContentProvider implements SmartContentProviderInterf
     public function __construct(
         private EntityManagerInterface $entityManager,
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', \sprintf('Instantiating %s without the $deduplicationStore argument is deprecated.', static::class));
+        }
     }
 
     public function getConfiguration(): ProviderConfigurationInterface
@@ -114,6 +121,8 @@ readonly class AccountSmartContentProvider implements SmartContentProviderInterf
         /** @var array<array{id: string, title: string}> $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
 
+        $this->deduplicationStore?->add(AccountInterface::RESOURCE_KEY, ...\array_column($result, 'id'));
+
         return $result;
     }
 
@@ -129,6 +138,15 @@ readonly class AccountSmartContentProvider implements SmartContentProviderInterf
     ): void {
         foreach ($sortBys as $sortBy => $sortMethod) {
             $queryBuilder->orderBy($sortBy, $sortMethod);
+        }
+
+        $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates']) {
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(AccountInterface::RESOURCE_KEY) ?? [])];
+        }
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
         }
 
         $tagIds = $filters['tags'];

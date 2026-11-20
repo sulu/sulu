@@ -312,10 +312,16 @@ final class SuluPageBundle extends AbstractBundle
         // Property Resolver services
         $services->set('sulu_page.page_selection_property_resolver')
             ->class(PageSelectionPropertyResolver::class)
+            ->args([
+                new Reference('sulu_content.deduplication_store'),
+            ])
             ->tag('sulu_content.property_resolver');
 
         $services->set('sulu_page.single_page_selection_property_resolver')
             ->class(SinglePageSelectionPropertyResolver::class)
+            ->args([
+                new Reference('sulu_content.deduplication_store'),
+            ])
             ->tag('sulu_content.property_resolver');
 
         $services->set('sulu_page.page_tree_route_property_resolver')
@@ -499,6 +505,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_security.access_control_query_enhancer'),
                 new Reference('security.helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
                 param('sulu_security.permissions'),
+                new Reference('sulu_content.deduplication_store'),
             ])
             ->tag('sulu_content.smart_content_provider', ['type' => PageInterface::RESOURCE_KEY]);
 

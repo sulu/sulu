@@ -23,6 +23,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 
@@ -45,6 +46,8 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: string[],
+ *       resource?: array{resourceKey: string, id: string},
  *       audienceTargeting?: bool,
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
@@ -68,6 +71,8 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *        limit: int|null,
  *        includeSubFolders: bool,
  *        excludeDuplicates: bool,
+ *        excluded?: string[],
+ *        resource?: array{resourceKey: string, id: string},
  *        audienceTargeting?: bool,
  *        audienceTargeting?: bool,
  *        targetGroupId?: int,
@@ -97,7 +102,12 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
         private GroupProviderInterface $groupProvider,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', \sprintf('Instantiating %s without the $deduplicationStore argument is deprecated.', static::class));
+        }
+
         $this->entityRepository = $entityManager->getRepository(ArticleInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(ArticleDimensionContentInterface::class);
         $this->articleDimensionContentClassName = $this->entityDimensionContentRepository->getClassName();
@@ -223,6 +233,8 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         /** @var array{id: string, title: string}[] $result */
         $result = $queryBuilder->getQuery()->getArrayResult();
 
+        $this->deduplicationStore?->add(ArticleInterface::RESOURCE_KEY, ...\array_column($result, 'id'));
+
         return $result;
     }
 
@@ -262,6 +274,8 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         offset?: int,
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
+     *         excluded?: string[],
+     *         resource?: array{resourceKey: string, id: string},
      *         audienceTargeting?: bool,
      *         webspaceKey?: string
      *     }
@@ -393,10 +407,26 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *     websiteTags: string[],
      *     websiteTagOperator: 'AND'|'OR',
      *     webspaceKey?: string,
+     *     excludeDuplicates?: bool,
+     *     excluded?: string[],
+     *     resource?: array{resourceKey: string, id: string},
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
+        $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates'] ?? false) {
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(ArticleInterface::RESOURCE_KEY) ?? [])];
+        }
+        $resource = $filters['resource'] ?? null;
+        if (null !== $resource && ArticleInterface::RESOURCE_KEY === $resource['resourceKey']) {
+            $excluded[] = $resource['id'];
+        }
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
+        }
+
         $websiteCategoryIds = $filters['websiteCategories'];
         if ([] !== $websiteCategoryIds) {
             $this->smartContentQueryEnhancer->addJoinFilter(

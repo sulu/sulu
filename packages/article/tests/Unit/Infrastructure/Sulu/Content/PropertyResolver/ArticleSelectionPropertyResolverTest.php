@@ -20,6 +20,7 @@ use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Infrastructure\Sulu\Content\PropertyResolver\ArticleSelectionPropertyResolver;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 
 #[CoversClass(ArticleSelectionPropertyResolver::class)]
 class ArticleSelectionPropertyResolverTest extends TestCase
@@ -200,5 +201,43 @@ class ArticleSelectionPropertyResolverTest extends TestCase
         $this->assertCount(1, $references);
         $this->assertSame('1', $references[0]->getResourceId());
         $this->assertSame(ArticleInterface::RESOURCE_KEY, $references[0]->getResourceKey());
+    }
+
+    public function testResolveAddsTheIdsToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new ArticleSelectionPropertyResolver($store);
+
+        $resolver->resolve(['article-1', '', 'article-2'], 'en');
+
+        $this->assertSame(['article-1', 'article-2'], $store->getIds(ArticleInterface::RESOURCE_KEY));
+    }
+
+    public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new ArticleSelectionPropertyResolver($store);
+
+        $resolver->resolve([], 'en');
+
+        $this->assertSame([], $store->getIds(ArticleInterface::RESOURCE_KEY));
+    }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new ArticleSelectionPropertyResolver();
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ' . ArticleSelectionPropertyResolver::class . ' without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }

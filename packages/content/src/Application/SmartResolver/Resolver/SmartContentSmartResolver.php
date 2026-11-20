@@ -42,12 +42,14 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  *       maxPerPage: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: string[],
+ *       resource?: array{resourceKey: string, id: string},
  *       audienceTargeting?: bool,
  *       targetGroupId?: string,
  *       offset?: int,
  *   }
  */
-class SmartContentSmartResolver implements SmartResolverInterface
+class SmartContentSmartResolver implements SmartResolverContextAwareInterface
 {
     /**
      * @param ServiceLocator<SmartContentProviderInterface> $smartContentProviders
@@ -57,7 +59,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
     ) {
     }
 
-    public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
+    public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
     {
         /** @var array{
          *     value: array<string, mixed>,
@@ -109,13 +111,20 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
         $filters['limit'] = $maxPerPage ?? $limit;
 
+        $resource = $context['resource'] ?? null;
+        if (\is_array($resource) && \is_string($resource['resourceKey'] ?? null) && \is_string($resource['id'] ?? null)) {
+            $filters['resource'] = ['resourceKey' => $resource['resourceKey'], 'id' => $resource['id']];
+        }
+
         $countByFilters = $filters;
         unset($countByFilters['offset']);
 
         $params = ['value' => $value, ...$parameters];
-        $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
 
+        // count first: with "exclude_duplicates" the provider excludes the ids of the deduplication store,
+        // and findFlatBy adds its own results to it
         $fullTotal = $smartContentProvider->countBy($countByFilters, $params);
+        $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
         $total = $limit ? \min($limit, $fullTotal) : $fullTotal;
 
         /** @var array<int|string> $valueTags */
@@ -147,9 +156,6 @@ class SmartContentSmartResolver implements SmartResolverInterface
             'maxPage' => null !== $maxPerPage ? (int) \ceil($total / $maxPerPage) : null,
             'limit' => $limit,
             'maxPerPage' => $maxPerPage,
-
-            // TODO duplicates
-            'excluded' => [],
         ];
 
         $configuration = $smartContentProvider->getConfiguration();

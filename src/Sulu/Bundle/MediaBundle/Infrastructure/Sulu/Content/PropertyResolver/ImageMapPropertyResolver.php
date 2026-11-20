@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Content\ResourceLoader\MediaResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Application\MetadataResolver\MetadataResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataAwareInterface;
 
@@ -37,7 +38,11 @@ class ImageMapPropertyResolver implements PropertyResolverMetadataAwareInterface
         private readonly LoggerInterface $logger,
         private readonly MetadataProviderRegistry $metadataProviderRegistry,
         private readonly bool $debug = false,
+        private readonly ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', \sprintf('Instantiating %s without the $deduplicationStore argument is deprecated.', static::class));
+        }
     }
 
     /**
@@ -83,6 +88,7 @@ class ImageMapPropertyResolver implements PropertyResolverMetadataAwareInterface
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? MediaResourceLoader::getKey();
         $imageId = (int) $data['imageId'];
+        $this->deduplicationStore?->add(MediaInterface::RESOURCE_KEY, $imageId);
 
         return ContentView::create(
             [

@@ -24,18 +24,23 @@ return static function(ContainerConfigurator $container) {
     $services = $container->services();
 
     $services->set('sulu_contact.account_selection_property_resolver', AccountSelectionPropertyResolver::class)
+        ->args([new Reference('sulu_content.deduplication_store')])
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_contact.single_account_selection_property_resolver', SingleAccountSelectionPropertyResolver::class)
+        ->args([new Reference('sulu_content.deduplication_store')])
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_contact.contact_selection_property_resolver', ContactSelectionPropertyResolver::class)
+        ->args([new Reference('sulu_content.deduplication_store')])
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_contact.single_contact_selection_property_resolver', SingleContactSelectionPropertyResolver::class)
+        ->args([new Reference('sulu_content.deduplication_store')])
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_contact.account_contact_selection_property_resolver', ContactAccountSelectionPropertyResolver::class)
+        ->args([new Reference('sulu_content.deduplication_store')])
         ->tag('sulu_content.property_resolver');
 
     $services->set('sulu_contact.contact_resource_loader', ContactResourceLoader::class)

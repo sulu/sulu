@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
@@ -46,6 +47,8 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResou
  *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: string[],
+ *       resource?: array{resourceKey: string, id: string},
  *   }
  * @phpstan-type ExampleSmartContentCountFilters array{
  *       categories: int[],
@@ -64,6 +67,8 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResou
  *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: string[],
+ *       resource?: array{resourceKey: string, id: string},
  *   }
  */
 readonly class ExampleSmartContentProvider implements SmartContentProviderInterface
@@ -82,6 +87,7 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
         $this->entityRepository = $entityManager->getRepository(Example::class);
         $this->exampleDimensionContentClassName = $entityManager->getRepository(ExampleDimensionContent::class)->getClassName();
@@ -185,6 +191,8 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
             $queryResult
         );
 
+        $this->deduplicationStore?->add(Example::RESOURCE_KEY, ...\array_column($result, 'id'));
+
         return $result;
     }
 
@@ -223,6 +231,8 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
      *         offset?: int,
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
+     *         excluded?: string[],
+     *         resource?: array{resourceKey: string, id: string},
      *     }
      */
     protected function mapFilters(array $filters, array $params = []): array
@@ -302,10 +312,26 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
      *     websiteCategoryOperator: 'AND'|'OR',
      *     websiteTags: string[],
      *     websiteTagOperator: 'AND'|'OR',
+     *     excludeDuplicates?: bool,
+     *     excluded?: string[],
+     *     resource?: array{resourceKey: string, id: string},
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
+        $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates'] ?? false) {
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(Example::RESOURCE_KEY) ?? [])];
+        }
+        $resource = $filters['resource'] ?? null;
+        if (null !== $resource && Example::RESOURCE_KEY === $resource['resourceKey']) {
+            $excluded[] = $resource['id'];
+        }
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
+        }
+
         $websiteCategoryIds = $filters['websiteCategories'];
         if ([] !== $websiteCategoryIds) {
             $this->smartContentQueryEnhancer->addJoinFilter(

@@ -12,6 +12,7 @@
 namespace Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver;
 
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
@@ -23,6 +24,14 @@ use Sulu\Page\Infrastructure\Sulu\Content\ResourceLoader\PageResourceLoader;
  */
 class SinglePageSelectionPropertyResolver implements PropertyResolverInterface
 {
+    public function __construct(
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
+    ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', \sprintf('Instantiating %s without the $deduplicationStore argument is deprecated.', static::class));
+        }
+    }
+
     /**
      * @param array{
      *     resourceLoader?: string,
@@ -37,6 +46,8 @@ class SinglePageSelectionPropertyResolver implements PropertyResolverInterface
 
         /** @var string $resourceLoaderKey */
         $resourceLoaderKey = $params['resourceLoader'] ?? PageResourceLoader::getKey();
+
+        $this->deduplicationStore?->add(PageInterface::RESOURCE_KEY, $data);
 
         return ContentView::createResolvableWithReferences(
             id: $data,
