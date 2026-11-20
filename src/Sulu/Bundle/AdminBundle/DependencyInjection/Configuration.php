@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\DependencyInjection;
 
+use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -66,6 +67,16 @@ final class Configuration implements ConfigurationInterface
                         ->scalarNode('threshold')
                             ->defaultValue(60)
                             ->info('The time after which a collabaration without keep alive signal is terminated')
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('smart_content')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->integerNode('default_limit')
+                            ->defaultValue(SmartContentProviderInterface::DEFAULT_LIMIT)
+                            ->min(1)
+                            ->info('The maximum number of items a smart content returns when it sets neither a limit nor a page size')
                         ->end()
                     ->end()
                 ->end()

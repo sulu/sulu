@@ -54,6 +54,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
      */
     public function __construct(
         private ServiceLocator $smartContentProviders,
+        private int $defaultLimit = SmartContentProviderInterface::DEFAULT_LIMIT,
     ) {
     }
 
@@ -107,7 +108,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
         unset($filters['page']);
 
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
-        $filters['limit'] = $maxPerPage ?? $limit;
+        $filters['limit'] = $maxPerPage ?? $limit ?? $this->defaultLimit;
 
         $countByFilters = $filters;
         unset($countByFilters['offset']);
@@ -116,7 +117,8 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
 
         $fullTotal = $smartContentProvider->countBy($countByFilters, $params);
-        $total = $limit ? \min($limit, $fullTotal) : $fullTotal;
+        $totalLimit = $limit ?? (null === $maxPerPage ? $this->defaultLimit : null);
+        $total = $totalLimit ? \min($totalLimit, $fullTotal) : $fullTotal;
 
         /** @var array<int|string> $valueTags */
         $valueTags = $value['tags'] ?? [];
@@ -138,7 +140,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
             'websiteTagOperator' => $filters['websiteTagOperator'],
             'sortBys' => $sortBys,
             'presentAs' => $value['presentAs'] ?? null,
-            'limitResult' => $filters['limit'],
+            'limitResult' => $maxPerPage ?? $limit,
 
             'page' => $page,
             'hasNextPage' => null !== $maxPerPage && ($total > ($maxPerPage * $page)),

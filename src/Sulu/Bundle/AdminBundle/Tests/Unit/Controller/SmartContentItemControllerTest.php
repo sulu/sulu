@@ -137,4 +137,65 @@ class SmartContentItemControllerTest extends TestCase
             Argument::cetera(),
         )->shouldHaveBeenCalled();
     }
+
+    public function testDefaultLimitWithoutLimitResult(): void
+    {
+        $request = Request::create('/api/items', 'GET', [
+            'provider' => 'articles', 'locale' => 'en',
+        ]);
+
+        $this->controller->getItemsAction($request);
+
+        $this->provider->findFlatBy(
+            Argument::that(fn (array $f) => SmartContentProviderInterface::DEFAULT_LIMIT === $f['limit']),
+            Argument::cetera(),
+        )->shouldHaveBeenCalled();
+    }
+
+    public function testLimitResultOverridesDefaultLimit(): void
+    {
+        $request = Request::create('/api/items', 'GET', [
+            'provider' => 'articles', 'locale' => 'en', 'limitResult' => '5',
+        ]);
+
+        $this->controller->getItemsAction($request);
+
+        $this->provider->findFlatBy(
+            Argument::that(fn (array $f) => '5' === $f['limit']),
+            Argument::cetera(),
+        )->shouldHaveBeenCalled();
+    }
+
+    public function testNoDefaultLimitWhenPaginated(): void
+    {
+        $params = \json_encode(['max_per_page' => ['type' => 'string', 'value' => '10']]);
+        $request = Request::create('/api/items', 'GET', [
+            'provider' => 'articles', 'locale' => 'en', 'params' => $params,
+        ]);
+
+        $this->controller->getItemsAction($request);
+
+        $this->provider->findFlatBy(
+            Argument::that(fn (array $f) => null === $f['limit']),
+            Argument::cetera(),
+        )->shouldHaveBeenCalled();
+    }
+
+    public function testConfiguredDefaultLimit(): void
+    {
+        /** @var ServiceLocator<SmartContentProviderInterface> $locator */
+        $locator = new ServiceLocator([
+            'articles' => fn () => $this->provider->reveal(),
+        ]);
+        $controller = new SmartContentItemController($locator, $this->viewHandler->reveal(), null, 250);
+
+        $controller->getItemsAction(Request::create('/api/items', 'GET', [
+            'provider' => 'articles', 'locale' => 'en',
+        ]));
+
+        $this->provider->findFlatBy(
+            Argument::that(fn (array $f) => 250 === $f['limit']),
+            Argument::cetera(),
+        )->shouldHaveBeenCalled();
+    }
 }

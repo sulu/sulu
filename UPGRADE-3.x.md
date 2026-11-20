@@ -1,5 +1,18 @@
 # Upgrade
 
+## 3.0.12
+
+### Smart content is limited to 100 items by default
+
+A smart content that sets neither a limit nor `max_per_page` returned every matching item. It now returns
+at most 100, also in the admin preview. Raise the limit in the configuration if you need more:
+
+```yaml
+sulu_admin:
+    smart_content:
+        default_limit: 500
+```
+
 ## 3.0.10
 
 ### The target group select of the preview follows the audience targeting permission

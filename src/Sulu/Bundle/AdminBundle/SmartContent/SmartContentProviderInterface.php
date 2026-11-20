@@ -57,6 +57,11 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInte
  */
 interface SmartContentProviderInterface
 {
+    /**
+     * Default of the `sulu_admin.smart_content.default_limit` config, applied when neither a limit nor a page size is set.
+     */
+    public const DEFAULT_LIMIT = 100;
+
     public function getConfiguration(): ProviderConfigurationInterface;
 
     /**

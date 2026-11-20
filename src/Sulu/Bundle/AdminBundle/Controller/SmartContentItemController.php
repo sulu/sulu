@@ -37,6 +37,7 @@ class SmartContentItemController extends AbstractRestController
         private ServiceLocator $smartContentProviderLocator,
         ViewHandlerInterface $viewHandler,
         ?TokenStorageInterface $tokenStorage = null,
+        private int $defaultLimit = SmartContentProviderInterface::DEFAULT_LIMIT,
     ) {
         parent::__construct($viewHandler, $tokenStorage);
     }
@@ -126,6 +127,10 @@ class SmartContentItemController extends AbstractRestController
         // Keep limit unchanged - it's the overall result limit
         // Remove pagination fields that providers don't expect
         unset($filters['page'], $filters['maxPerPage']);
+
+        if (null === $filters['limit'] && !$maxPerPage) {
+            $filters['limit'] = $this->defaultLimit;
+        }
 
         /** @var SmartContentBaseFilters $filters */
         if (!$this->smartContentProviderLocator->has($providerType)) {
