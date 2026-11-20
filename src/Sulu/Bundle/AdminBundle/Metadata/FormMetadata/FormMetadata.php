@@ -259,7 +259,7 @@ class FormMetadata extends AbstractMetadata
         $mergedForm->setGroup($otherForm->getGroup() ?? $this->getGroup());
 
         $mergedForm->setTags(\array_merge($this->getTags(), $otherForm->getTags()));
-        $mergedForm->setItems(\array_merge($this->getItems(), $otherForm->getItems()));
+        $mergedForm->setItems($this->mergeItemMetaData($otherForm));
         $mergedForm->setResources(\array_merge($this->getResources(), $otherForm->getResources()));
         $mergedForm->setSchema($this->getSchema()->merge($otherForm->getSchema()));
 
@@ -296,5 +296,33 @@ class FormMetadata extends AbstractMetadata
         }
 
         return $items;
+    }
+
+    /**
+     * @return array<string, ItemMetadata>
+     */
+    private function mergeItemMetaData(FormMetadata $otherForm): array
+    {
+        /** @var array<string, ItemMetadata> $mergedItems */
+        $mergedItems = $this->getItems();
+
+        /** @var array<string, ItemMetadata> $otherFormItems */
+        $otherFormItems = $otherForm->getItems();
+        foreach ($otherFormItems as $name => $otherItem) {
+            if (!isset($mergedItems[$name])) {
+                $mergedItems[$name] = $otherItem;
+                continue;
+            }
+
+            $item = $mergedItems[$name];
+
+            if (!$item instanceof FieldMetadata || !$otherItem instanceof FieldMetadata) {
+                continue;
+            }
+
+            $mergedItems[$name] = $item->merge($otherItem);
+        }
+
+        return $mergedItems;
     }
 }
