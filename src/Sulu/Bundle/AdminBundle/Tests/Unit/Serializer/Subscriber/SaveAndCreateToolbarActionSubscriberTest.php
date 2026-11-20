@@ -62,8 +62,8 @@ class SaveAndCreateToolbarActionSubscriberTest extends TestCase
     public function testOnPostSerializeTranslatesLabelAndTitle(): void
     {
         $toolbarAction = new SaveAndCreateToolbarAction(
-            'app.label',
-            'app.title',
+            'sulu_admin.save',
+            'sulu_admin.cancel',
             'form',
             'tasks',
             'entityId',
@@ -73,8 +73,8 @@ class SaveAndCreateToolbarActionSubscriberTest extends TestCase
             'isDraft'
         );
 
-        $this->translator->trans('app.label', [], 'admin')->willReturn('Label');
-        $this->translator->trans('app.title', [], 'admin')->willReturn('Title');
+        $this->translator->trans('sulu_admin.save', [], 'admin')->willReturn('Label');
+        $this->translator->trans('sulu_admin.cancel', [], 'admin')->willReturn('Title');
 
         $navigator = $this->prophesize(GraphNavigatorInterface::class);
         $navigator->accept(Argument::any(), Argument::any())->will(fn (array $arguments) => $arguments[0]);
