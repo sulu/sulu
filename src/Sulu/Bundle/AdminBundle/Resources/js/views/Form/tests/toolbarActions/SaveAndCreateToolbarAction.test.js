@@ -54,10 +54,10 @@ const OPTIONS = {
     data: {handlerClass: 'Handler'},
     formKey: 'dialog_form',
     idParameter: 'entityId',
-    label: 'app.publish_at',
+    label: 'Publish at',
     parameters: {entityClass: 'Entity'},
     resourceKey: 'tasks',
-    title: 'app.publish_at',
+    title: 'Publish at date',
 };
 
 function createAction(options: {[string]: any} = OPTIONS) {
@@ -83,9 +83,9 @@ beforeEach(() => {
     ResourceRequester.post.mockClear();
 });
 
-test('Return an item config with the translated label and a button type', () => {
+test('Return an item config with the delivered label and a button type', () => {
     expect(createAction().getToolbarItemConfig()).toEqual(expect.objectContaining({
-        label: 'app.publish_at',
+        label: 'Publish at',
         type: 'button',
     }));
 });
@@ -108,6 +108,10 @@ test('Throw an error if no formKey is passed', () => {
 
 test('Throw an error if no resourceKey is passed', () => {
     expect(() => createAction({formKey: 'dialog_form'})).toThrow(/"resourceKey"/);
+});
+
+test('Use the delivered title for the dialog', () => {
+    expect(createAction().getNode().props.title).toEqual('Publish at date');
 });
 
 test('Open the dialog when the entry is clicked and close it on cancel', () => {

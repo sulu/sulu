@@ -80,6 +80,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueR
 use Sulu\Bundle\AdminBundle\Serializer\Handler\SchemaHandler;
 use Sulu\Bundle\AdminBundle\Serializer\Subscriber\DropdownToolbarActionSubscriber;
 use Sulu\Bundle\AdminBundle\Serializer\Subscriber\MetadataSubscriber;
+use Sulu\Bundle\AdminBundle\Serializer\Subscriber\SaveAndCreateToolbarActionSubscriber;
 use Sulu\Bundle\AdminBundle\Serializer\Subscriber\SaveWithFormDialogToolbarActionSubscriber;
 use Sulu\Bundle\AdminBundle\Serializer\Subscriber\TogglerToolbarActionSubscriber;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
@@ -365,6 +366,10 @@ return static function(ContainerConfigurator $container) {
         ->tag('jms_serializer.event_subscriber');
 
     $services->set('sulu_admin.item_metadata_serializer_subscriber', MetadataSubscriber::class)
+        ->tag('jms_serializer.event_subscriber');
+
+    $services->set('sulu_admin.save_and_create_toolbar_action_subscriber', SaveAndCreateToolbarActionSubscriber::class)
+        ->args([new Reference('translator')])
         ->tag('jms_serializer.event_subscriber');
 
     $services->set('sulu_admin.save_with_form_dialog_toolbar_action_subscriber', SaveWithFormDialogToolbarActionSubscriber::class)

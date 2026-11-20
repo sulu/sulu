@@ -137,7 +137,7 @@ export default class SaveAndCreateToolbarAction extends AbstractFormToolbarActio
                 onCancel={this.handleCancel}
                 onConfirm={this.handleConfirm}
                 open={this.showDialog}
-                title={typeof title === 'string' ? translate(title) : ''}
+                title={typeof title === 'string' ? title : ''}
             >
                 <FormContainer
                     onSubmit={this.handleSubmit}
@@ -157,7 +157,7 @@ export default class SaveAndCreateToolbarAction extends AbstractFormToolbarActio
 
         return {
             disabled: this.resourceFormStore.saving || this.creating,
-            label: typeof label === 'string' ? translate(label) : '',
+            label: typeof label === 'string' ? label : '',
             onClick: action(() => {
                 this.showDialog = true;
             }),
