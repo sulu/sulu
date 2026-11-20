@@ -206,9 +206,8 @@ class ContentViewBuilderFactory implements ContentViewBuilderFactoryInterface
                 $parts[] = '!activeWorkflowTransitionRequest';
 
                 $options['visible_condition'] = \implode(' && ', $parts);
-                $toolbarAction = new ToolbarAction($toolbarAction->getType(), $options);
 
-                $toolbarActions[] = $toolbarAction;
+                $toolbarActions[] = $toolbarAction->withOptions($options);
             }
         }
 

@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilderInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\SaveWithFormDialogToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderInterface;
@@ -540,6 +541,35 @@ class ContentViewBuilderFactoryTest extends TestCase
             'An entry without a permission is still hidden while a request is open.',
         );
         $this->assertSame('(own) && !activeWorkflowTransitionRequest', $entries[3]->getOptions()['visible_condition']);
+    }
+
+    public function testAnEntryOfAProviderKeepsItsClass(): void
+    {
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $provider = $this->prophesize(SaveToolbarActionProviderInterface::class);
+        $provider->getToolbarActions(Example::class)->willReturn([
+            new SaveWithFormDialogToolbarAction('app.title', 'app_form'),
+        ]);
+
+        $contentViewBuilder = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
+            saveToolbarActionProviders: [$provider->reveal()],
+        );
+
+        $save = $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(Example::class)['save'];
+
+        /** @var list<ToolbarAction> $allEntries */
+        $allEntries = $save->getOptions()['toolbarActions'];
+        $entry = $allEntries[4];
+
+        $this->assertInstanceOf(SaveWithFormDialogToolbarAction::class, $entry);
+        $this->assertSame('app_form', $entry->getOptions()['formKey']);
+        $this->assertSame('app.title', $entry->getOptions()['title']);
+        $this->assertSame('!activeWorkflowTransitionRequest', $entry->getOptions()['visible_condition']);
     }
 
     public function testAnEntryOfAProviderWithAnUnsupportedPermissionThrows(): void
