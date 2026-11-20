@@ -39,7 +39,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             }
 
             $smartResolvableResources = [];
-            $resolvableResources = [];
+            $resolvableResourcesPerMetadataIdentifier = [];
             $metadataIdentifiersPerResourceId = [];
             foreach ($resourcesToLoad as $id => $resourcePerMetadataIdentifier) {
                 foreach ($resourcePerMetadataIdentifier as $metadataIdentifier => $resource) {
@@ -47,7 +47,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
                     if ($resource instanceof SmartResolvable) {
                         $smartResolvableResources[$id] = $resource;
                     } elseif ($resource instanceof ResolvableResource) {
-                        $resolvableResources[$id] = $resource;
+                        $resolvableResourcesPerMetadataIdentifier[$metadataIdentifier][$id] = $resource;
                     } else {
                         throw new \RuntimeException(\sprintf('Resource with id "%s" is neither a SmartResolvable nor a ResolvableResource', $id));
                     }
@@ -63,12 +63,11 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
                 }
             }
 
-            if (\count($resolvableResources) > 0) {
+            // The metadata are the params of the load, so each metadata is loaded on its own.
+            foreach ($resolvableResourcesPerMetadataIdentifier as $metadataIdentifier => $resolvableResources) {
                 $result = $this->loadResolvableResources($resolvableResources, $loaderKey, $locale, $context);
                 foreach ($result as $id => $loadedResource) {
-                    foreach ($metadataIdentifiersPerResourceId[$id] as $metadataIdentifier) {
-                        $loadedResources[$loaderKey][$id][$metadataIdentifier] = $loadedResource;
-                    }
+                    $loadedResources[$loaderKey][$id][$metadataIdentifier] = $loadedResource;
                 }
             }
         }
@@ -113,8 +112,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
 
         $resourceIds = \array_map(fn (ResolvableResource $resource) => $resource->getId(), $resolvableResources);
 
-        // We can use the metadata of the first resource, as all resources share the same metadata structure
-        // different metadata structures will lead to different metadataIdentifiers and thus different resource loading calls
+        // All resources of one call share their metadata, see loadResources()
         $params = \count($resolvableResources) > 0 ? \reset($resolvableResources)->getMetadata() ?? [] : [];
 
         return $resourceLoader->load(
