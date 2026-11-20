@@ -213,6 +213,103 @@ class ResolvableResourceLoaderTest extends TestCase
         ], $result['example']['123'][$metadata2]);
     }
 
+    public function testLoadResourcesLoadsEachMetadataWithItsOwnParams(): void
+    {
+        $recordingLoader = $this->createRecordingLoader();
+
+        $loader = new ResolvableResourceLoader(
+            new ResourceLoaderProvider(['recording' => $recordingLoader]),
+            $this->smartResolverProvider,
+        );
+
+        $titleMetadata = ['properties' => ['title' => 'product.title']];
+        $attributesMetadata = ['properties' => ['attributes' => 'product.attributes']];
+        $title1 = new ResolvableResource('1', 'recording', 1, metadata: $titleMetadata);
+        $title3 = new ResolvableResource('3', 'recording', 1, metadata: $titleMetadata);
+        $attributes1 = new ResolvableResource('1', 'recording', 1, metadata: $attributesMetadata);
+        $attributes2 = new ResolvableResource('2', 'recording', 1, metadata: $attributesMetadata);
+
+        $result = $loader->loadResources([
+            'recording' => [
+                '1' => [
+                    $title1->getMetadataIdentifier() => $title1,
+                    $attributes1->getMetadataIdentifier() => $attributes1,
+                ],
+                '2' => [$attributes2->getMetadataIdentifier() => $attributes2],
+                '3' => [$title3->getMetadataIdentifier() => $title3],
+            ],
+        ], 'en');
+
+        self::assertSame([
+            ['ids' => ['1', '3'], 'params' => $titleMetadata],
+            ['ids' => ['1', '2'], 'params' => $attributesMetadata],
+        ], $recordingLoader->calls, 'one load per metadata, all its ids at once');
+        self::assertSame(['id' => '1', 'params' => $titleMetadata], $result['recording']['1'][$title1->getMetadataIdentifier()]);
+        self::assertSame(['id' => '1', 'params' => $attributesMetadata], $result['recording']['1'][$attributes1->getMetadataIdentifier()]);
+        self::assertSame(['id' => '2', 'params' => $attributesMetadata], $result['recording']['2'][$attributes2->getMetadataIdentifier()]);
+        self::assertSame(['id' => '3', 'params' => $titleMetadata], $result['recording']['3'][$title3->getMetadataIdentifier()]);
+    }
+
+    public function testLoadResourcesLoadsResourcesWithoutMetadataApartFromTheOnesWithMetadata(): void
+    {
+        $recordingLoader = $this->createRecordingLoader();
+        $loader = new ResolvableResourceLoader(
+            new ResourceLoaderProvider(['recording' => $recordingLoader]),
+            $this->smartResolverProvider,
+        );
+
+        $metadata = ['properties' => ['title' => 'title']];
+        $plain5 = new ResolvableResource(5, 'recording', 1);
+        $plain6 = new ResolvableResource(6, 'recording', 1);
+        $withMetadata5 = new ResolvableResource(5, 'recording', 1, metadata: $metadata);
+
+        $result = $loader->loadResources([
+            'recording' => [
+                5 => [
+                    $plain5->getMetadataIdentifier() => $plain5,
+                    $withMetadata5->getMetadataIdentifier() => $withMetadata5,
+                ],
+                6 => [$plain6->getMetadataIdentifier() => $plain6],
+            ],
+        ], 'en');
+
+        self::assertSame([
+            ['ids' => [5, 6], 'params' => []],
+            ['ids' => [5], 'params' => $metadata],
+        ], $recordingLoader->calls);
+        self::assertSame(['id' => 5, 'params' => []], $result['recording'][5]['']);
+        self::assertSame(['id' => 5, 'params' => $metadata], $result['recording'][5][$withMetadata5->getMetadataIdentifier()]);
+        self::assertSame(['id' => 6, 'params' => []], $result['recording'][6]['']);
+    }
+
+    /**
+     * @return ResourceLoaderInterface&object{calls: list<array{ids: list<string|int>, params: array<mixed>}>}
+     */
+    private function createRecordingLoader(): ResourceLoaderInterface
+    {
+        return new class() implements ResourceLoaderInterface {
+            /** @var list<array{ids: list<string|int>, params: array<mixed>}> */
+            public array $calls = [];
+
+            public function load(array $ids, ?string $locale, array $params = []): array
+            {
+                $this->calls[] = ['ids' => \array_values($ids), 'params' => $params];
+
+                $result = [];
+                foreach ($ids as $id) {
+                    $result[$id] = ['id' => $id, 'params' => $params];
+                }
+
+                return $result;
+            }
+
+            public static function getKey(): string
+            {
+                return 'recording';
+            }
+        };
+    }
+
     public function testLoadResourcesWithContext(): void
     {
         $contextAwareLoader = new class() implements ResourceLoaderInterface {
