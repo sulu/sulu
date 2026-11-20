@@ -7,6 +7,9 @@ $blockHandleBackgroundColor: $silver;
 $blockCollapsedColor: $gray;
 $blockIconsColor: $gray;
 $blockSelectedColor: $blueZodiac;
+$blockErrorColor: $persianRed;
+$blockErrorBadgeColor: $white;
+$blockErrorBadgeSize: 16px;
 
 .block {
     display: flex;
@@ -50,6 +53,35 @@ $blockSelectedColor: $blueZodiac;
             background: $blockSelectedColor;
         }
     }
+
+    &.error {
+        position: relative;
+        border-color: $blockErrorColor;
+        box-shadow: 0 0 0 1px $blockErrorColor;
+
+        .handle {
+            background: $blockErrorColor;
+            color: $blockErrorBadgeColor;
+        }
+    }
+}
+
+/* placed on the top border, so it is visible for collapsed blocks and cannot be cut off by a surrounding container */
+.error-badge {
+    position: absolute;
+    z-index: 1;
+    top: calc($blockErrorBadgeSize / -2 - 1px);
+    right: 20px;
+    min-width: $blockErrorBadgeSize;
+    height: $blockErrorBadgeSize;
+    padding: 0 4px;
+    border-radius: calc($blockErrorBadgeSize / 2);
+    background-color: $blockErrorColor;
+    color: $blockErrorBadgeColor;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: $blockErrorBadgeSize;
+    text-align: center;
 }
 
 .handle {
