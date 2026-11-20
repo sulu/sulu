@@ -165,3 +165,19 @@ test('Should tell whether a url of a given type can be generated for a resourceK
     expect(resourceRouteRegistry.hasUrl('prefill', 'tags')).toEqual(false);
     expect(resourceRouteRegistry.hasUrl('prefill', 'unknown')).toEqual(false);
 });
+
+test('Put a parameter named like a route placeholder in the path and any other parameter in the query', () => {
+    SymfonyRouting.generate.mockImplementation((routeName, parameters) => {
+        const {id, ...query} = parameters;
+        const queryString = Object.keys(query).map((key) => key + '=' + query[key]).join('&');
+
+        return '/admin/api/tags' + (id !== undefined ? '/' + id : '') + (queryString ? '?' + queryString : '');
+    });
+
+    resourceRouteRegistry.setEndpoints({tags: {routes: {detail: 'get_tag'}}});
+
+    expect(resourceRouteRegistry.getUrl('detail', 'tags', {id: 5, locale: 'en'}))
+        .toEqual('/admin/api/tags/5?locale=en');
+    expect(resourceRouteRegistry.getUrl('detail', 'tags', {entityId: 5, locale: 'en'}))
+        .toEqual('/admin/api/tags?entityId=5&locale=en');
+});
