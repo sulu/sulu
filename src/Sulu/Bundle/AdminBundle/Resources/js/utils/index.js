@@ -1,7 +1,7 @@
 // @flow
 import {arrayMoveImmutable as arrayMove} from 'array-move';
 import {buildQueryString} from './Request';
-import {createAjv} from './Ajv';
+import {createValidator} from './JsonSchema';
 import {transformBytesToReadableString} from './Bytes';
 import {transformDateForUrl} from './Date';
 import {translate} from './Translator';
@@ -11,7 +11,7 @@ export {
     arrayMove,
     buildQueryString,
     clipboard,
-    createAjv,
+    createValidator,
     transformBytesToReadableString,
     transformDateForUrl,
     translate,
