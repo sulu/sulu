@@ -68,13 +68,13 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
     use HandleTrait;
 
     /**
-     * Actions which change the live content of a page and therefore need the live permission,
-     * which the request method based check of the SuluSecurityListener does not cover.
+     * Permissions the request method based check of the SuluSecurityListener does not cover:
+     * the live actions change the live content, removing the draft only changes the draft.
      */
-    private const LIVE_ACTIONS = [
-        WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH,
-        WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH,
-        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT,
+    private const ACTION_PERMISSIONS = [
+        WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH => PermissionTypes::LIVE,
+        WorkflowInterface::WORKFLOW_TRANSITION_UNPUBLISH => PermissionTypes::LIVE,
+        WorkflowInterface::WORKFLOW_TRANSITION_REMOVE_DRAFT => PermissionTypes::EDIT,
     ];
 
     /**
@@ -674,7 +674,9 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             return;
         }
 
-        if (!\in_array($action, self::LIVE_ACTIONS, true)) {
+        $permission = self::ACTION_PERMISSIONS[$action] ?? null;
+
+        if (null === $permission) {
             return;
         }
 
@@ -683,7 +685,7 @@ final class PageController implements SecuredControllerInterface, SecuredObjectC
             ? $this->pageRepository->getOneBy(['uuid' => $id])->getSecurityContext()
             : PageAdmin::getPageSecurityContext($request->query->getString('webspace'));
 
-        $this->checkPermission($request, $securityContext, $id, PermissionTypes::LIVE);
+        $this->checkPermission($request, $securityContext, $id, $permission);
     }
 
     private function checkPermission(Request $request, string $securityContext, ?string $id, string $permission): void
