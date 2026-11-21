@@ -230,6 +230,44 @@ class ResourceLocatorGenerateControllerTest extends SuluTestCase
         JSON, $response->getContent() ?: '');
     }
 
+    public function testGenerateExistPageOwnHistory(): void
+    {
+        $this->client->request('POST', '/admin/api/resource-locators', content: \json_encode([
+            'parts' => ['title' => 'Test'],
+            'locale' => 'en',
+            'webspace' => 'website',
+            'resourceKey' => 'pages',
+            'resourceId' => '2',
+        ], \JSON_THROW_ON_ERROR));
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertMatchesPattern(<<<'JSON'
+            {
+                "resourceLocator": "/test"
+            }
+        JSON, $response->getContent() ?: '');
+    }
+
+    public function testGenerateExistPageOtherResourceHistory(): void
+    {
+        $this->client->request('POST', '/admin/api/resource-locators', content: \json_encode([
+            'parts' => ['title' => 'Test'],
+            'locale' => 'en',
+            'webspace' => 'website',
+            'resourceKey' => 'pages',
+            'resourceId' => '3',
+        ], \JSON_THROW_ON_ERROR));
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertMatchesPattern(<<<'JSON'
+            {
+                "resourceLocator": "/test-1"
+            }
+        JSON, $response->getContent() ?: '');
+    }
+
     public function testGenerateWithRouteSchema(): void
     {
         $this->client->request('POST', '/admin/api/resource-locators', content: \json_encode([
