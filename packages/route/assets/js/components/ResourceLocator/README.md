@@ -11,14 +11,14 @@ const [value, setValue] = React.useState('/parent');
 </div>
 ```
 
-In the `leaf` mode the user is only capable of editing the part after the last slash:
+In the `tree_leaf_edit` mode the user is only capable of editing the part after the last slash:
 
 ```javascript
 const [value, setValue] = React.useState('/parent/child');
 
 <div>
     <div style={{paddingBottom: '50px'}}>Current value: {value}</div>
-    <ResourceLocator onChange={setValue} value={value} mode="leaf"/>
+    <ResourceLocator onChange={setValue} value={value} mode="tree_leaf_edit"/>
 </div>
 ```
 
@@ -38,5 +38,5 @@ const [value, setValue] = React.useState('/parent');
 A `disabled` resource locator cannot be edited.
 
 ```javascript
-<ResourceLocator disabled={true} mode="leaf" onChange={() => {}} value="/some/url" />
+<ResourceLocator disabled={true} mode="tree_leaf_edit" onChange={() => {}} value="/some/url" />
 ```
