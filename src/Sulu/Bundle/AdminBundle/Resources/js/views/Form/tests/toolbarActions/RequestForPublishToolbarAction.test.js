@@ -54,6 +54,7 @@ jest.mock('../../../../services/Router', () => jest.fn());
 
 jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
+    this.submitAndContinue = jest.fn();
 }));
 
 function createRequestForPublishToolbarAction(options = {}, id = 'saved-id') {
@@ -90,7 +91,7 @@ test.each([
     toolbarItemConfig.onClick();
 
     expect(toolbarAction.resourceFormStore.change).toHaveBeenCalledWith('workflowTransitionRequestData', {});
-    expect(toolbarAction.form.submit).toHaveBeenCalledWith({action: transition});
+    expect(toolbarAction.form.submitAndContinue).toHaveBeenCalledWith({action: transition}, expect.any(Function));
 });
 
 test.each([
@@ -118,7 +119,8 @@ test('Request the review of what the create form will save, which is unpublished
 
     toolbarItemConfig.onClick();
 
-    expect(toolbarAction.form.submit).toHaveBeenCalledWith({action: 'request_for_review'});
+    expect(toolbarAction.form.submitAndContinue)
+        .toHaveBeenCalledWith({action: 'request_for_review'}, expect.any(Function));
 });
 
 test('Return item config with a disabled button for a published page without changes', () => {
@@ -199,7 +201,7 @@ test('Open the overlay instead of submitting when the request form has fields', 
     toolbarItemConfig.onClick();
 
     expect(toolbarAction.open).toBe(true);
-    expect(toolbarAction.form.submit).not.toHaveBeenCalled();
+    expect(toolbarAction.form.submitAndContinue).not.toHaveBeenCalled();
 });
 
 test('Submit the transition with the data of the request form when the overlay is confirmed', () => {
@@ -227,7 +229,8 @@ test('Submit the transition with the data of the request form when the overlay i
         'workflowTransitionRequestData',
         {publishAt: '2026-12-01T10:00:00+00:00'}
     );
-    expect(toolbarAction.form.submit).toHaveBeenCalledWith({action: 'request_for_review_draft'});
+    expect(toolbarAction.form.submitAndContinue)
+        .toHaveBeenCalledWith({action: 'request_for_review_draft'}, expect.any(Function));
 });
 
 test('Submit nothing when the overlay is closed', () => {
@@ -251,7 +254,7 @@ test('Submit nothing when the overlay is closed', () => {
     toolbarAction.handleClose();
 
     expect(toolbarAction.open).toBe(false);
-    expect(toolbarAction.form.submit).not.toHaveBeenCalled();
+    expect(toolbarAction.form.submitAndContinue).not.toHaveBeenCalled();
 });
 
 function createActionWithRequestForm(data) {
@@ -272,33 +275,21 @@ function createActionWithRequestForm(data) {
     return toolbarAction;
 }
 
-test('Keep the entered values while the save is running and when it fails', async() => {
+test('Keep the entered values while the save is running and when it fails', () => {
     const toolbarAction = createActionWithRequestForm({message: 'Please check'});
-    (toolbarAction.form.submit: any).mockReturnValue(Promise.resolve(undefined));
 
     toolbarAction.handleConfirm();
-    await Promise.resolve();
 
     expect(toolbarAction.open).toBe(false);
     expect(toolbarAction.requestFormStore.data).toEqual({message: 'Please check'});
 });
 
-test('Keep the entered values when the form refuses to submit', () => {
+test('Start with an empty request form after the save succeeded', () => {
     const toolbarAction = createActionWithRequestForm({message: 'Please check'});
-    (toolbarAction.form.submit: any).mockReturnValue(undefined);
 
     toolbarAction.handleConfirm();
-
-    expect(toolbarAction.requestFormStore.data).toEqual({message: 'Please check'});
-});
-
-test('Start with an empty request form after the save succeeded', async() => {
-    const toolbarAction = createActionWithRequestForm({message: 'Please check'});
-    (toolbarAction.form.submit: any).mockReturnValue(Promise.resolve({id: 'saved-id'}));
-
-    toolbarAction.handleConfirm();
-    await Promise.resolve();
-    await Promise.resolve();
+    const continuation = (toolbarAction.form.submitAndContinue: any).mock.calls[0][1];
+    continuation({id: 'saved-id'});
 
     expect(toolbarAction.requestFormStore.data).toEqual({});
 });

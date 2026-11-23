@@ -96,17 +96,9 @@ export default class RequestForPublishToolbarAction extends AbstractFormToolbarA
     submit(transition: string, data: Object) {
         this.resourceFormStore.change(REQUEST_DATA_KEY, data);
 
-        const submitted = this.form.submit({action: transition});
-
-        // A failed save resolves without a response. The entered values stay in the store then, so the
-        // overlay shows them again on the next try.
-        if (submitted && typeof submitted.then === 'function') {
-            submitted.then((response) => {
-                if (response !== undefined) {
-                    this.resetRequestFormStore();
-                }
-            });
-        }
+        // The continuation runs after a successful save only, also after a forced one. A failed or
+        // refused save keeps the entered values in the store, so the overlay shows them again.
+        this.form.submitAndContinue({action: transition}, () => this.resetRequestFormStore());
     }
 
     @action resetRequestFormStore() {
