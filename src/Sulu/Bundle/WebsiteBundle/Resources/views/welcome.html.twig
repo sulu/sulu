@@ -376,7 +376,7 @@
     </style>
     <script>
         function copyCommandToClipboard() {
-            navigator.clipboard.writeText('bin/console sulu:build dev');
+            navigator.clipboard.writeText('{{ console.command|e("js") }}');
         }
     </script>
 </head>

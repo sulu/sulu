@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\WebsiteBundle\EventListener;
 
-use Doctrine\DBAL\ConnectionException as DBALConnectionException;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,7 +42,6 @@ final readonly class NotFoundWelcomeListener
         $throwable = $event->getThrowable();
 
         $state = match (true) {
-            $throwable instanceof DBALConnectionException => self::STATE_DATABASE_MISSING,
             $throwable instanceof ConnectionException => self::STATE_DATABASE_MISSING,
             $throwable instanceof TableNotFoundException && \str_contains($throwable->getMessage(), 'ro_routes') => self::STATE_FIXTURES_MISSING,
             default => $this->getFixturesState(),
@@ -107,7 +105,7 @@ final readonly class NotFoundWelcomeListener
         }
 
         yield [
-            'headline' => 'Load the inital data',
+            'headline' => 'Load the initial data',
             'status' => 'Copy the command on the right',
             'badge' => $isActive ? 'active' : 'empty',
         ];

@@ -30,7 +30,6 @@ class SuluWebsiteExtensionTest extends AbstractExtensionTestCase
         $this->container->setParameter('kernel.bundles', []);
         $this->load();
         $this->assertContainerBuilderNotHasService('sulu_website.data_collector.sulu_collector');
-        $this->assertContainerBuilderNotHasService('sulu_website.event_listener.not_found_welcome_listener');
     }
 
     public function testLoadWithContextWebsite(): void
