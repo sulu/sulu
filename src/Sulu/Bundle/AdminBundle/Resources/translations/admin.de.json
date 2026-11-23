@@ -195,6 +195,7 @@
     "sulu_admin.has_changed_warning_dialog_title": "Inhalte werden überschrieben!",
     "sulu_admin.has_changed_warning_dialog_text": "Dieser Inhalt wurde zwischenzeitlich von einem anderen Benutzer geändert. Wenn der Inhalt gespeichert wird, gehen diese Daten verloren.",
     "sulu_admin.edit_profile": "Profil bearbeiten",
+    "sulu_admin.edit_in_admin": "Im Admin bearbeiten",
     "sulu_admin.no_follow": "no-follow",
     "sulu_admin.no_permissions": "Keine Berechtigung",
     "sulu_admin.not_found": "Nicht gefunden",

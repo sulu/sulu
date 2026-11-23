@@ -33,7 +33,9 @@ use Sulu\Bundle\AdminBundle\Controller\CollaborationController;
 use Sulu\Bundle\AdminBundle\Controller\IconController;
 use Sulu\Bundle\AdminBundle\Controller\SmartContentItemController;
 use Sulu\Bundle\AdminBundle\Controller\TeaserController;
+use Sulu\Bundle\AdminBundle\Controller\WebsiteEditController;
 use Sulu\Bundle\AdminBundle\Entity\CollaborationRepository;
+use Sulu\Bundle\AdminBundle\EventListener\WebsiteEditCookieSubscriber;
 use Sulu\Bundle\AdminBundle\ExpressionLanguage\ContainerExpressionLanguageProvider;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistry;
 use Sulu\Bundle\AdminBundle\Icon\providers\IcomoonProvider;
@@ -87,6 +89,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
 use Sulu\Bundle\AdminBundle\Teaser\Provider\TeaserProviderPool;
 use Sulu\Bundle\AdminBundle\Teaser\TeaserManager;
 use Sulu\Bundle\AdminBundle\Teaser\TeaserTagPropertyExtractor;
+use Sulu\Bundle\AdminBundle\Twig\WebsiteEditTwigExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -491,4 +494,25 @@ return static function(ContainerConfigurator $container) {
         ->public()
         ->args([new Reference(BlockIdGeneratorInterface::class)])
         ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_admin.website_edit_controller', WebsiteEditController::class)
+        ->public()
+        ->args([
+            new Reference('sulu_admin.resource_view_url_generator'),
+            new Reference('router'),
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_admin.website_edit_cookie_subscriber', WebsiteEditCookieSubscriber::class)
+        ->args(['%session.storage.options%'])
+        ->tag('kernel.event_subscriber')
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    // No context tag, like the preview deep-link extension: website templates must not break in any kernel.
+    $services->set('sulu_admin.website_edit_twig_extension', WebsiteEditTwigExtension::class)
+        ->args([
+            new Reference('request_stack'),
+            new Reference('translator'),
+        ])
+        ->tag('twig.extension');
 };

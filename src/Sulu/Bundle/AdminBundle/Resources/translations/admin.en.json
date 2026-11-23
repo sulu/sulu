@@ -195,6 +195,7 @@
     "sulu_admin.has_changed_warning_dialog_title": "Content will be overwritten!",
     "sulu_admin.has_changed_warning_dialog_text": "This content has been edited by another user. When you save the content this data will get lost.",
     "sulu_admin.edit_profile": "Edit profile",
+    "sulu_admin.edit_in_admin": "Edit in admin",
     "sulu_admin.no_follow": "no-follow",
     "sulu_admin.no_permissions": "No permissions",
     "sulu_admin.not_found": "Not found",

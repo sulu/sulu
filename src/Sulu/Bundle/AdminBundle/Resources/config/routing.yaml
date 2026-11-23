@@ -19,3 +19,8 @@ sulu_admin.login_check:
 
 sulu_admin.logout:
     path: /logout
+
+sulu_admin.website_edit:
+    path: /website-edit
+    methods: [GET]
+    controller: sulu_admin.website_edit_controller::redirectAction
