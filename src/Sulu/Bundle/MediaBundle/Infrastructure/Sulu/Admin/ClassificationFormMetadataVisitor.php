@@ -20,8 +20,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\MediaBundle\Media\Classification\ClassificationProvider;
 
 /**
- * Hides the classification field of the media details when no classifications are configured,
- * and widens the content locales field that shares its row.
+ * Without configured classifications, the content locales field takes the full row the classification field leaves.
  *
  * @internal
  */
