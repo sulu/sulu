@@ -48,7 +48,8 @@ final class ApplyWorkflowTransitionSnippetMessageHandler
         $this->contentWorkflow->apply(
             $snippet,
             ['locale' => $locale],
-            $message->getTransitionName()
+            $message->getTransitionName(),
+            $message->getWorkflowTransitionRequestData(),
         );
 
         $this->domainEventCollector->collect(new SnippetWorkflowTransitionAppliedEvent($snippet, $message->getTransitionName(), $locale));

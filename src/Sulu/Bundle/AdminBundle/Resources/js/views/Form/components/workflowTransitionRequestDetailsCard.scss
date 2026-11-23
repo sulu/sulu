@@ -1,0 +1,27 @@
+@import '../../../containers/Application/colors.scss';
+
+.list {
+    margin: 0;
+}
+
+.row {
+    padding: 12px 20px;
+
+    & + & {
+        border-top: 1px solid $mercury;
+    }
+}
+
+.label {
+    color: $doveGray;
+    font-size: 13px;
+    margin: 0 0 4px;
+}
+
+.value {
+    color: $mineShaft;
+    font-size: 14px;
+    line-height: 20px;
+    margin: 0;
+    white-space: pre-wrap;
+}

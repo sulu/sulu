@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\ContentWorkflow\Subscriber;
 
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowResolverInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
@@ -81,6 +82,10 @@ class WorkflowTransitionRequestTransitionSubscriber implements EventSubscriberIn
             $workflow->name,
         );
         $workflowTransitionRequest->setCreator($this->resolveUser());
+
+        /** @var array<string, mixed> $data */
+        $data = $transitionEvent->getContext()[ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_CONTEXT_KEY] ?? [];
+        $workflowTransitionRequest->setData($data);
 
         // One pending row per validator. Whether it blocks is read from the config on every status
         // check, so it is not copied here.

@@ -15,6 +15,7 @@ namespace Sulu\Article\Tests\Functional\Integration;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use Sulu\Article\Domain\Model\ArticleDimensionContentInterface;
+use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Article\Infrastructure\Sulu\Admin\ArticleAdmin;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -27,6 +28,7 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -251,6 +253,69 @@ class ArticleInReviewTest extends SuluTestCase
         $this->assertNotEmpty($version, 'Publishing has to leave a version behind for the restore.');
 
         return $version;
+    }
+
+    public function testRequestFormDataIsStoredOnTheRequestAndNotOnTheContent(): void
+    {
+        $id = $this->createArticle();
+
+        $this->putWithRequestData($id, ['message' => 'Please check', 'tags' => ['a', 'b']], 'Requested');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array<string, mixed> $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('review', $content['workflowPlace']);
+        $this->assertEmpty($content['workflowTransitionRequestData'] ?? null);
+
+        $request = self::getContainer()->get(WorkflowTransitionRequestRepositoryInterface::class)->getOneBy([
+            'resourceKey' => ArticleInterface::RESOURCE_KEY,
+            'resourceId' => $id,
+            'active' => true,
+        ]);
+        $this->assertSame(['message' => 'Please check', 'tags' => ['a', 'b']], $request->getData());
+
+        $article = self::getContainer()->get(ArticleRepositoryInterface::class)->getOneBy(['uuid' => $id]);
+        $draftContent = self::getContainer()->get(ContentManagerInterface::class)->resolve(
+            $article,
+            ['stage' => DimensionContentInterface::STAGE_DRAFT, 'locale' => 'en'],
+        );
+        $this->assertSame('Requested', $draftContent->getTemplateData()['title'] ?? null);
+        $this->assertEmpty($draftContent->getTemplateData()['workflowTransitionRequestData'] ?? null);
+    }
+
+    public function testMalformedRequestFormDataIsRefusedBeforeAnythingIsSaved(): void
+    {
+        $id = $this->createArticle();
+
+        $this->putWithRequestData($id, 'not an array', 'Should Not Be Saved');
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+
+        $this->client->request('GET', \sprintf('/admin/api/articles/%s?%s', $id, \http_build_query(['locale' => 'en'])));
+
+        /** @var array{title: string, workflowPlace: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('Article In Review', $content['title']);
+        $this->assertNotSame('review', $content['workflowPlace']);
+    }
+
+    /**
+     * @param mixed $workflowTransitionRequestData
+     */
+    private function putWithRequestData(string $id, $workflowTransitionRequestData, string $title): void
+    {
+        $this->client->request(
+            'PUT',
+            \sprintf('/admin/api/articles/%s?%s', $id, \http_build_query(['action' => 'request_for_review', 'locale' => 'en'])),
+            [],
+            [],
+            [],
+            (string) \json_encode([
+                'template' => 'review',
+                'title' => $title,
+                'url' => '/article-in-review', 'mainWebspace' => 'sulu-io',
+                'workflowTransitionRequestData' => $workflowTransitionRequestData,
+            ]),
+        );
     }
 
     private function trigger(string $id, string $action): void

@@ -13,6 +13,7 @@
         <field name="place" column="place" type="string" length="16" enum-type="Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum"/>
         <field name="activeKey" column="active_key" type="string" length="191" nullable="true" unique="true"/>
         <field name="workflowName" column="workflow_name" type="string" length="64"/>
+        <field name="data" column="data" type="json" nullable="true"/>
         <field name="created" column="created_at" type="datetime_immutable"/>
         <field name="changed" column="changed_at" type="datetime_immutable"/>
 

@@ -84,6 +84,16 @@ class WorkflowTransitionRequestViewFactoryTest extends TestCase
         $this->assertNotNull($approvals[0]['decidedAt']);
     }
 
+    public function testViewCarriesTheFormData(): void
+    {
+        $request = $this->createRequest();
+        $request->setData(['publishAt' => '2026-12-01T10:00:00+00:00']);
+
+        $view = $this->createFactory(1)->build($request);
+
+        $this->assertSame(['publishAt' => '2026-12-01T10:00:00+00:00'], $view['data']);
+    }
+
     public function testViewListsTheActionsThatFitAndThatTheUserMayTake(): void
     {
         $view = $this->createFactory(

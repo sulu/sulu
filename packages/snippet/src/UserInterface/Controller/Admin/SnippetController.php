@@ -25,6 +25,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
@@ -358,6 +359,15 @@ final class SnippetController implements SecuredControllerInterface
     /**
      * @return array<string, mixed>
      */
+    private function getWorkflowTransitionRequestData(Request $request): array
+    {
+        /** @var array<string, mixed> */
+        return $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     private function getData(Request $request): array
     {
         $data = \array_replace(
@@ -370,6 +380,10 @@ final class SnippetController implements SecuredControllerInterface
         if ($request->query->getBoolean('force', false)) {
             unset($data['_hash']);
         }
+
+        // read here as well, so a malformed value is refused with a 400 before anything is saved
+        $this->getWorkflowTransitionRequestData($request);
+        unset($data[ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY]);
 
         return $data;
     }
@@ -447,7 +461,14 @@ final class SnippetController implements SecuredControllerInterface
             /** @var SnippetInterface|null */
             return $this->handle(new Envelope($message, [new EnableFlushStamp()]));
         } else {
-            $message = new ApplyWorkflowTransitionSnippetMessage(['uuid' => $uuid], $this->getLocale($request), $action);
+            $workflowTransitionRequestData = $this->getWorkflowTransitionRequestData($request);
+
+            $message = new ApplyWorkflowTransitionSnippetMessage(
+                ['uuid' => $uuid],
+                $this->getLocale($request),
+                $action,
+                $workflowTransitionRequestData,
+            );
 
             /** @see \Sulu\Snippet\Application\MessageHandler\ApplyWorkflowTransitionSnippetMessageHandler */
             /** @var null */

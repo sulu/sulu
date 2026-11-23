@@ -68,6 +68,7 @@ export type WorkflowTransitionRequestData = {|
     approvals: Array<WorkflowTransitionRequestApproval>,
     checks: Array<WorkflowTransitionRequestCheck>,
     createdBy: ?User,
+    data?: {[string]: mixed},
     id: string,
     locale: string,
     permissions: WorkflowTransitionRequestPermissions,

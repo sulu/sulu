@@ -9,6 +9,16 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key, params) => (params ? key + ':' + JSON.stringify(params) : key)),
 }));
 
+jest.mock('../../../containers/Form/stores/memoryFormStoreFactory', () => ({
+    createFromFormKey: jest.fn(() => ({
+        loading: false,
+        schema: {
+            publishAt: {label: 'Publish at', type: 'datetime'},
+            message: {label: 'Message to the reviewer', type: 'text_area'},
+        },
+    })),
+}));
+
 jest.mock('../../../stores/userStore', () => ({
     user: {id: 1},
 }));
@@ -119,6 +129,25 @@ test('counts the passed checks separately from the approvals', () => {
     expect(screen.getByText(
         'sulu_content.workflow_transition_request.n_of_m_checks_passed:{"passed":1,"total":2}'
     )).toBeInTheDocument();
+});
+
+test('shows the message and the date of the requester to the reviewer', () => {
+    renderOverlay({
+        request: createRequest({
+            data: {message: 'Please look at the second paragraph.', publishAt: '2026-11-25T10:00:00+00:00'},
+        }),
+    });
+
+    expect(screen.getByText('sulu_content.workflow_transition_request.request_details')).toBeInTheDocument();
+    expect(screen.getByText('Message to the reviewer')).toBeInTheDocument();
+    expect(screen.getByText('Please look at the second paragraph.')).toBeInTheDocument();
+    expect(screen.getByText('Publish at')).toBeInTheDocument();
+});
+
+test('shows no details when the requester wrote none', () => {
+    renderOverlay({request: createRequest({data: {message: '  '}})});
+
+    expect(screen.queryByText('sulu_content.workflow_transition_request.request_details')).not.toBeInTheDocument();
 });
 
 test('shows the actions of bundles in the footer and runs one by its key', async() => {

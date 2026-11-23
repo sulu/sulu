@@ -48,6 +48,19 @@ class WorkflowTransitionRequestTest extends TestCase
         $this->assertSame([], $request->getDecisions());
     }
 
+    public function testDataIsEmptyUntilItIsSet(): void
+    {
+        $request = new WorkflowTransitionRequest('examples', '1', 'en', 'default');
+
+        $this->assertSame([], $request->getData());
+
+        $request->setData(['publishAt' => '2026-12-01T10:00:00+00:00']);
+        $this->assertSame(['publishAt' => '2026-12-01T10:00:00+00:00'], $request->getData());
+
+        $request->setData([]);
+        $this->assertSame([], $request->getData());
+    }
+
     public function testApprovalBelowThresholdKeepsRequestPending(): void
     {
         $request = $this->createRequest();

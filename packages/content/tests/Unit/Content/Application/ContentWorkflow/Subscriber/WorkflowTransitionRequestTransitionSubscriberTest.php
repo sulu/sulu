@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionRequestTransitionSubscriber;
 use Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflow;
@@ -175,6 +176,45 @@ class WorkflowTransitionRequestTransitionSubscriberTest extends TestCase
         );
 
         $subscriber->onRequestForReview(new TransitionEvent($dimensionContent, new Marking()));
+    }
+
+    public function testOnRequestForReviewStoresTheFormDataOfTheContext(): void
+    {
+        $dimensionContent = $this->createDimensionContent($this->createExample('1'), 'en');
+
+        /** @var list<WorkflowTransitionRequest> $added */
+        $added = [];
+        $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
+        $repository->add(Argument::type(WorkflowTransitionRequest::class))->will(static function(array $args) use (&$added): void {
+            $added[] = $args[0];
+        });
+
+        $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
+        $provider->find(Argument::cetera())->willReturn(null);
+
+        $token = $this->prophesize(TokenInterface::class);
+        $token->getUser()->willReturn($this->prophesize(UserInterface::class)->reveal());
+        $tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $tokenStorage->getToken()->willReturn($token->reveal());
+
+        $resolver = $this->prophesize(RequestWorkflowResolverInterface::class);
+        $resolver->resolveForContent($dimensionContent)->willReturn(new RequestWorkflow('default', [], 1));
+
+        $subscriber = new WorkflowTransitionRequestTransitionSubscriber(
+            $repository->reveal(),
+            $provider->reveal(),
+            $tokenStorage->reveal(),
+            $resolver->reveal(),
+            $this->createMessageBus(),
+        );
+
+        $subscriber->onRequestForReview(new TransitionEvent($dimensionContent, new Marking(), null, null, [
+            ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_CONTEXT_KEY => ['publishAt' => '2026-12-01T10:00:00+00:00'],
+        ]));
+
+        $this->assertCount(1, $added);
+        $this->assertInstanceOf(WorkflowTransitionRequest::class, $added[0]);
+        $this->assertSame(['publishAt' => '2026-12-01T10:00:00+00:00'], $added[0]->getData());
     }
 
     private function createMessageBus(): MessageBusInterface

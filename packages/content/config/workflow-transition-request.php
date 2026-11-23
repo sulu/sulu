@@ -152,12 +152,18 @@ return static function(ContainerConfigurator $container) {
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_content.workflow_transition_request_cancel_transition_subscriber', WorkflowTransitionRequestCancelTransitionSubscriber::class)
-        ->args([new Reference('sulu_content.active_workflow_transition_request_provider')])
+        ->args([
+            new Reference('sulu_content.active_workflow_transition_request_provider'),
+            new Reference('event_dispatcher'),
+        ])
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);
 
     $services->set('sulu_content.workflow_transition_request_publish_transition_subscriber', WorkflowTransitionRequestPublishTransitionSubscriber::class)
-        ->args([new Reference('sulu_content.active_workflow_transition_request_provider')])
+        ->args([
+            new Reference('sulu_content.active_workflow_transition_request_provider'),
+            new Reference('event_dispatcher'),
+        ])
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);
 

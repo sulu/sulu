@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<form xmlns="http://schemas.sulu.io/template/template"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/form-1.0.xsd"
+>
+    <key>workflow_transition_request_details</key>
+
+    <properties>
+        <property name="message" type="text_area">
+            <meta>
+                <title>sulu_content.workflow_transition_request.message_to_reviewer</title>
+            </meta>
+        </property>
+    </properties>
+</form>
