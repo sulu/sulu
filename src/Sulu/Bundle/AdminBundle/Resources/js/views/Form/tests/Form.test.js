@@ -2608,6 +2608,19 @@ test('Should title the locked banner so an approved request does not read as a w
     }));
 });
 
+test('Should show the status message of an action in the banner instead of the one of the core', () => {
+    const banner = renderLockedReviewForm({
+        createdBy: {id: 7},
+        permissions: {cancel: true, publish: false, retry: true, review: false},
+        statusMessage: {message: 'app.publish_scheduled', parameters: {date: '25.11.2026 10:00'}},
+        status: 'approved',
+    });
+
+    const {translate} = require('../../../utils/Translator');
+    expect(translate).toHaveBeenCalledWith('app.publish_scheduled', {date: '25.11.2026 10:00'});
+    expect(banner.message).toBe('app.publish_scheduled');
+});
+
 test('Should title the banner of a request that is still open as a review', () => {
     const banner = renderLockedReviewForm({createdBy: {id: 7}, status: 'open'});
 

@@ -17,9 +17,14 @@ use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionReques
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
 
 /**
- * @internal
+ * Derives the status of a request. An action of a bundle may use it, for example to check that a request is approved.
+ *
+ * @experimental This is an experimental feature and may change in future releases.
  */
 interface WorkflowTransitionRequestStatusResolverInterface
 {
+    /**
+     * @experimental This is an experimental feature and may change in future releases.
+     */
     public function resolve(WorkflowTransitionRequest $workflowTransitionRequest): WorkflowTransitionRequestStatusEnum;
 }

@@ -19,6 +19,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestStatusEnum;
+use Sulu\Content\Tests\Application\ExampleTestBundle\RequestWorkflow\ExampleWorkflowTransitionRequestAction;
 use Sulu\Content\Tests\Traits\WorkflowTransitionRequestTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -345,6 +346,104 @@ class WorkflowTransitionRequestControllerTest extends SuluTestCase
         );
 
         $this->assertSame(400, $this->client->getResponse()->getStatusCode());
+    }
+
+    public function testActionOfABundleRunsOnTheRequest(): void
+    {
+        ExampleWorkflowTransitionRequestAction::$executed = [];
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/workflow-transition-requests/%s.json?action=example_note', $workflowTransitionRequest->getId()),
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame([$workflowTransitionRequest->getId()], ExampleWorkflowTransitionRequestAction::$executed);
+    }
+
+    /**
+     * Only approving and rejecting read the comment, so a body meant for nobody must not break an action of a bundle.
+     */
+    public function testActionOfABundleIgnoresACommentOfTheWrongType(): void
+    {
+        ExampleWorkflowTransitionRequestAction::$executed = [];
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/workflow-transition-requests/%s.json?action=example_note', $workflowTransitionRequest->getId()),
+            [],
+            [],
+            [],
+            (string) \json_encode(['comment' => 1]),
+        );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame([$workflowTransitionRequest->getId()], ExampleWorkflowTransitionRequestAction::$executed);
+    }
+
+    public function testApproveWithACommentOfTheWrongTypeReturns400(): void
+    {
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/workflow-transition-requests/%s.json?action=approve', $workflowTransitionRequest->getId()),
+            [],
+            [],
+            [],
+            (string) \json_encode(['comment' => 1]),
+        );
+
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+    }
+
+    public function testActionOfABundleOnAClosedRequestReturns409(): void
+    {
+        ExampleWorkflowTransitionRequestAction::$executed = [];
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+        $workflowTransitionRequest->cancel();
+        static::getEntityManager()->flush();
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/workflow-transition-requests/%s.json?action=example_note', $workflowTransitionRequest->getId()),
+        );
+
+        $this->assertHttpStatusCode(409, $this->client->getResponse());
+        $this->assertSame([], ExampleWorkflowTransitionRequestAction::$executed);
+    }
+
+    public function testActionOfABundleWithoutItsPermissionReturns403(): void
+    {
+        ExampleWorkflowTransitionRequestAction::$executed = [];
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+        $this->grantTestUserNoPermissions();
+        $this->renameTestUserTo('action_no_permission');
+        $this->client->setServerParameter('PHP_AUTH_USER', 'action_no_permission');
+        $this->client->setServerParameter('PHP_AUTH_PW', 'test');
+
+        $this->client->request(
+            'POST',
+            \sprintf('/admin/api/workflow-transition-requests/%s.json?action=example_note', $workflowTransitionRequest->getId()),
+        );
+
+        $this->assertHttpStatusCode(403, $this->client->getResponse());
+        $this->assertSame([], ExampleWorkflowTransitionRequestAction::$executed);
+    }
+
+    public function testGetListsTheActionsOfBundlesOfAnOpenRequest(): void
+    {
+        $workflowTransitionRequest = $this->persistWorkflowTransitionRequest('examples', '1', 'en');
+
+        $this->client->request('GET', \sprintf('/admin/api/workflow-transition-requests/%s.json', $workflowTransitionRequest->getId()));
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array{actions: list<array{key: string, label: string}>} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame([['key' => 'example_note', 'label' => 'example_test.note']], $content['actions']);
     }
 
     public function testActionOnMissingIdReturns404(): void

@@ -19,6 +19,7 @@ use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataA
 use Sulu\Content\Application\RequestWorkflow\PreValidator\RequestWorkflowPreValidatorInterface;
 use Sulu\Content\Application\RequestWorkflow\Validator\RequestWorkflowValidatorInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionInterface;
 use Sulu\Content\Domain\Exception\ContentInReviewException;
 use Sulu\Content\Domain\Exception\DuplicateActiveWorkflowTransitionRequestException;
 use Sulu\Content\Domain\Exception\MissingAuthenticatedUserException;
@@ -26,6 +27,7 @@ use Sulu\Content\Domain\Exception\NoRequestWorkflowException;
 use Sulu\Content\Domain\Exception\SelfReviewNotAllowedException;
 use Sulu\Content\Domain\Exception\ShadowSourceNotPublishedException;
 use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
+use Sulu\Content\Domain\Exception\WorkflowTransitionRequestActionNotAvailableException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestPreValidationFailedException;
@@ -209,6 +211,7 @@ final class SuluContentBundle extends AbstractBundle
                             MissingAuthenticatedUserException::class => 401,
                             SelfReviewNotAllowedException::class => 403,
                             WorkflowTransitionRequestCancelNotAllowedException::class => 403,
+                            WorkflowTransitionRequestActionNotAvailableException::class => 409,
                             WorkflowTransitionRequestClosedException::class => 409,
                             ContentInReviewException::class => 409,
                             DuplicateActiveWorkflowTransitionRequestException::class => 409,
@@ -258,6 +261,9 @@ final class SuluContentBundle extends AbstractBundle
 
         $container->registerForAutoconfiguration(RequestWorkflowValidatorInterface::class)
             ->addTag('sulu_content.request_workflow_validator');
+
+        $container->registerForAutoconfiguration(WorkflowTransitionRequestActionInterface::class)
+            ->addTag('sulu_content.workflow_transition_request_action');
 
         $container->registerForAutoconfiguration(RequestWorkflowPreValidatorInterface::class)
             ->addTag('sulu_content.request_workflow_pre_validator');

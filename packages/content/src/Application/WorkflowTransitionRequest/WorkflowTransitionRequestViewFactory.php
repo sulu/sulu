@@ -14,9 +14,13 @@ declare(strict_types=1);
 namespace Sulu\Content\Application\WorkflowTransitionRequest;
 
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Content\Application\RequestWorkflow\RequestWorkflowRegistryInterface;
 use Sulu\Content\Application\RequestWorkflow\WorkflowTransitionRequestStatusResolverInterface;
 use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
+use Sulu\Content\Application\Security\WorkflowTransitionRequestSecurityContextResolverInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionRegistryInterface;
+use Sulu\Content\Domain\Exception\UnresolvableSecurityContextException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequestDecision;
 
@@ -29,6 +33,9 @@ final class WorkflowTransitionRequestViewFactory implements WorkflowTransitionRe
         private readonly RequestWorkflowRegistryInterface $registry,
         private readonly WorkflowTransitionRequestStatusResolverInterface $statusResolver,
         private readonly WorkflowTransitionAdminAuthorizerInterface $authorizer,
+        private readonly WorkflowTransitionRequestActionRegistryInterface $actionRegistry,
+        private readonly SecurityCheckerInterface $securityChecker,
+        private readonly WorkflowTransitionRequestSecurityContextResolverInterface $securityContextResolver,
     ) {
     }
 
@@ -50,6 +57,8 @@ final class WorkflowTransitionRequestViewFactory implements WorkflowTransitionRe
                 $request->getResourceId(),
                 $request->getLocale(),
             ),
+            'actions' => $this->buildActions($request),
+            ...$this->buildStatusMessage($request),
             'requestedAt' => $request->getCreated()->format(\DATE_ATOM),
             'createdBy' => $this->serializeUser($request->getCreator()),
             'approvalProgress' => [
@@ -79,6 +88,62 @@ final class WorkflowTransitionRequestViewFactory implements WorkflowTransitionRe
                 \array_filter($request->getDecisions(), static fn (WorkflowTransitionRequestDecision $decision) => $decision->isUserDecision()),
             )),
         ];
+    }
+
+    /**
+     * @return array{statusMessage?: array{message: string, parameters: array<string, string>}}
+     */
+    private function buildStatusMessage(WorkflowTransitionRequest $request): array
+    {
+        foreach ($this->actionRegistry->all() as $action) {
+            $statusMessage = $action->getStatusMessage($request);
+            if (null !== $statusMessage) {
+                return ['statusMessage' => $statusMessage];
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * The actions of bundles that fit the request and that the user may take, for the footer of the
+     * review overlay. The label travels untranslated like the messages do.
+     *
+     * @return list<array{key: string, label: string, labelParameters?: array<string, string>}>
+     */
+    private function buildActions(WorkflowTransitionRequest $request): array
+    {
+        if (!$request->isOpen()) {
+            return [];
+        }
+
+        try {
+            $condition = $this->securityContextResolver->resolve(
+                $request->getResourceKey(),
+                $request->getResourceId(),
+                $request->getLocale(),
+            );
+        } catch (UnresolvableSecurityContextException) {
+            // The buttons are only a view of the rules, so a broken setup hides them.
+            return [];
+        }
+
+        $actions = [];
+        foreach ($this->actionRegistry->all() as $action) {
+            if (!$action->isAvailable($request) || !$this->securityChecker->hasPermission($condition, $action->getPermission())) {
+                continue;
+            }
+
+            $entry = ['key' => $action::getKey(), 'label' => $action->getLabel()];
+            $labelParameters = $action->getLabelParameters($request);
+            if ([] !== $labelParameters) {
+                $entry['labelParameters'] = $labelParameters;
+            }
+
+            $actions[] = $entry;
+        }
+
+        return $actions;
     }
 
     /**

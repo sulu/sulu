@@ -17,9 +17,11 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Content\Application\Message\RetryWorkflowTransitionRequestValidationMessage;
 use Sulu\Content\Application\Message\ValidateWorkflowTransitionRequestMessage;
 use Sulu\Content\Application\MessageHandler\RetryWorkflowTransitionRequestValidationMessageHandler;
+use Sulu\Content\Application\Security\WorkflowTransitionAdminAuthorizerInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestActionEvent;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestClosedException;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
@@ -27,6 +29,7 @@ use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[CoversClass(RetryWorkflowTransitionRequestValidationMessageHandler::class)]
@@ -66,6 +69,7 @@ class RetryWorkflowTransitionRequestValidationMessageHandlerTest extends TestCas
             $repository->reveal(),
             $messageBus->reveal(),
             $eventDispatcher->reveal(),
+            $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class)->reveal(),
         );
 
         $this->assertSame($request, $handler(new RetryWorkflowTransitionRequestValidationMessage($request->getId(), 'seo_required')));
@@ -89,6 +93,7 @@ class RetryWorkflowTransitionRequestValidationMessageHandlerTest extends TestCas
             $repository->reveal(),
             $messageBus->reveal(),
             $eventDispatcher->reveal(),
+            $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class)->reveal(),
         );
 
         $this->assertSame($request, $handler(new RetryWorkflowTransitionRequestValidationMessage($request->getId(), 'removed_validator')));
@@ -112,9 +117,39 @@ class RetryWorkflowTransitionRequestValidationMessageHandlerTest extends TestCas
             $repository->reveal(),
             $messageBus->reveal(),
             $eventDispatcher->reveal(),
+            $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class)->reveal(),
         );
 
         $this->expectException(WorkflowTransitionRequestClosedException::class);
         $handler(new RetryWorkflowTransitionRequestValidationMessage($request->getId(), 'seo_required'));
+    }
+
+    public function testInvokeRefusesAUserWithoutTheEditPermission(): void
+    {
+        $request = new WorkflowTransitionRequest('pages', 'res-1', 'en', 'default');
+        $request->addValidatorDecision('seo_required');
+        $repository = $this->prophesize(WorkflowTransitionRequestRepositoryInterface::class);
+        $repository->getOneBy(['id' => $request->getId()])->willReturn($request);
+
+        $messageBus = $this->prophesize(MessageBusInterface::class);
+        $messageBus->dispatch(Argument::any())->shouldNotBeCalled();
+
+        $authorizer = $this->prophesize(WorkflowTransitionAdminAuthorizerInterface::class);
+        $authorizer->assertHasPermission('pages', 'res-1', 'en', PermissionTypes::EDIT)
+            ->willThrow(new AccessDeniedException('no'));
+
+        $handler = new RetryWorkflowTransitionRequestValidationMessageHandler(
+            $repository->reveal(),
+            $messageBus->reveal(),
+            $this->prophesize(EventDispatcherInterface::class)->reveal(),
+            $authorizer->reveal(),
+        );
+
+        try {
+            $handler(new RetryWorkflowTransitionRequestValidationMessage($request->getId(), 'seo_required'));
+            $this->fail('A user without the edit permission must not retry a check.');
+        } catch (AccessDeniedException) {
+            $this->assertNotNull($request->getValidatorDecision('seo_required'));
+        }
     }
 }
