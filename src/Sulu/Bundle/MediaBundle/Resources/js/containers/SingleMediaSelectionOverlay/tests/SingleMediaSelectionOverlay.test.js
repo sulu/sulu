@@ -114,6 +114,26 @@ test('Should create list-stores with classifications', () => {
     );
     expect(MediaSelectionOverlayMock.createMediaListStore.mock.calls[0][1].get()).toEqual(undefined);
     expect(MediaSelectionOverlayMock.createCollectionListStore).toHaveBeenCalledWith(expect.anything(), locale);
+    expect(MediaSelectionOverlayMock).toHaveBeenLastCalledWith(
+        expect.objectContaining({uploadDisabled: true}),
+        expect.anything()
+    );
+});
+
+test('Should allow uploads without classifications', () => {
+    render(
+        <SingleMediaSelectionOverlay
+            locale={mockObservable.box('en')}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+        />
+    );
+
+    expect(MediaSelectionOverlayMock).toHaveBeenLastCalledWith(
+        expect.objectContaining({uploadDisabled: false}),
+        expect.anything()
+    );
 });
 
 test('Should update selections of media-list-store to only contain a single item', () => {

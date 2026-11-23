@@ -30,6 +30,7 @@ type Props = {|
     onUploadOverlayClose: () => void,
     onUploadOverlayOpen: () => void,
     overlayType: OverlayType,
+    uploadDisabled: boolean,
     uploadOverlayOpen: boolean,
 |};
 
@@ -38,6 +39,7 @@ class MediaCollection extends React.Component<Props> {
     static defaultProps = {
         hideUploadAction: false,
         overlayType: 'overlay',
+        uploadDisabled: false,
     };
 
     static addable: boolean = true;
@@ -92,6 +94,7 @@ class MediaCollection extends React.Component<Props> {
             onMediaNavigate,
             onUploadOverlayClose,
             onUploadOverlayOpen,
+            uploadDisabled,
             uploadOverlayOpen,
         } = this.props;
 
@@ -104,8 +107,9 @@ class MediaCollection extends React.Component<Props> {
             && (permissions.delete !== undefined ? permissions.delete : MediaCollection.deletable);
         const securable = !locked
             && (permissions.security !== undefined ? permissions.security : MediaCollection.securable);
+        const uploadable = addable && !uploadDisabled;
 
-        if (addable && !hideUploadAction) {
+        if (uploadable && !hideUploadAction) {
             listActions.push({
                 disabled: collectionStore.loading,
                 icon: 'su-upload',
@@ -118,7 +122,7 @@ class MediaCollection extends React.Component<Props> {
             <MultiMediaDropzone
                 className={className}
                 collectionId={collectionStore.id}
-                disabled={collectionStore.loading || !addable}
+                disabled={collectionStore.loading || !uploadable}
                 locale={locale}
                 onClose={onUploadOverlayClose}
                 onOpen={onUploadOverlayOpen}

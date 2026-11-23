@@ -61,6 +61,7 @@ class MultiMediaSelectionOverlay extends React.Component<Props> {
 
     render() {
         const {
+            classifications,
             confirmLoading,
             onClose,
             onConfirm,
@@ -78,6 +79,7 @@ class MultiMediaSelectionOverlay extends React.Component<Props> {
                 onClose={onClose}
                 onConfirm={onConfirm}
                 open={open}
+                uploadDisabled={classifications.length > 0}
             />
         );
     }

@@ -331,6 +331,7 @@ function createMediaCollectionTestProps(options: any = {}) {
         onUploadError: options.onUploadError,
         onUploadOverlayClose: options.onUploadOverlayClose || jest.fn(),
         onUploadOverlayOpen: options.onUploadOverlayOpen || jest.fn(),
+        uploadDisabled: options.uploadDisabled || false,
         uploadOverlayOpen: options.uploadOverlayOpen || false,
     };
 
@@ -688,6 +689,20 @@ test('Do not pass action for uploading new media to media list if hideUploadActi
     rerender(<MediaCollection {...props} hideUploadAction={true} />);
 
     expect(screen.queryByRole('button', {name: /sulu_media.upload_file/})).not.toBeInTheDocument();
+});
+
+test('Hide the upload action and disable the dropzone if uploadDisabled prop is set to true', async() => {
+    const user = userEvent.setup();
+    const MediaUploadStore = require('../../../stores/MediaUploadStore');
+    const {props, rerender} = renderMediaCollection({collectionId: 1});
+
+    expect(screen.getByRole('button', {name: /sulu_media.upload_file/})).toBeInTheDocument();
+
+    rerender(<MediaCollection {...props} uploadDisabled={true} />);
+
+    expect(screen.queryByRole('button', {name: /sulu_media.upload_file/})).not.toBeInTheDocument();
+    await user.upload(getFileInput(), new File(['content'], 'test.jpg', {type: 'image/jpeg'}));
+    expect(MediaUploadStore).not.toHaveBeenCalled();
 });
 
 test('Pass item actions of the itemActionsProvider prop to media list', () => {

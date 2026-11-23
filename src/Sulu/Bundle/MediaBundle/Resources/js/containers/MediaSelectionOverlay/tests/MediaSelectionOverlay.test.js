@@ -208,8 +208,29 @@ test('Render an open MediaSelectionOverlay', () => {
     expect(MediaCollectionMock).toHaveBeenCalledWith(expect.objectContaining({
         mediaListAdapters: ['media_card_selection', 'table'],
         overlayType: 'dialog',
+        uploadDisabled: false,
         uploadOverlayOpen: false,
     }), expect.anything());
+});
+
+test('Pass the uploadDisabled prop to the MediaCollection', () => {
+    render(
+        <MediaSelectionOverlay
+            collectionId={observable.box()}
+            collectionListStore={collectionListStoreMock}
+            locale={observable.box('en')}
+            mediaListStore={mediaListStoreMock}
+            onClose={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            uploadDisabled={true}
+        />
+    );
+
+    expect(MediaCollectionMock).toHaveBeenCalledWith(
+        expect.objectContaining({uploadDisabled: true}),
+        expect.anything()
+    );
 });
 
 test('Render an open MediaSelectionOverlay with selected items', () => {
