@@ -738,7 +738,9 @@ export default withToolbar(Form, function() {
                 }]
                 : [],
             message,
-            title: translate('sulu_content.workflow_transition_request.banner_title'),
+            title: translate(status === 'approved'
+                ? 'sulu_content.workflow_transition_request.banner_title_approved'
+                : 'sulu_content.workflow_transition_request.banner_title'),
         });
     }
 
