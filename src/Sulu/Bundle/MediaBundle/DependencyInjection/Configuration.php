@@ -47,18 +47,19 @@ final class Configuration implements ConfigurationInterface
             ->arrayNode('classifications')
                 ->info('Classifications a media can be assigned to, with the translation key of their title as value.')
                 ->useAttributeAsKey('name')
+                ->normalizeKeys(false)
                 ->scalarPrototype()->cannotBeEmpty()->end()
                 ->validate()
                     ->ifTrue(static function(array $classifications): bool {
                         foreach (\array_keys($classifications) as $key) {
-                            if (!\preg_match('/^[a-zA-Z0-9_-]{1,191}$/', (string) $key)) {
+                            if (!\preg_match('/^[a-zA-Z][a-zA-Z0-9_-]{0,190}$/', (string) $key)) {
                                 return true;
                             }
                         }
 
                         return false;
                     })
-                    ->thenInvalid('The keys of "sulu_media.classifications" must consist of up to 191 letters, digits, "_" or "-".')
+                    ->thenInvalid('The keys of "sulu_media.classifications" must start with a letter and consist of up to 191 letters, digits, "_" or "-".')
                 ->end()
             ->end()
             ->arrayNode('image_format_files')

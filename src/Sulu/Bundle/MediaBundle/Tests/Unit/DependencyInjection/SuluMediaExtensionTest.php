@@ -49,9 +49,12 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->executableFinder->find(Argument::any())->willReturn(true);
         $this->container->setParameter('kernel.bundles', []);
 
-        $this->load(['classifications' => ['data_sheet' => 'app.data_sheet']]);
+        $this->load(['classifications' => ['data_sheet' => 'app.data_sheet', 'warranty-certificate' => 'app.warranty']]);
 
-        $this->assertContainerBuilderHasParameter('sulu_media.classifications', ['data_sheet' => 'app.data_sheet']);
+        $this->assertContainerBuilderHasParameter(
+            'sulu_media.classifications',
+            ['data_sheet' => 'app.data_sheet', 'warranty-certificate' => 'app.warranty'],
+        );
     }
 
     public function testLoadWithoutClassifications(): void
@@ -64,14 +67,27 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasParameter('sulu_media.classifications', []);
     }
 
-    public function testLoadInvalidClassificationKey(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInvalidClassificationKeys')]
+    public function testLoadInvalidClassificationKey(int|string $key): void
     {
         $this->executableFinder->find(Argument::any())->willReturn(true);
         $this->container->setParameter('kernel.bundles', []);
 
         $this->expectException(InvalidConfigurationException::class);
 
-        $this->load(['classifications' => ['data,sheet' => 'app.data_sheet']]);
+        $this->load(['classifications' => [$key => 'app.data_sheet']]);
+    }
+
+    /**
+     * @return iterable<string, array{int|string}>
+     */
+    public static function provideInvalidClassificationKeys(): iterable
+    {
+        yield 'comma' => ['data,sheet'];
+        yield 'digits only' => [2024];
+        yield 'leading digit' => ['1st_sheet'];
+        yield 'leading underscore' => ['_sheet'];
+        yield 'too long' => [\str_repeat('a', 192)];
     }
 
     public function testLoad(): void
