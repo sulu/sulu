@@ -52,6 +52,8 @@ class Form extends React.Component<Props> {
     @observable showDirtyWarning: boolean = false;
     @observable showHasChangedWarning: boolean = false;
     postponedSaveOptions: Object;
+    postponedSaveContinuation: ?(response: Object) => mixed;
+    submitContinuation: ?(response: Object) => mixed;
     navigateAfterPreValidation: ?() => void;
     postponedUpdateRouteMethod: ?UpdateRouteMethod;
     postponedRoute: ?Route;
@@ -358,6 +360,24 @@ class Form extends React.Component<Props> {
         this.form.submit(options);
     };
 
+    /**
+     * Submits the form through its validation and runs the continuation after the save, also after a forced one.
+     */
+    submitAndContinue = (options: {[string]: any}, continuation: (response: Object) => mixed) => {
+        if (!this.form) {
+            throw new Error('The form ref has not been set! This should not happen and is likely a bug.');
+        }
+
+        this.submitContinuation = continuation;
+
+        try {
+            return this.form.submit(options);
+        } finally {
+            // An invalid form never reaches handleSubmit, so the continuation must not wait for the next save.
+            this.submitContinuation = undefined;
+        }
+    };
+
     handleSubmit = (options: ?string | {[string]: any}) => {
         if (typeof options === 'string') {
             log.warn(
@@ -368,14 +388,17 @@ class Form extends React.Component<Props> {
             options = {action: options};
         }
 
-        return this.save(options);
+        const continuation = this.submitContinuation;
+        this.submitContinuation = undefined;
+
+        return this.save(options, continuation);
     };
 
     handleSuccess = () => {
         this.showSuccessSnackbar();
     };
 
-    save = (options: Object) => {
+    save = (options: Object, continuation: ?(response: Object) => mixed) => {
         const {resourceStore, router} = this.props;
 
         const {
@@ -421,12 +444,13 @@ class Form extends React.Component<Props> {
                     );
                 }
 
-                return response;
+                return continuation ? Promise.resolve(continuation(response)).then(() => response) : response;
             })
             .catch(action((error) => {
                 if (error.code === HAS_CHANGED_ERROR_CODE) {
                     this.showHasChangedWarning = true;
                     this.postponedSaveOptions = options;
+                    this.postponedSaveContinuation = continuation;
 
                     return;
                 }
@@ -569,12 +593,14 @@ class Form extends React.Component<Props> {
     @action handleHasChangedWarningCancelClick = () => {
         this.showHasChangedWarning = false;
         this.postponedSaveOptions = undefined;
+        this.postponedSaveContinuation = undefined;
     };
 
     @action handleHasChangedWarningConfirmClick = () => {
-        this.save({...this.postponedSaveOptions, force: true});
+        this.save({...this.postponedSaveOptions, force: true}, this.postponedSaveContinuation);
         this.showHasChangedWarning = false;
         this.postponedSaveOptions = undefined;
+        this.postponedSaveContinuation = undefined;
     };
 
     setFormRef = (form: ?ElementRef<typeof FormContainer>) => {
