@@ -120,6 +120,8 @@ final class PageRepository implements PageRepositoryInterface
             throw new PageNotFoundException($filters, 0, $e);
         }
 
+        $this->initializeCollections($queryBuilder, [$page]);
+
         return $page;
     }
 
@@ -133,6 +135,8 @@ final class PageRepository implements PageRepositoryInterface
         } catch (NoResultException $e) {
             return null;
         }
+
+        $this->initializeCollections($queryBuilder, [$page]);
 
         return $page;
     }
@@ -162,6 +166,7 @@ final class PageRepository implements PageRepositoryInterface
 
         /** @var iterable<PageInterface> $pages */
         $pages = $queryBuilder->getQuery()->getResult();
+        $this->initializeCollections($queryBuilder, $pages);
 
         foreach ($pages as $page) {
             yield $page;
@@ -213,6 +218,7 @@ final class PageRepository implements PageRepositoryInterface
 
         /** @var PageInterface[] $pages */
         $pages = $query->getResult('sulu_page_tree');
+        $this->initializeCollections($queryBuilder, $this->flattenTree($pages));
 
         return $pages;
     }
@@ -456,6 +462,27 @@ final class PageRepository implements PageRepositoryInterface
         }
 
         return $queryBuilder;
+    }
+
+    /**
+     * @param iterable<PageInterface> $pages
+     */
+    private function initializeCollections(QueryBuilder $queryBuilder, iterable $pages): void
+    {
+        $this->dimensionContentQueryEnhancer->initializeCollections($queryBuilder, $pages, ['navigationContexts']);
+    }
+
+    /**
+     * @param iterable<PageInterface> $pages
+     *
+     * @return \Generator<int, PageInterface>
+     */
+    private function flattenTree(iterable $pages): \Generator
+    {
+        foreach ($pages as $page) {
+            yield $page;
+            yield from $this->flattenTree($page->getChildren());
+        }
     }
 
     private function leftJoinDimensionContent(QueryBuilder $queryBuilder): void

@@ -178,7 +178,8 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
         });
 
         $this->assertCount(3, $pages);
-        $this->assertSame(1, $queries);
+        // the load plus one query each for the navigation contexts and the audience target groups
+        $this->assertSame(3, $queries);
         foreach ($pages as $page) {
             $this->assertNotNull($this->findLive($page, 'en'));
             $this->assertNull($this->findLive($page, 'de'));
@@ -204,7 +205,7 @@ class PageRepositoryLoadedDimensionContentsTest extends SuluTestCase
             $this->walkTree($roots, fn (PageInterface $page) => $this->findLive($page, 'en'));
         });
 
-        $this->assertSame(1, $queries);
+        $this->assertSame(3, $queries);
         $this->assertCount(2, $roots);
 
         $titles = [];

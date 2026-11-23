@@ -126,7 +126,7 @@ class NavigationPerformanceTest extends SuluTestCase
         $this->assertSame(5, $navigationCount);
 
         $initialQueryCount = \count($result['queries']);
-        $this->assertCount(8, $result['queries']);
+        $this->assertCount(9, $result['queries']);
 
         self::createPage([
             'en' => [
@@ -163,7 +163,7 @@ class NavigationPerformanceTest extends SuluTestCase
         $this->assertSame(3, $navigationCount);
 
         $initialQueryCount = \count($result['queries']);
-        $this->assertCount(8, $result['queries']);
+        $this->assertCount(9, $result['queries']);
 
         self::createPage([
             'en' => [
@@ -199,7 +199,7 @@ class NavigationPerformanceTest extends SuluTestCase
         $this->assertSame(2, $navigationCount);
 
         $initialQueryCount = \count($result['queries']);
-        $this->assertCount(9, $result['queries']);
+        $this->assertCount(10, $result['queries']);
 
         self::createPage([
             'en' => [
@@ -236,7 +236,7 @@ class NavigationPerformanceTest extends SuluTestCase
         $this->assertSame(1, $navigationCount);
 
         $initialQueryCount = \count($result['queries']);
-        $this->assertCount(9, $result['queries']);
+        $this->assertCount(10, $result['queries']);
 
         self::createPage([
             'en' => [
@@ -273,7 +273,7 @@ class NavigationPerformanceTest extends SuluTestCase
         $this->assertSame(3, $navigationCount);
 
         $initialQueryCount = \count($result['queries']);
-        $this->assertCount(9, $result['queries']);
+        $this->assertCount(10, $result['queries']);
 
         self::createPage([
             'en' => [

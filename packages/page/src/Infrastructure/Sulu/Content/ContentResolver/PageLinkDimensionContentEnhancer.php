@@ -18,6 +18,7 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkUrlTrait;
 use Sulu\Content\Application\ContentAggregator\ContentAggregatorInterface;
 use Sulu\Content\Application\ContentEnhancer\DimensionContentEnhancerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\PageDimensionContent;
 use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Sulu\Page\Domain\Repository\PageRepositoryInterface;
@@ -97,7 +98,7 @@ class PageLinkDimensionContentEnhancer implements DimensionContentEnhancerInterf
             ['uuid' => $href],
             [
                 PageRepositoryInterface::SELECT_PAGE_CONTENT => [
-                    'selects' => [], // No excerpt/tags needed for link resolution
+                    'selects' => [DimensionContentQueryEnhancer::GROUP_SELECT_CONTENT_WEBSITE => true],
                     'dimensionAttributes' => [
                         'locale' => $locale,
                         'stage' => $stage ?? DimensionContentInterface::STAGE_DRAFT,

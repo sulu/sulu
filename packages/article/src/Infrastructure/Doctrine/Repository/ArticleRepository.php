@@ -103,6 +103,8 @@ final class ArticleRepository implements ArticleRepositoryInterface
             throw new ArticleNotFoundException($filters, 0, $e);
         }
 
+        $this->initializeCollections($queryBuilder, [$article]);
+
         return $article;
     }
 
@@ -116,6 +118,8 @@ final class ArticleRepository implements ArticleRepositoryInterface
         } catch (NoResultException $e) {
             return null;
         }
+
+        $this->initializeCollections($queryBuilder, [$article]);
 
         return $article;
     }
@@ -145,6 +149,7 @@ final class ArticleRepository implements ArticleRepositoryInterface
 
         /** @var iterable<ArticleInterface> $articles */
         $articles = $queryBuilder->getQuery()->getResult();
+        $this->initializeCollections($queryBuilder, $articles);
 
         foreach ($articles as $article) {
             yield $article;
@@ -307,5 +312,13 @@ final class ArticleRepository implements ArticleRepositoryInterface
         }
 
         return $queryBuilder;
+    }
+
+    /**
+     * @param iterable<ArticleInterface> $articles
+     */
+    private function initializeCollections(QueryBuilder $queryBuilder, iterable $articles): void
+    {
+        $this->dimensionContentQueryEnhancer->initializeCollections($queryBuilder, $articles, ['additionalWebspaces']);
     }
 }
