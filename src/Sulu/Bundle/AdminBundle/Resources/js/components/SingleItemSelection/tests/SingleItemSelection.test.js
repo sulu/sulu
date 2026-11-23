@@ -281,3 +281,57 @@ test('Call onRemove callback if remove button is clicked', async() => {
 
     expect(removeSpy).toHaveBeenCalled();
 });
+
+test('Render buttons before the remove button and call their onClick callback', async() => {
+    const user = userEvent.setup();
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+    const rightButton = {
+        icon: 'su-display-default',
+        onClick: jest.fn(),
+    };
+    const cropButton = {
+        icon: 'su-crop-pen',
+        onClick: jest.fn(),
+    };
+
+    render(
+        <SingleItemSelection
+            buttons={[cropButton]}
+            leftButton={leftButton}
+            onRemove={jest.fn()}
+            rightButton={rightButton}
+        >
+            Test Item
+        </SingleItemSelection>
+    );
+
+    const buttonIcons = screen.getAllByRole('button')
+        .map((button) => button.querySelector('[aria-label]')?.getAttribute('aria-label'))
+        .filter(Boolean);
+    expect(buttonIcons).toEqual(['su-document', 'su-crop-pen', 'su-trash-alt', 'su-display-default']);
+
+    await user.click(screen.getByLabelText('su-crop-pen'));
+    expect(cropButton.onClick).toHaveBeenCalledTimes(1);
+});
+
+test('Hide buttons if the selection is disabled', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
+    const cropButton = {
+        icon: 'su-crop-pen',
+        onClick: jest.fn(),
+    };
+
+    render(
+        <SingleItemSelection buttons={[cropButton]} disabled={true} leftButton={leftButton}>
+            Test Item
+        </SingleItemSelection>
+    );
+
+    expect(screen.queryByLabelText('su-crop-pen')).not.toBeInTheDocument();
+});

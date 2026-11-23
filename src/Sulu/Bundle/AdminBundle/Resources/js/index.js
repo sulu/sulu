@@ -120,6 +120,7 @@ import Form, {
     PublishToolbarAction as FormPublishToolbarAction,
     RequestForPublishToolbarAction as FormRequestForPublishToolbarAction,
     ReviewWorkflowTransitionRequestToolbarAction as FormReviewWorkflowTransitionRequestToolbarAction,
+    SaveAndCreateToolbarAction as FormSaveAndCreateToolbarAction,
     SaveWithFormDialogToolbarAction as FormSaveWithFormDialogToolbarAction,
     SaveWithPublishingToolbarAction as FormSaveWithPublishingToolbarAction,
     SetUnpublishedToolbarAction as FormSetUnpublishedToolbarAction,
@@ -382,6 +383,7 @@ function registerFormToolbarActions() {
     formToolbarActionRegistry.add('sulu_admin.save', FormSaveToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.publish', FormPublishToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.save_with_form_dialog', FormSaveWithFormDialogToolbarAction);
+    formToolbarActionRegistry.add('sulu_admin.save_and_create', FormSaveAndCreateToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.set_unpublished', FormSetUnpublishedToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.type', FormTypeToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.toggler', FormTogglerToolbarAction);

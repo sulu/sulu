@@ -95,6 +95,20 @@ export default class ReviewWorkflowTransitionRequestToolbarAction extends Abstra
         this.resourceFormStore.resourceStore.reload();
     };
 
+    handleAction = async(key: string) => {
+        const request = this.resourceFormStore.data.activeWorkflowTransitionRequest;
+        if (!request) {
+            return;
+        }
+
+        await ResourceRequester.post(
+            'workflow_transition_requests',
+            {},
+            {id: request.id, action: key}
+        );
+        this.resourceFormStore.resourceStore.reload();
+    };
+
     handleRetry = async(validatorKey: string) => {
         const request = this.resourceFormStore.data.activeWorkflowTransitionRequest;
         if (!request) {
@@ -126,6 +140,7 @@ export default class ReviewWorkflowTransitionRequestToolbarAction extends Abstra
                 canPublish={this.canPublish}
                 canRetry={this.canRetry}
                 key={`workflow-transition-request-review-${index ?? 0}`}
+                onAction={this.handleAction}
                 onApprove={this.handleApprove}
                 onClose={this.handleClose}
                 onPublish={this.handlePublish}

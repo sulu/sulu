@@ -70,6 +70,31 @@ const handleRemove = () => {
 </SingleItemSelection>
 ```
 
+The `buttons` prop adds icon buttons to the item, rendered in order before the remove button.
+
+```javascript
+const leftButton = {
+    icon: 'su-document',
+};
+
+const buttons = [
+    {
+        icon: 'su-crop-pen',
+        onClick: () => {
+            alert('Crop was pressed!');
+        },
+    },
+];
+
+const handleRemove = () => {
+    alert('Remove was pressed!');
+};
+
+<SingleItemSelection buttons={buttons} leftButton={leftButton} onRemove={handleRemove}>
+    Test item
+</SingleItemSelection>
+```
+
 It will also show a defined message in a slightly greyed out tone if no item seems to be selected.
 
 ```javascript

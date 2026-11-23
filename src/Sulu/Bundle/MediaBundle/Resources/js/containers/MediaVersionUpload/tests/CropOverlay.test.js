@@ -253,3 +253,17 @@ test('Show which formats have already been cropped', async() => {
     expect(screen.getByRole('button', {name: 'Test 3'})).toBeInTheDocument();
     expect(screen.getByRole('button', {name: 'Test 4'})).toBeInTheDocument();
 });
+
+test('Only the given formats should be available', async() => {
+    renderCropOverlay({formats: ['test3', 'test4']});
+
+    expect(await screen.findByText('Test 3')).toBeInTheDocument();
+    expect(screen.queryByText('Test 2')).not.toBeInTheDocument();
+});
+
+test('Show a message if none of the given formats exists', async() => {
+    renderCropOverlay({formats: ['unknown']});
+
+    expect(await screen.findByText('sulu_media.no_crop_formats')).toBeInTheDocument();
+    expect(screen.queryByTestId('image-rectangle-selection')).not.toBeInTheDocument();
+});

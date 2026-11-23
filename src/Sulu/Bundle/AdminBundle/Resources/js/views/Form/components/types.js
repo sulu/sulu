@@ -54,7 +54,16 @@ export type WorkflowTransitionRequestPermissions = {|
     review: boolean,
 |};
 
+export type WorkflowTransitionRequestAction = {|
+    key: string,
+    label: string,
+    /** Values for the placeholders of the translated label, for example a date. */
+    labelParameters?: {[string]: string},
+|};
+
 export type WorkflowTransitionRequestData = {|
+    /** Added by bundles: the footer of the review overlay shows them next to the actions of the core. */
+    actions?: Array<WorkflowTransitionRequestAction>,
     approvalProgress: ApprovalProgress,
     approvals: Array<WorkflowTransitionRequestApproval>,
     checks: Array<WorkflowTransitionRequestCheck>,
@@ -67,6 +76,8 @@ export type WorkflowTransitionRequestData = {|
     resourceId: string,
     resourceKey: string,
     status: WorkflowTransitionRequestStatus,
+    /** Added by bundles: replaces the message of the banner, e.g. to tell that the publish is scheduled. */
+    statusMessage?: {message: string, parameters?: {[string]: string}},
 |};
 
 export type PreValidationResult = {|

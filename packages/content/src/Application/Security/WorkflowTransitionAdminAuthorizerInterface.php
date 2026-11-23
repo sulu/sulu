@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\Security;
 
+use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Domain\Exception\WorkflowTransitionRequestCancelNotAllowedException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -30,10 +31,13 @@ interface WorkflowTransitionAdminAuthorizerInterface
     public function getPermissions(string $resourceKey, string $resourceId, string $locale): array;
 
     /**
-     * @throws AccessDeniedException when the user holds neither the LIVE permission nor the EDIT
+     * Without a user the current token is checked. A caller that runs without one, such as a console
+     * command, passes the user it acts for. A disabled or locked user is refused, as the token path refuses it.
+     *
+     * @throws AccessDeniedException when the user is disabled or locked, or holds neither the LIVE permission nor the EDIT
      *                               permission together with an approved active request
      */
-    public function assertCanPublish(string $resourceKey, string $resourceId, string $locale): void;
+    public function assertCanPublish(string $resourceKey, string $resourceId, string $locale, ?UserInterface $user = null): void;
 
     /**
      * Covers every reviewer verdict: the content-level `reject` transition as well as approving or
@@ -42,6 +46,14 @@ interface WorkflowTransitionAdminAuthorizerInterface
      * @throws AccessDeniedException when the user lacks the REVIEW permission for the resolved context
      */
     public function assertCanReview(string $resourceKey, string $resourceId, string $locale): void;
+
+    /**
+     * For the actions that take one permission of their own, like retrying a check or an action of a bundle.
+     * Asked in the handler as well as in the controller, because the message is on the public bus.
+     *
+     * @throws AccessDeniedException when the user lacks the permission for the resolved context
+     */
+    public function assertHasPermission(string $resourceKey, string $resourceId, string $locale, string $permission): void;
 
     /**
      * @throws WorkflowTransitionRequestCancelNotAllowedException when an active request covers the

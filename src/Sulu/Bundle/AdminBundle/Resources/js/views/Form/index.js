@@ -13,6 +13,7 @@ import RequestForPublishToolbarAction from './toolbarActions/RequestForPublishTo
 import ReviewWorkflowTransitionRequestToolbarAction
     from './toolbarActions/ReviewWorkflowTransitionRequestToolbarAction';
 import SaveWithPublishingToolbarAction from './toolbarActions/SaveWithPublishingToolbarAction';
+import SaveAndCreateToolbarAction from './toolbarActions/SaveAndCreateToolbarAction';
 import SaveWithFormDialogToolbarAction from './toolbarActions/SaveWithFormDialogToolbarAction';
 import SaveToolbarAction from './toolbarActions/SaveToolbarAction';
 import SetUnpublishedToolbarAction from './toolbarActions/SetUnpublishedToolbarAction';
@@ -38,6 +39,7 @@ export {
     ReviewWorkflowTransitionRequestToolbarAction,
     SaveWithPublishingToolbarAction,
     SaveToolbarAction,
+    SaveAndCreateToolbarAction,
     SaveWithFormDialogToolbarAction,
     SetUnpublishedToolbarAction,
     TypeToolbarAction,

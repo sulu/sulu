@@ -1619,6 +1619,104 @@ test('Should show warning when form is submitted but already changed on the serv
     );
 });
 
+async function setUpContinuationForm() {
+    const ResourceRequester = require('../../../services/ResourceRequester');
+    const Form = require('../Form').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const metadataStore = require('../../../containers/Form/stores/metadataStore');
+    const formToolbarActionRegistry = require('../registries/formToolbarActionRegistry');
+    const resourceStore = new ResourceStore('snippets', 8, {locale: observable.box()});
+
+    const schemaTypesPromise = Promise.resolve(null);
+    metadataStore.getSchemaTypes.mockReturnValue(schemaTypesPromise);
+    const schemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+    const jsonSchemaPromise = Promise.resolve();
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    let form;
+    const CaptureToolbarAction = jest.fn(function(resourceFormStore, formView) {
+        form = formView;
+        this.destroy = jest.fn();
+        this.getToolbarItemConfig = jest.fn();
+        this.getNode = jest.fn();
+    });
+    formToolbarActionRegistry.get.mockReturnValue(CaptureToolbarAction);
+
+    const route = {options: {formKey: 'snippets', locales: [], toolbarActions: [{type: 'capture'}]}};
+    const router = {
+        addUpdateRouteHook: jest.fn(),
+        bind: jest.fn(),
+        navigate: jest.fn(),
+        route,
+        attributes: {id: 8},
+    };
+    renderFormElement(<Form resourceStore={resourceStore} route={route} router={router} />);
+
+    resourceStore.locale.set('en');
+    resourceStore.data = {value: 'Value'};
+    resourceStore.loading = false;
+
+    await Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]);
+
+    return {form, ResourceRequester};
+}
+
+test('Should run the continuation after a submit through the validation succeeded', async() => {
+    const {form, ResourceRequester} = await setUpContinuationForm();
+    ResourceRequester.put.mockReturnValue(Promise.resolve({}));
+    const continuation = jest.fn();
+
+    await form.submitAndContinue({action: 'draft'}, continuation);
+
+    expect(ResourceRequester.put).toHaveBeenCalledWith(
+        'snippets',
+        {value: 'Value'},
+        {action: 'draft', id: 8, locale: 'en'}
+    );
+    expect(continuation).toHaveBeenCalledTimes(1);
+});
+
+test('Should keep the continuation across the has-changed dialog and run it after the forced save', async() => {
+    const user = userEvent.setup();
+    const {form, ResourceRequester} = await setUpContinuationForm();
+    ResourceRequester.put.mockReturnValueOnce(
+        Promise.reject({json: jest.fn().mockReturnValue(Promise.resolve({code: 1102}))})
+    );
+    const continuation = jest.fn();
+
+    await form.submitAndContinue({action: 'draft'}, continuation);
+    expect(continuation).not.toHaveBeenCalled();
+    await waitFor(() => expect(getDialog('sulu_admin.has_changed_warning_dialog_title')).toHaveClass('open'));
+
+    ResourceRequester.put.mockReturnValueOnce(Promise.resolve({}));
+    await clickDialogButton(user, 'sulu_admin.has_changed_warning_dialog_title', 'sulu_admin.confirm');
+
+    await waitFor(() => expect(continuation).toHaveBeenCalledTimes(1));
+    expect(ResourceRequester.put).toHaveBeenLastCalledWith(
+        'snippets',
+        {value: 'Value'},
+        {action: 'draft', force: true, id: 8, locale: 'en'}
+    );
+});
+
+test('Should drop the continuation when the has-changed dialog is cancelled', async() => {
+    const user = userEvent.setup();
+    const {form, ResourceRequester} = await setUpContinuationForm();
+    ResourceRequester.put.mockReturnValueOnce(
+        Promise.reject({json: jest.fn().mockReturnValue(Promise.resolve({code: 1102}))})
+    );
+    const continuation = jest.fn();
+
+    await form.submitAndContinue({action: 'draft'}, continuation);
+    await waitFor(() => expect(getDialog('sulu_admin.has_changed_warning_dialog_title')).toHaveClass('open'));
+
+    await clickDialogButton(user, 'sulu_admin.has_changed_warning_dialog_title', 'sulu_admin.cancel');
+
+    expect(continuation).not.toHaveBeenCalled();
+    expect(form.postponedSaveContinuation).toBeUndefined();
+});
+
 test('Should set showSuccess flag after form submission', (done) => {
     const ResourceRequester = require('../../../services/ResourceRequester');
     ResourceRequester.put.mockReturnValue(Promise.resolve({}));
@@ -2506,8 +2604,27 @@ test('Should title the locked banner so an approved request does not read as a w
 
     expect(banner).toEqual(expect.objectContaining({
         message: 'sulu_content.workflow_transition_request.banner_approved',
-        title: 'sulu_content.workflow_transition_request.banner_title',
+        title: 'sulu_content.workflow_transition_request.banner_title_approved',
     }));
+});
+
+test('Should show the status message of an action in the banner instead of the one of the core', () => {
+    const banner = renderLockedReviewForm({
+        createdBy: {id: 7},
+        permissions: {cancel: true, publish: false, retry: true, review: false},
+        statusMessage: {message: 'app.publish_scheduled', parameters: {date: '25.11.2026 10:00'}},
+        status: 'approved',
+    });
+
+    const {translate} = require('../../../utils/Translator');
+    expect(translate).toHaveBeenCalledWith('app.publish_scheduled', {date: '25.11.2026 10:00'});
+    expect(banner.message).toBe('app.publish_scheduled');
+});
+
+test('Should title the banner of a request that is still open as a review', () => {
+    const banner = renderLockedReviewForm({createdBy: {id: 7}, status: 'open'});
+
+    expect(banner.title).toBe('sulu_content.workflow_transition_request.banner_title');
 });
 
 function renderPreValidationForm(resourceStore, route) {
