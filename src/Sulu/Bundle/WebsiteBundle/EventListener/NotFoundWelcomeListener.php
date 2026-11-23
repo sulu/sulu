@@ -57,6 +57,7 @@ final readonly class NotFoundWelcomeListener
             '@SuluWebsite/welcome.html.twig',
             [
                 'steps' => $this->getSteps($state),
+                'console' => $this->getHelp($state),
                 'workingDirectory' => $this->projectDirectory,
             ]
         );
@@ -93,7 +94,7 @@ final readonly class NotFoundWelcomeListener
         if (self::STATE_DATABASE_MISSING === $state) {
             yield [
                 'headline' => 'Database configuration invalid',
-                'status' => "Check the .env file for the correct connection string\nMake sure the docker container is running with `docker compose up`",
+                'status' => "Check the .env file for the correct connection string\nMake sure the docker database container is running",
                 'badge' => 'active',
             ];
             $isActive = false;
@@ -115,6 +116,32 @@ final readonly class NotFoundWelcomeListener
             'headline' => 'Open the admin',
             'status' => 'After the next reload',
             'badge' => 'empty',
+        ];
+    }
+
+    /**
+     * @return array{command: string, whatItDoes: array<string>}
+     */
+    private function getHelp(string $state): array
+    {
+        if (self::STATE_DATABASE_MISSING === $state) {
+            return [
+                'command' => 'docker compose up',
+                'whatItDoes' => [
+                    'starts the docker database container',
+                    'then update the environment configuration',
+                    'alternative configure DATABASE_URL variable in your .env.local file to existing running database',
+                ],
+            ];
+        }
+
+        return [
+            'command' => 'bin/console sulu:build dev',
+            'whatItDoes' => [
+                'sets up the database',
+                'loads the initial data',
+                'then reload this page',
+            ],
         ];
     }
 }

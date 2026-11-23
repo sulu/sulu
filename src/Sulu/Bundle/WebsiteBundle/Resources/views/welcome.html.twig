@@ -138,8 +138,8 @@
         }
 
         .badge.active {
-            background: var(--color-blue);
-            color: var(--color-navy);
+            background: var(--color-navy);
+            color: var(--color-white);
         }
 
         .badge.empty {
@@ -442,12 +442,14 @@
                         </button>
                     </div>
                     <hr />
-                    <div class="command-to-run"><span class="prompt">$</span> bin/console sulu:build dev<span class="cursor" aria-hidden="true"></span></div>
+                    <div class="command-to-run">
+                        <span class="prompt">$</span> {{ console.command }}<span class="cursor" aria-hidden="true"></span>
+                    </div>
                     <div class="commands">
                         <span class="comment"># what it does</span><br />
-                        → sets up the database<br />
-                        → loads the initial data<br />
-                        → then reload this page
+                        {% for line in console.whatItDoes %}
+                            → {{ line }} <br>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="run-hint">Run it in your project folder.</div>

@@ -38,7 +38,7 @@ class LoadDevelopmentOnlyServicesCompilerPass implements CompilerPassInterface
             ->addTag('kernel.event_listener', ['event' => 'kernel.exception', 'method' => 'renderWelcomePage']);
 
         $container->addDefinitions([
-            'sulu_website.event_listener.not_found_welcome_listener' => $definition,
+            '.sulu_website.event_listener.not_found_welcome_listener' => $definition,
         ]);
     }
 }
