@@ -64,3 +64,8 @@ $optionDisabledBackgroundColor: $mercury;
         background: $optionDisabledBackgroundColor;
     }
 }
+
+// the dragged item is moved to the body by the sortable, so the text selection is turned off from there
+:global(body):has(.dragging) {
+    user-select: none;
+}
