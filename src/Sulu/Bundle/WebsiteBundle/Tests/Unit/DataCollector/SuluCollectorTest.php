@@ -43,9 +43,6 @@ class SuluCollectorTest extends TestCase
 
     public function setUp(): void
     {
-        $this->request = $this->prophesize(Request::class);
-        $this->request->getLocale()->willReturn('en');
-
         $this->attributes = $this->prophesize(ParameterBag::class);
         $this->response = $this->prophesize(Response::class);
 

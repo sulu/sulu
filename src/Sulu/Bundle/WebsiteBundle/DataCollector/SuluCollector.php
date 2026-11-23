@@ -11,11 +11,14 @@
 
 namespace Sulu\Bundle\WebsiteBundle\DataCollector;
 
-use Sulu\Bundle\AdminBundle\Admin\View\ResourceViewUrlGeneratorInterface;
+use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Util\ArrayableInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -23,6 +26,7 @@ use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal no backwards compatibility promise is given for this class it can be removed at any time
@@ -30,8 +34,8 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class SuluCollector extends DataCollector
 {
     public function __construct(
+        //private RouterInterface $routeGenerator,
         private string $kernelEnvironment = 'dev',
-        private ?ResourceViewUrlGeneratorInterface $resourceViewUrlGenerator,
     ) {
     }
 
@@ -61,6 +65,7 @@ class SuluCollector extends DataCollector
         $this->data['redirect'] = $requestAttributes->getAttribute('redirect');
         $this->data['portal_url'] = $requestAttributes->getAttribute('portalUrl');
         $this->data['segment'] = $requestAttributes->getAttribute('segment');
+        $this->data['webspace'] = $webspace;
 
         if ($webspace instanceof ArrayableInterface) {
             $this->data['webspace'] = $webspace->toArray();
@@ -109,12 +114,6 @@ class SuluCollector extends DataCollector
                     $structure['created'] = $this->renderUserAndTimeStamp($resource->getCreator(), $resource->getCreated());
                     $structure['changed'] = $this->renderUserAndTimeStamp($resource->getChanger(), $resource->getChanged());
                 }
-
-                $this->data['adminUrl'] = $this->resourceViewUrlGenerator->generate(
-                    'pages',
-                    'detail',
-                    ['locale' => $request->getLocale(), 'id' => $resource->getId()],
-                );
             }
 
             if ($object instanceof TemplateInterface) {
@@ -131,6 +130,19 @@ class SuluCollector extends DataCollector
 
             if ($object instanceof ShadowInterface) {
                 $structure['shadowLocales'] = $object->getShadowLocales();
+            }
+
+            if ($object instanceof RoutableInterface) {
+                //$structure['adminUrl'] = $this->routeGenerator->generate(
+                //'sulu_admin.redirect_controller',
+                //[ 'resourceKey' => 'pages', 'view' => 'detail', 'locale' => $request->getLocale(), 'id' => $resource->getId()],
+                //);
+                $structure['adminUrl'] = '/admin/view-redirect?' . \http_build_query([
+                    'resourceKey' => $object->getResourceKey(),
+                    'view' => 'detail',
+                    'locale' => $object->getLocale(),
+                    'id' => $object->getResourceId(),
+                ]);
             }
         }
         $this->data['structure'] = $structure;

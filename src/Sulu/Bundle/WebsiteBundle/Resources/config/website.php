@@ -17,7 +17,6 @@ use Sulu\Bundle\WebsiteBundle\EventListener\SegmentSubscriber;
 use Sulu\Bundle\WebsiteBundle\EventSubscriber\GeneratorEventSubscriber;
 use Sulu\Bundle\WebsiteBundle\Locale\PortalDefaultLocaleProvider;
 use Sulu\Bundle\WebsiteBundle\Locale\RequestDefaultLocaleProvider;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 return static function(ContainerConfigurator $container) {
@@ -25,8 +24,8 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_website.data_collector.sulu_collector', SuluCollector::class)
         ->args([
+            new Reference('router'),
             '%kernel.environment%',
-            new Reference('sulu_admin.resource_view_url_generator', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
         ->tag('data_collector', ['template' => '@SuluWebsite/Profiler/layout.html.twig', 'id' => 'sulu'])
         ->tag('sulu.context', ['context' => 'website']);

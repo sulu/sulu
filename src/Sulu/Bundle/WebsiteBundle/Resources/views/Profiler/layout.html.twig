@@ -31,14 +31,14 @@
             <span>{{ collector.data('webspace').name }}</span>
         </div>
         {% if collector.data('structure') %}
-        <div class="sf-toolbar-info-piece">
-            <b>Structure</b>
-            <span>{{ collector.data('structure').template }}</span>
-        </div>
-        <div class="sf-toolbar-info-piece">
-            <b>Class</b>
-            <span>{{ collector.data('structure').class }}</span>
-        </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Structure</b>
+                <span>{{ collector.data('structure').template }}</span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Class</b>
+                <span>{{ collector.data('structure').class }}</span>
+            </div>
         {% endif %}
         <div class="sf-toolbar-info-piece">
             <b>Localization</b>
@@ -47,11 +47,11 @@
                 {% if collector.data('structure') %} ({{ collector.data('structure').locale }}) {% endif %}
             </span>
         </div>
-        {% if collector.data('adminUrl') is not null %}
+        {% if collector.data('structure').adminUrl is not null %}
             <div class="sf-toolbar-info-piece">
                 <b>Admin Url</b>
                 <span>
-                    <a href="{{ collector.data('adminUrl') }}">Go to admin view</a>
+                    <a href="{{ collector.data('structure').adminUrl }}">Go to admin view</a>
                 </span>
             </div>
         {% endif %}
