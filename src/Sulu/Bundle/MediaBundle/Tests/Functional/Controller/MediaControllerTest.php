@@ -1425,6 +1425,32 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNull($response['classification']);
     }
 
+    public function testPutClassificationTooLong(): void
+    {
+        /** @var Media $media */
+        $media = $this->createMedia('photo');
+        $this->setClassification($media, 'data_sheet');
+        $this->em->flush();
+
+        $this->client->jsonRequest(
+            'PUT',
+            '/api/media/' . $media->getId() . '?locale=en-gb',
+            ['collection' => $this->collection->getId(), 'classification' => \str_repeat('a', 192)]
+        );
+
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+
+        /** @var array{code: int} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame(5032, $response['code']);
+
+        $this->client->jsonRequest('GET', '/api/media/' . $media->getId() . '?locale=en-gb');
+
+        /** @var array{classification: string|null} $response */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $this->assertSame('data_sheet', $response['classification']);
+    }
+
     public function testTagRemove(): void
     {
         $media = $this->createMedia('photo');

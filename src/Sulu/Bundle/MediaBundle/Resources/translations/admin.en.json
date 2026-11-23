@@ -55,6 +55,7 @@
     "sulu_media.validity_info_text": "The validity is for information only. It has no effect on how long this media is available.",
     "sulu_media.validity_range_invalid": "The validity end cannot be before the validity start.",
     "sulu_media.validity_date_invalid": "The validity start and end must be valid dates.",
+    "sulu_media.classification_invalid": "The classification must be at most 191 characters long.",
     "sulu_media.taxonomies": "Taxonomies",
     "sulu_media.history": "History",
     "sulu_media.formats": "Formats",

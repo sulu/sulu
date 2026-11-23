@@ -205,6 +205,13 @@ class MediaException extends \Exception
      */
     public const EXCEPTION_INVALID_VALIDITY_DATE = 5031;
 
+    /**
+     * The classification is not a string of up to 191 characters.
+     *
+     * @var int
+     */
+    public const EXCEPTION_INVALID_CLASSIFICATION = 5032;
+
     public function toArray()
     {
         return [

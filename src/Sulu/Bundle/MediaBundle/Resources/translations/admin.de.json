@@ -55,6 +55,7 @@
     "sulu_media.validity_info_text": "Die Gültigkeit dient nur der Information. Sie hat keinen Einfluss darauf, wie lange dieses Medium verfügbar ist.",
     "sulu_media.validity_range_invalid": "Das Ende der Gültigkeit darf nicht vor dem Beginn der Gültigkeit liegen.",
     "sulu_media.validity_date_invalid": "Beginn und Ende der Gültigkeit müssen gültige Daten sein.",
+    "sulu_media.classification_invalid": "Die Klassifizierung darf höchstens 191 Zeichen lang sein.",
     "sulu_media.taxonomies": "Taxonomien",
     "sulu_media.history": "Verlauf",
     "sulu_media.formats": "Formate",
