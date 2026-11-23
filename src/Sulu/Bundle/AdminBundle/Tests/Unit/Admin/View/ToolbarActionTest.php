@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\View;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\AdminBundle\Admin\View\SaveWithFormDialogToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 
 class ToolbarActionTest extends TestCase
@@ -28,5 +29,19 @@ class ToolbarActionTest extends TestCase
         $toolbarAction = new ToolbarAction('sulu_admin.delete', ['allow_conflict_deletion' => false]);
 
         $this->assertSame(['allow_conflict_deletion' => false], $toolbarAction->getOptions());
+    }
+
+    public function testWithOptions(): void
+    {
+        $toolbarAction = new SaveWithFormDialogToolbarAction('Title', 'form_key');
+        $original = $toolbarAction->getOptions();
+
+        $result = $toolbarAction->withOptions(['label' => 'new']);
+
+        $this->assertNotSame($toolbarAction, $result);
+        $this->assertSame(SaveWithFormDialogToolbarAction::class, $result::class);
+        $this->assertSame('sulu_admin.save_with_form_dialog', $result->getType());
+        $this->assertSame(['label' => 'new'], $result->getOptions());
+        $this->assertSame($original, $toolbarAction->getOptions());
     }
 }

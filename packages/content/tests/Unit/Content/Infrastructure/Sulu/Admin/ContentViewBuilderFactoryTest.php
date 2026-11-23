@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\PreviewFormViewBuilderInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\SaveWithFormDialogToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderInterface;
@@ -50,6 +51,7 @@ use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Domain\Model\WorkflowTrait;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactory;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
+use Sulu\Content\Infrastructure\Sulu\Admin\SaveToolbarActionProviderInterface;
 use Sulu\Content\Infrastructure\Sulu\Preview\ContentObjectProvider;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
@@ -61,6 +63,7 @@ class ContentViewBuilderFactoryTest extends TestCase
 
     /**
      * @param array<string, array{instanceOf: class-string}> $settingsForms
+     * @param iterable<SaveToolbarActionProviderInterface> $saveToolbarActionProviders
      */
     protected function createContentViewBuilder(
         ContentMetadataInspectorInterface $contentMetadataInspector,
@@ -68,6 +71,7 @@ class ContentViewBuilderFactoryTest extends TestCase
         ?PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry = null,
         array $settingsForms = [],
         bool $hasSecurityContext = true,
+        iterable $saveToolbarActionProviders = [],
     ): ContentViewBuilderFactoryInterface {
         if (null === $previewObjectProviderRegistry) {
             $previewObjectProviderRegistry = $this->createPreviewObjectProviderRegistry([]);
@@ -86,7 +90,10 @@ class ContentViewBuilderFactoryTest extends TestCase
             $securityChecker,
             $requestWorkflowResolver->reveal(),
             $securityContextResolver->reveal(),
-            $settingsForms
+            $settingsForms,
+            [],
+            [],
+            $saveToolbarActionProviders,
         );
     }
 
@@ -464,6 +471,201 @@ class ContentViewBuilderFactoryTest extends TestCase
             [['sulu_admin.save', 'sulu_content.request_for_publish']],
             $this->getSaveDropdownEntries($views),
             'Every view carrying the save dropdown drops its publish entries.',
+        );
+    }
+
+    public function testTheSaveDropdownGetsTheEntriesOfProvidersBehindTheOnesOfTheCore(): void
+    {
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $provider = $this->prophesize(SaveToolbarActionProviderInterface::class);
+        $provider->getToolbarActions(Example::class)->willReturn([new ToolbarAction('app.publish_at')]);
+        $silentProvider = $this->prophesize(SaveToolbarActionProviderInterface::class);
+        $silentProvider->getToolbarActions(Example::class)->willReturn([]);
+
+        $contentViewBuilder = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
+            saveToolbarActionProviders: [$silentProvider->reveal(), $provider->reveal()],
+        );
+
+        $save = $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(Example::class)['save'];
+
+        /** @var list<ToolbarAction> $entries */
+        $entries = $save->getOptions()['toolbarActions'];
+
+        $this->assertSame(
+            ['sulu_admin.save', 'sulu_content.request_for_publish', 'sulu_admin.save', 'sulu_admin.publish', 'app.publish_at'],
+            \array_map(static fn (ToolbarAction $toolbarAction) => $toolbarAction->getType(), $entries),
+        );
+    }
+
+    public function testAnEntryOfAProviderGetsTheConditionOfTheCallerForItsPermission(): void
+    {
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $provider = $this->prophesize(SaveToolbarActionProviderInterface::class);
+        $provider->getToolbarActions(Example::class)->willReturn([
+            new ToolbarAction('app.publish_at', ['permission' => PermissionTypes::LIVE, 'visible_condition' => '!active']),
+            new ToolbarAction('app.save_as', ['permission' => PermissionTypes::EDIT]),
+            new ToolbarAction('app.other'),
+            new ToolbarAction('app.own', ['visible_condition' => 'own']),
+        ]);
+
+        $contentViewBuilder = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
+            saveToolbarActionProviders: [$provider->reveal()],
+        );
+
+        $save = $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(
+            Example::class,
+            'saveCondition',
+            'liveCondition',
+        )['save'];
+
+        /** @var list<ToolbarAction> $allEntries */
+        $allEntries = $save->getOptions()['toolbarActions'];
+        $entries = \array_slice($allEntries, 4);
+
+        $this->assertSame('(liveCondition) && (!active) && !activeWorkflowTransitionRequest', $entries[0]->getOptions()['visible_condition']);
+        $this->assertSame(PermissionTypes::LIVE, $entries[0]->getOptions()['permission']);
+        $this->assertSame('(saveCondition) && !activeWorkflowTransitionRequest', $entries[1]->getOptions()['visible_condition']);
+        $this->assertSame(
+            ['visible_condition' => '!activeWorkflowTransitionRequest'],
+            $entries[2]->getOptions(),
+            'An entry without a permission is still hidden while a request is open.',
+        );
+        $this->assertSame('(own) && !activeWorkflowTransitionRequest', $entries[3]->getOptions()['visible_condition']);
+    }
+
+    public function testAnEntryOfAProviderKeepsItsClass(): void
+    {
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $provider = $this->prophesize(SaveToolbarActionProviderInterface::class);
+        $provider->getToolbarActions(Example::class)->willReturn([
+            new SaveWithFormDialogToolbarAction('app.title', 'app_form'),
+        ]);
+
+        $contentViewBuilder = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
+            saveToolbarActionProviders: [$provider->reveal()],
+        );
+
+        $save = $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(Example::class)['save'];
+
+        /** @var list<ToolbarAction> $allEntries */
+        $allEntries = $save->getOptions()['toolbarActions'];
+        $entry = $allEntries[4];
+
+        $this->assertInstanceOf(SaveWithFormDialogToolbarAction::class, $entry);
+        $this->assertSame('app_form', $entry->getOptions()['formKey']);
+        $this->assertSame('app.title', $entry->getOptions()['title']);
+        $this->assertSame('!activeWorkflowTransitionRequest', $entry->getOptions()['visible_condition']);
+    }
+
+    public function testAnEntryOfAProviderWithAnUnsupportedPermissionThrows(): void
+    {
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $provider = $this->prophesize(SaveToolbarActionProviderInterface::class);
+        $provider->getToolbarActions(Example::class)->willReturn([
+            new ToolbarAction('app.delete_all', ['permission' => PermissionTypes::DELETE]),
+        ]);
+
+        $contentViewBuilder = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $this->prophesize(SecurityCheckerInterface::class)->reveal(),
+            saveToolbarActionProviders: [$provider->reveal()],
+        );
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('names the permission "delete", but only "edit", "live" are supported');
+
+        $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(Example::class);
+    }
+
+    public function testCreateViewsDropsAnEntryOfAProviderWhoseNamedPermissionTheUserLacks(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission('test_context', PermissionTypes::ADD)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::EDIT)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::DELETE)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::LIVE)->willReturn(false);
+
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $provider = $this->prophesize(SaveToolbarActionProviderInterface::class);
+        $provider->getToolbarActions(Example::class)->willReturn([
+            new ToolbarAction('app.publish_at', ['permission' => PermissionTypes::LIVE]),
+        ]);
+
+        $contentViewBuilder = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $securityChecker->reveal(),
+            saveToolbarActionProviders: [$provider->reveal()],
+        );
+
+        $views = $contentViewBuilder->createViews(
+            Example::class,
+            'edit_parent_key',
+            'add_parent_key',
+            'test_context',
+            $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(Example::class),
+        );
+
+        $this->assertSame(
+            [['sulu_admin.save', 'sulu_content.request_for_publish']],
+            $this->getSaveDropdownEntries($views),
+        );
+    }
+
+    public function testCreateViewsKeepsAnEntryOfAProviderWhoseNamedPermissionTheUserHas(): void
+    {
+        $securityChecker = $this->prophesize(SecurityCheckerInterface::class);
+        $securityChecker->hasPermission('test_context', PermissionTypes::ADD)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::EDIT)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::DELETE)->willReturn(true);
+        $securityChecker->hasPermission('test_context', PermissionTypes::LIVE)->willReturn(true);
+
+        $contentMetadataInspector = $this->prophesize(ContentMetadataInspectorInterface::class);
+        $contentMetadataInspector->getDimensionContentClass(Example::class)
+            ->willReturn(ExampleDimensionContent::class);
+
+        $provider = $this->prophesize(SaveToolbarActionProviderInterface::class);
+        $provider->getToolbarActions(Example::class)->willReturn([
+            new ToolbarAction('app.publish_at', ['permission' => PermissionTypes::LIVE]),
+        ]);
+
+        $contentViewBuilder = $this->createContentViewBuilder(
+            $contentMetadataInspector->reveal(),
+            $securityChecker->reveal(),
+            saveToolbarActionProviders: [$provider->reveal()],
+        );
+
+        $views = $contentViewBuilder->createViews(
+            Example::class,
+            'edit_parent_key',
+            'add_parent_key',
+            'test_context',
+            $contentViewBuilder->getWorkflowTransitionRequestToolbarActions(Example::class),
+        );
+
+        $this->assertSame(
+            [['sulu_admin.save', 'sulu_content.request_for_publish', 'sulu_admin.save', 'sulu_admin.publish', 'app.publish_at']],
+            $this->getSaveDropdownEntries($views),
         );
     }
 

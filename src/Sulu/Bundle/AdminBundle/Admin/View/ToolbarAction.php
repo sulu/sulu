@@ -51,4 +51,17 @@ class ToolbarAction
     {
         return $this->options;
     }
+
+    /**
+     * Returns a copy with the given options, so a subclass keeps its class and state.
+     *
+     * @param array<string, mixed> $options
+     */
+    public function withOptions(array $options): static
+    {
+        $clone = clone $this;
+        $clone->options = $options;
+
+        return $clone;
+    }
 }
