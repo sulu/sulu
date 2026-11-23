@@ -37,11 +37,18 @@ class ClassificationProvider
     }
 
     /**
+     * The values start with an empty option, which the single_select field saves as null, so a set classification
+     * can be cleared.
+     *
      * @return array<array{name: string, title: string}>
      */
     public function getValues(string $locale): array
     {
-        $values = [];
+        if ([] === $this->classifications) {
+            return [];
+        }
+
+        $values = [['name' => '', 'title' => $this->translator->trans('sulu_media.classification_none', [], 'admin', $locale)]];
         foreach ($this->classifications as $name => $title) {
             $values[] = ['name' => $name, 'title' => $this->translator->trans($title, [], 'admin', $locale)];
         }

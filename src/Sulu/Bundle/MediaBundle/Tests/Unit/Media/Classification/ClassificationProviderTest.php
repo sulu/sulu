@@ -36,7 +36,12 @@ class ClassificationProviderTest extends TestCase
     public function testGetValuesTranslatesTheTitles(): void
     {
         // looped over variables, because the translation lint reads literal trans() calls as missing keys
-        foreach (['app.data_sheet' => 'Datenblatt', 'app.warranty_certificate' => 'Garantieschein'] as $key => $title) {
+        $titles = [
+            'sulu_media.classification_none' => 'Keine Klassifizierung',
+            'app.data_sheet' => 'Datenblatt',
+            'app.warranty_certificate' => 'Garantieschein',
+        ];
+        foreach ($titles as $key => $title) {
             $this->translator->trans($key, [], 'admin', 'de')->willReturn($title);
         }
 
@@ -48,6 +53,7 @@ class ClassificationProviderTest extends TestCase
         $this->assertTrue($provider->hasClassifications());
         $this->assertSame(
             [
+                ['name' => '', 'title' => 'Keine Klassifizierung'],
                 ['name' => 'data_sheet', 'title' => 'Datenblatt'],
                 ['name' => 'warranty_certificate', 'title' => 'Garantieschein'],
             ],
