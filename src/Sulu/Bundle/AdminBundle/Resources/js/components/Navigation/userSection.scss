@@ -1,8 +1,9 @@
 @import '../../containers/Application/colors.scss';
 
-$color: $white;
-$hoverColor: $shakespeare;
+$color: $silver;
+$hoverColor: $white;
 $lightColor: $silver;
+$menuButtonHoverColor: $white;
 
 .user-section {
     display: flex;
@@ -88,6 +89,6 @@ $lightColor: $silver;
 
     &:hover,
     &:focus {
-        color: $hoverColor;
+        color: $menuButtonHoverColor;
     }
 }
