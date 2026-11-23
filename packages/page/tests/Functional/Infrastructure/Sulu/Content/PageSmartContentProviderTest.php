@@ -1282,6 +1282,31 @@ class PageSmartContentProviderTest extends SuluTestCase
     }
 
     // Add tests for blog webspace
+    /**
+     * @return array<string, array{0: string|null, 1: bool}>
+     */
+    public static function emptyDataSourceProvider(): array
+    {
+        return [
+            'null' => [null, false],
+            'null_include_sub_folders' => [null, true],
+            'empty_string' => ['', false],
+            'empty_string_include_sub_folders' => ['', true],
+        ];
+    }
+
+    #[DataProvider('emptyDataSourceProvider')]
+    public function testFindFlatByWithoutDataSource(?string $dataSource, bool $includeSubFolders): void
+    {
+        $filters = [
+            ...$this->getDefaultFilters(),
+            ...['locale' => 'en', 'dataSource' => $dataSource, 'includeSubFolders' => $includeSubFolders],
+        ];
+
+        $this->assertSame([], $this->smartContentProvider->findFlatBy($filters, []));
+        $this->assertSame(0, $this->smartContentProvider->countBy($filters));
+    }
+
     public function testFindFlatByBlogWebspace(): void
     {
         // Test filtering by blog parent page to get all blog pages

@@ -150,6 +150,10 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
      */
     public function countBy(array $filters, array $params = []): int
     {
+        if (!$this->hasDataSource($filters)) {
+            return 0;
+        }
+
         $alias = 'media';
         $queryBuilder = $this->createQueryBuilder($alias);
         $queryBuilder->select(\sprintf('COUNT(DISTINCT %s.id)', $alias));
@@ -172,6 +176,10 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
      */
     public function findFlatBy(array $filters, array $sortBys, array $params = []): array
     {
+        if (!$this->hasDataSource($filters)) {
+            return [];
+        }
+
         $locale = $filters['locale'];
 
         $alias = 'media';
@@ -204,6 +212,16 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
             },
             $queryResult,
         );
+    }
+
+    /**
+     * Without a selected collection no media is returned, like in Sulu 2.
+     *
+     * @param MediaSmartContentFilters|MediaSmartContentCountFilters $filters
+     */
+    private function hasDataSource(array $filters): bool
+    {
+        return null !== $filters['dataSource'] && '' !== $filters['dataSource'];
     }
 
     /**

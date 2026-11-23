@@ -92,9 +92,13 @@ class MediaSmartContentProviderTest extends SuluTestCase
             $tagEntities[$tagName] = self::createTag(['name' => $tagName]);
         }
 
+        self::$collections['all'] = self::createCollection(['title' => 'All Collection', 'locale' => 'en', 'key' => 'all']);
         self::$collections['main'] = self::createCollection(['title' => 'Main Collection', 'locale' => 'en', 'key' => 'main']);
         self::$collections['tech'] = self::createCollection(['title' => 'Tech Collection', 'locale' => 'en', 'key' => 'tech']);
         self::$collections['sports'] = self::createCollection(['title' => 'Sports Collection', 'locale' => 'en', 'key' => 'sports']);
+        foreach (['main', 'tech', 'sports'] as $key) {
+            self::$collections[$key]->setParent(self::$collections['all']);
+        }
 
         $entityManager->flush();
 
@@ -341,6 +345,26 @@ class MediaSmartContentProviderTest extends SuluTestCase
         foreach (self::$media as $media) {
             $this->assertContains($media->getId(), $resultIds);
         }
+    }
+
+    /**
+     * @return array<string, array{0: string|null}>
+     */
+    public static function emptyDataSourceProvider(): array
+    {
+        return [
+            'null' => [null],
+            'empty_string' => [''],
+        ];
+    }
+
+    #[DataProvider('emptyDataSourceProvider')]
+    public function testFindFlatByWithoutDataSource(?string $dataSource): void
+    {
+        $filters = [...$this->getDefaultFilters(), ...['locale' => 'en', 'dataSource' => $dataSource]];
+
+        $this->assertSame([], $this->smartContentProvider->findFlatBy($filters, []));
+        $this->assertSame(0, $this->smartContentProvider->countBy($filters));
     }
 
     /**
@@ -672,6 +696,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
             ...[
                 'locale' => 'en',
                 'dataSource' => $dataSourceId,
+                'includeSubFolders' => false,
             ],
         ], []);
 
@@ -686,6 +711,7 @@ class MediaSmartContentProviderTest extends SuluTestCase
                 ...[
                     'locale' => 'en',
                     'dataSource' => $dataSourceId,
+                    'includeSubFolders' => false,
                 ],
             ]),
         );
@@ -969,10 +995,10 @@ class MediaSmartContentProviderTest extends SuluTestCase
             'typesOperator' => 'OR',
             'locale' => 'en',
             'webspaceKey' => null,
-            'dataSource' => null,
+            'dataSource' => (string) self::$collections['all']->getId(),
             'limit' => null,
             'offset' => 0,
-            'includeSubFolders' => false,
+            'includeSubFolders' => true,
             'excludeDuplicates' => false,
         ];
     }
