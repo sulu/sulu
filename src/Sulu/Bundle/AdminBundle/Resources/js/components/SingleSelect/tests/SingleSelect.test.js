@@ -133,6 +133,20 @@ test('The component should select the correct option', () => {
     expect(screen.queryByText(/Option 3/)).not.toBeInTheDocument();
 });
 
+test('The component should mark the selected option and do not care if string or number', async() => {
+    const user = userEvent.setup();
+    render(
+        <SingleSelect value={2}>
+            <Option value="1">Option 1</Option>
+            <Option value="2">Option 2</Option>
+        </SingleSelect>
+    );
+
+    await user.click(screen.queryByLabelText('su-angle-down'));
+
+    expect(screen.getAllByLabelText('su-check')).toHaveLength(1);
+});
+
 test('The component should select the correct option if value is undefined', () => {
     render(
         <SingleSelect value={undefined}>

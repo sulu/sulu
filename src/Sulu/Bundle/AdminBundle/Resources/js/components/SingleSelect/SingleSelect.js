@@ -40,7 +40,7 @@ export default class SingleSelect<T: string | number> extends React.PureComponen
     }
 
     isOptionSelected: (option: Element<Class<SingleSelect.Option<T>>>) => boolean = (option) => {
-        return option.props.value === this.props.value && !option.props.disabled;
+        return option.props.value == this.props.value && !option.props.disabled;
     };
 
     handleSelect: (value: T) => void = (value) => {
