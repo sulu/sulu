@@ -24,7 +24,7 @@ return static function(ContainerConfigurator $container) {
 
     $services->set('sulu_website.data_collector.sulu_collector', SuluCollector::class)
         ->args([
-            new Reference('router'),
+            '/admin/view-redirect',
             '%kernel.environment%',
         ])
         ->tag('data_collector', ['template' => '@SuluWebsite/Profiler/layout.html.twig', 'id' => 'sulu'])

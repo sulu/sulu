@@ -26,7 +26,6 @@ use Sulu\Page\Domain\Model\PageDimensionContentInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal no backwards compatibility promise is given for this class it can be removed at any time
@@ -34,7 +33,7 @@ use Symfony\Component\Routing\RouterInterface;
 class SuluCollector extends DataCollector
 {
     public function __construct(
-        private RouterInterface $routeGenerator,
+        private string $adminDeeplinkRoute,
         private string $kernelEnvironment = 'dev',
     ) {
     }
@@ -133,16 +132,12 @@ class SuluCollector extends DataCollector
             }
 
             if ($object instanceof RoutableInterface) {
-                //$structure['adminUrl'] = $this->routeGenerator->generate(
-                //'sulu_admin.redirect_controller',
-                //[ 'resourceKey' => 'pages', 'view' => 'detail', 'locale' => $request->getLocale(), 'id' => $resource->getId()],
-                //);
-                $structure['adminUrl'] = '/admin/view-redirect?' . \http_build_query([
+                $structure['adminUrl'] = $this->adminDeeplinkRoute . '?' . \http_build_query([
                     'resourceKey' => $object->getResourceKey(),
                     'view' => 'detail',
                     'locale' => $object->getLocale(),
                     'id' => $object->getResourceId(),
-                    'webspace' => $webspace->getKey(),
+                    'webspace' => $webspace?->getKey(),
                 ]);
             }
         }
