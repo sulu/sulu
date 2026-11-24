@@ -41,27 +41,16 @@ class WebspaceSettingControllerPermissionsTest extends SuluTestCase
     private const VIEW_EDIT_LIVE = 82;
     private const VIEW_EDIT_REVIEW = 208;
 
-    public function testTheAdminConfigCarriesThePermissionsOfTheSettingsForTheTab(): void
+    public function testTheTabIsOnlyRegisteredForUsersWhoMayViewSomeSettings(): void
     {
         self::purgeDatabase();
-        $this->createUserWithPermissions('viewuser', [
-            WebspaceSettingAdmin::getSecurityContext('sulu-io') => self::VIEW,
-            'sulu.webspaces.sulu-io' => self::VIEW_EDIT_LIVE,
-        ]);
+        $this->createUserWithPermissions('viewuser', [WebspaceSettingAdmin::getSecurityContext('sulu-io') => self::VIEW]);
+        $this->createUserWithPermissions('pageuser', ['sulu.webspaces.sulu-io' => self::VIEW_EDIT_LIVE]);
         self::ensureKernelShutdown();
 
-        $client = $this->createClientForUser('viewuser');
-        $client->request('GET', '/admin/config');
-        $this->assertHttpStatusCode(200, $client->getResponse());
-
-        /** @var array{sulu_page: array{webspaces: array<string, array{_contextPermissions: array<string, array<string, bool>>, _permissions: array<string, bool>}>}} $config */
-        $config = \json_decode((string) $client->getResponse()->getContent(), true);
-        $webspaces = $config['sulu_page']['webspaces'];
-
-        $this->assertTrue($webspaces['sulu-io']['_contextPermissions']['webspace-settings']['view'] ?? null);
-        $this->assertFalse($webspaces['sulu-io']['_contextPermissions']['webspace-settings']['edit'] ?? null, 'the permissions of the pages do not leak into the settings');
-        $this->assertTrue($webspaces['sulu-io']['_permissions']['edit']);
-        $this->assertFalse($webspaces['blog']['_contextPermissions']['webspace-settings']['view'] ?? false, 'the permissions are granted per webspace');
+        $this->assertSame('!__webspace || __webspace.key == "sulu-io"', $this->getTabCondition('viewuser'));
+        self::ensureKernelShutdown();
+        $this->assertNull($this->getTabCondition('pageuser'), 'the permissions of the pages do not show the settings');
     }
 
     public function testGetWithoutPermissionIsForbidden(): void
@@ -347,6 +336,23 @@ class WebspaceSettingControllerPermissionsTest extends SuluTestCase
 
         $entityManager->flush();
         $entityManager->clear();
+    }
+
+    private function getTabCondition(string $username): ?string
+    {
+        $client = $this->createClientForUser($username);
+        $client->request('GET', '/admin/config');
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        /** @var array{sulu_admin: array{routes: list<array{name: string, options: array{tabCondition?: string}}>}} $config */
+        $config = \json_decode((string) $client->getResponse()->getContent(), true);
+        foreach ($config['sulu_admin']['routes'] as $route) {
+            if (WebspaceSettingAdmin::TABS_VIEW === $route['name']) {
+                return $route['options']['tabCondition'] ?? null;
+            }
+        }
+
+        return null;
     }
 
     private function createClientForUser(string $username): KernelBrowser

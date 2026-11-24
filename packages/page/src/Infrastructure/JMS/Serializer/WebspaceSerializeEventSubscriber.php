@@ -17,8 +17,6 @@ use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
-use Sulu\Bundle\AdminBundle\Admin\AdminPool;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Environment;
@@ -26,7 +24,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url\WebspaceUrlProviderInterface;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -37,18 +34,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 final class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var string[]|null
-     */
-    private ?array $webspaceContextSuffixes = null;
-
     public function __construct(
         private WebspaceManagerInterface $webspaceManager,
         private WebspaceUrlProviderInterface $webspaceUrlProvider,
         private AccessControlManagerInterface $accessControlManager,
         private TokenStorageInterface $tokenStorage,
         private string $environment,
-        private ?AdminPool $adminPool = null,
     ) {
     }
 
@@ -80,9 +71,6 @@ final class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
         $this->appendSegments($webspace, $context, $visitor);
         $this->appendResourceLocatorStrategy($webspace, $context, $visitor);
         $this->appendPermissions($webspace, $context, $visitor);
-        if ($visitor instanceof SerializationVisitorInterface) {
-            $this->appendContextPermissions($webspace, $context, $visitor);
-        }
 
         $allLocalizations = [];
 
@@ -239,55 +227,5 @@ final class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
             new StaticPropertyMetadata('', '_permissions', $permissions),
             $permissions
         );
-    }
-
-    /**
-     * Adds the permissions of the security contexts which other admins register per webspace (e.g.
-     * "sulu.webspaces.#webspace#.custom-urls"), keyed by their suffix, so that a tab can be hidden per webspace.
-     */
-    private function appendContextPermissions(
-        Webspace $webspace,
-        Context $context,
-        SerializationVisitorInterface $visitor
-    ): void {
-        $user = $this->tokenStorage->getToken()?->getUser();
-
-        $contextPermissions = [];
-        foreach ($this->getWebspaceContextSuffixes() as $suffix) {
-            $contextPermissions[$suffix] = $this->accessControlManager->getUserPermissions(
-                new SecurityCondition(PageAdmin::SECURITY_CONTEXT_PREFIX . $webspace->getKey() . '.' . $suffix),
-                $user instanceof UserInterface ? $user : null
-            );
-        }
-
-        $contextPermissions = $context->getNavigator()->accept($contextPermissions);
-        $visitor->visitProperty(
-            new StaticPropertyMetadata('', '_contextPermissions', $contextPermissions),
-            $contextPermissions
-        );
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getWebspaceContextSuffixes(): array
-    {
-        if (null !== $this->webspaceContextSuffixes) {
-            return $this->webspaceContextSuffixes;
-        }
-
-        $prefix = PageAdmin::SECURITY_CONTEXT_PREFIX . '#webspace#.';
-        $suffixes = [];
-        foreach ($this->adminPool?->getSecurityContextsWithPlaceholder() ?? [] as $groups) {
-            foreach ($groups as $securityContexts) {
-                foreach (\array_keys($securityContexts) as $securityContext) {
-                    if (\str_starts_with($securityContext, $prefix)) {
-                        $suffixes[] = \substr($securityContext, \strlen($prefix));
-                    }
-                }
-            }
-        }
-
-        return $this->webspaceContextSuffixes = \array_values(\array_unique($suffixes));
     }
 }

@@ -54,7 +54,7 @@ class WebspaceSettingAdminTest extends SuluTestCase
 
         $this->assertSame(PageAdmin::WEBSPACE_TABS_VIEW, $tabsView->getParent());
         $this->assertSame(4096, $tabsView->getOption('tabOrder'));
-        $this->assertSame('webspaceSettingsForm && _contextPermissions["webspace-settings"].view', $tabsView->getOption('tabCondition'));
+        $this->assertSame('!__webspace || __webspace.key == "sulu-io"', $tabsView->getOption('tabCondition'));
         $this->assertSame('sulu_page.page_tabs', $tabsView->getType());
         $this->assertTrue($tabsView->getOption('idFromWebspace'));
     }
@@ -80,10 +80,10 @@ class WebspaceSettingAdminTest extends SuluTestCase
         );
     }
 
-    public function testChildTabsDoNotInheritTheWebspaceConditionOfTheTabsView(): void
+    public function testChildTabsInheritAConditionWhichMatchesWithoutAWebspace(): void
     {
         foreach ([WebspaceSettingAdmin::CONTENT_VIEW, WebspaceSettingAdmin::VERSIONS_VIEW, WebspaceSettingAdmin::ACTIVITY_VIEW] as $viewName) {
-            $this->assertSame('true', $this->getViewRegistry()->findViewByName($viewName)->getOption('tabCondition'), $viewName);
+            $this->assertSame('!__webspace || __webspace.key == "sulu-io"', $this->getViewRegistry()->findViewByName($viewName)->getOption('tabCondition'), $viewName);
         }
     }
 

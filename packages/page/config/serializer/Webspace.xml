@@ -9,6 +9,5 @@
             <type><![CDATA[array<Sulu\Component\Localization\Localization>]]></type>
         </property>
         <property name="defaultTemplates" expose="true" groups="frontend,Default"/>
-        <property name="webspaceSettingsForm" expose="true" groups="frontend,Default"/>
     </class>
 </serializer>

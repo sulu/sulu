@@ -583,8 +583,6 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_security.access_control_manager'),
                 new Reference('security.token_storage', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 new Parameter('kernel.environment'),
-                // only available in the admin context, where the webspaces are serialized for the admin
-                new Reference('sulu_admin.admin_pool', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->tag('jms_serializer.event_subscriber');
 

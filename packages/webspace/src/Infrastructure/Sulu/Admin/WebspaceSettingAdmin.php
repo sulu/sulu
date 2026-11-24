@@ -46,12 +46,6 @@ class WebspaceSettingAdmin extends Admin
 
     public const ACTIVITY_VIEW = self::TABS_VIEW . '.activity';
 
-    /**
-     * The child views inherit the tabCondition of the tabs view, which only matches the webspace and would hide them
-     * when it is evaluated against the settings.
-     */
-    private const CHILD_TAB_CONDITION = 'true';
-
     public static function getSecurityContext(string $webspaceKey): string
     {
         return \sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'webspace-settings');
@@ -84,8 +78,7 @@ class WebspaceSettingAdmin extends Admin
                 ->setOption('titleProperty', '')
                 ->setOption('tabTitle', 'sulu_webspace.webspace_settings_tab')
                 ->setOption('tabOrder', 4096)
-                // evaluated against the selected webspace by the webspace tabs
-                ->setOption('tabCondition', 'webspaceSettingsForm && _contextPermissions["webspace-settings"].view')
+                ->setOption('tabCondition', $this->getTabCondition())
                 ->setAttributeDefault('locale', $webspace->getDefaultLocalization()->getLocale())
                 ->addRerenderAttribute('webspace')
                 ->setParent(PageAdmin::WEBSPACE_TABS_VIEW),
@@ -103,9 +96,7 @@ class WebspaceSettingAdmin extends Admin
             }
 
             if ($viewBuilder instanceof FormViewBuilderInterface || $viewBuilder instanceof PreviewFormViewBuilderInterface) {
-                $viewBuilder
-                    ->addRouterAttributesToFormMetadata(['webspace'])
-                    ->setTabCondition(self::CHILD_TAB_CONDITION);
+                $viewBuilder->addRouterAttributesToFormMetadata(['webspace']);
             }
 
             $viewCollection->add($viewBuilder);
@@ -116,7 +107,6 @@ class WebspaceSettingAdmin extends Admin
                 ->createListViewBuilder(self::VERSIONS_VIEW, '/versions')
                 ->setTabTitle('sulu_admin.versions')
                 ->setTabOrder(2048)
-                ->setTabCondition(self::CHILD_TAB_CONDITION)
                 ->setResourceKey($resourceKey . '_versions')
                 ->setListKey($resourceKey . '_versions')
                 ->addListAdapters(['table'])
@@ -138,7 +128,6 @@ class WebspaceSettingAdmin extends Admin
                 $this->activityViewBuilderFactory
                     ->createActivityListViewBuilder(self::ACTIVITY_VIEW, '/activities', $resourceKey)
                     ->setTabOrder(3072)
-                    ->setTabCondition(self::CHILD_TAB_CONDITION)
                     ->setParent(self::TABS_VIEW),
             );
         }
@@ -238,5 +227,19 @@ class WebspaceSettingAdmin extends Admin
         }
 
         return null;
+    }
+
+    /**
+     * Shows the tab for every webspace with a settings form, the permission of each webspace is checked by the API.
+     * The child views inherit this condition and evaluate it against the settings, which have no `__webspace`.
+     */
+    private function getTabCondition(): string
+    {
+        $conditions = ['!__webspace'];
+        foreach ($this->getSettingsWebspaces() as $webspace) {
+            $conditions[] = '__webspace.key == ' . \json_encode($webspace->getKey(), \JSON_THROW_ON_ERROR);
+        }
+
+        return \implode(' || ', $conditions);
     }
 }

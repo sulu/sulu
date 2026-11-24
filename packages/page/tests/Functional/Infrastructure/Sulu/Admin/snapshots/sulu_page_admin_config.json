@@ -48,7 +48,6 @@
                     "default": false
                 }
             ],
-            "webspaceSettingsForm": null,
             "theme": "default",
             "security": {
                 "system": "Blog",
@@ -85,48 +84,6 @@
             "segments": [],
             "resourceLocatorStrategy": {
                 "inputType": "leaf"
-            },
-            "_contextPermissions": {
-                "analytics": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "cache": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "custom-urls": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "webspace-settings": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                }
             },
             "_permissions": {
                 "view": false,
@@ -172,7 +129,6 @@
                     "default": false
                 }
             ],
-            "webspaceSettingsForm": null,
             "theme": "default",
             "security": {
                 "system": "Website",
@@ -210,48 +166,6 @@
             "resourceLocatorStrategy": {
                 "inputType": "leaf"
             },
-            "_contextPermissions": {
-                "analytics": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "cache": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "custom-urls": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "webspace-settings": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                }
-            },
             "_permissions": {
                 "view": false,
                 "add": false,
@@ -287,7 +201,6 @@
                     "default": true
                 }
             ],
-            "webspaceSettingsForm": null,
             "theme": null,
             "security": null,
             "defaultTemplates": {
@@ -332,48 +245,6 @@
             "resourceLocatorStrategy": {
                 "inputType": "leaf"
             },
-            "_contextPermissions": {
-                "analytics": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "cache": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "custom-urls": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "webspace-settings": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                }
-            },
             "_permissions": {
                 "view": false,
                 "add": false,
@@ -414,7 +285,6 @@
                     "default": false
                 }
             ],
-            "webspaceSettingsForm": null,
             "theme": "default",
             "security": {
                 "system": "sulu-test-secure",
@@ -452,48 +322,6 @@
             "resourceLocatorStrategy": {
                 "inputType": "leaf"
             },
-            "_contextPermissions": {
-                "analytics": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "cache": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "custom-urls": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "webspace-settings": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                }
-            },
             "_permissions": {
                 "view": false,
                 "add": false,
@@ -529,7 +357,6 @@
                     "default": true
                 }
             ],
-            "webspaceSettingsForm": null,
             "theme": "default",
             "security": {
                 "system": "Website",
@@ -565,48 +392,6 @@
             "segments": [],
             "resourceLocatorStrategy": {
                 "inputType": "leaf"
-            },
-            "_contextPermissions": {
-                "analytics": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "cache": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "custom-urls": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                },
-                "webspace-settings": {
-                    "view": false,
-                    "add": false,
-                    "edit": false,
-                    "delete": false,
-                    "archive": false,
-                    "live": false,
-                    "review": false,
-                    "security": false
-                }
             },
             "_permissions": {
                 "view": false,

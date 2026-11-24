@@ -115,7 +115,7 @@ test('Show only the tabs whose tabCondition matches the selected webspace', () =
     const settingsRoute = createRoute(
         {
             tabTitle: 'Settings',
-            tabCondition: 'webspaceSettingsForm && _contextPermissions["webspace-settings"].view',
+            tabCondition: '!__webspace || __webspace.key == "sulu" || __webspace.key == "sulu_shop"',
         },
         {},
         [],
@@ -129,25 +129,15 @@ test('Show only the tabs whose tabCondition matches the selected webspace', () =
 
     webspaceStore.getWebspace.mockImplementation((key) => {
         if (key === 'sulu') {
-            return {
-                key: 'sulu',
-                localizations: [],
-                webspaceSettingsForm: 'footer',
-                _contextPermissions: {'webspace-settings': {view: true}},
-            };
+            return {key: 'sulu', localizations: []};
         }
 
         if (key === 'sulu_blog') {
-            return {key: 'sulu_blog', localizations: [], webspaceSettingsForm: null};
+            return {key: 'sulu_blog', localizations: []};
         }
 
         if (key === 'sulu_shop') {
-            return {
-                key: 'sulu_shop',
-                localizations: [],
-                webspaceSettingsForm: 'footer',
-                _contextPermissions: {'webspace-settings': {view: false}},
-            };
+            return {key: 'sulu_shop', localizations: []};
         }
     });
 
@@ -163,10 +153,9 @@ test('Show only the tabs whose tabCondition matches the selected webspace', () =
     expect(screen.getByRole('button', {name: 'Pages'})).toBeInTheDocument();
     expect(screen.queryByRole('button', {name: 'Settings'})).not.toBeInTheDocument();
 
-    // the settings have a permission of their own, so the tab is hidden when it is not granted for this webspace
     act(() => webspaceKey.set('sulu_shop'));
     expect(screen.getByRole('button', {name: 'Pages'})).toBeInTheDocument();
-    expect(screen.queryByRole('button', {name: 'Settings'})).not.toBeInTheDocument();
+    expect(screen.getByRole('button', {name: 'Settings'})).toBeInTheDocument();
 });
 
 test('Save and update webspace when select value is changed', async() => {
