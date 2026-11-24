@@ -34,7 +34,7 @@ use Symfony\Component\Routing\RouterInterface;
 class SuluCollector extends DataCollector
 {
     public function __construct(
-        //private RouterInterface $routeGenerator,
+        private RouterInterface $routeGenerator,
         private string $kernelEnvironment = 'dev',
     ) {
     }
@@ -142,6 +142,7 @@ class SuluCollector extends DataCollector
                     'view' => 'detail',
                     'locale' => $object->getLocale(),
                     'id' => $object->getResourceId(),
+                    'webspace' => $webspace->getKey(),
                 ]);
             }
         }

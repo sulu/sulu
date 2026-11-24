@@ -32,6 +32,7 @@ class ViewRedirectController
         $viewParams = [
             'id' => $request->query->getString('id'),
             'locale' => $request->query->getString('locale'),
+            'webspace' => $request->query->getString('webspace'),
         ];
 
         $url = $this->resourceViewUrlGenerator->generate(
