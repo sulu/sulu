@@ -638,7 +638,7 @@ class MediaManager implements MediaManagerInterface
     }
 
     /**
-     * Rejects a classification the column cannot hold before the entity is touched or a file is stored.
+     * Rejects a classification the column cannot hold before anything is stored.
      *
      * @param array<mixed> $data
      *

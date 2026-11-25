@@ -15,8 +15,6 @@ namespace Sulu\Bundle\MediaBundle\Infrastructure\Sulu\Admin;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataVisitorInterface;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\MediaBundle\Media\Classification\ClassificationProvider;
 
 /**
@@ -36,22 +34,8 @@ class ClassificationFormMetadataVisitor implements FormMetadataVisitorInterface
             return;
         }
 
-        $this->hideClassification($formMetadata->getItems());
-    }
-
-    /**
-     * @param ItemMetadata[] $items
-     */
-    private function hideClassification(array $items): void
-    {
-        foreach ($items as $item) {
-            if ($item instanceof SectionMetadata) {
-                $this->hideClassification($item->getItems());
-            } elseif ('classification' === $item->getName()) {
-                $item->setVisibleCondition('false');
-            } elseif ('contentLocales' === $item->getName()) {
-                $item->setColSpan(12);
-            }
-        }
+        $fields = $formMetadata->getFlatFieldMetadata();
+        ($fields['classification'] ?? null)?->setVisibleCondition('false');
+        ($fields['contentLocales'] ?? null)?->setColSpan(12);
     }
 }

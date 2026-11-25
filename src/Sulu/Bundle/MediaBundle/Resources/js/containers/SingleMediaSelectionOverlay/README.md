@@ -7,6 +7,7 @@ and medias from the API and cannot be rendered in this documentation.
 | `open`        | Shows the overlay.                                             |
 | `locale`      | Observable locale.                                             |
 | `types`       | Restricts the selectable media types, e.g. `['image']`.        |
+| `classifications` | Restricts the selectable medias to these classifications, e.g. `['data_sheet']`. |
 | `excludedIds` | Ids of medias which cannot be selected.                        |
 | `onClose`     | Called when the overlay is closed.                             |
 | `onConfirm`   | Called with the selected media object.                         |

@@ -39,17 +39,17 @@ class MediaListBuilderFactory
     ) {
     }
 
-    /**
-     * @param string[] $classifications
-     */
     public function getListBuilder(
         array $fieldDescriptors,
         UserInterface $user,
         array $types = [],
         bool $sortByDefault = true,
         ?int $collectionId = null,
-        array $classifications = [],
+        /* array $classifications = [], */
     ): DoctrineListBuilder {
+        /** @var string[] $classifications */
+        $classifications = \func_num_args() > 5 ? \func_get_arg(5) : [];
+
         $listBuilder = $this->doctrineListBuilderFactory->create($this->mediaClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 

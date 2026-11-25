@@ -285,7 +285,6 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         $validity = $config['validity'];
         $container->setParameter('sulu_media.validity', $validity);
 
-        // classifications of media files
         /** @var array<string, string> $classifications */
         $classifications = $config['classifications'];
         $container->setParameter('sulu_media.classifications', $classifications);
