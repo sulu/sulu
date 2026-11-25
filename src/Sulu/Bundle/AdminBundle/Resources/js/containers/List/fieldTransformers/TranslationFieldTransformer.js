@@ -9,8 +9,13 @@ export default class TranslationFieldTransformer implements FieldTransformer {
             return null;
         }
 
-        const {prefix = ''} = parameters;
+        const {key, prefix = ''} = parameters;
 
+        if (key) {
+            return translate(key.replaceAll('{value}', String(value)), {value});
+        }
+
+        // @deprecated use the "key" parameter with a "{value}" placeholder instead
         return translate(prefix + value);
     }
 }
