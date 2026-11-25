@@ -111,11 +111,11 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $filters['limit'] = $maxPerPage ?? $limit;
 
         $resource = $resolvable->getContext()['_resource'] ?? null;
-        // TODO compare with the resource key of the provider once it has one: getType() is not always the resource key,
-        //      e.g. the article page tree provider returns "articles_page_tree" for articles. Until then uuids go to
-        //      every provider (integer id providers skip them), integer ids only to the provider of their resource key.
-        if (\is_array($resource) && \is_string($resource['id'] ?? null)
-            && (!\ctype_digit($resource['id']) || $resource['resourceKey'] === $smartContentProvider->getType())
+        // TODO compare with the resource key of the provider once it has one: until then match the type or a
+        //      "<resourceKey>_" prefix, e.g. "articles_page_tree" for articles.
+        if (\is_array($resource) && \is_string($resource['id'] ?? null) && \is_string($resource['resourceKey'] ?? null)
+            && ($resource['resourceKey'] === $smartContentProvider->getType()
+                || \str_starts_with($smartContentProvider->getType(), $resource['resourceKey'] . '_'))
         ) {
             $filters['excluded'] = [...($filters['excluded'] ?? []), $resource['id']];
         }

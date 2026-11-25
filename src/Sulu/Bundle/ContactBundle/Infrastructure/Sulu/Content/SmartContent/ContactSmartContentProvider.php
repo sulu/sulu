@@ -153,8 +153,7 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
             $queryBuilder->orderBy($sortBy, $sortMethod);
         }
 
-        // the uuid of the rendered resource would be cast to an integer by MySQL
-        $excluded = \array_filter($filters['excluded'] ?? [], static fn ($id) => \is_int($id) || \ctype_digit($id));
+        $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates']) {
             $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(ContactInterface::RESOURCE_KEY) ?? [])];
         }

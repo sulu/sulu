@@ -279,8 +279,7 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
             $queryBuilder->addSelect($sortBy);
         }
 
-        // the uuid of the rendered resource would be cast to an integer by MySQL
-        $excluded = \array_filter($filters['excluded'] ?? [], static fn ($id) => \is_int($id) || \ctype_digit($id));
+        $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates']) {
             $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(MediaInterface::RESOURCE_KEY) ?? [])];
         }

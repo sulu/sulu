@@ -540,21 +540,6 @@ class ContactSmartContentProviderTest extends SuluTestCase
         $this->assertSame(\count($allIds), $this->smartContentProvider->countBy($filters));
     }
 
-    public function testFindFlatByIgnoresTheExcludedIdsThatAreNotNumeric(): void
-    {
-        $filters = [...$this->getDefaultFilters(), 'locale' => 'en'];
-
-        $allIds = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
-        $this->assertNotEmpty($allIds);
-
-        $filters['excluded'] = [$allIds[0] . '-uuid-of-another-resource'];
-        $ids = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
-
-        $this->assertContains($allIds[0], $ids);
-        $this->assertCount(\count($allIds), $ids);
-        $this->assertSame(\count($allIds), $this->smartContentProvider->countBy($filters));
-    }
-
     public function testFindFlatByExcludesTheNumericExcludedIds(): void
     {
         $filters = [...$this->getDefaultFilters(), 'locale' => 'en'];

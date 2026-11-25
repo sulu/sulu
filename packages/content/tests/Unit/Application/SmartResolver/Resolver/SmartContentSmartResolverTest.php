@@ -169,6 +169,46 @@ class SmartContentSmartResolverTest extends TestCase
         $this->smartResolver->resolve($resolvable, 'en');
     }
 
+    public function testResolveExcludesTheRenderedArticleFromThePageTreeArticleProvider(): void
+    {
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->getType()->willReturn('articles_page_tree');
+        $smartContentProvider->countBy(
+            Argument::that(static fn (array $filters): bool => ['article-uuid'] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn(0)->shouldBeCalled();
+        $smartContentProvider->findFlatBy(
+            Argument::that(static fn (array $filters): bool => ['article-uuid'] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn([])->shouldBeCalled();
+
+        $resolvable = $this->createResolvable()
+            ->withContext(['_resource' => ['resourceKey' => 'articles', 'id' => 'article-uuid']]);
+        $result = $this->smartResolver->resolve($resolvable, 'en');
+
+        $this->assertSame(['article-uuid'], $result->getView()['excluded']);
+    }
+
+    public function testResolveKeepsTheRenderedPageUuidAwayFromAnArticleProvider(): void
+    {
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->getType()->willReturn('articles');
+        $smartContentProvider->countBy(
+            Argument::that(static fn (array $filters): bool => [] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn(0)->shouldBeCalled();
+        $smartContentProvider->findFlatBy(
+            Argument::that(static fn (array $filters): bool => [] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn([])->shouldBeCalled();
+
+        $resolvable = $this->createResolvable()
+            ->withContext(['_resource' => ['resourceKey' => 'pages', 'id' => 'page-uuid']]);
+        $result = $this->smartResolver->resolve($resolvable, 'en');
+
+        $this->assertSame([], $result->getView()['excluded']);
+    }
+
     public function testResolveWithoutResourceKeepsTheExcludedFilter(): void
     {
         $smartContentProvider = $this->prophesizeProvider();

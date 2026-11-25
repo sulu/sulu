@@ -315,8 +315,7 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
-        // the uuid of the rendered resource would be cast to an integer by MySQL
-        $excluded = \array_filter($filters['excluded'] ?? [], static fn ($id) => \is_int($id) || \ctype_digit($id));
+        $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates'] ?? false) {
             $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(Example::RESOURCE_KEY) ?? [])];
         }

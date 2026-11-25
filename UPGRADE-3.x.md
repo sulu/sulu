@@ -14,8 +14,8 @@ Projects with their own `RouteDefaultsProviderInterface` should throw a `Resourc
 
 ### Smart content providers exclude the rendered resource
 
-Custom smart content providers need to exclude the ids in the `excluded` filter, and providers with integer ids have
-to skip ids that are not numeric.
+Custom smart content providers need to exclude the ids in the `excluded` filter. The rendered id reaches only
+providers whose `getType()` is the resource key or starts with `<resourceKey>_`.
 
 ### New constructor argument for the selection property resolvers and smart content providers
 
