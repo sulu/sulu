@@ -22,6 +22,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Routing\Exception\NoConfigurationException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
@@ -152,7 +154,7 @@ class RedirectExceptionSubscriber implements EventSubscriberInterface
 
         try {
             return null !== $this->router->matchRequest($request);
-        } catch (ResourceNotFoundException $exception) {
+        } catch (NoConfigurationException|ResourceNotFoundException|MethodNotAllowedException $exception) {
             return false;
         }
     }
