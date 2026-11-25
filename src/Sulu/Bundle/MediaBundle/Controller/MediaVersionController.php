@@ -33,12 +33,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Lists the file versions of a single media.
+ *
+ * @internal this class should not be instated by a project
+ *           Use instead a request or response listener to
+ *           extend the endpoints behaviours
  */
-class MediaVersionController extends AbstractRestController
+final class MediaVersionController extends AbstractRestController
 {
-    public const LIST_KEY = 'media_versions';
+    private const LIST_KEY = 'media_versions';
 
-    public const RESOURCE_KEY = 'media_versions';
+    private const RESOURCE_KEY = 'media_versions';
 
     public function __construct(
         ViewHandlerInterface $viewHandler,
