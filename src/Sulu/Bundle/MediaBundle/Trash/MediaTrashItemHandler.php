@@ -107,6 +107,7 @@ final class MediaTrashItemHandler implements
                     'focusPointX' => $fileVersion->getFocusPointX(),
                     'focusPointY' => $fileVersion->getFocusPointY(),
                     'origin' => $fileVersion->getOrigin(),
+                    'classification' => $fileVersion->getClassification(),
                     'aiDisclosureDisabled' => $fileVersion->getAiDisclosureDisabled(),
                     'aiDisclosureIconVariant' => $fileVersion->getAiDisclosureIconVariant(),
                     'contentLocales' => $fileVersion->getContentLocales(),
@@ -239,6 +240,9 @@ final class MediaTrashItemHandler implements
                 $fileVersion->setFocusPointY($focusPointY);
                 $fileVersion->setCreated(new \DateTimeImmutable($fileVersionData['created']));
                 $fileVersion->setOrigin($fileVersionData['origin'] ?? 'unknown');
+                /** @var string|null $classification */
+                $classification = $fileVersionData['classification'] ?? null;
+                $fileVersion->setClassification($classification);
                 $fileVersion->setAiDisclosureDisabled($fileVersionData['aiDisclosureDisabled'] ?? false);
                 $fileVersion->setAiDisclosureIconVariant($fileVersionData['aiDisclosureIconVariant'] ?? 'auto');
                 $contentLocales = $fileVersionData['contentLocales'] ?? [];

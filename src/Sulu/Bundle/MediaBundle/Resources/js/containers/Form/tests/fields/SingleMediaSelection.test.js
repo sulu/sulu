@@ -9,6 +9,7 @@ import ResourceFormStore from 'sulu-admin-bundle/containers/Form/stores/Resource
 import ResourceStore from 'sulu-admin-bundle/stores/ResourceStore';
 import SingleSelectionStore from 'sulu-admin-bundle/stores/SingleSelectionStore';
 import SingleMediaSelection from '../../fields/SingleMediaSelection';
+import SingleMediaSelectionOverlay from '../../../SingleMediaSelectionOverlay';
 
 let mockSingleSelectionStoreInstances: Array<Object> = [];
 
@@ -152,6 +153,34 @@ test('Set types on SingleMediaSelectionComponent', async() => {
     await user.click(screen.getByRole('button', {name: 'su-image'}));
 
     expect(screen.getByText('image,video')).toBeInTheDocument();
+});
+
+test('Set classifications on SingleMediaSelectionComponent', async() => {
+    const user = userEvent.setup();
+    const schemaOptions = {
+        classifications: {name: 'classifications', value: 'data_sheet, warranty_certificate'},
+    };
+
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    render(
+        <SingleMediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            onChange={jest.fn()}
+            schemaOptions={schemaOptions}
+        />
+    );
+
+    await user.click(screen.getByRole('button', {name: 'su-image'}));
+
+    const overlayCalls = (SingleMediaSelectionOverlay: any).mock.calls;
+    expect(overlayCalls[overlayCalls.length - 1][0].classifications).toEqual(['data_sheet', 'warranty_certificate']);
 });
 
 test('Set default display option if no value is passed', () => {
@@ -371,4 +400,21 @@ test('Should throw an error if formats schemaOption is given but not an array', 
             schemaOptions={{formats: {name: 'formats', value: 'sulu-400x400'}}}
         />
     )).toThrow(/"formats"/);
+});
+
+test('Should throw an error if classifications schemaOption is given but not a string', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => render(
+        <SingleMediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={{classifications: {name: 'classifications', value: true}}}
+        />
+    )).toThrow(/"classifications"/);
 });

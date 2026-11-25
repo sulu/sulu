@@ -20,6 +20,7 @@ import type {Value} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
 type Props = {|
+    classifications: Array<string>,
     className?: string,
     disabled: boolean,
     displayOptions: Array<DisplayOption>,
@@ -38,6 +39,7 @@ const THUMBNAIL_SIZE = 'sulu-25x25';
 @observer
 class SingleMediaSelection extends React.Component<Props> {
     static defaultProps = {
+        classifications: [],
         disabled: false,
         displayOptions: [],
         formats: [],
@@ -134,7 +136,7 @@ class SingleMediaSelection extends React.Component<Props> {
     };
 
     render() {
-        const {className, disabled, displayOptions, formats, locale, types, valid, value} = this.props;
+        const {classifications, className, disabled, displayOptions, formats, locale, types, valid, value} = this.props;
         const {loading, item: media} = this.singleMediaSelectionStore;
 
         const cropImage = media && MediaCollection.editable ? getCropImageUrl(media, formats) : undefined;
@@ -190,6 +192,7 @@ class SingleMediaSelection extends React.Component<Props> {
                     }
                 </SingleItemSelection>
                 <SingleMediaSelectionOverlay
+                    classifications={classifications}
                     excludedIds={media ? [media.id] : []}
                     locale={locale}
                     onClose={this.handleOverlayClose}

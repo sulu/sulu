@@ -36,6 +36,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidClassificationException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidValidityDateException;
@@ -226,6 +227,7 @@ class MediaManager implements MediaManagerInterface
         }
 
         $this->validateValidity($data, $currentFileVersion);
+        $this->validateClassification($data);
 
         $shouldEmitModifiedEvent = true;
         $fileVersion = null;
@@ -364,6 +366,7 @@ class MediaManager implements MediaManagerInterface
 
         $this->validator->validate($uploadedFile);
         $this->validateValidity($data, null);
+        $this->validateClassification($data);
 
         /** @var string $locale */
         $locale = $data['locale'] ?? 'en';
@@ -471,6 +474,7 @@ class MediaManager implements MediaManagerInterface
                 || 'focusPointX' === $attribute
                 || 'focusPointY' === $attribute
                 || 'type' === $attribute
+                || 'classification' === $attribute
                 || 'origin' === $attribute
                 || 'aiDisclosureDisabled' === $attribute
                 || 'aiDisclosureText' === $attribute
@@ -580,6 +584,9 @@ class MediaManager implements MediaManagerInterface
                     case 'focusPointY':
                         $media->setFocusPointY($value);
                         break;
+                    case 'classification':
+                        $media->setClassification(\is_string($value) && '' !== $value ? $value : null);
+                        break;
                     case 'origin':
                         $media->setOrigin($value ?? 'unknown');
                         break;
@@ -627,6 +634,22 @@ class MediaManager implements MediaManagerInterface
 
         if ($validFrom && $validTo && $validTo < $validFrom) {
             throw new InvalidValidityRangeException();
+        }
+    }
+
+    /**
+     * Rejects a classification the column cannot hold before anything is stored.
+     *
+     * @param array<mixed> $data
+     *
+     * @throws InvalidClassificationException
+     */
+    private function validateClassification(array $data): void
+    {
+        $classification = $data['classification'] ?? null;
+
+        if (null !== $classification && (!\is_string($classification) || \mb_strlen($classification) > 191)) {
+            throw new InvalidClassificationException();
         }
     }
 

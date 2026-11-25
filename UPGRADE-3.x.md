@@ -118,6 +118,15 @@ them regardless. Run the new migration to apply the schema change:
 bin/console doctrine:migrations:migrate
 ```
 
+### Media classification column
+
+Media file versions gained an optional classification, which adds a nullable, indexed `classification` column to
+`me_file_versions`. Run the new migration to apply the schema change:
+
+```bash
+bin/console doctrine:migrations:migrate
+```
+
 ### Text editor configs decide which CKEditor plugins are loaded
 
 Which plugins a `text_editor` property loads now follows from the tags and attributes its text editor config enables.

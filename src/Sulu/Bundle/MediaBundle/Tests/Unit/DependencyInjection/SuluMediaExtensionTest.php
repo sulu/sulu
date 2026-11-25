@@ -17,6 +17,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\DependencyInjection\SuluMediaExtension;
 use Sulu\Bundle\MediaBundle\EventListener\ParallelImageGenerationLimiter;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Semaphore\SemaphoreFactory;
@@ -41,6 +42,52 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         return [
             new SuluMediaExtension($this->executableFinder->reveal()),
         ];
+    }
+
+    public function testLoadClassifications(): void
+    {
+        $this->executableFinder->find(Argument::any())->willReturn(true);
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->load(['classifications' => ['data_sheet' => 'app.data_sheet', 'warranty-certificate' => 'app.warranty']]);
+
+        $this->assertContainerBuilderHasParameter(
+            'sulu_media.classifications',
+            ['data_sheet' => 'app.data_sheet', 'warranty-certificate' => 'app.warranty'],
+        );
+    }
+
+    public function testLoadWithoutClassifications(): void
+    {
+        $this->executableFinder->find(Argument::any())->willReturn(true);
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->load();
+
+        $this->assertContainerBuilderHasParameter('sulu_media.classifications', []);
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInvalidClassificationKeys')]
+    public function testLoadInvalidClassificationKey(int|string $key): void
+    {
+        $this->executableFinder->find(Argument::any())->willReturn(true);
+        $this->container->setParameter('kernel.bundles', []);
+
+        $this->expectException(InvalidConfigurationException::class);
+
+        $this->load(['classifications' => [$key => 'app.data_sheet']]);
+    }
+
+    /**
+     * @return iterable<string, array{int|string}>
+     */
+    public static function provideInvalidClassificationKeys(): iterable
+    {
+        yield 'comma' => ['data,sheet'];
+        yield 'digits only' => [2024];
+        yield 'leading digit' => ['1st_sheet'];
+        yield 'leading underscore' => ['_sheet'];
+        yield 'too long' => [\str_repeat('a', 192)];
     }
 
     public function testLoad(): void

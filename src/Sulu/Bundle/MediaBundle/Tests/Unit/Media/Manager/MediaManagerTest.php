@@ -35,6 +35,7 @@ use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Media\Exception\InvalidClassificationException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidValidityDateException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidValidityRangeException;
@@ -848,6 +849,49 @@ class MediaManagerTest extends TestCase
 
         $this->assertCount(1, $file->getFileVersions());
         $this->assertSame(1, $file->getVersion());
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideInvalidClassification')]
+    public function testSaveWithInvalidClassification(mixed $classification): void
+    {
+        $this->expectException(InvalidClassificationException::class);
+
+        $this->saveWithValidity(null, null, ['classification' => $classification]);
+    }
+
+    public function testSaveWithClassificationOfMaximumLength(): void
+    {
+        $classification = \str_repeat('ä', 191);
+
+        $fileVersion = $this->saveWithValidity(null, null, ['classification' => $classification]);
+
+        $this->assertSame($classification, $fileVersion->getClassification());
+    }
+
+    public function testCreateWithInvalidClassificationStoresNoFile(): void
+    {
+        $uploadedFile = $this->prophesizeUploadedFile('image/jpeg');
+
+        $this->storage->save(Argument::cetera())->shouldNotBeCalled();
+        $this->mediaRepository->createNew()->shouldNotBeCalled();
+
+        $this->expectException(InvalidClassificationException::class);
+
+        $this->mediaManager->save(
+            $uploadedFile->reveal(),
+            ['locale' => 'en', 'title' => 'test', 'classification' => \str_repeat('a', 192)],
+            null,
+        );
+    }
+
+    /**
+     * @return iterable<string, array{mixed}>
+     */
+    public static function provideInvalidClassification(): iterable
+    {
+        yield 'too long' => [\str_repeat('a', 192)];
+        yield 'integer' => [2024];
+        yield 'array' => [['data_sheet']];
     }
 
     /**

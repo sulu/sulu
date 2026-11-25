@@ -44,6 +44,24 @@ final class Configuration implements ConfigurationInterface
                 ->info('Shows the optional "Validity From" and "Validity To" fields in the media details of the admin. The dates are informational only, they do not affect how long a media is available, and the API accepts and returns them regardless of this option.')
                 ->defaultFalse()
             ->end()
+            ->arrayNode('classifications')
+                ->info('Classifications a media can be assigned to, with the translation key of their title as value.')
+                ->useAttributeAsKey('name')
+                ->normalizeKeys(false)
+                ->scalarPrototype()->cannotBeEmpty()->end()
+                ->validate()
+                    ->ifTrue(static function(array $classifications): bool {
+                        foreach (\array_keys($classifications) as $key) {
+                            if (!\preg_match('/^[a-zA-Z][a-zA-Z0-9_-]{0,190}$/', (string) $key)) {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    })
+                    ->thenInvalid('The keys of "sulu_media.classifications" must start with a letter and consist of up to 191 letters, digits, "_" or "-".')
+                ->end()
+            ->end()
             ->arrayNode('image_format_files')
                 ->prototype('scalar')->end()
             ->end()

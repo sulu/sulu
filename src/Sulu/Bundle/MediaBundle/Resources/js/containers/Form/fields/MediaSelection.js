@@ -5,6 +5,7 @@ import log from 'loglevel';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import {computed, isArrayLike, observable} from 'mobx';
 import {
+    convertClassificationsFromParams,
     convertDisplayOptionsFromParams,
     convertFormatsFromParams,
     convertMediaTypesFromParams,
@@ -100,6 +101,9 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             formats: {
                 value: formats,
             } = {},
+            classifications: {
+                value: classifications,
+            } = {},
             types: {
                 value: mediaTypes,
             } = {},
@@ -129,12 +133,19 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
 
         const mediaTypeValues = convertMediaTypesFromParams(mediaTypes);
 
+        if (classifications !== undefined && classifications !== null && typeof classifications !== 'string') {
+            throw new Error('The "classifications" option has to be a string if set.');
+        }
+
+        const classificationValues = convertClassificationsFromParams(classifications);
+
         if (sortable !== undefined && typeof sortable !== 'boolean') {
             throw new Error('The "sortable" schema option must be a boolean if given!');
         }
 
         return (
             <MultiMediaSelection
+                classifications={classificationValues}
                 disabled={!!disabled}
                 displayOptions={displayOptionValues}
                 formats={formatValues}

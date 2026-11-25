@@ -103,6 +103,29 @@
                     "tags": [],
                     "label": "Content languages"
                 },
+                "classification": {
+                    "disabledCondition": null,
+                    "visibleCondition": "false",
+                    "type": "single_select",
+                    "colSpan": 6,
+                    "options": {
+                        "values": {
+                            "name": "values",
+                            "type": "expression",
+                            "value": []
+                        }
+                    },
+                    "types": [],
+                    "defaultType": null,
+                    "required": false,
+                    "multilingual": true,
+                    "spaceAfter": null,
+                    "minOccurs": null,
+                    "maxOccurs": null,
+                    "onInvalid": null,
+                    "tags": [],
+                    "label": "Classification"
+                },
                 "validFrom": {
                     "disabledCondition": null,
                     "visibleCondition": "false",
@@ -119,7 +142,7 @@
                     "onInvalid": null,
                     "tags": [],
                     "label": "Validity From",
-                    "description": "The validity is for information only. It has no effect on how long this media is available."
+                    "description": "For information only, does not affect availability."
                 },
                 "validTo": {
                     "disabledCondition": null,

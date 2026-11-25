@@ -9,6 +9,7 @@ one itself, so it cannot be rendered in this documentation.
 | `locale`         | Observable locale used to load the media.                                                       |
 | `displayOptions` | Display options the editor can choose from: `leftTop`, `top`, `rightTop`, `left`, `middle`, `right`, `leftBottom`, `bottom`, `rightBottom`. A button is shown only if the list is not empty. |
 | `types`          | Restricts the selectable media types, e.g. `['image']`.                                         |
+| `classifications` | Restricts the selectable medias to these classifications, e.g. `['data_sheet']`.                |
 | `valid`          | Marks the selection as invalid if `false` (default `true`).                                     |
 | `disabled`       | Disables editing.                                                                               |
 | `onItemClick`    | Called with the id and the media object when the selected item is clicked.                      |

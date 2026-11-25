@@ -4,6 +4,7 @@ import {observer} from 'mobx-react';
 import userStore from 'sulu-admin-bundle/stores/userStore';
 import {computed, isArrayLike, observable} from 'mobx';
 import {
+    convertClassificationsFromParams,
     convertDisplayOptionsFromParams,
     convertFormatsFromParams,
     convertMediaTypesFromParams,
@@ -87,6 +88,9 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
             formats: {
                 value: formats,
             } = {},
+            classifications: {
+                value: classifications,
+            } = {},
             types: {
                 value: mediaTypes,
             } = {},
@@ -113,8 +117,15 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
 
         const mediaTypeValues = convertMediaTypesFromParams(mediaTypes);
 
+        if (classifications !== undefined && classifications !== null && typeof classifications !== 'string') {
+            throw new Error('The "classifications" option has to be a string if set.');
+        }
+
+        const classificationValues = convertClassificationsFromParams(classifications);
+
         return (
             <SingleMediaSelectionComponent
+                classifications={classificationValues}
                 disabled={!!disabled}
                 displayOptions={displayOptionValues}
                 formats={formatValues}
