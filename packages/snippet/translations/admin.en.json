@@ -30,6 +30,7 @@
     "sulu_activity.description.snippets.preview_link_generated": "{userFullName} has generated a preview link: {resourceTitle}",
     "sulu_activity.description.snippets.preview_link_revoked": "{userFullName} has revoked a preview link: {resourceTitle}",
     "sulu_activity.description.snippets.workflow_transition.publish": "{userFullName} has published the snippet \"{resourceTitle}\"",
+    "sulu_activity.description.snippets.workflow_transition.publish_without_review": "{userFullName} has published the snippet \"{resourceTitle}\" without review",
     "sulu_activity.description.snippets.workflow_transition.unpublish": "{userFullName} has unpublished the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.workflow_transition.remove_draft": "{userFullName} has discarded the draft of the snippet \"{resourceTitle}\"",
     "sulu_activity.description.snippets.workflow_transition.request_for_review": "{userFullName} has requested a review for the snippet \"{resourceTitle}\"",

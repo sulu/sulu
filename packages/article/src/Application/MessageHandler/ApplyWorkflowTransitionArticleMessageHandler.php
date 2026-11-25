@@ -17,7 +17,10 @@ use Sulu\Article\Domain\Model\ArticleInterface;
 use Sulu\Article\Domain\Repository\ArticleRepositoryInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 
 /**
@@ -30,6 +33,7 @@ final class ApplyWorkflowTransitionArticleMessageHandler
         private ArticleRepositoryInterface $articleRepository,
         private ContentWorkflowInterface $contentWorkflow,
         private DomainEventCollectorInterface $domainEventCollector,
+        private ?ActiveWorkflowTransitionRequestProviderInterface $activeWorkflowTransitionRequestProvider,
     ) {
     }
 
@@ -45,6 +49,11 @@ final class ApplyWorkflowTransitionArticleMessageHandler
             $article = $this->loadArticle($message, [$locale, ...$relatedLocales]);
         }
 
+        // The publish closes the request, so it is looked up before and read again afterwards.
+        $request = WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH === $message->getTransitionName()
+            ? $this->activeWorkflowTransitionRequestProvider?->find(ArticleInterface::RESOURCE_KEY, (string) $article->getId(), $locale)
+            : null;
+
         $this->contentWorkflow->apply(
             $article,
             ['locale' => $locale],
@@ -52,7 +61,12 @@ final class ApplyWorkflowTransitionArticleMessageHandler
             $message->getWorkflowTransitionRequestData(),
         );
 
-        $this->domainEventCollector->collect(new ArticleWorkflowTransitionAppliedEvent($article, $message->getTransitionName(), $locale));
+        $this->domainEventCollector->collect(new ArticleWorkflowTransitionAppliedEvent(
+            $article,
+            $message->getTransitionName(),
+            $locale,
+            WorkflowTransitionRequestPlaceEnum::BYPASSED === $request?->getPlace(),
+        ));
 
         return $article;
     }

@@ -153,6 +153,10 @@ class WorkflowTransitionRequest implements AuditableInterface
             return WorkflowTransitionRequestStatusEnum::PUBLISHED;
         }
 
+        if (WorkflowTransitionRequestPlaceEnum::BYPASSED === $this->place) {
+            return WorkflowTransitionRequestStatusEnum::BYPASSED;
+        }
+
         if ($this->countUserApprovals() < $requiredUserApprovals) {
             return WorkflowTransitionRequestStatusEnum::PENDING;
         }
@@ -285,6 +289,14 @@ class WorkflowTransitionRequest implements AuditableInterface
     public function publish(): void
     {
         $this->transitionTo(WorkflowTransitionRequestPlaceEnum::PUBLISHED);
+    }
+
+    /**
+     * Closes the request because the content was published without the approvals it asked for.
+     */
+    public function bypass(): void
+    {
+        $this->transitionTo(WorkflowTransitionRequestPlaceEnum::BYPASSED);
     }
 
     /**

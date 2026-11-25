@@ -25,6 +25,7 @@ class PageWorkflowTransitionAppliedEvent extends DomainEvent
         private PageInterface $page,
         private string $workflowTransitionName,
         private string $locale,
+        private bool $reviewBypassed = false,
     ) {
         parent::__construct();
     }
@@ -39,9 +40,17 @@ class PageWorkflowTransitionAppliedEvent extends DomainEvent
         return $this->workflowTransitionName;
     }
 
+    /**
+     * Whether the transition published the content while its request for publishing still waited for approvals.
+     */
+    public function isReviewBypassed(): bool
+    {
+        return $this->reviewBypassed;
+    }
+
     public function getEventType(): string
     {
-        return 'workflow_transition.' . $this->workflowTransitionName;
+        return 'workflow_transition.' . ($this->reviewBypassed ? 'publish_without_review' : $this->workflowTransitionName);
     }
 
     public function getResourceKey(): string

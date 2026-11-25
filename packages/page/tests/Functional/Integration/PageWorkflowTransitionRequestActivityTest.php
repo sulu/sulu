@@ -21,7 +21,9 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum;
 use Sulu\Page\Domain\Model\Page;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Admin\PageAdmin;
@@ -109,6 +111,85 @@ class PageWorkflowTransitionRequestActivityTest extends SuluTestCase
         $this->assertCount(2, $this->findActivities('workflow_transition_request.validated'));
     }
 
+    public function testPublishWhileTheRequestIsPendingStoresAnActivityThatMarksTheBypass(): void
+    {
+        $id = $this->createPageInReview('review');
+
+        $this->publish($this->client, $id);
+
+        $activity = $this->findActivity('workflow_transition.publish_without_review');
+        $this->assertSame('pages', $activity->getResourceKey());
+        $this->assertSame($id, $activity->getResourceId());
+        $this->assertSame('en', $activity->getResourceLocale());
+        $this->assertSame('Page In Review', $activity->getResourceTitle());
+        $this->assertSame(self::getTestUser()->getId(), $activity->getUser()?->getId());
+        $this->assertSame([], $this->findActivities('workflow_transition.publish'), 'The bypass replaces the plain publish activity.');
+        $this->assertSame(WorkflowTransitionRequestPlaceEnum::BYPASSED, $this->findRequest($id)->getPlace());
+    }
+
+    public function testPublishAfterTheApprovalStoresThePlainPublishActivity(): void
+    {
+        $id = $this->createPageInReview('review');
+        $this->createReviewer();
+        $this->act($this->createReviewerClient(), $id, 'approve');
+
+        $this->publish($this->createCreatorClient(), $id);
+
+        $this->assertCount(1, $this->findActivities('workflow_transition.publish'));
+        $this->assertSame([], $this->findActivities('workflow_transition.publish_without_review'));
+        $this->assertSame(WorkflowTransitionRequestPlaceEnum::PUBLISHED, $this->findRequest($id)->getPlace());
+    }
+
+    public function testPublishWithoutARequestStoresThePlainPublishActivity(): void
+    {
+        $id = $this->createPage();
+
+        $this->publish($this->client, $id);
+
+        $this->assertCount(1, $this->findActivities('workflow_transition.publish'));
+        $this->assertSame([], $this->findActivities('workflow_transition.publish_without_review'));
+    }
+
+    /**
+     * The activity list renders `sulu_activity.description.<resourceKey>.<type>`, and a missing key
+     * shows the raw key instead of failing.
+     */
+    public function testTheActivitySaysThatThePageWasPublishedWithoutReview(): void
+    {
+        $id = $this->createPageInReview('review');
+        $this->publish($this->client, $id);
+
+        $activity = $this->findActivity('workflow_transition.publish_without_review');
+
+        foreach (['en' => 'has published the page "Page In Review" without review', 'de' => 'hat die Seite "Page In Review" ohne Review veröffentlicht'] as $locale => $expected) {
+            $this->assertSame(
+                '{user} ' . $expected,
+                self::getContainer()->get('translator')->trans(
+                    \sprintf('sulu_activity.description.%s.%s', $activity->getResourceKey(), $activity->getType()),
+                    ['{userFullName}' => '{user}', '{resourceTitle}' => 'Page In Review'],
+                    'admin',
+                    $locale,
+                ),
+            );
+        }
+    }
+
+    private function publish(KernelBrowser $client, string $pageId): void
+    {
+        $client->request('POST', \sprintf('/admin/api/pages/%s?locale=en&action=publish', $pageId));
+        $this->assertHttpStatusCode(200, $client->getResponse());
+    }
+
+    private function findRequest(string $pageId): WorkflowTransitionRequest
+    {
+        self::getEntityManager()->clear();
+
+        return self::getContainer()->get(WorkflowTransitionRequestRepositoryInterface::class)->getOneBy([
+            'resourceKey' => PageInterface::RESOURCE_KEY,
+            'resourceId' => $pageId,
+        ]);
+    }
+
     /**
      * @param array<string, string> $body
      * @param array<string, string> $query
@@ -177,6 +258,16 @@ class PageWorkflowTransitionRequestActivityTest extends SuluTestCase
         return $user;
     }
 
+    private function createCreatorClient(): KernelBrowser
+    {
+        self::ensureKernelShutdown();
+
+        return $this->createAuthenticatedClient(
+            [],
+            ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'],
+        );
+    }
+
     private function createReviewerClient(): KernelBrowser
     {
         self::ensureKernelShutdown();
@@ -215,6 +306,16 @@ class PageWorkflowTransitionRequestActivityTest extends SuluTestCase
 
     private function createPageInReview(string $template): string
     {
+        $id = $this->createPage($template);
+
+        $this->client->request('POST', \sprintf('/admin/api/pages/%s?locale=en&action=request_for_review', $id));
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        return $id;
+    }
+
+    private function createPage(string $template = 'review'): string
+    {
         $homepage = new Page('0199ee04-c220-784e-a6fa-ac985870f2d5');
         $homepage->setLft(0);
         $homepage->setRgt(1);
@@ -235,11 +336,7 @@ class PageWorkflowTransitionRequestActivityTest extends SuluTestCase
 
         /** @var array{id: string} $content */
         $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
-        $id = $content['id'];
 
-        $this->client->request('POST', \sprintf('/admin/api/pages/%s?locale=en&action=request_for_review', $id));
-        $this->assertHttpStatusCode(200, $this->client->getResponse());
-
-        return $id;
+        return $content['id'];
     }
 }

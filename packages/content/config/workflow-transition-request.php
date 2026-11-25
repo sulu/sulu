@@ -163,6 +163,8 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_content.active_workflow_transition_request_provider'),
             new Reference('event_dispatcher'),
+            new Reference('sulu_content.workflow_transition_request_status_resolver'),
+            new Reference('sulu_content.workflow_transition_request_action_registry'),
         ])
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);

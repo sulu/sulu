@@ -71,6 +71,21 @@ class WorkflowTransitionRequestControllerTest extends SuluTestCase
         $this->assertSame(1, $content['pages']);
     }
 
+    public function testCgetShowsARequestThatWasPublishedWithoutReviewAsBypassed(): void
+    {
+        $request = $this->persistWorkflowTransitionRequest('examples', '1', 'en', $this->createRequestCreator());
+        $request->bypass();
+        static::getEntityManager()->flush();
+
+        $this->client->request('GET', '/admin/api/workflow-transition-requests.json?resourceKey=examples&resourceId=1&locale=en');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        /** @var array{_embedded: array{workflow_transition_requests: array<int, array<string, mixed>>}} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        $this->assertSame(['bypassed'], \array_column($content['_embedded']['workflow_transition_requests'], 'status'));
+    }
+
     public function testCgetReturnsNullRequesterWithoutCreator(): void
     {
         $this->persistWorkflowTransitionRequest('examples', '1', 'en');

@@ -13,7 +13,10 @@ namespace Sulu\Snippet\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Application\Message\ApplyWorkflowTransitionSnippetMessage;
 use Sulu\Snippet\Domain\Event\SnippetWorkflowTransitionAppliedEvent;
@@ -29,7 +32,8 @@ final class ApplyWorkflowTransitionSnippetMessageHandler
     public function __construct(
         private SnippetRepositoryInterface $snippetRepository,
         private ContentWorkflowInterface $contentWorkflow,
-        private DomainEventCollectorInterface $domainEventCollector
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ?ActiveWorkflowTransitionRequestProviderInterface $activeWorkflowTransitionRequestProvider,
     ) {
     }
 
@@ -45,6 +49,11 @@ final class ApplyWorkflowTransitionSnippetMessageHandler
             $snippet = $this->loadSnippet($message, [$locale, ...$relatedLocales]);
         }
 
+        // The publish closes the request, so it is looked up before and read again afterwards.
+        $request = WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH === $message->getTransitionName()
+            ? $this->activeWorkflowTransitionRequestProvider?->find(SnippetInterface::RESOURCE_KEY, (string) $snippet->getId(), $locale)
+            : null;
+
         $this->contentWorkflow->apply(
             $snippet,
             ['locale' => $locale],
@@ -52,7 +61,12 @@ final class ApplyWorkflowTransitionSnippetMessageHandler
             $message->getWorkflowTransitionRequestData(),
         );
 
-        $this->domainEventCollector->collect(new SnippetWorkflowTransitionAppliedEvent($snippet, $message->getTransitionName(), $locale));
+        $this->domainEventCollector->collect(new SnippetWorkflowTransitionAppliedEvent(
+            $snippet,
+            $message->getTransitionName(),
+            $locale,
+            WorkflowTransitionRequestPlaceEnum::BYPASSED === $request?->getPlace(),
+        ));
 
         return $snippet;
     }

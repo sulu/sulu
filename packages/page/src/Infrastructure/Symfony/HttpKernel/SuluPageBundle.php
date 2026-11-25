@@ -209,6 +209,7 @@ final class SuluPageBundle extends AbstractBundle
                 new Reference('sulu_page.page_repository'),
                 new Reference('sulu_content.content_workflow'),
                 new Reference('sulu_activity.domain_event_collector'),
+                new Reference('sulu_content.active_workflow_transition_request_provider', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
             ->tag('messenger.message_handler');
 
