@@ -87,7 +87,7 @@
                     "onInvalid": null,
                     "tags": [],
                     "label": "Validity From",
-                    "description": "The validity is for information only. It has no effect on how long this media is available."
+                    "description": "For information only, does not affect availability."
                 },
                 "validTo": {
                     "disabledCondition": null,

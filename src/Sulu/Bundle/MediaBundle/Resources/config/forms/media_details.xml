@@ -28,19 +28,6 @@
                     </meta>
                 </property>
 
-                <property name="validFrom" type="date" colspan="6">
-                    <meta>
-                        <title>sulu_media.valid_from</title>
-                        <info_text>sulu_media.validity_info_text</info_text>
-                    </meta>
-                </property>
-
-                <property name="validTo" type="date" colspan="6">
-                    <meta>
-                        <title>sulu_media.valid_to</title>
-                    </meta>
-                </property>
-
                 <property name="contentLocales" type="select" colspan="6">
                     <meta>
                         <title>sulu_media.content_locales</title>
@@ -59,6 +46,19 @@
                     <params>
                         <param name="values" type="expression" value="service('sulu_media.classification_provider').getValues(locale)"/>
                     </params>
+                </property>
+
+                <property name="validFrom" type="date" colspan="6">
+                    <meta>
+                        <title>sulu_media.valid_from</title>
+                        <info_text>sulu_media.validity_info_text</info_text>
+                    </meta>
+                </property>
+
+                <property name="validTo" type="date" colspan="6">
+                    <meta>
+                        <title>sulu_media.valid_to</title>
+                    </meta>
                 </property>
 
                 <property name="origin" type="single_select">
