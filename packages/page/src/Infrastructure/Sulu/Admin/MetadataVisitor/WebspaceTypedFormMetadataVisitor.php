@@ -14,6 +14,7 @@ namespace Sulu\Page\Infrastructure\Sulu\Admin\MetadataVisitor;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadataVisitorInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Page\Domain\Model\PageInterface;
 
 /**
  * @internal no backwards compatibility promise is given for this class it could be removed or changed at any time.
@@ -30,6 +31,10 @@ final class WebspaceTypedFormMetadataVisitor implements TypedFormMetadataVisitor
      */
     public function visitTypedFormMetadata(TypedFormMetadata $formMetadata, string $key, string $locale, array $metadataOptions = []): void
     {
+        if (PageInterface::TEMPLATE_TYPE !== $key) {
+            return;
+        }
+
         $webspaceKey = $metadataOptions['webspace'] ?? null;
         if (null === $webspaceKey) {
             return;
