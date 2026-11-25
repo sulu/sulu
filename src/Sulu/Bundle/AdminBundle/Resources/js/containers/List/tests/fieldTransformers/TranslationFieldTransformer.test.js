@@ -1,8 +1,13 @@
 // @flow
+import log from 'loglevel';
 import TranslationFieldTransformer from '../../fieldTransformers/TranslationFieldTransformer';
 import {translate} from '../../../../utils/Translator';
 
 const translationFieldTransformer = new TranslationFieldTransformer();
+
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
 
 jest.mock('../../../../utils/Translator/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -16,11 +21,13 @@ test('Test undefined', () => {
 test('Test transform with prefix', () => {
     expect(translationFieldTransformer.transform('<value>', {prefix: 'sulu_admin.test.'}))
         .toBe('sulu_admin.test.<value>');
+    expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('"prefix" parameter'));
 });
 
 test('Test transform with a placeholder in the key', () => {
     expect(translationFieldTransformer.transform('published', {key: 'sulu_admin.state_{value}'}))
         .toBe('sulu_admin.state_published');
+    expect(log.warn).not.toHaveBeenCalled();
     expect(translate).toHaveBeenLastCalledWith('sulu_admin.state_published', {value: 'published'});
 });
 
