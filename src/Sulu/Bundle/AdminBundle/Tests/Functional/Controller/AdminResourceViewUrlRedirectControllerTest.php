@@ -18,27 +18,22 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
-class WebsiteEditControllerTest extends SuluTestCase
+class AdminResourceViewUrlRedirectControllerTest extends SuluTestCase
 {
-    public function testRedirectsToDetailView(): void
-    {
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/website-edit', [
-            'resourceKey' => 'pages',
-            'resourceId' => '123-abc',
-            'locale' => 'en',
-            'webspace' => 'sulu_io',
-        ]);
-
-        $response = $client->getResponse();
-        $this->assertHttpStatusCode(302, $response);
-        $this->assertSame('/admin/#/webspaces/sulu_io/pages/en/123-abc', $response->headers->get('Location'));
-    }
-
     public function testRedirectsToStartPageWithoutTarget(): void
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/admin/website-edit');
+        $client->request('GET', '/admin/resource-view-url-redirect');
+
+        $response = $client->getResponse();
+        $this->assertHttpStatusCode(302, $response);
+        $this->assertSame('/admin/', $response->headers->get('Location'));
+    }
+
+    public function testRedirectsToStartPageForUnknownUrl(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/admin/resource-view-url-redirect', ['url' => 'https://unknown.example/about']);
 
         $response = $client->getResponse();
         $this->assertHttpStatusCode(302, $response);
@@ -48,7 +43,7 @@ class WebsiteEditControllerTest extends SuluTestCase
     public function testRejectsAnonymousRequest(): void
     {
         $client = $this->createClient();
-        $client->request('GET', '/admin/website-edit', ['resourceKey' => 'pages', 'resourceId' => '123-abc']);
+        $client->request('GET', '/admin/resource-view-url-redirect', ['url' => 'http://localhost/']);
 
         $this->assertHttpStatusCode(401, $client->getResponse());
     }
@@ -56,7 +51,7 @@ class WebsiteEditControllerTest extends SuluTestCase
     public function testRejectsPost(): void
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/admin/website-edit');
+        $client->request('POST', '/admin/resource-view-url-redirect');
 
         $this->assertHttpStatusCode(405, $client->getResponse());
     }
@@ -70,6 +65,7 @@ class WebsiteEditControllerTest extends SuluTestCase
         $cookie = $this->findCookie($client->getResponse());
         $this->assertNotNull($cookie, 'The login response must set the website edit cookie.');
         $this->assertSame('/', $cookie->getPath());
+        $this->assertSame('http://localhost/admin/resource-view-url-redirect', $cookie->getValue());
         $this->assertFalse($cookie->isCleared());
 
         $client->request('GET', '/admin/logout');

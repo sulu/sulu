@@ -17,14 +17,14 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 /**
- * Sets a cookie on path "/" while a user is logged in to the admin, so the website can show the
- * edit button. The admin session cookie is scoped to "/admin" and never reaches the website.
- * The cookie is only a hint: it carries no secret and the admin firewall still guards every request.
+ * Sets a cookie on path "/" holding the redirect endpoint url while a user is logged in to the admin,
+ * so the website can show the edit button. It is a hint, not a secret.
  *
  * @internal No BC promises are given for this class. It may be changed or removed at any time.
  */
@@ -35,8 +35,10 @@ final class WebsiteEditCookieSubscriber implements EventSubscriberInterface
     /**
      * @param array{cookie_lifetime?: int|string|null, cookie_domain?: string|null, cookie_secure?: bool|string|null} $sessionStorageOptions
      */
-    public function __construct(private array $sessionStorageOptions = [])
-    {
+    public function __construct(
+        private UrlGeneratorInterface $urlGenerator,
+        private array $sessionStorageOptions = [],
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -55,11 +57,12 @@ final class WebsiteEditCookieSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $lifetime = (int) ($this->sessionStorageOptions['cookie_lifetime'] ?? 0);
+        // Same lifetime as the session cookie, which falls back to php.ini when Symfony leaves it unset.
+        $lifetime = (int) ($this->sessionStorageOptions['cookie_lifetime'] ?? \ini_get('session.cookie_lifetime'));
 
         $response->headers->setCookie(Cookie::create(
             self::COOKIE_NAME,
-            '1',
+            $this->urlGenerator->generate('sulu_admin.resource_view_url_redirect', [], UrlGeneratorInterface::ABSOLUTE_URL),
             $lifetime > 0 ? \time() + $lifetime : 0,
             '/',
             $this->getDomain(),

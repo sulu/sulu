@@ -21,6 +21,7 @@ use Sulu\Bundle\AdminBundle\EventListener\WebsiteEditCookieSubscriber;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -38,13 +39,13 @@ class WebsiteEditCookieSubscriberTest extends TestCase
     public function testLoginSetsCookie(): void
     {
         $response = new Response();
-        $subscriber = new WebsiteEditCookieSubscriber();
+        $subscriber = new WebsiteEditCookieSubscriber($this->createUrlGenerator());
 
         $subscriber->onLoginSuccess($this->createLoginSuccessEvent($this->createAuthenticatedToken(), $response));
 
         $cookie = $this->findCookie($response);
         $this->assertNotNull($cookie);
-        $this->assertSame('1', $cookie->getValue());
+        $this->assertSame('https://sulu.io/admin/resource-view-url-redirect', $cookie->getValue());
         $this->assertSame('/', $cookie->getPath());
         $this->assertSame(0, $cookie->getExpiresTime());
         $this->assertFalse($cookie->isHttpOnly());
@@ -55,7 +56,7 @@ class WebsiteEditCookieSubscriberTest extends TestCase
     public function testLoginUsesSessionCookieLifetime(): void
     {
         $response = new Response();
-        $subscriber = new WebsiteEditCookieSubscriber(['cookie_lifetime' => 3600]);
+        $subscriber = new WebsiteEditCookieSubscriber($this->createUrlGenerator(), ['cookie_lifetime' => 3600]);
 
         $subscriber->onLoginSuccess($this->createLoginSuccessEvent($this->createAuthenticatedToken(), $response));
 
@@ -64,10 +65,29 @@ class WebsiteEditCookieSubscriberTest extends TestCase
         $this->assertEqualsWithDelta(\time() + 3600, $cookie->getExpiresTime(), 5);
     }
 
+    public function testLoginFallsBackToIniCookieLifetime(): void
+    {
+        $iniLifetime = \ini_get('session.cookie_lifetime');
+        \ini_set('session.cookie_lifetime', '7200');
+
+        try {
+            $response = new Response();
+            $subscriber = new WebsiteEditCookieSubscriber($this->createUrlGenerator());
+
+            $subscriber->onLoginSuccess($this->createLoginSuccessEvent($this->createAuthenticatedToken(), $response));
+        } finally {
+            \ini_set('session.cookie_lifetime', (string) $iniLifetime);
+        }
+
+        $cookie = $this->findCookie($response);
+        $this->assertNotNull($cookie);
+        $this->assertEqualsWithDelta(\time() + 7200, $cookie->getExpiresTime(), 5);
+    }
+
     public function testLoginOverHttpsSetsSecureCookie(): void
     {
         $response = new Response();
-        $subscriber = new WebsiteEditCookieSubscriber();
+        $subscriber = new WebsiteEditCookieSubscriber($this->createUrlGenerator());
 
         $subscriber->onLoginSuccess($this->createLoginSuccessEvent(
             $this->createAuthenticatedToken(),
@@ -93,7 +113,7 @@ class WebsiteEditCookieSubscriberTest extends TestCase
     public function testLoginUsesSessionCookieDomain(): void
     {
         $response = new Response();
-        $subscriber = new WebsiteEditCookieSubscriber(['cookie_domain' => '.sulu.io']);
+        $subscriber = new WebsiteEditCookieSubscriber($this->createUrlGenerator(), ['cookie_domain' => '.sulu.io']);
 
         $subscriber->onLoginSuccess($this->createLoginSuccessEvent($this->createAuthenticatedToken(), $response));
 
@@ -116,7 +136,7 @@ class WebsiteEditCookieSubscriberTest extends TestCase
     public function testLoginFollowsSessionCookieSecure(bool|string|null $cookieSecure, string $uri, bool $expected): void
     {
         $response = new Response();
-        $subscriber = new WebsiteEditCookieSubscriber(['cookie_secure' => $cookieSecure]);
+        $subscriber = new WebsiteEditCookieSubscriber($this->createUrlGenerator(), ['cookie_secure' => $cookieSecure]);
 
         $subscriber->onLoginSuccess($this->createLoginSuccessEvent(
             $this->createAuthenticatedToken(),
@@ -130,7 +150,7 @@ class WebsiteEditCookieSubscriberTest extends TestCase
     public function testLoginWithPendingTwoFactorSetsNoCookie(): void
     {
         $response = new Response();
-        $subscriber = new WebsiteEditCookieSubscriber();
+        $subscriber = new WebsiteEditCookieSubscriber($this->createUrlGenerator());
 
         $subscriber->onLoginSuccess($this->createLoginSuccessEvent(
             $this->prophesize(TwoFactorTokenInterface::class)->reveal(),
@@ -143,7 +163,7 @@ class WebsiteEditCookieSubscriberTest extends TestCase
     public function testLoginWithoutResponseSetsNoCookie(): void
     {
         $event = $this->createLoginSuccessEvent($this->createAuthenticatedToken(), null);
-        $subscriber = new WebsiteEditCookieSubscriber();
+        $subscriber = new WebsiteEditCookieSubscriber($this->createUrlGenerator());
 
         $subscriber->onLoginSuccess($event);
 
@@ -155,7 +175,7 @@ class WebsiteEditCookieSubscriberTest extends TestCase
         $response = new Response();
         $event = new LogoutEvent(Request::create('/admin/logout'), new NullToken());
         $event->setResponse($response);
-        $subscriber = new WebsiteEditCookieSubscriber();
+        $subscriber = new WebsiteEditCookieSubscriber($this->createUrlGenerator());
 
         $subscriber->onLogout($event);
 
@@ -170,7 +190,7 @@ class WebsiteEditCookieSubscriberTest extends TestCase
         $response = new Response();
         $event = new LogoutEvent(Request::create('https://sulu.io/admin/logout'), new NullToken());
         $event->setResponse($response);
-        $subscriber = new WebsiteEditCookieSubscriber(['cookie_domain' => '.sulu.io', 'cookie_secure' => 'auto']);
+        $subscriber = new WebsiteEditCookieSubscriber($this->createUrlGenerator(), ['cookie_domain' => '.sulu.io', 'cookie_secure' => 'auto']);
 
         $subscriber->onLogout($event);
 
@@ -184,11 +204,20 @@ class WebsiteEditCookieSubscriberTest extends TestCase
     public function testLogoutWithoutResponse(): void
     {
         $event = new LogoutEvent(Request::create('/admin/logout'), new NullToken());
-        $subscriber = new WebsiteEditCookieSubscriber();
+        $subscriber = new WebsiteEditCookieSubscriber($this->createUrlGenerator());
 
         $subscriber->onLogout($event);
 
         $this->assertNull($event->getResponse());
+    }
+
+    private function createUrlGenerator(): UrlGeneratorInterface
+    {
+        $urlGenerator = $this->prophesize(UrlGeneratorInterface::class);
+        $urlGenerator->generate('sulu_admin.resource_view_url_redirect', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://sulu.io/admin/resource-view-url-redirect');
+
+        return $urlGenerator->reveal();
     }
 
     private function createAuthenticatedToken(): TokenInterface
