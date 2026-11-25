@@ -20,7 +20,6 @@ use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderInterface;
 use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
-use Sulu\Content\Application\SmartResolver\Resolver\SmartResolverContextAwareInterface;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartResolverInterface;
 use Sulu\Content\Application\SmartResolver\SmartResolverProviderInterface;
 
@@ -248,7 +247,7 @@ class ResolvableResourceLoaderTest extends TestCase
         self::assertSame('de', $contextAwareLoader->lastParams['_shadowLocale']);
     }
 
-    public function testLoadResourcesPassesTheContextToContextAwareSmartResolvers(): void
+    public function testLoadResourcesPassesTheContextToSmartResolversButNotTheResourceToLoaders(): void
     {
         $contextAwareLoader = new class() implements ResourceLoaderInterface {
             /** @var array<mixed> */
@@ -267,13 +266,13 @@ class ResolvableResourceLoaderTest extends TestCase
             }
         };
 
-        $contextAwareSmartResolver = new class() implements SmartResolverContextAwareInterface {
+        $contextAwareSmartResolver = new class() implements SmartResolverInterface {
             /** @var array<string, mixed>|null */
             public ?array $lastContext = null;
 
-            public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
+            public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
             {
-                $this->lastContext = $context;
+                $this->lastContext = $resolvable->getContext();
 
                 return ContentView::create([], []);
             }
@@ -318,7 +317,7 @@ class ResolvableResourceLoaderTest extends TestCase
             $context,
         );
 
-        self::assertSame($context, $contextAwareLoader->lastParams);
+        self::assertSame(['_shadowLocale' => 'de'], $contextAwareLoader->lastParams);
         self::assertSame($context, $contextAwareSmartResolver->lastContext);
     }
 

@@ -46,8 +46,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
- *       excluded?: string[],
- *       resource?: array{resourceKey: string, id: string},
+ *       excluded?: (int|string)[],
  *       audienceTargeting?: bool,
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
@@ -71,8 +70,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
  *        limit: int|null,
  *        includeSubFolders: bool,
  *        excludeDuplicates: bool,
- *        excluded?: string[],
- *        resource?: array{resourceKey: string, id: string},
+ *        excluded?: (int|string)[],
  *        audienceTargeting?: bool,
  *        audienceTargeting?: bool,
  *        targetGroupId?: int,
@@ -274,8 +272,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *         offset?: int,
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
-     *         excluded?: string[],
-     *         resource?: array{resourceKey: string, id: string},
+     *         excluded?: (int|string)[],
      *         audienceTargeting?: bool,
      *         webspaceKey?: string
      *     }
@@ -408,8 +405,7 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
      *     websiteTagOperator: 'AND'|'OR',
      *     webspaceKey?: string,
      *     excludeDuplicates?: bool,
-     *     excluded?: string[],
-     *     resource?: array{resourceKey: string, id: string},
+     *     excluded?: (int|string)[],
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
@@ -417,10 +413,6 @@ readonly class ArticleSmartContentProvider implements SmartContentProviderInterf
         $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates'] ?? false) {
             $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(ArticleInterface::RESOURCE_KEY) ?? [])];
-        }
-        $resource = $filters['resource'] ?? null;
-        if (null !== $resource && ArticleInterface::RESOURCE_KEY === $resource['resourceKey']) {
-            $excluded[] = $resource['id'];
         }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')

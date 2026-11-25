@@ -47,8 +47,7 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResou
  *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
- *       excluded?: string[],
- *       resource?: array{resourceKey: string, id: string},
+ *       excluded?: (int|string)[],
  *   }
  * @phpstan-type ExampleSmartContentCountFilters array{
  *       categories: int[],
@@ -67,8 +66,7 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\ResourceLoader\ExampleResou
  *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
- *       excluded?: string[],
- *       resource?: array{resourceKey: string, id: string},
+ *       excluded?: (int|string)[],
  *   }
  */
 readonly class ExampleSmartContentProvider implements SmartContentProviderInterface
@@ -231,8 +229,7 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
      *         offset?: int,
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
-     *         excluded?: string[],
-     *         resource?: array{resourceKey: string, id: string},
+     *         excluded?: (int|string)[],
      *     }
      */
     protected function mapFilters(array $filters, array $params = []): array
@@ -313,19 +310,15 @@ readonly class ExampleSmartContentProvider implements SmartContentProviderInterf
      *     websiteTags: string[],
      *     websiteTagOperator: 'AND'|'OR',
      *     excludeDuplicates?: bool,
-     *     excluded?: string[],
-     *     resource?: array{resourceKey: string, id: string},
+     *     excluded?: (int|string)[],
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
-        $excluded = $filters['excluded'] ?? [];
+        // the uuid of the rendered resource would be cast to an integer by MySQL
+        $excluded = \array_filter($filters['excluded'] ?? [], static fn ($id) => \is_int($id) || \ctype_digit($id));
         if ($filters['excludeDuplicates'] ?? false) {
             $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(Example::RESOURCE_KEY) ?? [])];
-        }
-        $resource = $filters['resource'] ?? null;
-        if (null !== $resource && Example::RESOURCE_KEY === $resource['resourceKey']) {
-            $excluded[] = $resource['id'];
         }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')

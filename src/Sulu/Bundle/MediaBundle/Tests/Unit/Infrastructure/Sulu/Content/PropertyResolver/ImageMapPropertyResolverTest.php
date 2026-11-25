@@ -87,7 +87,7 @@ class ImageMapPropertyResolverTest extends TestCase
     {
         $this->resolver->resolve(['imageId' => 5, 'hotspots' => []], 'en', [], $this->createMetadata());
 
-        $this->assertSame(['5'], $this->deduplicationStore->getIds(MediaInterface::RESOURCE_KEY));
+        $this->assertSame([5], $this->deduplicationStore->getIds(MediaInterface::RESOURCE_KEY));
     }
 
     public function testResolveWithoutImageAddsNothingToTheDeduplicationStore(): void

@@ -16,7 +16,6 @@ namespace Sulu\Content\Application\ContentResolver\ResolvableResourceLoader;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
 use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
-use Sulu\Content\Application\SmartResolver\Resolver\SmartResolverContextAwareInterface;
 use Sulu\Content\Application\SmartResolver\SmartResolverProviderInterface;
 
 /**
@@ -91,9 +90,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             $resourceLoaderKey = $smartResource->getResourceLoaderKey();
             $smartResolver = $this->smartResolverProvider->getSmartResolver($resourceLoaderKey);
 
-            $loadedResources[$id] = $smartResolver instanceof SmartResolverContextAwareInterface
-                ? $smartResolver->resolve($smartResource, $locale, $context)
-                : $smartResolver->resolve($smartResource, $locale);
+            $loadedResources[$id] = $smartResolver->resolve($smartResource->withContext($context), $locale);
         }
 
         return $loadedResources;
@@ -121,7 +118,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
         return $resourceLoader->load(
             $resourceIds,
             $locale,
-            \array_merge($params, $context),
+            \array_merge($params, \array_diff_key($context, ['resource' => true])),
         );
     }
 }

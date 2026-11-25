@@ -883,33 +883,19 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         ];
     }
 
-    public function testFindFlatByExcludesTheResourceOfItsOwnResourceKey(): void
+    public function testFindFlatByExcludesTheExcludedIds(): void
     {
         $filters = [...$this->getDefaultFilters(), 'locale' => 'en'];
 
         $allIds = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
         $this->assertNotEmpty($allIds);
 
-        $filters['resource'] = ['resourceKey' => ArticleInterface::RESOURCE_KEY, 'id' => $allIds[0]];
+        $filters['excluded'] = [$allIds[0]];
         $ids = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
 
         $this->assertNotContains($allIds[0], $ids);
         $this->assertCount(\count($allIds) - 1, $ids);
         $this->assertSame(\count($allIds) - 1, $this->smartContentProvider->countBy($filters));
-    }
-
-    public function testFindFlatByKeepsTheResourceOfAnotherResourceKey(): void
-    {
-        $filters = [...$this->getDefaultFilters(), 'locale' => 'en'];
-
-        $allIds = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
-        $this->assertNotEmpty($allIds);
-
-        $filters['resource'] = ['resourceKey' => 'pages', 'id' => $allIds[0]];
-        $ids = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
-
-        $this->assertContains($allIds[0], $ids);
-        $this->assertCount(\count($allIds), $ids);
     }
 
     public function testFindFlatByExcludesTheStoredIdsWithExcludeDuplicates(): void

@@ -42,14 +42,13 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  *       maxPerPage: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
- *       excluded?: string[],
- *       resource?: array{resourceKey: string, id: string},
+ *       excluded?: (int|string)[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: string,
  *       offset?: int,
  *   }
  */
-class SmartContentSmartResolver implements SmartResolverContextAwareInterface
+class SmartContentSmartResolver implements SmartResolverInterface
 {
     /**
      * @param ServiceLocator<SmartContentProviderInterface> $smartContentProviders
@@ -59,7 +58,7 @@ class SmartContentSmartResolver implements SmartResolverContextAwareInterface
     ) {
     }
 
-    public function resolve(SmartResolvable $resolvable, ?string $locale = null, array $context = []): ContentView
+    public function resolve(SmartResolvable $resolvable, ?string $locale = null): ContentView
     {
         /** @var array{
          *     value: array<string, mixed>,
@@ -111,9 +110,14 @@ class SmartContentSmartResolver implements SmartResolverContextAwareInterface
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
         $filters['limit'] = $maxPerPage ?? $limit;
 
-        $resource = $context['resource'] ?? null;
-        if (\is_array($resource) && \is_string($resource['resourceKey'] ?? null) && \is_string($resource['id'] ?? null)) {
-            $filters['resource'] = ['resourceKey' => $resource['resourceKey'], 'id' => $resource['id']];
+        $resource = $resolvable->getContext()['resource'] ?? null;
+        // TODO compare with the resource key of the provider once it has one: getType() is not always the resource key,
+        //      e.g. the article page tree provider returns "articles_page_tree" for articles. Until then uuids go to
+        //      every provider (integer id providers skip them), integer ids only to the provider of their resource key.
+        if (\is_array($resource) && \is_string($resource['id'] ?? null)
+            && (!\ctype_digit($resource['id']) || $resource['resourceKey'] === $smartContentProvider->getType())
+        ) {
+            $filters['excluded'] = [...($filters['excluded'] ?? []), $resource['id']];
         }
 
         $countByFilters = $filters;
@@ -156,6 +160,8 @@ class SmartContentSmartResolver implements SmartResolverContextAwareInterface
             'maxPage' => null !== $maxPerPage ? (int) \ceil($total / $maxPerPage) : null,
             'limit' => $limit,
             'maxPerPage' => $maxPerPage,
+
+            'excluded' => $filters['excluded'] ?? [],
         ];
 
         $configuration = $smartContentProvider->getConfiguration();

@@ -45,8 +45,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
- *       excluded?: string[],
- *       resource?: array{resourceKey: string, id: string},
+ *       excluded?: (int|string)[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -68,8 +67,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
- *       excluded?: string[],
- *       resource?: array{resourceKey: string, id: string},
+ *       excluded?: (int|string)[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -256,8 +254,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *         offset?: int,
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
-     *         excluded?: string[],
-     *         resource?: array{resourceKey: string, id: string},
+     *         excluded?: (int|string)[],
      *         audienceTargeting?: bool
      *     }
      */
@@ -351,8 +348,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *     websiteTags: string[],
      *     websiteTagOperator: 'AND'|'OR',
      *     excludeDuplicates?: bool,
-     *     excluded?: string[],
-     *     resource?: array{resourceKey: string, id: string},
+     *     excluded?: (int|string)[],
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
@@ -360,10 +356,6 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         $excluded = $filters['excluded'] ?? [];
         if ($filters['excludeDuplicates'] ?? false) {
             $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(SnippetInterface::RESOURCE_KEY) ?? [])];
-        }
-        $resource = $filters['resource'] ?? null;
-        if (null !== $resource && SnippetInterface::RESOURCE_KEY === $resource['resourceKey']) {
-            $excluded[] = $resource['id'];
         }
         if ([] !== $excluded) {
             $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')

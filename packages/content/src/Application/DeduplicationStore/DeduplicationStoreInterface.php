@@ -23,7 +23,7 @@ interface DeduplicationStoreInterface extends ResetInterface
     public function add(string $resourceKey, string|int ...$ids): void;
 
     /**
-     * @return string[]
+     * @return (int|string)[]
      */
     public function getIds(string $resourceKey): array;
 }

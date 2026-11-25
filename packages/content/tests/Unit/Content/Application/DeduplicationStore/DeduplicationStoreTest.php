@@ -25,7 +25,7 @@ class DeduplicationStoreTest extends TestCase
         $store->add('pages', 'a-uuid', '');
         $store->add('media', 1);
 
-        self::assertSame(['1', '2'], $store->getIds('media'));
+        self::assertSame([1, 2], $store->getIds('media'));
         self::assertSame(['a-uuid'], $store->getIds('pages'));
         self::assertSame([], $store->getIds('articles'));
     }

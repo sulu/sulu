@@ -40,7 +40,7 @@ use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
  *      offset: int,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
- *      excluded?: string[],
+ *      excluded?: (int|string)[],
  *  }
  * @phpstan-type AccountSmartContentCountFilters array{
  *      categories: int[],
@@ -58,7 +58,7 @@ use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
  *      limit: int|null,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
- *      excluded?: string[],
+ *      excluded?: (int|string)[],
  *  }
  */
 readonly class AccountSmartContentProvider implements SmartContentProviderInterface
@@ -140,7 +140,8 @@ readonly class AccountSmartContentProvider implements SmartContentProviderInterf
             $queryBuilder->orderBy($sortBy, $sortMethod);
         }
 
-        $excluded = $filters['excluded'] ?? [];
+        // the uuid of the rendered resource would be cast to an integer by MySQL
+        $excluded = \array_filter($filters['excluded'] ?? [], static fn ($id) => \is_int($id) || \ctype_digit($id));
         if ($filters['excludeDuplicates']) {
             $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(AccountInterface::RESOURCE_KEY) ?? [])];
         }

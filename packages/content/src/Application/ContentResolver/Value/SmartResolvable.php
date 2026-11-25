@@ -21,6 +21,11 @@ class SmartResolvable implements ResolvableInterface
     private \Closure $callback;
 
     /**
+     * @var array<string, mixed>
+     */
+    private array $context = [];
+
+    /**
      * @param mixed[] $data
      * @param array<string, mixed>|null $metadata Optional metadata for additional context
      */
@@ -71,6 +76,25 @@ class SmartResolvable implements ResolvableInterface
     public function getMetadata(): ?array
     {
         return $this->metadata;
+    }
+
+    /**
+     * @param array<string, mixed> $context
+     */
+    public function withContext(array $context): static
+    {
+        $clone = clone $this;
+        $clone->context = $context;
+
+        return $clone;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getContext(): array
+    {
+        return $this->context;
     }
 
     public function getMetadataIdentifier(): string

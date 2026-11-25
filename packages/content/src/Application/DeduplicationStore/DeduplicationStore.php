@@ -16,7 +16,7 @@ namespace Sulu\Content\Application\DeduplicationStore;
 class DeduplicationStore implements DeduplicationStoreInterface
 {
     /**
-     * @var array<string, array<int|string, string>>
+     * @var array<string, array<int|string, int|string>>
      */
     private array $ids = [];
 
@@ -24,7 +24,7 @@ class DeduplicationStore implements DeduplicationStoreInterface
     {
         foreach ($ids as $id) {
             if ('' !== $id) {
-                $this->ids[$resourceKey][$id] = (string) $id;
+                $this->ids[$resourceKey][$id] = $id;
             }
         }
     }

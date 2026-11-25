@@ -15,13 +15,9 @@ Projects with their own `RouteDefaultsProviderInterface` should throw a `Resourc
 ### The rendered page is excluded from its own smart contents
 
 A smart content no longer lists the page, article or snippet it is rendered on, also without `exclude_duplicates`. The
-smart content providers get the rendered resource in the `resource` filter (`resourceKey` and `id`) and exclude it when
-the resource key is their own. Custom smart content providers keep listing it unless they do the same.
-
-### The excluded key is removed from the smart content view
-
-The view of a smart content no longer contains `excluded`. It was always an empty array, so templates reading it need
-to drop that.
+`SmartContentSmartResolver` adds the id of the rendered resource to the `excluded` filter. Custom smart content
+providers need to exclude the ids in `excluded`; providers with integer ids have to skip ids that are not numeric. The
+`excluded` key of the smart content view, always an empty array before, now contains these ids.
 
 ### New constructor argument for the selection property resolvers and smart content providers
 
@@ -30,11 +26,16 @@ providers take the `sulu_content.deduplication_store` as their last argument. Pr
 or define their own service for it need to pass it, otherwise `exclude_duplicates` has no effect for them. Leaving it
 out triggers a deprecation.
 
-### SmartContentSmartResolver::resolve has a new context argument
+### Custom smart content providers and exclude_duplicates
 
-`SmartContentSmartResolver` implements the new `SmartResolverContextAwareInterface` and its `resolve()` method takes
-the context of the current resolution as third argument. Projects that extend it and override `resolve()` need to add
-`array $context = []`.
+With `exclude_duplicates`, a smart content leaves out the items that selections, teasers and earlier smart contents of
+the same request already returned. A custom `SmartContentProviderInterface` implementation takes the
+`sulu_content.deduplication_store`, excludes its `getIds()` for the provider's resource key when the
+`excludeDuplicates` filter is set, and adds the ids it returns in `findFlatBy()`.
+
+The store spans the whole request, so the result depends on the resolve order: resolving the same smart content a
+second time leaves out what the first call returned, and a page selection in a navigation property registers its pages
+for the smart contents resolved after the navigation.
 
 ## 3.0.10
 
