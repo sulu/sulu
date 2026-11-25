@@ -8,3 +8,14 @@ const [value, setValue] = React.useState(undefined);
     <Phone value={value} onChange={setValue} />
 </div>
 ```
+
+The `disabled`, `valid` and `placeholder` props configure the field, `onBlur` is called when it loses focus. Clicking
+the icon opens the `tel:` link of the current value.
+
+```javascript
+<div>
+    <Phone disabled={true} value="+43 123 456" onChange={() => {}} />
+    <Phone valid={false} value="not a number" onChange={() => {}} />
+    <Phone placeholder="Phone number" value={null} onChange={() => {}} onBlur={() => console.log('blur')} />
+</div>
+```

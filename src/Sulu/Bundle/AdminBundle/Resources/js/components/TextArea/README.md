@@ -23,3 +23,14 @@ const [value, setValue] = React.useState('');
     value={value}
 />
 ```
+
+The `rows` prop sets the visible height, `disabled` and `valid={false}` show the disabled and error state, and
+`onBlur` and `onFocus` are called when the focus changes.
+
+```javascript
+<div>
+    <TextArea rows={5} value="Five rows high" onChange={() => {}} onBlur={() => console.log('blur')} onFocus={() => console.log('focus')} />
+    <TextArea disabled={true} value="Disabled" onChange={() => {}} />
+    <TextArea valid={false} value="Invalid" onChange={() => {}} />
+</div>
+```

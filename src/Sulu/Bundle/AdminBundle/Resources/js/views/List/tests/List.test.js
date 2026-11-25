@@ -1077,6 +1077,64 @@ test('Should propagate errors to toolbar', () => {
     expect(screen.getByRole('button', {name: new RegExp(error)})).toBeInTheDocument();
 });
 
+test('Should bind the locale of the given resourceStore if no locale is passed', () => {
+    const List = require('../List').default;
+    const ResourceStore = require('../../../stores/ResourceStore').default;
+    const resourceStore = new ResourceStore('tests', '123-456-789');
+    resourceStore.locale = observable.box('en');
+
+    const router = {
+        bind: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                listKey: 'test',
+                locales: ['de', 'en'],
+                resourceKey: 'test',
+            },
+        },
+    };
+
+    renderListElement(<List resourceStore={resourceStore} router={router} />);
+
+    expect(router.bind).toHaveBeenCalledWith('locale', resourceStore.locale);
+    expect(getListStore().observableOptions.locale).toBe(resourceStore.locale);
+});
+
+test('Should show success in the toolbar if an item action calls showSuccessSnackbar', () => {
+    const List = require('../List').default;
+    const listItemActionRegistry = require('../registries/listItemActionRegistry').default;
+
+    const ItemActionMock = jest.fn(function() {
+        this.getNode = jest.fn().mockReturnValue(null);
+        this.getItemActionConfig = jest.fn().mockReturnValue({icon: 'su-trash-alt'});
+    });
+    listItemActionRegistry.add('mock', ItemActionMock);
+
+    const router = {
+        bind: jest.fn(),
+        restore: jest.fn(),
+        route: {
+            options: {
+                adapters: ['table'],
+                backView: 'backView',
+                listKey: 'test',
+                resourceKey: 'test',
+                itemActions: [{type: 'mock', options: {}}],
+            },
+        },
+    };
+
+    renderListElement(<List router={router} />);
+
+    expect(within(getViewToolbar()).getByRole('button', {name: 'su-angle-left'})).toBeInTheDocument();
+
+    const listView = ItemActionMock.mock.calls[0][1];
+    act(() => listView.showSuccessSnackbar());
+
+    expect(within(getViewToolbar()).getByRole('button', {name: 'su-check'})).toBeInTheDocument();
+});
+
 test('Should show the error of a failed copy in the toolbar', async() => {
     const user = userEvent.setup();
     const List = require('../List').default;

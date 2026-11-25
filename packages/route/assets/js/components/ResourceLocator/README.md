@@ -34,3 +34,9 @@ const [value, setValue] = React.useState('/parent');
     mode="tree_full_edit"
 />
 ```
+
+A `disabled` resource locator cannot be edited.
+
+```javascript
+<ResourceLocator disabled={true} mode="leaf" onChange={() => {}} value="/some/url" />
+```

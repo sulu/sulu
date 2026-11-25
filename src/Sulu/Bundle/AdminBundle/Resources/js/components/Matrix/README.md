@@ -36,3 +36,14 @@ const Item = Matrix.Item;
     </Row>
 </Matrix>
 ```
+
+A `disabled` matrix cannot be changed. `className` is added to the root element.
+
+```javascript
+<Matrix disabled={true} onChange={() => {}} values={{'global.articles': {view: true, edit: false}}}>
+    <Matrix.Row name="global.articles">
+        <Matrix.Item name="view" icon="su-pen" />
+        <Matrix.Item name="edit" icon="su-plus" />
+    </Matrix.Row>
+</Matrix>
+```

@@ -40,3 +40,13 @@ const [type, setType] = React.useState('work');
     </Form.Field>
 </Form>
 ```
+
+The `skin` prop switches between the `light` and the `dark` appearance of the form.
+
+```javascript
+<Form skin="dark">
+    <Form.Field label="Dark field">
+        <input type="text" style={{width: '100%'}} />
+    </Form.Field>
+</Form>
+```

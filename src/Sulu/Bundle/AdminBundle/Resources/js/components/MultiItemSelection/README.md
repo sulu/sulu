@@ -151,3 +151,31 @@ const handleAddItem = (option) => {
 >
 </MultiItemSelection>
 ```
+
+The `disabled` prop blocks all interaction, `loading` shows a loading state, `sortable={false}` removes the drag
+handles, `rightButton` adds a second button and `onItemClick` is called when an item is clicked.
+
+```javascript
+const Item = MultiItemSelection.Item;
+
+<div>
+    <MultiItemSelection
+        label="Disabled"
+        disabled={true}
+        leftButton={{icon: 'su-plus', onClick: () => {}}}
+    >
+        <Item id={1} index={0}>Disabled item</Item>
+    </MultiItemSelection>
+    <MultiItemSelection label="Loading" loading={true} leftButton={{icon: 'su-plus', onClick: () => {}}} />
+    <MultiItemSelection
+        label="Not sortable"
+        sortable={false}
+        leftButton={{icon: 'su-plus', onClick: () => {}}}
+        rightButton={{icon: 'su-display-default', onClick: () => {}}}
+        onItemClick={(id) => alert('Clicked item ' + id)}
+    >
+        <Item id={1} index={0}>Click me</Item>
+        <Item id={2} index={1}>Or me</Item>
+    </MultiItemSelection>
+</div>
+```

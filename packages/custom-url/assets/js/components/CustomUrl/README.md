@@ -30,3 +30,11 @@ const handleChange = (value) => setValue(value);
 
 <CustomUrl baseDomain="*.*.sulu.io/*" onChange={handleChange} value={value} />
 ```
+
+The `onBlur` callback is called when one of the inputs loses focus, e.g. to mark the field as touched.
+
+```javascript
+const [value, setValue] = React.useState([]);
+
+<CustomUrl baseDomain="*.sulu.io" onBlur={() => alert('blur')} onChange={setValue} value={value} />
+```
