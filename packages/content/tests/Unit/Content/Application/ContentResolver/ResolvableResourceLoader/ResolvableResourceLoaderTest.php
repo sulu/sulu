@@ -306,7 +306,7 @@ class ResolvableResourceLoaderTest extends TestCase
 
         $resolvable = new ResolvableResource('1', 'context_test', 1);
         $smartResolvable = new SmartResolvable(['value' => []], 'smart_example', 1);
-        $context = ['_shadowLocale' => 'de', 'resource' => ['resourceKey' => 'pages', 'id' => '123']];
+        $context = ['_shadowLocale' => 'de', '_resource' => ['resourceKey' => 'pages', 'id' => '123']];
 
         $loader->loadResources(
             [

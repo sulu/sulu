@@ -118,7 +118,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
         return $resourceLoader->load(
             $resourceIds,
             $locale,
-            \array_merge($params, \array_diff_key($context, ['resource' => true])),
+            \array_merge($params, \array_diff_key($context, ['_resource' => true])),
         );
     }
 }

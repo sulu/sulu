@@ -424,7 +424,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['smart_example' => [$smartResolvable->getId() => [$smartResolvable->getMetadataIdentifier() => $smartResolvable]]],
             'en',
-            ['resource' => ['resourceKey' => TestExample::RESOURCE_KEY, 'id' => '446']],
+            ['_resource' => ['resourceKey' => TestExample::RESOURCE_KEY, 'id' => '446']],
         )->shouldBeCalledOnce()->willReturn([]);
 
         $this->contentResolver->resolve($dimensionContent);
@@ -435,7 +435,7 @@ class ContentResolverTest extends TestCase
      */
     private function context(TestExample $example): array
     {
-        return ['resource' => ['resourceKey' => TestExample::RESOURCE_KEY, 'id' => (string) $example->getId()]];
+        return ['_resource' => ['resourceKey' => TestExample::RESOURCE_KEY, 'id' => (string) $example->getId()]];
     }
 }
 

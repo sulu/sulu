@@ -131,7 +131,7 @@ class SmartContentSmartResolverTest extends TestCase
         )->willReturn([])->shouldBeCalled();
 
         $resolvable = $this->createResolvable(['other-page'])
-            ->withContext(['resource' => ['resourceKey' => 'pages', 'id' => 'self-page']]);
+            ->withContext(['_resource' => ['resourceKey' => 'pages', 'id' => 'self-page']]);
         $result = $this->smartResolver->resolve($resolvable, 'en');
 
         $this->assertSame($excludedIds, $result->getView()['excluded']);
@@ -149,7 +149,7 @@ class SmartContentSmartResolverTest extends TestCase
             Argument::cetera(),
         )->willReturn([])->shouldBeCalled();
 
-        $resolvable = $this->createResolvable()->withContext(['resource' => ['resourceKey' => 'pages', 'id' => '5']]);
+        $resolvable = $this->createResolvable()->withContext(['_resource' => ['resourceKey' => 'pages', 'id' => '5']]);
         $this->smartResolver->resolve($resolvable, 'en');
     }
 
@@ -165,7 +165,7 @@ class SmartContentSmartResolverTest extends TestCase
             Argument::cetera(),
         )->willReturn([])->shouldBeCalled();
 
-        $resolvable = $this->createResolvable()->withContext(['resource' => ['resourceKey' => 'examples', 'id' => '5']]);
+        $resolvable = $this->createResolvable()->withContext(['_resource' => ['resourceKey' => 'examples', 'id' => '5']]);
         $this->smartResolver->resolve($resolvable, 'en');
     }
 

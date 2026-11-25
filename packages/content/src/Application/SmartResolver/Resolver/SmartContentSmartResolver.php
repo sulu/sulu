@@ -110,7 +110,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
         $filters['limit'] = $maxPerPage ?? $limit;
 
-        $resource = $resolvable->getContext()['resource'] ?? null;
+        $resource = $resolvable->getContext()['_resource'] ?? null;
         // TODO compare with the resource key of the provider once it has one: getType() is not always the resource key,
         //      e.g. the article page tree provider returns "articles_page_tree" for articles. Until then uuids go to
         //      every provider (integer id providers skip them), integer ids only to the provider of their resource key.

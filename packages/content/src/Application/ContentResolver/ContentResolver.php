@@ -157,7 +157,7 @@ readonly class ContentResolver implements ContentResolverInterface
             $context['_shadowLocale'] = $dimensionContent->getShadowLocale();
         }
 
-        $context['resource'] = [
+        $context['_resource'] = [
             'resourceKey' => $dimensionContent::getResourceKey(),
             'id' => (string) $dimensionContent->getResource()->getId(),
         ];
