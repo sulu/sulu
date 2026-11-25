@@ -258,6 +258,7 @@ test('Should call onError callback', () => {
     const submitSpy = jest.fn();
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     store.validate.mockReturnValue(false);
+    // $FlowFixMe: the errors are a getter of the real store
     store.errors = {error1: {}};
     const {form} = renderForm({
         onError: errorSpy,
@@ -276,6 +277,7 @@ test('Should work when errors occurs but no onError callback is given', () => {
     const submitSpy = jest.fn();
     const store = new ResourceFormStore(new ResourceStore('snippet', '1'), 'snippet');
     store.validate.mockReturnValue(false);
+    // $FlowFixMe: the errors are a getter of the real store
     store.errors = {error1: {}};
     const {form} = renderForm({
         onSubmit: submitSpy,

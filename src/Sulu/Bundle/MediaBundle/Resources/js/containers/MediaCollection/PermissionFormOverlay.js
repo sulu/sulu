@@ -112,6 +112,14 @@ class PermissionFormOverlay extends React.Component<Props> {
             .then(() => onConfirm())
             .catch((response) => {
                 response.json().then(action((data) => {
+                    if (Array.isArray(data.violations)) {
+                        // the messages are shown at their fields
+                        this.formStore.setServerErrors(data.violations);
+                        this.error = translate('sulu_admin.form_contains_invalid_values');
+
+                        return;
+                    }
+
                     const message = data.detail || data.title || translate('sulu_admin.form_save_server_error');
 
                     if (!message) {

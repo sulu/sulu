@@ -2,7 +2,7 @@
 import {action, computed, observable, when} from 'mobx';
 import log from 'loglevel';
 import metadataStore from './metadataStore';
-import type {ChangeContext, FormStoreInterface, Schema, SchemaEntry} from '../types';
+import type {ChangeContext, FormStoreInterface, Schema, SchemaEntry, Violation} from '../types';
 
 export default class SchemaFormStoreDecorator implements FormStoreInterface {
     @observable innerFormStore: ?FormStoreInterface;
@@ -260,6 +260,12 @@ export default class SchemaFormStoreDecorator implements FormStoreInterface {
         }
 
         return true;
+    }
+
+    setServerErrors(violations: Array<Violation>) {
+        if (this.innerFormStore) {
+            this.innerFormStore.setServerErrors(violations);
+        }
     }
 
     /**

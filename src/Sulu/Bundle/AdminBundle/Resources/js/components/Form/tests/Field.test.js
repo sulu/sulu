@@ -73,6 +73,29 @@ test('Display a field with an error', () => {
     expect(container).toMatchSnapshot();
 });
 
+test('Display a field with several errors', () => {
+    render(
+        <Field errors={[{message: 'First error'}, {message: 'Second error'}]} label="Testlabel">
+            <div>Test</div>
+        </Field>
+    );
+
+    expect(screen.getByText('First error')).toBeInTheDocument();
+    expect(screen.getByText('Second error')).toBeInTheDocument();
+    expect(screen.getAllByLabelText('su-exclamation-triangle')).toHaveLength(2);
+});
+
+test('Display the errors instead of the deprecated error', () => {
+    render(
+        <Field error="Old error" errors={[{message: 'New error'}]} label="Testlabel">
+            <div>Test</div>
+        </Field>
+    );
+
+    expect(screen.getByText('New error')).toBeInTheDocument();
+    expect(screen.queryByText('Old error')).not.toBeInTheDocument();
+});
+
 test('Change type of field', async() => {
     const user = userEvent.setup();
     const typeChangeSpy = jest.fn();
