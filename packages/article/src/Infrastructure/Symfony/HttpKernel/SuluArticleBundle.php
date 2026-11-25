@@ -449,6 +449,7 @@ final class SuluArticleBundle extends AbstractBundle
                     tagged_iterator('sulu_article.article_mapper'),
                     new Reference('sulu_activity.domain_event_collector'),
                     new Reference('sulu_route.resource_locator_generator'),
+                    new Reference('sulu_route.route_repository'),
                 ])
                 ->tag('sulu_trash.store_trash_item_handler')
                 ->tag('sulu_trash.restore_trash_item_handler')

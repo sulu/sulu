@@ -35,6 +35,7 @@ use Sulu\Content\Domain\Model\DimensionContentCollection;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorGeneratorInterface;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorRequest;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -56,6 +57,7 @@ final class ArticleTrashItemHandler implements
         private iterable $articleMappers,
         private DomainEventCollectorInterface $domainEventCollector,
         private ResourceLocatorGeneratorInterface $resourceLocatorGenerator,
+        private RouteRepositoryInterface $routeRepository,
     ) {
     }
 
@@ -248,24 +250,35 @@ final class ArticleTrashItemHandler implements
         }
 
         // a page_tree_route url only stores the suffix below the selected page
-        $parentUuid = \is_array($url) && \is_array($url['page'] ?? null) ? ($url['page']['uuid'] ?? null) : null;
+        $page = \is_array($url) && \is_array($url['page'] ?? null) ? $url['page'] : null;
+        $parentUuid = $page['uuid'] ?? null;
         $suffix = \is_array($url) ? ($url['suffix'] ?? null) : null;
         if (!\is_array($url) || !\is_string($parentUuid) || '' === $parentUuid || !\is_string($suffix) || '' === $suffix) {
             return $dimensionContentData;
         }
 
+        // same parent path as the RoutableDataMapper, which falls back to the stored path without a parent route
+        $parentPath = $this->routeRepository->findOneBy([
+            'locale' => $locale,
+            'resourceKey' => 'pages',
+            'resourceId' => $parentUuid,
+        ])?->getSlug() ?? $page['path'] ?? null;
+        if (!\is_string($parentPath) || '' === $parentPath) {
+            return $dimensionContentData;
+        }
+
+        $parentPath = \rtrim($parentPath, '/');
         $suffix = '/' . \ltrim($suffix, '/');
-        $uniqueSuffix = $this->resourceLocatorGenerator->generate(new ResourceLocatorRequest(
+        $uniqueSuffix = \substr($this->resourceLocatorGenerator->generate(new ResourceLocatorRequest(
             parts: [],
             locale: $locale,
             webspace: null,
             resourceKey: ArticleInterface::RESOURCE_KEY,
             resourceId: $article->getUuid(),
-            parentResourceId: $parentUuid,
-            parentResourceKey: 'pages',
-            routeSchema: $suffix,
-            relative: true,
-        ));
+            parentResourceId: null,
+            parentResourceKey: null,
+            routeSchema: $parentPath . $suffix,
+        )), \strlen($parentPath));
 
         if ($uniqueSuffix !== $suffix) {
             $url['suffix'] = $uniqueSuffix;

@@ -27,6 +27,8 @@ use Sulu\Content\Application\ContentMerger\ContentMergerInterface;
 use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorGeneratorInterface;
 use Sulu\Route\Application\ResourceLocator\ResourceLocatorRequest;
+use Sulu\Route\Domain\Model\Route;
+use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 
 class ArticleTrashItemHandlerTest extends TestCase
 {
@@ -44,17 +46,20 @@ class ArticleTrashItemHandlerTest extends TestCase
             static fn (ResourceLocatorRequest $request): bool => 'en' === $request->locale
                 && null === $request->webspace
                 && 'article-123' === $request->resourceId
-                && 'page-123' === $request->parentResourceId
-                && 'pages' === $request->parentResourceKey
-                && '/my-article' === $request->routeSchema
-                && $request->relative,
-        ))->willReturn('/my-article-1');
+                && null === $request->parentResourceId
+                && '/blog/my-article' === $request->routeSchema
+                && !$request->relative,
+        ))->willReturn('/blog/my-article-1');
+
+        $routeRepository = $this->prophesize(RouteRepositoryInterface::class);
+        $routeRepository->findOneBy(['locale' => 'en', 'resourceKey' => 'pages', 'resourceId' => 'page-123'])
+            ->willReturn(new Route('pages', 'page-123', 'en', '/blog/', 'sulu-io'));
 
         $articleMapper = $this->prophesize(ArticleMapperInterface::class);
         $articleMapper->mapArticleData($article, [
             'locale' => 'en',
             'url' => [
-                'page' => ['uuid' => 'page-123', 'path' => '/blog'],
+                'page' => ['uuid' => 'page-123', 'path' => '/old-blog'],
                 'suffix' => '/my-article-1',
             ],
         ])->shouldBeCalled();
@@ -67,6 +72,7 @@ class ArticleTrashItemHandlerTest extends TestCase
             [$articleMapper->reveal()],
             $this->prophesize(DomainEventCollectorInterface::class)->reveal(),
             $resourceLocatorGenerator->reveal(),
+            $routeRepository->reveal(),
         );
 
         $trashItem = new TrashItem();
@@ -76,8 +82,8 @@ class ArticleTrashItemHandlerTest extends TestCase
                 [
                     'locale' => 'en',
                     'url' => [
-                        'page' => ['uuid' => 'page-123', 'path' => '/blog'],
-                        'suffix' => '/my-article',
+                        'page' => ['uuid' => 'page-123', 'path' => '/old-blog'],
+                        'suffix' => 'my-article',
                     ],
                 ],
             ],
