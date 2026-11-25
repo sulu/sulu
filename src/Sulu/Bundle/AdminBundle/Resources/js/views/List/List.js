@@ -40,6 +40,7 @@ class List extends React.Component<Props> {
     @observable toolbarActions: Array<AbstractListToolbarAction> = [];
     @observable itemActions: Array<AbstractListItemAction> = [];
     @observable errors = [];
+    showSuccess: IObservableValue<boolean> = observable.box(false);
 
     static remountViewOnLogin = true;
 
@@ -80,7 +81,7 @@ class List extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        const {locale, router} = this.props;
+        const {locale, resourceStore, router} = this.props;
         const {
             attributes,
             route: {
@@ -111,7 +112,8 @@ class List extends React.Component<Props> {
             throw new Error('The route does not define the mandatory "adapters" option');
         }
 
-        this.locale = locale ? locale : observable.box();
+        // A list inside resource tabs shares the locale of their resource, so switching it updates the tabs as well.
+        this.locale = locale || resourceStore?.locale || observable.box();
 
         const observableOptions = {};
 
@@ -352,6 +354,10 @@ class List extends React.Component<Props> {
         this.listStore.reload();
     };
 
+    @action showSuccessSnackbar = () => {
+        this.showSuccess.set(true);
+    };
+
     setListRef = (list: ?ElementRef<typeof ListContainer>) => {
         this.list = list;
     };
@@ -424,7 +430,7 @@ class List extends React.Component<Props> {
 }
 
 export default withToolbar(List, function() {
-    const {errors} = this;
+    const {errors, showSuccess} = this;
     const {router} = this.props;
 
     const {
@@ -480,5 +486,6 @@ export default withToolbar(List, function() {
         errors,
         locale,
         items,
+        showSuccess,
     };
 });
