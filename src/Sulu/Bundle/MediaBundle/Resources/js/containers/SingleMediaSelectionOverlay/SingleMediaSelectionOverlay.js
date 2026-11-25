@@ -89,7 +89,6 @@ class SingleMediaSelectionOverlay extends React.Component<Props> {
 
     render() {
         const {
-            classifications,
             onClose,
             open,
             locale,
@@ -104,7 +103,6 @@ class SingleMediaSelectionOverlay extends React.Component<Props> {
                 onClose={onClose}
                 onConfirm={this.handleConfirm}
                 open={open}
-                uploadDisabled={classifications.length > 0}
             />
         );
     }

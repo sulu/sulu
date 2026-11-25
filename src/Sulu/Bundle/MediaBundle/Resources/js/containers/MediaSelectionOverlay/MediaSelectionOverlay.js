@@ -23,14 +23,12 @@ type Props = {|
     onClose: () => void,
     onConfirm: (selectedMedia: Array<Object>) => void,
     open: boolean,
-    uploadDisabled: boolean,
 |};
 
 @observer
 class MediaSelectionOverlay extends React.Component<Props> {
     static defaultProps = {
         confirmLoading: false,
-        uploadDisabled: false,
     };
 
     @observable collectionStore: CollectionStore;
@@ -169,7 +167,6 @@ class MediaSelectionOverlay extends React.Component<Props> {
             mediaListStore,
             open,
             locale,
-            uploadDisabled,
         } = this.props;
 
         const overlayActions = [{
@@ -199,7 +196,6 @@ class MediaSelectionOverlay extends React.Component<Props> {
                         onUploadOverlayClose={this.handleUploadOverlayClose}
                         onUploadOverlayOpen={this.handleUploadOverlayOpen}
                         overlayType="dialog"
-                        uploadDisabled={uploadDisabled}
                         uploadOverlayOpen={this.showMediaUploadOverlay}
                     />
                 </div>
