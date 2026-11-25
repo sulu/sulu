@@ -12,12 +12,10 @@ escaped from the exception listener and turned the `404` into a `500`.
 
 Projects with their own `RouteDefaultsProviderInterface` should throw a `ResourceNotFoundException` as well.
 
-### The rendered page is excluded from its own smart contents
+### Smart content providers exclude the rendered resource
 
-A smart content no longer lists the page, article or snippet it is rendered on, also without `exclude_duplicates`. The
-`SmartContentSmartResolver` adds the id of the rendered resource to the `excluded` filter. Custom smart content
-providers need to exclude the ids in `excluded`; providers with integer ids have to skip ids that are not numeric. The
-`excluded` key of the smart content view, always an empty array before, now contains these ids.
+Custom smart content providers need to exclude the ids in the `excluded` filter, and providers with integer ids have
+to skip ids that are not numeric.
 
 ### New constructor argument for the selection property resolvers and smart content providers
 
@@ -25,17 +23,6 @@ The selection property resolvers, `TeaserSelectionPropertyResolver`, `ImageMapPr
 providers take the `sulu_content.deduplication_store` as their last argument. Projects that extend one of these classes
 or define their own service for it need to pass it, otherwise `exclude_duplicates` has no effect for them. Leaving it
 out triggers a deprecation.
-
-### Custom smart content providers and exclude_duplicates
-
-With `exclude_duplicates`, a smart content leaves out the items that selections, teasers and earlier smart contents of
-the same request already returned. A custom `SmartContentProviderInterface` implementation takes the
-`sulu_content.deduplication_store`, excludes its `getIds()` for the provider's resource key when the
-`excludeDuplicates` filter is set, and adds the ids it returns in `findFlatBy()`.
-
-The store spans the whole request, so the result depends on the resolve order: resolving the same smart content a
-second time leaves out what the first call returned, and a page selection in a navigation property registers its pages
-for the smart contents resolved after the navigation.
 
 ## 3.0.10
 
