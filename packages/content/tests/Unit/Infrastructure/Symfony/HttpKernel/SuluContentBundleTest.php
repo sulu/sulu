@@ -108,6 +108,7 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
             'sulu_content' => [
                 'content_resolver' => [
                     'max_depth' => 5,
+                    'template_metadata' => false,
                 ],
                 'request_workflows' => [],
             ],
@@ -149,6 +150,7 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
                 ],
                 'content_resolver' => [
                     'max_depth' => 5,
+                    'template_metadata' => false,
                 ],
             ],
         ], [
