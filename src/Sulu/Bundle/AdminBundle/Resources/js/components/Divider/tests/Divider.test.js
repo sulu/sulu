@@ -12,3 +12,8 @@ test('Render a Divider with text', () => {
     const {container} = render(<Divider>Test</Divider>);
     expect(container).toMatchSnapshot();
 });
+
+test('Render a Divider with text and description', () => {
+    const {container} = render(<Divider description="Description">Test</Divider>);
+    expect(container).toMatchSnapshot();
+});

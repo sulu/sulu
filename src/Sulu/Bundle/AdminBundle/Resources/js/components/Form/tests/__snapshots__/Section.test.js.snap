@@ -1,5 +1,55 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`Render section with description 1`] = `
+<div>
+  <div
+    class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+    >
+      <div
+        class="divider"
+      >
+        Test
+      </div>
+      <div
+        class="description"
+      >
+        Section description
+      </div>
+    </div>
+    <p>
+      Test
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Render section with description but without label 1`] = `
+<div>
+  <div
+    class="section gridSection colSpan colSpan-6 space-before-0 space-after-0"
+  >
+    <div
+      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+    >
+      <div
+        class="divider"
+      />
+      <div
+        class="description"
+      >
+        Section description
+      </div>
+    </div>
+    <p>
+      Test
+    </p>
+  </div>
+</div>
+`;
+
 exports[`Render section with given colSpan 1`] = `
 <div>
   <div

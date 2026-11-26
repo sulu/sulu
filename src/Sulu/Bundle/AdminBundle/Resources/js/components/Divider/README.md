@@ -10,3 +10,9 @@ Empty `Divider` example:
 ```
 <Divider />
 ```
+
+A `description` is shown centered below the `Divider`.
+
+```
+<Divider description="Additional information about the following section">I am the mighty Divider</Divider>
+```
