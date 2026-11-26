@@ -169,6 +169,32 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
                 $filters['categoryOperator'],
             );
         }
+
+        $websiteCategoryIds = $filters['websiteCategories'];
+        if ([] !== $websiteCategoryIds) {
+            $this->smartContentQueryEnhancer->addJoinFilter(
+                $queryBuilder,
+                $alias . '.categories',
+                'websiteFilterCategoryId',
+                'id',
+                'websiteCategoryIds',
+                $websiteCategoryIds,
+                $filters['websiteCategoryOperator'],
+            );
+        }
+
+        $websiteTagNames = $filters['websiteTags'];
+        if ([] !== $websiteTagNames) {
+            $this->smartContentQueryEnhancer->addJoinFilter(
+                $queryBuilder,
+                $alias . '.tags',
+                'websiteFilterTagName',
+                'name',
+                'websiteTagNames',
+                $websiteTagNames,
+                $filters['websiteTagOperator'],
+            );
+        }
     }
 
     public function createQueryBuilder(string $alias): QueryBuilder

@@ -530,6 +530,51 @@ class MediaSmartContentProviderTest extends SuluTestCase
         }
     }
 
+    /**
+     * @param string[] $categoryKeys
+     * @param 'AND'|'OR' $operator
+     * @param string[] $expectedKeys
+     */
+    #[DataProvider('categoryFilterProvider')]
+    public function testWebsiteCategoryFiltering(array $categoryKeys, string $operator, array $expectedKeys, int $expectedCount): void
+    {
+        $filters = [
+            ...$this->getDefaultFilters(),
+            'websiteCategories' => \array_map(fn ($key) => (string) self::$categories[$key]->getId(), $categoryKeys),
+            'websiteCategoryOperator' => $operator,
+        ];
+
+        $this->assertFilterResult($filters, $expectedKeys, $expectedCount);
+    }
+
+    /**
+     * @param string[] $tagKeys
+     * @param 'AND'|'OR' $operator
+     * @param string[] $expectedKeys
+     */
+    #[DataProvider('tagFilterProvider')]
+    public function testWebsiteTagFiltering(array $tagKeys, string $operator, array $expectedKeys, int $expectedCount): void
+    {
+        $filters = [
+            ...$this->getDefaultFilters(),
+            'websiteTags' => $tagKeys,
+            'websiteTagOperator' => $operator,
+        ];
+
+        $this->assertFilterResult($filters, $expectedKeys, $expectedCount);
+    }
+
+    public function testCategoryAndWebsiteCategoryFilters(): void
+    {
+        $filters = [
+            ...$this->getDefaultFilters(),
+            'categories' => [self::$categories['tech']->getId()],
+            'websiteCategories' => [(string) self::$categories['health']->getId()],
+        ];
+
+        $this->assertFilterResult($filters, ['tech_health', 'multi_category_multi_tag'], 2);
+    }
+
     public function testFindFlatByCategoryAndTagFilters(): void
     {
         $result = $this->smartContentProvider->findFlatBy([
@@ -1016,5 +1061,22 @@ class MediaSmartContentProviderTest extends SuluTestCase
         }
 
         return \array_map(fn ($item) => $idToKeyMap[$item['id']], $results);
+    }
+
+    /**
+     * @param SmartContentBaseFilters $filters
+     * @param string[] $expectedKeys
+     */
+    private function assertFilterResult(array $filters, array $expectedKeys, int $expectedCount): void
+    {
+        $result = $this->smartContentProvider->findFlatBy($filters, []);
+
+        $this->assertCount($expectedCount, $result);
+        $this->assertSame($expectedCount, $this->smartContentProvider->countBy($filters));
+
+        $resultIds = \array_map(fn ($item) => $item['id'], $result);
+        foreach ($expectedKeys as $key) {
+            $this->assertContains(self::$media[$key]->getId(), $resultIds, "Media '" . $key . "' should be in the result");
+        }
     }
 }
