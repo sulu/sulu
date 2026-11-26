@@ -35,7 +35,7 @@ if (
 ) {
     exec('npx "symlink-dir@5.2.0" ' + from + ' ' + to, (error) => {
         if (error) {
-            throw new Error('Error occured while creating symlink: ' + error);
+            throw new Error('Error occurred while creating symlink: ' + error);
         }
     });
 }
