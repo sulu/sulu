@@ -5,12 +5,30 @@ const ESCAPE_KEY = 'esc';
 
 // Mousetrap keeps one handler per key and unbinds it for everybody. With overlays and popovers on top of each
 // other, the one that closes first would take the esc key from the one below. So their handlers are stacked:
-// the topmost one is bound, and the one below is bound again when it is removed.
+// the topmost one handles the key, and the one below gets it again when that one is removed.
 const handlers = [];
+
+function handleEscape(event: ?KeyboardEvent) {
+    // A component may have used the key before, e.g. a select closing its options. The handler of its popover is
+    // gone by then, and the layer below must not react to the same keypress.
+    if (event && event.defaultPrevented) {
+        return;
+    }
+
+    handlers[handlers.length - 1]();
+}
+
+function updateBinding() {
+    if (handlers.length > 0) {
+        Mousetrap.bind(ESCAPE_KEY, handleEscape);
+    } else {
+        Mousetrap.unbind(ESCAPE_KEY);
+    }
+}
 
 export function addEscapeHandler(handler: () => void) {
     handlers.push(handler);
-    Mousetrap.bind(ESCAPE_KEY, handler);
+    updateBinding();
 }
 
 export function removeEscapeHandler(handler: () => void) {
@@ -20,10 +38,5 @@ export function removeEscapeHandler(handler: () => void) {
     }
 
     handlers.splice(index, 1);
-
-    if (handlers.length > 0) {
-        Mousetrap.bind(ESCAPE_KEY, handlers[handlers.length - 1]);
-    } else {
-        Mousetrap.unbind(ESCAPE_KEY);
-    }
+    updateBinding();
 }

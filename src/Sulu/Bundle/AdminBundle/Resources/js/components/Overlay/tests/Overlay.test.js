@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import Mousetrap from 'mousetrap';
 import React from 'react';
 import Popover from '../../Popover';
+import SingleSelect from '../../SingleSelect';
 import Overlay from '../Overlay';
 
 jest.mock('../../../utils/Translator');
@@ -337,5 +338,30 @@ test('The overlay gets the esc key back after a popover inside of it is closed',
     rerender(renderOverlayWithPopover(false));
 
     Mousetrap.trigger('esc');
+    expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test('The overlay stays open when a select inside of it closes itself on the esc key', async() => {
+    const onClose = jest.fn();
+    render(
+        <Overlay onClose={onClose} open={true} title="Overlay">
+            <SingleSelect onChange={jest.fn()} value={undefined}>
+                <SingleSelect.Option value="1">Option 1</SingleSelect.Option>
+            </SingleSelect>
+        </Overlay>
+    );
+    // dispatched without act(), which would delay the rerender until the event has reached the document as well
+    const pressEscape = (element: any) => element.dispatchEvent(
+        new KeyboardEvent('keydown', {key: 'Escape', keyCode: 27, which: 27, bubbles: true, cancelable: true})
+    );
+
+    await userEvent.click(screen.getByRole('button', {name: /sulu_admin.please_choose/}));
+    expect(screen.getByRole('button', {name: 'Option 1'})).toBeInTheDocument();
+
+    pressEscape(screen.getByRole('button', {name: 'Option 1'}));
+    expect(screen.queryByRole('button', {name: 'Option 1'})).not.toBeInTheDocument();
+    expect(onClose).not.toHaveBeenCalled();
+
+    pressEscape(document.body);
     expect(onClose).toHaveBeenCalledTimes(1);
 });
