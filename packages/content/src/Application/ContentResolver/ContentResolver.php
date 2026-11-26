@@ -157,6 +157,11 @@ readonly class ContentResolver implements ContentResolverInterface
             $context['_shadowLocale'] = $dimensionContent->getShadowLocale();
         }
 
+        $context['_resource'] = [
+            'resourceKey' => $dimensionContent::getResourceKey(),
+            'id' => (string) $dimensionContent->getResource()->getId(),
+        ];
+
         // Initial resolution to gather ResolvableResources
         /** @var array<int, array<string, array<int, array<int|string, array<string, ResolvableInterface>>>>> $priorityQueue */
         $priorityQueue = [];

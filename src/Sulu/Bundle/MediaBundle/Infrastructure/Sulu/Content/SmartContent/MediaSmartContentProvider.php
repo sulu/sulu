@@ -29,6 +29,7 @@ use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -50,6 +51,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: (int|string)[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -73,6 +75,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: (int|string)[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -95,7 +98,11 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         private ?Security $security,
         private bool $hasAudienceTargeting = false,
         private ?array $permissions = null,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', \sprintf('Instantiating %s without the $deduplicationStore argument is deprecated.', static::class));
+        }
     }
 
     public function getConfiguration(): ProviderConfigurationInterface
@@ -202,6 +209,8 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         /** @var array<array{id: string, title: string}> $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
+        $this->deduplicationStore?->add(MediaInterface::RESOURCE_KEY, ...\array_column($queryResult, 'id'));
+
         return \array_map(
             function(array $item) {
                 // TODO image
@@ -268,6 +277,15 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
         foreach ($sortBys as $sortBy => $sortMethod) {
             $queryBuilder->orderBy($sortBy, $sortMethod);
             $queryBuilder->addSelect($sortBy);
+        }
+
+        $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates']) {
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(MediaInterface::RESOURCE_KEY) ?? [])];
+        }
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
         }
 
         if ($filters['mimetype'] ?? null) {

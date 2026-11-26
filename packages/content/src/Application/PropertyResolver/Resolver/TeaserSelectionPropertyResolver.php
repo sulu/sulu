@@ -17,10 +17,19 @@ use Sulu\Bundle\AdminBundle\Teaser\Teaser;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\Reference;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Application\ResourceLoader\Loader\TeaserResourceLoader;
 
 class TeaserSelectionPropertyResolver implements PropertyResolverInterface
 {
+    public function __construct(
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
+    ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', \sprintf('Instantiating %s without the $deduplicationStore argument is deprecated.', static::class));
+        }
+    }
+
     public function resolve(mixed $data, string $locale, array $params = []): ContentView
     {
         $view = [
@@ -77,6 +86,7 @@ class TeaserSelectionPropertyResolver implements PropertyResolverInterface
             // the teaser "type" is the provider alias, which matches the resource key of the referenced resource
             if ('' !== $id && '' !== $type) {
                 $references[] = new Reference($id, $type);
+                $this->deduplicationStore?->add($type, $id);
             }
         }
 

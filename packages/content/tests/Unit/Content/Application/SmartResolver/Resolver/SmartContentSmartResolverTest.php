@@ -63,6 +63,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => true,
+                'excludeDuplicates' => false,
                 'categories' => [1, 2],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -105,6 +106,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => true,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -146,6 +148,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => false,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -188,6 +191,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => false,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -230,6 +234,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => false,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -270,6 +275,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => false,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],
@@ -302,6 +308,7 @@ class SmartContentSmartResolverTest extends TestCase
             'filters' => [
                 'dataSource' => '',
                 'includeSubFolders' => false,
+                'excludeDuplicates' => false,
                 'categories' => [],
                 'categoryOperator' => 'OR',
                 'tags' => [],

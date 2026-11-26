@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 use Sulu\Page\Domain\Model\PageInterface;
 use Sulu\Page\Infrastructure\Sulu\Content\PropertyResolver\PageSelectionPropertyResolver;
 
@@ -201,5 +202,43 @@ class PageSelectionPropertyResolverTest extends TestCase
         $this->assertCount(1, $references);
         $this->assertSame('1', $references[0]->getResourceId());
         $this->assertSame(PageInterface::RESOURCE_KEY, $references[0]->getResourceKey());
+    }
+
+    public function testResolveAddsTheIdsToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new PageSelectionPropertyResolver($store);
+
+        $resolver->resolve(['page-1', '', 'page-2'], 'en');
+
+        $this->assertSame(['page-1', 'page-2'], $store->getIds(PageInterface::RESOURCE_KEY));
+    }
+
+    public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new PageSelectionPropertyResolver($store);
+
+        $resolver->resolve([], 'en');
+
+        $this->assertSame([], $store->getIds(PageInterface::RESOURCE_KEY));
+    }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new PageSelectionPropertyResolver();
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ' . PageSelectionPropertyResolver::class . ' without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }

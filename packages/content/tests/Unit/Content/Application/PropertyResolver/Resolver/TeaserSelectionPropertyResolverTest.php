@@ -16,6 +16,7 @@ namespace Sulu\Content\Tests\Unit\Content\Application\PropertyResolver\Resolver;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Teaser\Teaser;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 use Sulu\Content\Application\PropertyResolver\Resolver\TeaserSelectionPropertyResolver;
 
 class TeaserSelectionPropertyResolverTest extends TestCase
@@ -209,8 +210,43 @@ class TeaserSelectionPropertyResolverTest extends TestCase
         $this->assertSame('Page Description', $teaser->getDescription());
     }
 
+    public function testResolveRegistersTheTeasersForDeduplication(): void
+    {
+        $deduplicationStore = new DeduplicationStore();
+        $resolver = new TeaserSelectionPropertyResolver($deduplicationStore);
+
+        $resolver->resolve([
+            'items' => [
+                ['id' => 'page-1', 'type' => 'pages'],
+                ['id' => 'article-1', 'type' => 'articles'],
+                ['id' => '', 'type' => 'pages'],
+            ],
+        ], 'en');
+
+        self::assertSame(['page-1'], $deduplicationStore->getIds('pages'));
+        self::assertSame(['article-1'], $deduplicationStore->getIds('articles'));
+    }
+
     public function testGetType(): void
     {
         $this->assertSame('teaser_selection', TeaserSelectionPropertyResolver::getType());
+    }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new TeaserSelectionPropertyResolver();
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ' . TeaserSelectionPropertyResolver::class . ' without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }

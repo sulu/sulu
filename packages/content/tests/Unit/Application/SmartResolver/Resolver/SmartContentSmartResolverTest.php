@@ -69,12 +69,15 @@ class SmartContentSmartResolverTest extends TestCase
                 'websiteTagOperator' => 'OR',
                 'limit' => 5,
                 'page' => 1,
+                'excludeDuplicates' => false,
             ],
             'sortBys' => ['title' => 'asc'],
             'parameters' => ['provider' => 'pages', 'categoryRoot' => null],
         ];
 
         $smartResolvable->getData()->willReturn($data);
+        $smartResolvable->getMetadata()->willReturn(null);
+        $smartResolvable->getContext()->willReturn([]);
 
         $this->serviceLocator->has('pages')->willReturn(true);
         $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
@@ -112,6 +115,184 @@ class SmartContentSmartResolverTest extends TestCase
         $view = $result->getView();
         $this->assertArrayHasKey('total', $view);
         $this->assertSame(5, $view['total']); // min(limit (5), fullTotal (10)) = 5
+    }
+
+    public function testResolveExcludesTheRenderedResource(): void
+    {
+        $excludedIds = ['other-page', 'self-page'];
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->countBy(
+            Argument::that(static fn (array $filters): bool => $excludedIds === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn(0)->shouldBeCalled();
+        $smartContentProvider->findFlatBy(
+            Argument::that(static fn (array $filters): bool => $excludedIds === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn([])->shouldBeCalled();
+
+        $resolvable = $this->createResolvable(['other-page'])
+            ->withContext(['_resource' => ['resourceKey' => 'pages', 'id' => 'self-page']]);
+        $result = $this->smartResolver->resolve($resolvable, 'en');
+
+        $this->assertSame($excludedIds, $result->getView()['excluded']);
+    }
+
+    public function testResolveExcludesTheRenderedIntegerIdOfItsOwnResourceKey(): void
+    {
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->countBy(
+            Argument::that(static fn (array $filters): bool => ['5'] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn(0)->shouldBeCalled();
+        $smartContentProvider->findFlatBy(
+            Argument::that(static fn (array $filters): bool => ['5'] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn([])->shouldBeCalled();
+
+        $resolvable = $this->createResolvable()->withContext(['_resource' => ['resourceKey' => 'pages', 'id' => '5']]);
+        $this->smartResolver->resolve($resolvable, 'en');
+    }
+
+    public function testResolveKeepsTheRenderedIntegerIdOfAnotherResourceKey(): void
+    {
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->countBy(
+            Argument::that(static fn (array $filters): bool => [] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn(0)->shouldBeCalled();
+        $smartContentProvider->findFlatBy(
+            Argument::that(static fn (array $filters): bool => [] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn([])->shouldBeCalled();
+
+        $resolvable = $this->createResolvable()->withContext(['_resource' => ['resourceKey' => 'examples', 'id' => '5']]);
+        $this->smartResolver->resolve($resolvable, 'en');
+    }
+
+    public function testResolveExcludesTheRenderedArticleFromThePageTreeArticleProvider(): void
+    {
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->getType()->willReturn('articles_page_tree');
+        $smartContentProvider->countBy(
+            Argument::that(static fn (array $filters): bool => ['article-uuid'] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn(0)->shouldBeCalled();
+        $smartContentProvider->findFlatBy(
+            Argument::that(static fn (array $filters): bool => ['article-uuid'] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn([])->shouldBeCalled();
+
+        $resolvable = $this->createResolvable()
+            ->withContext(['_resource' => ['resourceKey' => 'articles', 'id' => 'article-uuid']]);
+        $result = $this->smartResolver->resolve($resolvable, 'en');
+
+        $this->assertSame(['article-uuid'], $result->getView()['excluded']);
+    }
+
+    public function testResolveKeepsTheRenderedPageUuidAwayFromAnArticleProvider(): void
+    {
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->getType()->willReturn('articles');
+        $smartContentProvider->countBy(
+            Argument::that(static fn (array $filters): bool => [] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn(0)->shouldBeCalled();
+        $smartContentProvider->findFlatBy(
+            Argument::that(static fn (array $filters): bool => [] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn([])->shouldBeCalled();
+
+        $resolvable = $this->createResolvable()
+            ->withContext(['_resource' => ['resourceKey' => 'pages', 'id' => 'page-uuid']]);
+        $result = $this->smartResolver->resolve($resolvable, 'en');
+
+        $this->assertSame([], $result->getView()['excluded']);
+    }
+
+    public function testResolveWithoutResourceKeepsTheExcludedFilter(): void
+    {
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->countBy(
+            Argument::that(static fn (array $filters): bool => ['other-page'] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn(0)->shouldBeCalled();
+        $smartContentProvider->findFlatBy(
+            Argument::that(static fn (array $filters): bool => ['other-page'] === $filters['excluded']),
+            Argument::cetera(),
+        )->willReturn([])->shouldBeCalled();
+
+        $result = $this->smartResolver->resolve($this->createResolvable(['other-page']), 'en');
+
+        $this->assertSame(['other-page'], $result->getView()['excluded']);
+    }
+
+    public function testResolveCountsBeforeItFindsTheItems(): void
+    {
+        $calls = [];
+        $smartContentProvider = $this->prophesizeProvider();
+        $smartContentProvider->countBy(Argument::cetera())->will(function() use (&$calls): int {
+            $calls[] = 'countBy';
+
+            return 0;
+        });
+        $smartContentProvider->findFlatBy(Argument::cetera())->will(function() use (&$calls): array {
+            $calls[] = 'findFlatBy';
+
+            return [];
+        });
+
+        $this->smartResolver->resolve($this->createResolvable(), 'en');
+
+        $this->assertSame(['countBy', 'findFlatBy'], $calls);
+    }
+
+    /**
+     * @return ObjectProphecy<SmartContentProviderInterface>
+     */
+    private function prophesizeProvider(): ObjectProphecy
+    {
+        $smartContentProvider = $this->prophesize(SmartContentProviderInterface::class);
+        $smartContentProvider->getResourceLoaderKey()->willReturn('pages');
+        $smartContentProvider->getType()->willReturn('pages');
+        $smartContentProvider->getConfiguration()->willReturn(new ProviderConfiguration());
+
+        $this->serviceLocator->has('pages')->willReturn(true);
+        $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
+
+        return $smartContentProvider;
+    }
+
+    /**
+     * @param string[] $excluded
+     */
+    private function createResolvable(array $excluded = []): SmartResolvable
+    {
+        return new SmartResolvable(
+            [
+                'value' => [],
+                'filters' => [
+                    'dataSource' => 'root',
+                    'includeSubFolders' => true,
+                    'categories' => [],
+                    'categoryOperator' => 'OR',
+                    'tagOperator' => 'OR',
+                    'types' => [],
+                    'typesOperator' => 'OR',
+                    'websiteCategories' => [],
+                    'websiteCategoryOperator' => 'OR',
+                    'websiteTags' => [],
+                    'websiteTagOperator' => 'OR',
+                    'limit' => null,
+                    'page' => 1,
+                    'excludeDuplicates' => true,
+                    'excluded' => $excluded,
+                ],
+                'sortBys' => [],
+                'parameters' => ['provider' => 'pages'],
+            ],
+            'smart_content',
+            100,
+        );
     }
 
     public function testResolveWithInvalidProvider(): void
@@ -176,12 +357,15 @@ class SmartContentSmartResolverTest extends TestCase
                 'websiteCategoryOperator' => 'OR',
                 'websiteTags' => [],
                 'websiteTagOperator' => 'OR',
+                'excludeDuplicates' => false,
             ],
             'sortBys' => [],
             'parameters' => ['provider' => 'pages'],
         ];
 
         $smartResolvable->getData()->willReturn($data);
+        $smartResolvable->getMetadata()->willReturn(null);
+        $smartResolvable->getContext()->willReturn([]);
 
         $this->serviceLocator->has('pages')->willReturn(true);
         $this->serviceLocator->get('pages')->willReturn($smartContentProvider->reveal());
@@ -242,12 +426,15 @@ class SmartContentSmartResolverTest extends TestCase
                 'websiteTagOperator' => 'OR',
                 'limit' => null,
                 'page' => 1,
+                'excludeDuplicates' => false,
             ],
             'sortBys' => [],
             'parameters' => ['provider' => 'articles'],
         ];
 
         $smartResolvable->getData()->willReturn($data);
+        $smartResolvable->getMetadata()->willReturn(null);
+        $smartResolvable->getContext()->willReturn([]);
 
         $this->serviceLocator->has('articles')->willReturn(true);
         $this->serviceLocator->get('articles')->willReturn($smartContentProvider->reveal());
@@ -298,6 +485,7 @@ class SmartContentSmartResolverTest extends TestCase
                 'websiteTagOperator' => 'OR',
                 'limit' => null,
                 'page' => 1,
+                'excludeDuplicates' => false,
             ],
             'sortBys' => [],
             'parameters' => [
@@ -308,6 +496,8 @@ class SmartContentSmartResolverTest extends TestCase
         ];
 
         $smartResolvable->getData()->willReturn($data);
+        $smartResolvable->getMetadata()->willReturn(null);
+        $smartResolvable->getContext()->willReturn([]);
 
         $this->serviceLocator->has('articles')->willReturn(true);
         $this->serviceLocator->get('articles')->willReturn($smartContentProvider->reveal());

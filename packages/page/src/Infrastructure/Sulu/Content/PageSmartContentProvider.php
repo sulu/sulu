@@ -28,6 +28,7 @@ use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Domain\Model\Page;
@@ -57,6 +58,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: (int|string)[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -79,6 +81,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: (int|string)[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -117,7 +120,12 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         private AccessControlQueryEnhancer $accessControlQueryEnhancer,
         private ?Security $security,
         private ?array $permissions = null,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', \sprintf('Instantiating %s without the $deduplicationStore argument is deprecated.', static::class));
+        }
+
         $this->entityRepository = $entityManager->getRepository(PageInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(PageDimensionContentInterface::class);
         $this->pageDimensionContentClassName = $this->entityDimensionContentRepository->getClassName();
@@ -242,6 +250,8 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         /** @var array{id: string, title: string, webspace: string}[] $queryResult */
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
+        $this->deduplicationStore?->add(PageInterface::RESOURCE_KEY, ...\array_column($queryResult, 'id'));
+
         return $queryResult;
     }
 
@@ -266,6 +276,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      *        offset?: int,
      *        includeSubFolders: bool,
      *        excludeDuplicates: bool,
+     *        excluded?: (int|string)[],
      *        audienceTargeting?: bool,
      *        targetGroupId?: int,
      *        segmentKey?: string,
@@ -392,10 +403,21 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
      *     websiteCategoryOperator: 'AND'|'OR',
      *     websiteTags: string[],
      *     websiteTagOperator: 'AND'|'OR',
+     *     excludeDuplicates?: bool,
+     *     excluded?: (int|string)[],
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
+        $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates'] ?? false) {
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(PageInterface::RESOURCE_KEY) ?? [])];
+        }
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
+        }
+
         $datasource = $filters['dataSource'] ?? null;
         if ($filters['includeSubFolders']) {
             // Join with the dataSource page to get its lft and rgt values

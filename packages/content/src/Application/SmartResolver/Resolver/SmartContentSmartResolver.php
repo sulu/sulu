@@ -42,6 +42,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
  *       maxPerPage: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: (int|string)[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: string,
  *       offset?: int,
@@ -109,13 +110,25 @@ class SmartContentSmartResolver implements SmartResolverInterface
         $filters['offset'] = $maxPerPage ? (($page - 1) * $maxPerPage) : 0;
         $filters['limit'] = $maxPerPage ?? $limit;
 
+        $resource = $resolvable->getContext()['_resource'] ?? null;
+        // TODO compare with the resource key of the provider once it has one: until then match the type or a
+        //      "<resourceKey>_" prefix, e.g. "articles_page_tree" for articles.
+        if (\is_array($resource) && \is_string($resource['id'] ?? null) && \is_string($resource['resourceKey'] ?? null)
+            && ($resource['resourceKey'] === $smartContentProvider->getType()
+                || \str_starts_with($smartContentProvider->getType(), $resource['resourceKey'] . '_'))
+        ) {
+            $filters['excluded'] = [...($filters['excluded'] ?? []), $resource['id']];
+        }
+
         $countByFilters = $filters;
         unset($countByFilters['offset']);
 
         $params = ['value' => $value, ...$parameters];
-        $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
 
+        // count first: with "exclude_duplicates" the provider excludes the ids of the deduplication store,
+        // and findFlatBy adds its own results to it
         $fullTotal = $smartContentProvider->countBy($countByFilters, $params);
+        $result = $smartContentProvider->findFlatBy($filters, $sortBys, $params);
         $total = $limit ? \min($limit, $fullTotal) : $fullTotal;
 
         /** @var array<int|string> $valueTags */
@@ -148,8 +161,7 @@ class SmartContentSmartResolver implements SmartResolverInterface
             'limit' => $limit,
             'maxPerPage' => $maxPerPage,
 
-            // TODO duplicates
-            'excluded' => [],
+            'excluded' => $filters['excluded'] ?? [],
         ];
 
         $configuration = $smartContentProvider->getConfiguration();

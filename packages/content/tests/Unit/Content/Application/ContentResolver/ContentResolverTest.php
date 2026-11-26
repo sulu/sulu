@@ -29,6 +29,7 @@ use Sulu\Content\Application\ContentResolver\ResolvableResourceReplacer\Resolvab
 use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\ResourceLoader\Loader\ResourceLoaderContentViewEnhancementInterface;
 use Sulu\Content\Application\ResourceLoader\ResourceLoaderProvider;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
@@ -181,13 +182,13 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => $highPriorityResource]]],
             'en',
-            []
+            $this->context($example),
         )->willReturn(['example' => ['333' => [$highPriorityResource->getMetadataIdentifier() => 'High Priority Result']]]);
 
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => $lowPriorityResource]]],
             'en',
-            []
+            $this->context($example),
         )->willReturn(['example' => ['444' => [$lowPriorityResource->getMetadataIdentifier() => 'Low Priority Result']]]);
 
         $result = $this->contentResolver->resolve($dimensionContent);
@@ -252,7 +253,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => $singleResource]]],
             'en',
-            []
+            $this->context($example),
         )->willReturn(
             ['example' => ['single-1' => [$singleResource->getMetadataIdentifier() => ['id' => 'single-1', 'title' => 'Single Title']]]]
         );
@@ -296,7 +297,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            []
+            $this->context($example),
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );
@@ -340,7 +341,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            []
+            $this->context($example),
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );
@@ -387,7 +388,7 @@ class ContentResolverTest extends TestCase
         $this->resolvableResourceLoader->loadResources(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => $multiResource]]],
             'en',
-            []
+            $this->context($example),
         )->willReturn(
             ['example' => ['multi-1' => [$multiResource->getMetadataIdentifier() => ['id' => 'multi-1', 'title' => 'Multi Title']]]]
         );
@@ -403,6 +404,38 @@ class ContentResolverTest extends TestCase
             ],
             $result['view']['multi_selection']
         );
+    }
+
+    public function testResolvePassesTheResolvedResourceInTheContext(): void
+    {
+        $example = new TestExample();
+        $example->id = 446;
+
+        $dimensionContent = new TestExampleDimensionContent($example);
+        $example->addDimensionContent($dimensionContent);
+        $dimensionContent->setStage('live');
+        $dimensionContent->setLocale('en');
+
+        $smartResolvable = new SmartResolvable(['value' => []], 'smart_example', 100);
+
+        $templateContentView = ContentView::create(['smart_content' => $smartResolvable], []);
+        $this->templateResolver->setContentView($templateContentView);
+
+        $this->resolvableResourceLoader->loadResources(
+            ['smart_example' => [$smartResolvable->getId() => [$smartResolvable->getMetadataIdentifier() => $smartResolvable]]],
+            'en',
+            ['_resource' => ['resourceKey' => TestExample::RESOURCE_KEY, 'id' => '446']],
+        )->shouldBeCalledOnce()->willReturn([]);
+
+        $this->contentResolver->resolve($dimensionContent);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function context(TestExample $example): array
+    {
+        return ['_resource' => ['resourceKey' => TestExample::RESOURCE_KEY, 'id' => (string) $example->getId()]];
     }
 }
 

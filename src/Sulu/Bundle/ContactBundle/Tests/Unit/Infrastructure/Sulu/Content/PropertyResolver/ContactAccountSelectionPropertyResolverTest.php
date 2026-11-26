@@ -18,6 +18,7 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\PropertyResolver\ContactAccountSelectionPropertyResolver;
 use Sulu\Content\Application\ContentResolver\Value\ResolvableResource;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 
 #[CoversClass(ContactAccountSelectionPropertyResolver::class)]
 class ContactAccountSelectionPropertyResolverTest extends TestCase
@@ -129,5 +130,44 @@ class ContactAccountSelectionPropertyResolverTest extends TestCase
         $this->assertInstanceOf(ResolvableResource::class, $resolvable);
         $this->assertSame(2, $resolvable->getId());
         $this->assertSame('custom_account', $resolvable->getResourceLoaderKey());
+    }
+
+    public function testResolveAddsTheIdsToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new ContactAccountSelectionPropertyResolver($store);
+
+        $resolver->resolve(['c1', 'a2', 'c', 'x3', 'a4'], 'en');
+
+        $this->assertSame([1], $store->getIds(ContactInterface::RESOURCE_KEY));
+        $this->assertSame([2, 4], $store->getIds(AccountInterface::RESOURCE_KEY));
+    }
+
+    public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void
+    {
+        $store = new DeduplicationStore();
+        $resolver = new ContactAccountSelectionPropertyResolver($store);
+
+        $resolver->resolve([], 'en');
+
+        $this->assertSame([], $store->getIds(ContactInterface::RESOURCE_KEY));
+    }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new ContactAccountSelectionPropertyResolver();
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ' . ContactAccountSelectionPropertyResolver::class . ' without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }

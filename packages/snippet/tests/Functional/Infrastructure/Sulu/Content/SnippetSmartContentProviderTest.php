@@ -17,9 +17,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStore;
 use Sulu\Content\Tests\Traits\CreateCategoryTrait;
 use Sulu\Content\Tests\Traits\CreateTagTrait;
 use Sulu\Snippet\Domain\Model\SnippetInterface;
+use Sulu\Snippet\Infrastructure\Sulu\Content\SnippetSmartContentProvider;
 use Sulu\Snippet\Tests\Traits\CreateSnippetTrait;
 
 /**
@@ -206,5 +208,98 @@ class SnippetSmartContentProviderTest extends SuluTestCase
     protected static function getEntityManager(): EntityManagerInterface
     {
         return self::getContainer()->get('doctrine.orm.entity_manager');
+    }
+
+    public function testFindFlatByExcludesTheExcludedIds(): void
+    {
+        $filters = [...$this->getDefaultFilters(), 'locale' => 'en'];
+
+        $allIds = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
+        $this->assertNotEmpty($allIds);
+
+        $filters['excluded'] = [$allIds[0]];
+        $ids = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
+
+        $this->assertNotContains($allIds[0], $ids);
+        $this->assertCount(\count($allIds) - 1, $ids);
+        $this->assertSame(\count($allIds) - 1, $this->smartContentProvider->countBy($filters));
+    }
+
+    public function testFindFlatByExcludesTheStoredIdsWithExcludeDuplicates(): void
+    {
+        $store = $this->createDeduplicationStore();
+        $filters = [...$this->getDefaultFilters(), 'locale' => 'en'];
+
+        $allIds = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
+        $this->assertNotEmpty($allIds);
+
+        $store->reset();
+        $store->add(SnippetInterface::RESOURCE_KEY, $allIds[0]);
+
+        $filters['excludeDuplicates'] = true;
+        $this->assertSame(\count($allIds) - 1, $this->smartContentProvider->countBy($filters));
+        $ids = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
+
+        $this->assertNotContains($allIds[0], $ids);
+        $this->assertCount(\count($allIds) - 1, $ids);
+    }
+
+    public function testFindFlatByKeepsTheStoredIdsWithoutExcludeDuplicates(): void
+    {
+        $store = $this->createDeduplicationStore();
+        $filters = [...$this->getDefaultFilters(), 'locale' => 'en', 'excludeDuplicates' => false];
+
+        $allIds = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
+
+        $store->reset();
+        $store->add(SnippetInterface::RESOURCE_KEY, $allIds[0]);
+
+        $ids = \array_map(fn (array $item) => (string) $item['id'], $this->smartContentProvider->findFlatBy($filters, []));
+
+        $this->assertContains($allIds[0], $ids);
+        $this->assertCount(\count($allIds), $ids);
+        $this->assertSame(\count($allIds), $this->smartContentProvider->countBy($filters));
+    }
+
+    public function testFindFlatByAddsTheResultsToTheDeduplicationStore(): void
+    {
+        $store = $this->createDeduplicationStore();
+
+        $result = $this->smartContentProvider->findFlatBy([...$this->getDefaultFilters(), 'locale' => 'en'], []);
+
+        $ids = \array_map(fn (array $item) => (string) $item['id'], $result);
+        $this->assertNotEmpty($ids);
+        $this->assertEqualsCanonicalizing($ids, $store->getIds(SnippetInterface::RESOURCE_KEY));
+    }
+
+    private function createDeduplicationStore(): DeduplicationStore
+    {
+        $store = self::getContainer()->get('sulu_content.deduplication_store');
+        $store->reset();
+
+        return $store;
+    }
+
+    public function testInstantiatingWithoutDeduplicationStoreIsDeprecated(): void
+    {
+        $container = self::getContainer();
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            new SnippetSmartContentProvider(
+                $container->get('sulu_content.dimension_content_query_enhancer'),
+                $container->get('sulu_admin.smart_content_query_enhancer'),
+                $container->get('doctrine.orm.entity_manager'),
+            );
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertSame(['Since sulu/sulu 3.0.12: Instantiating ' . SnippetSmartContentProvider::class . ' without the $deduplicationStore argument is deprecated.'], $deprecations);
     }
 }

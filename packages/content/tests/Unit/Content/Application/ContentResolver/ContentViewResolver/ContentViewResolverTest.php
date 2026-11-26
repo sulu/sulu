@@ -373,4 +373,34 @@ class ContentViewResolverTest extends TestCase
         self::assertArrayHasKey(10, $result['resolvableResources'][0]['tag'][0]);
         self::assertArrayHasKey(20, $result['resolvableResources'][0]['tag'][0]);
     }
+
+    public function testResolveContentViewsQueuesResolvablesInDeclarationOrder(): void
+    {
+        $contentViews = [
+            'first' => ContentView::create(new ResolvableResource('a', 'example', 1), []),
+            'second' => ContentView::create(new ResolvableResource('b', 'example', 1), []),
+            'third' => ContentView::create(new ResolvableResource('c', 'example', 1), []),
+        ];
+
+        $result = $this->contentViewResolver->resolveContentViews($contentViews, 0);
+
+        self::assertSame(['a', 'b', 'c'], \array_keys($result['resolvableResources'][1]['example'][0]));
+    }
+
+    public function testResolveContentViewWithMixedContentQueuesResolvablesInDeclarationOrder(): void
+    {
+        $contentView = ContentView::create(
+            [
+                'first' => ContentView::create(new ResolvableResource('a', 'example', 1), []),
+                'title' => 'Not a content view',
+                'second' => ContentView::create(new ResolvableResource('b', 'example', 1), []),
+                'third' => ContentView::create(new ResolvableResource('c', 'example', 1), []),
+            ],
+            []
+        );
+
+        $result = $this->contentViewResolver->resolveContentView($contentView, 'blocks', 0);
+
+        self::assertSame(['a', 'b', 'c'], \array_keys($result['resolvableResources'][1]['example'][0]));
+    }
 }

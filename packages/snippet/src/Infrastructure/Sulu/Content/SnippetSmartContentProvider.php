@@ -19,6 +19,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Snippet\Domain\Model\SnippetDimensionContentInterface;
@@ -44,6 +45,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       offset: int,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: (int|string)[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -65,6 +67,7 @@ use Sulu\Snippet\Infrastructure\Sulu\Content\ResourceLoader\SnippetResourceLoade
  *       limit: int|null,
  *       includeSubFolders: bool,
  *       excludeDuplicates: bool,
+ *       excluded?: (int|string)[],
  *       audienceTargeting?: bool,
  *       targetGroupId?: int,
  *       segmentKey?: string,
@@ -91,7 +94,12 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
         private DimensionContentQueryEnhancer $dimensionContentQueryEnhancer,
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
         EntityManagerInterface $entityManager,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', \sprintf('Instantiating %s without the $deduplicationStore argument is deprecated.', static::class));
+        }
+
         $this->entityRepository = $entityManager->getRepository(SnippetInterface::class);
         $this->entityDimensionContentRepository = $entityManager->getRepository(SnippetDimensionContentInterface::class);
         $this->snippetDimensionContentClassName = $this->entityDimensionContentRepository->getClassName();
@@ -205,6 +213,8 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
             $queryResult
         );
 
+        $this->deduplicationStore?->add(SnippetInterface::RESOURCE_KEY, ...\array_column($result, 'id'));
+
         return $result;
     }
 
@@ -244,6 +254,7 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *         offset?: int,
      *         includeSubFolders: bool,
      *         excludeDuplicates: bool,
+     *         excluded?: (int|string)[],
      *         audienceTargeting?: bool
      *     }
      */
@@ -336,10 +347,21 @@ readonly class SnippetSmartContentProvider implements SmartContentProviderInterf
      *     websiteCategoryOperator: 'AND'|'OR',
      *     websiteTags: string[],
      *     websiteTagOperator: 'AND'|'OR',
+     *     excludeDuplicates?: bool,
+     *     excluded?: (int|string)[],
      *  } $filters
      */
     protected function addInternalFilters(QueryBuilder $queryBuilder, array $filters, string $alias): void
     {
+        $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates'] ?? false) {
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(SnippetInterface::RESOURCE_KEY) ?? [])];
+        }
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.uuid NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
+        }
+
         $websiteCategoryIds = $filters['websiteCategories'];
         if ([] !== $websiteCategoryIds) {
             $this->smartContentQueryEnhancer->addJoinFilter(

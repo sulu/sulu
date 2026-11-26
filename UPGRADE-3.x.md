@@ -12,6 +12,18 @@ escaped from the exception listener and turned the `404` into a `500`.
 
 Projects with their own `RouteDefaultsProviderInterface` should throw a `ResourceNotFoundException` as well.
 
+### Smart content providers exclude the rendered resource
+
+Custom smart content providers need to exclude the ids in the `excluded` filter. The rendered id reaches only
+providers whose `getType()` is the resource key or starts with `<resourceKey>_`.
+
+### New constructor argument for the selection property resolvers and smart content providers
+
+The selection property resolvers, `TeaserSelectionPropertyResolver`, `ImageMapPropertyResolver` and the smart content
+providers take the `sulu_content.deduplication_store` as their last argument. Projects that extend one of these classes
+or define their own service for it need to pass it, otherwise `exclude_duplicates` has no effect for them. Leaving it
+out triggers a deprecation.
+
 ## 3.0.10
 
 ### The target group select of the preview follows the audience targeting permission

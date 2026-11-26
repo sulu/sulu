@@ -697,7 +697,7 @@ class SmartContentContentResolverTest extends SuluTestCase
 
     public function testRecursionMaxDepthReplacesDeepWithNull(): void
     {
-        // Create two pages with smart content that selects itself first via title ASC
+        // Create two pages with smart content that select each other, as the own page is excluded
         $b = static::createExample(['en' => ['live' => [
             'template' => 'default-example-smart-content',
             'title' => 'B',
@@ -722,7 +722,7 @@ class SmartContentContentResolverTest extends SuluTestCase
         self::assertNotEmpty($lvl1);
         /** @var array<string, mixed> $aItem */
         $aItem = $lvl1[0];
-        self::assertSame('A', $aItem['title']);
+        self::assertSame('B', $aItem['title']);
 
         // Attempt to walk nested levels up to depth 5 and verify that at or before depth 5, next level becomes null
         $current = $aItem;

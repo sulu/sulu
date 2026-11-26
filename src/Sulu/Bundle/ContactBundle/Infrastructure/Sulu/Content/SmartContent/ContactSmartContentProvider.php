@@ -20,6 +20,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
 use Sulu\Bundle\ContactBundle\Admin\ContactAdmin;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\ContactResourceLoader;
+use Sulu\Content\Application\DeduplicationStore\DeduplicationStoreInterface;
 
 /**
  * @phpstan-type ContactSmartContentFilters array{
@@ -39,6 +40,7 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Contact
  *      offset: int,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
+ *      excluded?: (int|string)[],
  *  }
  * @phpstan-type ContactSmartContentCountFilters array{
  *      categories: int[],
@@ -56,6 +58,7 @@ use Sulu\Bundle\ContactBundle\Infrastructure\Sulu\Content\ResourceLoader\Contact
  *      limit: int|null,
  *      includeSubFolders: bool,
  *      excludeDuplicates: bool,
+ *      excluded?: (int|string)[],
  *  }
  */
 readonly class ContactSmartContentProvider implements SmartContentProviderInterface
@@ -63,7 +66,11 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
     public function __construct(
         private EntityManagerInterface $entityManager,
         private SmartContentQueryEnhancer $smartContentQueryEnhancer,
+        private ?DeduplicationStoreInterface $deduplicationStore = null,
     ) {
+        if (null === $this->deduplicationStore) {
+            @trigger_deprecation('sulu/sulu', '3.0.12', \sprintf('Instantiating %s without the $deduplicationStore argument is deprecated.', static::class));
+        }
     }
 
     public function getConfiguration(): ProviderConfigurationInterface
@@ -127,6 +134,8 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
             $queryResult,
         );
 
+        $this->deduplicationStore?->add(ContactInterface::RESOURCE_KEY, ...\array_column($result, 'id'));
+
         return $result;
     }
 
@@ -142,6 +151,15 @@ readonly class ContactSmartContentProvider implements SmartContentProviderInterf
     ): void {
         foreach ($sortBys as $sortBy => $sortMethod) {
             $queryBuilder->orderBy($sortBy, $sortMethod);
+        }
+
+        $excluded = $filters['excluded'] ?? [];
+        if ($filters['excludeDuplicates']) {
+            $excluded = [...$excluded, ...($this->deduplicationStore?->getIds(ContactInterface::RESOURCE_KEY) ?? [])];
+        }
+        if ([] !== $excluded) {
+            $queryBuilder->andWhere($alias . '.id NOT IN (:excluded)')
+                ->setParameter('excluded', $excluded);
         }
 
         $tagIds = $filters['tags'];

@@ -55,7 +55,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             }
 
             if (\count($smartResolvableResources) > 0) {
-                $result = $this->loadSmartResolvableResources($smartResolvableResources, $locale);
+                $result = $this->loadSmartResolvableResources($smartResolvableResources, $locale, $context);
                 foreach ($result as $id => $loadedResource) {
                     foreach ($metadataIdentifiersPerResourceId[$id] as $metadataIdentifier) {
                         $loadedResources[$loaderKey][$id][$metadataIdentifier] = $loadedResource;
@@ -78,10 +78,11 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
 
     /**
      * @param array<SmartResolvable> $smartResources
+     * @param array<string, mixed> $context
      *
      * @return array<mixed>
      */
-    private function loadSmartResolvableResources(array $smartResources, ?string $locale): array
+    private function loadSmartResolvableResources(array $smartResources, ?string $locale, array $context): array
     {
         $loadedResources = [];
 
@@ -89,10 +90,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
             $resourceLoaderKey = $smartResource->getResourceLoaderKey();
             $smartResolver = $this->smartResolverProvider->getSmartResolver($resourceLoaderKey);
 
-            $loadedResources[$id] = $smartResolver->resolve(
-                $smartResource,
-                $locale,
-            );
+            $loadedResources[$id] = $smartResolver->resolve($smartResource->withContext($context), $locale);
         }
 
         return $loadedResources;
@@ -120,7 +118,7 @@ class ResolvableResourceLoader implements ResolvableResourceLoaderInterface
         return $resourceLoader->load(
             $resourceIds,
             $locale,
-            \array_merge($params, $context),
+            \array_merge($params, \array_diff_key($context, ['_resource' => true])),
         );
     }
 }
