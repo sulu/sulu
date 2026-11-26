@@ -15,10 +15,14 @@ namespace Sulu\Webspace\Application\Message;
 
 class ApplyWorkflowTransitionWebspaceSettingMessage
 {
+    /**
+     * @param array<string, mixed> $workflowTransitionRequestData
+     */
     public function __construct(
         private string $webspaceKey,
         private string $locale,
         private string $transitionName,
+        private array $workflowTransitionRequestData = [],
     ) {
     }
 
@@ -35,5 +39,13 @@ class ApplyWorkflowTransitionWebspaceSettingMessage
     public function getTransitionName(): string
     {
         return $this->transitionName;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getWorkflowTransitionRequestData(): array
+    {
+        return $this->workflowTransitionRequestData;
     }
 }

@@ -54,6 +54,7 @@ final class ApplyWorkflowTransitionWebspaceSettingMessageHandler
             $webspaceSetting,
             ['locale' => $message->getLocale()],
             $message->getTransitionName(),
+            $message->getWorkflowTransitionRequestData(),
         );
 
         $this->domainEventCollector->collect(new WebspaceSettingWorkflowTransitionAppliedEvent(

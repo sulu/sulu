@@ -27,6 +27,7 @@ use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
+use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
@@ -205,7 +206,20 @@ final class WebspaceSettingController implements SecuredControllerInterface
             unset($data['_hash']);
         }
 
+        // read here as well, so a malformed value is refused with a 400 before anything is saved
+        $this->getWorkflowTransitionRequestData($request);
+        unset($data[ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY]);
+
         return $data;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getWorkflowTransitionRequestData(Request $request): array
+    {
+        /** @var array<string, mixed> */
+        return $request->request->all(ContentWorkflowInterface::WORKFLOW_TRANSITION_REQUEST_DATA_REQUEST_KEY);
     }
 
     private function handleAction(Request $request, string $webspaceKey): void
@@ -225,7 +239,12 @@ final class WebspaceSettingController implements SecuredControllerInterface
                 $request->query->getInt('version') ?: throw new BadRequestHttpException('The "version" query parameter is required for restoring a version.'),
                 $locale,
             )],
-            default => [new ApplyWorkflowTransitionWebspaceSettingMessage($webspaceKey, $locale, $action)],
+            default => [new ApplyWorkflowTransitionWebspaceSettingMessage(
+                $webspaceKey,
+                $locale,
+                $action,
+                $this->getWorkflowTransitionRequestData($request),
+            )],
         };
 
         foreach ($messages as $message) {

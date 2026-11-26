@@ -17,6 +17,8 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\TestWith;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
+use Sulu\Webspace\Domain\Model\WebspaceSettingInterface;
 use Sulu\Webspace\Infrastructure\Sulu\HttpCache\EventSubscriber\WebspaceSettingCacheInvalidationSubscriber;
 use Sulu\Webspace\Tests\Traits\CreateWebspaceSettingTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -126,6 +128,40 @@ class WebspaceSettingControllerTest extends SuluTestCase
 
         $this->assertSame('published', $content['workflowPlace']);
         $this->assertTrue($content['publishedState']);
+    }
+
+    public function testRequestFormDataIsStoredOnTheRequestAndNotOnTheSettings(): void
+    {
+        $content = $this->request('PUT', '/admin/api/webspace-settings/sulu-io?locale=en&action=request_for_review', [
+            'companyName' => 'Sulu GmbH',
+            'workflowTransitionRequestData' => ['message' => 'Please check'],
+        ]);
+
+        $this->assertSame('review', $content['workflowPlace']);
+        $this->assertSame('Sulu GmbH', $content['companyName']);
+        $this->assertArrayNotHasKey('workflowTransitionRequestData', $content);
+
+        $request = self::getContainer()->get(WorkflowTransitionRequestRepositoryInterface::class)->getOneBy([
+            'resourceKey' => WebspaceSettingInterface::RESOURCE_KEY,
+            'resourceId' => 'sulu-io',
+            'active' => true,
+        ]);
+        $this->assertSame(['message' => 'Please check'], $request->getData());
+    }
+
+    public function testMalformedRequestFormDataIsRefusedBeforeAnythingIsSaved(): void
+    {
+        $this->request('PUT', '/admin/api/webspace-settings/sulu-io?locale=en', ['companyName' => 'Sulu GmbH']);
+
+        $this->client->request('PUT', '/admin/api/webspace-settings/sulu-io?locale=en&action=request_for_review', [], [], [], (string) \json_encode([
+            'companyName' => 'Should Not Be Saved',
+            'workflowTransitionRequestData' => 'not an array',
+        ]));
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
+
+        $content = $this->request('GET', '/admin/api/webspace-settings/sulu-io?locale=en');
+        $this->assertSame('Sulu GmbH', $content['companyName']);
+        $this->assertNotSame('review', $content['workflowPlace']);
     }
 
     public function testGetOtherLocaleIsAGhost(): void
