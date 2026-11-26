@@ -112,7 +112,7 @@ class SingleContactSelectionPropertyResolverTest extends TestCase
 
         $resolver->resolve(1, 'en');
 
-        $this->assertSame(['1'], $store->getIds(ContactInterface::RESOURCE_KEY));
+        $this->assertSame([1], $store->getIds(ContactInterface::RESOURCE_KEY));
     }
 
     public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void

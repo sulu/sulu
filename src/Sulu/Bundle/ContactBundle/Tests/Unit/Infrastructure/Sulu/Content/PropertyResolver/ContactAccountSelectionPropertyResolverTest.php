@@ -139,8 +139,8 @@ class ContactAccountSelectionPropertyResolverTest extends TestCase
 
         $resolver->resolve(['c1', 'a2', 'c', 'x3', 'a4'], 'en');
 
-        $this->assertSame(['1'], $store->getIds(ContactInterface::RESOURCE_KEY));
-        $this->assertSame(['2', '4'], $store->getIds(AccountInterface::RESOURCE_KEY));
+        $this->assertSame([1], $store->getIds(ContactInterface::RESOURCE_KEY));
+        $this->assertSame([2, 4], $store->getIds(AccountInterface::RESOURCE_KEY));
     }
 
     public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void

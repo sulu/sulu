@@ -121,7 +121,7 @@ class AccountSelectionPropertyResolverTest extends TestCase
 
         $resolver->resolve([1, 2], 'en');
 
-        $this->assertSame(['1', '2'], $store->getIds(AccountInterface::RESOURCE_KEY));
+        $this->assertSame([1, 2], $store->getIds(AccountInterface::RESOURCE_KEY));
     }
 
     public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void

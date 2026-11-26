@@ -137,7 +137,7 @@ class MediaSelectionPropertyResolverTest extends TestCase
 
         $resolver->resolve(['ids' => [1, 2]], 'en');
 
-        $this->assertSame(['1', '2'], $store->getIds(MediaInterface::RESOURCE_KEY));
+        $this->assertSame([1, 2], $store->getIds(MediaInterface::RESOURCE_KEY));
     }
 
     public function testResolveWithoutDataAddsNothingToTheDeduplicationStore(): void
