@@ -27,7 +27,7 @@ use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepository;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * @internal this class is internal and should not be extended or relied on in custom code
@@ -67,23 +67,23 @@ class ExampleRouteDefaultsProvider implements RouteDefaultsProviderInterface
         );
 
         if (null === $example) {
-            throw new NotFoundHttpException(\sprintf('No example found for id "%s" and locale "%s"', $id, $locale));
+            throw new ResourceNotFoundException(\sprintf('No example found for id "%s" and locale "%s"', $id, $locale));
         }
 
         try {
             $dimensionContent = $this->contentAggregator->aggregate($example, $dimensionAttributes);
         } catch (ContentNotFoundException $exception) {
-            throw new NotFoundHttpException(\sprintf('No example found for id "%s" and locale "%s"', $id, $locale), $exception);
+            throw new ResourceNotFoundException(\sprintf('No example found for id "%s" and locale "%s"', $id, $locale), 0, $exception);
         }
 
         $contentLocale = $dimensionContent->getLocale();
         if (!$contentLocale) {
-            throw new NotFoundHttpException(\sprintf('No example found for id "%s" and locale "%s"', $id, $locale));
+            throw new ResourceNotFoundException(\sprintf('No example found for id "%s" and locale "%s"', $id, $locale));
         }
 
         $templateKey = $dimensionContent->getTemplateKey();
         if (!$templateKey) {
-            throw new NotFoundHttpException(\sprintf('No template found for id "%s" and locale "%s"', $id, $locale));
+            throw new ResourceNotFoundException(\sprintf('No template found for id "%s" and locale "%s"', $id, $locale));
         }
 
         $templateMetadata = $this->resolveTemplateMetadata($dimensionContent::getTemplateType(), $templateKey, $contentLocale);

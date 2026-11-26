@@ -33,7 +33,7 @@ use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Exception\MissingRequestContextParameterException;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -78,18 +78,18 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
         );
 
         if (null === $article) {
-            throw new NotFoundHttpException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale));
+            throw new ResourceNotFoundException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale));
         }
 
         try {
             $dimensionContent = $this->contentAggregator->aggregate($article, $dimensionAttributes);
         } catch (ContentNotFoundException $exception) {
-            throw new NotFoundHttpException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale), $exception);
+            throw new ResourceNotFoundException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale), 0, $exception);
         }
 
         $contentLocale = $dimensionContent->getLocale();
         if (!$contentLocale) {
-            throw new NotFoundHttpException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale));
+            throw new ResourceNotFoundException(\sprintf('No article found for id "%s" and locale "%s"', $id, $locale));
         }
 
         // Article routes are stored without a webspace (see RoutableDataMapper), so a single route matches every
@@ -100,12 +100,12 @@ class ArticleRouteDefaultsProvider implements RouteDefaultsProviderInterface
             && $requestWebspace !== $dimensionContent->getMainWebspace()
             && !\in_array($requestWebspace, $dimensionContent->getAdditionalWebspaces(), true)
         ) {
-            throw new NotFoundHttpException(\sprintf('No article found for id "%s" and locale "%s" in webspace "%s"', $id, $locale, $requestWebspace));
+            throw new ResourceNotFoundException(\sprintf('No article found for id "%s" and locale "%s" in webspace "%s"', $id, $locale, $requestWebspace));
         }
 
         $templateKey = $dimensionContent->getTemplateKey();
         if (!$templateKey) {
-            throw new NotFoundHttpException(\sprintf('No template found for id "%s" and locale "%s"', $id, $locale));
+            throw new ResourceNotFoundException(\sprintf('No template found for id "%s" and locale "%s"', $id, $locale));
         }
 
         $templateMetadata = $this->resolveTemplateMetadata($dimensionContent::getTemplateType(), $templateKey, $contentLocale);

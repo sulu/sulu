@@ -30,6 +30,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Routing\Exception\NoConfigurationException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Route;
@@ -397,7 +399,18 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->assertSame('http://sulu.lo/de-at', $redirectResponse->getTargetUrl());
     }
 
-    public function testRedirectPartialMatchNotExists(): void
+    /**
+     * @return iterable<string, array{\Throwable}>
+     */
+    public static function provideRedirectPartialMatchNotExists(): iterable
+    {
+        yield 'resource not found' => [new ResourceNotFoundException()];
+        yield 'no configuration' => [new NoConfigurationException()];
+        yield 'method not allowed' => [new MethodNotAllowedException(['POST'])];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideRedirectPartialMatchNotExists')]
+    public function testRedirectPartialMatchNotExists(\Throwable $exception): void
     {
         $portal = new Portal();
         $portal->setKey('portal');
@@ -427,7 +440,7 @@ class RedirectExceptionSubscriberTest extends TestCase
             'sulu.lo/de-at'
         );
 
-        $this->router->matchRequest(Argument::type(Request::class))->willThrow(new ResourceNotFoundException());
+        $this->router->matchRequest(Argument::type(Request::class))->willThrow($exception);
 
         $this->exceptionListener->redirectPartialMatch($this->event);
 

@@ -32,7 +32,7 @@ use Sulu\Page\Domain\Repository\PageRepositoryInterface;
 use Sulu\Route\Application\Routing\Matcher\RouteDefaultsProviderInterface;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * @internal this class is internal and should not be extended or relied on in custom code
@@ -74,18 +74,18 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
         );
 
         if (null === $page) {
-            throw new NotFoundHttpException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale));
+            throw new ResourceNotFoundException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale));
         }
 
         try {
             $dimensionContent = $this->contentAggregator->aggregate($page, $dimensionAttributes);
         } catch (ContentNotFoundException $exception) {
-            throw new NotFoundHttpException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale), $exception);
+            throw new ResourceNotFoundException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale), 0, $exception);
         }
 
         $contentLocale = $dimensionContent->getLocale();
         if (!$contentLocale) {
-            throw new NotFoundHttpException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale));
+            throw new ResourceNotFoundException(\sprintf('No page found for id "%s" and locale "%s"', $id, $locale));
         }
 
         $redirectDefaults = $this->resolveRedirectDefaults($dimensionContent, $contentLocale);
@@ -95,7 +95,7 @@ class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
 
         $templateKey = $dimensionContent->getTemplateKey();
         if (!$templateKey) {
-            throw new NotFoundHttpException(\sprintf('No template found for id "%s" and locale "%s"', $id, $locale));
+            throw new ResourceNotFoundException(\sprintf('No template found for id "%s" and locale "%s"', $id, $locale));
         }
 
         $templateMetadata = $this->resolveTemplateMetadata($dimensionContent::getTemplateType(), $templateKey, $contentLocale);
