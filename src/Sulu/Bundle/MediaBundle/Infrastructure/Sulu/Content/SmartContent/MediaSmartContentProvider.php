@@ -326,6 +326,32 @@ readonly class MediaSmartContentProvider implements SmartContentProviderInterfac
             );
         }
 
+        $websiteCategoryIds = $filters['websiteCategories'];
+        if ([] !== $websiteCategoryIds) {
+            $this->smartContentQueryEnhancer->addJoinFilter(
+                $queryBuilder,
+                'fileVersion.categories',
+                'websiteFilterCategoryId',
+                'id',
+                'websiteCategoryIds',
+                $websiteCategoryIds,
+                $filters['websiteCategoryOperator'],
+            );
+        }
+
+        $websiteTagNames = $filters['websiteTags'];
+        if ([] !== $websiteTagNames) {
+            $this->smartContentQueryEnhancer->addJoinFilter(
+                $queryBuilder,
+                'fileVersion.tags',
+                'websiteFilterTagName',
+                'name',
+                'websiteTagNames',
+                $websiteTagNames,
+                $filters['websiteTagOperator'],
+            );
+        }
+
         if (($filters['audienceTargeting'] ?? null) && ($filters['targetGroupId'] ?? null)) {
             $this->smartContentQueryEnhancer->addJoinFilter(
                 $queryBuilder,
