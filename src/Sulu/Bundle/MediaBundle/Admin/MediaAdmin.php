@@ -15,6 +15,7 @@ use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilde
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
@@ -127,8 +128,19 @@ class MediaAdmin extends Admin
 
             $viewCollection->add(
                 $this->viewBuilderFactory
-                    ->createViewBuilder(static::EDIT_FORM_HISTORY_VIEW, '/history', 'sulu_media.history')
-                    ->setOption('tabTitle', 'sulu_media.history')
+                    ->createListViewBuilder(static::EDIT_FORM_HISTORY_VIEW, '/history')
+                    ->setResourceKey('media_versions')
+                    ->setListKey('media_versions')
+                    ->setTabTitle('sulu_media.history')
+                    ->addListAdapters(['table'])
+                    ->disableSearching()
+                    ->disableSelection()
+                    ->disableFiltering()
+                    ->addRouterAttributesToListRequest(['id'])
+                    ->addItemActions([
+                        new ListItemAction('sulu_media.show_version'),
+                        new ListItemAction('sulu_media.delete_version'),
+                    ])
                     ->setParent(static::EDIT_FORM_VIEW)
             );
 

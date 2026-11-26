@@ -25,6 +25,7 @@ use Sulu\Bundle\MediaBundle\Controller\MediaFormatController;
 use Sulu\Bundle\MediaBundle\Controller\MediaPreviewController;
 use Sulu\Bundle\MediaBundle\Controller\MediaRedirectController;
 use Sulu\Bundle\MediaBundle\Controller\MediaStreamController;
+use Sulu\Bundle\MediaBundle\Controller\MediaVersionController;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionCreatedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionModifiedEvent;
@@ -160,6 +161,18 @@ return static function(ContainerConfigurator $container) {
             new Reference('doctrine.orm.entity_manager'),
             new Reference('sulu_media.media_manager'),
             new Reference('sulu_security.security_checker'),
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_media.media_version_controller', MediaVersionController::class)
+        ->public()
+        ->args([
+            new Reference('fos_rest.view_handler'),
+            new Reference('sulu_media.media_manager'),
+            new Reference('sulu_security.security_checker'),
+            new Reference('sulu_core.list_builder.field_descriptor_factory'),
+            new Reference('sulu_core.doctrine_list_builder_factory'),
+            new Reference('sulu_core.doctrine_rest_helper'),
         ])
         ->tag('sulu.context', ['context' => 'admin']);
 

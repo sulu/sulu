@@ -46,6 +46,7 @@
     "sulu_media.thumbnail": "Thumbnail",
     "sulu_media.type": "Type",
     "sulu_media.version": "Version",
+    "sulu_media.version_label": "Version {value}",
     "sulu_media.size": "Filesize",
     "sulu_media.mime_type": "MIME-Type",
     "sulu_media.license": "License",

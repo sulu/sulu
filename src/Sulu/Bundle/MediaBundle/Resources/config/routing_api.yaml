@@ -89,6 +89,14 @@ sulu_media.delete_media:
     requirements:
         _format: json|csv
 
+sulu_media.get_media_versions:
+    path: '/media/{id}/versions.{_format}'
+    methods: GET
+    controller: 'sulu_media.media_version_controller::cgetAction'
+    format: json
+    requirements:
+        _format: json|csv
+
 sulu_media.delete_media_version:
     path: '/media/{id}/versions/{version}.{_format}'
     methods: DELETE
