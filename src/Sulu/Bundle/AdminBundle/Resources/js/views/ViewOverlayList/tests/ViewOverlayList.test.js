@@ -72,7 +72,9 @@ function renderViewOverlayList(options: Object) {
     router.route = route;
     router.attributes = {};
 
-    return render(<ViewOverlayList route={route} router={router} />);
+    render(<ViewOverlayList route={route} router={router} />);
+
+    return router;
 }
 
 function getViewOverlayProps() {
@@ -87,7 +89,9 @@ test('Neither add nor click items without overlay views', () => {
 });
 
 test('Open the edit view with the id and locale of the clicked item in an overlay', async() => {
-    renderViewOverlayList({editOverlayTitle: 'app.edit_test', editOverlayView: 'test_edit', overlaySize: 'small'});
+    const router = renderViewOverlayList(
+        {editOverlayTitle: 'app.edit_test', editOverlayView: 'test_edit', overlaySize: 'small'}
+    );
 
     expect(screen.queryByText('add-item')).not.toBeInTheDocument();
     expect(screen.queryByTestId('view-overlay')).not.toBeInTheDocument();
@@ -100,6 +104,7 @@ test('Open the edit view with the id and locale of the clicked item in an overla
         size: 'small',
         title: 'app.edit_test',
     }));
+    expect(getViewOverlayProps().parentRouter).toBe(router);
 });
 
 test('Open the add view with the locale and the parent in a small overlay', async() => {

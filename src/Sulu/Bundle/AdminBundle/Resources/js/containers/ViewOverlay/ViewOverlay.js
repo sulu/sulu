@@ -4,25 +4,34 @@ import {computed, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import {createMemoryHistory} from 'history';
 import Overlay from '../../components/Overlay';
-import Router, {Route} from '../../services/Router';
+import Router, {getViewKeyFromRoute, Route} from '../../services/Router';
 import {translate} from '../../utils/Translator';
 import Toolbar, {ToolbarSnackbars} from '../Toolbar';
 import toolbarStorePool from '../Toolbar/stores/toolbarStorePool';
 import ViewRenderer, {updateRouterAttributesFromView} from '../ViewRenderer';
 import type {Size} from '../../components/Overlay/types';
-import type {AttributeMap} from '../../services/Router/types';
+import type {AttributeMap, UpdateRouteMethod} from '../../services/Router/types';
 
 type Props = {|
     attributes: AttributeMap,
     onClose: () => void,
+    parentRouter: Router,
     route: string,
     size?: Size,
     title: string,
 |};
 
+// the priority of the form dirty warning, so it runs before ViewRenderer and withToolbar react to the navigation
+const PARENT_ROUTE_HOOK_PRIORITY = 2048;
+
 // Closing runs the update route hooks with this route, so a view can veto it as it vetoes a navigation away,
 // e.g. the form with its dirty warning, which then calls the passed method to close after all.
 const CLOSE_ROUTE = new Route({name: 'sulu_admin.view_overlay_close', path: '', type: ''});
+
+// the keys ViewRenderer gives a view and its parents, the view is mounted anew if one of them changes
+function getViewKeys(route: ?Route, attributes: ?AttributeMap): string {
+    return route ? getViewKeys(route.parent, attributes) + '/' + String(getViewKeyFromRoute(route, attributes)) : '';
+}
 
 // Overlays are modal, so each nesting depth has one open at a time and reuses the toolbar store of that depth.
 let openOverlayCount = 0;
@@ -31,6 +40,8 @@ let openOverlayCount = 0;
 class ViewOverlay extends React.Component<Props> {
     router: Router;
     toolbarStoreKey: string;
+    parentRouteHookDisposer: () => void;
+    leavingParentRoute: boolean = false;
 
     constructor(props: Props) {
         super(props);
@@ -48,6 +59,11 @@ class ViewOverlay extends React.Component<Props> {
         this.router.addUpdateAttributesHook(this.getLocaleAttributes);
         this.router.addUpdateRouteHook(this.closeOnNavigationToBackView);
         this.router.navigate(route, attributes);
+
+        this.parentRouteHookDisposer = this.props.parentRouter.addUpdateRouteHook(
+            this.checkViewsBeforeParentNavigation,
+            PARENT_ROUTE_HOOK_PRIORITY
+        );
     }
 
     // The main router fills in an omitted locale from the content locale of the user. The overlay has its own
@@ -77,7 +93,42 @@ class ViewOverlay extends React.Component<Props> {
         return true;
     };
 
+    // A navigation of the parent router, e.g. the back button of the browser, removes the view the overlay is part
+    // of and the overlay with it, so the views of the overlay have to agree as they do for closing it.
+    checkViewsBeforeParentNavigation = (
+        newRoute: ?Route,
+        newAttributes: ?AttributeMap,
+        updateRouteMethod: ?UpdateRouteMethod
+    ): boolean => {
+        const {parentRouter} = this.props;
+
+        // without a route the window is closed, which the own router of the overlay listens to itself
+        if (this.leavingParentRoute || !newRoute || !updateRouteMethod) {
+            return true;
+        }
+
+        // the tabs around the view reload for another id and remove it while they do so
+        const keepsView = getViewKeys(newRoute, newAttributes)
+            === getViewKeys(parentRouter.route, parentRouter.attributes)
+            && newAttributes?.id === parentRouter.attributes.id;
+
+        if (keepsView) {
+            return true;
+        }
+
+        return this.runCloseHooks(() => {
+            this.leavingParentRoute = true;
+            updateRouteMethod(newRoute.name, newAttributes || {});
+            this.leavingParentRoute = false;
+        });
+    };
+
+    runCloseHooks(close: () => void): boolean {
+        return this.router.sortedUpdateRouteHooks.every((hook) => hook(CLOSE_ROUTE, {}, close));
+    }
+
     componentWillUnmount() {
+        this.parentRouteHookDisposer();
         this.router.destroy();
         openOverlayCount--;
     }
@@ -92,7 +143,7 @@ class ViewOverlay extends React.Component<Props> {
         const {onClose} = this.props;
         const closeOverlay = () => onClose();
 
-        if (this.router.sortedUpdateRouteHooks.every((hook) => hook(CLOSE_ROUTE, {}, closeOverlay))) {
+        if (this.runCloseHooks(closeOverlay)) {
             onClose();
         }
     };
