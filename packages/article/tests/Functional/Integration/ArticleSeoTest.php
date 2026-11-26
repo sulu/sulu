@@ -59,6 +59,31 @@ class ArticleSeoTest extends SuluTestCase
         $this->assertSame('http://sulu.io/en/seo-test-article', $canonical->attr('href'));
     }
 
+    public function testStructuredDataIsNotRenderedByDefault(): void
+    {
+        self::purgeDatabase();
+
+        self::createArticle([
+            'en' => [
+                'live' => [
+                    'template' => 'article',
+                    'title' => 'Structured Data Article',
+                    'url' => '/structured-data-article',
+                    'mainWebspace' => 'sulu-io',
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $websiteClient = $this->createWebsiteClient();
+        $crawler = $websiteClient->request('GET', 'http://sulu.io/en/structured-data-article');
+
+        $this->assertHttpStatusCode(200, $websiteClient->getResponse());
+        $this->assertCount(1, $crawler->filter('link[rel="canonical"]'));
+        $this->assertCount(0, $crawler->filter('script[type="application/ld+json"]'));
+    }
+
     public function testEditorCanonicalIsRespected(): void
     {
         self::purgeDatabase();

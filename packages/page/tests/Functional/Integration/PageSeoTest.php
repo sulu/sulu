@@ -137,6 +137,72 @@ class PageSeoTest extends SuluTestCase
         $this->assertStringContainsString('/en/shadow-source', $canonicalHref);
     }
 
+    public function testStructuredDataDescribesWebsitePageAndBreadcrumb(): void
+    {
+        self::purgeDatabase();
+        $homepage = $this->createHomepage('0199ee04-c220-784e-a6fa-ac985870f2d5', 'sulu-io');
+
+        $parent = self::createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'default',
+                    'title' => 'Parent Page',
+                    'url' => '/parent',
+                    'parentId' => $homepage->getId(),
+                ],
+            ],
+        ]);
+
+        self::createPage([
+            'en' => [
+                'live' => [
+                    'template' => 'structured-data',
+                    'title' => 'Child Page',
+                    'url' => '/parent/child',
+                    'parentId' => $parent->getId(),
+                    'seo' => [
+                        'title' => 'Child </script><script>alert(1)</script>',
+                        'description' => 'Child description',
+                    ],
+                ],
+            ],
+        ]);
+
+        self::ensureKernelShutdown();
+
+        $websiteClient = $this->createWebsiteClient();
+        $crawler = $websiteClient->request('GET', 'http://sulu.io/en/parent/child');
+
+        $this->assertHttpStatusCode(200, $websiteClient->getResponse());
+
+        $scripts = $crawler->filter('script[type="application/ld+json"]');
+        $this->assertCount(1, $scripts);
+        $this->assertStringNotContainsString('</script><script>', (string) $websiteClient->getResponse()->getContent());
+
+        /** @var array{'@context': string, '@graph': list<array<string, mixed>>} $data */
+        $data = \json_decode($scripts->text(), true, flags: \JSON_THROW_ON_ERROR);
+        $this->assertSame('https://schema.org', $data['@context']);
+        $this->assertSame(['WebSite', 'WebPage', 'BreadcrumbList'], \array_column($data['@graph'], '@type'));
+
+        [$website, $webPage, $breadcrumb] = $data['@graph'];
+
+        $this->assertSame('http://sulu.io/en', $website['url']);
+        $this->assertSame('Sulu CMF', $website['name']);
+        $this->assertSame('en', $website['inLanguage']);
+
+        $this->assertSame('http://sulu.io/en/parent/child', $webPage['url']);
+        $this->assertSame('Child </script><script>alert(1)</script>', $webPage['name']);
+        $this->assertSame('Child description', $webPage['description']);
+        $this->assertSame(['@id' => 'http://sulu.io/en#website'], $webPage['isPartOf']);
+        $this->assertSame(['@id' => 'http://sulu.io/en/parent/child#breadcrumb'], $webPage['breadcrumb']);
+
+        $this->assertSame('http://sulu.io/en/parent/child#breadcrumb', $breadcrumb['@id']);
+        $this->assertSame([
+            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Parent Page', 'item' => 'http://sulu.io/en/parent'],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => 'Child Page', 'item' => 'http://sulu.io/en/parent/child'],
+        ], $breadcrumb['itemListElement']);
+    }
+
     public function testHreflangAlternatesAreAbsoluteUrls(): void
     {
         self::purgeDatabase();

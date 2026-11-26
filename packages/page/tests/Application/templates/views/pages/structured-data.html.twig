@@ -1,0 +1,16 @@
+{% extends 'views/base.html.twig' %}
+
+{% block meta %}
+    {% include "@SuluWebsite/Extension/seo.html.twig" with {
+        "seo": extension.seo|default([]),
+        "content": content|default([]),
+        "localizations": localizations|default([]),
+        "shadowBaseLocale": shadowBaseLocale|default(),
+        "structuredData": true,
+        "breadcrumb": sulu_page_breadcrumb(resource.id),
+    } %}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ content.title }}</h1>
+{% endblock %}
