@@ -38,7 +38,7 @@ use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ArticleRouteDefaultsProviderTest extends TestCase
@@ -151,7 +151,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
 
         $this->articleRepository->findOneBy(Argument::cetera())->willReturn(null);
 
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(ResourceNotFoundException::class);
 
         $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', 'en', '/test-article'));
     }
@@ -286,7 +286,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
 
         $this->pushRequestWithWebspace('unrelated');
 
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(ResourceNotFoundException::class);
 
         $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', $locale, $slug));
     }
@@ -307,7 +307,7 @@ class ArticleRouteDefaultsProviderTest extends TestCase
 
         $this->pushRequestWithWebspace('sulu-io');
 
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(ResourceNotFoundException::class);
 
         $provider->getDefaults(new Route(Article::RESOURCE_KEY, '123-123-123', $locale, $slug));
     }

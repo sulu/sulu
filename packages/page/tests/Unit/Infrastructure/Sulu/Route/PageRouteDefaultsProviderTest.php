@@ -41,7 +41,7 @@ use Sulu\Page\Infrastructure\Sulu\Route\PageRouteDefaultsProvider;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class PageRouteDefaultsProviderTest extends TestCase
 {
@@ -201,7 +201,7 @@ class PageRouteDefaultsProviderTest extends TestCase
             $this->linkProviderPool->reveal(),
         );
 
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(ResourceNotFoundException::class);
 
         $page = new Page('123-123-123');
         $page->setWebspaceKey('sulu-io');

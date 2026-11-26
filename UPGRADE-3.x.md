@@ -1,5 +1,17 @@
 # Upgrade
 
+## 3.0.12
+
+### Route defaults providers throw a ResourceNotFoundException
+
+`PageRouteDefaultsProvider` and `ArticleRouteDefaultsProvider` throw a `ResourceNotFoundException` instead of a
+`NotFoundHttpException` when the content of a route cannot be served. The request still ends in a `404`.
+The `RedirectExceptionSubscriber` matches the target of a trailing slash or partial match redirect with the router
+and expects the exceptions of the `RequestMatcherInterface`. A `NotFoundHttpException` thrown while matching
+escaped from the exception listener and turned the `404` into a `500`.
+
+Projects with their own `RouteDefaultsProviderInterface` should throw a `ResourceNotFoundException` as well.
+
 ## 3.0.10
 
 ### The target group select of the preview follows the audience targeting permission

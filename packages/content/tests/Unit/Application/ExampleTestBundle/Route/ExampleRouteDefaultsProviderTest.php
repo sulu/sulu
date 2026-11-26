@@ -35,7 +35,7 @@ use Sulu\Content\Tests\Application\ExampleTestBundle\Repository\ExampleRepositor
 use Sulu\Content\Tests\Application\ExampleTestBundle\Route\ExampleRouteDefaultsProvider;
 use Sulu\Route\Domain\Model\Route;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class ExampleRouteDefaultsProviderTest extends TestCase
 {
@@ -229,7 +229,7 @@ class ExampleRouteDefaultsProviderTest extends TestCase
 
     public function testGetDefaultsNotPublishedInLocale(): void
     {
-        $this->expectException(NotFoundHttpException::class);
+        $this->expectException(ResourceNotFoundException::class);
 
         $example = new Example();
         $example->id = '123';
