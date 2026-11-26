@@ -3,8 +3,8 @@ import React, {Fragment} from 'react';
 import {Portal} from 'react-portal';
 import {observer} from 'mobx-react';
 import {action, computed, observable} from 'mobx';
-import Mousetrap from 'mousetrap';
 import {afterElementsRendered} from '../../utils/DOM';
+import {addEscapeHandler, removeEscapeHandler} from '../../utils/EscapeKey';
 import Backdrop from '../Backdrop';
 import PopoverPositioner from './PopoverPositioner';
 import popoverStyles from './popover.scss';
@@ -29,8 +29,6 @@ type Props = {
     popoverChildRef?: (ref: ?ElementRef<*>) => void,
     verticalOffset: number,
 };
-
-const CLOSE_KEY = 'esc';
 
 @observer
 class Popover extends React.Component<Props> {
@@ -61,7 +59,7 @@ class Popover extends React.Component<Props> {
         });
 
         if (this.props.open) {
-            Mousetrap.bind(CLOSE_KEY, this.close);
+            addEscapeHandler(this.close);
         }
     }
 
@@ -71,7 +69,7 @@ class Popover extends React.Component<Props> {
         this.mutationObserver.disconnect();
 
         if (this.props.open) {
-            Mousetrap.unbind(CLOSE_KEY);
+            removeEscapeHandler(this.close);
         }
     }
 
@@ -86,9 +84,9 @@ class Popover extends React.Component<Props> {
 
         if (prevProps.open !== this.props.open) {
             if (this.props.open) {
-                Mousetrap.bind(CLOSE_KEY, this.close);
+                addEscapeHandler(this.close);
             } else {
-                Mousetrap.unbind(CLOSE_KEY);
+                removeEscapeHandler(this.close);
             }
         }
     }

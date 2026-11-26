@@ -1,6 +1,5 @@
 // @flow
 import classNames from 'classnames';
-import Mousetrap from 'mousetrap';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import React, {Fragment} from 'react';
@@ -8,6 +7,7 @@ import {Portal} from 'react-portal';
 import Icon from '../Icon';
 import Button from '../Button';
 import {afterElementsRendered} from '../../utils/DOM';
+import {addEscapeHandler, removeEscapeHandler} from '../../utils/EscapeKey';
 import Backdrop from '../Backdrop';
 import Snackbar, {type SnackbarType} from '../Snackbar';
 import ToolbarButton from '../Toolbar/Button';
@@ -40,33 +40,6 @@ type Props = {
 
 const CLOSE_ICON = 'su-times';
 const SUCCESS_ICON = 'su-check';
-const CLOSE_OVERLAY_KEY = 'esc';
-
-// Mousetrap keeps one handler per key and unbinds it for everybody. With overlays on top of each other
-// (e.g. a view in a view overlay opening an overlay of its own) the one that closes first would take
-// the esc key from the one below. So the close handlers of the open overlays are stacked: the topmost
-// one is bound, and the one below is bound again when it is removed.
-const closeHandlers = [];
-
-function addCloseHandler(handler: () => void) {
-    closeHandlers.push(handler);
-    Mousetrap.bind(CLOSE_OVERLAY_KEY, handler);
-}
-
-function removeCloseHandler(handler: () => void) {
-    const index = closeHandlers.indexOf(handler);
-    if (index === -1) {
-        return;
-    }
-
-    closeHandlers.splice(index, 1);
-
-    if (closeHandlers.length > 0) {
-        Mousetrap.bind(CLOSE_OVERLAY_KEY, closeHandlers[closeHandlers.length - 1]);
-    } else {
-        Mousetrap.unbind(CLOSE_OVERLAY_KEY);
-    }
-}
 
 @observer
 class Overlay extends React.Component<Props> {
@@ -87,7 +60,7 @@ class Overlay extends React.Component<Props> {
         const {closable, open} = this.props;
 
         if (open && closable) {
-            addCloseHandler(this.close);
+            addEscapeHandler(this.close);
         }
 
         this.open = open;
@@ -96,7 +69,7 @@ class Overlay extends React.Component<Props> {
 
     componentWillUnmount() {
         if (this.props.open && this.props.closable) {
-            removeCloseHandler(this.close);
+            removeEscapeHandler(this.close);
         }
     }
 
@@ -105,9 +78,9 @@ class Overlay extends React.Component<Props> {
 
         if (prevProps.open !== open || prevProps.closable !== closable) {
             if (open && closable) {
-                addCloseHandler(this.close);
+                addEscapeHandler(this.close);
             } else {
-                removeCloseHandler(this.close);
+                removeEscapeHandler(this.close);
             }
         }
 

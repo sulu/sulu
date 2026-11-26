@@ -3,6 +3,7 @@ import {render, screen, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Mousetrap from 'mousetrap';
 import React from 'react';
+import Popover from '../../Popover';
 import Overlay from '../Overlay';
 
 jest.mock('../../../utils/Translator');
@@ -312,4 +313,29 @@ test('The overlay below gets the esc key back when the overlay on top of it is c
 
     Mousetrap.trigger('esc');
     expect(onCloseBelow).toHaveBeenCalledTimes(1);
+});
+
+test('The overlay gets the esc key back after a popover inside of it is closed', () => {
+    const onClose = jest.fn();
+    const onPopoverClose = jest.fn();
+    const anchorElement: any = document.createElement('button');
+    const renderOverlayWithPopover = (popoverOpen) => (
+        <Overlay onClose={onClose} open={true} title="Overlay">
+            <Popover anchorElement={anchorElement} onClose={onPopoverClose} open={popoverOpen}>
+                {(setPopoverRef, styles) => <div ref={setPopoverRef} style={styles}>Item</div>}
+            </Popover>
+        </Overlay>
+    );
+
+    const {rerender} = render(renderOverlayWithPopover(false));
+    rerender(renderOverlayWithPopover(true));
+
+    Mousetrap.trigger('esc');
+    expect(onPopoverClose).toHaveBeenCalledTimes(1);
+    expect(onClose).not.toHaveBeenCalled();
+
+    rerender(renderOverlayWithPopover(false));
+
+    Mousetrap.trigger('esc');
+    expect(onClose).toHaveBeenCalledTimes(1);
 });

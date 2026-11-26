@@ -5,6 +5,7 @@ import Mousetrap from 'mousetrap';
 import React from 'react';
 import Popover from '../Popover';
 import PopoverPositioner from '../PopoverPositioner';
+import {addEscapeHandler, removeEscapeHandler} from '../../../utils/EscapeKey';
 
 PopoverPositioner.getCroppedDimensions = function() {
     return {
@@ -163,6 +164,21 @@ test('The popover should bind and unbind the esc key when overlay is opened and 
     );
     Mousetrap.trigger('esc');
     expect(closeSpy).toHaveBeenCalled();
+});
+
+test('The popover should give the esc key back when it is unmounted while open', () => {
+    const closeSpy = jest.fn();
+    const closeBelowSpy = jest.fn();
+    addEscapeHandler(closeBelowSpy);
+    const {unmount} = renderPopover({onClose: closeSpy, open: true});
+
+    unmount();
+    Mousetrap.trigger('esc');
+
+    expect(closeSpy).not.toHaveBeenCalled();
+    expect(closeBelowSpy).toHaveBeenCalledTimes(1);
+
+    removeEscapeHandler(closeBelowSpy);
 });
 
 test('The popover should pass its child ref to the parent', () => {
