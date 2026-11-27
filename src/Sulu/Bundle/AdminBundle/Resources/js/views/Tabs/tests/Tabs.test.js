@@ -574,6 +574,55 @@ test('Should redirect to child route from props with highest priority if no tab 
     await waitFor(() => expect(router.redirect).toHaveBeenCalledWith('route2', attributes));
 });
 
+test('Redirect if a nested route of a tab which is not shown is active', async() => {
+    const childRoute1 = new Route({name: 'route1', options: {}, path: '/route1', type: 'route1'});
+    const childRoute2 = new Route({name: 'route2', options: {}, path: '/route2', type: 'route1'});
+    const nestedRoute = new Route({name: 'route2.nested', options: {}, path: '/nested', type: 'route1'});
+    nestedRoute.parent = childRoute2;
+    childRoute2.children.push(nestedRoute);
+
+    const route = new Route({name: 'parent', options: {}, path: '/parent', type: 'route1'});
+    route.children.push(childRoute1, childRoute2);
+
+    const attributes = {id: 1};
+
+    // $FlowFixMe
+    Router.mockImplementation(function() {
+        this.attributes = attributes;
+        this.redirect = jest.fn();
+        this.route = nestedRoute;
+    });
+
+    const router = new Router({});
+
+    render(<Tabs route={route} routeChildren={[childRoute1]} router={router}>{() => null}</Tabs>);
+
+    await waitFor(() => expect(router.redirect).toHaveBeenCalledWith('route1', attributes));
+});
+
+test('Do not redirect if a nested route of a shown tab is active', () => {
+    const childRoute1 = new Route({name: 'route1', options: {}, path: '/route1', type: 'route1'});
+    const nestedRoute = new Route({name: 'route1.nested', options: {}, path: '/nested', type: 'route1'});
+    nestedRoute.parent = childRoute1;
+    childRoute1.children.push(nestedRoute);
+
+    const route = new Route({name: 'parent', options: {}, path: '/parent', type: 'route1'});
+    route.children.push(childRoute1);
+
+    // $FlowFixMe
+    Router.mockImplementation(function() {
+        this.attributes = {};
+        this.redirect = jest.fn();
+        this.route = nestedRoute;
+    });
+
+    const router = new Router({});
+
+    render(<Tabs route={route} router={router}>{() => null}</Tabs>);
+
+    expect(router.redirect).not.toHaveBeenCalled();
+});
+
 test('Navigate to tab with filtered attributes if it was clicked', async() => {
     const user = userEvent.setup();
     const childRoute1 = new Route({

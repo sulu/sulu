@@ -183,6 +183,20 @@ test('Return no dialog if no id is set', () => {
     expect(setUnpublishedToolbarAction.getNode()).toEqual(null);
 });
 
+test('Show the default warning text in the dialog', () => {
+    const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction();
+    setUnpublishedToolbarAction.resourceFormStore.resourceStore.id = 3;
+
+    expect(getDialogProps(setUnpublishedToolbarAction).children).toEqual('sulu_page.unpublish_warning_text');
+});
+
+test('Show the warning text passed as option in the dialog', () => {
+    const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction({warning_text: 'app.unpublish_warning'});
+    setUnpublishedToolbarAction.resourceFormStore.resourceStore.id = 3;
+
+    expect(getDialogProps(setUnpublishedToolbarAction).children).toEqual('app.unpublish_warning');
+});
+
 test('Close dialog when onClose from unpublish dialog is called', () => {
     const setUnpublishedToolbarAction = createSetUnpublishedToolbarAction();
     setUnpublishedToolbarAction.resourceFormStore.resourceStore.id = 3;
