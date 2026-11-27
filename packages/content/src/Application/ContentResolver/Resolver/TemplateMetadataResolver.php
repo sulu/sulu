@@ -11,12 +11,11 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Content\Application\ContentResolver\TemplateMetadataResolver;
+namespace Sulu\Content\Application\ContentResolver\Resolver;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
-use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
 use Sulu\Content\Application\ContentResolver\Value\ContentView;
 use Sulu\Content\Domain\Model\ContentRichEntityInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
@@ -74,9 +73,6 @@ readonly class TemplateMetadataResolver implements ResolverInterface
         return 'templateMetadata';
     }
 
-    /**
-     * Merges into the root like the settings, whose "template" it replaces by a higher tag priority.
-     */
     public function getOutputPath(): ?string
     {
         return '';

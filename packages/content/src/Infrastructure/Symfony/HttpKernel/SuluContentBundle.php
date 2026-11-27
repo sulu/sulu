@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Content\Infrastructure\Symfony\HttpKernel;
 
 use Sulu\Content\Application\ContentResolver\Resolver\ResolverInterface;
-use Sulu\Content\Application\ContentResolver\TemplateMetadataResolver\TemplateMetadataResolver;
+use Sulu\Content\Application\ContentResolver\Resolver\TemplateMetadataResolver;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverInterface;
 use Sulu\Content\Application\PropertyResolver\Resolver\PropertyResolverMetadataAwareInterface;
 use Sulu\Content\Application\RequestWorkflow\PreValidator\RequestWorkflowPreValidatorInterface;
@@ -66,14 +66,6 @@ final class SuluContentBundle extends AbstractBundle
                         ->booleanNode('template_metadata')
                             ->info('Resolves "template" to an array with the "key", "group" and "tags" of the template instead of its key.')
                             ->defaultFalse()
-                            ->beforeNormalization()
-                                ->ifTrue(function($v) { return true !== $v; })
-                                ->then(function($v) {
-                                    @trigger_deprecation('sulu/sulu', '3.1', 'Disabling the "sulu_content.content_resolver.template_metadata" option is deprecated');
-
-                                    return $v;
-                                })
-                            ->end()
                         ->end()
                     ->end()
                 ->end()
@@ -147,6 +139,8 @@ final class SuluContentBundle extends AbstractBundle
             $services->set('sulu_content.template_metadata_resolver', TemplateMetadataResolver::class)
                 ->args([new Reference('sulu_admin.form_metadata_provider')])
                 ->tag('sulu_content.content_resolver', ['priority' => 10]);
+        } else {
+            @trigger_deprecation('sulu/sulu', '3.1', 'Not enabling the "sulu_content.content_resolver.template_metadata" option is deprecated.');
         }
 
         /** @var array<string, array{resources?: list<string>, validators?: array<string, array<string, mixed>>, pre_validators?: array<string, array<string, mixed>>, required_user_approvals?: int}> $requestWorkflowsConfig */

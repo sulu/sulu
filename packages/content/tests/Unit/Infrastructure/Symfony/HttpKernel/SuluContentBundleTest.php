@@ -21,6 +21,7 @@ use Sulu\Content\Application\ContentCopier\ContentCopierInterface;
 use Sulu\Content\Application\ContentManager\ContentManagerInterface;
 use Sulu\Content\Application\ContentNormalizer\ContentNormalizerInterface;
 use Sulu\Content\Application\ContentPersister\ContentPersisterInterface;
+use Sulu\Content\Application\ContentResolver\Resolver\TemplateMetadataResolver;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
 use Sulu\Content\Domain\Factory\DimensionContentCollectionFactoryInterface;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
@@ -33,6 +34,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\Config\Definition\Loader\DefinitionFileLoader;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
@@ -197,6 +199,60 @@ class SuluContentBundleTest extends AbstractExtensionTestCase
         // returns null for every content, so they never create or enforce a request.
         $this->assertContainerBuilderHasService('sulu_content.workflow_transition_request_publish_transition_subscriber');
         $this->assertContainerBuilderHasService('sulu_content.workflow_transition_request_transition_subscriber');
+    }
+
+    public function testLoadWithTemplateMetadata(): void
+    {
+        $this->container->setParameter('kernel.environment', 'test');
+        $this->container->setParameter('kernel.build_dir', \dirname(__DIR__, 4) . '/Application/var/cache/builddir');
+
+        $this->load(['content_resolver' => ['template_metadata' => true]]);
+
+        $this->assertContainerBuilderHasService('sulu_content.template_metadata_resolver', TemplateMetadataResolver::class);
+
+        $sorter = new class() {
+            use PriorityTaggedServiceTrait;
+
+            /**
+             * @return string[]
+             */
+            public function sort(ContainerBuilder $container): array
+            {
+                return \array_map('strval', $this->findAndSortTaggedServices('sulu_content.content_resolver', $container));
+            }
+        };
+        $resolverIds = $sorter->sort($this->container);
+
+        $this->assertContains('sulu_content.template_metadata_resolver', $resolverIds);
+        $this->assertLessThan(
+            \array_search('sulu_content.settings_resolver', $resolverIds, true),
+            \array_search('sulu_content.template_metadata_resolver', $resolverIds, true),
+        );
+    }
+
+    public function testLoadWithoutTemplateMetadata(): void
+    {
+        $this->container->setParameter('kernel.environment', 'test');
+        $this->container->setParameter('kernel.build_dir', \dirname(__DIR__, 4) . '/Application/var/cache/builddir');
+
+        $deprecations = [];
+        \set_error_handler(static function(int $errorNumber, string $message) use (&$deprecations): bool {
+            $deprecations[] = $message;
+
+            return true;
+        }, \E_USER_DEPRECATED);
+
+        try {
+            $this->load();
+        } finally {
+            \restore_error_handler();
+        }
+
+        $this->assertContainerBuilderNotHasService('sulu_content.template_metadata_resolver');
+        $this->assertContains(
+            'Since sulu/sulu 3.1: Not enabling the "sulu_content.content_resolver.template_metadata" option is deprecated.',
+            $deprecations,
+        );
     }
 
     public function testPrepend(): void

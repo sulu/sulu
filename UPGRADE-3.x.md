@@ -39,6 +39,23 @@ and `extension` are seeded before any resolver runs, so a `[root]` resolver cann
 any priority. Two resolvers returning the same `type` are not rejected; the later one replaces the
 earlier, as before this release.
 
+### Template metadata in the website view
+
+The new `sulu_content.content_resolver.template_metadata` option resolves `template` to an array
+with the `key`, `group` and `tags` of the template instead of its key:
+
+```yaml
+# config/packages/sulu_content.yaml
+sulu_content:
+    content_resolver:
+        template_metadata: true
+```
+
+With the option enabled, Twig templates have to read the key from `template.key`, so
+`template == 'default'` becomes `template.key == 'default'` and `{{ template }}` becomes
+`{{ template.key }}`. Leaving the option disabled is deprecated, it will be enabled by default in
+a future version.
+
 ### Content admin API routes
 
 The review overlay needs them. Add to `config/routes/sulu_admin.yaml`:
