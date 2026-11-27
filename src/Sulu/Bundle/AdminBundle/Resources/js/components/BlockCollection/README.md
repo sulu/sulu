@@ -52,6 +52,25 @@ const renderBlockContent = (value) => 'A not so unique block';
 />
 ```
 
+The `generateBlockIds` prop is an optional callback receiving the amount of needed ids and returning a promise with
+that many new ids. If it is passed, duplicated, copied and cut blocks lose their `_id`, and the duplicated blocks
+receive new ones, so the ids stay unique.
+
+```javascript
+const [value, setValue] = React.useState([{_id: 'a1', content: 'First'}, {_id: 'a2', content: 'Second'}]);
+let counter = 0;
+
+const generateBlockIds = (count) => Promise.resolve(Array.from({length: count}, () => 'generated-' + ++counter));
+const renderBlockContent = (value) => <p>{value.content} ({value._id})</p>;
+
+<BlockCollection
+    generateBlockIds={generateBlockIds}
+    onChange={setValue}
+    renderBlockContent={renderBlockContent}
+    value={value}
+/>
+```
+
 The `movable` flag can be used to disable the moving feature of blocks.
 
 ```javascript
