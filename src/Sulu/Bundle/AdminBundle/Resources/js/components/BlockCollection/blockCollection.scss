@@ -5,6 +5,10 @@
     position: relative;
 }
 
+:global(body):has(.dragging) {
+    user-select: none;
+}
+
 .spacer {
     height: 10px;
 }

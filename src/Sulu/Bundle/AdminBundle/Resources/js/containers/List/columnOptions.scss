@@ -13,10 +13,6 @@ $optionDisabledBackgroundColor: $mercury;
     display: flex;
     flex-direction: column;
     padding: $viewPaddingVertical $viewPaddingHorizontal;
-
-    &.sorting {
-        user-select: none;
-    }
 }
 
 .column-option {
@@ -63,4 +59,8 @@ $optionDisabledBackgroundColor: $mercury;
     &.dragging {
         background: $optionDisabledBackgroundColor;
     }
+}
+
+:global(body):has(.dragging) {
+    user-select: none;
 }

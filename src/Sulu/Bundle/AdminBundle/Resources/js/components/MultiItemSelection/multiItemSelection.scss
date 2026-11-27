@@ -43,3 +43,7 @@ $listElementDragBoxShadowColor: rgba($black, .1);
             0 -3px 6px $listElementDragBoxShadowColor;
     }
 }
+
+:global(body):has(.dragging) {
+    user-select: none;
+}

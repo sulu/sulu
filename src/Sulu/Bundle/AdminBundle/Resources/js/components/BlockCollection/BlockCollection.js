@@ -627,6 +627,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     disabled={disabled}
                     expandedBlocks={this.expandedBlocks}
                     generatedBlockIds={this.generatedBlockIds}
+                    helperClass={blockCollectionStyles.dragging}
                     icons={icons}
                     lockAxis="y"
                     mode={this.mode}

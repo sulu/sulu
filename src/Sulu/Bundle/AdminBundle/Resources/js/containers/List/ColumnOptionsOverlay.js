@@ -2,7 +2,6 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import {action, observable} from 'mobx';
-import classNames from 'classnames';
 import {arrayMove, SortableContainer, SortableElement} from 'react-sortable-hoc';
 import Overlay from '../../components/Overlay';
 import {translate} from '../../utils';
@@ -35,7 +34,6 @@ const SortableList = SortableContainer(({children, className}) => {
 @observer
 class ColumnOptionsOverlay extends React.Component<Props> {
     @observable columnOptions: Array<ColumnOption> = [];
-    @observable sorting: boolean = false;
 
     handleConfirm = () => {
         const newSchema = {};
@@ -80,13 +78,8 @@ class ColumnOptionsOverlay extends React.Component<Props> {
         }
     }
 
-    @action handleItemsSortStart = () => {
-        this.sorting = true;
-    };
-
     @action handleItemsSortEnd = ({newIndex, oldIndex}: {newIndex: number, oldIndex: number}) => {
         this.columnOptions = arrayMove(this.columnOptions, oldIndex, newIndex);
-        this.sorting = false;
     };
 
     render() {
@@ -94,15 +87,6 @@ class ColumnOptionsOverlay extends React.Component<Props> {
             onClose,
             open,
         } = this.props;
-
-        const className = classNames(
-            columnOptionsStyles.overlay,
-            {
-                // TODO: This could be removed when following issue is fixed:
-                // https://github.com/clauderic/react-sortable-hoc/issues/403
-                [columnOptionsStyles.sorting]: this.sorting,
-            }
-        );
 
         return (
             <Overlay
@@ -115,12 +99,11 @@ class ColumnOptionsOverlay extends React.Component<Props> {
             >
                 <SortableList
                     axis="y"
-                    className={className}
+                    className={columnOptionsStyles.overlay}
                     helperClass={columnOptionsStyles.dragging}
                     lockAxis="y"
                     lockToContainerEdges={true}
                     onSortEnd={this.handleItemsSortEnd}
-                    onSortStart={this.handleItemsSortStart}
                     useDragHandle={true}
                 >
                     {this.columnOptions.map((columnOption, index) => {
