@@ -99,6 +99,7 @@ class NavigationRepositoryTest extends TestCase
         $this->nestedTreeRepository = $nestedTreeRepository;
         $this->dimensionContentRepository = $this->prophesize('Doctrine\ORM\EntityRepository');
         $this->dimensionContentQueryEnhancer = $this->prophesize(DimensionContentQueryEnhancer::class);
+        $this->dimensionContentQueryEnhancer->initializeCollections(Argument::cetera())->shouldBeCalled();
         $this->contentAggregator = $this->prophesize(ContentAggregatorInterface::class);
         $this->contentResolver = $this->prophesize(ContentResolverInterface::class);
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);

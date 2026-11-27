@@ -125,8 +125,10 @@ final class NavigationRepository implements NavigationRepositoryInterface
     ): array {
         $filters = $this->buildChildrenFilters($uuid, $locale, $webspaceKey, $depth, $navigationContext);
 
-        /** @var iterable<PageInterface> $pages */
-        $pages = $this->createQueryBuilder($filters)->getQuery()->getResult();
+        $queryBuilder = $this->createQueryBuilder($filters);
+        /** @var PageInterface[] $pages */
+        $pages = $queryBuilder->getQuery()->getResult();
+        $this->dimensionContentQueryEnhancer->initializeCollections($queryBuilder, $pages);
 
         return $this->resolveAndNormalizePages($pages, $locale, $properties);
     }
@@ -151,26 +153,31 @@ final class NavigationRepository implements NavigationRepositoryInterface
         string $webspaceKey,
         array $properties = []
     ): array {
-        /** @var PageInterface|null $page */
-        $page = $this->createQueryBuilder([
+        $pageQueryBuilder = $this->createQueryBuilder([
             'uuid' => $uuid,
             'locale' => $locale,
             'stage' => DimensionContentInterface::STAGE_LIVE,
-        ])->getQuery()->getOneOrNullResult();
+        ]);
+        /** @var PageInterface|null $page */
+        $page = $pageQueryBuilder->getQuery()->getOneOrNullResult();
 
         if (null === $page) {
             return [];
         }
 
-        /** @var PageInterface[] $ancestors */
-        $ancestors = $this->createQueryBuilder([
+        $this->dimensionContentQueryEnhancer->initializeCollections($pageQueryBuilder, [$page]);
+
+        $ancestorsQueryBuilder = $this->createQueryBuilder([
             'ancestorLft' => $page->getLft(),
             'ancestorRgt' => $page->getRgt(),
             'webspaceKey' => $webspaceKey,
             'locale' => $locale,
             'stage' => DimensionContentInterface::STAGE_LIVE,
             'skipAccessControl' => true,
-        ])->getQuery()->getResult();
+        ]);
+        /** @var PageInterface[] $ancestors */
+        $ancestors = $ancestorsQueryBuilder->getQuery()->getResult();
+        $this->dimensionContentQueryEnhancer->initializeCollections($ancestorsQueryBuilder, $ancestors);
 
         /** @var PageInterface[] $pages */
         $pages = [...$ancestors, $page];
@@ -268,10 +275,13 @@ final class NavigationRepository implements NavigationRepositoryInterface
      */
     private function findBy(array $filters = []): \Generator
     {
-        $query = $this->createQueryBuilder($filters)->getQuery();
+        $queryBuilder = $this->createQueryBuilder($filters);
 
-        /** @var PageInterface $page */
-        foreach ($query->getResult() as $page) { // @phpstan-ignore-line foreach.nonIterable
+        /** @var PageInterface[] $pages */
+        $pages = $queryBuilder->getQuery()->getResult();
+        $this->dimensionContentQueryEnhancer->initializeCollections($queryBuilder, $pages);
+
+        foreach ($pages as $page) {
             yield $page;
         }
     }

@@ -40,8 +40,18 @@ class DimensionContentQueryEnhancer
     public const SELECT_EXCERPT_TAGS = 'excerpt-tags';
     public const SELECT_EXCERPT_CATEGORIES = 'excerpt-categories';
     public const SELECT_EXCERPT_CATEGORIES_TRANSLATION = 'excerpt-categories-translation';
-    public const SELECT_EXCERPT_AUDIENCE_TARGET_GROUPS = 'excerpt-audience-target-groups';
     public const SELECT_ROUTE = 'route';
+
+    /**
+     * The target groups are not joined, because every joined to-many collection multiplies the rows of the others.
+     * They are initialized with one query after the entities are loaded, see initializeCollections().
+     */
+    public const SELECT_EXCERPT_AUDIENCE_TARGET_GROUPS = 'excerpt-audience-target-groups';
+
+    private const ASSOCIATION_EXCERPT_AUDIENCE_TARGET_GROUPS = 'excerptAudienceTargetGroups';
+
+    // keeps the number of bind parameters of one query far below the limit of PostgreSQL
+    private const INITIALIZE_COLLECTIONS_CHUNK_SIZE = 1000;
 
     /**
      * Groups are used in controllers and represents serialization / resolver group,
@@ -60,12 +70,14 @@ class DimensionContentQueryEnhancer
             self::SELECT_EXCERPT_TAGS => true,
             self::SELECT_EXCERPT_CATEGORIES => true,
             self::SELECT_ROUTE => true,
+            self::SELECT_EXCERPT_AUDIENCE_TARGET_GROUPS => true,
         ],
         self::GROUP_SELECT_CONTENT_WEBSITE => [
             self::SELECT_EXCERPT_TAGS => true,
             self::SELECT_EXCERPT_CATEGORIES => true,
             self::SELECT_EXCERPT_CATEGORIES_TRANSLATION => true,
             self::SELECT_ROUTE => true,
+            self::SELECT_EXCERPT_AUDIENCE_TARGET_GROUPS => true,
         ],
     ];
 
@@ -76,9 +88,17 @@ class DimensionContentQueryEnhancer
      */
     private \WeakMap $completedAttributes;
 
+    /**
+     * Associations which addSelects() leaves uninitialized for a query builder, to be initialized after its result is loaded.
+     *
+     * @var \WeakMap<QueryBuilder, string[]>
+     */
+    private \WeakMap $collectionsToInitialize;
+
     public function __construct()
     {
         $this->completedAttributes = new \WeakMap();
+        $this->collectionsToInitialize = new \WeakMap();
     }
 
     /**
@@ -272,6 +292,7 @@ class DimensionContentQueryEnhancer
      *     with-excerpt-categories?: bool,
      *     with-excerpt-categories-translation?: bool,
      *     with-excerpt-audience-target-groups?: bool,
+     *     excerpt-audience-target-groups?: bool,
      *     with-excerpt-image?: bool,
      *     with-excerpt-image-translation?: bool,
      *     with-excerpt-icon?: bool,
@@ -301,6 +322,8 @@ class DimensionContentQueryEnhancer
 
         $locale = $dimensionAttributes['locale'] ?? null;
 
+        $collectionsToInitialize = $this->collectionsToInitialize[$queryBuilder] ?? [];
+
         if (\is_subclass_of($dimensionContentClassName, TaxonomyInterface::class)) {
             if ($selects[self::SELECT_EXCERPT_TAGS] ?? false) {
                 $queryBuilder->leftJoin('dimensionContent.excerptTags', 'contentExcerptTag')
@@ -328,8 +351,7 @@ class DimensionContentQueryEnhancer
             }
 
             if ($selects[self::SELECT_EXCERPT_AUDIENCE_TARGET_GROUPS] ?? false) {
-                $queryBuilder->leftJoin('dimensionContent.excerptAudienceTargetGroups', 'contentExcerptAudienceTargetGroup')
-                    ->addSelect('contentExcerptAudienceTargetGroup');
+                $collectionsToInitialize[] = self::ASSOCIATION_EXCERPT_AUDIENCE_TARGET_GROUPS;
             }
         }
 
@@ -337,6 +359,84 @@ class DimensionContentQueryEnhancer
             if ($selects[self::SELECT_ROUTE] ?? false) {
                 $queryBuilder->leftJoin('dimensionContent.route', 'route')
                     ->addSelect('route');
+            }
+        }
+
+        $this->collectionsToInitialize[$queryBuilder] = \array_values(\array_unique($collectionsToInitialize));
+    }
+
+    /**
+     * Initializes the lazy collections of the dimension contents loaded by a query builder with one query per association.
+     *
+     * Merging reads these collections of every dimension content, one query each.
+     * The associations the selects of addSelects() ask for are initialized, the repository adds the ones only it knows.
+     *
+     * @template T of DimensionContentInterface
+     *
+     * @param iterable<ContentRichEntityInterface<T>> $contentRichEntities
+     * @param string[] $associations
+     */
+    public function initializeCollections(
+        QueryBuilder $queryBuilder,
+        iterable $contentRichEntities,
+        array $associations = [],
+    ): void {
+        $registeredAssociations = $this->collectionsToInitialize[$queryBuilder] ?? null;
+        if (null === $registeredAssociations) {
+            return;
+        }
+
+        $associations = \array_values(\array_unique([...$registeredAssociations, ...$associations]));
+        if ([] === $associations) {
+            return;
+        }
+
+        $entityManager = $queryBuilder->getEntityManager();
+
+        $dimensionContentsByClass = [];
+        foreach ($contentRichEntities as $contentRichEntity) {
+            if ($entityManager->getUnitOfWork()->isUninitializedObject($contentRichEntity)) {
+                continue;
+            }
+
+            $dimensionContents = $contentRichEntity->getDimensionContents();
+            if ($dimensionContents instanceof PersistentCollection && !$dimensionContents->isInitialized()) {
+                continue;
+            }
+
+            foreach ($dimensionContents as $dimensionContent) {
+                $dimensionContentsByClass[$dimensionContent::class][] = $dimensionContent;
+            }
+        }
+
+        foreach ($dimensionContentsByClass as $dimensionContentClassName => $dimensionContents) {
+            $classMetadata = $entityManager->getClassMetadata($dimensionContentClassName);
+
+            foreach ($associations as $association) {
+                if (!$classMetadata->hasAssociation($association)) {
+                    continue;
+                }
+
+                $uninitializedDimensionContents = \array_values(\array_filter(
+                    $dimensionContents,
+                    static function(object $dimensionContent) use ($classMetadata, $association): bool {
+                        $collection = $classMetadata->getFieldValue($dimensionContent, $association);
+
+                        return $collection instanceof PersistentCollection && !$collection->isInitialized();
+                    },
+                ));
+
+                // Doctrine fills the uninitialized collections of the entities it already manages from the joined rows.
+                foreach (\array_chunk($uninitializedDimensionContents, self::INITIALIZE_COLLECTIONS_CHUNK_SIZE) as $chunk) {
+                    $entityManager->createQueryBuilder()
+                        ->select('dimensionContent', 'association')
+                        ->from($classMetadata->rootEntityName, 'dimensionContent')
+                        ->leftJoin('dimensionContent.' . $association, 'association')
+                        ->where('dimensionContent IN (:dimensionContents)')
+                        ->setParameter('dimensionContents', $chunk)
+                        ->getQuery()
+                        ->getResult();
+                }
             }
         }
     }
