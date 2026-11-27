@@ -10,6 +10,7 @@ type Props = {|
     onClick: ?(rowId: string | number, rowIndex: number) => void,
     rowId: string | number,
     rowIndex: number,
+    title?: string,
 |};
 
 export default class ButtonCell extends React.PureComponent<Props> {
@@ -29,11 +30,12 @@ export default class ButtonCell extends React.PureComponent<Props> {
         const {
             disabled,
             icon,
+            title,
         } = this.props;
 
         return (
             <Cell className={tableStyles.buttonCell}>
-                <button disabled={disabled} onClick={this.handleClick} type="button">
+                <button disabled={disabled} onClick={this.handleClick} type="button" title={title}>
                     <Icon name={icon} />
                 </button>
             </Cell>

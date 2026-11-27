@@ -40,6 +40,7 @@ export type ItemActionConfig = {|
     disabled?: boolean,
     icon: string,
     onClick: ?(rowId: string | number, index: number) => void,
+    title?: string,
 |};
 
 export type ItemActionsProvider = (item: ?Object) => Array<ItemActionConfig>;
