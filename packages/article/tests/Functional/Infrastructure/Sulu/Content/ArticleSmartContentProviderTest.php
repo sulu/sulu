@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Sulu\Article\Application\Message\ApplyWorkflowTransitionArticleMessage;
 use Sulu\Article\Application\Message\CreateArticleMessage;
 use Sulu\Article\Domain\Model\ArticleInterface;
+use Sulu\Article\Infrastructure\Sulu\Content\ArticleSmartContentProvider;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -554,6 +555,32 @@ class ArticleSmartContentProviderTest extends SuluTestCase
         $this->assertSame('Cloud Computing', $result[0]['title']);
     }
 
+    public function testDefaultLimitIsConfigured(): void
+    {
+        $this->assertSame(
+            ArticleSmartContentProvider::DEFAULT_LIMIT,
+            $this->getContainer()->getParameter('sulu_article.smart_content.default_limit'),
+        );
+    }
+
+    public function testFindFlatByWithoutLimitUsesDefaultLimit(): void
+    {
+        $smartContentProvider = $this->createSmartContentProvider(5);
+        $filters = [...$this->getDefaultFilters(), ...['locale' => 'en']];
+
+        $this->assertCount(5, $smartContentProvider->findFlatBy($filters, []));
+        $this->assertSame(5, $smartContentProvider->countBy($filters));
+    }
+
+    public function testFindFlatByLimitOverridesDefaultLimit(): void
+    {
+        $smartContentProvider = $this->createSmartContentProvider(5);
+        $filters = [...$this->getDefaultFilters(), ...['locale' => 'en', 'limit' => 10]];
+
+        $this->assertCount(10, $smartContentProvider->findFlatBy($filters, []));
+        $this->assertSame(15, $smartContentProvider->countBy($filters));
+    }
+
     public function testFindFlatByMaxPerPageAndPageSecond(): void
     {
         $page = 2;
@@ -853,6 +880,17 @@ class ArticleSmartContentProviderTest extends SuluTestCase
             [['news-group'], ['sports2', 'entertainment2']],
             [['blog-group', 'news-group'], ['tech2', 'business2', 'sports2', 'entertainment2']],
         ];
+    }
+
+    private function createSmartContentProvider(int $defaultLimit): SmartContentProviderInterface
+    {
+        return new ArticleSmartContentProvider(
+            $this->getContainer()->get('sulu_content.dimension_content_query_enhancer'),
+            $this->getContainer()->get('sulu_admin.smart_content_query_enhancer'),
+            $this->getContainer()->get('doctrine.orm.entity_manager'),
+            $this->getContainer()->get('sulu_admin.metadata_group_provider'),
+            $defaultLimit,
+        );
     }
 
     /**
