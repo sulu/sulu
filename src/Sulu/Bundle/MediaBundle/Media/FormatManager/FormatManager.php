@@ -25,6 +25,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,7 +62,8 @@ class FormatManager implements FormatManagerInterface
         $saveImage,
         private $responseHeaders,
         private $formats,
-        ?LoggerInterface $logger = null
+        ?LoggerInterface $logger = null,
+        private bool $debug = false
     ) {
         $this->saveImage = 'true' == $saveImage ? true : false;
         $this->fileSystem = new Filesystem();
@@ -155,11 +157,16 @@ class FormatManager implements FormatManagerInterface
                     $formatKey
                 );
             }
-        } catch (ImageProxyException $e) {
+        } catch (IOException|ImageProxyException $e) {
             $this->logger->debug($e->getMessage(), ['exception' => $e]);
             $responseContent = null;
             $status = 404;
             $mimeType = null;
+
+            if ($this->debug) {
+                $mimeType = 'image/svg+xml';
+                $responseContent = $this->getNotFoundImage($formatKey, $e);
+            }
         }
 
         // Set header.
@@ -329,5 +336,45 @@ class FormatManager implements FormatManagerInterface
         }
 
         throw new ImageProxyMediaNotFoundException('Media file version was not found');
+    }
+
+    /**
+     * Get not found image.
+     */
+    private function getNotFoundImage(string $formatKey, \Exception $e): string
+    {
+        $x = 600;
+        $y = 350;
+
+        if (isset($this->formats[$formatKey])) {
+            $format = $this->formats[$formatKey];
+            $x = $format['scale']['x'];
+            $y = $format['scale']['y'];
+
+            // Render square image when only height or only width is given.
+            $x = $x ?: $y; // if x is empty use y as x
+            $y = $y ?: $x; // if y is empty use x as y
+
+            if ($format['scale']['retina']) {
+                $x = $x * 2;
+                $y = $y * 2;
+            }
+        }
+
+        $fontSize = $x / 20;
+        $textX = \ceil($x / 2);
+        $textY = \ceil($y / 2);
+        $textY2 = \ceil($textX + $fontSize * 1.5);
+        $errorCode = $e->getCode();
+
+        return <<<XML
+            <?xml version="1.0" encoding="utf-8"?>
+            <svg xmlns="http://www.w3.org/2000/svg" width="$x" height="$y">
+                <rect height="100%" width="100%" fill="silver"/>
+                <text x="$textX" y="$textY" fill="white" text-anchor="middle" font-family="Monospace" font-size="$fontSize" alignment-baseline="central">
+                    ERROR CODE: $errorCode
+                </text>
+            </svg>
+            XML;
     }
 }
