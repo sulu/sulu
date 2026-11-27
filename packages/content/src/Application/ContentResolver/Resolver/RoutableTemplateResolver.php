@@ -120,17 +120,26 @@ readonly class RoutableTemplateResolver implements ResolverInterface
         }
 
         $parentSlug = $parentRoute->getSlug();
+        $parentPath = \rtrim($parentSlug, '/');
         $slug = $route->getSlug();
-        $suffix = \str_starts_with($slug, $parentSlug)
-            ? \substr($slug, \strlen($parentSlug))
-            : '';
+
+        // A slug that is not below the slug of the page (e.g. changed by hand or migrated) is the url as a whole.
+        if (!\str_starts_with($slug, $parentPath . '/')) {
+            return [
+                'page' => [
+                    'uuid' => $parentRoute->getResourceId(),
+                    'path' => '',
+                ],
+                'suffix' => $slug,
+            ];
+        }
 
         return [
             'page' => [
                 'uuid' => $parentRoute->getResourceId(),
                 'path' => $parentSlug,
             ],
-            'suffix' => $suffix,
+            'suffix' => \substr($slug, \strlen($parentPath)),
         ];
     }
 }
