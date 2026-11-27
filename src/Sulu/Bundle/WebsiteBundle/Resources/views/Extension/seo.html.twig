@@ -3,6 +3,8 @@
  # seo array
  # shadowBaseLocale string
  # localizations array
+ # structuredData bool (optional, renders schema.org JSON-LD)
+ # breadcrumb array (optional, items with title and url, e.g. from sulu_page_breadcrumb)
 -#}
 
 {% if localizations is not defined %}
@@ -84,4 +86,67 @@
 {%- block canonical -%}
     {#- Set canonical to itself if a bot clone the page -#}
     <link rel="canonical" href="{{ seoCanonical|default(app.request.uri) }}">
+{%- endblock -%}
+
+{%- block structured_data -%}
+    {#- opt-in: pass "structuredData": true, and optionally "breadcrumb": sulu_page_breadcrumb(resource.id) -#}
+    {%- if structuredData|default(false) -%}
+        {%- set suluAttributes = app.request.attributes.get('_sulu') -%}
+        {%- set webspace = suluAttributes ? suluAttributes.getAttribute('webspace') : null -%}
+        {%- set language = app.request.locale|replace({'_': '-'}) -%}
+        {%- set websiteUrl = absolute_url(sulu_content_root_path()) -%}
+        {%- set pageUrl = seoCanonical|default(app.request.uri) -%}
+        {%- set breadcrumbItems = breadcrumb|default([]) -%}
+
+        {%- set website = {
+            '@type': 'WebSite',
+            '@id': websiteUrl ~ '#website',
+            'url': websiteUrl,
+            'inLanguage': language,
+        } -%}
+        {%- if webspace -%}
+            {%- set website = website|merge({'name': webspace.name}) -%}
+        {%- endif -%}
+
+        {%- set webPage = {
+            '@type': 'WebPage',
+            '@id': pageUrl ~ '#webpage',
+            'url': pageUrl,
+            'inLanguage': language,
+            'isPartOf': {'@id': websiteUrl ~ '#website'},
+        } -%}
+        {%- if seoTitle -%}
+            {%- set webPage = webPage|merge({'name': seoTitle}) -%}
+        {%- endif -%}
+        {%- if seoDescription -%}
+            {%- set webPage = webPage|merge({'description': seoDescription}) -%}
+        {%- endif -%}
+
+        {%- set graph = [website] -%}
+
+        {%- if breadcrumbItems is not empty -%}
+            {%- set listItems = [] -%}
+            {%- for item in breadcrumbItems -%}
+                {%- set listItems = listItems|merge([{
+                    '@type': 'ListItem',
+                    'position': loop.index,
+                    'name': item.title|default(''),
+                    'item': absolute_url(sulu_content_path(item.url|default('/'))),
+                }]) -%}
+            {%- endfor -%}
+
+            {%- set webPage = webPage|merge({'breadcrumb': {'@id': pageUrl ~ '#breadcrumb'}}) -%}
+            {%- set graph = graph|merge([webPage, {
+                '@type': 'BreadcrumbList',
+                '@id': pageUrl ~ '#breadcrumb',
+                'itemListElement': listItems,
+            }]) -%}
+        {%- else -%}
+            {%- set graph = graph|merge([webPage]) -%}
+        {%- endif -%}
+
+        <script type="application/ld+json">
+            {{- {'@context': 'https://schema.org', '@graph': graph}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_HEX_TAG') b-or constant('JSON_HEX_AMP'))|raw -}}
+        </script>
+    {%- endif -%}
 {%- endblock -%}
