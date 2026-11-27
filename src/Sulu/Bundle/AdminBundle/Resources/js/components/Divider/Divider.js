@@ -4,16 +4,24 @@ import dividerStyles from './divider.scss';
 
 type Props = {
     children?: string,
+    description?: string,
 };
 
 export default class Divider extends React.PureComponent<Props> {
     render() {
-        const {children} = this.props;
+        const {children, description} = this.props;
 
         return (
-            <div className={dividerStyles.divider}>
-                {children}
-            </div>
+            <>
+                <div className={dividerStyles.divider}>
+                    {children}
+                </div>
+                {description &&
+                    <div className={dividerStyles.description}>
+                        {description}
+                    </div>
+                }
+            </>
         );
     }
 }

@@ -75,6 +75,12 @@ test('Render section with children', () => {
     expect(screen.getByTestId('field-type')).toBeInTheDocument();
 });
 
+test('Render section with description', () => {
+    renderSection({schema: {description: 'Section description'}});
+
+    expect(screen.getByText('Section description')).toBeInTheDocument();
+});
+
 test('Do not render anything if visibleCondition evaluates to false', () => {
     const data = observable({title: 'Test'});
 

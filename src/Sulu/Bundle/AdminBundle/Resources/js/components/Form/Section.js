@@ -10,6 +10,7 @@ import type {ChildrenArray, Element} from 'react';
 type Props = {|
     children: ?ChildrenArray<?Element<typeof Field | typeof Section>>,
     colSpan: ColSpan,
+    description?: string,
     label?: string,
 |};
 
@@ -19,13 +20,13 @@ export default class Section extends React.Component<Props> {
     };
 
     render() {
-        const {children, label, colSpan} = this.props;
+        const {children, colSpan, description, label} = this.props;
 
         const fields = React.Children.toArray(children);
-        if (label || colSpan === 12) {
+        if (label || description || colSpan === 12) {
             fields.unshift(
                 <Grid.Item className={gridStyles.dividerContainer} colSpan={12} key={fields.length}>
-                    <Divider>
+                    <Divider description={description}>
                         {label}
                     </Divider>
                 </Grid.Item>

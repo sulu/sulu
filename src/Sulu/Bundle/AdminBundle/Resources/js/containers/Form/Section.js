@@ -47,10 +47,10 @@ class Section extends React.Component<Props> {
         }
 
         const {children, name, schema} = this.props;
-        const {colSpan, label} = schema;
+        const {colSpan, description, label} = schema;
 
         return (
-            <Form.Section colSpan={colSpan} key={name} label={label}>
+            <Form.Section colSpan={colSpan} description={description} key={name} label={label}>
                 {children}
             </Form.Section>
         );

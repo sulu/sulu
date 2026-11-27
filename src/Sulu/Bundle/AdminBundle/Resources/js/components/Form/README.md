@@ -18,7 +18,7 @@ const [type, setType] = React.useState('work');
             <input type="text" style={{width: '100%'}} />
         </Form.Field>
     </Form.Section>
-    <Form.Section label="Section 2" colSpan={9}>
+    <Form.Section description="This is the second section" label="Section 2" colSpan={9}>
         <Form.Field description="This is the title" label="Title" required={true} colSpan={3}>
             <input type="text" style={{width: '100%'}} />
         </Form.Field>

@@ -29,3 +29,21 @@ test('Render section without label but with divider', () => {
     );
     expect(container).toMatchSnapshot();
 });
+
+test('Render section with description', () => {
+    const {container} = render(
+        <Section description="Section description" label="Test">
+            <p>Test</p>
+        </Section>
+    );
+    expect(container).toMatchSnapshot();
+});
+
+test('Render section with description but without label', () => {
+    const {container} = render(
+        <Section colSpan={6} description="Section description">
+            <p>Test</p>
+        </Section>
+    );
+    expect(container).toMatchSnapshot();
+});
