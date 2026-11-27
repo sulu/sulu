@@ -19,6 +19,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Component\Rest\Exception\RestExceptionInterface;
 use Sulu\Content\Tests\Traits\CreateTagTrait;
+use Sulu\Route\Domain\Model\Route;
 use Sulu\Route\Domain\Repository\RouteRepositoryInterface;
 use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -990,5 +991,101 @@ class ArticleControllerTest extends SuluTestCase
         $this->assertContains('de', $availableLocales);
         $this->assertContains('fr', $availableLocales);
         $this->assertContains('en', $availableLocales);
+    }
+
+    public function testRestoreWithUrlTakenByOtherArticle(): void
+    {
+        self::purgeDatabase();
+
+        $uuid = $this->postArticle('/a');
+
+        $this->client->request('DELETE', '/admin/api/articles/' . $uuid . '?locale=en');
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        $otherUuid = $this->postArticle('/a');
+
+        $trashItem = self::getContainer()->get(TrashItemRepositoryInterface::class)->findOneBy([
+            'resourceKey' => ArticleInterface::RESOURCE_KEY,
+            'resourceId' => $uuid,
+        ]);
+        $this->assertNotNull($trashItem);
+
+        $this->client->request('POST', '/admin/api/trash-items/' . $trashItem->getId() . '?action=restore');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $routeRepository = self::getContainer()->get(RouteRepositoryInterface::class);
+        $route = $routeRepository->getOneBy(['resourceKey' => 'articles', 'resourceId' => $uuid, 'locale' => 'en']);
+        $this->assertSame('/a-1', $route->getSlug());
+
+        $otherRoute = $routeRepository->getOneBy(['resourceKey' => 'articles', 'resourceId' => $otherUuid, 'locale' => 'en']);
+        $this->assertSame('/a', $otherRoute->getSlug());
+    }
+
+    public function testRestorePageTreeRouteWithUrlTakenByOtherArticle(): void
+    {
+        $this->assertRestoredPageTreeRouteIsUnique(removeParentRoute: false);
+    }
+
+    public function testRestorePageTreeRouteWithUrlTakenByOtherArticleWithoutParentRoute(): void
+    {
+        $this->assertRestoredPageTreeRouteIsUnique(removeParentRoute: true);
+    }
+
+    private function assertRestoredPageTreeRouteIsUnique(bool $removeParentRoute): void
+    {
+        self::purgeDatabase();
+
+        $routeRepository = self::getContainer()->get(RouteRepositoryInterface::class);
+        $routeRepository->add(new Route('pages', 'parent-page', 'en', '/blog', 'sulu-io'));
+        self::getEntityManager()->flush();
+
+        $this->client->request('POST', '/admin/api/articles?locale=en', [], [], [], \json_encode([
+            'template' => 'page-tree-route',
+            'title' => 'Test Article',
+            'url' => ['page' => ['uuid' => 'parent-page', 'path' => '/blog'], 'suffix' => '/my-article'],
+        ], \JSON_THROW_ON_ERROR));
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+        $uuid = $content['id'];
+
+        $this->client->request('DELETE', '/admin/api/articles/' . $uuid . '?locale=en');
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+
+        if ($removeParentRoute) {
+            self::getEntityManager()->createQuery('DELETE FROM ' . Route::class . " r WHERE r.resourceKey = 'pages'")->execute();
+        }
+
+        $otherUuid = $this->postArticle('/blog/my-article');
+
+        $trashItem = self::getContainer()->get(TrashItemRepositoryInterface::class)->findOneBy([
+            'resourceKey' => ArticleInterface::RESOURCE_KEY,
+            'resourceId' => $uuid,
+        ]);
+        $this->assertNotNull($trashItem);
+
+        $this->client->request('POST', '/admin/api/trash-items/' . $trashItem->getId() . '?action=restore');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $route = $routeRepository->getOneBy(['resourceKey' => 'articles', 'resourceId' => $uuid, 'locale' => 'en']);
+        $this->assertSame('/blog/my-article-1', $route->getSlug());
+
+        $otherRoute = $routeRepository->getOneBy(['resourceKey' => 'articles', 'resourceId' => $otherUuid, 'locale' => 'en']);
+        $this->assertSame('/blog/my-article', $otherRoute->getSlug());
+    }
+
+    private function postArticle(string $url): string
+    {
+        $this->client->request('POST', '/admin/api/articles?locale=en', [], [], [], \json_encode([
+            'template' => 'article',
+            'title' => 'Test Article',
+            'url' => $url,
+        ], \JSON_THROW_ON_ERROR));
+        $this->assertHttpStatusCode(201, $this->client->getResponse());
+
+        /** @var array{id: string} $content */
+        $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        return $content['id'];
     }
 }
