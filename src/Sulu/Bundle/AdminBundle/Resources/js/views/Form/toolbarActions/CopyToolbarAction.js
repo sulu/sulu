@@ -52,6 +52,7 @@ export default class CopyToolbarAction extends AbstractFormToolbarAction {
     @action handleCopyDialogConfirm = () => {
         const {
             id,
+            locale,
             options: {
                 webspace,
             },
@@ -66,6 +67,7 @@ export default class CopyToolbarAction extends AbstractFormToolbarAction {
             {
                 action: 'copy',
                 id,
+                locale,
                 webspace,
             }
         ).then(action((response) => {
