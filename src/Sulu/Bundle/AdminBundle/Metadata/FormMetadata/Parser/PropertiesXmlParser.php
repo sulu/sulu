@@ -351,6 +351,7 @@ class PropertiesXmlParser
      *          title?: array<string, string>,
      *          info_text?: array<string, string>,
      *          placeholder?: array<string, string>,
+     *          priority?: int,
      *      },
      *      collection?: array<mixed>,
      *  }>
@@ -375,6 +376,7 @@ class PropertiesXmlParser
      *         title?: array<string, string>,
      *         info_text?: array<string, string>,
      *         placeholder?: array<string, string>,
+     *         priority?: int,
      *     },
      *     collection?: array<mixed>,
      * }
