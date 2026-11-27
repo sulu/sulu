@@ -231,7 +231,7 @@ test('Copy resource when confirmation dialog is confirmed', () => {
     expect(ResourceRequester.post).toHaveBeenCalledWith(
         'pages',
         undefined,
-        {action: 'copy', id: 3, webspace: 'sulu_io'}
+        {action: 'copy', id: 3, locale: copyToolbarAction.resourceFormStore.locale, webspace: 'sulu_io'}
     );
 
     return copyPromise.then(() => {
