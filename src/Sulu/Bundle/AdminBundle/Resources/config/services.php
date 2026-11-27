@@ -33,6 +33,7 @@ use Sulu\Bundle\AdminBundle\Controller\CollaborationController;
 use Sulu\Bundle\AdminBundle\Controller\IconController;
 use Sulu\Bundle\AdminBundle\Controller\SmartContentItemController;
 use Sulu\Bundle\AdminBundle\Controller\TeaserController;
+use Sulu\Bundle\AdminBundle\Controller\ViewRedirectController;
 use Sulu\Bundle\AdminBundle\Entity\CollaborationRepository;
 use Sulu\Bundle\AdminBundle\ExpressionLanguage\ContainerExpressionLanguageProvider;
 use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistry;
@@ -130,6 +131,13 @@ return static function(ContainerConfigurator $container) {
             '%sulu_admin.text_editor_configs%',
         ])
         ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->set('sulu_admin.view_redirect_controller', ViewRedirectController::class)
+        ->public()
+        ->args([
+            new Reference('sulu_admin.resource_view_url_generator', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+        ])
+    ;
 
     $services->set('sulu_admin.admin_pool', AdminPool::class)
         ->public()

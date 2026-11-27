@@ -19,3 +19,9 @@ sulu_admin.login_check:
 
 sulu_admin.logout:
     path: /logout
+
+# Admin Deeplink
+sulu_admin.redirect_controller:
+    path: '/view-redirect'
+    methods: GET
+    controller: 'sulu_admin.view_redirect_controller'

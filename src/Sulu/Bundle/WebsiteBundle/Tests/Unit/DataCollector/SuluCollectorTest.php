@@ -19,8 +19,8 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Webspace;
-use Sulu\Content\Domain\Model\ContentRichEntityInterface;
-use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Page\Domain\Model\Page;
+use Sulu\Page\Domain\Model\PageDimensionContent;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,9 +43,10 @@ class SuluCollectorTest extends TestCase
 
     public function setUp(): void
     {
+        $this->attributes = $this->prophesize(ParameterBag::class);
         $this->response = $this->prophesize(Response::class);
 
-        $this->suluCollector = new SuluCollector();
+        $this->suluCollector = new SuluCollector('/admin/view-redirect');
     }
 
     public function testCollectorNoComplexObjects(): void
@@ -84,21 +85,26 @@ class SuluCollectorTest extends TestCase
         $this->assertEquals(null, $this->suluCollector->data('structure'));
     }
 
-    public function testCollectorWithDocument(): void
+    public function testCollectorWithPage(): void
     {
         $webspace = $this->prophesize(Webspace::class);
+        $webspace->getKey()->willReturn('test-webspace');
+
         $portal = $this->prophesize(Portal::class);
         $segment = $this->prophesize(Segment::class);
 
-        $page = $this->prophesize(DimensionContentInterface::class);
-        $resource = $this->prophesize(ContentRichEntityInterface::class);
-        $resource->getId()->willReturn('123');
+        $page = $this->prophesize(Page::class);
+        $page->getId()->willReturn('456');
+        $page->getCreated()->willReturn(new \DateTimeImmutable());
+        $page->getChanged()->willReturn(new \DateTimeImmutable());
+        $page->getCreator()->willReturn(null);
+        $page->getChanger()->willReturn(null);
 
-        $page->getResource()->willReturn($resource->reveal());
-        $page->getStage()->willReturn('published');
-        $page->getLocale()->willReturn('de');
-        $page->getAvailableLocales()->willReturn(['de', 'en']);
-        $page->getGhostLocale()->willReturn(null);
+        $pageDimensionContent = new PageDimensionContent($page->reveal());
+
+        (new \ReflectionProperty($pageDimensionContent, 'id'))->setValue($pageDimensionContent, 1);
+        $pageDimensionContent->setTemplateKey('page.html.twig');
+        $pageDimensionContent->setLocale('de');
 
         $request = Request::create('/');
         $request->attributes->set('_sulu', new RequestAttributes([
@@ -112,7 +118,7 @@ class SuluCollectorTest extends TestCase
             'resourceLocator' => '/asd',
             'resourceLocatorPrefix' => '/asd/',
         ]));
-        $request->attributes->set('object', $page->reveal());
+        $request->attributes->set('object', $pageDimensionContent);
 
         $webspace->toArray()->shouldBeCalled();
         $portal->toArray()->shouldBeCalled();
@@ -120,14 +126,23 @@ class SuluCollectorTest extends TestCase
         $segment->toArray()->shouldBeCalled();
 
         $this->suluCollector->collect($request, $this->response->reveal());
+
+        $data = $this->suluCollector->data('structure');
+        unset($data['created'], $data['changed']);
+
         $this->assertEquals([
-            'id' => '123',
-            'class' => ($resource->reveal())::class,
-            'dimensionClass' => ($page->reveal())::class,
-            'nodeState' => 'published',
+            'id' => '456',
+            'class' => ($page->reveal())::class,
+            'dimensionClass' => PageDimensionContent::class,
+            'nodeState' => 'draft',
             'locale' => 'de',
-            'availableLocales' => ['de', 'en'],
+            'availableLocales' => null,
             'ghostLocale' => null,
-        ], $this->suluCollector->data('structure'));
+            'template' => 'page.html.twig',
+            'published' => null,
+            'navContexts' => [],
+            'shadowLocales' => null,
+            'adminUrl' => '/admin/view-redirect?resourceKey=pages&view=detail&locale=de&id=456&webspace=test-webspace',
+        ], $data);
     }
 }

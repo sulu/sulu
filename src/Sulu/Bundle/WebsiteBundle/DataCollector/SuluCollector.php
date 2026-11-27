@@ -18,6 +18,7 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\RoutableInterface;
 use Sulu\Content\Domain\Model\ShadowInterface;
 use Sulu\Content\Domain\Model\TemplateInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
@@ -32,7 +33,8 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class SuluCollector extends DataCollector
 {
     public function __construct(
-        private string $kernelEnvironment = 'dev'
+        private string $adminDeeplinkRoute,
+        private string $kernelEnvironment = 'dev',
     ) {
     }
 
@@ -62,6 +64,7 @@ class SuluCollector extends DataCollector
         $this->data['redirect'] = $requestAttributes->getAttribute('redirect');
         $this->data['portal_url'] = $requestAttributes->getAttribute('portalUrl');
         $this->data['segment'] = $requestAttributes->getAttribute('segment');
+        $this->data['webspace'] = $webspace;
 
         if ($webspace instanceof ArrayableInterface) {
             $this->data['webspace'] = $webspace->toArray();
@@ -126,6 +129,16 @@ class SuluCollector extends DataCollector
 
             if ($object instanceof ShadowInterface) {
                 $structure['shadowLocales'] = $object->getShadowLocales();
+            }
+
+            if ($object instanceof RoutableInterface) {
+                $structure['adminUrl'] = $this->adminDeeplinkRoute . '?' . \http_build_query([
+                    'resourceKey' => $object->getResourceKey(),
+                    'view' => 'detail',
+                    'locale' => $object->getLocale(),
+                    'id' => $object->getResourceId(),
+                    'webspace' => $webspace?->getKey(),
+                ]);
             }
         }
         $this->data['structure'] = $structure;
