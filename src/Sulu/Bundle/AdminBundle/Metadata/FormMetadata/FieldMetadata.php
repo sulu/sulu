@@ -105,6 +105,17 @@ class FieldMetadata extends ItemMetadata
         return $this->types;
     }
 
+    /**
+     * @param array<FormMetadata> $types
+     */
+    public function setTypes(array $types): void
+    {
+        $this->types = [];
+        foreach ($types as $type) {
+            $this->addType($type);
+        }
+    }
+
     public function addType(FormMetadata $type): void
     {
         $this->types[$type->getKey()] = $type;
@@ -205,5 +216,28 @@ class FieldMetadata extends ItemMetadata
     public function setTags(array $tags): void
     {
         $this->tags = $tags;
+    }
+
+    public function merge(FieldMetadata $otherMetaData): FieldMetadata
+    {
+        $mergedMetaData = new self($this->name);
+        $mergedMetaData->setType($this->type);
+        $mergedMetaData->setColSpan($this->colSpan);
+        $mergedMetaData->setDefaultType($this->defaultType);
+        $mergedMetaData->setMaxOccurs($this->maxOccurs);
+        $mergedMetaData->setMinOccurs($this->minOccurs);
+        $mergedMetaData->setOnInvalid($this->onInvalid);
+        $mergedMetaData->setRequired($this->required);
+        $mergedMetaData->setDisabledCondition($this->disabledCondition);
+        $mergedMetaData->setVisibleCondition($this->visibleCondition);
+        $mergedMetaData->setSpaceAfter($this->spaceAfter);
+        $mergedMetaData->setMultilingual($this->multilingual);
+
+        $mergedMetaData->setDescriptions(\array_merge($this->descriptions, $otherMetaData->getDescriptions()));
+        $mergedMetaData->setLabels(\array_merge($this->labels, $otherMetaData->getLabels()));
+        $mergedMetaData->setTags(\array_merge($this->tags, $otherMetaData->getTags()));
+        $mergedMetaData->setTypes(\array_merge($this->types, $otherMetaData->getTypes()));
+
+        return $mergedMetaData;
     }
 }
