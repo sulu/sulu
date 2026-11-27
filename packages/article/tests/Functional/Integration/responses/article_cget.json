@@ -8,6 +8,7 @@
                 "changer": "@string@",
                 "created": "@datetime@",
                 "creator": "@string@",
+                "excerptPriority": 0,
                 "ghostLocale": null,
                 "id": "@string@",
                 "locale": "@string@",

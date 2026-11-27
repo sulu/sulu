@@ -12,6 +12,11 @@
 
         <field name="title" type="string" column="title" length="191" nullable="true"/>
         <field name="customizeWebspaceSettings" type="boolean" column="customizeWebspaceSettings" nullable="false"/>
+        <field name="excerptPriority" type="integer" column="excerptPriority" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
 
         <many-to-one field="article" target-entity="Sulu\Article\Domain\Model\ArticleInterface" inversed-by="dimensionContents">
             <join-columns>
@@ -29,5 +34,9 @@
                 <cascade-persist/>
             </cascade>
         </one-to-many>
+
+        <indexes>
+            <index name="idx_ar_article_dimension_contents_excerpt_priority" fields="excerptPriority"/>
+        </indexes>
     </mapped-superclass>
 </doctrine-mapping>
