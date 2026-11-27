@@ -16,6 +16,7 @@ type Props<T: string> = {
     actions: Array<ActionConfig>,
     activeType?: T,
     children: Node,
+    errorCount?: number,
     expanded: boolean,
     handle?: Node,
     icons?: Array<string>,
@@ -102,6 +103,7 @@ class Block<T: string> extends React.Component<Props<T>> {
         const {
             activeType,
             children,
+            errorCount,
             handle,
             icons,
             navigationId,
@@ -117,6 +119,7 @@ class Block<T: string> extends React.Component<Props<T>> {
         const blockClass = classNames(
             blockStyles.block,
             {
+                [blockStyles.error]: !!errorCount,
                 [blockStyles.expanded]: expanded,
                 [blockStyles.selected]: selected,
             }
@@ -129,6 +132,9 @@ class Block<T: string> extends React.Component<Props<T>> {
                 onClick={this.handleExpand}
                 role="switch"
             >
+                {!!errorCount &&
+                    <span className={blockStyles.errorBadge}>{errorCount}</span>
+                }
                 {handle &&
                     <div className={blockStyles.handle}>
                         {handle}

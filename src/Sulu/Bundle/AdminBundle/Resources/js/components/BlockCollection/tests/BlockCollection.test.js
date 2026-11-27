@@ -132,6 +132,17 @@ test('Should render a non-movable block list', () => {
     expect(asFragment()).toMatchSnapshot();
 });
 
+test('Should pass the number of errors to the matching blocks', () => {
+    renderBlockCollection({
+        errorCounts: [0, 2],
+        value: [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}],
+    });
+
+    expect(getBlock(0)).not.toHaveClass('error');
+    expect(getBlock(1)).toHaveClass('error');
+    expect(within(getBlock(1)).getByText('2')).toHaveClass('errorBadge');
+});
+
 test('Should render a disabled block list', () => {
     renderBlockCollection({
         disabled: true,

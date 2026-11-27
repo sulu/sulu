@@ -18,6 +18,7 @@ type Props<T: string, U: {_id?: string, type: T, ...}> = {|
     collapseAllText?: ?string,
     defaultType: T,
     disabled: boolean,
+    errorCounts?: Array<number>,
     expandAllText?: ?string,
     generateBlockIds?: (count: number) => Promise<Array<string>>,
     icons?: Array<Array<string>>,
@@ -772,6 +773,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
         const {
             collapsable,
             disabled,
+            errorCounts,
             icons,
             onSettingsClick,
             renderBlockContent,
@@ -796,6 +798,7 @@ class BlockCollection<T: string, U: {_id?: string, type: T, ...}> extends React.
                 <SortableBlockList
                     blockActions={this.blockActions}
                     disabled={disabled}
+                    errorCounts={errorCounts}
                     expandedBlocks={this.expandedBlocks}
                     generatedBlockIds={this.generatedBlockIds}
                     icons={icons}
