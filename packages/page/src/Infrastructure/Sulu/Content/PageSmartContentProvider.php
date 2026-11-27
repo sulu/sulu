@@ -24,7 +24,7 @@ use Sulu\Bundle\AdminBundle\SmartContent\Configuration\BuilderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentProviderInterface;
 use Sulu\Bundle\AdminBundle\SmartContent\SmartContentQueryEnhancer;
-use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
+use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -114,7 +114,7 @@ readonly class PageSmartContentProvider implements SmartContentProviderInterface
         EntityManagerInterface $entityManager,
         private array $bundles,
         private WebspaceManagerInterface $webspaceManager,
-        private AccessControlQueryEnhancer $accessControlQueryEnhancer,
+        private AccessControlQueryEnhancerInterface $accessControlQueryEnhancer,
         private ?Security $security,
         private ?array $permissions = null,
     ) {
