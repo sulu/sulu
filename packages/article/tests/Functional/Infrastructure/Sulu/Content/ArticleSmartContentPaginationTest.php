@@ -23,12 +23,11 @@ use Sulu\Content\Application\ContentResolver\Value\SmartResolvable;
 use Sulu\Content\Application\SmartResolver\Resolver\SmartContentSmartResolver;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Messenger\Infrastructure\Symfony\Messenger\FlushMiddleware\EnableFlushStamp;
-use Sulu\Route\Domain\Value\RequestAttributeEnum;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 /**
- * The default limit must not cap the total of a paginated smart content (see sulu/SuluArticleBundle#494).
+ * The default limit must not cap the total of a paginated smart content.
  */
 class ArticleSmartContentPaginationTest extends SuluTestCase
 {
@@ -39,10 +38,6 @@ class ArticleSmartContentPaginationTest extends SuluTestCase
         parent::setUpBeforeClass();
         self::purgeDatabase();
         self::bootKernel();
-
-        // TODO this should not be necessary
-        self::getContainer()->get('router.request_context')
-            ->setParameter(RequestAttributeEnum::WEBSPACE->value, 'sulu-io');
 
         for ($i = 0; $i < self::ARTICLE_COUNT; ++$i) {
             self::createArticle(['title' => 'Article ' . $i]);
