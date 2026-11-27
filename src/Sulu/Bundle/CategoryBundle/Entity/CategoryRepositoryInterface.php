@@ -102,4 +102,12 @@ interface CategoryRepositoryInterface extends RepositoryInterface
      * @return array<array{id: int, resourceKey: string, depth: int}>
      */
     public function findDescendantCategoryResources(int $ancestorId): array;
+
+    /**
+     * Returns the ancestors of the given category with their translations, ordered from the root to the parent.
+     * The category itself is not part of the result.
+     *
+     * @return CategoryInterface[]
+     */
+    public function findAncestorCategories(CategoryInterface $category): array;
 }

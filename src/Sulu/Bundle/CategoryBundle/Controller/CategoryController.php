@@ -11,12 +11,14 @@
 
 namespace Sulu\Bundle\CategoryBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin;
 use Sulu\Bundle\CategoryBundle\Api\RootCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
+use Sulu\Bundle\CategoryBundle\Serializer\Subscriber\CategoryBreadcrumbSubscriber;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -63,6 +65,10 @@ class CategoryController extends AbstractRestController implements SecuredContro
         };
 
         $view = $this->responseGetById($id, $findCallback);
+
+        $context = new Context();
+        $context->setGroups(['fullCategory', CategoryBreadcrumbSubscriber::GROUP]);
+        $view->setContext($context);
 
         return $this->handleView($view);
     }
