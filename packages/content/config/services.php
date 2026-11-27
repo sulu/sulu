@@ -44,6 +44,7 @@ use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactory;
 use Sulu\Content\Infrastructure\Sulu\Admin\ContentViewBuilderFactoryInterface;
 use Sulu\Content\Infrastructure\Sulu\HttpCache\EventSubscriber\DimensionContentTagSubscriber;
 use Sulu\Content\Infrastructure\Sulu\Page\Select\WebspaceSelect;
+use Sulu\Content\Infrastructure\Symfony\Command\DebugContentCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -197,4 +198,14 @@ return static function(ContainerConfigurator $container) {
         ]);
 
     $services->alias(ContentManagerInterface::class, 'sulu_content.content_manager');
+
+    // Commands
+    $services->set('sulu_content.command.debug_content', DebugContentCommand::class)
+        ->args([
+            tagged_iterator(tag: 'sulu_content.resource_loader', defaultIndexMethod: 'getKey', indexAttribute: 'key'),
+            tagged_iterator(tag: 'sulu_content.content_resolver', indexAttribute: 'type'),
+            tagged_iterator(tag: 'sulu_content.property_resolver', defaultIndexMethod: 'getType'),
+        ])
+        ->tag('console.command')
+    ;
 };
