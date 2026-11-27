@@ -1,0 +1,213 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>smart-content-duplicate</key>
+
+    <view>@ExampleTest/examples/smart_content_duplicate</view>
+    <controller>Sulu\Content\UserInterface\Controller\Website\ContentController::indexAction</controller>
+    <cacheLifetime>604800</cacheLifetime>
+
+    <meta>
+        <title lang="en">Example Smart Content Duplicate</title>
+        <title lang="de">Example Smart Content Duplicate</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="de">Titel</title>
+            </meta>
+
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+
+            <tag name="sulu.rlp.part"/>
+        </property>
+
+        <property name="url" type="route">
+            <meta>
+                <title lang="en">Resourcelocator</title>
+                <title lang="de">Adresse</title>
+            </meta>
+
+            <tag name="sulu.rlp"/>
+        </property>
+
+        <block name="blocks" default-type="smart_content" minOccurs="0">
+            <meta>
+                <title lang="en">Blocks for test Smart content Duplicates</title>
+                <title lang="de">Blöcke für Test Smart Content Duplikate</title>
+            </meta>
+
+            <types>
+                <type name="smart_content">
+                    <meta>
+                        <title lang="en">Smart Content Examples</title>
+                        <title lang="de">Smart Content Beispiele</title>
+                    </meta>
+
+                    <properties>
+                        <property name="examples" type="smart_content">
+                            <meta>
+                                <title lang="en">Smart Content Examples</title>
+                                <title lang="de">Smart Content Examples</title>
+                            </meta>
+
+                            <params>
+                                <param name="provider" value="examples"/>
+                                <param name="exclude_duplicates" value="true"/>
+                                <param name="properties" type="collection">
+                                    <param name="id" value="object.resource.id"/>
+                                    <param name="title" value="title"/>
+                                    <param name="url" value="url"/>
+                                </param>
+                            </params>
+                        </property>
+                    </properties>
+                </type>
+
+                <type name="teaser_selection">
+                    <meta>
+                        <title lang="en">Teasers</title>
+                        <title lang="de">Teasers</title>
+                    </meta>
+
+                    <properties>
+                        <property name="teasers" type="teaser_selection">
+                            <meta>
+                                <title lang="en">Teasers</title>
+                                <title lang="de">Teasers</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </type>
+
+                <type name="example_selection">
+                    <meta>
+                        <title lang="en">Examples</title>
+                        <title lang="de">Beispiele</title>
+                    </meta>
+
+                    <properties>
+                        <property name="examples" type="example_selection">
+                            <meta>
+                                <title lang="en">Example Selection</title>
+                                <title lang="de">Beispiel Auswahl</title>
+                            </meta>
+
+                            <params>
+                                <param name="properties" type="collection">
+                                    <param name="id" value="object.resource.id"/>
+                                    <param name="title" value="title"/>
+                                    <param name="url" value="url"/>
+                                </param>
+                            </params>
+                        </property>
+                    </properties>
+                </type>
+
+                <type name="single_example_selection">
+                    <meta>
+                        <title lang="en">Single Example Selection</title>
+                        <title lang="de">Einzelauswahl Beispiel</title>
+                    </meta>
+
+                    <properties>
+                        <property name="example" type="single_example_selection">
+                            <meta>
+                                <title lang="en">Example</title>
+                                <title lang="de">Beispiel</title>
+                            </meta>
+
+                            <params>
+                                <param name="properties" type="collection">
+                                    <param name="id" value="object.resource.id"/>
+                                    <param name="title" value="title"/>
+                                    <param name="url" value="url"/>
+                                </param>
+                            </params>
+                        </property>
+                    </properties>
+                </type>
+
+                <type name="link">
+                    <meta>
+                        <title lang="en">Link</title>
+                        <title lang="de">Link</title>
+                    </meta>
+
+                    <properties>
+                        <property name="link" type="link">
+                            <meta>
+                                <title lang="en">Link</title>
+                                <title lang="de">Link</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </type>
+
+                <type name="text_editor">
+                    <meta>
+                        <title lang="en">Text Editor</title>
+                        <title lang="de">Text Editor</title>
+                    </meta>
+
+                    <properties>
+                        <property name="text" type="text_editor">
+                            <meta>
+                                <title lang="en">Text</title>
+                                <title lang="de">Text</title>
+                            </meta>
+                        </property>
+                    </properties>
+                </type>
+
+                <type name="nested">
+                    <meta>
+                        <title lang="en">Nested Block</title>
+                        <title lang="de">Verschachtelter Block</title>
+                    </meta>
+
+                    <properties>
+                        <block name="nested_blocks" default-type="example_selection" minOccurs="1" maxOccurs="1">
+                            <meta>
+                                <title lang="en">Nested Block</title>
+                                <title lang="de">Verschachtelter Block</title>
+                            </meta>
+
+                            <types>
+                                <type name="example_selection">
+                                    <meta>
+                                        <title lang="en">Examples</title>
+                                        <title lang="de">Beispiele</title>
+                                    </meta>
+
+                                    <properties>
+                                        <property name="examples" type="example_selection">
+                                            <meta>
+                                                <title lang="en">Example Selection</title>
+                                                <title lang="de">Beispiel Auswahl</title>
+                                            </meta>
+
+                                            <params>
+                                                <param name="properties" type="collection">
+                                                    <param name="id" value="object.resource.id"/>
+                                                    <param name="title" value="title"/>
+                                                    <param name="url" value="url"/>
+                                                </param>
+                                            </params>
+                                        </property>
+                                    </properties>
+                                </type>
+                            </types>
+                        </block>
+                    </properties>
+                </type>
+            </types>
+        </block>
+    </properties>
+</template>
