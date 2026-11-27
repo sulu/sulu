@@ -13,246 +13,6 @@ parameters:
 			path: bin/console.php
 
 		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\CmfRoutingConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\CmsigSealConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\DebugConfig\.$#'
-			identifier: class.notFound
-			count: 2
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\DoctrineConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\FlysystemConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\FosHttpCacheConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\FosJsRoutingConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\FosRestConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\JmsSerializerConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\MassiveBuildConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\MonologConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SchebTwoFactorConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SecurityConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\StofDoctrineExtensionsConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluActivityConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluAdminConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluArticleConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluAudienceTargetingConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluCategoryConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluContactConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluContentConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluCoreConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluCustomUrlConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluHttpCacheConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluLocationConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluMarkupConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluMediaConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluPageConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluPersistenceConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluPreviewConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluReferenceConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluSearchConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluSecurityConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluSnippetConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluTagConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluTestConfig\.$#'
-			identifier: class.notFound
-			count: 2
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluTrashConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\SuluWebsiteConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\TwigConfig\.$#'
-			identifier: class.notFound
-			count: 6
-			path: config/reference.php
-
-		-
-			message: '#^Type alias ConfigType contains unknown class Symfony\\Component\\DependencyInjection\\Loader\\Configurator\\WebProfilerConfig\.$#'
-			identifier: class.notFound
-			count: 2
-			path: config/reference.php
-
-		-
 			message: '#^Binary operation "\." between ''/''\|''\\\\'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2
@@ -329,18 +89,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: packages/content/tests/Application/public/index.php
-
-		-
-			message: '#^Offset ''authored'' might not exist on array\{availableLocales\?\: array\<string\>\|null, mainWebspace\?\: string\|null, template\?\: string\|null, author\?\: Sulu\\Content\\Application\\ContentResolver\\Value\\ContentView\|null, authored\?\: DateTime\|null, shadowBaseLocale\?\: string\|null, lastModified\?\: DateTimeImmutable\|null\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: packages/content/tests/Unit/Content/Application/ContentResolver/Resolver/SettingsResolverTest.php
-
-		-
-			message: '#^Offset ''lastModified'' might not exist on array\{availableLocales\?\: array\<string\>\|null, mainWebspace\?\: string\|null, template\?\: string\|null, author\?\: Sulu\\Content\\Application\\ContentResolver\\Value\\ContentView\|null, authored\: DateTime, shadowBaseLocale\?\: string\|null, lastModified\?\: DateTimeImmutable\|null\}\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: packages/content/tests/Unit/Content/Application/ContentResolver/Resolver/SettingsResolverTest.php
 
 		-
 			message: '#^Method Sulu\\Content\\Tests\\Unit\\Content\\Application\\PropertyResolver\\BlockVisitor\\ScheduleBlockVisitorTest\:\:provideVisit\(\) return type has no value type specified in iterable type array\.$#'
@@ -3407,6 +3155,12 @@ parameters:
 			identifier: method.nonObject
 			count: 7
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Admin/Navigation/NavigationRegistryTest.php
+
+		-
+			message: '#^Property Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Admin\\SuluAdminTest\:\:\$contactManager \(Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\<Sulu\\Bundle\\ContactBundle\\Entity\\ContactInterface, Sulu\\Bundle\\ContactBundle\\Api\\Contact, Sulu\\Bundle\\ContactBundle\\Entity\\ContactAddress\>\>\) does not accept Prophecy\\Prophecy\\ObjectProphecy\<Sulu\\Bundle\\ContactBundle\\Contact\\ContactManagerInterface\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Admin/SuluAdminTest.php
 
 		-
 			message: '#^Method Sulu\\Bundle\\AdminBundle\\Tests\\Unit\\Admin\\View\\FormOverlayListViewBuilderTest\:\:provideBuildFormOverlayListView\(\) has no return type specified\.$#'
@@ -19759,19 +19513,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManagerInterface\:\:delete\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
 			message: '#^Parameter \#1 \$id of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManagerInterface\:\:getById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: '#^Parameter \#2 \$id of class Sulu\\Component\\Rest\\Exception\\EntityNotFoundException constructor expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
@@ -19779,12 +19521,6 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$userId of method Sulu\\Bundle\\MediaBundle\\Media\\Manager\\MediaManagerInterface\:\:save\(\) expects int\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\MediaBundle\\Controller\\MediaController\:\:\$entityManager is never read, only written\.$#'
-			identifier: property.onlyWritten
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
@@ -24907,6 +24643,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
+			message: '#^Cannot access offset ''contentLocales'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
+
+		-
 			message: '#^Cannot access offset ''copyright'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -25006,12 +24748,6 @@ parameters:
 			message: '#^Cannot access offset ''locale'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
-
-		-
-			message: '#^Cannot access offset ''contentLocales'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Trash/MediaTrashItemHandler.php
 
 		-
@@ -27553,20 +27289,8 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Functional\\Entity\\AccessControlRepositoryTest\:\:createAccessControl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Entity/AccessControlRepositoryTest.php
-
-		-
 			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Functional\\Entity\\AccessControlRepositoryTest\:\:createAccessControl\(\) has parameter \$entityId with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Entity/AccessControlRepositoryTest.php
-
-		-
-			message: '#^Method Sulu\\Bundle\\SecurityBundle\\Tests\\Functional\\Entity\\AccessControlRepositoryTest\:\:createRole\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Entity/AccessControlRepositoryTest.php
 
@@ -27574,12 +27298,6 @@ parameters:
 			message: '#^Parameter \#1 \$entityId of method Sulu\\Bundle\\SecurityBundle\\Entity\\AccessControl\:\:setEntityId\(\) expects int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Entity/AccessControlRepositoryTest.php
-
-		-
-			message: '#^Parameter \#3 \$role of method Sulu\\Bundle\\SecurityBundle\\Tests\\Functional\\Entity\\AccessControlRepositoryTest\:\:createAccessControl\(\) expects Sulu\\Bundle\\SecurityBundle\\Entity\\Role, mixed given\.$#'
-			identifier: argument.type
-			count: 3
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Entity/AccessControlRepositoryTest.php
 
 		-
@@ -29485,18 +29203,6 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
 
 		-
-			message: '#^Property Sulu\\Bundle\\TrashBundle\\Tests\\Functional\\UserInterface\\Controller\\Admin\\TrashItemControllerTest\:\:\$entityManager is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
-
-		-
-			message: '#^Property Sulu\\Bundle\\TrashBundle\\Tests\\Functional\\UserInterface\\Controller\\Admin\\TrashItemControllerTest\:\:\$repository is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
-
-		-
 			message: '#^Property Sulu\\Bundle\\TrashBundle\\Tests\\Unit\\Application\\TrashManager\\TrashManagerTest\:\:\$removeTrashItemHandlerLocator with generic class Symfony\\Component\\DependencyInjection\\ServiceLocator does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
@@ -30131,12 +29837,6 @@ parameters:
 			identifier: notIdentical.alwaysTrue
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/RedirectExceptionSubscriber.php
-
-		-
-			message: '#^Method Symfony\\Component\\HttpKernel\\EventListener\\RouterListener\:\:onKernelFinishRequest\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/EventListener/RouterListener.php
 
 		-
 			message: '#^Parameter \#1 \$key of method Symfony\\Component\\HttpFoundation\\ParameterBag\:\:getBoolean\(\) expects string, mixed given\.$#'
@@ -31335,7 +31035,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''references'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 2
 			path: src/Sulu/Component/Doctrine/ReferencesOption.php
 
 		-
@@ -31353,18 +31053,6 @@ parameters:
 		-
 			message: '#^Method Sulu\\Component\\Doctrine\\ReferencesOption\:\:postGenerateSchemaTable\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Sulu/Component/Doctrine/ReferencesOption.php
-
-		-
-			message: '#^Parameter \#1 \$fieldName of method Doctrine\\ORM\\Mapping\\ClassMetadata\<object\>\:\:setAttributeOverride\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Sulu/Component/Doctrine/ReferencesOption.php
-
-		-
-			message: '#^Parameter \#2 \$overrideMapping of method Doctrine\\ORM\\Mapping\\ClassMetadata\<object\>\:\:setAttributeOverride\(\) expects array\<string, mixed\>, Doctrine\\ORM\\Mapping\\FieldMapping given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/Sulu/Component/Doctrine/ReferencesOption.php
 
@@ -35695,12 +35383,6 @@ parameters:
 			path: src/Sulu/Component/Security/Authorization/AccessControl/DoctrineAccessControlProvider.php
 
 		-
-			message: '#^Parameter \#2 \$id of method Sulu\\Component\\Security\\Authorization\\AccessControl\\AccessControlRepositoryInterface\:\:findByTypeAndId\(\) expects int, string given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Sulu/Component/Security/Authorization/AccessControl/DoctrineAccessControlProvider.php
-
-		-
 			message: '#^Method Sulu\\Component\\Security\\Authorization\\SecurityChecker\:\:hasPermission\(\) has parameter \$subject with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -38141,12 +37823,6 @@ parameters:
 			identifier: method.nonObject
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/Loader/XmlFileLoader10Test.php
-
-		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNull\(\) with Sulu\\Component\\Localization\\Localization will always evaluate to false\.$#'
-			identifier: method.impossibleType
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Loader/XmlFileLoader11Test.php
 
 		-
 			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNull\(\) with string will always evaluate to false\.$#'
