@@ -10,6 +10,7 @@ import ResourceFormStore from '../../../containers/Form/stores/ResourceFormStore
 import Router, {Route} from '../../../services/Router';
 import FormOverlay from '../../../containers/FormOverlay';
 import {createTestRef} from '../../../utils/TestHelper';
+import formToolbarActionRegistry from '../../Form/registries/formToolbarActionRegistry';
 
 const React = mockReact;
 let mockListReload;
@@ -84,6 +85,28 @@ jest.mock('../../../containers/Form/stores/ResourceFormStore', () => jest.fn(
     }
 ));
 
+function createToolbarActionClass() {
+    return jest.fn(function() {
+        this.destroy = jest.fn();
+        this.getNode = jest.fn(() => null);
+        this.getToolbarItemConfig = jest.fn(() => ({label: 'Save', onClick: jest.fn(), type: 'button'}));
+    });
+}
+
+function createRouterWithOverlayToolbarActions(overlayToolbarActions: Array<Object>): Router {
+    return ({
+        route: {
+            name: 'test-route',
+            options: {
+                formKey: 'test-form-key',
+                locales: ['en', 'de'],
+                overlayToolbarActions,
+                resourceKey: 'test-resource-key',
+            },
+        },
+    }: any);
+}
+
 function getFormOverlayProps() {
     return (FormOverlay: any).mock.lastCall[0];
 }
@@ -93,6 +116,7 @@ beforeEach(() => {
     (ResourceStore: any).mockClear();
     (ResourceFormStore: any).mockClear();
     (FormOverlay: any).mockClear();
+    formToolbarActionRegistry.clear();
 });
 
 test('View should render with closed overlay', () => {
@@ -392,3 +416,60 @@ test('Should destroy ResourceFormStore when component is unmounted', async() => 
     unmount();
     expect(destroySpy).toHaveBeenCalled();
 });
+
+test('Should pass no toolbarActionsProvider to FormOverlay when no overlayToolbarActions are configured', async() => {
+    const user = userEvent.setup();
+    const router: Router = ({route: {options: {formKey: 'test-form-key'}}}: any);
+
+    render(<FormOverlayList route={({}: any)} router={router} />);
+    await user.click(screen.getByRole('button', {name: 'add-item'}));
+
+    expect(getFormOverlayProps().toolbarActionsProvider).toBeUndefined();
+});
+
+test('Should resolve overlayToolbarActions from the registry for the FormOverlay', async() => {
+    const user = userEvent.setup();
+    const SaveToolbarAction = createToolbarActionClass();
+    formToolbarActionRegistry.add('sulu_admin.save', (SaveToolbarAction: any));
+    const router = createRouterWithOverlayToolbarActions([{options: {answer: 42}, type: 'sulu_admin.save'}]);
+
+    render(<FormOverlayList route={({}: any)} router={router} />);
+    await user.click(screen.getByRole('button', {name: 'click-item'}));
+
+    const {toolbarActionsProvider, toolbarStoreKey} = getFormOverlayProps();
+    expect(toolbarStoreKey).toEqual('form_overlay_test-route');
+
+    const form = {};
+    const toolbarActions = toolbarActionsProvider(form);
+
+    expect(toolbarActions).toHaveLength(1);
+    expect(SaveToolbarAction).toHaveBeenCalledWith(
+        getFormOverlayProps().formStore,
+        form,
+        router,
+        ['en', 'de'],
+        {answer: 42},
+        getFormOverlayProps().formStore.resourceStore
+    );
+});
+
+test('Should reload the list when an overlay with toolbar actions is closed', async() => {
+    const user = userEvent.setup();
+    formToolbarActionRegistry.add('sulu_admin.save', (createToolbarActionClass(): any));
+    const router = createRouterWithOverlayToolbarActions([{options: {}, type: 'sulu_admin.save'}]);
+
+    render(<FormOverlayList route={({}: any)} router={router} />);
+    await user.click(screen.getByRole('button', {name: 'click-item'}));
+    await user.click(screen.getByRole('button', {name: 'close-overlay'}));
+
+    expect(mockListReload).toHaveBeenCalled();
+});
+
+test.each(['sulu_admin.copy', 'sulu_admin.delete'])(
+    'Should throw when %s is configured as an overlay toolbar action',
+    (type) => {
+        const router = createRouterWithOverlayToolbarActions([{options: {}, type}]);
+
+        expect(() => render(<FormOverlayList route={({}: any)} router={router} />)).toThrow(type);
+    }
+);

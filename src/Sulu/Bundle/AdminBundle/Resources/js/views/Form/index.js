@@ -25,6 +25,8 @@ import SuggestFormStoreToolbarAction from './toolbarActions/SuggestFormStoreTool
 
 export default Form;
 
+export type {ToolbarActionFormInterface} from '../../containers/Toolbar/types';
+
 export {
     formToolbarActionRegistry,
     AbstractFormToolbarAction,
