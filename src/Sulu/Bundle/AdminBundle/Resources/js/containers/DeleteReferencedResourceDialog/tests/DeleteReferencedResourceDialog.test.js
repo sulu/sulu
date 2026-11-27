@@ -161,6 +161,138 @@ test('The component should name the referenced resource and show the type of the
         .toEqual(['Team (Page)', 'Footer (Snippet)', 'News']);
 });
 
+test('The component should link the referencing resources that have an url', () => {
+    (translate: any).mockImplementation((key) => {
+        return {
+            'sulu_reference.resource.pages': 'Page',
+            'sulu_reference.resource.snippets': 'Snippet',
+        }[key] || key;
+    });
+
+    const referencingResourcesData: ReferencingResourcesData = {
+        referencingResources: [
+            {id: 2, resourceKey: 'pages', title: 'Team', url: '/admin/#/webspaces/sulu/pages/en/2/content'},
+            {id: 3, resourceKey: 'snippets', title: 'Footer', url: null},
+            {id: 4, resourceKey: 'articles', title: 'News'},
+        ],
+        referencingResourcesCount: 3,
+        resource: {id: 1, resourceKey: 'media', title: 'Photo'},
+    };
+
+    render(
+        <DeleteReferencedResourceDialog
+            allowDeletion={true}
+            confirmLoading={false}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            referencingResourcesData={referencingResourcesData}
+        />
+    );
+
+    expect(screen.getAllByRole('listitem').map((item) => item.textContent))
+        .toEqual(['Team (Page)', 'Footer (Snippet)', 'News']);
+
+    const links = screen.getAllByRole('link');
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveTextContent('Team');
+    expect(links[0]).toHaveAttribute('href', '/admin/#/webspaces/sulu/pages/en/2/content');
+    expect(links[0]).toHaveAttribute('target', '_blank');
+    expect(links[0]).toHaveAttribute('rel', 'noopener noreferrer');
+});
+
+test('The component should show how many referencing resources are not listed', () => {
+    (translate: any).mockImplementation((key, parameters) => {
+        return key === 'sulu_admin.delete_linked_more_text' ? `and ${parameters.count} more` : key;
+    });
+
+    const referencingResourcesData: ReferencingResourcesData = {
+        referencingResources: [
+            {id: 2, resourceKey: 'pages', title: 'Team'},
+            {id: 3, resourceKey: 'pages', title: 'About us'},
+        ],
+        referencingResourcesCount: 7,
+        resource: {id: 1, resourceKey: 'media', title: 'Photo'},
+    };
+
+    render(
+        <DeleteReferencedResourceDialog
+            allowDeletion={true}
+            confirmLoading={false}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            referencingResourcesData={referencingResourcesData}
+        />
+    );
+
+    expect(screen.getAllByRole('listitem').map((item) => item.textContent))
+        .toEqual(['Team', 'About us', 'and 5 more']);
+});
+
+test('The component should not name a single listed resource inline if more are not listed', () => {
+    (translate: any).mockImplementation((key, parameters) => {
+        return key === 'sulu_admin.delete_linked_more_text' ? `and ${parameters.count} more` : key;
+    });
+
+    const referencingResourcesData: Array<ReferencingResourcesData> = [
+        {
+            referencingResources: [{id: 2, resourceKey: 'pages', title: 'Team'}],
+            referencingResourcesCount: 3,
+            resource: {id: 1, resourceKey: 'media', title: 'Photo'},
+        },
+        {
+            referencingResources: [{id: 3, resourceKey: 'pages', title: 'About us'}],
+            referencingResourcesCount: 1,
+            resource: {id: 4, resourceKey: 'media', title: 'Logo'},
+        },
+    ];
+
+    render(
+        <DeleteReferencedResourceDialog
+            allowDeletion={true}
+            confirmLoading={false}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            referencingResourcesData={referencingResourcesData}
+        />
+    );
+
+    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Team', 'and 2 more']);
+});
+
+test('The component should link a single referencing resource named inline', () => {
+    const referencingResourcesData: Array<ReferencingResourcesData> = [
+        {
+            referencingResources: [
+                {id: 2, resourceKey: 'pages', title: 'Team', url: '/admin/#/webspaces/sulu/pages/en/2/content'},
+            ],
+            referencingResourcesCount: 1,
+            resource: {id: 1, resourceKey: 'media', title: 'Photo'},
+        },
+        {
+            referencingResources: [
+                {id: 3, resourceKey: 'pages', title: 'About us'},
+            ],
+            referencingResourcesCount: 1,
+            resource: {id: 5, resourceKey: 'media', title: 'Logo'},
+        },
+    ];
+
+    render(
+        <DeleteReferencedResourceDialog
+            allowDeletion={true}
+            confirmLoading={false}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            referencingResourcesData={referencingResourcesData}
+        />
+    );
+
+    const links = screen.getAllByRole('link');
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveTextContent('Team');
+    expect(links[0]).toHaveAttribute('href', '/admin/#/webspaces/sulu/pages/en/2/content');
+});
+
 test('The component should truncate long titles of the referenced resources', () => {
     const longTitle = '127.0.0.1_8000_admin_preview_render_webspaceKey=website&provider=pages&id=011f-77bb-a918-9f00';
     const truncatedTitle = longTitle.slice(0, 59) + '…';

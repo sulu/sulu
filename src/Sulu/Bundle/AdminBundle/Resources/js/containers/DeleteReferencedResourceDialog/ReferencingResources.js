@@ -2,7 +2,8 @@
 import React from 'react';
 import {translate} from '../../utils';
 import styles from './referencingResources.scss';
-import type {ReferencingResourcesData} from '../../types';
+import type {Node} from 'react';
+import type {ReferencingResource, ReferencingResourcesData} from '../../types';
 
 type Props = {|
     allowDeletion: boolean,
@@ -27,21 +28,31 @@ const getResourceTypeLabel = (resourceKey: string): ?string => {
     return label === translationKey ? undefined : label;
 };
 
-const getReferencingResourceLabels = (referencingResourcesData: ReferencingResourcesData): Array<string> => {
-    return referencingResourcesData.referencingResources.flatMap(({resourceKey, title = null}) => {
-        if (!title) {
-            return [];
-        }
+const renderReferencingResource = ({resourceKey, title = null, url = null}: ReferencingResource): Node => {
+    const type = getResourceTypeLabel(resourceKey);
+    // the dialog stays open behind the new tab, so the pending delete is not lost
+    const name = url
+        ? <a className={styles.link} href={url} rel="noopener noreferrer" target="_blank">{title}</a>
+        : title;
 
-        const type = getResourceTypeLabel(resourceKey);
-
-        return [type ? `${title} (${type})` : title];
-    });
+    return type ? <React.Fragment>{name} ({type})</React.Fragment> : name;
 };
 
-const renderLabels = (labels: Array<string>) => (
+const getReferencingResourceItems = (referencingResourcesData: ReferencingResourcesData): Array<Node> => {
+    return referencingResourcesData.referencingResources
+        .filter(({title}) => !!title)
+        .map(renderReferencingResource);
+};
+
+// the response lists only the first resources, but counts all of them
+const getHiddenCount = ({referencingResources, referencingResourcesCount}: ReferencingResourcesData): number => {
+    return Math.max(0, referencingResourcesCount - referencingResources.length);
+};
+
+const renderItems = (items: Array<Node>, hiddenCount: number) => (
     <ul>
-        {labels.map((label, index) => <li key={index}>{label}</li>)}
+        {items.map((item, index) => <li key={index}>{item}</li>)}
+        {hiddenCount > 0 && <li>{translate('sulu_admin.delete_linked_more_text', {count: hiddenCount})}</li>}
     </ul>
 );
 
@@ -79,18 +90,19 @@ const ReferencingResources = ({allowDeletion, referencingResourcesData}: Props) 
                 <div className={styles.items}>
                     {referencingResourcesData.map((data, index) => {
                         const {title} = data.resource;
-                        const labels = getReferencingResourceLabels(data);
-                        const inline = !!title && labels.length === 1;
+                        const items = getReferencingResourceItems(data);
+                        const hiddenCount = getHiddenCount(data);
+                        const inline = !!title && items.length === 1 && hiddenCount === 0;
 
                         return (
                             <React.Fragment key={index}>
                                 {title && (
                                     <p>
                                         {renderResourceHeading(title)}
-                                        {inline && <span className={styles.inline}>{' ' + labels[0]}</span>}
+                                        {inline && <span className={styles.inline}>{' '}{items[0]}</span>}
                                     </p>
                                 )}
-                                {!inline && renderLabels(labels)}
+                                {!inline && renderItems(items, hiddenCount)}
                             </React.Fragment>
                         );
                     })}
@@ -111,7 +123,7 @@ const ReferencingResources = ({allowDeletion, referencingResourcesData}: Props) 
                 : translate('sulu_admin.delete_linked_abort_text')
             }
 
-            {renderLabels(getReferencingResourceLabels(data))}
+            {renderItems(getReferencingResourceItems(data), getHiddenCount(data))}
         </React.Fragment>
     );
 };

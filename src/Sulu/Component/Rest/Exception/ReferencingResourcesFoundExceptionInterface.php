@@ -21,7 +21,7 @@ interface ReferencingResourcesFoundExceptionInterface extends RestExceptionInter
     public function getResource(): array;
 
     /**
-     * @return array<array{id: int|string, resourceKey: string, title: string|null}>
+     * @return array<array{id: int|string, resourceKey: string, title: string|null, url?: string|null}>
      */
     public function getReferencingResources(): array;
 
