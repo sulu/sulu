@@ -19,3 +19,8 @@ sulu_admin.login_check:
 
 sulu_admin.logout:
     path: /logout
+
+sulu_admin.resource_view_url_redirect:
+    path: /resource-view-url-redirect
+    methods: [GET]
+    controller: sulu_admin.admin_resource_view_url_redirect_controller::redirectAction
