@@ -9,6 +9,7 @@ import PublishIndicator from '../../../components/PublishIndicator';
 import {translate} from '../../../utils/Translator';
 import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
 import ColumnStructureStrategy from '../structureStrategies/ColumnStructureStrategy';
+import getPublishIndicatorProps from './getPublishIndicatorProps';
 import AbstractAdapter from './AbstractAdapter';
 import columnListAdapterStyles from './columnListAdapter.scss';
 
@@ -121,19 +122,9 @@ class ColumnListAdapter extends AbstractAdapter {
             indicators.push(<Icon key="shadow" name="su-shadow-page" />);
         }
 
-        if (item.publishedState !== undefined || item.published !== undefined) {
-            const draft = !item.publishedState;
-            const published = !!item.published;
-
-            if (draft || !published) {
-                indicators.push(
-                    <PublishIndicator
-                        draft={draft}
-                        key="publish"
-                        published={published}
-                    />
-                );
-            }
+        const publishIndicatorProps = getPublishIndicatorProps(item);
+        if (publishIndicatorProps) {
+            indicators.push(<PublishIndicator key="publish" {...publishIndicatorProps} />);
         }
 
         const {
