@@ -287,7 +287,7 @@ class WorkflowTransitionRequestLockAndPublishWithoutReviewTest extends SuluTestC
         ]);
         $this->assertNotNull($finalRequest, 'Request row should still exist after bypass.');
         // Publishing past an open request closes it, so no stale active request is left behind.
-        $this->assertSame(WorkflowTransitionRequestStatusEnum::PUBLISHED, $this->resolveRequestStatus($finalRequest));
+        $this->assertSame(WorkflowTransitionRequestStatusEnum::BYPASSED, $this->resolveRequestStatus($finalRequest));
         $this->assertNull($finalRequest->getActiveKey());
     }
 

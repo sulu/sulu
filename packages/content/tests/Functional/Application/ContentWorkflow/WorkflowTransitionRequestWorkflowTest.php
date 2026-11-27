@@ -104,7 +104,7 @@ class WorkflowTransitionRequestWorkflowTest extends SuluTestCase
     /**
      * The workflow has no view on permissions, so an open request does not stop `publish` here.
      */
-    public function testPublishWithPendingRequestClosesTheRequest(): void
+    public function testPublishWithPendingRequestBypassesTheRequest(): void
     {
         $example = $this->createExampleAtDraft();
         $dimensionAttributes = ['stage' => DimensionContentInterface::STAGE_DRAFT, 'locale' => 'en'];
@@ -132,7 +132,7 @@ class WorkflowTransitionRequestWorkflowTest extends SuluTestCase
         ]);
 
         $this->assertNotNull($request);
-        $this->assertSame(WorkflowTransitionRequestStatusEnum::PUBLISHED, $this->resolveRequestStatus($request));
+        $this->assertSame(WorkflowTransitionRequestStatusEnum::BYPASSED, $this->resolveRequestStatus($request));
     }
 
     public function testCancelReviewClosesTheRequestAndReturnsContentToUnpublished(): void

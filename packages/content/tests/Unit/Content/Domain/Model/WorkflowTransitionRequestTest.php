@@ -210,6 +210,28 @@ class WorkflowTransitionRequestTest extends TestCase
         $this->assertNull($request->getActiveKey());
     }
 
+    public function testBypassClosesAPendingRequestWithItsOwnStatus(): void
+    {
+        $request = $this->createRequest();
+
+        $request->bypass();
+
+        $this->assertSame(WorkflowTransitionRequestPlaceEnum::BYPASSED, $request->getPlace());
+        $this->assertSame(WorkflowTransitionRequestStatusEnum::BYPASSED, $request->getStatus(1));
+        $this->assertNull($request->getActiveKey(), 'A bypassed request must not block the next one.');
+        $this->assertFalse($request->isOpen());
+    }
+
+    public function testBypassOnAClosedRequestIsNoOp(): void
+    {
+        $request = $this->createRequest();
+        $request->cancel();
+
+        $request->bypass();
+
+        $this->assertSame(WorkflowTransitionRequestStatusEnum::CANCELLED, $request->getStatus(1));
+    }
+
     public function testABlockingCheckHoldsARequestThatHasEveryApproval(): void
     {
         $request = $this->createRequest();

@@ -45,7 +45,7 @@ function resolveErrorDetail(error: Object): Promise<?string> {
 }
 
 function isClosed(request: WorkflowTransitionRequestData): boolean {
-    return request.status === 'cancelled' || request.status === 'published';
+    return request.status === 'cancelled' || request.status === 'published' || request.status === 'bypassed';
 }
 
 function buildCheckRows(request: WorkflowTransitionRequestData, canRetry: boolean): Array<CheckRow> {

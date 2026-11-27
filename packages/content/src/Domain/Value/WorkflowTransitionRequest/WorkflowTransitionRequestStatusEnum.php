@@ -19,6 +19,7 @@ enum WorkflowTransitionRequestStatusEnum: string
     case APPROVED = 'approved';
     case CANCELLED = 'cancelled';
     case PUBLISHED = 'published';
+    case BYPASSED = 'bypassed';
     /** The workflow the request names is no longer configured, so nothing can be derived from it. */
     case UNKNOWN = 'unknown';
 }

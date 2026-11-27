@@ -24,6 +24,7 @@ enum WorkflowTransitionRequestPlaceEnum: string
     case OPEN = 'open';
     case CANCELLED = 'cancelled';
     case PUBLISHED = 'published';
+    case BYPASSED = 'bypassed';
 
     public function isOpen(): bool
     {

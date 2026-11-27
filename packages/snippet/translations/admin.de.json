@@ -31,6 +31,7 @@
     "sulu_activity.description.snippets.preview_link_generated": "{userFullName} hat einen Vorschau-Link erstellt: {resourceTitle}",
     "sulu_activity.description.snippets.preview_link_revoked": "{userFullName} hat einen Vorschau-Link widerrufen: {resourceTitle}",
     "sulu_activity.description.snippets.workflow_transition.publish": "{userFullName} hat den Schnipsel \"{resourceTitle}\" veröffentlicht",
+    "sulu_activity.description.snippets.workflow_transition.publish_without_review": "{userFullName} hat den Schnipsel \"{resourceTitle}\" ohne Review veröffentlicht",
     "sulu_activity.description.snippets.workflow_transition.unpublish": "{userFullName} hat den Schnipsel \"{resourceTitle}\" nicht mehr veröffentlicht",
     "sulu_activity.description.snippets.workflow_transition.remove_draft": "{userFullName} hat den Entwurf des Schnipsels \"{resourceTitle}\" verworfen",
     "sulu_activity.description.snippets.workflow_transition.request_for_review": "{userFullName} hat ein Review für das Snippet \"{resourceTitle}\" angefragt",

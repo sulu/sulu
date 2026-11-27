@@ -298,6 +298,16 @@ test('disables both decisions once the request is closed', () => {
     expect(screen.getByRole('button', {name: 'sulu_content.approve'})).toBeDisabled();
 });
 
+test('treats a request that was published without review as closed', () => {
+    renderOverlay({onPublish: jest.fn(), request: createRequest({status: 'bypassed'})});
+
+    expect(screen.getByRole('button', {name: 'sulu_content.reject'})).toBeDisabled();
+    expect(screen.getByRole('button', {name: 'sulu_content.approve'})).toBeDisabled();
+    expect(screen.queryByRole('button', {name: 'sulu_content.workflow_transition_request.publish_without_review'}))
+        .not.toBeInTheDocument();
+    expect(screen.queryByRole('button', {name: 'sulu_admin.publish'})).not.toBeInTheDocument();
+});
+
 test('approves with a comment and closes the overlay afterwards', async() => {
     const user = userEvent.setup();
     const onApprove = jest.fn().mockResolvedValue();

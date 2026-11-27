@@ -1,6 +1,12 @@
 // @flow
 
-export type WorkflowTransitionRequestStatus = 'pending' | 'approved' | 'cancelled' | 'published' | 'unknown';
+export type WorkflowTransitionRequestStatus =
+    | 'pending'
+    | 'approved'
+    | 'cancelled'
+    | 'published'
+    | 'bypassed'
+    | 'unknown';
 
 /** A validator's decision starts pending and is answered later, possibly by a worker. */
 export type CheckStatus = 'pending' | 'approved' | 'rejected';

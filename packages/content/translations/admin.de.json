@@ -105,6 +105,7 @@
     "sulu_content.workflow_transition_request.status.approved": "Genehmigt",
     "sulu_content.workflow_transition_request.status.cancelled": "Abgebrochen",
     "sulu_content.workflow_transition_request.status.published": "Veröffentlicht",
+    "sulu_content.workflow_transition_request.status.bypassed": "Ohne Review veröffentlicht",
     "sulu_content.workflow_transition_request.status.unknown": "Unbekannt",
     "sulu_content.approval": "Freigabe",
     "sulu_content.approve": "Genehmigen",

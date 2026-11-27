@@ -13,7 +13,10 @@ namespace Sulu\Page\Application\MessageHandler;
 
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Content\Application\ContentWorkflow\ContentWorkflowInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
+use Sulu\Content\Domain\Model\WorkflowInterface;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum;
 use Sulu\Content\Infrastructure\Doctrine\DimensionContentQueryEnhancer;
 use Sulu\Page\Application\Message\ApplyWorkflowTransitionPageMessage;
 use Sulu\Page\Domain\Event\PageWorkflowTransitionAppliedEvent;
@@ -30,6 +33,7 @@ final class ApplyWorkflowTransitionPageMessageHandler
         private PageRepositoryInterface $pageRepository,
         private ContentWorkflowInterface $contentWorkflow,
         private DomainEventCollectorInterface $domainEventCollector,
+        private ?ActiveWorkflowTransitionRequestProviderInterface $activeWorkflowTransitionRequestProvider,
     ) {
     }
 
@@ -45,6 +49,11 @@ final class ApplyWorkflowTransitionPageMessageHandler
             $page = $this->loadPage($message, [$locale, ...$relatedLocales]);
         }
 
+        // The publish closes the request, so it is looked up before and read again afterwards.
+        $request = WorkflowInterface::WORKFLOW_TRANSITION_PUBLISH === $message->getTransitionName()
+            ? $this->activeWorkflowTransitionRequestProvider?->find(PageInterface::RESOURCE_KEY, (string) $page->getId(), $locale)
+            : null;
+
         $this->contentWorkflow->apply(
             $page,
             ['locale' => $locale],
@@ -52,7 +61,12 @@ final class ApplyWorkflowTransitionPageMessageHandler
             $message->getWorkflowTransitionRequestData(),
         );
 
-        $this->domainEventCollector->collect(new PageWorkflowTransitionAppliedEvent($page, $message->getTransitionName(), $locale));
+        $this->domainEventCollector->collect(new PageWorkflowTransitionAppliedEvent(
+            $page,
+            $message->getTransitionName(),
+            $locale,
+            WorkflowTransitionRequestPlaceEnum::BYPASSED === $request?->getPlace(),
+        ));
 
         return $page;
     }

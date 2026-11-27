@@ -21,8 +21,10 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Content\Application\ContentWorkflow\Subscriber\WorkflowTransitionRequestPublishTransitionSubscriber;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestSettledEvent;
+use Sulu\Content\Application\WorkflowTransitionRequest\WorkflowTransitionRequestReviewBypassCheckerInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Sulu\Content\Domain\Model\WorkflowTransitionRequest\WorkflowTransitionRequest;
+use Sulu\Content\Domain\Value\WorkflowTransitionRequest\WorkflowTransitionRequestPlaceEnum;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\Example;
 use Sulu\Content\Tests\Application\ExampleTestBundle\Entity\ExampleDimensionContent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -60,7 +62,7 @@ class WorkflowTransitionRequestPublishTransitionSubscriberTest extends TestCase
             },
         );
 
-        $subscriber = new WorkflowTransitionRequestPublishTransitionSubscriber($provider->reveal(), $eventDispatcher);
+        $subscriber = $this->createSubscriber($provider->reveal(), $eventDispatcher);
         $subscriber->onPublish(new TransitionEvent($this->createDimensionContent(), new Marking()));
 
         $this->assertFalse($request->isOpen());
@@ -85,7 +87,7 @@ class WorkflowTransitionRequestPublishTransitionSubscriberTest extends TestCase
             },
         );
 
-        $subscriber = new WorkflowTransitionRequestPublishTransitionSubscriber($provider->reveal(), $eventDispatcher);
+        $subscriber = $this->createSubscriber($provider->reveal(), $eventDispatcher);
         $subscriber->onPublish(new TransitionEvent($this->createDimensionContent(), new Marking()));
 
         $this->assertSame([], $dispatched);
@@ -96,8 +98,51 @@ class WorkflowTransitionRequestPublishTransitionSubscriberTest extends TestCase
         $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
         $provider->findForContent(Argument::cetera())->shouldNotBeCalled();
 
-        $subscriber = new WorkflowTransitionRequestPublishTransitionSubscriber($provider->reveal(), new EventDispatcher());
+        $subscriber = $this->createSubscriber($provider->reveal(), new EventDispatcher());
         $subscriber->onPublish(new TransitionEvent(new \stdClass(), new Marking()));
+    }
+
+    public function testOnPublishBypassesTheRequestWhenTheCheckerSaysTheReviewIsSkipped(): void
+    {
+        $request = new WorkflowTransitionRequest(Example::RESOURCE_KEY, '1', 'en', 'default');
+
+        $subscriber = $this->createSubscriber($this->provide($request), new EventDispatcher(), isBypassingReview: true);
+        $subscriber->onPublish(new TransitionEvent($this->createDimensionContent(), new Marking()));
+
+        $this->assertSame(WorkflowTransitionRequestPlaceEnum::BYPASSED, $request->getPlace());
+    }
+
+    public function testOnPublishPublishesTheRequestWhenTheCheckerSaysTheReviewIsNotSkipped(): void
+    {
+        $request = new WorkflowTransitionRequest(Example::RESOURCE_KEY, '1', 'en', 'default');
+
+        $subscriber = $this->createSubscriber($this->provide($request), new EventDispatcher(), isBypassingReview: false);
+        $subscriber->onPublish(new TransitionEvent($this->createDimensionContent(), new Marking()));
+
+        $this->assertSame(WorkflowTransitionRequestPlaceEnum::PUBLISHED, $request->getPlace());
+    }
+
+    private function provide(WorkflowTransitionRequest $request): ActiveWorkflowTransitionRequestProviderInterface
+    {
+        $provider = $this->prophesize(ActiveWorkflowTransitionRequestProviderInterface::class);
+        $provider->findForContent(Argument::any())->willReturn($request);
+
+        return $provider->reveal();
+    }
+
+    private function createSubscriber(
+        ActiveWorkflowTransitionRequestProviderInterface $provider,
+        EventDispatcher $eventDispatcher,
+        bool $isBypassingReview = false,
+    ): WorkflowTransitionRequestPublishTransitionSubscriber {
+        $workflowTransitionRequestReviewBypassChecker = $this->prophesize(WorkflowTransitionRequestReviewBypassCheckerInterface::class);
+        $workflowTransitionRequestReviewBypassChecker->isBypassingReview(Argument::any())->willReturn($isBypassingReview);
+
+        return new WorkflowTransitionRequestPublishTransitionSubscriber(
+            $provider,
+            $eventDispatcher,
+            $workflowTransitionRequestReviewBypassChecker->reveal(),
+        );
     }
 
     private function createDimensionContent(): ExampleDimensionContent

@@ -48,6 +48,7 @@
                         <param name="copied" value="su-copy"/>
                         <param name="published" value="su-publish"/>
                         <param name="workflow_transition.publish" value="su-publish"/>
+                        <param name="workflow_transition.publish_without_review" value="su-publish"/>
                         <param name="unpublished" value="su-unpublish"/>
                         <param name="workflow_transition.unpublish" value="su-unpublish"/>
                         <param name="merged" value="su-merge"/>

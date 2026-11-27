@@ -15,6 +15,7 @@ namespace Sulu\Content\Application\ContentWorkflow\Subscriber;
 
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\Event\WorkflowTransitionRequestSettledEvent;
+use Sulu\Content\Application\WorkflowTransitionRequest\WorkflowTransitionRequestReviewBypassCheckerInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\WorkflowInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -31,6 +32,7 @@ class WorkflowTransitionRequestPublishTransitionSubscriber implements EventSubsc
     public function __construct(
         private readonly ActiveWorkflowTransitionRequestProviderInterface $activeWorkflowTransitionRequestProvider,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly WorkflowTransitionRequestReviewBypassCheckerInterface $workflowTransitionRequestReviewBypassChecker,
     ) {
     }
 
@@ -53,7 +55,11 @@ class WorkflowTransitionRequestPublishTransitionSubscriber implements EventSubsc
             return;
         }
 
-        $workflowTransitionRequest->publish();
+        if ($this->workflowTransitionRequestReviewBypassChecker->isBypassingReview($workflowTransitionRequest)) {
+            $workflowTransitionRequest->bypass();
+        } else {
+            $workflowTransitionRequest->publish();
+        }
 
         $this->eventDispatcher->dispatch(new WorkflowTransitionRequestSettledEvent($workflowTransitionRequest));
     }

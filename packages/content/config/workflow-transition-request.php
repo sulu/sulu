@@ -43,6 +43,8 @@ use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransition
 use Sulu\Content\Application\WorkflowTransitionRequest\Action\WorkflowTransitionRequestActionRegistryInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProvider;
 use Sulu\Content\Application\WorkflowTransitionRequest\ActiveWorkflowTransitionRequestProviderInterface;
+use Sulu\Content\Application\WorkflowTransitionRequest\WorkflowTransitionRequestReviewBypassChecker;
+use Sulu\Content\Application\WorkflowTransitionRequest\WorkflowTransitionRequestReviewBypassCheckerInterface;
 use Sulu\Content\Application\WorkflowTransitionRequest\WorkflowTransitionRequestViewFactory;
 use Sulu\Content\Application\WorkflowTransitionRequest\WorkflowTransitionRequestViewFactoryInterface;
 use Sulu\Content\Domain\Repository\WorkflowTransitionRequestRepositoryInterface;
@@ -118,6 +120,15 @@ return static function(ContainerConfigurator $container) {
 
     $services->alias(WorkflowTransitionRequestActionRegistryInterface::class, 'sulu_content.workflow_transition_request_action_registry');
 
+    $services->set('sulu_content.workflow_transition_request_review_bypass_checker', WorkflowTransitionRequestReviewBypassChecker::class)
+        ->args([
+            new Reference('sulu_content.workflow_transition_request_status_resolver'),
+            new Reference('sulu_content.workflow_transition_request_action_registry'),
+        ])
+        ->tag('sulu.context', ['context' => 'admin']);
+
+    $services->alias(WorkflowTransitionRequestReviewBypassCheckerInterface::class, 'sulu_content.workflow_transition_request_review_bypass_checker');
+
     $services->set('sulu_content.workflow_transition_request_view_factory', WorkflowTransitionRequestViewFactory::class)
         ->args([
             new Reference('sulu_content.request_workflow_registry'),
@@ -163,6 +174,7 @@ return static function(ContainerConfigurator $container) {
         ->args([
             new Reference('sulu_content.active_workflow_transition_request_provider'),
             new Reference('event_dispatcher'),
+            new Reference('sulu_content.workflow_transition_request_review_bypass_checker'),
         ])
         ->tag('kernel.event_subscriber')
         ->tag('sulu.context', ['context' => 'admin']);
