@@ -309,7 +309,11 @@ used as it is, the value is not appended:
   `review`) saying what the current user may do with it. The admin renders the review overlay and the
   banner's cancel action from it, because content without object security, an article or a snippet,
   delivers no `_permissions` of its own.
-
+- `Sulu\Component\Webspace\Environment::setType()` is now deprecated use the constructor
+- `Sulu\Component\Webspace\Url::setUrl` is now deprecated use the constructor.
+- Using the `Url::getEnvironment()` and `Url::setEnvironment()` functions is deprecated.
+  Retrieve the environment from the portal instead via `Portal::getEnvironment($type)`, and use the
+  returned `Environment` object for reading or updating the environment configuration.
 
 ## 3.0.12
 
@@ -429,19 +433,6 @@ The `re_references` table has a new index. Update your database schema, or add i
 ```sql
 CREATE INDEX reference_resource_idx ON re_references (referenceResourceKey, referenceResourceId, referenceLocale, referenceContext);
 ```
-
-### Cleaning up environment usage in webspaces
-
-The function `Sulu\Component\Webspace\Environment::setType()` is now deprecated and should be replaced with a call to the constructor with the correct environment:
-```diff
-- $environment = new Environment();
-- $environment->setType('prod');
-+ $environment = new Environment('prod');
-```
-
-Using the `Url::getEnvironment()` and `Url::setEnvironment()` functions is deprecated. Retrieve the environment from the portal instead via `Portal::getEnvironment($type)`, and use the returned `Environment` object for reading or updating the environment configuration.
-
-The `Sulu\Component\Webspace\Url::setUrl` is now deprecated as it should only be set through the constructor.
 
 ## 3.0.9
 
