@@ -566,7 +566,7 @@ as well as [pnpm 8](https://pnpm.io/) or [bun 1](https://bun.sh/) for custom
 admin builds. With the introduction of these new versions, it is necessary
 to drop the support for npm 6.
 
-The upgrade of CKEditor to the latest version atleast [requires Node 18](https://github.com/ckeditor/ckeditor5-dev/blob/v39.6.3/package.json#L19).
+The upgrade of CKEditor to the latest version at least [requires Node 18](https://github.com/ckeditor/ckeditor5-dev/blob/v39.6.3/package.json#L19).
 
 ### Webpack 5 upgrade
 
@@ -1385,7 +1385,7 @@ bin/websiteconsole massive:search:reindex --provider sulu_structure
 
 Changes in the JS ecosystem not longer allows us to test Sulu Admin
 against Node 12. With this release so Sulu custom build may not longer
-work on Node 12, we recommend updating your CI to atleast Node 14.
+work on Node 12, we recommend updating your CI to at least Node 14.
 
 ## 2.4.6
 
@@ -1798,7 +1798,7 @@ ALTER TABLE we_analytics_domains ADD CONSTRAINT FK_F9323B6EEAC2E688 FOREIGN KEY 
 
 The configured `doctrine_phpcr.meta_cache_provider` and `doctrine_phpcr.nodes_cache_provider`
 in the `config/packages/prod/sulu_document_manager.yaml` should be tagged with `kernel.reset`
-to be correctly be reseted:
+to be correctly be reset:
 
 ```diff
 # config/packages/prod/sulu_document_manager.yaml
@@ -2211,7 +2211,7 @@ The metadata classes in the `Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata` na
 * The `PropertyMetadata` accepts a third optional attribute called `$schemaMetadata`, which allows to define the schema of that property.
 
 * `ArrayMetadata` and `ConstMetadata` don't extend from `PropertyMetadata` anymore.
-  Therfore the `$name` and `$mandatory` arguments have been removed from their constructors.
+  Therefore the `$name` and `$mandatory` arguments have been removed from their constructors.
 
   To restore the same behaviour of these classes as before
     * `new ArrayMetadata($name, $mandatory, $itemsSchema)` has to be changed to `new PropertyMetadata($name, $mandatory, new ArrayMetadata($itemsSchema))` and
@@ -2242,7 +2242,7 @@ If you have implemented this interface in your project, you need to add the para
 
 The configured `doctrine_phpcr.meta_cache_provider` and `doctrine_phpcr.nodes_cache_provider`
 in the `config/packages/prod/sulu_document_manager.yaml` should be tagged with `kernel.reset`
-to be correctly be reseted:
+to be correctly be reset:
 
 ```diff
 # config/packages/prod/sulu_document_manager.yaml
@@ -3144,7 +3144,7 @@ When upgrading also have a look at the changes in the
 The `WebspaceManagerInterface` changed that in all methods the `$environment` variable is nullable
 and will use in the implementation the current `kernel.environment`.
 
-### Ugrading JMS Serializer dependency
+### Upgrading JMS Serializer dependency
 
 See [JMS/Serializer](https://github.com/schmittjoh/serializer/blob/master/UPGRADING.md)
 and [JMS/SerializerBundle](https://github.com/schmittjoh/JMSSerializerBundle/blob/master/UPGRADING.md)
@@ -3222,7 +3222,7 @@ public static function getSubscribedServices()
 }
 ```
 
-### Security Profile and Conexts routes changed
+### Security Profile and Contexts routes changed
 
 The endpoints for the profile and security contexts apis changed:
 
@@ -3303,7 +3303,7 @@ auto generated user when the username `test` is used.
 
 ### LocationBundle
 
-The LocationBundle was cleaned up and therefor the configuration of the bundle was changed:
+The LocationBundle was cleaned up and therefore the configuration of the bundle was changed:
 
 __Before:__
 
@@ -3873,7 +3873,7 @@ This is necessary because `SYSTEM` is a SQL keyword since MySQL 8.0.3.
 ALTER TABLE se_roles CHANGE system securitySystem VARCHAR(60) NOT NULL;
 ```
 
-### Rename ToolbarActionRegistry and AbstractToolbarAction javscript classes
+### Rename ToolbarActionRegistry and AbstractToolbarAction JavaScript classes
 
 **This change only affects you if you have used a 2.0.0 release before**
 
@@ -3922,7 +3922,7 @@ The controller returning the search indexes will now embed the indexes in an `_e
 ### RouteBundle API
 
 The API for routes under `/admin/api/routes` has changed a bit, in order to avoid having PHP class names in the
-frontent. Instead it uses the already known `resourceKey` now.
+frontend. Instead it uses the already known `resourceKey` now.
 
 Therefore the API has changed, instead of `entityClass` it now takes the `resourceKey`, and the `entityId` attribute has
 changed to just `id`.
@@ -4171,7 +4171,7 @@ UPDATE we_analytics SET type="matomo" WHERE type="piwik";
 
 ### Removed sulu twig variables
 
-The following sulu twig variables are removed and its symfony equivilants should be used instead:
+The following sulu twig variables are removed and its symfony equivalents should be used instead:
 
 | Before                 | After
 |------------------------|---------------------|
@@ -4298,7 +4298,7 @@ match the other names.
 
 **This change only affects you if you have used a 2.0.0 alpha release before**
 
-The word `datagrid` has been renamed to `list`, which also includes all occurences of this word including file names,
+The word `datagrid` has been renamed to `list`, which also includes all occurrences of this word including file names,
 class names, function resp. method names and service parameters as well as the Symfony configuration.
 
 The most important changes are described in the next few paragraphs:
@@ -4556,7 +4556,7 @@ public function __construct($environment, $debug, $suluContext = self::CONTEXT_A
 **This change only affects you if you have used a 2.0.0 alpha release before**
 
 The React components registered as views in the `ViewRegistry` had to add the padding using the
-`$viewPadding` scss variable on their own. That is not neccessary anymore, since it is added in a
+`$viewPadding` scss variable on their own. That is not necessary anymore, since it is added in a
 central place.
 
 ### DatagridStore
@@ -5126,7 +5126,7 @@ a tree using the `parentId` on their own.
 
 The `parent` query parameter, which is used in quite some controllers like for pages and categories, was renamed to
 `parentId`, because it only references the id, and not the entire reference. This is also the new convention within
-our new Admin, so if your API should work with it, you have to name the query paramter `parentId`.
+our new Admin, so if your API should work with it, you have to name the query parameter `parentId`.
 
 ### Highlight section
 
@@ -5170,7 +5170,7 @@ The field descriptor parameter `$default` and `$disabled` where combined into a 
 
 Use the following table for upgrading:
 
-| Disabled | Default  | Visiblity
+| Disabled | Default  | Visibility
 |----------|----------|--------------
 | false    | true     | FieldDescriptorInterface::VISIBILITY_ALWAYS (always)
 | false    | false    | FieldDescriptorInterface::VISIBILITY_YES (yes)
