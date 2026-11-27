@@ -41,6 +41,7 @@ class SuluArticleBundleTest extends AbstractExtensionTestCase
     {
         $this->container->setParameter('kernel.bundles', []);
         $this->container->setParameter('kernel.environment', 'test');
+        $this->container->setParameter('kernel.build_dir', \dirname(__DIR__, 5) . '/Application/var/cache/builddir');
 
         $this->load(['smart_content' => ['default_limit' => 7]]);
 
