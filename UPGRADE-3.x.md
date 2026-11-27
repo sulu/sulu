@@ -12,6 +12,29 @@ escaped from the exception listener and turned the `404` into a `500`.
 
 Projects with their own `RouteDefaultsProviderInterface` should throw a `ResourceNotFoundException` as well.
 
+### New constructor argument for the ArticleTwigExtension
+
+`ArticleTwigExtension` takes the `request_stack` as its last argument, which `sulu_article_load_recent` uses to
+leave out the article of the current request. Projects that extend this class or define their own service for it
+need to pass it. Leaving it out triggers a deprecation.
+
+### Changed signature of sulu_article_load_recent
+
+The Twig function `sulu_article_load_recent` of the 2.x `SuluArticleBundle` was
+`sulu_article_load_recent(limit, types, locale, ignoreWebspaces)`. It is now
+`sulu_article_load_recent(limit, properties, templateKeys, locale, ignoreWebspaces)`: `properties` selects the
+returned fields, as in `sulu_article_load`, and `templateKeys` filters by article template instead of article
+type. `limit` and `properties` are now required. Templates ported from 2.x need to pass both, and template keys where
+they passed types:
+
+```twig
+{# Before #}
+{% set articles = sulu_article_load_recent(5, ['blog']) %}
+
+{# After #}
+{% set articles = sulu_article_load_recent(5, {title: 'title'}, ['blog']) %}
+```
+
 ## 3.0.10
 
 ### The target group select of the preview follows the audience targeting permission

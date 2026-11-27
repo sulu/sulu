@@ -84,12 +84,14 @@ interface ArticleRepositoryInterface
      *     tagNames?: string[],
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
+     *     version?: int,
      *     page?: int,
      *     limit?: int,
      * } $filters
      * @param array{
      *     id?: 'asc'|'desc',
      *     title?: 'asc'|'desc',
+     *     authored?: 'asc'|'desc',
      * } $sortBy
      * @param array{
      *     article_admin?: bool,
@@ -114,12 +116,15 @@ interface ArticleRepositoryInterface
      *     tagNames?: string[],
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
+     *     webspaceKey?: string,
+     *     version?: int,
      *     page?: int,
      *     limit?: int,
      * } $filters
      * @param array{
      *     id?: 'asc'|'desc',
      *     title?: 'asc'|'desc',
+     *     authored?: 'asc'|'desc',
      * } $sortBy
      *
      * @return iterable<string>
