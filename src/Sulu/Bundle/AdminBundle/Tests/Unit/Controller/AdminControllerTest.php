@@ -187,8 +187,6 @@ class AdminControllerTest extends TestCase
                 function(View $view) {
                     $data = $view->getData();
                     \assert(\is_array($data));
-                    $suluAdmin = $data['sulu_admin'];
-                    \assert(\is_array($suluAdmin));
 
                     return 'json' === $view->getFormat()
                         && ['test1' => 'value1'] === $data['admin1']

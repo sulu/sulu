@@ -31,8 +31,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Webmozart\Assert\Assert;
 
 /**
- * @internal no backwards compatibility promise is given for this method it could be removed or changed at any time
- *           create your own service class extending `Admin` instead
+ * @internal no backwards compatibility promise is given for this class, create your own service
+ *           class extending `Admin` instead
  */
 final class SuluAdmin extends Admin
 {
