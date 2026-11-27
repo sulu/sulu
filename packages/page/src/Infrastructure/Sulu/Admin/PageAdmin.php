@@ -160,7 +160,7 @@ class PageAdmin extends Admin
                     new ToolbarAction(
                         'sulu_admin.delete_draft',
                         [
-                            'visible_condition' => $publishVisibleCondition,
+                            'visible_condition' => '(!_permissions || _permissions.edit)',
                         ]
                     ),
                     new ToolbarAction(
