@@ -5,6 +5,7 @@ import {act, render, screen} from '@testing-library/react';
 import userStore from '../../../stores/userStore';
 import ViewRenderer from '../ViewRenderer';
 import viewRegistry from '../registries/viewRegistry';
+import viewRendererContext from '../viewRendererContext';
 
 jest.mock('../registries/viewRegistry', () => ({
     get: jest.fn(),
@@ -365,4 +366,32 @@ test('Do not remount views when the same user logs in again', () => {
     act(() => logIn(createUser(1)));
 
     expect(onMount).toHaveBeenCalledTimes(1);
+});
+
+test('Pass the toolbar store key and the sidebar availability to the views', () => {
+    const router = createRouter({type: 'test'});
+    viewRegistry.get.mockReturnValue(function ContextProbe() {
+        const {sidebarAvailable, toolbarStoreKey} = React.useContext(viewRendererContext);
+
+        return <h1>{toolbarStoreKey + '__' + String(sidebarAvailable)}</h1>;
+    });
+    viewRegistry.getConfig.mockReturnValue({});
+
+    render(<ViewRenderer router={router} sidebarAvailable={false} toolbarStoreKey="overlay" />);
+
+    expect(screen.getByRole('heading', {name: 'overlay__false'})).toBeInTheDocument();
+});
+
+test('Make the sidebar available and leave the toolbar store key open by default', () => {
+    const router = createRouter({type: 'test'});
+    viewRegistry.get.mockReturnValue(function ContextProbe() {
+        const {sidebarAvailable, toolbarStoreKey} = React.useContext(viewRendererContext);
+
+        return <h1>{String(toolbarStoreKey) + '__' + String(sidebarAvailable)}</h1>;
+    });
+    viewRegistry.getConfig.mockReturnValue({});
+
+    render(<ViewRenderer router={router} />);
+
+    expect(screen.getByRole('heading', {name: 'undefined__true'})).toBeInTheDocument();
 });

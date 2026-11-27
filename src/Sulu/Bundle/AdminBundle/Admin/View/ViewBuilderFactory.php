@@ -28,6 +28,11 @@ class ViewBuilderFactory implements ViewBuilderFactoryInterface
         return new FormOverlayListViewBuilder($name, $path);
     }
 
+    public function createViewOverlayListViewBuilder(string $name, string $path): ViewOverlayListViewBuilderInterface
+    {
+        return new ViewOverlayListViewBuilder($name, $path);
+    }
+
     public function createFormViewBuilder(string $name, string $path): FormViewBuilderInterface
     {
         return new FormViewBuilder($name, $path);

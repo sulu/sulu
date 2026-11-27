@@ -19,6 +19,13 @@ interface ViewBuilderFactoryInterface
 
     public function createFormOverlayListViewBuilder(string $name, string $path): FormOverlayListViewBuilderInterface;
 
+    /**
+     * @experimental
+     *
+     * TODO discuss this BC break: every implementation of this interface has to add this method
+     */
+    public function createViewOverlayListViewBuilder(string $name, string $path): ViewOverlayListViewBuilderInterface;
+
     public function createFormViewBuilder(string $name, string $path): FormViewBuilderInterface;
 
     public function createPreviewFormViewBuilder(string $name, string $path): PreviewFormViewBuilderInterface;

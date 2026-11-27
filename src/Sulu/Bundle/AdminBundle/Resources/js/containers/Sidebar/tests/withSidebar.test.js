@@ -3,6 +3,7 @@ import React from 'react';
 import {extendObservable, observable} from 'mobx';
 import {render, screen} from '@testing-library/react';
 import sidebarStore from '../stores/sidebarStore';
+import viewRendererContext from '../../ViewRenderer/viewRendererContext';
 import withSidebar from '../withSidebar';
 
 jest.mock('../stores/sidebarStore', () => ({
@@ -152,4 +153,26 @@ test('Recall sidebar-function when changing observable', () => {
     expect(sidebarStore.setConfig).toHaveBeenCalledWith({
         view: 'test',
     });
+});
+
+test('Leave the sidebar untouched if the view renderer has no sidebar', () => {
+    const Component = class Component extends React.Component<*> {
+        render = jest.fn();
+    };
+
+    const ComponentWithSidebar = withSidebar(Component, () => ({view: 'test1'}));
+
+    const router = createRouter();
+
+    const {unmount} = render(
+        <viewRendererContext.Provider value={{sidebarAvailable: false, toolbarStoreKey: 'overlay'}}>
+            <ComponentWithSidebar router={router} />
+        </viewRendererContext.Provider>
+    );
+
+    unmount();
+
+    expect(sidebarStore.setConfig).not.toHaveBeenCalled();
+    expect(sidebarStore.clearConfig).not.toHaveBeenCalled();
+    expect(router.addUpdateRouteHook).not.toHaveBeenCalled();
 });

@@ -1153,6 +1153,54 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/View.php
 
 		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ViewOverlayListViewBuilder\:\:addRequestParametersToView\(\) has parameter \$requestParameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewOverlayListViewBuilder.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ViewOverlayListViewBuilder\:\:addResourceStorePropertiesToListMetadataToView\(\) has parameter \$resourceStorePropertiesToListMetadata with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewOverlayListViewBuilder.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ViewOverlayListViewBuilder\:\:addResourceStorePropertiesToListRequestToView\(\) has parameter \$resourceStorePropertiesToListRequest with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewOverlayListViewBuilder.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ViewOverlayListViewBuilder\:\:addRouterAttributesToListMetadataToView\(\) has parameter \$routerAttributesToListMetadata with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewOverlayListViewBuilder.php
+
+		-
+			message: '#^Method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ViewOverlayListViewBuilder\:\:addRouterAttributesToListRequestToView\(\) has parameter \$routerAttributesToListRequest with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewOverlayListViewBuilder.php
+
+		-
+			message: '#^Parameter \#1 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 11
+			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewOverlayListViewBuilder.php
+
+		-
+			message: '#^Parameter \#1 \.\.\.\$arrays of function array_merge_recursive expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewOverlayListViewBuilder.php
+
+		-
+			message: '#^Parameter \#2 \$locale of method Sulu\\Bundle\\AdminBundle\\Admin\\View\\ViewOverlayListViewBuilder\:\:setDefaultLocaleToView\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewOverlayListViewBuilder.php
+
+		-
 			message: '#^Cannot call method getParent\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2

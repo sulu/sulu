@@ -3,6 +3,8 @@ import {render, screen, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Mousetrap from 'mousetrap';
 import React from 'react';
+import Popover from '../../Popover';
+import SingleSelect from '../../SingleSelect';
 import Overlay from '../Overlay';
 
 jest.mock('../../../utils/Translator');
@@ -231,4 +233,135 @@ test('The component should call the callback when the snackbar is clicked', asyn
     expect(onSnackbarClick).not.toHaveBeenCalled();
     await user.click(screen.getByRole('button', {name: /sulu_admin.warning/i}));
     expect(onSnackbarClick).toHaveBeenCalled();
+});
+
+test('The component should render the toolbar instead of the header', () => {
+    renderOverlay({
+        toolbar: <div data-testid="overlay-toolbar">toolbar content</div>,
+    });
+
+    expect(screen.getByTestId('overlay-toolbar')).toBeInTheDocument();
+    expect(screen.queryByRole('heading', {name: 'My overlay title'})).not.toBeInTheDocument();
+});
+
+test('The component should use the title as accessible name of the dialog when a toolbar is passed', () => {
+    renderOverlay({
+        toolbar: <div>toolbar content</div>,
+    });
+
+    expect(screen.getByRole('dialog', {name: 'My overlay title'})).toBeInTheDocument();
+});
+
+test('The component should render no dialog role and keep the header when no toolbar is passed', () => {
+    renderOverlay();
+
+    expect(screen.queryByTestId('overlay-toolbar')).not.toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'My overlay title'})).toBeInTheDocument();
+});
+
+test('The component should close from the close button of the toolbar', async() => {
+    const user = userEvent.setup();
+    const onClose = jest.fn();
+
+    renderOverlay({
+        onClose,
+        toolbar: <div>toolbar content</div>,
+    });
+
+    await user.click(screen.getByLabelText('su-times', {selector: 'button > span'}));
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test('The component should show a check and announce the message when a close success message is passed', () => {
+    renderOverlay({
+        closeSuccessMessage: 'Changes saved',
+        toolbar: <div>toolbar content</div>,
+    });
+
+    expect(screen.getByLabelText('su-check')).toBeInTheDocument();
+    expect(screen.queryByLabelText('su-times', {selector: 'button > span'})).not.toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('Changes saved');
+});
+
+test('The component should render the snackbar between the toolbar and the content', () => {
+    renderOverlay({
+        snackbarMessage: 'Something went wrong',
+        toolbar: <div data-testid="overlay-toolbar">toolbar content</div>,
+    });
+
+    const toolbar = screen.getByTestId('overlay-toolbar');
+    const snackbar = screen.getByRole('button', {name: /sulu_admin.error/i});
+    const content = screen.getByText('My overlay content');
+
+    expect(toolbar.compareDocumentPosition(snackbar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(snackbar.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+});
+
+test('The overlay below gets the esc key back when the overlay on top of it is closed', () => {
+    const onCloseBelow = jest.fn();
+    const onCloseAbove = jest.fn();
+
+    render(<Overlay onClose={onCloseBelow} open={true} title="Below">Below</Overlay>);
+    const {unmount} = render(<Overlay onClose={onCloseAbove} open={true} title="Above">Above</Overlay>);
+
+    Mousetrap.trigger('esc');
+    expect(onCloseAbove).toHaveBeenCalledTimes(1);
+    expect(onCloseBelow).not.toHaveBeenCalled();
+
+    unmount();
+
+    Mousetrap.trigger('esc');
+    expect(onCloseBelow).toHaveBeenCalledTimes(1);
+});
+
+test('The overlay gets the esc key back after a popover inside of it is closed', () => {
+    const onClose = jest.fn();
+    const onPopoverClose = jest.fn();
+    const anchorElement: any = document.createElement('button');
+    const renderOverlayWithPopover = (popoverOpen) => (
+        <Overlay onClose={onClose} open={true} title="Overlay">
+            <Popover anchorElement={anchorElement} onClose={onPopoverClose} open={popoverOpen}>
+                {(setPopoverRef, styles) => <div ref={setPopoverRef} style={styles}>Item</div>}
+            </Popover>
+        </Overlay>
+    );
+
+    const {rerender} = render(renderOverlayWithPopover(false));
+    rerender(renderOverlayWithPopover(true));
+
+    Mousetrap.trigger('esc');
+    expect(onPopoverClose).toHaveBeenCalledTimes(1);
+    expect(onClose).not.toHaveBeenCalled();
+
+    rerender(renderOverlayWithPopover(false));
+
+    Mousetrap.trigger('esc');
+    expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+test('The overlay stays open when a select inside of it closes itself on the esc key', async() => {
+    const onClose = jest.fn();
+    render(
+        <Overlay onClose={onClose} open={true} title="Overlay">
+            <SingleSelect onChange={jest.fn()} value={undefined}>
+                <SingleSelect.Option value="1">Option 1</SingleSelect.Option>
+            </SingleSelect>
+        </Overlay>
+    );
+    // dispatched without act(), which would delay the rerender until the event has reached the document as well
+    const pressEscape = (element: any) => element.dispatchEvent(
+        new KeyboardEvent('keydown', {key: 'Escape', keyCode: 27, which: 27, bubbles: true, cancelable: true})
+    );
+
+    await userEvent.click(screen.getByRole('button', {name: /sulu_admin.please_choose/}));
+    expect(screen.getByRole('button', {name: 'Option 1'})).toBeInTheDocument();
+
+    pressEscape(screen.getByRole('button', {name: 'Option 1'}));
+    expect(screen.queryByRole('button', {name: 'Option 1'})).not.toBeInTheDocument();
+    expect(onClose).not.toHaveBeenCalled();
+
+    pressEscape(document.body);
+    expect(onClose).toHaveBeenCalledTimes(1);
 });

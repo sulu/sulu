@@ -1857,3 +1857,36 @@ test('Do not ask for confirmation to close window if no updateRouteHooks prevent
     expect(event.preventDefault).not.toHaveBeenCalled();
     expect(event.returnValue).toEqual(undefined);
 });
+
+test('Stop following the history and the window after being destroyed', () => {
+    window.removeEventListener = jest.fn();
+
+    routeRegistry.getAll.mockReturnValue({
+        list: new Route({
+            name: 'list',
+            path: '/list',
+            type: 'list',
+        }),
+        form: new Route({
+            name: 'form',
+            path: '/form',
+            type: 'form',
+        }),
+    });
+
+    const history = createMemoryHistory();
+    const router = new Router(history);
+    router.navigate('list');
+
+    expect(history.location.pathname).toEqual('/list');
+
+    router.destroy();
+
+    router.navigate('form');
+    expect(history.location.pathname).toEqual('/list');
+
+    history.push('/list');
+    expect(router.route.name).toEqual('form');
+
+    expect(window.removeEventListener).toHaveBeenCalledWith('beforeunload', router.handleBeforeUnload);
+});
