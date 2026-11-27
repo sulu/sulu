@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Content\Application\ContentDataMapper\DataMapper;
 
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Content\Domain\Model\DimensionContentInterface;
 use Sulu\Content\Domain\Model\SeoInterface;
@@ -21,6 +20,8 @@ use Webmozart\Assert\Assert;
 
 readonly class SeoDataMapper implements DataMapperInterface
 {
+    use UnlocalizedPropertiesDataMapperTrait;
+
     public function __construct(
         private MetadataProviderInterface $formMetadataProvider,
     ) {
@@ -35,13 +36,16 @@ readonly class SeoDataMapper implements DataMapperInterface
             return;
         }
 
-        $this->setSeoData($localizedDimensionContent, $data);
+        $this->setSeoData($unlocalizedDimensionContent, $localizedDimensionContent, $data);
     }
 
     /**
+     * @template T of DimensionContentInterface
+     *
+     * @param T $unlocalizedDimensionContent
      * @param mixed[] $data
      */
-    private function setSeoData(SeoInterface $dimensionContent, array $data): void
+    private function setSeoData(DimensionContentInterface $unlocalizedDimensionContent, SeoInterface $dimensionContent, array $data): void
     {
         if (!$dimensionContent instanceof DimensionContentInterface) {
             return;
@@ -51,9 +55,22 @@ readonly class SeoDataMapper implements DataMapperInterface
             $seoData = $data['seo'];
             Assert::isArray($seoData);
 
-            $validSeoProperties = $this->getSeoProperties($dimensionContent); // add support of unlocalized seo data in future
+            $unlocalizedSeoPropertyNames = $unlocalizedDimensionContent instanceof SeoInterface
+                ? $this->getUnlocalizedPropertyNames($this->formMetadataProvider, 'content_seo', 'seo', $dimensionContent)
+                : [];
 
-            $dimensionContent->setSeoData($seoData); // @phpstan-ignore-line argument.type
+            if ([] === $unlocalizedSeoPropertyNames) {
+                $dimensionContent->setSeoData($seoData); // @phpstan-ignore-line argument.type
+            } else {
+                [$unlocalizedSeoData, $localizedSeoData] = $this->splitUnlocalizedData(
+                    $seoData,
+                    $unlocalizedDimensionContent->getSeoData(),
+                    $unlocalizedSeoPropertyNames,
+                );
+
+                $unlocalizedDimensionContent->setSeoData($unlocalizedSeoData);
+                $dimensionContent->setSeoData($localizedSeoData);
+            }
         }
 
         if (\array_key_exists('seoHideInSitemap', $data)) {
@@ -70,29 +87,5 @@ readonly class SeoDataMapper implements DataMapperInterface
             Assert::boolean($data['seoNoIndex']);
             $dimensionContent->setSeoNoIndex($data['seoNoIndex']);
         }
-    }
-
-    /**
-     * @template T of DimensionContentInterface
-     *
-     * @param T $dimensionContent
-     *
-     * @return array<string, mixed>
-     */
-    private function getSeoProperties(DimensionContentInterface $dimensionContent): array
-    {
-        $locale = $dimensionContent->getLocale();
-        if (!$locale) {
-            return [];
-        }
-
-        /** @var FormMetadata $formMetadata */
-        $formMetadata = $this->formMetadataProvider->getMetadata(
-            'content_seo',
-            $locale,
-            ['instanceOf' => $dimensionContent::class],
-        );
-
-        return $formMetadata->getFlatFieldMetadata();
     }
 }
