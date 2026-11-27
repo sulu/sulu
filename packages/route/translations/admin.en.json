@@ -1,0 +1,3 @@
+{
+    "sulu_route.slug_not_unique": "The URL \"{slug}\" is already in use."
+}
