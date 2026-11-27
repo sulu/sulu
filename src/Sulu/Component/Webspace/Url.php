@@ -52,18 +52,26 @@ class Url implements ArrayableInterface
 
     /**
      * @param string $url
-     * @param string $environment
+     * @param ?string $environment
      */
     public function __construct(
         private $url = null,
         private $environment = null
     ) {
+        if (null === $url) {
+            @trigger_deprecation('sulu/sulu', '3.0', 'Not passing a URL is deprecated.');
+        }
+        if (null !== $environment) {
+            @trigger_deprecation('sulu/sulu', '3.0', 'Passing an environment to the URL is deprecated.');
+        }
     }
 
     /**
      * Sets the url.
      *
      * @param string $url
+     *
+     * @deprecated use the constructor for that
      */
     public function setUrl($url)
     {
@@ -183,10 +191,14 @@ class Url implements ArrayableInterface
     /**
      * Returns the environment.
      *
-     * @return string
+     * @return string|null
+     *
+     * @deprecated use Portal::getEnvironment() instead
      */
     public function getEnvironment()
     {
+        @trigger_deprecation('sulu/sulu', '3.0', 'Url::getEnvironment is deprecated use the Environment::getType.');
+
         return $this->environment;
     }
 
@@ -194,9 +206,12 @@ class Url implements ArrayableInterface
      * Sets the environment.
      *
      * @param string $environment
+     *
+     * @deprecated
      */
     public function setEnvironment($environment)
     {
+        @trigger_deprecation('sulu/sulu', '3.0', 'Url::setEnvironment is deprecated. Move the url to a differnt Environment object.');
         $this->environment = $environment;
     }
 
@@ -223,6 +238,8 @@ class Url implements ArrayableInterface
         $res['segment'] = $this->getSegment();
         $res['redirect'] = $this->getRedirect();
         $res['main'] = $this->isMain();
+
+        // @deprecated: We should not rely on this anymore
         $res['environment'] = $this->getEnvironment();
 
         return $res;

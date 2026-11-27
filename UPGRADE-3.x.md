@@ -309,7 +309,11 @@ used as it is, the value is not appended:
   `review`) saying what the current user may do with it. The admin renders the review overlay and the
   banner's cancel action from it, because content without object security, an article or a snippet,
   delivers no `_permissions` of its own.
-
+- `Sulu\Component\Webspace\Environment::setType()` is now deprecated use the constructor
+- `Sulu\Component\Webspace\Url::setUrl` is now deprecated use the constructor.
+- Using the `Url::getEnvironment()` and `Url::setEnvironment()` functions is deprecated.
+  Retrieve the environment from the portal instead via `Portal::getEnvironment($type)`, and use the
+  returned `Environment` object for reading or updating the environment configuration.
 
 ## 3.0.12
 
