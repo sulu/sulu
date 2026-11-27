@@ -12,18 +12,26 @@
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Search\Reindex;
 
 use Massive\Bundle\SearchBundle\Search\Reindex\LocalizedReindexProviderInterface;
+use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Search\Reindex\StructureProvider;
+use Sulu\Component\Content\Document\Behavior\LocalizedStructureBehavior;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
+use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
+use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Query\Query;
 
 class StructureProviderTest extends TestCase
@@ -245,5 +253,102 @@ class StructureProviderTest extends TestCase
         $this->provider->cleanUp($classFqn);
 
         $this->documentManager->clear()->shouldBeCalled();
+    }
+
+    public function testGetLocalesSkipsLocalesWithMissingStructure(): void
+    {
+        $logger = $this->prophesize(LoggerInterface::class);
+        $provider = $this->createProviderWithEncoder($logger->reveal());
+
+        $document = $this->prophesize(StructureBehavior::class)->willImplement(LocalizedStructureBehavior::class);
+        $this->mockDocument($document->reveal(), ['de', 'en', 'fr'], [
+            'i18n:de-template' => 'default',
+            'i18n:en-template' => 'removed',
+            // no template for "fr"
+        ]);
+
+        $this->structureFactory->getStructureMetadata('page', 'default')->willReturn(new StructureMetadata('default'));
+        $this->structureFactory->getStructureMetadata('page', 'removed')
+            ->willThrow(new StructureTypeNotFoundException('Could not load structure type "removed"'));
+        $this->structureFactory->getStructureMetadata('page', null)->willReturn(null);
+
+        $logger->warning(Argument::containingString('in locale "en"'))->shouldBeCalledOnce();
+        $logger->warning(Argument::containingString('in locale "fr"'))->shouldBeCalledOnce();
+
+        $this->assertSame(['de'], $provider->getLocalesForObject($document->reveal()));
+    }
+
+    public function testGetLocalesUsesStructureOfShadowBaseLocale(): void
+    {
+        $provider = $this->createProviderWithEncoder();
+
+        $document = $this->prophesize(StructureBehavior::class)
+            ->willImplement(LocalizedStructureBehavior::class)
+            ->willImplement(ShadowLocaleBehavior::class);
+        $this->mockDocument($document->reveal(), ['de', 'en'], [
+            'i18n:de-template' => 'default',
+            'i18n:en-template' => 'removed',
+            'i18n:en-shadow-on' => true,
+            'i18n:en-shadow-base' => 'de',
+        ]);
+
+        $this->structureFactory->getStructureMetadata('page', 'default')->willReturn(new StructureMetadata('default'));
+        $this->structureFactory->getStructureMetadata('page', 'removed')->shouldNotBeCalled();
+
+        $this->assertSame(['de', 'en'], $provider->getLocalesForObject($document->reveal()));
+    }
+
+    public function testGetLocalesLooksUpEachStructureOnlyOnce(): void
+    {
+        $provider = $this->createProviderWithEncoder();
+
+        $document = $this->prophesize(StructureBehavior::class)->willImplement(LocalizedStructureBehavior::class);
+        $this->mockDocument($document->reveal(), ['de', 'en'], [
+            'i18n:de-template' => 'default',
+            'i18n:en-template' => 'default',
+        ]);
+
+        $this->structureFactory->getStructureMetadata('page', 'default')
+            ->shouldBeCalledOnce()
+            ->willReturn(new StructureMetadata('default'));
+
+        $this->assertSame(['de', 'en'], $provider->getLocalesForObject($document->reveal()));
+        $this->assertSame(['de', 'en'], $provider->getLocalesForObject($document->reveal()));
+    }
+
+    private function createProviderWithEncoder(?LoggerInterface $logger = null): StructureProvider
+    {
+        return new StructureProvider(
+            $this->documentManager->reveal(),
+            $this->metadataFactory->reveal(),
+            $this->structureFactory->reveal(),
+            $this->inspector->reveal(),
+            'admin',
+            new PropertyEncoder(new NamespaceRegistry(['system_localized' => 'i18n', 'content' => ''])),
+            $logger
+        );
+    }
+
+    /**
+     * @param string[] $locales
+     * @param array<string, mixed> $properties
+     */
+    private function mockDocument(object $document, array $locales, array $properties): void
+    {
+        $node = $this->prophesize(NodeInterface::class);
+        $node->getPropertyValueWithDefault(Argument::type('string'), Argument::any())
+            ->will(function(array $arguments) use ($properties) {
+                [$name, $default] = $arguments;
+
+                return \is_string($name) && \array_key_exists($name, $properties) ? $properties[$name] : $default;
+            });
+
+        $metadata = $this->prophesize(Metadata::class);
+        $metadata->getAlias()->willReturn('page');
+
+        $this->inspector->getLocales($document)->willReturn($locales);
+        $this->inspector->getNode($document)->willReturn($node->reveal());
+        $this->inspector->getMetadata($document)->willReturn($metadata->reveal());
+        $this->inspector->getUuid($document)->willReturn('123-123-123');
     }
 }
