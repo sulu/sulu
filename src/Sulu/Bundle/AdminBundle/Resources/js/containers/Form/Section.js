@@ -7,11 +7,12 @@ import Form from '../../components/Form';
 import conditionDataProviderRegistry from './registries/conditionDataProviderRegistry';
 import FormInspector from './FormInspector';
 import Field from './Field';
+import TabSection from './TabSection';
 import type {ChildrenArray, Element} from 'react';
 import type {SchemaEntry} from './types';
 
 type Props = {|
-    children: false | ChildrenArray<?Element<typeof Field | typeof Section>>,
+    children: false | ChildrenArray<?Element<typeof Field | typeof Section | typeof TabSection>>,
     data: Object,
     formInspector: FormInspector,
     name: string,

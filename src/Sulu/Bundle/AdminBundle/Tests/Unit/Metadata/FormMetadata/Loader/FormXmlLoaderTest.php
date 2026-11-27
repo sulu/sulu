@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\PropertiesXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\SchemaXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Parser\TagXmlParser;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SchemaMetadataProvider;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapper\BlockPropertyMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
@@ -540,6 +541,24 @@ class FormXmlLoaderTest extends TestCase
         $this->assertEquals('name', $formMetadata->getItems()['name']->getName());
         $this->assertEquals(8, $formMetadata->getItems()['name']->getColSpan());
         $this->assertCount(1, $formMetadata->getItems()['name']->getItems());
+    }
+
+    public function testLoadFormWithTabSections(): void
+    {
+        $formMetadata = $this->loader->load($this->getFormDirectory() . 'form_with_tab_sections.xml');
+
+        $tabs = $formMetadata->getItems()['tabs'];
+        $this->assertInstanceOf(SectionMetadata::class, $tabs);
+        $this->assertSame('tabs', $tabs->getLayout());
+        $this->assertSame(['title', 'content', 'settings'], \array_keys($tabs->getItems()));
+
+        $content = $tabs->getItems()['content'];
+        $this->assertInstanceOf(SectionMetadata::class, $content);
+        $this->assertSame('default', $content->getLayout());
+
+        $settings = $tabs->getItems()['settings'];
+        $this->assertInstanceOf(SectionMetadata::class, $settings);
+        $this->assertSame('default', $settings->getLayout());
     }
 
     public function testLoadFormInvalidRootTag(): void
