@@ -199,6 +199,8 @@ final class ArticleRepository implements ArticleRepositoryInterface
      *     tagNames?: string[],
      *     tagOperator?: 'AND'|'OR',
      *     templateKeys?: string[],
+     *     webspaceKey?: string,
+     *     version?: int,
      *     loadGhost?: bool,
      *     page?: int,
      *     limit?: int,
@@ -206,6 +208,7 @@ final class ArticleRepository implements ArticleRepositoryInterface
      * @param array{
      *     uuid?: 'asc'|'desc',
      *     title?: 'asc'|'desc',
+     *     authored?: 'asc'|'desc',
      *     created?: 'asc'|'desc',
      * } $sortBy
      * @param array{
@@ -268,6 +271,14 @@ final class ArticleRepository implements ArticleRepositoryInterface
                 $filters,
                 $sortBy,
             );
+
+            $webspaceKey = $filters['webspaceKey'] ?? null;
+            if (null !== $webspaceKey) {
+                Assert::string($webspaceKey); // @phpstan-ignore staticMethod.alreadyNarrowedType
+                $queryBuilder->leftJoin('filterDimensionContent.additionalWebspaces', 'filterAdditionalWebspace')
+                    ->andWhere('filterDimensionContent.mainWebspace = :webspaceKey OR filterAdditionalWebspace.additionalWebspace = :webspaceKey')
+                    ->setParameter('webspaceKey', $webspaceKey);
+            }
         }
 
         if ([] !== $sortBy) {
